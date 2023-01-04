@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <%== partial 'shared/header' %>
+
+  <body>
+    <script>0</script>
+
+    <% if @error %>
+      <%== yield %>
+    <% else %>
+      <nav class="navbar navbar-expand-lg navbar-dark shadow-sm mb-4">
+        <div class="container">
+          <%== partial 'shared/brand' %>
+          <%== partial 'shared/navigation' %>
+        </div>
+      </nav>
+
+      <%== partial 'shared/become_pro' %>
+
+      <%== partial 'shared/content', locals: { content: yield } %>
+    <% end %>
+  </body>
+</html>

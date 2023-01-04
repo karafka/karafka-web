@@ -1,0 +1,25 @@
+<li class="breadcrumb-item">
+  <a href="<%= root_path('errors', 0) %>">
+    Errors
+  </a>
+</li>
+
+<li class="breadcrumb-item">
+  <a href="<%= root_path('errors', @partition_id) %>">
+    Partition <%= @partition_id %>
+  </a>
+</li>
+
+<% if @offset %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('errors', @partition_id, @offset) %>">
+      <%=
+        type = @error_message.payload[:type]
+        error_class = @error_message.payload[:error_class]
+        offset = @error_message.offset
+
+        "#{type}: #{error_class} #{offset}"
+      %>
+    </a>
+  </li>
+<% end %>

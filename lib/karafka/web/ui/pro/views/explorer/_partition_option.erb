@@ -1,0 +1,7 @@
+<% if @partition_id == partition %>
+  <option value="<%= root_path('explorer', @topic_id, partition) %>" selected=selected>
+<% else %>
+  <option value="<%= root_path('explorer', @topic_id, partition) %>">
+<% end %>
+  <%= partition %>
+</option>

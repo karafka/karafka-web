@@ -1,0 +1,57 @@
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+  <span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarNav">
+  <ul class="navbar-nav">
+    <li class="nav-item ms-3">
+      <a class="nav-link <%= nav_class(start_with: '/consumers') %>" href="<%= root_path('consumers') %>">
+        Consumers
+      </a>
+    </li>
+    <li class="nav-item ms-3">
+      <a class="nav-link <%= nav_class(start_with: '/jobs') %>" href="<%= root_path('jobs') %>">
+        Jobs
+      </a>
+    </li>
+
+    <li class="nav-item ms-3">
+      <a class="nav-link <%= nav_class(start_with: '/health') %>" href="<%= root_path('health') %>">
+        Health
+      </a>
+    </li>
+    <li class="nav-item ms-3">
+      <a class="nav-link <%= nav_class(start_with: '/routing') %>" href="<%= root_path('routing') %>">
+        Routing
+      </a>
+    </li>
+    <li class="nav-item ms-3">
+      <a class="nav-link <%= nav_class(start_with: '/explorer') %>" href="<%= root_path('explorer') %>">
+        Explorer
+      </a>
+    </li>
+    <li class="nav-item ms-3">
+      <a class="nav-link <%= nav_class(start_with: '/errors') %>" href="<%= root_path('errors/0') %>">
+        Errors
+      </a>
+    </li>
+    <li class="nav-item ms-3">
+      <a class="nav-link <%= nav_class(start_with: '/dlq') %>" href="<%= root_path('dlq') %>">
+        Dead
+      </a>
+    </li>
+    <li class="nav-item ms-3">
+      <a class="nav-link <%= nav_class(start_with: '/cluster') %>" href="<%= root_path('cluster') %>">
+        Cluster
+      </a>
+    </li>
+  </ul>
+</div>
+
+<ul class="nav navbar-nav navbar-right">
+  <li>
+    <span class="btn btn-secondary btn-sm" id="live-poll" data-on="Live polling" data-off="Live poll">
+      Live poll
+    </a>
+  </li>
+</ul>

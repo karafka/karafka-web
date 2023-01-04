@@ -1,0 +1,35 @@
+<tr class="align-middle status-row-<%= details[:process].status %>">
+  <td>
+    <%= topic_name %>
+  </td>
+  <td>
+    <%= partition_id %>
+  </td>
+  <td><%= details[:lag_stored] %></td>
+  <td>
+    <span class="badge <%= lag_trend_bg(details[:lag_stored_d]) %>">
+      <%= details[:lag_stored_d] %>
+    </span>
+  </td>
+  <td>
+    <%= details[:committed_offset] %>
+  </td>
+  <td>
+    <%= details[:stored_offset] %>
+  </td>
+  <td>
+    <span class="badge <%= kafka_state_bg(details[:fetch_state]) %> mt-1 mb-1">
+      <%= details[:fetch_state] %>
+    </span>
+  </td>
+  <td>
+    <span class="badge <%= kafka_state_bg(details[:poll_state]) %> mt-1 mb-1">
+      <%= details[:poll_state] %>
+    </span>
+  </td>
+  <td>
+    <a href="<%= root_path('consumers', details[:process].id, 'subscriptions') %>">
+      <%= details[:process].name %>
+    </a>
+  </td>
+</tr>

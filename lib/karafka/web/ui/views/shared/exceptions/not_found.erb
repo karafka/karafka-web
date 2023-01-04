@@ -1,0 +1,40 @@
+<div id="content">
+  <div class="d-flex align-items-center justify-content-center vh-100">
+    <div class="error-message text-center">
+      <h1 class="display-1 fw-bold">404</h1>
+
+      <p class="fs-3 md-5">
+        <span class="text-danger">
+          Oops!
+        </span>
+        Page not found.
+      </p>
+
+      <div class="lead">
+        <p class="mb-5">
+          The page you're looking for doesn't exist.
+        </p>
+
+        <p>
+          Please make sure, that:
+        </p>
+
+        <ul class="mb-5 text-start">
+          <li>All the topics required by Karafka Web exist</li>
+          <li>Use <code>Karafka::Web.bootstrap_topics!</code> to create missing topics</li>
+          <li>You have started the <code>karafka server</code> at least once</li>
+          <li>You have a working connection with your Kafka cluster</li>
+          <li>The resource you requested exists</li>
+        </ul>
+
+        <p class="mb-5">
+          If you were looking for a given process or other real-time information, the state might have changed, and the information you are looking for no longer exists.
+        </p>
+
+        <p>
+          <a href="<%= root_path %>" class="btn btn-primary">Go Home</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

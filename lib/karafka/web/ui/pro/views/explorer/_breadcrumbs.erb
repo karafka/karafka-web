@@ -1,0 +1,29 @@
+<li class="breadcrumb-item">
+  <a href="<%= root_path('explorer') %>">
+    Explorer
+  </a>
+</li>
+
+<% if @topic_id %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('explorer', @topic_id, 0) %>">
+      <%= @topic_id %>
+    </a>
+  </li>
+<% end %>
+
+<% if @partition_id %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('explorer', @topic_id, @partition_id) %>">
+      Partition <%= @partition_id %>
+    </a>
+  </li>
+<% end %>
+
+<% if @offset %>
+  <li class="breadcrumb-item active">
+    <a href="<%= root_path('explorer', @topic_id, @partition_id, @offset) %>">
+      <%= @offset %>
+    </a>
+  </li>
+<% end %>

@@ -1,0 +1,56 @@
+<div class="container mb-5">
+  <div class="row">
+    <div class="col">
+      <h3>
+        <%= @topic_id %>
+      </h3>
+    </div>
+
+    <div class="col">
+        <div class="col-auto text-end">
+           <label class="col-form-label">Partition</label>
+        </div>
+    </div>
+
+    <div class="col pt-1 mb-0 pb-0">
+        <div class="col-auto">
+          <select class="form-select form-select-sm mb-0 form-control" id="current-partition">
+            <%==
+              each_partial(
+                @partitions_count.times.to_a,
+                'explorer/partition_option',
+                local: :partition
+              )
+            %>
+          </select>
+        </div>
+    </div>
+  </div>
+
+  <hr>
+</div>
+
+<div class="container">
+  <div class="row mb-5">
+    <div class="col-sm-12">
+      <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+        <thead>
+          <tr class="align-middle">
+            <th>Offset</th>
+            <th>Timestamp</th>
+            <th>Key</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <%==
+            each_partial(
+              @messages,
+              'explorer/message'
+            )
+          %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

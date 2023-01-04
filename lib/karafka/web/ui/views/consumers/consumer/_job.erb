@@ -1,0 +1,26 @@
+<tr>
+  <td>
+    <code><%= job.consumer %></code>
+  </td>
+  <td>
+    <span class="badge bg-secondary badge-topic" title="Consumer group: <%= job.consumer_group %>">
+      <%= job.topic %>:
+      <%= job.partition %>
+    </span>
+  </td>
+  <td>
+    <code>#<%= job.type %></code>
+  </td>
+  <td>
+    <%= job.first_offset %>
+  </td>
+  <td>
+    <%= job.last_offset %>
+  </td>
+  <td>
+    <%= job.comitted_offset %>
+  </td>
+  <td>
+    <%== relative_time job.started_at %>
+  </td>
+</tr>

@@ -1,0 +1,22 @@
+<% if topic[:topic_name] != '__consumer_offsets' %>
+  <tr>
+    <td>
+      <a href="<%= root_path('explorer', topic[:topic_name], 0) %>">
+        <%= topic[:topic_name] %>
+      </a>
+    <td>
+      <a href="<%= root_path('explorer', topic[:topic_name], partition[:partition_id]) %>">
+        <%= partition[:partition_id] %>
+      </a>
+    </td>
+    <td>
+      <%= partition[:leader] %>
+    </td>
+    <td>
+      <%= partition[:replica_count] %>
+    </td>
+    <td>
+      <%= partition[:in_sync_replica_brokers] %>
+    </td>
+  </tr>
+<% end %>

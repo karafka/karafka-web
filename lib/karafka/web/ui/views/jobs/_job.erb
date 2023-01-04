@@ -1,0 +1,22 @@
+<tr>
+  <td>
+    <a href="<%= root_path('consumers', job.process.id, 'subscriptions') %>">
+      <%= job.process.name %>
+    </a>
+  </td>
+  <td>
+    <span class="badge bg-secondary badge-topic" title="Consumer group: <%= job.consumer_group %>">
+      <%= job.topic %>:
+      <%= job.partition %>
+    </span>
+  </td>
+  <td>
+    <code><%= job.consumer %></code>
+  </td>
+  <td>
+    <code>#<%= job.type %></code>
+  </td>
+  <td>
+    <%== relative_time job.started_at %>
+  </td>
+</tr>

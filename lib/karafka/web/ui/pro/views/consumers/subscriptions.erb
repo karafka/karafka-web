@@ -1,0 +1,23 @@
+<%== view_title(@process.name) %>
+
+<% if @process.status == 'stopped' %>
+  <%== partial 'consumers/consumer/stopped' %>
+<% end %>
+
+<%== partial 'consumers/consumer/metrics' %>
+
+<%== partial 'consumers/consumer/tabs' %>
+
+<% if @process.consumer_groups.empty? %>
+  <%== partial 'consumers/consumer/no_subscriptions' %>
+<% end %>
+
+<div class="container">
+  <%==
+    render_each(
+      @process.consumer_groups,
+      'consumers/consumer/_consumer_group',
+      local: :consumer_group
+    )
+  %>
+</div>

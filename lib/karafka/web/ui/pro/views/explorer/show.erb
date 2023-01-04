@@ -1,0 +1,65 @@
+<div class="container">
+  <div class="row mb-4">
+    <div class="col-sm-12">
+      <h5 class="mb-2">
+        Metadata
+      </h5>
+      <hr/>
+
+    </div>
+  </div>
+
+  <div class="row mb-5">
+    <div class="col-sm-12">
+      <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+        <tbody>
+          <% @message.metadata.to_h.except(:received_at).each do |k, v| %>
+            <%==
+              partial(
+                'explorer/detail',
+                locals: {
+                  k: k,
+                  v: v
+                }
+              )
+            %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row mb-4">
+    <div class="col-sm-12">
+      <h5 class="mb-2">
+        Payload
+      </h5>
+      <hr/>
+
+    </div>
+  </div>
+
+  <% if @decrypt %>
+    <div class="row">
+      <div class="col-sm-12">
+        <% if @payload_error %>
+          <%== partial 'explorer/failed_deserialization' %>
+        <% end %>
+
+        <div class="card">
+          <div class="card-body">
+            <% if @payload_error %>
+              <pre class="m-0 p-0"><code class="wrapped json p-0 m-0"><%= @message.raw_payload %></code></pre>
+            <% else %>
+              <pre class="m-0 p-0"><code class="wrapped json p-0 m-0"><%= @pretty_payload %></code></pre>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <%== partial 'explorer/encryption_enabled' %>
+  <% end %>
+</div>

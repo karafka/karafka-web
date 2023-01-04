@@ -1,0 +1,25 @@
+<% if v.is_a?(Hash) %>
+  <% v.each do |k2, v2| %>
+    <tr>
+      <td>
+        <%= "#{k}.#{k2}" %>
+      </td>
+      <td>
+        <% if k2.to_s.include?('ssl') %>
+          ***
+        <% else %>
+          <%= v2 %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+<% else %>
+  <tr>
+    <td>
+      <%= k %>
+    </td>
+    <td>
+      <%= object_value_to_s(v) %>
+    </td>
+  </tr>
+<% end %>

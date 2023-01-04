@@ -1,0 +1,19 @@
+<li class="breadcrumb-item">
+  <a href="<%= root_path('errors') %>">
+    Errors
+  </a>
+</li>
+
+<% if @error_message %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('errors', @offset) %>">
+      <%=
+        type = @error_message.payload[:type]
+        error_class = @error_message.payload[:error_class]
+        offset = @error_message.offset
+
+        "#{type}: #{error_class} #{offset}"
+      %>
+    </a>
+  </li>
+<% end %>

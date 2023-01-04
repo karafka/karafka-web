@@ -1,0 +1,34 @@
+<%== view_title('Running jobs', hr: true) %>
+
+<% if @jobs.empty? %>
+  <%== partial 'jobs/no_jobs' %>
+<% else %>
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-sm-12">
+        <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+          <thead>
+            <tr class="align-middle">
+              <th>Process</th>
+              <th>Topic</th>
+              <th>Consumer</th>
+              <th>Type</th>
+              <th>First offset</th>
+              <th>Last offset</th>
+              <th>Committed offset</th>
+              <th>Started at</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%==
+              each_partial(
+                @jobs,
+                'jobs/job'
+              )
+            %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<% end %>

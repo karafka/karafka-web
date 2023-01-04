@@ -1,0 +1,30 @@
+<%==
+  type = @error_message.payload[:type]
+  error_class = @error_message.payload[:error_class]
+  offset = @error_message.offset
+
+  view_title("#{type}: #{error_class} #{offset}", hr: true)
+%>
+
+<div class="container">
+  <div class="row mb-5">
+    <div class="col-sm-12 table-responsive">
+      <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+        <tbody>
+          <% @error_message.payload.each do |k, v| %>
+            <% next if k == :backtrace %>
+            <%==
+              partial(
+                'errors/detail',
+                locals: {
+                  k: k,
+                  v: v
+                }
+              )
+            %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

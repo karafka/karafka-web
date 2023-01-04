@@ -1,0 +1,60 @@
+<tr class="status-row-<%= process.status %>">
+  <td>
+    <div class="badge badge-topic <%= status_bg(process.status) %> float-end">
+      <%= process.status %>
+    </div>
+
+    <a href="<%= root_path('consumers', process.id, 'subscriptions') %>">
+      <%= process.name %>
+    </a>
+
+    <br/>
+
+    <% process.consumer_groups.each do |consumer_group| %>
+      <% consumer_group.topics.each do |topic| %>
+        <span class="badge bg-secondary badge-topic" title="Consumer group: <%= consumer_group.id %>">
+          <%= topic.name %>:
+          <%= topic.partitions.map(&:id).join(',') %>
+        </span>
+      <% end %>
+    <% end %>
+  </td>
+
+  <td>
+    <%== relative_time process.started_at %>
+  </td>
+
+  <td>
+    <span class="badge bg-primary badge-topic">
+      <%= format_memory process.memory_usage %>
+    </span>
+    <span class="badge bg-primary badge-topic">
+      <%= format_memory process.memory_total_usage %>
+    </span>
+    <span class="badge bg-primary badge-topic">
+      <%= format_memory process.memory_size %>
+    </span>
+  </td>
+
+  <td>
+    <span class="badge bg-primary badge-topic">
+      <%= process.utilization.round(1) %>%
+    </span>
+    <span class="badge bg-primary badge-topic">
+      <%= process.concurrency %> /
+      <%= process.busy %>
+    </span>
+  </td>
+
+  <td>
+    <% process.cpu_usage.each do |metric| %>
+      <span class="badge bg-primary badge-topic">
+        <%= metric %>
+      </span>
+    <% end %>
+  </td>
+
+  <td>
+    <%= process.lag_stored %>
+  </td>
+</tr>

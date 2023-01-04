@@ -1,0 +1,9 @@
+en:
+  validations:
+    config:
+      missing: needs to be present
+
+    web:
+      missing: needs to be present
+      id_format: needs to be a String
+      format: is invalid

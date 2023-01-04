@@ -1,0 +1,26 @@
+<% error = error_msg.payload %>
+
+<tr>
+  <td>
+    <% if error[:details].key?(:topic) %>
+      <%= error[:details][:topic] %>: <%= error[:details][:partition] %>
+    <% else %>
+      <%= error[:type] %>
+    <% end %>
+  </td>
+  <td>
+    <%== error[:process_name] %>
+  </td>
+  <td>
+    <%= error[:error_class] %>:
+    <%= error[:error_message].first(200) %>
+  </td>
+  <td>
+    <%== relative_time error[:occurred_at] %>
+  </td>
+  <td>
+    <a href="<%= root_path('errors', error_msg.partition, error_msg.offset) %>" class="btn btn-sm btn-secondary text-white">
+      Details
+    </a>
+  </td>
+</tr>

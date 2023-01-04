@@ -1,0 +1,109 @@
+<div class="row mb-4">
+  <div class="col-sm-12">
+    <h5 class="mb-4">
+      <%= consumer_group.id %>
+    </h5>
+
+    <div class="card-group text-center">
+      <div class="card">
+        <div class="card-body d-flex flex-column align-items-center justify-content-center p-2">
+          State:&nbsp;
+          <span class="badge <%= kafka_state_bg(consumer_group[:state][:state]) %> mt-1 mb-1">
+            <%= consumer_group[:state][:state] %>
+          </span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body d-flex flex-column align-items-center justify-content-center p-2">
+          Join state:&nbsp;
+          <span class="badge <%= kafka_state_bg(consumer_group.join_state) %> mt-1 mb-1">
+            <%= consumer_group.join_state %>
+          </span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body d-flex flex-column align-items-center justify-content-center p-2">
+          State change:&nbsp;
+          <span class="badge bg-secondary mt-1 mb-1">
+            <%==
+              relative_time(
+                Time.at(@process.dispatched_at) - (consumer_group.stateage / 1_000)
+              )
+            %>
+          </span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body d-flex flex-column align-items-center justify-content-center p-2">
+          Last rebalance:&nbsp;
+          <span class="badge bg-secondary mt-1 mb-1">
+            <%==
+              relative_time(
+                Time.at(@process.dispatched_at) - (consumer_group.rebalance_age / 1_000)
+              )
+            %>
+          </span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body d-flex flex-column align-items-center justify-content-center p-2">
+          Rebalance count:&nbsp;
+          <span class="badge bg-secondary mt-1 mb-1">
+            <%= consumer_group.rebalance_cnt %>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <span class="text-end mt-3">
+    <small>
+      Last rebalance reason: <%= consumer_group.rebalance_reason %>
+    </small>
+  </span>
+</div>
+
+<% if consumer_group.topics.empty? %>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="alert alert-info" role="alert">
+        This process does not consume any messages from any topics of this consumer group.
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="row mb-5">
+    <div class="col-sm-12">
+      <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+        <thead>
+          <tr class="align-middle">
+            <th>Topic</th>
+            <th>Partition</th>
+            <th>Lag stored</th>
+            <th>Lag trend</th>
+            <th>Committed offset</th>
+            <th>Stored offset</th>
+            <th>Fetch state</th>
+            <th>Poll state</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% consumer_group.topics.each do |topic| %>
+            <% topic.partitions.each do |partition| %>
+              <%==
+                partial(
+                  'consumers/consumer/partition',
+                  locals: {
+                    topic: topic,
+                    partition: partition,
+                    consumer_group: consumer_group
+                  }
+                )
+              %>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% end %>

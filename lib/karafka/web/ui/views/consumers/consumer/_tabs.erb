@@ -1,0 +1,20 @@
+<div class="container">
+  <div class="row mb-4">
+    <div class="col-sm-12">
+
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link <%= nav_class(include: 'subscriptions') %>" href="<%= root_path('consumers', @process.id, 'subscriptions') %>">
+            Active subscriptions
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= nav_class(include: 'jobs') %>" href="<%= root_path('consumers', @process.id, 'jobs') %>">
+            Running jobs
+          </a>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</div>

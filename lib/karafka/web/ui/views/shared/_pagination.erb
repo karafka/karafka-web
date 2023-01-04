@@ -1,0 +1,21 @@
+<% if @current_page && (@current_page > 1 || @next_page) %>
+  <div id="pagination" class="container mb-5">
+    <div class="row">
+      <nav>
+        <ul class="pagination justify-content-center">
+          <li class="page-item <%= 'disabled' if @current_page <= 1 %>">
+            <a class="page-link" href="<%= current_path(page: @current_page - 1) %>">
+              <span>&laquo; Prev</span>
+            </a>
+          </li>
+
+          <li class="page-item <%= 'disabled' unless @next_page %>">
+            <a class="page-link" href="<%= current_path(page: @next_page) %>">
+              <span>Next &raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+<% end %>

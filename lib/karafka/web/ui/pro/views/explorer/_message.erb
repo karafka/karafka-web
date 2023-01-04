@@ -1,0 +1,16 @@
+<tr>
+  <td>
+    <%= message.offset %>
+  </td>
+  <td>
+    <%== relative_time message.timestamp %>
+  </td>
+  <td>
+    <%= message.key %>
+  </td>
+  <td class="text-center">
+    <a href="<%= root_path('explorer', message.topic, message.partition, message.offset) %>" class="btn btn-sm btn-secondary">
+      Details
+    </a>
+  </td>
+</tr>

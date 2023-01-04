@@ -1,0 +1,72 @@
+<%== view_title('Cluster informations') %>
+
+<div class="container mb-5">
+  <div class="row mb-3">
+    <div class="col-sm-12">
+      <h4 class="mb-4">
+        Brokers
+      </h4>
+      <hr/>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+        <table class="processes bg-white table table-hover table-bordered table-striped">
+          <thead>
+            <tr class="align-middle">
+              <th>Broker id</th>
+              <th>Name</th>
+              <th>Port</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%==
+              each_partial(
+                @cluster_info.brokers,
+                'cluster/broker'
+              )
+            %>
+          </tbody>
+        </table>
+    </div>
+  </div>
+</div>
+
+<div class="container mb-5">
+  <div class="row mb-3">
+    <div class="col-sm-12">
+      <h4 class="mb-4">
+        Topics and partitions
+      </h4>
+      <hr/>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+        <table class="processes bg-white table table-hover table-bordered table-striped">
+          <thead>
+            <tr class="align-middle">
+              <th>Topic name</th>
+              <th>Partition id</th>
+              <th>Leader</th>
+              <th>Replica count</th>
+              <th>In sync brokers</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @topics.each do |topic| %>
+              <%==
+                each_partial(
+                  topic[:partitions],
+                  'cluster/partition',
+                  locals: { topic: topic }
+                )
+              %>
+            <% end %>
+          </tbody>
+        </table>
+    </div>
+  </div>
+</div>

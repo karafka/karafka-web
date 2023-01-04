@@ -1,0 +1,7 @@
+<% if @partition_id == partition %>
+  <option value="<%= root_path('errors', partition) %>" selected=selected>
+<% else %>
+  <option value="<%= root_path('errors', partition) %>">
+<% end %>
+  <%= partition %>
+</option>
