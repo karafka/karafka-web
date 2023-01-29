@@ -1,4 +1,8 @@
 # Karafka Web changelog
 
-## 0.1.0 (Unreleased)
+## 0.1.1 (Unreleased)
+- Rename `Karafka::Web.bootstrap_topics!` to `Karafka::Web.bootstrap!` and expand it with the zero state injection.
+- Require Karafka `2.0.28` due to some instrumentation fixes.
+
+## 0.1.0
 - Initial code of the Web and Web Pro

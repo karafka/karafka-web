@@ -1,5 +1,17 @@
 <%== view_title('Consumers groups health') %>
 
+<% if @stats.empty? %>
+  <div class="container mb-4">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="alert alert-info" role="alert">
+          No health data is available. It may mean no processes are running.
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
 <% @stats.each do |cg_name, details| %>
 <div class="container mb-5">
   <div class="row mb-3">
