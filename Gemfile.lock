@@ -3,7 +3,7 @@ PATH
   specs:
     karafka-web (0.1.0)
       erubi (~> 1.12)
-      karafka (~> 2.0)
+      karafka (>= 2.0.28, < 3.0.0)
       roda (~> 3.63)
       tilt (~> 2.0)
 

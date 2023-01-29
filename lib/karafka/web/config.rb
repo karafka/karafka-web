@@ -48,6 +48,10 @@ module Karafka
             Tracking::Consumers::Listeners::Processing.new
           ]
         end
+
+        setting :producers do
+          setting :listeners, default: []
+        end
       end
 
       # States processing related settings
