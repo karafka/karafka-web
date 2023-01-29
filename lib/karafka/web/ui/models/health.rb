@@ -34,8 +34,6 @@ module Karafka
                 end
               end
 
-             # raise Web::Errors::Ui::NotFoundError if stats.empty?
-
               stats
             end
           end
