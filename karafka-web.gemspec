@@ -16,8 +16,8 @@ Gem::Specification.new do |spec|
   spec.description = 'Karafka ecosystem plug-and-play Web UI'
   spec.licenses    = %w[LGPL-3.0 Commercial]
 
-  spec.add_dependency 'erubi', '~> 1.12'
-  spec.add_dependency 'karafka', '>= 2.0.28', '< 3.0.0'
+  spec.add_dependency 'erubi', '~> 1.4'
+  spec.add_dependency 'karafka', '>= 2.0.29', '< 3.0.0'
   spec.add_dependency 'roda', '~> 3.63'
   spec.add_dependency 'tilt', '~> 2.0'
 
