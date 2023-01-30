@@ -29,6 +29,7 @@ Gem::Specification.new do |spec|
 
   spec.cert_chain    = %w[certs/cert_chain.pem]
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(spec)/}) }
+  spec.executables   = %w[karafka-web]
   spec.require_paths = %w[lib]
 
   spec.metadata = {
