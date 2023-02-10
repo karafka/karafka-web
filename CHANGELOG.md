@@ -2,7 +2,7 @@
 
 ## 0.1.2 (2023-02-10)
 - Provide more comprehensive info when lag stored and stored offset are not available.
-- Setup rspec scaffold
+- Setup rspec scaffold.
 
 ## 0.1.1 (2023-01-30)
 - Rename `Karafka::Web.bootstrap_topics!` to `Karafka::Web.bootstrap!` and expand it with the zero state injection.
