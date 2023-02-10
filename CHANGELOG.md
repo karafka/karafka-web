@@ -10,5 +10,4 @@
 - Provide an auto-installer under the `bundle exec karafka-web install` command.
 
 ## 0.1.0
-- Initial code of the Web and Web Pro
-.
+- Initial code of the Web and Web Pro.
