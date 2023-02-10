@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-## 0.1.2 (Unreleased)
+## 0.1.2 (2023-02-10)
 - Provide more comprehensive info when lag stored and stored offset are not available.
 - Setup rspec scaffold
 
@@ -11,3 +11,4 @@
 
 ## 0.1.0
 - Initial code of the Web and Web Pro
+.
