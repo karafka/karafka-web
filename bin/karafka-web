@@ -4,30 +4,5 @@ require 'karafka'
 require 'karafka/web'
 
 ::Karafka::Cli::Base.load
-include ::Karafka::Helpers::Colorize
 
-case ARGV[0]
-when 'install'
-  puts
-  puts 'Installing Karafka Web UI...'
-  puts
-  puts 'Creating necessary topics and populating state data...'
-  Karafka::Web.bootstrap!
-  puts 'Updating the Karafka boot file...'
-
-  enabler = 'Karafka::Web.enable!'
-
-  if File.read(Karafka.boot_file).include?(enabler)
-    puts "Web UI #{green('already')} installed."
-  else
-    File.open(Karafka.boot_file, 'a') do |f|
-      f << "\n#{enabler}\n"
-    end
-  end
-
-  puts
-  puts("Installation #{green('completed')}. Have fun!")
-  puts
-else
-  raise NotImplementedError, "#{ARGV[0]} is not supported"
-end
+::Karafka::Web::Cli.start

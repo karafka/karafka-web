@@ -27,12 +27,6 @@ module Karafka
         Config.config
       end
 
-      # Creates all the needed topics for the admin UI to work and populates initial (empty) set
-      # of data, so the UI will work even when no Karafka servers are started
-      def bootstrap!
-        Installer.new.bootstrap!
-      end
-
       # Activates all the needed routing and sets up listener, etc
       # This needs to run **after** the optional configuration of the web component
       def enable!

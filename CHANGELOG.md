@@ -1,5 +1,12 @@
 # Karafka Web changelog
 
+## 0.1.3 (Unreleased)
+- Skip topics creation if web topics already exist (do not raise error)
+- Support ability to provide replication factor in the install command
+- Provide ability to reset the state with a `reset` command. It will remove and re-create the topics.
+- Provide ability to uninstall the web via the CLI `uninstall` command
+- Remove the `Karafka::Web.bootstrap!` method as the install should happen via `bundle exec karafka-web install`
+
 ## 0.1.2 (2023-02-10)
 - Provide more comprehensive info when lag stored and stored offset are not available.
 - Setup rspec scaffold.
