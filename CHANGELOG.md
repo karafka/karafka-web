@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-## 0.1.3 (Unreleased)
+## 0.1.3 (2023-02-14)
 - Skip topics creation if web topics already exist (do not raise error)
 - Support ability to provide replication factor in the install command
 - Provide ability to reset the state with a `reset` command. It will remove and re-create the topics.
