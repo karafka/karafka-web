@@ -57,7 +57,8 @@ module Karafka
             topic: Karafka::Web.config.topics.consumers.states,
             payload: @consumers_aggregator.to_json,
             # This will ensure that the consumer states are compacted
-            key: Karafka::Web.config.topics.consumers.states
+            key: Karafka::Web.config.topics.consumers.states,
+            partition: 0
           )
         end
       end
