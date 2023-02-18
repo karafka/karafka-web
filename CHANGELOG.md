@@ -1,5 +1,8 @@
 # Karafka Web changelog
 
+## 0.1.4 (Unreleased)
+- Make sure that states and reports are always dispatched to the partition `0`. This should prevent UI from not fully working when someone accidentally creates more partitions than expected.
+
 ## 0.1.3 (2023-02-14)
 - Skip topics creation if web topics already exist (do not raise error)
 - Support ability to provide replication factor in the install command

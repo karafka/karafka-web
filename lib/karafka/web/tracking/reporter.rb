@@ -49,7 +49,8 @@ module Karafka
               {
                 topic: ::Karafka::Web.config.topics.consumers.reports,
                 payload: consumer_report.to_json,
-                key: consumer_report[:process][:name]
+                key: consumer_report[:process][:name],
+                partition: 0
               }
             ]
 
