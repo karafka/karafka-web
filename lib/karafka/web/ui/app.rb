@@ -71,6 +71,11 @@ module Karafka
               render_response controller.index
             end
           end
+
+          r.get 'status' do
+            controller = Controllers::Status.new(params)
+            render_response controller.show
+          end
         end
       end
     end

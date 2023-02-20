@@ -1,0 +1,19 @@
+<p>
+  Both
+  <code><%= Karafka::Web.config.topics.consumers.states %></code>
+  and
+  <code><%= Karafka::Web.config.topics.consumers.reports %></code>
+  topics need to be configured with <strong>exactly</strong> one partition.
+</p>
+
+<p>
+  Your current setup contains the following:
+</p>
+
+<ul class="mb-0">
+  <% details.each do |name, details| %>
+    <li>
+      <code><%= name %> </code> with <code><%= details[:partitions] %> </code> partitions.
+    </li>
+  <% end %>
+</ul>

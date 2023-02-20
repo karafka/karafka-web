@@ -112,6 +112,11 @@ module Karafka
               controller = Controllers::Dlq.new(params)
               render_response controller.index
             end
+
+            r.get 'status' do
+              controller = Controllers::Status.new(params)
+              render_response controller.show
+            end
           end
         end
       end
