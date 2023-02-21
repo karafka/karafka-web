@@ -1,0 +1,94 @@
+<%== view_title('Web UI status details') %>
+
+<div class="container mb-5">
+  <div class="row">
+    <div class="col-lg-10 offset-md-1">
+
+      <%==
+        partial(
+          "status/#{@status.connection.to_s}",
+          locals: {
+            title: 'Connection to Kafka',
+            description: partial('status/failures/connection')
+          }
+        )
+      %>
+
+      <%==
+        partial(
+          "status/#{@status.topics.to_s}",
+          locals: {
+            title: 'Topics presence',
+            description: partial(
+              'status/failures/topics',
+              locals: {
+                details: @status.topics.details
+              }
+            )
+          }
+        )
+      %>
+
+      <%==
+        partial(
+          "status/#{@status.partitions.to_s}",
+          locals: {
+            title: 'Partitions count',
+            description: partial(
+              'status/failures/partitions',
+              locals: {
+                details: @status.partitions.details
+              }
+            )
+          }
+        )
+      %>
+
+      <%==
+        partial(
+          "status/#{@status.initial_state.to_s}",
+          locals: {
+            title: 'Initial state presence',
+            description: partial(
+              'status/failures/initial_state',
+              locals: {
+                details: @status.initial_state.details
+              }
+            )
+          }
+        )
+      %>
+
+      <%==
+        partial(
+          "status/#{@status.live_reporting.to_s}",
+          locals: {
+            title: 'Live reporting',
+            description: partial(
+              'status/failures/live_reporting',
+              locals: {
+                details: @status.live_reporting.details
+              }
+            )
+          }
+        )
+      %>
+
+      <%==
+        partial(
+          "status/#{@status.state_calculation.to_s}",
+          locals: {
+            title: 'State calculation subscription',
+            description: partial(
+              'status/failures/state_calculation',
+              locals: {
+                details: @status.state_calculation.details
+              }
+            )
+          }
+        )
+      %>
+
+    </div>
+  </div>
+</div>

@@ -128,8 +128,6 @@ module Karafka
             replication_factor
           )
         end
-
-        bootstrap_state!
       end
 
       # Creates the initial state record with all values being empty

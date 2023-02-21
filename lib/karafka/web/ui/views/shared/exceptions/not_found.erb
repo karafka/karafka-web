@@ -20,6 +20,7 @@
         </p>
 
         <ul class="mb-5 text-start">
+          <li>You have visited the <a href="<%= root_path('status') %>">Status</a> page to troubleshoot any potential issues</li>
           <li>All the topics required by Karafka Web exist</li>
           <li>You have used <code>bundle exec karafka-web install</code> to initialize the Web UI</li>
           <li>You have a working connection with your Kafka cluster</li>
@@ -32,6 +33,7 @@
 
         <p>
           <a href="<%= root_path %>" class="btn btn-primary">Go Home</a>
+          <a href="<%= root_path('status') %>" class="btn btn-success">Status page</a>
         </p>
       </div>
     </div>

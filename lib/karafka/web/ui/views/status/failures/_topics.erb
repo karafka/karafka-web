@@ -1,0 +1,20 @@
+<p>
+  Web UI requires the following topics to exist:
+</p>
+
+<ul>
+  <% details.each do |name, details| %>
+    <li>
+      <code><%= name %></code> - <%= details[:present] ? 'Exists' : 'Missing' %>
+    </li>
+  <% end %>
+</ul>
+
+<p>
+  Please ensure all those topics exist and are accessible to your Karafka user.
+</p>
+
+<p class="mb-0">
+  You can read more about their setup and configuration
+  <a href="https://karafka.io/docs/Web-UI-Getting-Started/" target="_blank">here</a>.
+</p>
