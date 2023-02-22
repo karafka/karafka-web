@@ -56,6 +56,11 @@ module Karafka
 
       # States processing related settings
       setting :processing do
+        # Should we actively process reports
+        # This can be disabled in case of using a multi-tenant approach where only one of the
+        # apps should materialize the state
+        setting :active, default: true
+
         # What should be the consumer group name for web consumer
         setting :consumer_group, default: 'karafka_web'
 
