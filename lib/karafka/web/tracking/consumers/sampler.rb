@@ -11,13 +11,18 @@ module Karafka
 
           attr_reader :counters, :consumer_groups, :errors, :times, :pauses, :jobs
 
+          # Current schema version
+          # This can be used in the future for detecting incompatible changes and writing
+          # migrations
+          SCHEMA_VERSION = '1.0.1'
+
           # 60 seconds window for time tracked window-based metrics
           TIMES_TTL = 60
 
           # Times ttl in ms
           TIMES_TTL_MS = TIMES_TTL * 1_000
 
-          private_constant :TIMES_TTL, :TIMES_TTL_MS
+          private_constant :TIMES_TTL, :TIMES_TTL_MS, :SCHEMA_VERSION
 
           def initialize
             @counters = {
@@ -47,7 +52,7 @@ module Karafka
           # @return [Hash] report hash with all the details about consumer operations
           def to_report
             {
-              schema_version: '1.0.0',
+              schema_version: SCHEMA_VERSION,
               type: 'consumer',
               dispatched_at: float_now,
 
@@ -61,7 +66,8 @@ module Karafka
                 memory_total_usage: memory_total_usage,
                 memory_size: memory_size,
                 cpu_count: cpu_count,
-                cpu_usage: cpu_usage
+                cpu_usage: cpu_usage,
+                tags: tags
               },
 
               versions: {
@@ -208,6 +214,11 @@ module Karafka
           # @return [Integer] number of threads that process work
           def concurrency
             @concurrency ||= Karafka::App.config.concurrency
+          end
+
+          # @return [Array<String>] Tags for consumers
+          def tags
+            Karafka::Web.config.tracking.consumers.tags.uniq
           end
         end
       end

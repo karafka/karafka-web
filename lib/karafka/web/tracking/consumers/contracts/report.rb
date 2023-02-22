@@ -27,6 +27,7 @@ module Karafka
               required(:status) { |val| ::Karafka::Status::STATES.key?(val.to_sym) }
               required(:listeners) { |val| val.is_a?(Integer) && val >= 0 }
               required(:concurrency) { |val| val.is_a?(Integer) && val.positive? }
+              required(:tags) { |val| val.is_a?(Array) && val.all? { |tag| tag.is_a?(String) } }
 
               required(:cpu_usage) do |val|
                 val.is_a?(Array) &&

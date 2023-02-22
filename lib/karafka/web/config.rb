@@ -38,6 +38,11 @@ module Karafka
         setting :interval, default: 5_000
 
         setting :consumers do
+          # Any tags we want to report alongside of other data and display on the Web-UI on a
+          # per consumer basis. This can be the deploy hash, app name or anything else that we
+          # are interested in
+          setting :tags, default: []
+
           setting :sampler, default: Tracking::Consumers::Sampler.new
 
           setting :listeners, default: [
