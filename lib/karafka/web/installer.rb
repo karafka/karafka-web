@@ -45,6 +45,7 @@ module Karafka
           consumer_group ::Karafka::Web.config.processing.consumer_group do
             # Topic we listen on to materialize the states
             topic ::Karafka::Web.config.topics.consumers.reports do
+              active ::Karafka::Web.config.processing.active
               # Since we materialize state in intervals, we can poll for half of this time without
               # impacting the reporting responsiveness
               max_wait_time ::Karafka::Web.config.processing.interval / 2
