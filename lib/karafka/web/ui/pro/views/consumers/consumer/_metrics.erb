@@ -27,6 +27,16 @@
               </li>
             </ul>
             </p>
+
+            <% unless @process.tags.empty? %>
+              <p class="mb-0 text-end">
+                <% @process.tags.each do |tag| %>
+                  <span class="badge bg-info badge-topic">
+                    <%= tag %>
+                  </span>
+                <% end %>
+              </p>
+            <% end %>
           </div>
         </div>
         <div class="card">

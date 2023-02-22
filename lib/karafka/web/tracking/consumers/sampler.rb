@@ -67,7 +67,7 @@ module Karafka
                 memory_size: memory_size,
                 cpu_count: cpu_count,
                 cpu_usage: cpu_usage,
-                labels: labels
+                tags: tags
               },
 
               versions: {
@@ -216,9 +216,9 @@ module Karafka
             @concurrency ||= Karafka::App.config.concurrency
           end
 
-          # @return [Array<String>] Labels labeling consumers
-          def labels
-            Karafka::Web.config.tracking.consumers.labels.uniq
+          # @return [Array<String>] Tags for consumers
+          def tags
+            Karafka::Web.config.tracking.consumers.tags.uniq
           end
         end
       end

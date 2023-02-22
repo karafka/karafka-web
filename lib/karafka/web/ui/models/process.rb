@@ -40,11 +40,11 @@ module Karafka
               .sort_by(&:started_at)
           end
 
-          # @return [Array<String>] labels of this consuming process
+          # @return [Array<String>] tags of this consuming process
           # @note We use direct reference here and a fallback for users that come from the versions
-          #   that did not report labels
-          def labels
-            @hash[:process][:labels] || []
+          #   that did not report tags
+          def tags
+            @hash[:process][:tags] || []
           end
 
           # @return [Integer] collective lag on this process

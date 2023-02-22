@@ -8,28 +8,24 @@
       <%= process.name %>
     </a>
 
-    <br/>
-
-    <% process.consumer_groups.each do |consumer_group| %>
-      <% consumer_group.topics.each do |topic| %>
-        <span class="badge bg-secondary badge-topic" title="Consumer group: <%= consumer_group.id %>">
-          <%= topic.name %>:
-          <%= topic.partitions.map(&:id).join(',') %>
-        </span>
+    <p class="mt-0 mb-1">
+      <% process.consumer_groups.each do |consumer_group| %>
+        <% consumer_group.topics.each do |topic| %>
+          <span class="badge bg-secondary badge-topic" title="Consumer group: <%= consumer_group.id %>">
+            <%= topic.name %>:
+            <%= topic.partitions.map(&:id).join(',') %>
+          </span>
+        <% end %>
       <% end %>
-    <% end %>
+    </p>
 
-    <% if !process.consumer_groups.empty? && !process.labels.empty? %>
-      <br />
-    <% end %>
-
-    <% unless process.labels.empty? %>
-      <% process.labels.each do |label| %>
+    <p class="mt-0 mb-1">
+      <% process.tags.each do |tag| %>
         <span class="badge bg-info badge-topic">
-          <%= label %>
+          <%= tag %>
         </span>
       <% end %>
-    <% end %>
+    </p>
   </td>
 
   <td>
