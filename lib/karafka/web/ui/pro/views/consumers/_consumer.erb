@@ -18,6 +18,18 @@
         </span>
       <% end %>
     <% end %>
+
+    <% if !process.consumer_groups.empty? && !process.labels.empty? %>
+      <br />
+    <% end %>
+
+    <% unless process.labels.empty? %>
+      <% process.labels.each do |label| %>
+        <span class="badge bg-info badge-topic">
+          <%= label %>
+        </span>
+      <% end %>
+    <% end %>
   </td>
 
   <td>
