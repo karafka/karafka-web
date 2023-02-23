@@ -5,6 +5,7 @@
 - [Improvement] Allow for disabling the consumer subscription from Web for multi-tenant Web UI usage (#1331)
 - [Improvement] Make sure that states and reports are always dispatched to the partition `0`. This should prevent UI from not fully working when someone accidentally creates more partitions than expected.
 - [Fix] Fix a bug where bootstrapping would create two initial states.
+- [Fix] Fix a case, where errors listener would try to force encoding on a frozen error message.
 
 ## 0.1.3 (2023-02-14)
 - Skip topics creation if web topics already exist (do not raise error)
