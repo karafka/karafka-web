@@ -74,7 +74,7 @@ module Karafka
             # @param error [StandardError] error that occurred
             # @return [Array<String, String, String>] array with error name, message and backtrace
             def extract_error_info(error)
-              error_message = error.message.to_s
+              error_message = error.message.to_s.dup
               error_message.force_encoding('utf-8')
               error_message.scrub!
 
