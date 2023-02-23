@@ -67,7 +67,7 @@ module Karafka
                 memory_size: memory_size,
                 cpu_count: cpu_count,
                 cpu_usage: cpu_usage,
-                tags: tags
+                tags: Karafka::Process.tags
               },
 
               versions: {
@@ -214,11 +214,6 @@ module Karafka
           # @return [Integer] number of threads that process work
           def concurrency
             @concurrency ||= Karafka::App.config.concurrency
-          end
-
-          # @return [Array<String>] Tags for consumers
-          def tags
-            Karafka::Web.config.tracking.consumers.tags.uniq
           end
         end
       end
