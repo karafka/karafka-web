@@ -146,7 +146,8 @@ module Karafka
                 comitted_offset: consumer.coordinator.seek_offset - 1,
                 consumer: consumer.class.to_s,
                 consumer_group: consumer.topic.consumer_group.id,
-                type: type
+                type: type,
+                tags: consumer.tags
               }
             end
           end

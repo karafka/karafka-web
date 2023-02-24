@@ -18,6 +18,7 @@ module Karafka
             required(:last_offset) { |val| val.is_a?(Integer) && val >= 0 }
             required(:comitted_offset) { |val| val.is_a?(Integer) }
             required(:type) { |val| %w[consume revoked shutdown].include?(val) }
+            required(:tags) { |val| val.is_a?(Karafka::Core::Taggable::Tags) }
           end
         end
       end
