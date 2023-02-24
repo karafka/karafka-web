@@ -6,6 +6,10 @@ module Karafka
       module Models
         # Single job data representation model
         class Job < Lib::HashProxy
+          # @return [Array<String>] tags of this consuming job / consumer
+          def tags
+            @hash[:tags] || []
+          end
         end
       end
     end
