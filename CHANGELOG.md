@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-## 0.2.0 (Unreleased)
+## 0.2.0 (2023-02-24)
 - **[Feature]** Introduce ability to tag `Karafka::Process` to display process-centric tags in the Web UI.
 - **[Feature]** Introduce ability to tag consumer instances to display consumption-centric tags in the Web UI.
 - **[Feature]** Introduce a /status page that can validate the setup and tell what is missing (#1318)
