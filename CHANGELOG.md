@@ -1,5 +1,8 @@
 # Karafka Web changelog
 
+## 0.2.2 (2023-02-25)
+- [Fix] Fix status page reference in Pro.
+
 ## 0.2.1 (2023-02-24)
 - [Fix] Fix format incompatibility between 0.1.x and 0.2.x data formats. This will allow for the 0.2 Web UI to work with 0.1.x reporting.
 
