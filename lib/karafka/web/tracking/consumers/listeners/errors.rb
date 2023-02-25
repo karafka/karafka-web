@@ -65,7 +65,8 @@ module Karafka
                 first_offset: consumer.messages.first.offset,
                 last_offset: consumer.messages.last.offset,
                 comitted_offset: consumer.coordinator.seek_offset - 1,
-                consumer: consumer.class.to_s
+                consumer: consumer.class.to_s,
+                tags: consumer.tags
               }
             end
 
