@@ -56,14 +56,16 @@ module Karafka
 
             # Report errors that occurred (if any)
             messages += consumer_sampler.errors.map do |error|
+              process_name = consumer_report[:process][:name]
+
               {
                 topic: Karafka::Web.config.topics.errors,
                 # Inject process name into the error details for easier tracing
                 payload: error.merge(
-                  process_name: consumer_report[:process][:name]
+                  process_name: process_name
                 ).to_json,
                 # Always dispatch errors from the same process to the same partition
-                key: consumer_report[:process][:name]
+                key: process_name
               }
             end
 
