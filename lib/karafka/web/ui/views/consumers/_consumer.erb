@@ -20,11 +20,7 @@
     </p>
 
     <p class="mt-0 mb-1">
-      <% process.tags.each do |tag| %>
-        <span class="badge bg-info badge-topic">
-          <%= tag %>
-        </span>
-      <% end %>
+      <%== tags(process.tags) %>
     </p>
   </td>
 

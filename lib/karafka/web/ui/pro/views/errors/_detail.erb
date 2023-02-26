@@ -7,6 +7,8 @@
       <td>
         <% if k2.to_s.include?('ssl') %>
           ***
+        <% elsif k2.to_s == 'tags' %>
+          <%== tags(v2) %>
         <% else %>
           <%= v2 %>
         <% end %>

@@ -74,6 +74,16 @@ module Karafka
             bg
           end
 
+          # Renders tags one after another
+          #
+          # @param tags_array [Array<String>]
+          # @return [String] tags badges
+          def tags(tags_array)
+            tags_array
+              .map { |tag| %(<span class="badge bg-info">#{tag}</span>) }
+              .join(' ')
+          end
+
           # Takes a kafka report state and recommends background style color
           # @param state [String] state
           # @return [String] background style
