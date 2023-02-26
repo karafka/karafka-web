@@ -30,11 +30,7 @@
 
             <% unless @process.tags.empty? %>
               <p class="mb-0 text-end">
-                <% @process.tags.each do |tag| %>
-                  <span class="badge bg-info badge-topic">
-                    <%= tag %>
-                  </span>
-                <% end %>
+                <%== tags(@process.tags) %>
               </p>
             <% end %>
           </div>
