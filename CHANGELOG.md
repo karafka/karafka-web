@@ -1,7 +1,8 @@
 # Karafka Web changelog
 
 ## 0.2.3 (Unreleased)
-- [Improvement] Snapshot current consumer tags upon consumer errors
+- [Improvement] Snapshot current consumer tags upon consumer errors.
+- [Improvement] Optimize exception message extraction from errors.
 
 ## 0.2.2 (2023-02-25)
 - [Fix] Fix status page reference in Pro.
