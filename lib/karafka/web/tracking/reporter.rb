@@ -44,26 +44,23 @@ module Karafka
 
             @consumer_contract.validate!(consumer_report)
 
+            process_name = consumer_report[:process][:name]
+
             # Report consumers statuses
             messages = [
               {
                 topic: ::Karafka::Web.config.topics.consumers.reports,
                 payload: consumer_report.to_json,
-                key: consumer_report[:process][:name],
+                key: process_name,
                 partition: 0
               }
             ]
 
             # Report errors that occurred (if any)
             messages += consumer_sampler.errors.map do |error|
-              process_name = consumer_report[:process][:name]
-
               {
                 topic: Karafka::Web.config.topics.errors,
-                # Inject process name into the error details for easier tracing
-                payload: error.merge(
-                  process_name: process_name
-                ).to_json,
+                payload: error.to_json,
                 # Always dispatch errors from the same process to the same partition
                 key: process_name
               }

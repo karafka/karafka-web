@@ -60,7 +60,7 @@ module Karafka
                 started_at: @started_at,
                 name: process_name,
                 status: ::Karafka::App.config.internal.status.to_s,
-                listeners: Karafka::Server.listeners.count,
+                listeners: listeners,
                 concurrency: concurrency,
                 memory_usage: memory_usage,
                 memory_total_usage: memory_total_usage,
@@ -76,7 +76,7 @@ module Karafka
                 waterdrop: ::WaterDrop::VERSION
               },
 
-              stats: Karafka::Server.jobs_queue.statistics.merge(
+              stats: jobs_queue_statistics.merge(
                 utilization: utilization
               ).merge(total: @counters),
 
@@ -112,6 +112,12 @@ module Karafka
             times[:total].sum / 1_000 / concurrency / timefactor * 100
           end
 
+          # @return [Integer] number of listeners
+          def listeners
+            # This can be zero before the server starts
+            Karafka::Server.listeners&.count.to_i
+          end
+
           # @return [String] Unique process name
           def process_name
             @process_name ||= "#{Socket.gethostname}:#{::Process.pid}:#{SecureRandom.hex(6)}"
@@ -140,6 +146,12 @@ module Karafka
             else
               0
             end
+          end
+
+          # @return [Hash] job queue statistics
+          def jobs_queue_statistics
+            # We return empty stats in case jobs queue is not yet initialized
+            Karafka::Server.jobs_queue&.statistics || { busy: 0, enqueued: 0 }
           end
 
           # Total memory used in the OS
