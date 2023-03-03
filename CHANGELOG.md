@@ -3,6 +3,7 @@
 ## 0.2.3 (Unreleased)
 - [Improvement] Snapshot current consumer tags upon consumer errors.
 - [Improvement] Optimize exception message extraction from errors.
+- [Improvement] Slightly change error reporting structure (backwards compatible) to collect process tags on errors and to align with other reports.
 
 ## 0.2.2 (2023-02-25)
 - [Fix] Fix status page reference in Pro.

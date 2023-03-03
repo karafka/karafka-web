@@ -28,7 +28,8 @@ module Karafka
                   error_message: error_message,
                   backtrace: backtrace,
                   details: details,
-                  occurred_at: float_now
+                  occurred_at: float_now,
+                  process: sampler.to_report[:process].slice(:name, :tags)
                 }
 
                 sampler.counters[:errors] += 1
@@ -54,6 +55,13 @@ module Karafka
             end
 
             private
+
+            # @return [Object] sampler for the metrics
+            # @note We use this sampler to get basic process details that we want to assign
+            #   to the error
+            def consumer_sampler
+              @consumer_sampler ||= ::Karafka::Web.config.tracking.consumers.sampler
+            end
 
             # @param consumer [::Karafka::BaseConsumer]
             # @return [Hash] hash with consumer specific info for details of error
