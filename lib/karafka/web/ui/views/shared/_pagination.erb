@@ -9,6 +9,12 @@
             </a>
           </li>
 
+          <li class="page-item active disabled">
+            <a class="page-link" href="<%= current_path(page: @current_page) %>">
+              <span><%= @current_page %></span>
+            </a>
+          </li>
+
           <li class="page-item <%= 'disabled' unless @next_page %>">
             <a class="page-link" href="<%= current_path(page: @next_page) %>">
               <span>Next &raquo;</span>
