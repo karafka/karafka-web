@@ -89,6 +89,21 @@
         )
       %>
 
+      <%==
+        partial(
+          "status/#{@status.pro_subscription.to_s}",
+          locals: {
+            title: 'Karafka Pro subscription',
+            description: partial(
+              'status/warnings/pro_subscription',
+              locals: {
+                details: @status.pro_subscription.details
+              }
+            )
+          }
+        )
+      %>
+
     </div>
   </div>
 </div>

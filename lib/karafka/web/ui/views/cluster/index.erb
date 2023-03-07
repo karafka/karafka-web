@@ -56,15 +56,12 @@
             </tr>
           </thead>
           <tbody>
-            <% @topics.each do |topic| %>
-              <%==
-                each_partial(
-                  topic[:partitions],
-                  'cluster/partition',
-                  locals: { topic: topic }
-                )
-              %>
-            <% end %>
+            <%==
+              each_partial(
+                @partitions,
+                'cluster/partition'
+              )
+            %>
           </tbody>
         </table>
     </div>

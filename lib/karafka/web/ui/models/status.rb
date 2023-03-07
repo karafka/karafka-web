@@ -118,6 +118,22 @@ module Karafka
             )
           end
 
+          # @return [Status::Step] is Pro enabled with all of its features.
+          # @note It's not an error not to have it but we want to warn, that some of the features
+          #   may not work without Pro.
+          def pro_subscription
+            status = if state_calculation.success?
+                       ::Karafka.pro? ? :success : :warning
+                     else
+                       :halted
+                     end
+
+            Step.new(
+              status,
+              nil
+            )
+          end
+
           private
 
           # @return [String] consumers states topic name
