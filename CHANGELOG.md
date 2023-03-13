@@ -4,6 +4,8 @@
 - [Improvement] Paginate topics list in cluster info on every 100 partitions.
 - [Improvement] Provide current page in the pagination.
 - [Improvement] Report usage of Karafka Pro on the status page view.
+- [Fix] Add missing three months limit on errors storage.
+- [Maintenance] Exclude Karafka Web UI topics from declarative topics.
 
 ## 0.2.3 (2023-03-04)
 - [Improvement] Snapshot current consumer tags upon consumer errors.
