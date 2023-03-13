@@ -45,6 +45,7 @@ module Karafka
           consumer_group ::Karafka::Web.config.processing.consumer_group do
             # Topic we listen on to materialize the states
             topic ::Karafka::Web.config.topics.consumers.reports do
+              config(active: false)
               active ::Karafka::Web.config.processing.active
               # Since we materialize state in intervals, we can poll for half of this time without
               # impacting the reporting responsiveness
@@ -58,11 +59,13 @@ module Karafka
             # We define those two here without consumption, so Web understands how to deserialize
             # them when used / viewed
             topic ::Karafka::Web.config.topics.consumers.states do
+              config(active: false)
               active false
               deserializer web_deserializer
             end
 
             topic ::Karafka::Web.config.topics.errors do
+              config(active: false)
               active false
               deserializer web_deserializer
             end
@@ -126,7 +129,9 @@ module Karafka
           ::Karafka::Admin.create_topic(
             errors_topic,
             1,
-            replication_factor
+            replication_factor,
+            # Remove really old errors (older than 3 months just to preserve space)
+            { 'retention.ms': 3 * 31 * 24 * 60 * 60 * 1_000 }
           )
         end
       end
