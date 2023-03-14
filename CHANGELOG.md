@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-## 0.2.4 (Unreleased)
+## 0.2.4 (2023-03-14)
 - [Improvement] Paginate topics list in cluster info on every 100 partitions.
 - [Improvement] Provide current page in the pagination.
 - [Improvement] Report usage of Karafka Pro on the status page view.
