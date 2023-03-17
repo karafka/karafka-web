@@ -48,6 +48,10 @@ module Karafka
                          'shutdown'
                        end
 
+                # job reference only exists for consumer work related operations.
+                # Only for them we need to deregister the job reference.
+                return unless type
+
                 sampler.jobs.delete(
                   job_id(event[:caller], type)
                 )
