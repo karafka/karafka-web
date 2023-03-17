@@ -48,6 +48,8 @@ module Karafka
                          'shutdown'
                        end
 
+                return unless type
+
                 sampler.jobs.delete(
                   job_id(event[:caller], type)
                 )
