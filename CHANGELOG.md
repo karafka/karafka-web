@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-## 0.2.5 (Unreleased)
+## 0.2.5 (2023-03-17)
 - [Fix] Critical instrumentation async errors intercepted by Web don't have JID for job removal (#1366)
 
 ## 0.2.4 (2023-03-14)
