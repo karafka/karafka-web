@@ -14,7 +14,7 @@ module Karafka
           # Current schema version
           # This can be used in the future for detecting incompatible changes and writing
           # migrations
-          SCHEMA_VERSION = '1.0.1'
+          SCHEMA_VERSION = '1.0.2'
 
           # 60 seconds window for time tracked window-based metrics
           TIMES_TTL = 60
@@ -25,6 +25,8 @@ module Karafka
           private_constant :TIMES_TTL, :TIMES_TTL_MS, :SCHEMA_VERSION
 
           def initialize
+            super
+
             @counters = {
               batches: 0,
               messages: 0,
