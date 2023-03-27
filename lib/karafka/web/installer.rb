@@ -102,8 +102,13 @@ module Karafka
             consumers_states_topic,
             1,
             replication_factor,
-            # We care only about the most recent state, previous are irrelevant
-            { 'cleanup.policy': 'compact' }
+            # We care only about the most recent state, previous are irrelevant. So we can easily
+            # compact after one minute. We do not use this beyond the most recent collective
+            # state, hence it all can easily go away.
+            {
+              'cleanup.policy': 'compact',
+              'retention.ms': 60 * 60 * 1_000
+            }
           )
         end
 
