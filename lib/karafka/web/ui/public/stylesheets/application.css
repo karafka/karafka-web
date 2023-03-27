@@ -104,3 +104,7 @@ code.wrapped {
 #content .error-message {
   max-width: 700px;
 }
+
+#metrics ul {
+  padding-left: 0;
+}

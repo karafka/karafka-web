@@ -36,6 +36,9 @@ module Karafka
             def partition(topic_id, partition_id)
               @topic_id = topic_id
               @partition_id = partition_id
+
+              @watermark_offsets = Ui::Models::WatermarkOffsets.find(topic_id, partition_id)
+
               @previous_page, @messages, @next_page, @partitions_count = Ui::Models::Message.page(
                 @topic_id,
                 @partition_id,

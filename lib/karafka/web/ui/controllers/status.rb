@@ -13,6 +13,7 @@ module Karafka
           # Displays the Web UI setup status
           def show
             @status = Models::Status.new
+            @sampler = Tracking::Sampler.new
 
             respond
           end

@@ -1,4 +1,4 @@
-<div class="container mb-5">
+<div class="container mb-4">
   <div class="row">
     <div class="col">
       <h3>
@@ -33,24 +33,15 @@
 <div class="container">
   <div class="row mb-5">
     <div class="col-sm-12">
-      <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
-        <thead>
-          <tr class="align-middle">
-            <th>Offset</th>
-            <th>Timestamp</th>
-            <th>Key</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <%==
-            each_partial(
-              @messages,
-              'explorer/message'
-            )
-          %>
-        </tbody>
-      </table>
+      <%== partial('explorer/partition/watermark_offsets') %>
+
+      <% if @watermark_offsets.empty? %>
+        Empty
+      <% elsif @watermark_offsets.cleaned? %>
+        Cleaned
+      <% else %>
+        <%== partial('explorer/partition/messages') %>
+      <% end %>
     </div>
   </div>
 </div>

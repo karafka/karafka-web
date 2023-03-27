@@ -1,5 +1,18 @@
 # Karafka Web changelog
 
+# 0.3.0
+- [Improvement] Support paginating over compacted topics partitions.
+- [Improvement] Display informative message when partition is empty due to retention policy.
+- [Improvement] Display informative message when partition is empty instead of displaying nothing.
+- [Improvement] Display current watermark offsets in the Explorer when viewing list of messages from a given partition.
+- [Improvement] Report extra debug info in the status section.
+- [Improvement] Report not only `Karafka` and `WaterDrop` versions but also `Karafka::Core`, `Rdkafka` and `librdkafka` versions.
+- [Improvement] Small CSS improvements.
+- [Fix] Fix a case where explorer pagination would suggest more pages for compacted topics.
+- [Fix] Fix incorrect support of compacted partitions and partitions with low watermark offset other than 0.
+- [Fix] Display `N/A` instead of `-1` and `-1001` on lag stored and stored offset for consumer processes that did not mark any messages as consumed yet in the per consumer view.
+- [Maintenance] Remove compatibility fallbacks for job and process tags (#1342)
+
 ## 0.2.5 (2023-03-17)
 - [Fix] Critical instrumentation async errors intercepted by Web don't have JID for job removal (#1366)
 
