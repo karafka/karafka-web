@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-# 0.3.0
+## 0.3.0 (Unreleased)
 - **[Feature]** Support paginating over compacted topics partitions.
 - [Improvement] Display informative message when partition is empty due to retention policy.
 - [Improvement] Display informative message when partition is empty instead of displaying nothing.
@@ -15,6 +15,15 @@
 - [Fix] Display `N/A` instead of `-1` and `-1001` on lag stored and stored offset for consumer processes that did not mark any messages as consumed yet in the per consumer view.
 - [Maintenance] Remove compatibility fallbacks for job and process tags (#1342)
 - [Maintenance] Extract base sampler for tracking and web.
+
+### Upgrade notes
+
+Because of the removal of compatibility fallbacks for some metrics fetches, it is recommended to:
+
+- First, deploy **all** the Karafka consumer processes (`karafka server`)
+- Deploy the Web update to your web server.
+
+Please note that if you decide to use the updated Web UI with not updated consumers, you may hit a 500 error.
 
 ## 0.2.5 (2023-03-17)
 - [Fix] Critical instrumentation async errors intercepted by Web don't have JID for job removal (#1366)
