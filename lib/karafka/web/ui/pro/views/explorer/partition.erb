@@ -36,9 +36,9 @@
       <%== partial('explorer/partition/watermark_offsets') %>
 
       <% if @watermark_offsets.empty? %>
-        Empty
+        <%== partial 'explorer/partition/empty' %>
       <% elsif @watermark_offsets.cleaned? %>
-        Cleaned
+        <%== partial 'explorer/partition/cleaned' %>
       <% else %>
         <%== partial('explorer/partition/messages') %>
       <% end %>
