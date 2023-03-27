@@ -56,11 +56,11 @@ module Karafka
               # not previous page leading offset
               start_offset = high_offset - (per_page * page)
 
-              if start_offset < low_offset
-                count = per_page + start_offset
+              if start_offset <= low_offset
+                count = per_page - (low_offset - start_offset)
                 previous_page = page < 2 ? false : page - 1
                 next_page = false
-                start_offset = 0
+                start_offset = low_offset
               else
                 previous_page = page < 2 ? false : page - 1
                 next_page = page + 1

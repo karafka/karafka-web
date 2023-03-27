@@ -1,5 +1,16 @@
 # Karafka Web changelog
 
+## 0.3.1 (2023-03-27)
+- [Fix] Add missing retention policy for states topic.
+- [Fix] Fix display of compacted messages placeholders for offsets lower than low watermark.
+- [Fix] Fix invalid pagination per page count.
+
+### Upgrade notes
+
+If upgrading from `0.3.0`, nothing.
+
+If upgrading from lower, please follow `0.3.0` upgrade procedure.
+
 ## 0.3.0 (2023-03-27)
 - **[Feature]** Support paginating over compacted topics partitions.
 - [Improvement] Display watermark offsets in the errors view.
