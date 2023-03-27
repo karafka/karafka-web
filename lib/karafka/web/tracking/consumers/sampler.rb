@@ -6,7 +6,7 @@ module Karafka
       # Namespace for all the things related to tracking consumers and consuming processes
       module Consumers
         # Samples for fetching and storing metrics samples about the consumer process
-        class Sampler
+        class Sampler < Tracking::Sampler
           include ::Karafka::Core::Helpers::Time
 
           attr_reader :counters, :consumer_groups, :errors, :times, :pauses, :jobs
@@ -14,7 +14,7 @@ module Karafka
           # Current schema version
           # This can be used in the future for detecting incompatible changes and writing
           # migrations
-          SCHEMA_VERSION = '1.0.1'
+          SCHEMA_VERSION = '1.0.2'
 
           # 60 seconds window for time tracked window-based metrics
           TIMES_TTL = 60
@@ -25,6 +25,8 @@ module Karafka
           private_constant :TIMES_TTL, :TIMES_TTL_MS, :SCHEMA_VERSION
 
           def initialize
+            super
+
             @counters = {
               batches: 0,
               messages: 0,
@@ -72,8 +74,11 @@ module Karafka
 
               versions: {
                 ruby: ruby_version,
-                karafka: ::Karafka::VERSION,
-                waterdrop: ::WaterDrop::VERSION
+                karafka: karafka_version,
+                waterdrop: waterdrop_version,
+                karafka_core: karafka_core_version,
+                rdkafka: rdkafka_version,
+                librdkafka: librdkafka_version
               },
 
               stats: jobs_queue_statistics.merge(
@@ -116,11 +121,6 @@ module Karafka
           def listeners
             # This can be zero before the server starts
             Karafka::Server.listeners&.count.to_i
-          end
-
-          # @return [String] Unique process name
-          def process_name
-            @process_name ||= "#{Socket.gethostname}:#{::Process.pid}:#{SecureRandom.hex(6)}"
           end
 
           # @return [Integer] memory used by this process in kilobytes
@@ -208,19 +208,6 @@ module Karafka
           # @return [Integer] CPU count
           def cpu_count
             @cpu_count ||= Etc.nprocessors
-          end
-
-          # @return [String] currently used ruby version with details
-          def ruby_version
-            if defined?(JRUBY_VERSION)
-              revision = JRUBY_REVISION.to_s
-              version = JRUBY_VERSION
-            else
-              revision = RUBY_REVISION.to_s
-              version = RUBY_ENGINE_VERSION
-            end
-
-            "#{RUBY_ENGINE} #{version}-#{RUBY_PATCHLEVEL} #{revision[0..5]}"
           end
 
           # @return [Integer] number of threads that process work

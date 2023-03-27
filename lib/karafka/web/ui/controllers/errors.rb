@@ -16,6 +16,8 @@ module Karafka
               @params.current_page
             )
 
+            @watermark_offsets = Ui::Models::WatermarkOffsets.find(errors_topic, 0)
+
             respond
           end
 

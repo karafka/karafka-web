@@ -1,5 +1,33 @@
 # Karafka Web changelog
 
+## 0.3.0 (Unreleased)
+- **[Feature]** Support paginating over compacted topics partitions.
+- [Improvement] Display watermark offsets in the errors view.
+- [Improvement] Display informative message when partition is empty due to a retention policy.
+- [Improvement] Display informative message when partition is empty instead of displaying nothing.
+- [Improvement] Display current watermark offsets in the Explorer when viewing list of messages from a given partition.
+- [Improvement] Report extra debug info in the status section.
+- [Improvement] Report not only `Karafka` and `WaterDrop` versions but also `Karafka::Core`, `Rdkafka` and `librdkafka` versions.
+- [Improvement] Small CSS improvements.
+- [Improvement] Provide nicer info when errors topic does not contain any errors or was compacted.
+- [Improvement] Improve listing of errors including compacted once.
+- [Fix] Fix pagination for compacted indexes that would display despite no data being available below the low watermark offset.
+- [Fix] Fix a case where reading from a compacted offset would return no data despite data being available.
+- [Fix] Fix a case where explorer pagination would suggest more pages for compacted topics.
+- [Fix] Fix incorrect support of compacted partitions and partitions with low watermark offset other than 0.
+- [Fix] Display `N/A` instead of `-1` and `-1001` on lag stored and stored offset for consumer processes that did not mark any messages as consumed yet in the per consumer view.
+- [Maintenance] Remove compatibility fallbacks for job and process tags (#1342)
+- [Maintenance] Extract base sampler for tracking and web.
+
+### Upgrade notes
+
+Because of the removal of compatibility fallbacks for some metrics fetches, it is recommended to:
+
+- First, deploy **all** the Karafka consumer processes (`karafka server`)
+- Deploy the Web update to your web server.
+
+Please note that if you decide to use the updated Web UI with not updated consumers, you may hit a 500 error.
+
 ## 0.2.5 (2023-03-17)
 - [Fix] Critical instrumentation async errors intercepted by Web don't have JID for job removal (#1366)
 

@@ -102,27 +102,35 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Versions</h5>
-            <p class="card-text">
-            <ul style="list-style: square !important;">
-              <li class="align-items-center d-flex justify-content-between">
-                Ruby:
-                <span class="badge bg-secondary">
-                  <%= @process.ruby %>
-                </span>
-              </li>
-              <li class="align-items-center d-flex justify-content-between">
-                Karafka:
-                <span class="badge bg-secondary">
-                  <%= @process.karafka %>
-                </span>
-              </li>
-              <li class="align-items-center d-flex justify-content-between">
-                WaterDrop version:
-                <span class="badge bg-secondary">
-                  <%= @process.waterdrop %>
-                </span>
-              </li>
-            </ul>
+            <p class="card-text text-center">
+              <span class="badge bg-secondary">
+                <%= @process.ruby %>
+              </span>
+
+              <span class="badge bg-secondary">
+                karafka
+                <%= @process.karafka %>
+              </span>
+
+              <span class="badge bg-secondary">
+                karafka core
+                <%= @process.karafka_core %>
+              </span>
+
+              <span class="badge bg-secondary">
+                rdkafka
+                <%= @process.rdkafka %>
+              </span>
+
+              <span class="badge bg-secondary">
+                librdkafka
+                <%= @process.librdkafka %>
+              </span>
+
+              <span class="badge bg-secondary">
+                waterdrop
+                <%= @process.waterdrop %>
+              </span>
             </p>
           </div>
         </div>
