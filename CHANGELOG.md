@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-## 0.3.0 (Unreleased)
+## 0.3.0 (2023-03-27)
 - **[Feature]** Support paginating over compacted topics partitions.
 - [Improvement] Display watermark offsets in the errors view.
 - [Improvement] Display informative message when partition is empty due to a retention policy.
