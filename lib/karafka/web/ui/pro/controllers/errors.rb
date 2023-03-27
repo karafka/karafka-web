@@ -29,6 +29,8 @@ module Karafka
                   @params.current_page
                 )
 
+              @watermark_offsets = Ui::Models::WatermarkOffsets.find(errors_topic, @partition_id)
+
               respond
             end
 
@@ -38,7 +40,6 @@ module Karafka
             # @param offset [Integer]
             def show(partition_id, offset)
               errors_topic = ::Karafka::Web.config.topics.errors
-
               @partition_id = partition_id
               @offset = offset
               @error_message = Models::Message.find(

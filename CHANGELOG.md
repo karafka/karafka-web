@@ -2,13 +2,15 @@
 
 ## 0.3.0 (Unreleased)
 - **[Feature]** Support paginating over compacted topics partitions.
+- [Improvement] Display watermark offsets in the errors view.
 - [Improvement] Display informative message when partition is empty due to a retention policy.
 - [Improvement] Display informative message when partition is empty instead of displaying nothing.
 - [Improvement] Display current watermark offsets in the Explorer when viewing list of messages from a given partition.
 - [Improvement] Report extra debug info in the status section.
 - [Improvement] Report not only `Karafka` and `WaterDrop` versions but also `Karafka::Core`, `Rdkafka` and `librdkafka` versions.
 - [Improvement] Small CSS improvements.
-- [Improvement] Provide nicer info when errors topic does not contain any errors.
+- [Improvement] Provide nicer info when errors topic does not contain any errors or was compacted.
+- [Improvement] Improve listing of errors including compacted once.
 - [Fix] Fix pagination for compacted indexes that would display despite no data being available below the low watermark offset.
 - [Fix] Fix a case where reading from a compacted offset would return no data despite data being available.
 - [Fix] Fix a case where explorer pagination would suggest more pages for compacted topics.
