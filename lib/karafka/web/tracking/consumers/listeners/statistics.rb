@@ -15,11 +15,9 @@ module Karafka
               topics = statistics.fetch('topics')
               cgrp = statistics.fetch('cgrp')
               consumer_group_id = event[:consumer_group_id]
+              cg_details = extract_consumer_group_details(consumer_group_id, cgrp)
 
               track do |sampler|
-                cg_details = extract_consumer_group_details(consumer_group_id, cgrp)
-                sampler.consumer_groups[consumer_group_id] = cg_details
-
                 topics.each do |topic_name, topic_values|
                   partitions = topic_values.fetch('partitions')
 
@@ -45,6 +43,8 @@ module Karafka
                     )
                   end
                 end
+
+                sampler.consumer_groups[consumer_group_id] = cg_details
               end
             end
 
