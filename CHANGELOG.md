@@ -5,6 +5,15 @@
 - [Improvement] Include subscription groups names in the per-process subscriptions view.
 - [Fix] Add missing support for using multiple subscription groups within a single consumer group.
 
+### Upgrade notes
+
+Because of the reporting schema change, it is recommended to:
+
+- First, deploy **all** the Karafka consumer processes (`karafka server`)
+- Deploy the Web update to your web server.
+
+Please note that if you decide to use the updated Web UI with not updated consumers, you may hit a 500 error.
+
 ## 0.3.1 (2023-03-27)
 - [Fix] Add missing retention policy for states topic.
 - [Fix] Fix display of compacted messages placeholders for offsets lower than low watermark.
