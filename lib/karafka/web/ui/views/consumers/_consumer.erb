@@ -10,11 +10,13 @@
 
     <p class="mt-0 mb-1">
       <% process.consumer_groups.each do |consumer_group| %>
-        <% consumer_group.topics.each do |topic| %>
-          <span class="badge bg-secondary badge-topic" title="Consumer group: <%= consumer_group.id %>">
-            <%= topic.name %>:
-            <%= topic.partitions.map(&:id).join(',') %>
-          </span>
+        <% consumer_group.subscription_groups.each do |subscription_group| %>
+          <% subscription_group.topics.each do |topic| %>
+            <span class="badge bg-secondary badge-topic" title="Consumer group: <%= consumer_group.id %>">
+              <%= topic.name %>:
+              <%= topic.partitions.map(&:id).join(',') %>
+            </span>
+          <% end %>
         <% end %>
       <% end %>
     </p>

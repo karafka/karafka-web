@@ -12,29 +12,39 @@ module Karafka
             def current(state)
               stats = {}
 
+              iterate_partitions(state) do |process, consumer_group, topic, partition|
+                cg_name = consumer_group.id
+                t_name = topic.name
+                pt_id = partition.id
+
+                stats[cg_name] ||= {}
+                stats[cg_name][t_name] ||= {}
+                stats[cg_name][t_name][pt_id] = partition.to_h
+                stats[cg_name][t_name][pt_id][:process] = process
+              end
+
+              stats
+            end
+
+            private
+
+            # Iterates over all partitions, yielding with extra expanded details
+            #
+            # @param state [State]
+            def iterate_partitions(state)
               processes = Processes.active(state)
 
               processes.each do |process|
-                process.consumer_groups.each do |details|
-                  name = details.id
-
-                  stats[name] ||= {}
-
-                  details.topics.each do |details2|
-                    t_name = details2.name
-
-                    stats[name][t_name] ||= {}
-                    details2.partitions.each do |partition|
-                      partition_id = partition.id
-                      stats[name][t_name] ||= {}
-                      stats[name][t_name][partition_id] = partition.to_h
-                      stats[name][t_name][partition_id][:process] = process
+                process.consumer_groups.each do |consumer_group|
+                  consumer_group.subscription_groups.each do |subscription_group|
+                    subscription_group.topics.each do |topic|
+                      topic.partitions.each do |partition|
+                        yield(process, consumer_group, topic, partition)
+                      end
                     end
                   end
                 end
               end
-
-              stats
             end
           end
         end

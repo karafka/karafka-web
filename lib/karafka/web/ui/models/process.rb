@@ -43,11 +43,21 @@ module Karafka
           # @return [Integer] collective lag on this process
           def lag_stored
             consumer_groups
+              .flat_map(&:subscription_groups)
               .flat_map(&:topics)
               .flat_map(&:partitions)
               .map(&:lag_stored)
               .delete_if(&:negative?)
               .sum
+          end
+
+          # @return [Integer] number of partitions to which we are currently subscribed
+          def subscribed_partitions_count
+            consumer_groups
+              .flat_map(&:subscription_groups)
+              .flat_map(&:topics)
+              .flat_map(&:partitions)
+              .count
           end
         end
       end
