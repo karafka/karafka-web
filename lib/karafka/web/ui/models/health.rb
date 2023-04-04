@@ -28,7 +28,7 @@ module Karafka
 
             private
 
-            # Iterates over all partitions, yielding with extra unwinded details
+            # Iterates over all partitions, yielding with extra expanded details
             #
             # @param state [State]
             def iterate_partitions(state)
