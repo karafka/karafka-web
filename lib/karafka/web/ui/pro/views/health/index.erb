@@ -13,48 +13,48 @@
 <% end %>
 
 <% @stats.each do |cg_name, details| %>
-<div class="container mb-5">
-  <div class="row mb-3">
-    <div class="col-sm-12">
-      <h4 class="mb-4"><%= cg_name %></h4>
-      <hr/>
+  <div class="container mb-5">
+    <div class="row mb-3">
+      <div class="col-sm-12">
+        <h4 class="mb-4"><%= cg_name %></h4>
+        <hr/>
+      </div>
     </div>
-  </div>
 
-  <div class="row mb-5">
-    <div class="col-sm-12">
-      <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
-        <thead>
-          <tr class="align-middle">
-            <th class="align-middle">Topic</th>
-            <th>Partition</th>
-            <th>Lag stored</th>
-            <th>Lag trend</th>
-            <th>Committed offset</th>
-            <th>Stored offset</th>
-            <th>Fetch state</th>
-            <th>Poll state</th>
-            <th>Process name</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% details.sort_by(&:first).each do |topic_name, partitions| %>
-            <% partitions.sort_by(&:first).each do |partition_id, details| %>
-              <%==
-                partial(
-                  'health/partition',
-                  locals: {
-                    topic_name: topic_name,
-                    partition_id: partition_id,
-                    details: details
-                  }
-                )
-              %>
+    <div class="row mb-5">
+      <div class="col-sm-12">
+        <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+          <thead>
+            <tr class="align-middle">
+              <th class="align-middle">Topic</th>
+              <th>Partition</th>
+              <th>Lag stored</th>
+              <th>Lag trend</th>
+              <th>Committed offset</th>
+              <th>Stored offset</th>
+              <th>Fetch state</th>
+              <th>Poll state</th>
+              <th>Process name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% details.sort_by(&:first).each do |topic_name, partitions| %>
+              <% partitions.sort_by(&:first).each do |partition_id, details| %>
+                <%==
+                  partial(
+                    'health/partition',
+                    locals: {
+                      topic_name: topic_name,
+                      partition_id: partition_id,
+                      details: details
+                    }
+                  )
+                %>
+              <% end %>
             <% end %>
-          <% end %>
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
-</div>
 <% end %>

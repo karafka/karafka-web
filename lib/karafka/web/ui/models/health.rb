@@ -15,20 +15,22 @@ module Karafka
               processes = Processes.active(state)
 
               processes.each do |process|
-                process.consumer_groups.each do |details|
-                  name = details.id
+                process.consumer_groups.each do |consumer_group|
+                  consumer_group.subscription_groups.each do |details|
+                    name = consumer_group.id
 
-                  stats[name] ||= {}
+                    stats[name] ||= {}
 
-                  details.topics.each do |details2|
-                    t_name = details2.name
+                    details.topics.each do |details2|
+                      t_name = details2.name
 
-                    stats[name][t_name] ||= {}
-                    details2.partitions.each do |partition|
-                      partition_id = partition.id
                       stats[name][t_name] ||= {}
-                      stats[name][t_name][partition_id] = partition.to_h
-                      stats[name][t_name][partition_id][:process] = process
+                      details2.partitions.each do |partition|
+                        partition_id = partition.id
+                        stats[name][t_name] ||= {}
+                        stats[name][t_name][partition_id] = partition.to_h
+                        stats[name][t_name][partition_id][:process] = process
+                      end
                     end
                   end
                 end

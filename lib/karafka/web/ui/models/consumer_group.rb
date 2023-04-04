@@ -7,11 +7,12 @@ module Karafka
       module Models
         # Representation of data of a Karafka consumer group
         class ConsumerGroup < Lib::HashProxy
-          # @return [Array<Topic>] Data of topics belonging to this consumer group
-          def topics
-            super.values.map do |topic_hash|
-              Topic.new(topic_hash)
-            end
+          # @return [Array<SubscriptionGroup>] Data of topics belonging to this consumer group
+          def subscription_groups
+            super
+              .values
+              .map { |sg_hash| SubscriptionGroup.new(sg_hash) }
+              .sort_by(&:id)
           end
         end
       end

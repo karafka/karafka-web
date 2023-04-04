@@ -7,20 +7,20 @@ module Karafka
         # Consumer tracking related contracts
         module Contracts
           # Expected data for each consumer group
-          # It's mostly about topics details
+          # It's mostly about subscription groups details
           class ConsumerGroup < BaseContract
             configure
 
             required(:id) { |val| val.is_a?(String) && !val.empty? }
-            required(:topics) { |val| val.is_a?(Hash) }
+            required(:subscription_groups) { |val| val.is_a?(Hash) }
 
             virtual do |data, errors|
               next unless errors.empty?
 
-              topic_contract = Topic.new
+              subscription_group_contract = SubscriptionGroup.new
 
-              data.fetch(:topics).each do |_topic_name, details|
-                topic_contract.validate!(details)
+              data.fetch(:subscription_groups).each do |_subscription_group_name, details|
+                subscription_group_contract.validate!(details)
               end
 
               nil

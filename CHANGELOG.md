@@ -1,5 +1,10 @@
 # Karafka Web changelog
 
+## 0.4.0 (Unreleased)
+- [Improvement] Include active jobs and active partitions subscriptions count in the per-process tab navigation.
+- [Improvement] Include subscription groups names in the per-process subscriptions view.
+- [Fix] Add missing support for using multiple subscription groups within a single consumer group.
+
 ## 0.3.1 (2023-03-27)
 - [Fix] Add missing retention policy for states topic.
 - [Fix] Fix display of compacted messages placeholders for offsets lower than low watermark.

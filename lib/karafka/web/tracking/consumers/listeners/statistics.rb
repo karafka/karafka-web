@@ -15,8 +15,12 @@ module Karafka
               topics = statistics.fetch('topics')
               cgrp = statistics.fetch('cgrp')
               consumer_group_id = event[:consumer_group_id]
-              cg_details = extract_consumer_group_details(consumer_group_id, cgrp)
+              subscription_group_id = event[:subscription_group_id]
+              sg_details = extract_subscription_group_details(subscription_group_id, cgrp)
 
+              # More than one subscription group from the same consumer group may be reporting
+              # almost the same time. To prevent corruption of partial data, we put everything here
+              # in track as we merge data from multiple subscription groups
               track do |sampler|
                 topics.each do |topic_name, topic_values|
                   partitions = topic_values.fetch('partitions')
@@ -30,7 +34,7 @@ module Karafka
 
                     next if metrics.empty?
 
-                    topics_details = cg_details[:topics]
+                    topics_details = sg_details[:topics]
 
                     topic_details = topics_details[topic_name] ||= {
                       name: topic_name,
@@ -39,12 +43,19 @@ module Karafka
 
                     topic_details[:partitions][partition_id] = metrics.merge(
                       id: partition_id,
+                      # Pauses are stored on a consumer group since we do not process same topic
+                      # twice in the multipe subscription groups
                       poll_state: poll_state(consumer_group_id, topic_name, partition_id)
                     )
                   end
                 end
 
-                sampler.consumer_groups[consumer_group_id] = cg_details
+                sampler.consumer_groups[consumer_group_id] ||= {
+                  id: consumer_group_id,
+                  subscription_groups: {}
+                }
+
+                sampler.consumer_groups[consumer_group_id][:subscription_groups][subscription_group_id] = sg_details
               end
             end
 
@@ -52,12 +63,12 @@ module Karafka
 
             # Extracts basic consumer group related details
             # @param consumer_group_id [String]
-            # @param consumer_group_statistics [Hash]
+            # @param subscription_group_statistics [Hash]
             # @return [Hash] consumer group relevant details
-            def extract_consumer_group_details(consumer_group_id, consumer_group_statistics)
+            def extract_subscription_group_details(subscription_group_id, subscription_group_statistics)
               {
-                id: consumer_group_id,
-                state: consumer_group_statistics.slice(
+                id: subscription_group_id,
+                state: subscription_group_statistics.slice(
                   'state',
                   'join_state',
                   'stateage',
