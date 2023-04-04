@@ -14,9 +14,9 @@ module Karafka
               statistics = event[:statistics]
               topics = statistics.fetch('topics')
               cgrp = statistics.fetch('cgrp')
-              consumer_group_id = event[:consumer_group_id]
-              subscription_group_id = event[:subscription_group_id]
-              sg_details = extract_subscription_group_details(subscription_group_id, cgrp)
+              cg_id = event[:consumer_group_id]
+              sg_id = event[:subscription_group_id]
+              sg_details = extract_sg_details(sg_id, cgrp)
 
               # More than one subscription group from the same consumer group may be reporting
               # almost the same time. To prevent corruption of partial data, we put everything here
@@ -25,12 +25,12 @@ module Karafka
                 topics.each do |topic_name, topic_values|
                   partitions = topic_values.fetch('partitions')
 
-                  partitions.each do |partition_name, partition_statistics|
-                    partition_id = partition_name.to_i
+                  partitions.each do |pt_name, pt_stats|
+                    pt_id = pt_name.to_i
 
-                    next unless partition_reportable?(partition_id, partition_statistics)
+                    next unless partition_reportable?(pt_id, pt_stats)
 
-                    metrics = extract_partition_metrics(partition_statistics)
+                    metrics = extract_partition_metrics(pt_stats)
 
                     next if metrics.empty?
 
@@ -41,34 +41,34 @@ module Karafka
                       partitions: {}
                     }
 
-                    topic_details[:partitions][partition_id] = metrics.merge(
-                      id: partition_id,
+                    topic_details[:partitions][pt_id] = metrics.merge(
+                      id: pt_id,
                       # Pauses are stored on a consumer group since we do not process same topic
-                      # twice in the multipe subscription groups
-                      poll_state: poll_state(consumer_group_id, topic_name, partition_id)
+                      # twice in the multiple subscription groups
+                      poll_state: poll_state(cg_id, topic_name, pt_id)
                     )
                   end
                 end
 
-                sampler.consumer_groups[consumer_group_id] ||= {
-                  id: consumer_group_id,
+                sampler.consumer_groups[cg_id] ||= {
+                  id: cg_id,
                   subscription_groups: {}
                 }
 
-                sampler.consumer_groups[consumer_group_id][:subscription_groups][subscription_group_id] = sg_details
+                sampler.consumer_groups[cg_id][:subscription_groups][sg_id] = sg_details
               end
             end
 
             private
 
             # Extracts basic consumer group related details
-            # @param consumer_group_id [String]
-            # @param subscription_group_statistics [Hash]
+            # @param sg_id [String]
+            # @param sg_stats [Hash]
             # @return [Hash] consumer group relevant details
-            def extract_subscription_group_details(subscription_group_id, subscription_group_statistics)
+            def extract_sg_details(sg_id, sg_stats)
               {
-                id: subscription_group_id,
-                state: subscription_group_statistics.slice(
+                id: sg_id,
+                state: sg_stats.slice(
                   'state',
                   'join_state',
                   'stateage',
@@ -80,29 +80,29 @@ module Karafka
               }
             end
 
-            # @param partition_id [Integer]
-            # @param partition_statistics [Hash]
+            # @param pt_id [Integer]
+            # @param pt_stats [Hash]
             # @return [Boolean] is this partition relevant to the current process, hence should we
             #   report about it in the context of the process.
-            def partition_reportable?(partition_id, partition_statistics)
-              return false if partition_id == -1
+            def partition_reportable?(pt_id, pt_stats)
+              return false if pt_id == -1
 
               # Skip until lag info is available
-              return false if partition_statistics['consumer_lag'] == -1
+              return false if pt_stats['consumer_lag'] == -1
 
               # Collect information only about what we are subscribed to and what we fetch or
               # work in any way. Stopped means, we no longer work with it
-              return false if partition_statistics['fetch_state'] == 'stopped'
+              return false if pt_stats['fetch_state'] == 'stopped'
 
               true
             end
 
             # Extracts and formats partition relevant metrics
             #
-            # @param partition_statistics [Hash]
+            # @param pt_stats [Hash]
             # @return [Hash] extracted partition metrics
-            def extract_partition_metrics(partition_statistics)
-              metrics = partition_statistics.slice(
+            def extract_partition_metrics(pt_stats)
+              metrics = pt_stats.slice(
                 'consumer_lag_stored',
                 'consumer_lag_stored_d',
                 'committed_offset',
@@ -117,12 +117,12 @@ module Karafka
               metrics
             end
 
-            # @param consumer_group_id [String]
+            # @param cg_id [String]
             # @param topic_name [String]
-            # @param partition_id [Integer]
+            # @param pt_id [Integer]
             # @return [String] poll state / is partition paused or not
-            def poll_state(consumer_group_id, topic_name, partition_id)
-              pause_id = [consumer_group_id, topic_name, partition_id].join('-')
+            def poll_state(cg_id, topic_name, pt_id)
+              pause_id = [cg_id, topic_name, pt_id].join('-')
 
               sampler.pauses.include?(pause_id) ? 'paused' : 'active'
             end
