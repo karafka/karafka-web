@@ -5,7 +5,7 @@
         <%= "#{k}.#{k2}" %>
       </td>
       <td>
-        <% if k2.to_s.include?('ssl') %>
+        <% if %w[sasl ssl].any? { |scope| k2.to_s.include?(scope) } %>
           ***
         <% elsif k2.to_s == 'tags' %>
           <%== tags(v2) %>
