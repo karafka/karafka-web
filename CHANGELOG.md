@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-## 0.4.0 (Unreleased)
+## 0.4.0 (2023-04-07)
 - [Improvement] Include active jobs and active partitions subscriptions count in the per-process tab navigation.
 - [Improvement] Include subscription groups names in the per-process subscriptions view.
 - [Fix] Add missing support for using multiple subscription groups within a single consumer group.
