@@ -1,5 +1,11 @@
 # Karafka Web changelog
 
+## 0.4.1 (Unreleased)
+- [Improvement] Replace the "x time ago" in the code explorer with an exact date (`2023-04-12 10:16:48.596 +0200 `).
+- [Improvement] When hovering over a message timestamp, a label with raw numeric timestamp will be presented.
+- [Improvement] Do not skip reporting on partitions subscribed that never received any messages.
+- [Fix] Skip reporting data on subscriptions that were revoked and not only stopped by us.
+
 ## 0.4.0 (2023-04-07)
 - [Improvement] Include active jobs and active partitions subscriptions count in the per-process tab navigation.
 - [Improvement] Include subscription groups names in the per-process subscriptions view.

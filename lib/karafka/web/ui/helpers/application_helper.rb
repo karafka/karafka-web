@@ -46,6 +46,10 @@ module Karafka
             render "#{scope}/_breadcrumbs"
           end
 
+          def time_to_string(time)
+
+          end
+
           # Takes a status and recommends background style color
           #
           # @param status [String] status
@@ -125,8 +129,16 @@ module Karafka
           # @param time [Float] UTC time float
           # @return [String] relative time tag for timeago.js
           def relative_time(time)
-            stamp = Time.at(time).getutc.iso8601
+            stamp = Time.at(time).getutc.iso8601(3)
             %(<time class="ltr" dir="ltr" title="#{stamp}" datetime="#{stamp}">#{time}</time>)
+          end
+
+          # @param time [Time] time object we want to present with detailed ms label
+          # @return [String] span tag with raw timestamp as a title and time as a value
+          def labeled_time(time)
+            stamp = (time.to_f * 1000).to_i
+
+            %(<span title="#{stamp}">#{time}</span>)
           end
 
           # Returns the view title html code

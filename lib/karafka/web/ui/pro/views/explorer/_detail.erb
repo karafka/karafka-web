@@ -9,6 +9,15 @@
       </td>
    </tr>
   <% end %>
+<% elsif v.is_a?(Time) %>
+  <tr>
+    <td>
+      <%= k %>
+    </td>
+    <td>
+      <%== labeled_time(v) %>
+    </td>
+  </tr>
 <% else %>
   <tr>
     <td>
