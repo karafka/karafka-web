@@ -46,10 +46,6 @@ module Karafka
             render "#{scope}/_breadcrumbs"
           end
 
-          def time_to_string(time)
-
-          end
-
           # Takes a status and recommends background style color
           #
           # @param status [String] status
