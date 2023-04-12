@@ -20,7 +20,13 @@
     </span>
   </td>
   <td>
-    <%= partition.committed_offset %>
+    <% if partition.committed_offset.to_i < 0 %>
+      <span class="badge bg-secondary" title="Not available until first offset commit">
+        N/A
+      </span>
+    <% else %>
+      <%= partition.committed_offset %>
+    <% end %>
   </td>
   <td>
     <% if partition.stored_offset.to_i < 0 %>

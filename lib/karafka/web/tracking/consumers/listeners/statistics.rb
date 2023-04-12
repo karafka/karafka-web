@@ -87,12 +87,13 @@ module Karafka
             def partition_reportable?(pt_id, pt_stats)
               return false if pt_id == -1
 
-              # Skip until lag info is available
-              return false if pt_stats['consumer_lag'] == -1
-
               # Collect information only about what we are subscribed to and what we fetch or
-              # work in any way. Stopped means, we no longer work with it
+              # work in any way. Stopped means, we stopped working with it
               return false if pt_stats['fetch_state'] == 'stopped'
+
+              # Return if we no longer fetch this partition in a particular process. None means
+              # that we no longer have this subscription assigned and we do not fetch
+              return false if pt_stats['fetch_state'] == 'none'
 
               true
             end
