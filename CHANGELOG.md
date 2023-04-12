@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-## 0.4.1 (Unreleased)
+## 0.4.1 (2023-04-12)
 - [Improvement] Replace the "x time ago" in the code explorer with an exact date (`2023-04-12 10:16:48.596 +0200 `).
 - [Improvement] When hovering over a message timestamp, a label with raw numeric timestamp will be presented.
 - [Improvement] Do not skip reporting on partitions subscribed that never received any messages.
