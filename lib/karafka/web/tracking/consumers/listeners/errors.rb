@@ -69,10 +69,10 @@ module Karafka
               {
                 topic: consumer.topic.name,
                 consumer_group: consumer.topic.consumer_group.id,
-                partition: consumer.messages.metadata.partition,
-                first_offset: consumer.messages.first.offset,
-                last_offset: consumer.messages.last.offset,
-                comitted_offset: consumer.coordinator.seek_offset - 1,
+                partition: consumer.partition,
+                first_offset: consumer.messages.metadata.first_offset,
+                last_offset: consumer.messages.metadata.last_offset,
+                committed_offset: consumer.coordinator.seek_offset - 1,
                 consumer: consumer.class.to_s,
                 tags: consumer.tags
               }

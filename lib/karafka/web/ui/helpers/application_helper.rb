@@ -131,10 +131,23 @@ module Karafka
 
           # @param time [Time] time object we want to present with detailed ms label
           # @return [String] span tag with raw timestamp as a title and time as a value
-          def labeled_time(time)
+          def time_with_label(time)
             stamp = (time.to_f * 1000).to_i
 
             %(<span title="#{stamp}">#{time}</span>)
+          end
+
+          # @param offset [Integer] offset
+          # @return [String] offset if correct or `N/A` with labeled explanation for offsets
+          #   that are less than 0. Offset with less than 0 indicates, that the offset was not
+          #   yet committed and there is no value we know of
+          def offset_with_label(offset)
+            if offset.negative?
+              title = 'Not available until first offset commit'
+              %(<span class="badge bg-secondary" title="#{title}">N/A</span>)
+            else
+              offset.to_s
+            end
           end
 
           # Returns the view title html code
