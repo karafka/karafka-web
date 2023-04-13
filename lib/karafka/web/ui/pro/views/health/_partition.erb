@@ -6,13 +6,7 @@
     <%= partition_id %>
   </td>
   <td>
-    <% if details[:lag_stored].to_i < 0 %>
-      <span class="badge bg-secondary" title="Not available until first offset commit">
-        N/A
-      </span>
-    <% else %>
-      <%= details[:lag_stored] %>
-    <% end %>
+    <%== offset_with_label details[:lag_stored].to_i %>
   </td>
   <td>
     <span class="badge <%= lag_trend_bg(details[:lag_stored_d]) %>">
@@ -23,13 +17,7 @@
     <%= details[:committed_offset] %>
   </td>
   <td>
-    <% if details[:stored_offset].to_i < 0 %>
-      <span class="badge bg-secondary" title="Not available until first offset commit">
-        N/A
-      </span>
-    <% else %>
-      <%= details[:stored_offset] %>
-    <% end %>
+    <%== offset_with_label details[:stored_offset].to_i %>
   </td>
   <td>
     <span class="badge <%= kafka_state_bg(details[:fetch_state]) %> mt-1 mb-1">

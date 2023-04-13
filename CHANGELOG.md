@@ -1,5 +1,19 @@
 # Karafka Web changelog
 
+## 0.5.0 (2022-04-13)
+- [Improvement] Report job `-1001` offsets as `N/A` as in all the other places.
+- [Fix] Fix misspelling of word `committed`.
+- [Fix] Shutdown and revocation jobs statistics extraction crashes when idle initialized without messages (#53)
+
+### Upgrade notes
+
+Because of the reporting schema change, it is recommended to:
+
+- First, deploy **all** the Karafka consumer processes (`karafka server`)
+- Deploy the Web update to your web server.
+
+Please note that if you decide to use the updated Web UI with not updated consumers, you may hit a 500 error or offset related data may not be displayed correctly.
+
 ## 0.4.1 (2023-04-12)
 - [Improvement] Replace the "x time ago" in the code explorer with an exact date (`2023-04-12 10:16:48.596 +0200 `).
 - [Improvement] When hovering over a message timestamp, a label with raw numeric timestamp will be presented.

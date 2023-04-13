@@ -14,9 +14,9 @@ module Karafka
             required(:started_at) { |val| val.is_a?(Float) && val >= 0 }
             required(:topic) { |val| val.is_a?(String) }
             required(:partition) { |val| val.is_a?(Integer) && val >= 0 }
-            required(:first_offset) { |val| val.is_a?(Integer) && val >= 0 }
-            required(:last_offset) { |val| val.is_a?(Integer) && val >= 0 }
-            required(:comitted_offset) { |val| val.is_a?(Integer) }
+            required(:first_offset) { |val| val.is_a?(Integer) && (val >= 0 || val == -1001) }
+            required(:last_offset) { |val| val.is_a?(Integer) && (val >= 0 || val == -1001) }
+            required(:committed_offset) { |val| val.is_a?(Integer) }
             required(:type) { |val| %w[consume revoked shutdown].include?(val) }
             required(:tags) { |val| val.is_a?(Karafka::Core::Taggable::Tags) }
           end

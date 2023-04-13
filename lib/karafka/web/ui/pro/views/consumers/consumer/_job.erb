@@ -16,13 +16,13 @@
     <code>#<%= job.type %></code>
   </td>
   <td>
-    <%= job.first_offset %>
+    <%== offset_with_label job.first_offset %>
   </td>
   <td>
-    <%= job.last_offset %>
+    <%== offset_with_label job.last_offset %>
   </td>
   <td>
-    <%= job.comitted_offset %>
+    <%== offset_with_label job.committed_offset %>
   </td>
   <td>
     <%== relative_time job.started_at %>
