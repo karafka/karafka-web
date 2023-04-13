@@ -2,7 +2,7 @@
 
 ## 0.5.0 (2022-04-13)
 - [Improvement] Report job `-1001` offsets as `N/A` as in all the other places.
-- [Fix] Fix invalid naming `comitted` and rename to `committed`.
+- [Fix] Fix misspelling of word `committed`.
 - [Fix] Shutdown and revocation jobs statistics extraction crashes when idle initialized without messages (#53)
 
 ### Upgrade notes
