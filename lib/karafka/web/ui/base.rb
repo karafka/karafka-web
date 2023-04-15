@@ -25,6 +25,24 @@ module Karafka
         plugin :not_found
         plugin :path
 
+        # Based on
+        # https://github.com/sidekiq/sidekiq/blob/ae6ca119/lib/sidekiq/web/application.rb#L8
+        plugin :content_security_policy do |csp|
+          csp.default_src "'self' https: http:"
+          csp.child_src "'self'"
+          csp.connect_src "'self' https: http: wss: ws:"
+          csp.font_src "'self' https: http:"
+          csp.frame_src "'self'"
+          csp.img_src "'self' https: http: data:"
+          csp.manifest_src "'self'"
+          csp.media_src "'self'"
+          csp.object_src "'none'"
+          csp.script_src "'self' https: http: 'unsafe-inline'"
+          csp.style_src "'self' https: http: 'unsafe-inline'"
+          csp.worker_src "'self'"
+          csp.base_uri "'self'"
+        end
+
         # Display appropriate error specific to a given error type
         plugin :error_handler, classes: [
           ::Karafka::Web::Errors::Ui::NotFoundError,
