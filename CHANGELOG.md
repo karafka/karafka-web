@@ -1,9 +1,9 @@
 # Karafka Web changelog
 
-## 0.5.1 (Unreleased)
+## 0.5.1 (2023-04-16)
 - [Fix] Use CSP header matching Sidekiq one to ensure styles and js loading (#55)
 
-## 0.5.0 (2022-04-13)
+## 0.5.0 (2023-04-13)
 - [Improvement] Report job `-1001` offsets as `N/A` as in all the other places.
 - [Fix] Fix misspelling of word `committed`.
 - [Fix] Shutdown and revocation jobs statistics extraction crashes when idle initialized without messages (#53)
