@@ -2,8 +2,9 @@
   <td>
     <code><%= job.consumer %></code>
 
-    <% job.tags.each do |tag| %>
-      <span class="badge bg-info"><%= tag %></span>
+    <% unless job.tags.empty? %>
+      <br/>
+      <%== tags(job.tags) %>
     <% end %>
   </td>
   <td>
