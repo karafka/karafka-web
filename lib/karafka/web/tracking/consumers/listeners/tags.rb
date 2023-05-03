@@ -30,7 +30,7 @@ module Karafka
 
             private
 
-            # Adds ActivJob consumer related tags
+            # Adds ActiveJob consumer related tags
             #
             # @param consumer [Karafka::BaseConsumer]
             def tag_active_job(consumer)
@@ -73,9 +73,9 @@ module Karafka
             #
             # @param consumer [Karafka::BaseConsumer]
             def tag_long_running_job(consumer)
-              return unless topic.long_running_job.active?
+              return unless consumer.topic.long_running_job.active?
 
-              tags.add(:long_running_job, :long_running)
+              consumer.tags.add(:long_running_job, :long_running)
             end
           end
         end
