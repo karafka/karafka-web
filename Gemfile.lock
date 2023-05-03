@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    karafka-web (0.5.1)
+    karafka-web (0.5.2)
       erubi (~> 1.4)
       karafka (>= 2.0.40, < 3.0.0)
       karafka-core (>= 2.0.12, < 3.0.0)
@@ -24,9 +24,9 @@ GEM
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
     ffi (1.15.5)
-    i18n (1.12.0)
+    i18n (1.13.0)
       concurrent-ruby (~> 1.0)
-    karafka (2.0.40)
+    karafka (2.0.41)
       karafka-core (>= 2.0.12, < 3.0.0)
       thor (>= 0.20)
       waterdrop (>= 2.4.10, < 3.0.0)
@@ -38,7 +38,7 @@ GEM
       ffi (~> 1.15)
       mini_portile2 (~> 2.6)
       rake (> 12)
-    mini_portile2 (2.8.1)
+    mini_portile2 (2.8.2)
     minitest (5.18.0)
     rack (3.0.7)
     rackup (0.2.3)
@@ -51,9 +51,9 @@ GEM
       rspec-core (~> 3.12.0)
       rspec-expectations (~> 3.12.0)
       rspec-mocks (~> 3.12.0)
-    rspec-core (3.12.1)
+    rspec-core (3.12.2)
       rspec-support (~> 3.12.0)
-    rspec-expectations (3.12.2)
+    rspec-expectations (3.12.3)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
     rspec-mocks (3.12.5)
@@ -70,14 +70,13 @@ GEM
     tilt (2.1.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    waterdrop (2.5.1)
+    waterdrop (2.5.2)
       karafka-core (>= 2.0.12, < 3.0.0)
       zeitwerk (~> 2.3)
     webrick (1.8.1)
-    zeitwerk (2.6.7)
+    zeitwerk (2.6.8)
 
 PLATFORMS
-  arm64-darwin-21
   x86_64-linux
 
 DEPENDENCIES
