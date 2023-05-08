@@ -6,33 +6,33 @@
           <div class="col-sm-12">
             <ul class="list-unstyled row text-center mb-0 mt-0">
               <li class="col-sm">
-                <div class="count mb-1"><%= @counters.messages %></div>
+                <div class="fw-bold text-primary mb-1"><%= @counters.messages %></div>
                 <div class="desc">Messages</div>
               </li>
               <li class="col-sm">
-                <div class="count mb-1"><%= @counters.batches %></div>
+                <div class="fw-bold text-primary mb-1"><%= @counters.batches %></div>
                 <div class="desc">Batches</div>
               </li>
               <li class="col-sm">
-                <div class="count mb-1"><%= @processes.sum(&:lag_stored) %></div>
+                <div class="fw-bold text-primary mb-1"><%= @processes.sum(&:lag_stored) %></div>
                 <div class="desc">Lag</div>
               </li>
               <li class="col-sm">
-                <div class="count mb-1"><%= @counters.busy %></div>
+                <div class="fw-bold text-primary mb-1"><%= @counters.busy %></div>
                 <div class="desc">Busy</div>
               </li>
               <li class="col-sm">
-                <div class="count mb-1"><%= @counters.enqueued %></div>
+                <div class="fw-bold text-primary mb-1"><%= @counters.enqueued %></div>
                 <div class="desc">Enqueued</div>
               </li>
               <li class="col-sm">
                 <a href="<%= root_path('errors') %>">
-                  <div class="count mb-1"><%= @counters.errors %></div>
+                  <div class="fw-bold text-primary mb-1"><%= @counters.errors %></div>
                   <div class="desc">Errors</div>
                 </a>
               </li>
               <li class="col-sm">
-                <div class="count mb-1"><%= @counters.retries %></div>
+                <div class="fw-bold text-primary mb-1"><%= @counters.retries %></div>
                 <div class="desc">Retries</div>
               </li>
             </ul>
