@@ -104,28 +104,28 @@
 }
 
 .pagination > li > a {
-    background-color: white;
-    color: #4051b5;
+  background-color: white;
+  color: #4051b5;
 }
 
 .pagination > li > a:focus,
 .pagination > li > a:hover,
 .pagination > li > span:focus,
 .pagination > li > span:hover {
-    color: #5a5a5a;
-    background-color: #eee;
-    border-color: #ddd;
+  color: #5a5a5a;
+  background-color: #eee;
+  border-color: #ddd;
 }
 
 .pagination > .active > a {
-    color: white !important;
-    background-color: #4051b5 !Important;
-    border: solid 1px #4051b5 !Important;
+  color: white !important;
+  background-color: #4051b5 !Important;
+  border: solid 1px #4051b5 !Important;
 }
 
 .pagination > .active > a:hover {
-    background-color: #4051b5 !Important;
-    border: solid 1px #4051b5;
+  background-color: #4051b5 !Important;
+  border: solid 1px #4051b5;
 }
 
 #summary .card-group .card ul {
