@@ -58,7 +58,7 @@ module Karafka
             #
             # @param consumer [Karafka::BaseConsumer]
             def tag_virtual_partitions(consumer)
-              return unless consumer.topic.virtual_partitions.active?
+              return unless consumer.topic.virtual_partitions?
 
               consumer.tags.add(:virtual, :virtual)
 
@@ -73,7 +73,7 @@ module Karafka
             #
             # @param consumer [Karafka::BaseConsumer]
             def tag_long_running_job(consumer)
-              return unless consumer.topic.long_running_job.active?
+              return unless consumer.topic.long_running_job?
 
               consumer.tags.add(:long_running_job, :long_running)
             end

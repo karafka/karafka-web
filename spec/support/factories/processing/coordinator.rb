@@ -1,0 +1,19 @@
+# frozen_string_literal: true
+
+FactoryBot.define do
+  factory :processing_coordinator, class: 'Karafka::Processing::Coordinator' do
+    skip_create
+
+    topic { build(:routing_topic) }
+    partition { 0 }
+    pause_tracker { build(:time_trackers_pause) }
+    seek_offset { nil }
+
+    initialize_with do
+      coordinator = new(topic, partition, pause_tracker)
+      coordinator.increment
+      coordinator.seek_offset = seek_offset
+      coordinator
+    end
+  end
+end
