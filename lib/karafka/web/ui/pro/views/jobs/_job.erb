@@ -13,7 +13,10 @@
   <td>
     <code><%= job.consumer %></code>
 
-    <%== tags(job.tags) %>
+    <% unless job.tags.empty? %>
+      <br/>
+      <%== tags(job.tags) %>
+    <% end %>
   </td>
   <td>
     <code>#<%= job.type %></code>

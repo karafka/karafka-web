@@ -1,5 +1,13 @@
 # Karafka Web changelog
 
+## 0.5.2 (Unreleased)
+- Label ActiveJob consumers jobs with `active_job` tag.
+- Label Virtual Partitions consumers with `virtual` tag.
+- Label Long Running Jobs with `long_running_job` tag.
+- Label collapsed Virtual Partition with `collapsed` tag.
+- Display consumer tags always below the consumer class name in Jobs/Consumer Jobs views.
+- Add label with the attempt count on work being retried.
+
 ## 0.5.1 (2023-04-16)
 - [Fix] Use CSP header matching Sidekiq one to ensure styles and js loading (#55)
 
