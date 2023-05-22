@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-## 0.5.2 (Unreleased)
+## 0.5.2 (2023-05-22)
 - Label ActiveJob consumers jobs with `active_job` tag.
 - Label Virtual Partitions consumers with `virtual` tag.
 - Label Long Running Jobs with `long_running_job` tag.
