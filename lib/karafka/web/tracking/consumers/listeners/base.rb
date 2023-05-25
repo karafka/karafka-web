@@ -21,9 +21,9 @@ module Karafka
               @sampler ||= ::Karafka::Web.config.tracking.consumers.sampler
             end
 
-            # @return [Object] reported in use
+            # @return [Object] reporter in use
             def reporter
-              @reporter ||= ::Karafka::Web.config.tracking.reporter
+              @reporter ||= ::Karafka::Web.config.tracking.consumers.reporter
             end
           end
         end
