@@ -30,13 +30,6 @@ module Karafka
             def build_error_details(event)
               type = event[:type]
 
-              details = case type
-                        when 'librdkafka.dispatch_error'
-                          event.payload.slice(:topic, :partition, :offset)
-                        else
-                          {}
-                        end
-
               error_class, error_message, backtrace = extract_error_info(event[:error])
 
               {
@@ -46,12 +39,24 @@ module Karafka
                 error_class: error_class,
                 error_message: error_message,
                 backtrace: backtrace,
-                details: details,
+                details: build_details(type, event.payload),
                 occurred_at: float_now,
                 process: {
                   name: sampler.process_name
                 }
               }
+            end
+
+            # @param type [String] error type
+            # @param payload [Hash] error payload
+            # @return [Hash] hash with details
+            def build_details(type, payload)
+              case type
+              when 'librdkafka.dispatch_error'
+                payload.slice(:topic, :partition, :offset)
+              else
+                {}
+              end
             end
           end
         end
