@@ -6,7 +6,9 @@ module Karafka
       module Consumers
         module Contracts
           # Expected topic information that needs to go out
-          class Topic < BaseContract
+          class Topic < Tracking::Contracts::Base
+            configure
+
             required(:name) { |val| val.is_a?(String) && !val.empty? }
             required(:partitions) { |val| val.is_a?(Hash) }
 

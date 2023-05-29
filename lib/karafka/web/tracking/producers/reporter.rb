@@ -3,11 +3,10 @@
 module Karafka
   module Web
     module Tracking
-      module Consumers
+      module Producers
         # Reports the collected data about the process and sends it, so we can use it in the UI
         class Reporter
           include ::Karafka::Core::Helpers::Time
-          include ::Karafka::Helpers::Async
 
           # Minimum number of messages to produce to produce them in sync mode
           # This acts as a small back-off not to overload the system in case we would have
@@ -23,7 +22,6 @@ module Karafka
           def initialize
             # Move back so first report is dispatched fast to indicate, that the process is alive
             @tracked_at = monotonic_now - 10_000
-            @report_contract = Consumers::Contracts::Report.new
             @error_contract = Tracking::Contracts::Error.new
           end
 
@@ -33,40 +31,19 @@ module Karafka
           #   report only in case we would not send the report for long enough time.
           def report(forced: false)
             MUTEX.synchronize do
-              # Start background thread only when needed
-              # This prevents us from starting it too early or for non-consumer processes where
-              # Karafka is being included
-              async_call unless @running
-
               return unless report?(forced)
 
               @tracked_at = monotonic_now
 
-              report = sampler.to_report
-
-              @report_contract.validate!(report)
-
-              process_name = report[:process][:name]
-
-              # Report consumers statuses
-              messages = [
-                {
-                  topic: ::Karafka::Web.config.topics.consumers.reports,
-                  payload: report.to_json,
-                  key: process_name,
-                  partition: 0
-                }
-              ]
-
               # Report errors that occurred (if any)
-              messages += sampler.errors.map do |error|
+              messages = sampler.errors.map do |error|
                 @error_contract.validate!(error)
 
                 {
                   topic: Karafka::Web.config.topics.errors,
                   payload: error.to_json,
                   # Always dispatch errors from the same process to the same partition
-                  key: process_name
+                  key: error[:process][:name]
                 }
               end
 
@@ -87,28 +64,11 @@ module Karafka
 
           private
 
-          # Reports the process state once in a while
-          def call
-            @running = true
-
-            loop do
-              report
-
-              # We won't track more often anyhow but want to try frequently not to miss a window
-              # We need to convert the sleep interval into seconds for sleep
-              sleep(::Karafka::Web.config.tracking.interval / 1_000 / 10)
-            end
-          end
-
           # @param forced [Boolean] is this report forced. Forced means that as long as we can
           #   flush we will flush
           # @return [Boolean] Should we report or is it not yet time to do so
           def report?(forced)
-            # We never report in initializing phase because things are not yet fully configured
-            return false if ::Karafka::App.initializing?
-            # We never report in the initialized because server is not yet ready until Karafka is
-            # fully running and some of the things like listeners are not yet available
-            return false if ::Karafka::App.initialized?
+            return false unless ::Karafka.producer.status.active?
 
             return true if forced
 
@@ -117,7 +77,7 @@ module Karafka
 
           # @return [Object] sampler for the metrics
           def sampler
-            @sampler ||= ::Karafka::Web.config.tracking.consumers.sampler
+            @sampler ||= ::Karafka::Web.config.tracking.producers.sampler
           end
 
           # Produces messages to Kafka.

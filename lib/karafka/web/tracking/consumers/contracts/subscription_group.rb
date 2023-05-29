@@ -7,7 +7,7 @@ module Karafka
         module Contracts
           # Expected data for each subscription group
           # It's mostly about topics details
-          class SubscriptionGroup < BaseContract
+          class SubscriptionGroup < Tracking::Contracts::Base
             configure
 
             required(:id) { |val| val.is_a?(String) && !val.empty? }

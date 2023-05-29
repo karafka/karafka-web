@@ -10,7 +10,7 @@ module Karafka
       # @param replication_factor [Integer] replication factor we want to use (1 by default)
       def bootstrap!(replication_factor: 1)
         bootstrap_topics!(replication_factor)
-        bootstrap_state!
+        bootstrap_consumers_state!
       end
 
       # Removes all the Karafka topics and creates them again with the same replication factor
@@ -142,7 +142,7 @@ module Karafka
       end
 
       # Creates the initial state record with all values being empty
-      def bootstrap_state!
+      def bootstrap_consumers_state!
         ::Karafka.producer.produce_sync(
           topic: Karafka::Web.config.topics.consumers.states,
           key: Karafka::Web.config.topics.consumers.states,
@@ -151,7 +151,6 @@ module Karafka
             stats: {
               batches: 0,
               messages: 0,
-              errors: 0,
               retries: 0,
               dead: 0,
               busy: 0,

@@ -4,8 +4,14 @@
       <nav>
         <ul class="pagination justify-content-center">
           <li class="page-item <%= 'disabled' if @current_page <= 1 %>">
+            <a class="page-link" href="<%= current_path(page: 1) %>">
+              <span>&laquo;</span>
+            </a>
+          </li>
+
+          <li class="page-item <%= 'disabled' if @current_page <= 1 %>">
             <a class="page-link" href="<%= current_path(page: @current_page - 1) %>">
-              <span>&laquo; Prev</span>
+              <span>&lsaquo; Prev</span>
             </a>
           </li>
 
@@ -17,7 +23,7 @@
 
           <li class="page-item <%= 'disabled' unless @next_page %>">
             <a class="page-link" href="<%= current_path(page: @next_page) %>">
-              <span>Next &raquo;</span>
+              <span>Next &rsaquo;</span>
             </a>
           </li>
         </ul>

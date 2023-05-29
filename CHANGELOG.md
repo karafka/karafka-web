@@ -1,5 +1,17 @@
 # Karafka Web changelog
 
+## 0.6.0 (Unreleased)
+- **[Feature]** Introduce producers errors tracking.
+- [Improvement] Improve pagination by providing a "Go to first page" fast button.
+- [Improvement] Provide more explicit into on the consumers view consumers running.
+- [Improvement] Replace `compact` policy for states topics with `delete,compact` to optimize used storage.
+- [Improvement] Validate error reporting with unified error contract.
+- [Improvement] Use estimated errors count for counters presentation taken from the errors topic instead of materialization via from consumers states to allow for producers errors tracking.
+- [Improvement] Introduce `schema_version` to error reports.
+- [Fix] Fix missing empty `Process name` value in the errors index view.
+- [Refactor] Cleanup common components for errors extraction.
+- [Refactor] Remove not used and reduntant partials.
+
 ## 0.5.2 (2023-05-22)
 - Label ActiveJob consumers jobs with `active_job` tag.
 - Label Virtual Partitions consumers with `virtual` tag.

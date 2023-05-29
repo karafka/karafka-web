@@ -6,7 +6,7 @@ module Karafka
       module Consumers
         module Contracts
           # Contract for the job reporting details
-          class Job < BaseContract
+          class Job < Tracking::Contracts::Base
             configure
 
             required(:consumer) { |val| val.is_a?(String) }

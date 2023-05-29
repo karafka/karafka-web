@@ -10,11 +10,9 @@ module Karafka
           # @note For now we load all and paginate over the squashed data.
           def index
             @current_state = Models::State.current!
-            processes_total = Models::Processes.active(@current_state)
-
-            @counters = Lib::HashProxy.new(@current_state[:stats])
+            @counters = Models::Counters.new(@current_state)
             @processes, @next_page = Lib::PaginateArray.new.call(
-              processes_total,
+              Models::Processes.active(@current_state),
               @params.current_page
             )
 

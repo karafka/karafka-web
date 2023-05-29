@@ -9,6 +9,11 @@ module Karafka
           class Errors < Base
             include Tracking::Helpers::ErrorInfo
 
+            # Schema used by consumers error reporting
+            SCHEMA_VERSION = '1.0.0'
+
+            private_constant :SCHEMA_VERSION
+
             # Collects errors info and counts errors
             #
             # @param event [Karafka::Core::Monitoring::Event]
@@ -25,6 +30,7 @@ module Karafka
                 error_class, error_message, backtrace = extract_error_info(event[:error])
 
                 sampler.errors << {
+                  schema_version: SCHEMA_VERSION,
                   type: event[:type],
                   error_class: error_class,
                   error_message: error_message,
