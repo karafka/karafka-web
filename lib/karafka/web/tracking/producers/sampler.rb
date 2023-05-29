@@ -5,11 +5,11 @@ module Karafka
     module Tracking
       # Namespace for all the things related to tracking producers
       module Producers
-        # Samples for fetching and storing metrics samples about the producers
+        # Samples for collecting producers related data we're interested in
         class Sampler < Tracking::Sampler
           include ::Karafka::Core::Helpers::Time
 
-          attr_reader :errors, :producers
+          attr_reader :errors
 
           # Current schema version
           # This can be used in the future for detecting incompatible changes and writing
@@ -31,6 +31,7 @@ module Karafka
             end
           end
 
+          # Clears the sampler (for use after data dispatch)
           def clear
             @errors.clear
           end

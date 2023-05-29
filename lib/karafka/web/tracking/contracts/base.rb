@@ -3,6 +3,7 @@
 module Karafka
   module Web
     module Tracking
+      # Namespace for contracts used by consumers and producers tracking
       module Contracts
         # Base for all the metric related contracts
         class Base < ::Karafka::Core::Contractable::Contract

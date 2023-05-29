@@ -35,7 +35,7 @@ module Karafka
               #
               # Most of the users use one or few error partitions at most, so this is fairly
               # efficient and not problematic
-              rescue => e
+              rescue Rdkafka::RdkafkaError => e
                 e.code == :unknown_partition ? break : raise
               end
 

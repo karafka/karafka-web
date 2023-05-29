@@ -4,6 +4,7 @@ module Karafka
   module Web
     module Tracking
       module Producers
+        # Namespace for producers listeners
         module Listeners
           # Base listener for producer related listeners
           class Base
