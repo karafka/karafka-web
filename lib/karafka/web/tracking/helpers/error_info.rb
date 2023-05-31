@@ -28,14 +28,14 @@ module Karafka
 
             [
               error.class.name,
-              extract_eror_message(error),
+              extract_error_message(error),
               backtrace.join("\n")
             ]
           end
 
           # @param error [StandardError] error that occurred
           # @return [String] formatted exception message
-          def extract_eror_message(error)
+          def extract_error_message(error)
             error_message = error.message.to_s[0, 10_000]
             error_message.force_encoding('utf-8')
             error_message.scrub! if error_message.respond_to?(:scrub!)
