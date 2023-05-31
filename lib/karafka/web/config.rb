@@ -24,12 +24,6 @@ module Karafka
           # Topic for storing states aggregated info
           setting :states, default: 'karafka_consumers_states'
         end
-
-        setting :producers do
-          # Reports containing particular producers instances informations and metrics.
-          # It is similar in nature to the consumers reports one.
-          setting :reports, default: 'karafka_producers_reports'
-        end
       end
 
       # Tracking and reporting related settings
