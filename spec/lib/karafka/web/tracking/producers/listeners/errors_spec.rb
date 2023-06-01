@@ -25,6 +25,8 @@ RSpec.describe_current do
     )
   end
 
+  before { sampler.clear }
+
   describe '#on_error_occurred' do
     let(:recorded_errors) { sampler.errors }
 
