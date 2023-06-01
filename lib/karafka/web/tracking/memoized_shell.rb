@@ -6,7 +6,7 @@ module Karafka
     # processes
     module Tracking
       # Class used to run shell command that also returns previous result in case of a failure
-      # This is used because children cat get signals when performing stat fetches and then
+      # This is used because children can get signals when performing stat fetches and then
       # fetch is stopped. This can cause invalid results from sub-shell commands.
       #
       # This will return last result as log as there was one.
