@@ -18,6 +18,7 @@
 - [Fix] Fix potential empty dispatch of consumer metrics.
 - [Refactor] Cleanup common components for errors extraction.
 - [Refactor] Remove not used and redundant partials.
+- [Maintenance] Require `karafka` `2.1.4` due to fixes in metrics usage for workless flows.
 
 ### Upgrade notes
 
