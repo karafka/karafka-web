@@ -2,26 +2,39 @@
 
 ## 0.6.0 (Unreleased)
 - **[Feature]** Introduce producers errors tracking.
+- [Improvement] Display the error origin as a badge to align with consumers view topic assignments.
 - [Improvement] Collect more job metrics for future usage.
 - [Improvement] Normalize order of job columns on multiple views.
 - [Improvement] Improve pagination by providing a "Go to first page" fast button.
-- [Improvement] Provide more explicit info in the consumers view consumers running.
+- [Improvement] Provide more explicit info in the consumers view when no consumers running.
 - [Improvement] Validate error reporting with unified error contract.
 - [Improvement] Use estimated errors count for counters presentation taken from the errors topic instead of materialization via from consumers states to allow for producers errors tracking.
 - [Improvement] Introduce `schema_version` to error reports.
+- [Improvement] Do not display the dispatched error message offset in the breadcrumb and title as it was confused with the error message content.
+- [Improvement] Display `error_class` value wrapped with code tag.
+- [Improvement] Display error `type` value wrapped with label tag.
 - [Fix] Fix invalid arrows style in the pagination.
 - [Fix] Fix missing empty `Process name` value in the errors index view.
 - [Fix] Fix potential empty dispatch of consumer metrics.
 - [Refactor] Cleanup common components for errors extraction.
 - [Refactor] Remove not used and redundant partials.
 
+### Upgrade notes
+
+Because of the reporting schema update, it is recommended to:
+
+- First, deploy **all** the Karafka consumer processes (`karafka server`)
+- Deploy the Web update to your web server.
+
+Please note that if you decide to use the updated Web UI with not updated consumers, you may hit a 500 error or offset related data may not be displayed correctly.
+
 ## 0.5.2 (2023-05-22)
-- Label ActiveJob consumers jobs with `active_job` tag.
-- Label Virtual Partitions consumers with `virtual` tag.
-- Label Long Running Jobs with `long_running_job` tag.
-- Label collapsed Virtual Partition with `collapsed` tag.
-- Display consumer tags always below the consumer class name in Jobs/Consumer Jobs views.
-- Add label with the attempt count on work being retried.
+- [Improvement] Label ActiveJob consumers jobs with `active_job` tag.
+- [Improvement] Label Virtual Partitions consumers with `virtual` tag.
+- [Improvement] Label Long Running Jobs with `long_running_job` tag.
+- [Improvement] Label collapsed Virtual Partition with `collapsed` tag.
+- [Improvement] Display consumer tags always below the consumer class name in Jobs/Consumer Jobs views.
+- [Improvement] Add label with the attempt count on work being retried.
 
 ## 0.5.1 (2023-04-16)
 - [Fix] Use CSP header matching Sidekiq one to ensure styles and js loading (#55)

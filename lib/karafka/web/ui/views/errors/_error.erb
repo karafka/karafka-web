@@ -9,11 +9,13 @@
 
   <tr>
     <td>
-      <% if error[:details].key?(:topic) %>
-        <%= error[:details][:topic] %>: <%= error[:details][:partition] %>
-      <% else %>
-        <%= error[:type] %>
-      <% end %>
+      <span class="badge bg-secondary badge-topic">
+        <% if error[:details].key?(:topic) %>
+          <%= error[:details][:topic] %>: <%= error[:details][:partition] %>
+        <% else %>
+          <%= error[:type] %>
+        <% end %>
+      </span>
     </td>
     <td>
       <%== error[:process][:name] %>

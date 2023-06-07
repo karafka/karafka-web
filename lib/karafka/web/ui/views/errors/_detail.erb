@@ -21,8 +21,16 @@
       <%= k %>
     </td>
     <td>
-      <% if k == :occurred_at %>
+      <% case k
+         when :occurred_at
+      %>
         <%== relative_time v %>
+      <% when :error_class %>
+        <code><%= v %></code>
+      <% when :type %>
+        <span class="badge bg-secondary">
+          <%= v %>
+        </span>
       <% else %>
         <%= v %>
       <% end %>
