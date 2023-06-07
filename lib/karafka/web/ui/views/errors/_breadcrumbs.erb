@@ -10,9 +10,8 @@
       <%=
         type = @error_message.payload[:type]
         error_class = @error_message.payload[:error_class]
-        offset = @error_message.offset
 
-        "#{type}: #{error_class} #{offset}"
+        "#{type}: #{error_class}"
       %>
     </a>
   </li>

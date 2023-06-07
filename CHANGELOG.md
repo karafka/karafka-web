@@ -13,9 +13,11 @@
 - [Improvement] Do not display the dispatched error message offset in the breadcrumb and title as it was confused with the error message content.
 - [Improvement] Display `error_class` value wrapped with code tag.
 - [Improvement] Display error `type` value wrapped with label tag.
+- [Improvement] Include a blurred backtrace for non-Pro error inspection as a form of indication of this Pro feature.
 - [Fix] Fix invalid arrows style in the pagination.
 - [Fix] Fix missing empty `Process name` value in the errors index view.
 - [Fix] Fix potential empty dispatch of consumer metrics.
+- [Fix] Remove confusing part about real time resources from the "Pro feature" page.
 - [Refactor] Cleanup common components for errors extraction.
 - [Refactor] Remove not used and redundant partials.
 - [Maintenance] Require `karafka` `2.1.4` due to fixes in metrics usage for workless flows.
