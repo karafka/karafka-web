@@ -70,6 +70,8 @@ module Karafka
                 }
               end
 
+              return if messages.empty?
+
               produce(messages)
 
               # Clear the sampler so it tracks new state changes without previous once impacting

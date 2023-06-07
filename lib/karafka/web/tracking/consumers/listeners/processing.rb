@@ -147,6 +147,9 @@ module Karafka
             #
             # @param consumer [::Karafka::BaseConsumer] consumer instance
             # @param type [String] job type
+            # @note Be aware, that non consumption jobs may not have any messages (empty) in them
+            #   when certain filters or features are applied. Please refer to the Karafka docs for
+            #   more details.
             def job_details(consumer, type)
               {
                 started_at: float_now,
@@ -154,6 +157,8 @@ module Karafka
                 partition: consumer.partition,
                 first_offset: consumer.messages.metadata.first_offset,
                 last_offset: consumer.messages.metadata.last_offset,
+                processing_lag: consumer.messages.metadata.processing_lag,
+                consumption_lag: consumer.messages.metadata.consumption_lag,
                 committed_offset: consumer.coordinator.seek_offset - 1,
                 consumer: consumer.class.to_s,
                 consumer_group: consumer.topic.consumer_group.id,

@@ -2,6 +2,8 @@
 
 ## 0.6.0 (Unreleased)
 - **[Feature]** Introduce producers errors tracking.
+- [Improvement] Collect more job metrics for future usage.
+- [Improvement] Normalize order of job columns on multiple views.
 - [Improvement] Improve pagination by providing a "Go to first page" fast button.
 - [Improvement] Provide more explicit info in the consumers view consumers running.
 - [Improvement] Validate error reporting with unified error contract.
@@ -9,6 +11,7 @@
 - [Improvement] Introduce `schema_version` to error reports.
 - [Fix] Fix invalid arrows style in the pagination.
 - [Fix] Fix missing empty `Process name` value in the errors index view.
+- [Fix] Fix potential empty dispatch of consumer metrics.
 - [Refactor] Cleanup common components for errors extraction.
 - [Refactor] Remove not used and redundant partials.
 
