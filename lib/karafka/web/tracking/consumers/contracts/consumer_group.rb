@@ -8,7 +8,7 @@ module Karafka
         module Contracts
           # Expected data for each consumer group
           # It's mostly about subscription groups details
-          class ConsumerGroup < BaseContract
+          class ConsumerGroup < Tracking::Contracts::Base
             configure
 
             required(:id) { |val| val.is_a?(String) && !val.empty? }

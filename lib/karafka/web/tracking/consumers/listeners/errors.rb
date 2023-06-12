@@ -7,6 +7,13 @@ module Karafka
         module Listeners
           # Listener related to tracking errors, DLQs, and retries metrics for the Web UI
           class Errors < Base
+            include Tracking::Helpers::ErrorInfo
+
+            # Schema used by consumers error reporting
+            SCHEMA_VERSION = '1.0.0'
+
+            private_constant :SCHEMA_VERSION
+
             # Collects errors info and counts errors
             #
             # @param event [Karafka::Core::Monitoring::Event]
@@ -23,6 +30,7 @@ module Karafka
                 error_class, error_message, backtrace = extract_error_info(event[:error])
 
                 sampler.errors << {
+                  schema_version: SCHEMA_VERSION,
                   type: event[:type],
                   error_class: error_class,
                   error_message: error_message,
@@ -56,13 +64,6 @@ module Karafka
 
             private
 
-            # @return [Object] sampler for the metrics
-            # @note We use this sampler to get basic process details that we want to assign
-            #   to the error
-            def consumer_sampler
-              @consumer_sampler ||= ::Karafka::Web.config.tracking.consumers.sampler
-            end
-
             # @param consumer [::Karafka::BaseConsumer]
             # @return [Hash] hash with consumer specific info for details of error
             def extract_consumer_info(consumer)
@@ -76,43 +77,6 @@ module Karafka
                 consumer: consumer.class.to_s,
                 tags: consumer.tags
               }
-            end
-
-            # Extracts the basic error info
-            #
-            # @param error [StandardError] error that occurred
-            # @return [Array<String, String, String>] array with error name, message and backtrace
-            def extract_error_info(error)
-              app_root = "#{::Karafka.root}/"
-
-              gem_home = if ENV.key?('GEM_HOME')
-                           ENV['GEM_HOME']
-                         else
-                           File.expand_path(File.join(Karafka.gem_root.to_s, '../'))
-                         end
-
-              gem_home = "#{gem_home}/"
-
-              backtrace = error.backtrace || []
-              backtrace.map! { |line| line.gsub(app_root, '') }
-              backtrace.map! { |line| line.gsub(gem_home, '') }
-
-              [
-                error.class.name,
-                extract_exception_message(error),
-                backtrace.join("\n")
-              ]
-            end
-
-            # @param error [StandardError] error that occurred
-            # @return [String] formatted exception message
-            def extract_exception_message(error)
-              error_message = error.message.to_s[0, 10_000]
-              error_message.force_encoding('utf-8')
-              error_message.scrub! if error_message.respond_to?(:scrub!)
-              error_message
-            rescue StandardError
-              '!!! Error message extraction failed !!!'
             end
           end
         end

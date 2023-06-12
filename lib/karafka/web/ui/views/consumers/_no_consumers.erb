@@ -1,0 +1,9 @@
+<div class="alert alert-info" role="alert">
+  <p>
+    There are no Karafka consumer processes actively reporting to the Web UI.
+  </p>
+
+  <p class="mb-0">
+    If you are sure you are running at least one <code>karafka server</code> instance, please make sure that it can report to the <code><%= Karafka::Web.config.topics.consumers.reports %></code> topic.
+  </p>
+</div>

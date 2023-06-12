@@ -4,26 +4,30 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-12">
-      <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
-        <thead>
-          <tr class="align-middle">
-            <th>Name</th>
-            <th class="col-sm-2">Started</th>
-            <th class="col-sm-1">Memory</th>
-            <th class="col-sm-1">Utilization</th>
-            <th class="col-sm-1">Total lag</th>
-          </tr>
-        </thead>
-        <tbody>
-          <%==
-            render_each(
-              @processes,
-              'consumers/_consumer',
-              local: :process
-            )
-          %>
-        </tbody>
-      </table>
+      <% if @processes.empty? %>
+        <%== partial 'consumers/no_consumers' %>
+      <% else %>
+        <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+          <thead>
+            <tr class="align-middle">
+              <th>Name</th>
+              <th class="col-sm-2">Started</th>
+              <th class="col-sm-1">Memory</th>
+              <th class="col-sm-1">Utilization</th>
+              <th class="col-sm-1">Total lag</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%==
+              render_each(
+                @processes,
+                'consumers/_consumer',
+                local: :process
+              )
+            %>
+          </tbody>
+        </table>
+      <% end %>
     </div>
   </div>
 </div>

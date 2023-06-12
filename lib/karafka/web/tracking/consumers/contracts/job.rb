@@ -6,7 +6,7 @@ module Karafka
       module Consumers
         module Contracts
           # Contract for the job reporting details
-          class Job < BaseContract
+          class Job < Tracking::Contracts::Base
             configure
 
             required(:consumer) { |val| val.is_a?(String) }
@@ -19,6 +19,9 @@ module Karafka
             required(:committed_offset) { |val| val.is_a?(Integer) }
             required(:type) { |val| %w[consume revoked shutdown].include?(val) }
             required(:tags) { |val| val.is_a?(Karafka::Core::Taggable::Tags) }
+            # -1 can be here for workless flows
+            required(:consumption_lag) { |val| val.is_a?(Integer) && (val >= 0 || val == -1) }
+            required(:processing_lag) { |val| val.is_a?(Integer) && (val >= 0 || val == -1) }
           end
         end
       end

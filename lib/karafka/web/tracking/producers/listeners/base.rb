@@ -3,10 +3,10 @@
 module Karafka
   module Web
     module Tracking
-      module Consumers
-        # Consumer monitoring related listeners
+      module Producers
+        # Namespace for producers listeners
         module Listeners
-          # Base consumers processes related listener
+          # Base listener for producer related listeners
           class Base
             include ::Karafka::Core::Helpers::Time
             extend Forwardable
@@ -18,12 +18,12 @@ module Karafka
 
             # @return [Object] sampler in use
             def sampler
-              @sampler ||= ::Karafka::Web.config.tracking.consumers.sampler
+              @sampler ||= ::Karafka::Web.config.tracking.producers.sampler
             end
 
             # @return [Object] reporter in use
             def reporter
-              @reporter ||= ::Karafka::Web.config.tracking.consumers.reporter
+              @reporter ||= ::Karafka::Web.config.tracking.producers.reporter
             end
           end
         end

@@ -33,6 +33,10 @@ RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
+
+  config.before do
+    ::Karafka::Web.config.tracking.producers.sampler.clear
+  end
 end
 
 require 'karafka/core/helpers/rspec_locator'

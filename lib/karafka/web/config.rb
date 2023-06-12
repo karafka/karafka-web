@@ -28,16 +28,15 @@ module Karafka
 
       # Tracking and reporting related settings
       setting :tracking do
-        # Collects the metrics we will be dispatching
-        # Tracks and reports the collected metrics
-        setting :reporter, default: Tracking::Reporter.new
-
         # How often should we report data from a single process
         # You may set it to a lower value in development but in production and scale, every
         # 5 seconds should be enough
         setting :interval, default: 5_000
 
         setting :consumers do
+          # Reports the metrics collected in the sampler
+          setting :reporter, default: Tracking::Consumers::Reporter.new
+
           setting :sampler, default: Tracking::Consumers::Sampler.new
 
           setting :listeners, default: [
@@ -51,7 +50,14 @@ module Karafka
         end
 
         setting :producers do
-          setting :listeners, default: []
+          setting :reporter, default: Tracking::Producers::Reporter.new
+
+          setting :sampler, default: Tracking::Producers::Sampler.new
+
+          setting :listeners, default: [
+            Tracking::Producers::Listeners::Errors.new,
+            Tracking::Producers::Listeners::Reporter.new
+          ]
         end
       end
 

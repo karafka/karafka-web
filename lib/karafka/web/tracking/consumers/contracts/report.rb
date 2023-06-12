@@ -9,7 +9,7 @@ module Karafka
           #
           # Any outgoing reporting needs to match this format for it to work with the statuses
           # consumer.
-          class Report < BaseContract
+          class Report < Tracking::Contracts::Base
             configure
 
             required(:schema_version) { |val| val.is_a?(String) }
