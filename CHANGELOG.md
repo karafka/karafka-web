@@ -8,7 +8,7 @@
 - [Improvement] Improve pagination by providing a "Go to first page" fast button.
 - [Improvement] Provide more explicit info in the consumers view when no consumers running.
 - [Improvement] Validate error reporting with unified error contract.
-- [Improvement] Use estimated errors count for counters presentation taken from the errors topic instead of materialization via from consumers states to allow for producers errors tracking.
+- [Improvement] Use estimated errors count for counters presentation taken from the errors topic instead of materialization via consumers states to allow for producers errors tracking.
 - [Improvement] Introduce `schema_version` to error reports.
 - [Improvement] Do not display the dispatched error message offset in the breadcrumb and title as it was confused with the error message content.
 - [Improvement] Display `error_class` value wrapped with code tag.
