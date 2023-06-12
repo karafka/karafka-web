@@ -4,7 +4,11 @@ module Karafka
   module Web
     module Tracking
       module Producers
-        # Reports the collected data about the process and sends it, so we can use it in the UI
+        # Reports the collected data about the producer and sends it, so we can use it in the UI
+        #
+        # @note Producer reported does not have to operate with the `forced` dispatch mainly
+        #   because there is no expectation on immediate status updates for producers and their
+        #   dispatch flow is always periodic based.
         class Reporter
           include ::Karafka::Core::Helpers::Time
 
@@ -20,18 +24,15 @@ module Karafka
           MUTEX = Mutex.new
 
           def initialize
-            # Move back so first report is dispatched fast to indicate, that the process is alive
+            # If there are any errors right after we started sampling, dispatch them immediately
             @tracked_at = monotonic_now - 10_000
             @error_contract = Tracking::Contracts::Error.new
           end
 
           # Dispatches the current state from sampler to appropriate topics
-          #
-          # @param forced [Boolean] should we report bypassing the time frequency or should we
-          #   report only in case we would not send the report for long enough time.
-          def report(forced: false)
+          def report
             MUTEX.synchronize do
-              return unless report?(forced)
+              return unless report?
 
               @tracked_at = monotonic_now
 
@@ -57,22 +58,11 @@ module Karafka
             end
           end
 
-          # Reports bypassing frequency check. This can be used to report when state changes in the
-          # process drastically. For example when process is stopping, we want to indicate this as
-          # fast as possible in the UI, etc.
-          def report!
-            report(forced: true)
-          end
-
           private
 
-          # @param forced [Boolean] is this report forced. Forced means that as long as we can
-          #   flush we will flush
           # @return [Boolean] Should we report or is it not yet time to do so
-          def report?(forced)
+          def report?
             return false unless ::Karafka.producer.status.active?
-
-            return true if forced
 
             (monotonic_now - @tracked_at) >= ::Karafka::Web.config.tracking.interval
           end
