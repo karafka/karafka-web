@@ -31,6 +31,29 @@ Because of the reporting schema update, it is recommended to:
 
 Please note that if you decide to use the updated Web UI with not updated consumers, you may hit a 500 error or offset related data may not be displayed correctly.
 
+#### Disabling producers instrumentation
+
+Producers error tracking **is** enabled by default. If you want to opt out of it, you need to disable the producers' instrumentation by clearing the producers' listeners:
+
+```ruby
+Karafka::Web.setup do |config|
+  # Do not instrument producers with web-ui listeners
+  config.tracking.producers.listeners = []
+end
+```
+
+#### Custom producers instrumentation
+
+By default, Karafka Web-UI instruments only `Karafka.producer`. If you use producers initialized by yourself, you need to connect the listeners to them manually. To do so, run the following code:
+
+```ruby
+::Karafka::Web.config.tracking.producers.listeners.each do |listener|
+  MY_CUSTOM_PRODUCER.monitor.subscribe(listener)
+end
+```
+
+Please make sure **not** to do it for the default `Karafka.producer` because it is instrumented out of the box.
+
 ## 0.5.2 (2023-05-22)
 - [Improvement] Label ActiveJob consumers jobs with `active_job` tag.
 - [Improvement] Label Virtual Partitions consumers with `virtual` tag.
