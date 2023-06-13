@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-## 0.6.0 (Unreleased)
+## 0.6.0 (2023-06-13)
 - **[Feature]** Introduce producers errors tracking.
 - [Improvement] Display the error origin as a badge to align with consumers view topic assignments.
 - [Improvement] Collect more job metrics for future usage.
