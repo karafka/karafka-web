@@ -75,8 +75,9 @@ module Karafka
               versions: {
                 ruby: ruby_version,
                 karafka: karafka_version,
-                waterdrop: waterdrop_version,
                 karafka_core: karafka_core_version,
+                karafka_web: karafka_web_version,
+                waterdrop: waterdrop_version,
                 rdkafka: rdkafka_version,
                 librdkafka: librdkafka_version
               },

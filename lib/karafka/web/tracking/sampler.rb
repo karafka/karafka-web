@@ -32,6 +32,11 @@ module Karafka
           ::Karafka::VERSION
         end
 
+        # @return [String] Karafka Web UI version
+        def karafka_web_version
+          ::Karafka::Web::VERSION
+        end
+
         # @return [String] Karafka::Core version
         def karafka_core_version
           ::Karafka::Core::VERSION

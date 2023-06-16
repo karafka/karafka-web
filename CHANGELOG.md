@@ -1,5 +1,12 @@
 # Karafka Web changelog
 
+## 0.6.1 (Unreleased)
+- [Enhancement] Include the karafka-web version in the status page tags.
+- [Enhancement] Report `karafka-web` version that is running in particular processes.
+- [Enhancement] Display `karafka-web` version in the per-process view.
+- [Fix] Do not recommend running a server as a way to bootstrap the initial state.
+- [Fix] Ensure in the report contract, that `karafka-core`, `karafka-web`, `rdkafka` and `librdkafka` are validated.
+
 ## 0.6.0 (2023-06-13)
 - **[Feature]** Introduce producers errors tracking.
 - [Improvement] Display the error origin as a badge to align with consumers view topic assignments.

@@ -38,9 +38,13 @@ module Karafka
             end
 
             nested(:versions) do
-              required(:karafka) { |val| val.is_a?(String) && !val.empty? }
-              required(:waterdrop) { |val| val.is_a?(String) && !val.empty? }
               required(:ruby) { |val| val.is_a?(String) && !val.empty? }
+              required(:karafka) { |val| val.is_a?(String) && !val.empty? }
+              required(:karafka_core) { |val| val.is_a?(String) && !val.empty? }
+              required(:karafka_web) { |val| val.is_a?(String) && !val.empty? }
+              required(:waterdrop) { |val| val.is_a?(String) && !val.empty? }
+              required(:rdkafka) { |val| val.is_a?(String) && !val.empty? }
+              required(:librdkafka) { |val| val.is_a?(String) && !val.empty? }
             end
 
             nested(:stats) do
