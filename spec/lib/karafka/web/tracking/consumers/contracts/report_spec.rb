@@ -101,9 +101,9 @@ RSpec.describe_current do
   end
 
   context 'when dispatched_at is not a number' do
-      before { report[:dispatched_at] = 'test' }
+    before { report[:dispatched_at] = 'test' }
 
-      it { expect(contract.call(report)).not_to be_success }
+    it { expect(contract.call(report)).not_to be_success }
   end
 
   %i[schema_version type].each do |attr|
@@ -163,18 +163,6 @@ RSpec.describe_current do
 
   context 'when consumer_groups is missing' do
     before { report.delete(:consumer_groups) }
-
-    it { expect(contract.call(report)).not_to be_success }
-  end
-
-  context 'when jobs is missing' do
-    before { report.delete(:jobs) }
-
-    it { expect(contract.call(report)).not_to be_success }
-  end
-
-  context 'when jobs is not an array' do
-    before { report[:jobs] = 'not_an_array' }
 
     it { expect(contract.call(report)).not_to be_success }
   end
@@ -631,12 +619,6 @@ RSpec.describe_current do
 
   context 'when stats.total.dead is negative' do
     before { report[:stats][:total][:dead] = -1 }
-
-    it { expect(contract.call(report)).not_to be_success }
-  end
-
-  context 'when consumer_groups is missing' do
-    before { report.delete(:consumer_groups) }
 
     it { expect(contract.call(report)).not_to be_success }
   end

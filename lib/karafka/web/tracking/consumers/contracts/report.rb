@@ -29,7 +29,7 @@ module Karafka
               required(:concurrency) { |val| val.is_a?(Integer) && val.positive? }
               required(:tags) { |val| val.is_a?(Karafka::Core::Taggable::Tags) }
 
-               required(:cpu_usage) do |val|
+              required(:cpu_usage) do |val|
                 val.is_a?(Array) &&
                   val.all? { |key| key.is_a?(Numeric) } &&
                   val.all? { |key| key >= -1 } &&

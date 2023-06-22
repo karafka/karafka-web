@@ -7,7 +7,7 @@ RSpec.describe_current do
     {
       consumer: 'consumer1',
       consumer_group: 'consumer_group1',
-      started_at: 1624301554.123,
+      started_at: 1_624_301_554.123,
       topic: 'topic1',
       partition: 0,
       first_offset: 0,
