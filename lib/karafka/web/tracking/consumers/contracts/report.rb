@@ -12,7 +12,7 @@ module Karafka
           class Report < Tracking::Contracts::Base
             configure
 
-            required(:schema_version) { |val| val.is_a?(String) }
+            required(:schema_version) { |val| val.is_a?(String) && !val.empty? }
             required(:dispatched_at) { |val| val.is_a?(Numeric) && val.positive? }
             # We have consumers and producer reports and need to ensure that each is handled
             # in an expected fashion
@@ -24,12 +24,12 @@ module Karafka
               required(:memory_usage) { |val| val.is_a?(Integer) && val >= 0 }
               required(:memory_total_usage) { |val| val.is_a?(Integer) && val >= 0 }
               required(:memory_size) { |val| val.is_a?(Integer) && val >= 0 }
-              required(:status) { |val| ::Karafka::Status::STATES.key?(val.to_sym) }
+              required(:status) { |val| ::Karafka::Status::STATES.key?(val.to_s.to_sym) }
               required(:listeners) { |val| val.is_a?(Integer) && val >= 0 }
               required(:concurrency) { |val| val.is_a?(Integer) && val.positive? }
               required(:tags) { |val| val.is_a?(Karafka::Core::Taggable::Tags) }
 
-              required(:cpu_usage) do |val|
+               required(:cpu_usage) do |val|
                 val.is_a?(Array) &&
                   val.all? { |key| key.is_a?(Numeric) } &&
                   val.all? { |key| key >= -1 } &&
