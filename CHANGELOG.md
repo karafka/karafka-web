@@ -1,9 +1,11 @@
 # Karafka Web changelog
 
 ## 0.6.1 (Unreleased)
-- [Enhancement] Include the karafka-web version in the status page tags.
-- [Enhancement] Report `karafka-web` version that is running in particular processes.
-- [Enhancement] Display `karafka-web` version in the per-process view.
+- [Improvement] Include the karafka-web version in the status page tags.
+- [Improvement] Report `karafka-web` version that is running in particular processes.
+- [Improvement] Display `karafka-web` version in the per-process view.
+- [Improvement] Report in the web-ui a scenario, where getting cluster info takes more than 500ms as a warning to make people realize, that operating with Kafka with extensive latencies is not recommended.
+- [Improvement] Continue the status assessment flow on warnings.
 - [Fix] Do not recommend running a server as a way to bootstrap the initial state.
 - [Fix] Ensure in the report contract, that `karafka-core`, `karafka-web`, `rdkafka` and `librdkafka` are validated.
 

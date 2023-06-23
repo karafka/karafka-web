@@ -8,7 +8,12 @@
           "status/#{@status.connection.to_s}",
           locals: {
             title: 'Connection to Kafka',
-            description: partial('status/failures/connection')
+            description: partial(
+              "status/#{@status.connection.partial_namespace}/connection",
+              locals: {
+                details: @status.connection.details
+              }
+            )
           }
         )
       %>
