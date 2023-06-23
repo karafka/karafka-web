@@ -5,6 +5,7 @@ module Karafka
     module Ui
       module Models
         # Model that represents the general status of the Web UI.
+        #
         # We use this data to display a status page that helps with debugging on what is missing
         # in the overall setup of the Web UI.
         #
@@ -15,7 +16,18 @@ module Karafka
           Step = Struct.new(:status, :details) do
             # @return [Boolean] is the given step successfully configured and working
             def success?
-              status == :success
+              status == :success || status == :warning
+            end
+
+            # @return [String] local namespace for partial of a given type
+            def partial_namespace
+              case status
+              when :success then 'successes'
+              when :warning then 'warnings'
+              when :failure then 'failures'
+              else
+                raise ::Karafka::Errors::UnsupportedCaseError, status
+              end
             end
 
             # @return [String] stringified status
@@ -29,11 +41,21 @@ module Karafka
             connect
           end
 
-          # @return [Status::Step] were we able to connect to Kafka or not
+          # @return [Status::Step] were we able to connect to Kafka or not and how fast.
+          # Some people try to work with Kafka over the internet with really high latency and this
+          # should be highlighted in the UI as often the connection just becomes unstable
           def connection
+            level = if @connection_time < 1_000
+                      :success
+                    elsif @connection_time < 1_000_000
+                      :warning
+                    else
+                      :failure
+                    end
+
             Step.new(
-              @connected ? :success : :failure,
-              nil
+              level,
+              { time: @connection_time }
             )
           end
 
@@ -171,12 +193,14 @@ module Karafka
             topics
           end
 
-          # Tries connecting with the cluster and sets the connection state
+          # Tries connecting with the cluster and saves the cluster info and the connection time
+          # @note If fails, `connection_time` will be 1_000_000
           def connect
+            started = Time.now.to_f
             @cluster_info = ::Karafka::Admin.cluster_info
-            @connected = true
+            @connection_time = (Time.now.to_f - started) * 1_000
           rescue ::Rdkafka::RdkafkaError
-            @connected = false
+            @connection_time = 1_000_000
           end
         end
       end
