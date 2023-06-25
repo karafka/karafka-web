@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-## 0.6.1 (Unreleased)
+## 0.6.1 (2023-06-25)
 - [Improvement] Include the karafka-web version in the status page tags.
 - [Improvement] Report `karafka-web` version that is running in particular processes.
 - [Improvement] Display `karafka-web` version in the per-process view.
