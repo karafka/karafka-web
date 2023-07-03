@@ -1,28 +1,30 @@
-<% if @current_page && (@current_page > 1 || @next_page) %>
+<% if @page_scope && @page_scope.paginate? %>
   <div id="pagination" class="container mb-5">
     <div class="row">
       <nav>
         <ul class="pagination justify-content-center">
-          <li class="page-item <%= 'disabled' if @current_page <= 1 %>">
-            <a class="page-link" href="<%= current_path(page: 1) %>">
+          <li class="page-item <%= 'disabled' unless @page_scope.first_offset? %>">
+            <a class="page-link" href="<%= current_path(@page_scope.offset_key => @page_scope.first_offset) %>">
               <span>&laquo;</span>
             </a>
           </li>
 
-          <li class="page-item <%= 'disabled' if @current_page <= 1 %>">
-            <a class="page-link" href="<%= current_path(page: @current_page - 1) %>">
+          <li class="page-item <%= 'disabled' unless @page_scope.previous_offset? %>">
+            <a class="page-link" href="<%= current_path(@page_scope.offset_key => @page_scope.previous_offset) %>">
               <span>&lsaquo; Prev</span>
             </a>
           </li>
 
-          <li class="page-item active disabled">
-            <a class="page-link" href="<%= current_path(page: @current_page) %>">
-              <span><%= @current_page %></span>
-            </a>
-          </li>
+          <% if @page_scope.current_offset? %>
+            <li class="page-item active disabled">
+              <a class="page-link" href="<%= current_path(@page_scope.offset_key => @page_scope.current_offset) %>">
+                <span><%= @page_scope.current_offset %></span>
+              </a>
+            </li>
+          <% end %>
 
-          <li class="page-item <%= 'disabled' unless @next_page %>">
-            <a class="page-link" href="<%= current_path(page: @next_page) %>">
+          <li class="page-item <%= 'disabled' unless @page_scope.next_offset? %>">
+            <a class="page-link" href="<%= current_path(@page_scope.offset_key => @page_scope.next_offset) %>">
               <span>Next &rsaquo;</span>
             </a>
           </li>

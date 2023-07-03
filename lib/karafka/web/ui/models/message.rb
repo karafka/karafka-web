@@ -45,7 +45,7 @@ module Karafka
 
               partitions_count = fetch_partition_count(topic_id)
 
-              no_data_result = [false, [], false, partitions_count]
+              no_data_result = [[], true, partitions_count]
 
               # If there is not even one message, we need to early exit
               # If low and high watermark offsets are of the same value, it means no data in the
@@ -58,12 +58,10 @@ module Karafka
 
               if start_offset <= low_offset
                 count = per_page - (low_offset - start_offset)
-                previous_page = page < 2 ? false : page - 1
-                next_page = false
+                last_page = true
                 start_offset = low_offset
               else
-                previous_page = page < 2 ? false : page - 1
-                next_page = page + 1
+                last_page = false
                 count = per_page
               end
 
@@ -94,9 +92,8 @@ module Karafka
                 next unless messages
 
                 return [
-                  previous_page,
                   fill_compacted(messages, context_offset, context_count).reverse,
-                  next_page,
+                  last_page,
                   partitions_count
                 ]
               end

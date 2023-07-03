@@ -68,8 +68,12 @@ module Karafka
         # Allows us to build current path with additional params
         # @param query_data [Hash] query params we want to add to the current path
         path :current do |query_data = {}|
-          q = query_data.map { |k, v| "#{k}=#{CGI.escape(v.to_s)}" }.join('&')
-          "#{request.path}?#{q}"
+          q = query_data
+              .select { |_, v| v }
+              .map { |k, v| "#{k}=#{CGI.escape(v.to_s)}" }
+              .join('&')
+
+          [request.path, q].compact.delete_if(&:empty?).join('?')
         end
 
         # Sets appropriate template variables based on the response object and renders the
