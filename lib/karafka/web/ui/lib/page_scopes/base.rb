@@ -4,6 +4,7 @@ module Karafka
   module Web
     module Ui
       module Lib
+        # Namespace for all the types of pagination engines we want to support
         module PageScopes
           # Abstraction on top of pagination, so we can alter pagination key and other things
           # for non-standard pagination views (non page based, etc)
@@ -42,7 +43,7 @@ module Karafka
               raise NotImplementedError, 'Implement in a subclass'
             end
 
-            # @return [Boolean] Shuld we show next offset pagination. If false, next offset link
+            # @return [Boolean] Should we show next offset pagination. If false, next offset link
             #   will be disabled.
             def next_offset?
               raise NotImplementedError, 'Implement in a subclass'

@@ -5,9 +5,10 @@ module Karafka
     module Ui
       module Lib
         module PageScopes
+          # Regular page-based pagination engine
           class PageBased < Base
             # @param current_offset [Integer] current page
-            # @param next_offset [Boolean] should we show next page
+            # @param show_next_offset [Boolean] should we show next page
             #   (value is computed automatically)
             def initialize(
               current_offset,
