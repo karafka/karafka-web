@@ -18,7 +18,7 @@ module Karafka
               end
             end
 
-            @partitions, last_page = Ui::Lib::PaginateArray.new.call(
+            @partitions, last_page = Ui::Lib::PaginateArray.call(
               partitions_total,
               @params.current_page
             )

@@ -23,7 +23,7 @@ module Karafka
             # Show pagination only when there is more than one page
             # @return [Boolean]
             def paginate?
-              @current_offset && (@current_offset > 1 || @next_offset)
+              @current_offset && (@current_offset > 1 || !!@next_offset)
             end
 
             # @return [Boolean] active the first page link when we are not on the first page
