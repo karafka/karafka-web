@@ -1,5 +1,10 @@
 # Karafka Web changelog
 
+## 0.7.0 (Unreleased)
+- [Improvement] When no params needed for a page, do not include empty params.
+- [Improvement] Do not include page when page is 1.
+- [Refactor] Reorganize pagination engine to support offset based pagination.
+
 ## 0.6.1 (2023-06-25)
 - [Improvement] Include the karafka-web version in the status page tags.
 - [Improvement] Report `karafka-web` version that is running in particular processes.

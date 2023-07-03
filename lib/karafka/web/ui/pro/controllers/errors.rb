@@ -22,12 +22,17 @@ module Karafka
             def index(partition_id)
               errors_topic = ::Karafka::Web.config.topics.errors
               @partition_id = partition_id
-              @previous_page, @error_messages, @next_page, @partitions_count = \
+              @error_messages, last_page, @partitions_count = \
                 Models::Message.page(
                   errors_topic,
                   @partition_id,
                   @params.current_page
                 )
+
+              @page_scope = Ui::Lib::PageScopes::PageBased.new(
+                @params.current_page,
+                !last_page
+              )
 
               @watermark_offsets = Ui::Models::WatermarkOffsets.find(errors_topic, @partition_id)
 

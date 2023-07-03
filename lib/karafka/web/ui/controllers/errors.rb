@@ -10,13 +10,18 @@ module Karafka
         class Errors < Base
           # Lists first page of the errors
           def index
-            @previous_page, @error_messages, @next_page, = Models::Message.page(
+            @error_messages, last_page, = Models::Message.page(
               errors_topic,
               0,
               @params.current_page
             )
 
             @watermark_offsets = Ui::Models::WatermarkOffsets.find(errors_topic, 0)
+
+            @page_scope = Ui::Lib::PageScopes::PageBased.new(
+              @params.current_page,
+              !last_page
+            )
 
             respond
           end

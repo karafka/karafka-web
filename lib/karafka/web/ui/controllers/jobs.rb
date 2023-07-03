@@ -19,9 +19,14 @@ module Karafka
               end
             end
 
-            @jobs, @next_page = Ui::Lib::PaginateArray.new.call(
+            @jobs, last_page = Ui::Lib::PaginateArray.call(
               jobs_total,
               @params.current_page
+            )
+
+            @page_scope = Ui::Lib::PageScopes::PageBased.new(
+              @params.current_page,
+              !last_page
             )
 
             respond

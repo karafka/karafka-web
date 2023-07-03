@@ -39,10 +39,15 @@ module Karafka
 
               @watermark_offsets = Ui::Models::WatermarkOffsets.find(topic_id, partition_id)
 
-              @previous_page, @messages, @next_page, @partitions_count = Ui::Models::Message.page(
+              @messages, last_page, @partitions_count = Ui::Models::Message.page(
                 @topic_id,
                 @partition_id,
                 @params.current_page
+              )
+
+              @page_scope = Ui::Lib::PageScopes::PageBased.new(
+                @params.current_page,
+                !last_page
               )
 
               respond
