@@ -29,7 +29,7 @@ RSpec.describe_current do
 
   context 'when no data and page 1' do
     let(:array) { [] }
-    let(:page) { 2 }
+    let(:page) { 1 }
 
     it { expect(pagination[0]).to eq([]) }
     it { expect(pagination[1]).to eq(true) }

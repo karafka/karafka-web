@@ -14,14 +14,8 @@ module Karafka
             #   are from the last page
             def call(array, current_page)
               slices = array.each_slice(per_page).to_a
-
               current_data = slices[current_page - 1] || []
-
-              if slices.count >= current_page - 1 && current_data.size >= per_page
-                last_page = false
-              else
-                last_page = true
-              end
+              last_page = !(slices.count >= current_page - 1 && current_data.size >= per_page)
 
               [current_data, last_page]
             end
