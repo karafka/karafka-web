@@ -17,6 +17,7 @@ module Karafka
               @previous_offset = current_offset - 1
               @current_offset = current_offset
               @next_offset = show_next_offset ? current_offset + 1 : false
+              super()
             end
 
             # Show pagination only when there is more than one page

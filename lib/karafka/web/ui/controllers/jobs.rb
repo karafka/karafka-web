@@ -24,8 +24,7 @@ module Karafka
               @params.current_page
             )
 
-            @page_scope = Ui::Lib::PageScopes::PageBased.new(
-              @params.current_page,
+            @page_scope = Ui::Lib::PageScopes::PageBased.new(@params.current_page,
               !last_page
             )
 
