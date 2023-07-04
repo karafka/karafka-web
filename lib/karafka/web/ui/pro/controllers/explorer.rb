@@ -75,7 +75,7 @@ module Karafka
             private
 
             # Fetches current page data
-            # @param [Array] fetched data with pagination information
+            # @return [Array] fetched data with pagination information
             def current_page_data
               Ui::Models::Message.offset_page(
                 @topic_id,
