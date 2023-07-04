@@ -25,6 +25,7 @@ RSpec.describe_current do
     it { expect(pagination.current_offset).to eq(1) }
     it { expect(pagination.next_offset?).to eq(2) }
     it { expect(pagination.offset_key).to eq('page') }
+    it { expect(pagination.current_label).to eq('1') }
   end
 
   context 'when last page' do
@@ -40,5 +41,6 @@ RSpec.describe_current do
     it { expect(pagination.current_offset).to eq(10) }
     it { expect(pagination.next_offset?).to eq(false) }
     it { expect(pagination.offset_key).to eq('page') }
+    it { expect(pagination.current_label).to eq('10') }
   end
 end

@@ -42,7 +42,7 @@ module Karafka
             engine = case args.count
                      when 2
                        Ui::Lib::Paginations::PageBased
-                     when 3
+                     when 4
                        Ui::Lib::Paginations::OffsetBased
                      else
                        raise ::Karafka::Errors::UnsupportedCaseError, args.count

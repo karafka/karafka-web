@@ -17,11 +17,13 @@ module Karafka
             def initialize(
               previous_offset,
               current_offset,
-              next_offset
+              next_offset,
+              visible_offsets
             )
               @previous_offset = previous_offset
               @current_offset = current_offset
               @next_offset = next_offset
+              @visible_offsets = visible_offsets
               super()
             end
 
@@ -52,11 +54,10 @@ module Karafka
               !!@previous_offset
             end
 
-            # @return [Boolean] Since this is offset based pagination, there is no notion of
-            #   the current page and we operate on offsets. Because of that there is no continuous
-            #   pagination, thus we hide the current page.
+            # @return [Boolean] We show current label with offsets that are present on the given
+            #   page
             def current_offset?
-              false
+              true
             end
 
             # @return [Boolean] move to the next page if not false. False indicates, that there is
@@ -70,6 +71,15 @@ module Karafka
             # @return [Integer]
             def next_offset
               next_offset? ? @next_offset : 0
+            end
+
+            # @return [String] label of the current page. It is combined out of the first and
+            #   the last offsets to show the range where we are. It will be empty if no offsets
+            #   but this is not a problem as then we should not display pagination at all
+            def current_label
+              first = @visible_offsets.first
+              last = @visible_offsets.last
+              [first, last].compact.uniq.join(' - ').to_s
             end
 
             # @return [String] for offset based pagination we use the offset param name

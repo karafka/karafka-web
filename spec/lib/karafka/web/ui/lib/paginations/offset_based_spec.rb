@@ -4,8 +4,16 @@ RSpec.describe_current do
   let(:previous_offset) { 10 }
   let(:current_offset) { 20 }
   let(:next_offset) { 30 }
+  let(:visible_offsets) { [10, 20, 30] }
 
-  subject(:pagination) { described_class.new(previous_offset, current_offset, next_offset) }
+  subject(:pagination) do
+    described_class.new(
+      previous_offset,
+      current_offset,
+      next_offset,
+      visible_offsets
+    )
+  end
 
   describe '#paginate?' do
     context 'when there is more than one page' do
@@ -64,7 +72,7 @@ RSpec.describe_current do
 
   describe '#current_offset?' do
     it 'returns false' do
-      expect(pagination.current_offset?).to be false
+      expect(pagination.current_offset?).to be true
     end
   end
 
@@ -103,6 +111,38 @@ RSpec.describe_current do
   describe '#offset_key' do
     it 'returns "offset"' do
       expect(pagination.offset_key).to eq('offset')
+    end
+  end
+
+  describe '#current_label' do
+    context 'when visible_offsets are empty' do
+      let(:visible_offsets) { [] }
+
+      it 'returns an empty string' do
+        expect(pagination.current_label).to eq('')
+      end
+    end
+
+    context 'when visible_offsets contain only one offset' do
+      let(:visible_offsets) { [10] }
+
+      it 'returns the single offset as a string' do
+        expect(pagination.current_label).to eq('10')
+      end
+    end
+
+    context 'when visible_offsets contain multiple offsets' do
+      it 'returns the range of the first and last offsets joined with a hyphen' do
+        expect(pagination.current_label).to eq('10 - 30')
+      end
+    end
+
+    context 'when visible_offsets contain duplicate offsets' do
+      let(:visible_offsets) { [10, 20, 10, 30, 30] }
+
+      it 'returns the unique offsets in the range' do
+        expect(pagination.current_label).to eq('10 - 30')
+      end
     end
   end
 end

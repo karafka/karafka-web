@@ -40,7 +40,12 @@ module Karafka
 
               previous_offset, @messages, next_offset, @partitions_count = current_page_data
 
-              paginate(previous_offset, @params.current_offset, next_offset)
+              paginate(
+                previous_offset,
+                @params.current_offset,
+                next_offset,
+                @messages.map(&:offset)
+              )
 
               respond
             end
