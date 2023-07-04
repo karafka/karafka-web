@@ -14,6 +14,8 @@ module Karafka
             # @param current_offset [Integer] current offset
             # @param next_offset [Integer, Boolean] should we show next offset page button. If
             #   false it will not be presented.
+            # @param visible_offsets [Array<Integer>] offsets that are visible in the paginated
+            #   view. It is needed for the current page label
             def initialize(
               previous_offset,
               current_offset,
