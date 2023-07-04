@@ -39,12 +39,16 @@ module Karafka
           # Initializes the expected pagination engine and assigns expected arguments
           # @param args Any arguments accepted by the selected pagination engine
           def paginate(*args)
-            @pagination = pagination_engine.new(*args)
-          end
+            engine = case args.count
+                     when 2
+                       Ui::Lib::Paginations::PageBased
+                     when 3
+                       Ui::Lib::Paginations::OffsetBased
+                     else
+                       raise ::Karafka::Errors::UnsupportedCaseError, args.count
+                     end
 
-          # @return [Class] default pagination engine
-          def pagination_engine
-            Ui::Lib::Paginations::PageBased
+            @pagination = engine.new(*args)
           end
         end
       end

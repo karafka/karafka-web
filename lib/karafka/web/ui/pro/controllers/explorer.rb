@@ -85,11 +85,6 @@ module Karafka
                 @watermark_offsets[:high]
               )
             end
-
-            # @return [Class] offset based pagination
-            def pagination_engine
-              Ui::Lib::Paginations::OffsetBased
-            end
           end
         end
       end

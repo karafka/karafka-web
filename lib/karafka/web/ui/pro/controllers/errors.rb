@@ -64,11 +64,6 @@ module Karafka
             def errors_topic
               ::Karafka::Web.config.topics.errors
             end
-
-            # @return [Class] offset based pagination
-            def pagination_engine
-              Ui::Lib::Paginations::OffsetBased
-            end
           end
         end
       end
