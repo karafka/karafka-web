@@ -13,7 +13,12 @@ module Karafka
             @watermark_offsets = Ui::Models::WatermarkOffsets.find(errors_topic, 0)
             previous_offset, @error_messages, next_offset, = current_page_data
 
-            paginate(previous_offset, @params.current_offset, next_offset)
+            paginate(
+              previous_offset,
+              @params.current_offset,
+              next_offset,
+              @error_messages.map(&:offset)
+            )
 
             respond
           end

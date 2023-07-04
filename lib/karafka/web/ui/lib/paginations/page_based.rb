@@ -47,6 +47,11 @@ module Karafka
               true
             end
 
+            # @return [String] label of the current page
+            def current_label
+              @current_offset.to_s
+            end
+
             # @return [Boolean] move to the next page if not false. False indicates, that there is
             #   no next page to move to
             def next_offset?

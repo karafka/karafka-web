@@ -18,7 +18,9 @@
           <% if @pagination.current_offset? %>
             <li class="page-item active disabled">
               <a class="page-link" href="<%= current_path(@pagination.offset_key => @pagination.current_offset) %>">
-                <span><%= @pagination.current_offset %></span>
+                <span>
+                  <%= @pagination.current_label %>
+                </span>
               </a>
             </li>
           <% end %>

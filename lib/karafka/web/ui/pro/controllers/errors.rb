@@ -23,9 +23,14 @@ module Karafka
               @partition_id = partition_id
               @watermark_offsets = Ui::Models::WatermarkOffsets.find(errors_topic, @partition_id)
 
-              previous_page, @error_messages, next_page, @partitions_count = current_page_data
+              previous_offset, @error_messages, next_offset, @partitions_count = current_page_data
 
-              paginate(previous_page, @params.current_offset, next_page)
+              paginate(
+                previous_offset,
+                @params.current_offset,
+                next_offset,
+                @error_messages.map(&:offset)
+              )
 
               respond
             end
