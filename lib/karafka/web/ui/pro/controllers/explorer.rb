@@ -36,19 +36,11 @@ module Karafka
             def partition(topic_id, partition_id)
               @topic_id = topic_id
               @partition_id = partition_id
-
               @watermark_offsets = Ui::Models::WatermarkOffsets.find(topic_id, partition_id)
 
-              @messages, last_page, @partitions_count = Ui::Models::Message.page(
-                @topic_id,
-                @partition_id,
-                @params.current_page
-              )
+              previous_offset, @messages, next_offset, @partitions_count = current_page_data
 
-              @page_scope = Ui::Lib::PageScopes::PageBased.new(
-                @params.current_page,
-                !last_page
-              )
+              paginate(previous_offset, @params.current_offset, next_offset)
 
               respond
             end
@@ -78,6 +70,20 @@ module Karafka
               end
 
               respond
+            end
+
+            private
+
+            # Fetches current page data
+            # @return [Array] fetched data with pagination information
+            def current_page_data
+              Ui::Models::Message.offset_page(
+                @topic_id,
+                @partition_id,
+                @params.current_offset,
+                @watermark_offsets[:low],
+                @watermark_offsets[:high]
+              )
             end
           end
         end

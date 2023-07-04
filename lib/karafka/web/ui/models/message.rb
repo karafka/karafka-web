@@ -30,39 +30,44 @@ module Karafka
               )
             end
 
-            # Fetches requested page of Kafka messages.
+            # Fetches requested `page_count` number of Kafka messages starting from the oldest
+            # requested `start_offset`. If `start_offset` is `-1`, will fetch the most recent
+            # results
             #
             # @param topic_id [String]
             # @param partition_id [Integer]
-            # @param page [Integer]
-            # @return [Array] We return both page data as well as all the details needed to build
+            # @param start_offset [Integer] oldest offset from which we want to get the data
+            # @param low_offset [Integer] low watermark offset
+            # @param high_offset [Integer] high watermark offset
+            # @return [Array] We return page data as well as all the details needed to build
             #   the pagination details.
-            def page(topic_id, partition_id, page)
-              low_offset, high_offset = Karafka::Admin.read_watermark_offsets(
-                topic_id,
-                partition_id
-              )
-
+            def offset_page(topic_id, partition_id, start_offset, low_offset, high_offset)
               partitions_count = fetch_partition_count(topic_id)
 
-              no_data_result = [[], true, partitions_count]
+              # If we start from offset -1, it means we want first page with the most recent
+              # results. We obtain this page by using the offset based on the high watermark
+              # off
+              start_offset = high_offset - per_page if start_offset == -1
 
-              # If there is not even one message, we need to early exit
-              # If low and high watermark offsets are of the same value, it means no data in the
-              # topic is present
+              # No previous pages, no data, and no more offsets
+              no_data_result = [false, [], false, partitions_count]
+
+              # If there is no data, we return the no results result
               return no_data_result if low_offset == high_offset
 
-              # We add plus one because we compute previous offset from which we want to start and
-              # not previous page leading offset
-              start_offset = high_offset - (per_page * page)
-
               if start_offset <= low_offset
+                # If this page does not contain max per page, compute how many messages we can
+                # fetch before stopping
                 count = per_page - (low_offset - start_offset)
-                last_page = true
+                next_offset = false
                 start_offset = low_offset
               else
-                last_page = false
-                count = per_page
+                next_offset = start_offset - per_page
+                # Do not go below the lowest possible offset
+                next_offset = low_offset if next_offset < low_offset
+                count = high_offset - start_offset
+                # If there would be more messages that we want to get, force max
+                count = per_page if count > per_page
               end
 
               # This code is a bit tricky. Since topics can be compacted and certain offsets may
@@ -91,9 +96,14 @@ module Karafka
 
                 next unless messages
 
+                previous_offset = start_offset + count
+
                 return [
+                  # If there is a potential previous page with more recent data, compute its
+                  # offset
+                  previous_offset >= high_offset ? false : previous_offset,
                   fill_compacted(messages, context_offset, context_count).reverse,
-                  last_page,
+                  next_offset,
                   partitions_count
                 ]
               end
