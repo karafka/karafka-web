@@ -9,9 +9,11 @@ module Karafka
           #
           # Allows us to support paginating over offsets
           class OffsetBased < Base
-            # @param current_offset [Integer] current page
-            # @param show_next_offset [Boolean] should we show next page
-            #   (value is computed automatically)
+            # @param previous_offset [Integer, false] previous offset or false if should not be
+            #   presented
+            # @param current_offset [Integer] current offset
+            # @param next_offset [Integer, Boolean] should we show next offset page button. If
+            #   false it will not be presented.
             def initialize(
               previous_offset,
               current_offset,
@@ -51,7 +53,7 @@ module Karafka
             end
 
             # @return [Boolean] Since this is offset based pagination, there is no notion of
-            #   the current page and we operate on offsets. Becuase of that there is no continuus
+            #   the current page and we operate on offsets. Because of that there is no continuous
             #   pagination, thus we hide the current page.
             def current_offset?
               false

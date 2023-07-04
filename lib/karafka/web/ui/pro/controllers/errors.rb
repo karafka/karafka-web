@@ -52,12 +52,12 @@ module Karafka
             #   obtained metadata
             def current_page_data
               Models::Message.offset_page(
-                 errors_topic,
-                 @partition_id,
-                 @params.current_offset,
-                 @watermark_offsets[:low],
-                 @watermark_offsets[:high]
-               )
+                errors_topic,
+                @partition_id,
+                @params.current_offset,
+                @watermark_offsets[:low],
+                @watermark_offsets[:high]
+              )
             end
 
             # @return [String] errors topic

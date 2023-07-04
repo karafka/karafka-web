@@ -28,7 +28,7 @@ module Karafka
             #   is provided, we go with the high offset first page approach
             def current_offset
               @current_offset ||= begin
-                offset = @request_params.fetch('offset') { -1 }.to_i
+                offset = @request_params.fetch('offset', -1).to_i
                 offset < -1 ? -1 : offset
               end
             end
