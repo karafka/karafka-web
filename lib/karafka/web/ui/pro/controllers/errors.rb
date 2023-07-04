@@ -20,21 +20,12 @@ module Karafka
           class Errors < Ui::Controllers::Base
             # @param partition_id [Integer] id of the partition of errors we are interested in
             def index(partition_id)
-              errors_topic = ::Karafka::Web.config.topics.errors
               @partition_id = partition_id
-              @error_messages, last_page, @partitions_count = \
-                Models::Message.page(
-                  errors_topic,
-                  @partition_id,
-                  @params.current_page
-                )
-
-              @page_scope = Ui::Lib::PageScopes::PageBased.new(
-                @params.current_page,
-                !last_page
-              )
-
               @watermark_offsets = Ui::Models::WatermarkOffsets.find(errors_topic, @partition_id)
+
+              previous_page, @error_messages, next_page, @partitions_count = current_page_data
+
+              paginate(previous_page, @params.current_offset, next_page)
 
               respond
             end
@@ -44,7 +35,6 @@ module Karafka
             # @param partition_id [Integer]
             # @param offset [Integer]
             def show(partition_id, offset)
-              errors_topic = ::Karafka::Web.config.topics.errors
               @partition_id = partition_id
               @offset = offset
               @error_message = Models::Message.find(
@@ -54,6 +44,30 @@ module Karafka
               )
 
               respond
+            end
+
+            private
+
+            # @return [Array] Array with requested messages as well as pagination details and other
+            #   obtained metadata
+            def current_page_data
+              Models::Message.offset_page(
+                 errors_topic,
+                 @partition_id,
+                 @params.current_offset,
+                 @watermark_offsets[:low],
+                 @watermark_offsets[:high]
+               )
+            end
+
+            # @return [String] errors topic
+            def errors_topic
+              ::Karafka::Web.config.topics.errors
+            end
+
+            # @return [Class] offset based pagination
+            def pagination_engine
+              Ui::Lib::Paginations::OffsetBased
             end
           end
         end

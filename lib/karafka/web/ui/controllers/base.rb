@@ -12,6 +12,8 @@ module Karafka
             @params = params
           end
 
+          private
+
           # Builds the respond data object with assigned attributes based on instance variables.
           #
           # @return [Responses::Data] data that should be used to render appropriate view
@@ -32,6 +34,17 @@ module Karafka
               "#{scope}/#{action}",
               attributes
             )
+          end
+
+          # Initializes the expected pagination engine and assigns expected arguments
+          # @param args Any arguments accepted by the selected pagination engine
+          def paginate(*args)
+            @pagination = pagination_engine.new(*args)
+          end
+
+          # @return [Class] default pagination engine
+          def pagination_engine
+            Ui::Lib::Paginations::PageBased
           end
         end
       end

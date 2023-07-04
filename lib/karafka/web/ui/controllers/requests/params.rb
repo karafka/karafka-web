@@ -22,6 +22,16 @@ module Karafka
                 page.positive? ? page : 1
               end
             end
+
+            # @return [Integer] offset from which we want to start. `-1` indicates, that we want
+            #   to show the first page discovered based on the high watermark offset. If no offset
+            #   is provided, we go with the high offset first page approach
+            def current_offset
+              @current_offset ||= begin
+                offset = @request_params.fetch('offset') { -1 }.to_i
+                offset < -1 ? -1 : offset
+              end
+            end
           end
         end
       end

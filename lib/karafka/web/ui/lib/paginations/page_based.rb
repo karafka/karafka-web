@@ -4,7 +4,7 @@ module Karafka
   module Web
     module Ui
       module Lib
-        module PageScopes
+        module Paginations
           # Regular page-based pagination engine
           class PageBased < Base
             # @param current_offset [Integer] current page
