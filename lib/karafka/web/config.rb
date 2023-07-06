@@ -6,11 +6,6 @@ module Karafka
     class Config
       include ::Karafka::Core::Configurable
 
-      #setting(:secret_key_base, default: false, constructor: ->(default) {
-      #    ::Object.const_defined?(:Rails) ? Rails.application.secrets[:secret_key_base] : default
-      #  }
-      #)
-
       # How long do we consider the process alive without receiving status info about it
       # For this long we also display dead processes (shutdown) in the UI
       # This is used both in the processing for eviction and in the UI
@@ -91,7 +86,7 @@ module Karafka
           #
           # This is the max partitions we query for and if there are more, their data will not be
           # displayed and we will show a warning. This prevents the system from being overloaded
-          # as for the negative lookups we need to perform additionals calls to Kafka
+          # as for the negative lookups we need to perform additional calls to Kafka
           #
           # If the system is responsive for you with this number, you can increase it to match
           # your cluster setup

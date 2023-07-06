@@ -108,11 +108,11 @@ module Karafka
 
             private
 
-            # @return [Array<?>]
+            # @return [Array<Hash>] topics informations
             def topics
-                Karafka::Admin
-                  .cluster_info
-                  .topics
+              Karafka::Admin
+                .cluster_info
+                .topics
             end
 
             # Fetches current page data

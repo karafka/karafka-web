@@ -115,6 +115,7 @@ module Karafka
             # and merges the results. Ensures, that pagination works as expected.
             #
             # @param topic_id [String]
+            # @param page [Integer] which page we want to get
             # @param partitions_count [Integer] how many partitions do we have in this topic
             def topic_page(topic_id, page, partitions_count)
               # For topics with a lot of partitions we cannot get all the data efficiently, that
@@ -127,8 +128,8 @@ module Karafka
                 limited = false
               end
 
-              # This is the bottlenect, for each partition we make one request :(
-              offsets = max_partitions.times.map do |partition|
+              # This is the bottleneck, for each partition we make one request :(
+              offsets = Array.new(max_partitions) do |partition|
                 [partition, Models::WatermarkOffsets.find(topic_id, partition)]
               end.to_h
 
@@ -146,8 +147,8 @@ module Karafka
 
               # Figure out how many elements we want to get at most per each partition
               limits = elements_for_page(page, counts)
-                        .map { |a| [a[:partition], a[:indices].size] }
-                        .to_h
+                       .map { |a| [a[:partition], a[:indices].size] }
+                       .to_h
 
               iterator = Karafka::Pro::Iterator.new({ topic_id => ranges })
 
@@ -162,11 +163,12 @@ module Karafka
               partitions_count.times { |i| aggregated[i] }
 
               # We prefill all the potential offsets for each partition, so in case they were
-              # compacted, we get a continuus flow
+              # compacted, we get a continuous flow
               limits.each do |partition, limit|
                 start = ranges[partition]
+
                 limit.times.each do |i|
-                  aggregated[partition][start] = start
+                  aggregated[partition][start + i] = start + i
                 end
               end
 
@@ -207,10 +209,7 @@ module Karafka
               (first_global_index...last_global_index).each do |global_index|
                 set_index = global_index % counts.size
                 element_index = global_index / counts.size
-
-                if element_index < counts[set_index]
-                  set_indices_map[set_index] << element_index
-                end
+                set_indices_map[set_index] << element_index if element_index < counts[set_index]
               end
 
               set_indices_map.map do |partition, indices|
