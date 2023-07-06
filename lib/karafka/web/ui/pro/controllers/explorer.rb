@@ -20,11 +20,40 @@ module Karafka
           class Explorer < Ui::Controllers::Base
             # Lists all the topics we can explore
             def index
-              @topics = Karafka::Admin
-                        .cluster_info
-                        .topics
+              @topics = topics
                         .reject { |topic| topic[:topic_name] == '__consumer_offsets' }
                         .sort_by { |topic| topic[:topic_name] }
+
+              respond
+            end
+
+            # Displays aggregated messages from (potentially) all partitions of a topic
+            #
+            # @param topic_id [String]
+            #
+            # @note This view may not be 100% accurate because we merge multiple partitions data
+            #   into a single view and this is never accurate. It can be used however to quickly
+            #   look at most recent data flowing, etc, hence it is still useful for aggregated
+            #   metrics information
+            #
+            # @note We cannot use offset references here because each of the partitions may have
+            #   completely different values
+            #
+            # @note This view is also limited to `max_aggregable_partitions` because librdkafka
+            #   at the moment does not support querying for watermark offsets in batches
+            def topic(topic_id)
+              topic = topics.find { |topic_data| topic_data[:topic_name] == topic_id }
+              topic || raise(Web::Errors::Ui::NotFoundError, topic_id)
+
+              @topic_id = topic_id
+              @partitions_count = topic[:partition_count]
+              @max_aggregable_partitions = Web.config.ui.explorer.max_aggregable_partitions
+
+              @messages, next_page, @limited = Models::Message.topic_page(
+                topic_id, @params.current_page, @partitions_count
+              )
+
+              paginate(@params.current_page, next_page)
 
               respond
             end
@@ -38,7 +67,7 @@ module Karafka
               @partition_id = partition_id
               @watermark_offsets = Ui::Models::WatermarkOffsets.find(topic_id, partition_id)
 
-              previous_offset, @messages, next_offset, @partitions_count = current_page_data
+              previous_offset, @messages, next_offset, @partitions_count = current_partition_data
 
               paginate(
                 previous_offset,
@@ -63,7 +92,7 @@ module Karafka
               @payload_error = false
 
               @decrypt = if ::Karafka::App.config.encryption.active
-                           ::Karafka::Web.config.ui.decrypt
+                           ::Karafka::Web.config.ui.explorer.decrypt
                          else
                            true
                          end
@@ -79,9 +108,16 @@ module Karafka
 
             private
 
+            # @return [Array<?>]
+            def topics
+                Karafka::Admin
+                  .cluster_info
+                  .topics
+            end
+
             # Fetches current page data
-            # @return [Array] fetched data with pagination information
-            def current_page_data
+            # @return [Array] fetched data with pagination information for the requested partition
+            def current_partition_data
               Ui::Models::Message.offset_page(
                 @topic_id,
                 @partition_id,

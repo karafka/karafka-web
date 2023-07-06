@@ -81,6 +81,10 @@ module Karafka
                 render_response controller.partition(topic_id, partition_id)
               end
 
+              r.get String do |topic_id|
+                render_response controller.topic(topic_id)
+              end
+
               r.get do
                 render_response controller.index
               end

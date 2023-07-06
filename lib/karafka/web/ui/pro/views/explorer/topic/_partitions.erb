@@ -1,0 +1,15 @@
+<p class="text-end mb-4">
+  Partitions:
+  <span class="badge bg-secondary mt-1 mb-1">
+    total: <%= @partitions_count %>
+  </span>
+
+  <span class="badge bg-secondary mt-1 mb-1">
+    visible:
+    <% if @limited %>
+      <%= @max_aggregable_partitions %>
+    <% else %>
+      <%= @partitions_count %>
+    <% end %>
+  </span>
+</p>
