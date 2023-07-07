@@ -1,0 +1,21 @@
+<table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+  <thead>
+    <tr class="align-middle">
+      <th>Origin</th>
+      <th>Process name</th>
+      <th>Error</th>
+      <th>Occurred at</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%==
+      each_partial(
+        @error_messages,
+        'errors/error',
+        local: :error_msg
+      )
+    %>
+  </tbody>
+</table>

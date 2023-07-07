@@ -7,6 +7,8 @@ module Karafka
         # A proxy between `::Karafka::Messages::Message` and web UI
         # We work with the Karafka messages but use this model to wrap the work needed.
         class Message
+          extend Lib::Paginations::Paginators
+
           class << self
             # Looks for a message from a given topic partition
             #
@@ -41,8 +43,9 @@ module Karafka
             # @param high_offset [Integer] high watermark offset
             # @return [Array] We return page data as well as all the details needed to build
             #   the pagination details.
-            def offset_page(topic_id, partition_id, start_offset, low_offset, high_offset)
-              partitions_count = fetch_partition_count(topic_id)
+            def offset_page(topic_id, partition_id, start_offset, watermark_offsets)
+              low_offset = watermark_offsets.low
+              high_offset = watermark_offsets.high
 
               # If we start from offset -1, it means we want first page with the most recent
               # results. We obtain this page by using the offset based on the high watermark
@@ -50,7 +53,7 @@ module Karafka
               start_offset = high_offset - per_page if start_offset == -1
 
               # No previous pages, no data, and no more offsets
-              no_data_result = [false, [], false, partitions_count]
+              no_data_result = [false, [], false]
 
               # If there is no data, we return the no results result
               return no_data_result if low_offset == high_offset
@@ -102,35 +105,26 @@ module Karafka
                   # If there is a potential previous page with more recent data, compute its
                   # offset
                   previous_offset >= high_offset ? false : previous_offset,
-                  fill_compacted(messages, context_offset, context_count).reverse,
-                  next_offset,
-                  partitions_count
+                  fill_compacted(messages, partition_id, context_offset, context_count).reverse,
+                  next_offset
                 ]
               end
 
               no_data_result
             end
 
-            # Fetches requested `page_count` number of Kafka messages from all the topic partitions
+            # Fetches requested `page_count` number of Kafka messages from the topic partitions
             # and merges the results. Ensures, that pagination works as expected.
             #
             # @param topic_id [String]
+            # @param partitions_ids [Array<Integer>] for which of the partitions we want to
+            #   get the data. This is a limiting factor because of the fact that we have to
+            #   query the watermark offsets independently
             # @param page [Integer] which page we want to get
-            # @param partitions_count [Integer] how many partitions do we have in this topic
-            def topic_page(topic_id, page, partitions_count)
-              # For topics with a lot of partitions we cannot get all the data efficiently, that
-              # is why we limit number of partitions by default
-              if partitions_count > max_aggregable_partitions
-                max_partitions = max_aggregable_partitions
-                limited = true
-              else
-                max_partitions = partitions_count
-                limited = false
-              end
-
+            def topic_page(topic_id, partitions_ids, page)
               # This is the bottleneck, for each partition we make one request :(
-              offsets = Array.new(max_partitions) do |partition|
-                [partition, Models::WatermarkOffsets.find(topic_id, partition)]
+              offsets = partitions_ids.map do |partition_id|
+                [partition_id, Models::WatermarkOffsets.find(topic_id, partition_id)]
               end.to_h
 
               # Count number of elements we have in each partition
@@ -141,16 +135,24 @@ module Karafka
               # Establish initial offsets for the iterator (where to start) per partition
               # We do not use the negative lookup iterator because we already can compute starting
               # offsets. This saves a lot of calls to Kafka
-              ranges = elements_for_page(page, counts)
-                       .map { |a| [a[:partition], offsets[a[:partition]][:high] - a[:indices].last] }
-                       .to_h
+              ranges = Sets.call(counts, page).map do |partition_range|
+                partition_position = partition_range[:set]
+                partition_id = partitions_ids.to_a[partition_position]
+                watermarks = offsets[partition_id]
 
-              # Figure out how many elements we want to get at most per each partition
-              limits = elements_for_page(page, counts)
-                       .map { |a| [a[:partition], a[:indices].size] }
-                       .to_h
+                lowest = watermarks[:high] - partition_range[:indices].last
+                # We -1 because high watermark offset is the next incoming offset and not the last
+                # one in the topic partition
+                highest = watermarks[:high] - partition_range[:indices].first - 1
 
-              iterator = Karafka::Pro::Iterator.new({ topic_id => ranges })
+                # This range represents offsets we want to fetch
+                [partition_id, lowest..highest]
+              end.to_h
+
+              # We start on our topic from the lowest offset for each expected partition
+              iterator = Karafka::Pro::Iterator.new(
+                { topic_id => ranges.transform_values(&:first) }
+              )
 
               # Build the aggregated representation for each partition messages, so we can start
               # with assumption that all the topics are fully compacted. Then we can nicely replace
@@ -160,65 +162,36 @@ module Karafka
 
               # We initialize the hash so we have a constant ascending order based on the partition
               # number
-              partitions_count.times { |i| aggregated[i] }
+              partitions_ids.each { |i| aggregated[i] }
 
               # We prefill all the potential offsets for each partition, so in case they were
               # compacted, we get a continuous flow
-              limits.each do |partition, limit|
-                start = ranges[partition]
-
-                limit.times.each do |i|
-                  aggregated[partition][start + i] = start + i
-                end
+              ranges.each do |partition, range|
+                partition_aggr = aggregated[partition]
+                range.each { |i| partition_aggr[i] = [partition, i] }
               end
 
               # Iterate over all partitions and collect data
               iterator.each do |message|
+                range = ranges[message.partition]
+
+                # Do not fetch more data from a partition for which we got last message from the
+                # expected offsets
+                # When all partitions are stopped, we will stop operations. This drastically
+                # improves performance because we no longer have to poll nils
+                iterator.stop_current_partition if message.offset >= range.last
+
                 partition = aggregated[message.partition]
                 partition[message.offset] = message
-
-                # Since we may be getting more data because of incoming messages, we need to make
-                # sure that we stop when we've got as much as we needed per each partition
-                iterator.stop_current_partition if partition.count >= limits[message.partition]
               end
 
               [
                 aggregated.values.map(&:values).map(&:reverse).reduce(:+),
-                !elements_for_page(page + 1, counts).empty?,
-                limited
+                !Sets.call(counts, page + 1).empty?
               ]
             end
 
             private
-
-            # Figures out how many elements and from which partition should we get on a given page
-            # It takes into consideration cases where we have more partitions than per page
-            # elements
-            # @param page_number [Integer] page number (starts with 1)
-            # @param counts [Array<Integer>] array with count of messages in each partition
-            # @return [Hash<Integer, Range>] hash with per-partition details on which elements
-            #   should be taken. It returns values starting from 0 and this needs to be reverse
-            #   converted against watermark offsets
-            def elements_for_page(page_number, counts)
-              total_elements = counts.sum
-              first_global_index = (page_number - 1) * per_page
-              last_global_index = [first_global_index + per_page, total_elements].min
-
-              set_indices_map = Hash.new { |h, k| h[k] = [] }
-
-              (first_global_index...last_global_index).each do |global_index|
-                set_index = global_index % counts.size
-                element_index = global_index / counts.size
-                set_indices_map[set_index] << element_index if element_index < counts[set_index]
-              end
-
-              set_indices_map.map do |partition, indices|
-                {
-                  partition: partition,
-                  indices: indices.min...indices.max + 1
-                }
-              end
-            end
 
             # @param args [Object] anything required by the admin `#read_topic`
             # @return [Array<Karafka::Messages::Message>, false] topic partition messages or false
@@ -231,24 +204,9 @@ module Karafka
               raise
             end
 
-            # @param topic_id [String] id of the topic
-            # @return [Integer] number of partitions this topic has
-            def fetch_partition_count(topic_id)
-              ::Karafka::Admin
-                .cluster_info
-                .topics
-                .find { |topic| topic[:topic_name] == topic_id }
-                .fetch(:partition_count)
-            end
-
             # @return [Integer] elements per page
             def per_page
               ::Karafka::Web.config.ui.per_page
-            end
-
-            # @return [Integer] how many partitions data at most we can aggregate
-            def max_aggregable_partitions
-              Karafka::Web.config.ui.explorer.max_aggregable_partitions
             end
 
             # Since we paginate with compacted offsets visible but we do not get compacted messages
@@ -260,11 +218,11 @@ module Karafka
             #   have exactly the number that was  requested and not more
             # @return [Array<Karafka::Messages::Message, Integer>] array with gaps filled with the
             #   missing offset
-            def fill_compacted(messages, start_offset, count)
+            def fill_compacted(messages, partition_id, start_offset, count)
               Array.new(count) do |index|
                 messages.find do |message|
                   (message.offset - start_offset) == index
-                end || start_offset + index
+                end || [partition_id, start_offset + index]
               end
             end
           end

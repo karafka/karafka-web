@@ -1,0 +1,31 @@
+<div class="container mb-4">
+  <div class="row">
+    <div class="col">
+      <h3>
+        Errors
+      </h3>
+    </div>
+
+    <div class="col">
+        <div class="col-auto text-end">
+           <label class="col-form-label">Partition</label>
+        </div>
+    </div>
+
+    <div class="col pt-1 mb-0 pb-0">
+        <div class="col-auto">
+          <select class="form-select form-select-sm mb-0 form-control" id="current-partition">
+            <%==
+              each_partial(
+                [nil] + @partitions_count.times.to_a,
+                'errors/partition_option',
+                local: :partition
+              )
+            %>
+          </select>
+        </div>
+    </div>
+  </div>
+
+  <hr>
+</div>

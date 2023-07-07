@@ -19,7 +19,10 @@ module Karafka
               end
             end
 
-            @jobs, last_page = Ui::Lib::PaginateArray.call(jobs_total, @params.current_page)
+            @jobs, last_page = Ui::Lib::Paginations::Paginators::Arrays.call(
+              jobs_total,
+              @params.current_page
+            )
 
             paginate(@params.current_page, !last_page)
 

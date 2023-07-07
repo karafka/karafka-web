@@ -8,7 +8,8 @@ module Karafka
         class Cluster < Base
           # List cluster info data
           def index
-            @cluster_info = Karafka::Admin.cluster_info
+            # Make sure, that for the cluster view we always get the most recent cluster state
+            @cluster_info = Models::ClusterInfo.fetch(cached: false)
 
             partitions_total = []
 
@@ -18,7 +19,7 @@ module Karafka
               end
             end
 
-            @partitions, last_page = Ui::Lib::PaginateArray.call(
+            @partitions, last_page = Ui::Lib::Paginations::Paginators::Arrays.call(
               partitions_total,
               @params.current_page
             )

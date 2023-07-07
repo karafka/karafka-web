@@ -11,7 +11,7 @@ module Karafka
           def index
             @current_state = Models::State.current!
             @counters = Models::Counters.new(@current_state)
-            @processes, last_page = Lib::PaginateArray.call(
+            @processes, last_page = Ui::Lib::Paginations::Paginators::Arrays.call(
               Models::Processes.active(@current_state),
               @params.current_page
             )

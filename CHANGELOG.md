@@ -2,6 +2,7 @@
 
 ## 0.7.0 (Unreleased)
 - **[Feature]** Introduce per-topic data exploration (limited up to 50 first partitions by default).
+- [Improvement] Introduce in-memory cluster state cached to improve performance.
 - [Improvement] Switch to offset based pagination instead of per-page pagination.
 - [Improvement] Avoid double-reading of watermark offsets for explorer and errors display.
 - [Improvement] When no params needed for a page, do not include empty params.

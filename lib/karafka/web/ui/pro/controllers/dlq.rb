@@ -28,8 +28,7 @@ module Karafka
                                 .compact
                                 .select(&:itself)
 
-              @dlq_topics = Karafka::Admin
-                            .cluster_info
+              @dlq_topics = Models::ClusterInfo
                             .topics
                             .select { |topic| dlq_topic_names.include?(topic[:topic_name]) }
                             .sort_by { |topic| topic[:topic_name] }

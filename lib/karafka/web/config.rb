@@ -80,6 +80,8 @@ module Karafka
       end
 
       setting :ui do
+        setting :cache, default: Ui::Lib::TtlCache.new(60_000 * 5)
+
         setting :explorer do
           # On a per topic view it is expensive (one call per partition) to get offsets and
           # manage the states for aggregated view.
@@ -93,7 +95,7 @@ module Karafka
           #
           # librdkafka currently does not support batch watermark offsets aggregations and this is
           # why this limit is introduced.
-          setting :max_aggregable_partitions, default: 50
+          setting :max_aggregable_partitions, default: 10
 
           # Should the payload be decrypted for the Pro Web UI. Default to `false` due to security
           # reasons

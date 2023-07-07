@@ -1,7 +1,10 @@
-<% if message.is_a?(Integer) %>
+<% if message.is_a?(Array) %>
   <tr>
     <td class="text-muted">
-      <%= message %>
+      <%= message[0] %>
+    </td>
+    <td class="text-muted">
+      <%= message[1] %>
     </td>
     <td colspan="3" class="text-center text-muted">
       This message has either been removed or compacted and is no longer available.
