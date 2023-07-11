@@ -39,7 +39,7 @@ RSpec.describe_current do
     it { expect(pagination[2]).to eq(true) }
   end
 
-  context 'when there are 26 partitions and second page' do
+  context 'when there are 26 partitions and a third page' do
     let(:partitions_count) { 26 }
     let(:page) { 3 }
 
@@ -47,7 +47,6 @@ RSpec.describe_current do
     it { expect(pagination[1]).to eq(2) }
     it { expect(pagination[2]).to eq(true) }
   end
-
 
   context 'when there are 109 partitions and first page' do
     let(:partitions_count) { 109 }
@@ -67,7 +66,7 @@ RSpec.describe_current do
     it { expect(pagination[2]).to eq(true) }
   end
 
-  context 'when there are 109 partitions and second page' do
+  context 'when there are 109 partitions and a third page' do
     let(:partitions_count) { 109 }
     let(:page) { 3 }
 
