@@ -64,7 +64,7 @@ module Karafka
               next if time >= monotonic_now
 
               @times.delete(key)
-              delete(key)
+              @values.delete(key)
             end
           end
         end
