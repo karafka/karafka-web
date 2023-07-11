@@ -32,7 +32,7 @@ module Karafka
                   # Which "chunked" page do we want to get
                   materialized_page = (current_page / slices_count.to_f).ceil
                   # Which slice is the one we are operating on
-                  active_slice_index =  (current_page - 1) % slices_count
+                  active_slice_index = (current_page - 1) % slices_count
                   # All available slices so we can pick one that is active
                   partitions_slices = (0...partitions_count).each_slice(in_slice).to_a
                   # Select active partitions only

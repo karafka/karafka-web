@@ -29,7 +29,7 @@ module Karafka
 
                   loop do
                     lists_count = lists.length
-                    return {} if lists_count == 0
+                    return {} if lists_count.zero?
 
                     shortest_list_count = lists.map(&:last).min
                     mover = (shortest_list_count - curr_item_index)

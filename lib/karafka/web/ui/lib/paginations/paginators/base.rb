@@ -6,8 +6,10 @@ module Karafka
       module Lib
         module Paginations
           module Paginators
+            # Base paginator
             class Base
               class << self
+                # @return [Integer] number of elements per page
                 def per_page
                   ::Karafka::Web.config.ui.per_page
                 end

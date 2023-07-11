@@ -103,19 +103,20 @@ RSpec.describe_current do
 
     context 'when page 1' do
       let(:page) { 1 }
-      it { expect(pagination).to eq({ 0 => 0..5, 1 => 0..1, 2 => 0..5, 3 => 0..5, 4 => 0..4  }) }
+
+      it { expect(pagination).to eq({ 0 => 0..5, 1 => 0..1, 2 => 0..5, 3 => 0..5, 4 => 0..4 }) }
     end
 
     context 'when page 2' do
       let(:page) { 2 }
 
-      it { expect(pagination).to eq({ 0 => 6..11, 2 => 6..11, 3 => 6..11, 4 => 5..11  }) }
+      it { expect(pagination).to eq({ 0 => 6..11, 2 => 6..11, 3 => 6..11, 4 => 5..11 }) }
     end
 
     context 'when page 3' do
       let(:page) { 3 }
 
-      it { expect(pagination).to eq({ 0 => 12..19, 2 => 12..19, 3 => 12..12, 4 => 12..19  }) }
+      it { expect(pagination).to eq({ 0 => 12..19, 2 => 12..19, 3 => 12..12, 4 => 12..19 }) }
     end
 
     context 'when high page' do
