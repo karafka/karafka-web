@@ -197,7 +197,9 @@ module Karafka
           # @note If fails, `connection_time` will be 1_000_000
           def connect
             started = Time.now.to_f
-            @cluster_info = ::Karafka::Admin.cluster_info
+            # For status we always need uncached data, otherwise status could cache outdated
+            # info
+            @cluster_info = Models::ClusterInfo.fetch(cached: false)
             @connection_time = (Time.now.to_f - started) * 1_000
           rescue ::Rdkafka::RdkafkaError
             @connection_time = 1_000_000

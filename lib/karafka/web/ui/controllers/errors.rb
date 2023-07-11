@@ -43,8 +43,7 @@ module Karafka
               errors_topic,
               0,
               @params.current_offset,
-              @watermark_offsets[:low],
-              @watermark_offsets[:high]
+              @watermark_offsets
             )
           end
 

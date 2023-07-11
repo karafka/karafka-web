@@ -1,14 +1,16 @@
 <li class="breadcrumb-item">
-  <a href="<%= root_path('errors', 0) %>">
+  <a href="<%= root_path('errors') %>">
     Errors
   </a>
 </li>
 
-<li class="breadcrumb-item">
-  <a href="<%= root_path('errors', @partition_id) %>">
-    Partition <%= @partition_id %>
-  </a>
-</li>
+<% if @partition_id %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('errors', @partition_id) %>">
+      Partition <%= @partition_id %>
+    </a>
+  </li>
+<% end %>
 
 <% if @offset %>
   <li class="breadcrumb-item">

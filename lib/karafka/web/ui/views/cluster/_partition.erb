@@ -3,7 +3,7 @@
 <% if topic[:topic_name] != '__consumer_offsets' %>
   <tr>
     <td>
-      <a href="<%= root_path('explorer', topic[:topic_name], 0) %>">
+      <a href="<%= root_path('explorer', topic[:topic_name]) %>">
         <%= topic[:topic_name] %>
       </a>
     <td>

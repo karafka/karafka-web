@@ -80,6 +80,8 @@ module Karafka
       end
 
       setting :ui do
+        setting :cache, default: Ui::Lib::TtlCache.new(60_000 * 5)
+
         # Should the payload be decrypted for the Pro Web UI. Default to `false` due to security
         # reasons
         setting :decrypt, default: false
