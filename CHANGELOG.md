@@ -7,7 +7,6 @@
 - [Improvement] Avoid double-reading of watermark offsets for explorer and errors display.
 - [Improvement] When no params needed for a page, do not include empty params.
 - [Improvement] Do not include page when page is 1 in the url.
-- [Refactor] Replace `ui.decrypt` config option with `ui.explorer.decrypt`
 - [Refactor] Reorganize pagination engine to support offset based pagination.
 
 ## 0.6.1 (2023-06-25)

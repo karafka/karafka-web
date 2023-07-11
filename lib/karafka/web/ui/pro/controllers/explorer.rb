@@ -93,7 +93,7 @@ module Karafka
               @payload_error = false
 
               @decrypt = if ::Karafka::App.config.encryption.active
-                           ::Karafka::Web.config.ui.explorer.decrypt
+                           ::Karafka::Web.config.ui.decrypt
                          else
                            true
                          end

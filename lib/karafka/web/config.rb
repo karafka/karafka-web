@@ -82,11 +82,9 @@ module Karafka
       setting :ui do
         setting :cache, default: Ui::Lib::TtlCache.new(60_000 * 5)
 
-        setting :explorer do
-          # Should the payload be decrypted for the Pro Web UI. Default to `false` due to security
-          # reasons
-          setting :decrypt, default: false
-        end
+        # Should the payload be decrypted for the Pro Web UI. Default to `false` due to security
+        # reasons
+        setting :decrypt, default: false
 
         # How many elements should we display on pages that support pagination
         setting :per_page, default: 25
