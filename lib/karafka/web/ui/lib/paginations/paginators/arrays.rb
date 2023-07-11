@@ -5,6 +5,7 @@ module Karafka
     module Ui
       module Lib
         module Paginations
+          # Namespace for comamnds that build paginated resources based on the provided page
           module Paginators
             # A simple wrapper for paginating array related data structures
             # We call this with plural (same with `Sets`) to avoid confusion with Ruby classes

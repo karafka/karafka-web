@@ -39,8 +39,7 @@ module Karafka
             # @param topic_id [String]
             # @param partition_id [Integer]
             # @param start_offset [Integer] oldest offset from which we want to get the data
-            # @param low_offset [Integer] low watermark offset
-            # @param high_offset [Integer] high watermark offset
+            # @param watermark_offsets [Ui::Models::WatermarkOffsets] watermark offsets
             # @return [Array] We return page data as well as all the details needed to build
             #   the pagination details.
             def offset_page(topic_id, partition_id, start_offset, watermark_offsets)
@@ -212,6 +211,7 @@ module Karafka
             # we need to fill those with  just the missing offset and handle this on the UI.
             #
             # @param messages [Array<Karafka::Messages::Message>] selected messages
+            # @param partition_id [Integer] number of partition for which we fill message gap
             # @param start_offset [Integer] offset of the first message (lowest) that we received
             # @param count [Integer] how many messages we wanted - we need that to fill spots to
             #   have exactly the number that was  requested and not more

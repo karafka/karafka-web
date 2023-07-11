@@ -5,9 +5,12 @@ module Karafka
     module Ui
       # Non info related extra components used in the UI
       module Lib
+        # Ttl Cache for caching things in-memory
+        # @note It **is** thread-safe
         class TtlCache
           include ::Karafka::Core::Helpers::Time
 
+          # @param ttl [Integer] time in ms how long should this cache keep data
           def initialize(ttl)
             @ttl = ttl
             @times = {}
@@ -15,6 +18,10 @@ module Karafka
             @mutex = Mutex.new
           end
 
+          # Reads data from the cache
+          #
+          # @param key [String, Symbol] key for the cache read
+          # @return [Object] anything that was cached
           def read(key)
             @mutex.synchronize do
               evict
@@ -22,6 +29,11 @@ module Karafka
             end
           end
 
+          # Writes to the cache
+          #
+          # @param key [String, Symbol] key for the cache
+          # @param value [Object] value we want to cache
+          # @return [Object] value we have written
           def write(key, value)
             @mutex.synchronize do
               @times[key] = monotonic_now + @ttl
@@ -29,6 +41,11 @@ module Karafka
             end
           end
 
+          # Reads from the cache and if value not present, will run the block and store its result
+          # in the cache
+          #
+          # @param key [String, Symbol] key for the cache read
+          # @return [Object] anything that was cached or yielded
           def fetch(key, value)
             @mutex.synchronize do
               evict
@@ -41,6 +58,7 @@ module Karafka
 
           private
 
+          # Removes expired elements from the cache
           def evict
             @times.each do |key, time|
               next if time >= monotonic_now

@@ -18,23 +18,19 @@ module Karafka
         module Controllers
           # Errors details controller
           class Errors < Ui::Controllers::Base
+            include Ui::Lib::Paginations
+
+            # Lists all the errors from all the partitions
             def index
               @topic_id = errors_topic
               @partitions_count = Models::ClusterInfo.partitions_count(errors_topic)
-              @max_aggregable_partitions = Web.config.ui.explorer.max_aggregable_partitions
 
-              # For topics with a lot of partitions we cannot get all the data efficiently, that
-              # is why we limit number of partitions by default
-              if @partitions_count > @max_aggregable_partitions
-                aggreagable_partitions = 0...@max_aggregable_partitions
-                @limited = true
-              else
-                aggreagable_partitions = 0...@partitions_count
-                @limited = false
-              end
+              @active_partitions, materialized_page, @limited = Paginators::Partitions.call(
+                @partitions_count, @params.current_page
+              )
 
               @error_messages, next_page = Models::Message.topic_page(
-                errors_topic, aggreagable_partitions, @params.current_page
+                errors_topic, @active_partitions, materialized_page
               )
 
               paginate(@params.current_page, next_page)
