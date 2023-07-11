@@ -46,7 +46,7 @@ module Karafka
           #
           # @param key [String, Symbol] key for the cache read
           # @return [Object] anything that was cached or yielded
-          def fetch(key, value)
+          def fetch(key)
             @mutex.synchronize do
               evict
 
