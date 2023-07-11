@@ -18,6 +18,8 @@ module Karafka
         module Controllers
           # Data explorer controller
           class Explorer < Ui::Controllers::Base
+            include Ui::Lib::Paginations
+
             # Lists all the topics we can explore
             def index
               @topics = Models::ClusterInfo
@@ -39,26 +41,16 @@ module Karafka
             #
             # @note We cannot use offset references here because each of the partitions may have
             #   completely different values
-            #
-            # @note This view is also limited to `max_aggregable_partitions` because librdkafka
-            #   at the moment does not support querying for watermark offsets in batches
             def topic(topic_id)
               @topic_id = topic_id
               @partitions_count = Models::ClusterInfo.partitions_count(topic_id)
-              @max_aggregable_partitions = Web.config.ui.explorer.max_aggregable_partitions
 
-              # For topics with a lot of partitions we cannot get all the data efficiently, that
-              # is why we limit number of partitions by default
-              if @partitions_count > @max_aggregable_partitions
-                aggreagable_partitions = 0...@max_aggregable_partitions
-                @limited = true
-              else
-                aggreagable_partitions = 0...@partitions_count
-                @limited = false
-              end
+              @active_partitions, materialized_page, @limited = Paginators::Partitions.call(
+                @partitions_count, @params.current_page
+              )
 
               @messages, next_page = Models::Message.topic_page(
-                topic_id, aggreagable_partitions, @params.current_page
+                topic_id, @active_partitions, materialized_page
               )
 
               paginate(@params.current_page, next_page)

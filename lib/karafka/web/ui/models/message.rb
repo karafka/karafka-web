@@ -135,15 +135,14 @@ module Karafka
               # Establish initial offsets for the iterator (where to start) per partition
               # We do not use the negative lookup iterator because we already can compute starting
               # offsets. This saves a lot of calls to Kafka
-              ranges = Sets.call(counts, page).map do |partition_range|
-                partition_position = partition_range[:set]
+              ranges = Sets.call(counts, page).map do |partition_position, partition_range|
                 partition_id = partitions_ids.to_a[partition_position]
                 watermarks = offsets[partition_id]
 
-                lowest = watermarks[:high] - partition_range[:indices].last
+                lowest = watermarks[:high] - partition_range.last - 1
                 # We -1 because high watermark offset is the next incoming offset and not the last
                 # one in the topic partition
-                highest = watermarks[:high] - partition_range[:indices].first - 1
+                highest = watermarks[:high] - partition_range.first - 1
 
                 # This range represents offsets we want to fetch
                 [partition_id, lowest..highest]

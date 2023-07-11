@@ -8,7 +8,7 @@ module Karafka
           module Paginators
             # A simple wrapper for paginating array related data structures
             # We call this with plural (same with `Sets`) to avoid confusion with Ruby classes
-            module Arrays
+            class Arrays < Base
               class << self
                 # @param array [Array] array we want to paginate
                 # @param current_page [Integer] page we want to be on
@@ -21,13 +21,6 @@ module Karafka
                   last_page = !(slices.count >= current_page - 1 && current_data.size >= per_page)
 
                   [current_data, last_page]
-                end
-
-                private
-
-                # @return [Integer] how many elements should we display in the UI
-                def per_page
-                  ::Karafka::Web.config.ui.per_page
                 end
               end
             end

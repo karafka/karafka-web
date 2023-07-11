@@ -6,39 +6,74 @@ module Karafka
       module Lib
         module Paginations
           module Paginators
-            module Sets
+            # Paginator that allows us to take several lists/sets and iterate over them in a
+            # round-robin fashion.
+            #
+            # It does not have to iterate over all the elements from each set for higher pages
+            # making it much more effective than the naive implementation.
+            class Sets < Base
               class << self
-                # @param array [Array] array we want to paginate
-                # @param current_page [Integer] page we want to be on
-                # @return [Array<Array, Boolean>] Array with two elements: first is the array with
-                #   data of the given page and second is a boolean flag with info if the elements we got
-                #   are from the last page
+                # @param counts [Array<Integer>] sets elements counts
+                # @param current_page [Integer] page number
+                # @return [Hash<Integer, Range>] hash with integer keys indicating the count
+                #   location and the range needed to be taken of elements (counting backwards) for
+                #   each partition
                 def call(counts, current_page)
-                  total_elements = counts.sum
-                  first_global_index = (current_page - 1) * per_page
-                  last_global_index = [first_global_index + per_page, total_elements].min
+                  return {} if current_page < 1
 
-                  set_indices_map = Hash.new { |h, k| h[k] = [] }
+                  lists = counts.dup.map.with_index { |el, i| [i, el] }
 
-                  (first_global_index...last_global_index).each do |global_index|
-                    set_index = global_index % counts.size
-                    element_index = global_index / counts.size
-                    set_indices_map[set_index] << element_index if element_index < counts[set_index]
+                  curr_item_index = 0
+                  curr_list_index = 0
+                  items_to_skip_count = per_page * (current_page - 1)
+
+                  loop do
+                    lists_count = lists.length
+                    return {} if lists_count == 0
+
+                    shortest_list_count = lists.map(&:last).min
+                    mover = (shortest_list_count - curr_item_index)
+                    items_we_are_considering_count = lists_count * mover
+
+                    if items_we_are_considering_count >= items_to_skip_count
+                      curr_item_index += items_to_skip_count / lists_count
+                      curr_list_index = items_to_skip_count % lists_count
+                      break
+                    else
+                      curr_item_index = shortest_list_count
+                      lists.delete_if { |x| x.last == shortest_list_count }
+                      items_to_skip_count -= items_we_are_considering_count
+                    end
                   end
 
-                  set_indices_map.map do |set, indices|
-                    {
-                      set: set,
-                      indices: indices.min...indices.max + 1
-                    }
+                  page_items = []
+                  largest_list_count = lists.map(&:last).max
+
+                  while page_items.length < per_page && curr_item_index < largest_list_count
+                    curr_list = lists[curr_list_index]
+
+                    if curr_item_index < curr_list.last
+                      page_items << [curr_list.first, curr_item_index]
+                    end
+
+                    curr_list_index += 1
+                    if curr_list_index == lists.length
+                      curr_list_index = 0
+                      curr_item_index += 1
+                    end
                   end
-                end
 
-                private
+                  hashed = Hash.new { |h, k| h[k] = [] }
 
-                # @return [Integer] how many elements should we display in the UI
-                def per_page
-                  ::Karafka::Web.config.ui.per_page
+                  page_items.each do |el|
+                    hashed[el.first] << el.last
+                  end
+
+                  hashed.each do |key, value|
+                    hashed[key] = (value.first..value.last)
+                  end
+
+                  hashed
                 end
               end
             end

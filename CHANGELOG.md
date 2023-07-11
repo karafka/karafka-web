@@ -1,7 +1,7 @@
 # Karafka Web changelog
 
 ## 0.7.0 (Unreleased)
-- **[Feature]** Introduce per-topic data exploration (limited up to 50 first partitions by default).
+- **[Feature]** Introduce per-topic data exploration in the Explorer.
 - [Improvement] Introduce in-memory cluster state cached to improve performance.
 - [Improvement] Switch to offset based pagination instead of per-page pagination.
 - [Improvement] Avoid double-reading of watermark offsets for explorer and errors display.
