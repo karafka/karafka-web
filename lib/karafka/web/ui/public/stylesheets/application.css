@@ -2,6 +2,9 @@ body {
   background-color: #f5f6fe;
   font-size: 95%;
   color: #393939;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
 }
 
 #content {
@@ -111,4 +114,8 @@ code.wrapped {
 
 .blurred {
   filter: blur(4px)
+}
+
+main {
+  flex: 1;
 }

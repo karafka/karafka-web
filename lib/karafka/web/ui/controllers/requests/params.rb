@@ -8,6 +8,17 @@ module Karafka
         module Requests
           # Internal representation of params with sane sanitization
           class Params
+            # What ranges we support for charts
+            # Anything else will be rejected
+            ALLOWED_RANGES = %w[
+              seconds
+              minutes
+              hours
+              days
+            ].freeze
+
+            private_constant :ALLOWED_RANGES
+
             # @param request_params [Hash] raw hash with params
             def initialize(request_params)
               @request_params = request_params
@@ -21,6 +32,13 @@ module Karafka
 
                 page.positive? ? page : 1
               end
+            end
+
+            # @return [String] Range type for charts we want to fetch
+            def current_range
+              candidate = @request_params.fetch('range', 'seconds')
+              candidate = ALLOWED_RANGES.first unless ALLOWED_RANGES.include?(candidate)
+              candidate.to_sym
             end
 
             # @return [Integer] offset from which we want to start. `-1` indicates, that we want

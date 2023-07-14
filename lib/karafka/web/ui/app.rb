@@ -12,9 +12,20 @@ module Karafka
         instance_exec(&CONTEXT_DETAILS)
 
         route do |r|
-          r.root { r.redirect root_path('consumers') }
+          r.root { r.redirect root_path('dashboard') }
+
+          # Serve current version specific assets to prevent users from fetching old assets
+          # after upgrade
+          r.on(:assets, Karafka::Web::VERSION) do
+            r.public
+          end
 
           @current_page = params.current_page
+
+          r.get 'stats' do
+            current_state = Models::State.current!
+            Models::Counters.new(current_state).to_h
+          end
 
           r.on 'consumers' do
             r.get String, 'subscriptions' do |_process_id|

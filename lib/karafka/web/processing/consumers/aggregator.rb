@@ -10,6 +10,13 @@ module Karafka
         class Aggregator
           include ::Karafka::Core::Helpers::Time
 
+          # Current schema version
+          # This can be used in the future for detecting incompatible changes and writing
+          # migrations
+          SCHEMA_VERSION = '1.1.0'
+
+          private_constant :SCHEMA_VERSION
+
           def initialize
             # We keep whole reports for computation of active, current counters
             @active_reports = {}
@@ -30,11 +37,19 @@ module Karafka
             # We could calculate this on a per request basis but this would require fetching all
             # the active processes for each view and we do not want that for performance reasons
             refresh_current_stats
+
+            # Inject new historical state for historicals
+            update_historicals
           end
 
+          # Sets the dispatch time and converts to json that can be shipped to the states topic
+          #
           # @param _args [Object] extra parsing arguments (not used)
           # @return [String] json representation of the current processes state
           def to_json(*_args)
+            state[:schema_version] = SCHEMA_VERSION
+            state[:dispatched_at] = float_now
+
             state.to_json
           end
 
@@ -103,14 +118,17 @@ module Karafka
             stats[:processes] = 0
             stats[:rss] = 0
             stats[:listeners_count] = 0
+            stats[:lag_stored] = 0
             utilization = 0
 
             @active_reports
               .values
               .reject { |report| report[:process][:status] == 'stopped' }
               .each do |report|
-                report_stats = report[:stats]
-                report_process = report[:process]
+                model = Ui::Models::Process.new(report)
+
+                report_stats = model.stats
+                report_process = model.process
 
                 stats[:busy] += report_stats[:busy]
                 stats[:enqueued] += report_stats[:enqueued]
@@ -118,10 +136,17 @@ module Karafka
                 stats[:processes] += 1
                 stats[:rss] += report_process[:memory_usage]
                 stats[:listeners_count] += report_process[:listeners]
+                stats[:lag_stored] += model.lag_stored
                 utilization += report_stats[:utilization]
               end
 
             stats[:utilization] = utilization / (stats[:processes] + 0.0001)
+          end
+
+          # @note This needs to always run **after** the current stats are materialized as we
+          # need the most current state to be present
+          def update_historicals
+            state[:historicals] = Historicals.new(state).to_h
           end
         end
       end

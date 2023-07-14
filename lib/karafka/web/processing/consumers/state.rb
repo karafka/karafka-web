@@ -22,7 +22,7 @@ module Karafka
                 1
               ).last
 
-              state_message ? state_message.payload : { processes: {}, stats: {} }
+              state_message ? state_message.payload : { processes: {}, stats: {}, historicals: {} }
             end
           end
         end

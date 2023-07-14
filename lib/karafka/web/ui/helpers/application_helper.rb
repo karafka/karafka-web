@@ -20,6 +20,16 @@ module Karafka
             "#{env.fetch('SCRIPT_NAME')}/#{args.join('/')}"
           end
 
+          # Generates a full path to any asset with our web-ui version. We ship all assets with
+          # the version in the url to prevent those assets from being used after update. After
+          # each web-ui update, assets are going to be re-fetched as the url will change
+          #
+          # @param local_path [String] local path to the asset
+          # @return [String] full path to the asst including correct root path
+          def asset_path(local_path)
+            root_path("assets/#{Karafka::Web::VERSION}/#{local_path}")
+          end
+
           # Adds active class to the current location in the nav if needed
           # @param location [Hash]
           def nav_class(location)

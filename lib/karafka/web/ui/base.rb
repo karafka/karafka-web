@@ -11,9 +11,11 @@ module Karafka
         # If those would be evaluated in the base, they would not be initialized as expected
         CONTEXT_DETAILS = lambda do
           plugin(
-            :static,
-            %w[/javascripts /stylesheets /images],
-            root: Karafka::Web.gem_root.join('lib/karafka/web/ui/public')
+            :public,
+            root: Karafka::Web.gem_root.join('lib/karafka/web/ui/public'),
+            # Cache all static files for the end user for as long as possible
+            # We can do it because we ship per version assets so they invalidate with gem bumps
+            headers: { 'Cache-Control' => 'max-age=604800' }
           )
           plugin :render_each
           plugin :partials
@@ -24,6 +26,7 @@ module Karafka
         plugin :error_handler
         plugin :not_found
         plugin :path
+        plugin :json
 
         # Based on
         # https://github.com/sidekiq/sidekiq/blob/ae6ca119/lib/sidekiq/web/application.rb#L8

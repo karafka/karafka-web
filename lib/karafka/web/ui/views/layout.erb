@@ -9,15 +9,20 @@
       <%== yield %>
     <% else %>
       <nav class="navbar navbar-expand-lg navbar-dark shadow-sm mb-4">
-        <div class="container">
+        <div class="container-fluid">
           <%== partial 'shared/brand' %>
           <%== partial 'shared/navigation' %>
+          <%== partial 'shared/live_poll' %>
         </div>
       </nav>
 
-      <%== partial 'shared/become_pro' %>
+      <main>
+        <%== partial 'shared/become_pro' %>
 
-      <%== partial 'shared/content', locals: { content: yield } %>
+        <%== partial 'shared/content', locals: { content: yield } %>
+      </main>
+
+      <%== partial 'shared/footer' %>
     <% end %>
   </body>
 </html>

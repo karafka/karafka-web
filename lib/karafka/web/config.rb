@@ -68,6 +68,11 @@ module Karafka
         # apps should materialize the state
         setting :active, default: true
 
+        # Do we want to materialize the historical states for data for references
+        # This can be disabled if multi-tenant is used or when we do not want to store extensive
+        # informations alongside the states
+        setting :historicals, default: true
+
         # What should be the consumer group name for web consumer
         setting :consumer_group, default: 'karafka_web'
 

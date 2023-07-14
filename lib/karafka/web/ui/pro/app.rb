@@ -32,9 +32,31 @@ module Karafka
           ]
 
           route do |r|
-            r.root { r.redirect root_path('consumers') }
+            r.root { r.redirect root_path('dashboard') }
+
+            # Serve current version specific assets to prevent users from fetching old assets
+            # after upgrade
+            r.on(:assets, Karafka::Web::VERSION) do
+              r.public
+            end
 
             @current_page = params.current_page
+
+            r.get 'stats' do # json
+              current_state = Models::State.current!
+              Models::Counters.new(current_state).to_h
+            end
+
+            r.get 'historicals' do # json
+              current_state = Models::State.current!
+              Models::Historicals.new(current_state).to_h
+            end
+
+            r.get 'dashboard' do
+              @breadcrumbs = false
+              controller = Controllers::Dashboard.new(params)
+              render_response controller.index
+            end
 
             r.on 'consumers' do
               controller = Controllers::Consumers.new(params)

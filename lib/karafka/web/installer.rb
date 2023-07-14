@@ -159,8 +159,10 @@ module Karafka
               processes: 0,
               rss: 0,
               listeners_count: 0,
-              utilization: 0
-            }
+              utilization: 0,
+              lag_stored: 0
+            },
+            historicals: {}
           }.to_json
         )
       end
