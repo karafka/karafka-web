@@ -12,6 +12,7 @@ module Karafka
             @data = historicals[period]
           end
 
+          # @param args [Array<String>] names of historicals we want to show
           # @return [String] JSON with data about all the charts we were interested in
           def with(*args)
             args
@@ -30,10 +31,16 @@ module Karafka
             public_send(:threads_count)
           end
 
+          # @param method_name [String]
+          # @param include_private [Boolean]
           def respond_to_missing?(method_name, include_private = false)
             @data.last.last.key?(method_name.to_sym)
           end
 
+          # Handles delegation to fetch appropriate historical metrics based on their name
+          #
+          # @param method_name [String]
+          # @param arguments [Array] missing method call arguments
           def method_missing(method_name, *arguments)
             if @data.last.last.key?(method_name.to_sym)
               @data.map { |a| [a.first, a.last[method_name]] }

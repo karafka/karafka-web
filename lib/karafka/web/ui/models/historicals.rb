@@ -42,9 +42,9 @@ module Karafka
 
           # Injects the most recent current stats that is take from the state except the errors
           #
-          # @param
-          # @param
-          # @param
+          # @param historicals [Hash] all historicals for all the ranges
+          # @param stats [Hash] current stats
+          # @param dispatched_at [Float] time of the current state dispatch
           #
           # @note The current state `error` key is a sum of processing errors and consuming errors
           #   while on the charts we want to show only consuming errors as this value should
@@ -91,7 +91,7 @@ module Karafka
           # It is derived out of the data we have so we compute it on the fly
           # @param historicals [Hash] all historicals for all the ranges
           def enrich_with_batch_size(historicals)
-            historicals.each do |range, time_samples|
+            historicals.each_value do |time_samples|
               time_samples.each do |time_sample|
                 metrics = time_sample[1]
 
@@ -104,8 +104,10 @@ module Karafka
             end
           end
 
+          # Adds an average RSS on a per process basis
+          # @param historicals [Hash] all historicals for all the ranges
           def enrich_with_process_rss(historicals)
-            historicals.each do |range, time_samples|
+            historicals.each_value do |time_samples|
               time_samples.each do |time_sample|
                 metrics = time_sample[1]
 
