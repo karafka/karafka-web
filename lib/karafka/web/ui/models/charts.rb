@@ -4,7 +4,7 @@ module Karafka
   module Web
     module Ui
       module Models
-        # Models that wraps up the historicals and allows us to easil generate charts data
+        # Models that wraps up the historicals and allows us to easily generate charts data
         class Charts
           # @param historicals [Hash] all historicals for all periods
           # @param period [Symbol] period that we are interested in
@@ -34,7 +34,7 @@ module Karafka
           # @param method_name [String]
           # @param include_private [Boolean]
           def respond_to_missing?(method_name, include_private = false)
-            @data.last.last.key?(method_name.to_sym)
+            @data.last.last.key?(method_name.to_sym) || super
           end
 
           # Handles delegation to fetch appropriate historical metrics based on their name

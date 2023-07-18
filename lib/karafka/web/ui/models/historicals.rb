@@ -51,11 +51,11 @@ module Karafka
           #   correspond with messages and batches. Because of that we cannot use this value and
           #   we replace it with previous historical sample "consumer only" errors that are based
           #   on the counter we keep.
-          def inject_current_stats(historicals, stats, dispathed_at)
+          def inject_current_stats(historicals, stats, dispatched_at)
             historicals.each_value do |time_samples|
               errors = time_samples.last.last[:errors]
 
-              time_samples << [dispathed_at.to_i, stats.merge(errors: errors)]
+              time_samples << [dispatched_at.to_i, stats.merge(errors: errors)]
             end
           end
 
