@@ -89,10 +89,10 @@ RSpec.describe_current do
 
     let(:historicals) do
       {
-        days: [[1689099896, days]],
-        hours: [[1689099896, hours]],
-        minutes: [[1689099896, minutes]],
-        seconds: [[1689099896, seconds]]
+        days: [[1_689_099_896, days]],
+        hours: [[1_689_099_896, hours]],
+        minutes: [[1_689_099_896, minutes]],
+        seconds: [[1_689_099_896, seconds]]
       }
     end
 
@@ -133,14 +133,14 @@ RSpec.describe_current do
       end
     end
 
-    let(:close_time) { 1689099896 - 1 }
+    let(:close_time) { 1_689_099_896 - 1 }
 
     let(:historicals) do
       {
-        days: [[1689099896, days], [close_time, days]],
-        hours: [[1689099896, hours], [close_time, hours]],
-        minutes: [[1689099896, minutes], [close_time, minutes]],
-        seconds: [[1689099896, seconds], [close_time, seconds]]
+        days: [[1_689_099_896, days], [close_time, days]],
+        hours: [[1_689_099_896, hours], [close_time, hours]],
+        minutes: [[1_689_099_896, minutes], [close_time, minutes]],
+        seconds: [[1_689_099_896, seconds], [close_time, seconds]]
       }
     end
 

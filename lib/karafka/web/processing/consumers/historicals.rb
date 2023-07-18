@@ -108,7 +108,7 @@ module Karafka
               limit = rules.fetch(:limit)
               resolution = rules.fetch(:resolution)
 
-              grouped = values.group_by { |sample| sample.first / resolution  }
+              grouped = values.group_by { |sample| sample.first / resolution }
               times = grouped.values.map(&:first)
               times.uniq!(&:first)
               # Squash in case there would be two events from the same time
