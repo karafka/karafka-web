@@ -169,8 +169,6 @@ module Karafka
                 range.each { |i| partition_aggr[i] = [partition, i] }
               end
 
-              t = Time.now.to_f
-
               # Iterate over all partitions and collect data
               iterator.each do |message|
                 range = ranges[message.partition]
@@ -184,8 +182,6 @@ module Karafka
                 partition = aggregated[message.partition]
                 partition[message.offset] = message
               end
-
-              p Time.now.to_f - t
 
               [
                 aggregated.values.map(&:values).map(&:reverse).reduce(:+),

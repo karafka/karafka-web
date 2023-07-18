@@ -42,16 +42,6 @@ module Karafka
 
             @current_page = params.current_page
 
-            r.get 'stats' do # json
-              current_state = Models::State.current!
-              Models::Counters.new(current_state).to_h
-            end
-
-            r.get 'historicals' do # json
-              current_state = Models::State.current!
-              Models::Historicals.new(current_state).to_h
-            end
-
             r.get 'dashboard' do
               @breadcrumbs = false
               controller = Controllers::Dashboard.new(params)

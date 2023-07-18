@@ -22,11 +22,6 @@ module Karafka
 
           @current_page = params.current_page
 
-          r.get 'stats' do
-            current_state = Models::State.current!
-            Models::Counters.new(current_state).to_h
-          end
-
           r.on 'consumers' do
             r.get String, 'subscriptions' do |_process_id|
               raise Errors::Ui::ProOnlyError
