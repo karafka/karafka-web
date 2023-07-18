@@ -4,7 +4,7 @@
 - **[Feature]** Introduce graphs.
 - **[Feature]** Introduce historical metrics storage.
 - **[Feature]** Introduce per-topic data exploration in the Explorer.
-- [Improvement] Start versioning the materialize states schemas.
+- [Improvement] Start versioning the materialized states schemas.
 - [Improvement] Drastically improve the consumers view performance.
 - [Improvement] Ship versioned assets to prevent invalid assets loading due to cache.
 - [Improvement] Use `Cache-Control` to cache all the static assets.

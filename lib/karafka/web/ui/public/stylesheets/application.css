@@ -119,3 +119,7 @@ code.wrapped {
 main {
   flex: 1;
 }
+
+.chartjs-wrapper {
+  height: 250px;
+}

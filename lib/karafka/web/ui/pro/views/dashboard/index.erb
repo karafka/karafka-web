@@ -36,28 +36,28 @@
 
       <div class="tab-content">
         <div class="tab-pane show active" id="messages" role="tabpanel">
-          <div style="height: 250px;" class="mt-4">
+          <div class="mt-4 chartjs-wrapper">
             <% charts = @charts.with(:messages, :errors, :dead, :retries, :batch_size) %>
             <canvas id="messages-chart" data-datasets="<%= charts %>" class="chartjs" data-label_type="date"></canvas>
           </div>
         </div>
 
         <div class="tab-pane" id="batches" role="tabpanel">
-          <div style="height: 250px;" class="mt-4">
+          <div class="mt-4 chartjs-wrapper">
             <% charts = @charts.with(:batches, :errors, :dead, :retries) %>
             <canvas id="batches-chart" data-datasets="<%= charts %>" class="chartjs" data-label_type="date"></canvas>
           </div>
         </div>
 
         <div class="tab-pane" id="in-progress" role="tabpanel">
-          <div style="height: 250px;" class="mt-4">
+          <div class="mt-4 chartjs-wrapper">
             <% charts = @charts.with(:enqueued, :busy) %>
             <canvas id="in-progress-chart" data-datasets="<%= charts %>" class="chartjs" data-label_type="date"></canvas>
           </div>
         </div>
 
         <div class="tab-pane" id="total-lag" role="tabpanel">
-          <div style="height: 250px;" class="mt-4">
+          <div class="mt-4 chartjs-wrapper">
             <% charts = @charts.with(:lag_stored) %>
             <canvas id="total-lag-chart" data-datasets="<%= charts %>" class="chartjs" data-label_type="date"></canvas>
           </div>
@@ -96,21 +96,21 @@
 
       <div class="tab-content">
         <div class="tab-pane show active" id="utilization" role="tabpanel">
-          <div style="height: 250px;" class="mt-4">
+          <div class="mt-4 chartjs-wrapper">
             <% charts = @charts.with(:utilization) %>
             <canvas id="utilization-chart" data-datasets="<%= charts %>" class="chartjs" data-label_type="date"></canvas>
           </div>
         </div>
 
         <div class="tab-pane show" id="rss" role="tabpanel">
-          <div style="height: 250px;" class="mt-4">
+          <div class="mt-4 chartjs-wrapper">
             <% charts = @charts.with(:rss, :process_rss) %>
             <canvas id="rss-chart" data-datasets="<%= charts %>" class="chartjs" data-label_type="date"></canvas>
           </div>
         </div>
 
         <div class="tab-pane show" id="processes" role="tabpanel">
-          <div style="height: 250px;" class="mt-4">
+          <div class="mt-4 chartjs-wrapper">
             <% charts = @charts.with(:processes, :threads, :listeners) %>
             <canvas id="processes-chart" data-datasets="<%= charts %>" class="chartjs" data-label_type="date"></canvas>
           </div>
