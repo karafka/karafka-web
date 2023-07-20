@@ -4,6 +4,7 @@
 - **[Feature]** Introduce graphs.
 - **[Feature]** Introduce historical metrics storage.
 - **[Feature]** Introduce per-topic data exploration in the Explorer.
+- [Improvement] Extend status page checks to ensure, that it detects a case when Web-UI is not part of `karafka.rb` but still referenced in routes.
 - [Improvement] List Web UI topics names on the status page in the info section.
 - [Improvement] Start versioning the materialized states schemas.
 - [Improvement] Drastically improve the consumers view performance.
@@ -19,6 +20,7 @@
 - [Improvement] When no params needed for a page, do not include empty params.
 - [Improvement] Do not include page when page is 1 in the url.
 - [Fix] Fix headers size inconsistency between Health and Routing.
+- [Fix] Fix invalid padding on status page.
 - [Refactor] Reorganize pagination engine to support offset based pagination.
 
 ## 0.6.1 (2023-06-25)

@@ -5,6 +5,21 @@
     <div class="col-lg-10 offset-md-1">
       <%==
         partial(
+          "status/#{@status.enabled.to_s}",
+          locals: {
+            title: 'Web-UI setup in karafka.rb',
+            description: partial(
+              "status/#{@status.enabled.partial_namespace}/enabled",
+              locals: {
+                details: @status.enabled.details
+              }
+            )
+          }
+        )
+      %>
+
+      <%==
+        partial(
           "status/#{@status.connection.to_s}",
           locals: {
             title: 'Connection to Kafka',

@@ -25,6 +25,7 @@ module Karafka
               when :success then 'successes'
               when :warning then 'warnings'
               when :failure then 'failures'
+              when :halted  then 'failures'
               else
                 raise ::Karafka::Errors::UnsupportedCaseError, status
               end
@@ -36,22 +37,40 @@ module Karafka
             end
           end
 
-          # Initializes the status object and tries to connect to Kafka
-          def initialize
-            connect
+          # Is karafka-web enabled in the `karafka.rb`
+          # Checks if the consumer group for web-ui is injected.
+          # It does **not** check if the group is active because this may depend on the
+          # configuration details, but for the Web-UI web app to work, the routing needs to be
+          # aware of the deserializer, etc
+          def enabled
+            enabled = ::Karafka::App.routes.map(&:name).include?(
+              ::Karafka::Web.config.processing.consumer_group
+            )
+
+            Step.new(
+              enabled ? :success : :failure,
+              nil
+            )
           end
 
           # @return [Status::Step] were we able to connect to Kafka or not and how fast.
           # Some people try to work with Kafka over the internet with really high latency and this
           # should be highlighted in the UI as often the connection just becomes unstable
           def connection
-            level = if @connection_time < 1_000
-                      :success
-                    elsif @connection_time < 1_000_000
-                      :warning
-                    else
-                      :failure
-                    end
+            if enabled.success?
+              # Do not connect more than once during the status object lifetime
+              @connection_time || connect
+
+              level = if @connection_time < 1_000
+                        :success
+                      elsif @connection_time < 1_000_000
+                        :warning
+                      else
+                        :failure
+                      end
+            else
+              level = :halted
+            end
 
             Step.new(
               level,

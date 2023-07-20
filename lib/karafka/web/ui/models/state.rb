@@ -18,6 +18,10 @@ module Karafka
               state = fetch
 
               return false unless state
+              # Do not return the state in case web-ui is not enabled because we need our
+              # internal deserializer for it to operate. False will force user to go to the
+              # status page
+              return false unless Models::Status.new.enabled.success?
 
               state = state.payload
               evict_expired_processes(state)
