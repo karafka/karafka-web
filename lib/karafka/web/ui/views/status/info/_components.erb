@@ -2,7 +2,7 @@
   Below you can find information about your setup. This can be helpful when debugging or reporting bugs and issues.
 </p>
 
-<p class="mb-0">
+<p>
   <span class="badge bg-secondary">
     <%= @sampler.ruby_version %>
   </span>
@@ -37,3 +37,15 @@
     <%= @sampler.waterdrop_version %>
   </span>
 </p>
+
+<hr/>
+
+<p>
+  Below you can find information about internal Karafka Web-UI topics:
+</p>
+
+<ul class="mb-0">
+  <li>Errors: <code><%= Karafka::Web.config.topics.errors %></code></li>
+  <li>Consumers reports: <code><%= Karafka::Web.config.topics.consumers.reports %></code></li>
+  <li>Consumers states: <code><%= Karafka::Web.config.topics.consumers.states %></code></li>
+</ul>

@@ -52,4 +52,34 @@ RSpec.describe_current do
       end
     end
   end
+
+  describe '#current_range' do
+    context 'when range is provided' do
+      context 'when range is allowed' do
+        %w[seconds minutes hours days].each do |allowed_range|
+          context "when range is #{allowed_range}" do
+            let(:request_params) { { 'range' => allowed_range } }
+
+            it 'returns the symbolized range' do
+              expect(params.current_range).to eq(allowed_range.to_sym)
+            end
+          end
+        end
+      end
+
+      context 'when range is not allowed' do
+        let(:request_params) { { 'range' => 'not_allowed_range' } }
+
+        it 'returns the first allowed range as a symbol' do
+          expect(params.current_range).to eq(:seconds)
+        end
+      end
+    end
+
+    context 'when range is not provided' do
+      it 'returns the first allowed range as a symbol' do
+        expect(params.current_range).to eq(:seconds)
+      end
+    end
+  end
 end

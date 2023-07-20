@@ -4,6 +4,7 @@
 - **[Feature]** Introduce graphs.
 - **[Feature]** Introduce historical metrics storage.
 - **[Feature]** Introduce per-topic data exploration in the Explorer.
+- [Improvement] List Web UI topics names on the status page in the info section.
 - [Improvement] Start versioning the materialized states schemas.
 - [Improvement] Drastically improve the consumers view performance.
 - [Improvement] Ship versioned assets to prevent invalid assets loading due to cache.

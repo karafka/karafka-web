@@ -148,6 +148,7 @@ module Karafka
           key: Karafka::Web.config.topics.consumers.states,
           payload: {
             processes: {},
+            historicals: {},
             stats: {
               batches: 0,
               messages: 0,
@@ -161,8 +162,7 @@ module Karafka
               listeners_count: 0,
               utilization: 0,
               lag_stored: 0
-            },
-            historicals: {}
+            }
           }.to_json
         )
       end
