@@ -173,19 +173,19 @@ module Karafka
             @memory_size ||= case RUBY_PLATFORM
                              when /linux/
                                @shell
-                                 .call('grep MemTotal /proc/meminfo')
-                                 .match(/(\d+)/)
-                                 .to_s
-                                 .to_i
+                             .call('grep MemTotal /proc/meminfo')
+                             .match(/(\d+)/)
+                             .to_s
+                             .to_i
                              when /darwin|bsd/
                                @shell
-                                 .call('sysctl -a')
-                                 .split("\n")
-                                 .find { |line| line.start_with?('hw.memsize:') }
-                                 .to_s
-                                 .split(' ')
-                                 .last
-                                 .to_i
+                             .call('sysctl -a')
+                             .split("\n")
+                             .find { |line| line.start_with?('hw.memsize:') }
+                             .to_s
+                             .split(' ')
+                             .last
+                             .to_i
                              else
                                0
                              end
