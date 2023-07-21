@@ -5,8 +5,16 @@ module Karafka
     module Ui
       module Models
         # Materializes the historical data and computes the expected diffs out of the snapshots
+        # We do some pre-processing to make sure, we do not have bigger gaps and to compensate
+        # for reporting drifting
         class Historicals < Lib::HashProxy
           include ::Karafka::Core::Helpers::Time
+
+          # If samples are closer than that, sample will be rejected
+          MIN_ACCEPTED_DRIFT = 4
+
+          # If samples are further away than that, we will inject an artificial sample in-between
+          MAX_ACCEPTED_DRIFT = 7
 
           # For which keys we should compute the delta in reference to the previous period
           # Metrics we get from the processes are always absolute, hence we need a reference point
@@ -21,6 +29,8 @@ module Karafka
             dead
           ].freeze
 
+          private_constant :MIN_ACCEPTED_DRIFT, :MAX_ACCEPTED_DRIFT, :DELTA_KEYS
+
           # Builds the Web-UI historicals representation that includes deltas
           #
           # @param state [Hash]
@@ -31,6 +41,8 @@ module Karafka
             state
               .to_h
               .fetch(:historicals)
+              .tap { |historicals| reject_drifters(historicals) }
+              .tap { |historicals| fill_gaps(historicals) }
               .tap { |historicals| inject_current_stats(historicals, stats, dispathed_at) }
               .then { |historicals| enrich_with_deltas(historicals) }
               .tap { |historicals| enrich_with_batch_size(historicals) }
@@ -39,6 +51,69 @@ module Karafka
           end
 
           private
+
+          # Since our reporting is not ms precise, there are cases where sampling can drift.
+          # If drifting gets us close to one side, for delta metrics it would create sudden
+          # artificial drops in metrics that would not match the reality. We reject drifters like
+          # this as we can compensate this later.
+          #
+          # This problems only affects our near real-time metrics with seconds precision
+          #
+          # @param historicals [Hash] all historicals for all the ranges
+          def reject_drifters(historicals)
+            initial = nil
+
+            historicals[:seconds].delete_if do |sample|
+              unless initial
+                initial = sample.first
+
+                next
+              end
+
+              # Reject values that are closer than minimum
+              too_close = sample.first - initial < MIN_ACCEPTED_DRIFT
+
+              initial = sample.first
+
+              too_close
+            end
+          end
+
+
+          # In case of a positive drift, we may have gaps bigger than few seconds in reporting.
+          # This can create a false sense of spikes that do not reflect the reality. We compensate
+          # this by extrapolating the values.
+          #
+          # This problems only affects our near real-time metrics with seconds precision
+          #
+          # @param historicals [Hash] all historicals for all the ranges
+          def fill_gaps(historicals)
+            filled = []
+            previous = nil
+
+            historicals[:seconds].each do |sample|
+              unless previous
+                filled << sample
+                previous = sample
+                next
+              end
+
+              if sample.first - previous.first > MAX_ACCEPTED_DRIFT
+                base = sample.last.dup
+
+                DELTA_KEYS.each do |key|
+                  base[key] = previous.last[key] + (sample.last[key] - previous.last[key]) / 2
+                end
+
+                filled << [previous.first + (sample.first - previous.first) / 2, base]
+              end
+
+              filled << sample
+              previous = sample
+            end
+
+            historicals[:seconds] = filled
+          end
 
           # Injects the most recent current stats that is take from the state except the errors
           #
@@ -99,7 +174,7 @@ module Karafka
 
                 # We check if not zero just in case something would be off there
                 # We do not want to divide by zero
-                metrics[:batch_size] = batches.zero? ? 0 : metrics[:messages] / batches.to_f
+                metrics[:batch_size] = batches.zero? ? 0 : metrics[:messages] / batches
               end
             end
           end
