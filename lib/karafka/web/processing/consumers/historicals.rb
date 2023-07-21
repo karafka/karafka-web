@@ -47,8 +47,6 @@ module Karafka
             }.freeze
           }.freeze
 
-          private_constant :TIME_RANGES
-
           # @param aggregated_state [Hash] full aggregated state without historicals
           def initialize(aggregated_state)
             # Builds an empty structure for potential time ranges we are interested in

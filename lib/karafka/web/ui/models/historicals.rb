@@ -63,7 +63,7 @@ module Karafka
           def reject_drifters(historicals)
             initial = nil
 
-            historicals[:seconds].delete_if do |sample|
+            historicals.fetch(:seconds).delete_if do |sample|
               unless initial
                 initial = sample.first
 
@@ -79,10 +79,9 @@ module Karafka
             end
           end
 
-
           # In case of a positive drift, we may have gaps bigger than few seconds in reporting.
           # This can create a false sense of spikes that do not reflect the reality. We compensate
-          # this by extrapolating the values.
+          # this by extrapolating the delta values and using the rest as they are.
           #
           # This problems only affects our near real-time metrics with seconds precision
           #
@@ -91,7 +90,7 @@ module Karafka
             filled = []
             previous = nil
 
-            historicals[:seconds].each do |sample|
+            historicals.fetch(:seconds).each do |sample|
               unless previous
                 filled << sample
                 previous = sample
@@ -128,7 +127,7 @@ module Karafka
           #   on the counter we keep.
           def inject_current_stats(historicals, stats, dispatched_at)
             historicals.each_value do |time_samples|
-              errors = time_samples.last.last[:errors]
+              errors = (time_samples.last || [{ errors: 0 }]).last[:errors]
 
               time_samples << [dispatched_at.to_i, stats.merge(errors: errors)]
             end

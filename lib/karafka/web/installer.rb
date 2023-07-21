@@ -4,6 +4,36 @@ module Karafka
   module Web
     # Responsible for setup of the Web UI and Karafka Web-UI related components initialization.
     class Installer
+      # Defaults stats state that we create in Kafka
+      DEFAULT_STATS = {
+        batches: 0,
+        messages: 0,
+        retries: 0,
+        dead: 0,
+        busy: 0,
+        enqueued: 0,
+        threads_count: 0,
+        processes: 0,
+        rss: 0,
+        listeners_count: 0,
+        utilization: 0,
+        lag_stored: 0
+      }.freeze
+
+      # Default empty historicals for first record in Kafka
+      DEFAULT_HISTORICALS = Processing::Consumers::Historicals::TIME_RANGES
+                            .keys
+                            .map { |range| [range, []] }
+                            .to_h
+                            .freeze
+
+      # WHole default empty state (aside from dispatch time)
+      DEFAULT_STATE = {
+        processes: {},
+        historicals: DEFAULT_HISTORICALS,
+        stats: DEFAULT_STATS
+      }.freeze
+
       # Creates needed topics and the initial zero state, so even if no `karafka server` processes
       # are running, we can still display the empty UI
       #
@@ -146,24 +176,7 @@ module Karafka
         ::Karafka.producer.produce_sync(
           topic: Karafka::Web.config.topics.consumers.states,
           key: Karafka::Web.config.topics.consumers.states,
-          payload: {
-            processes: {},
-            historicals: {},
-            stats: {
-              batches: 0,
-              messages: 0,
-              retries: 0,
-              dead: 0,
-              busy: 0,
-              enqueued: 0,
-              threads_count: 0,
-              processes: 0,
-              rss: 0,
-              listeners_count: 0,
-              utilization: 0,
-              lag_stored: 0
-            }
-          }.to_json
+          payload: DEFAULT_STATE.to_json
         )
       end
     end
