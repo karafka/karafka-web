@@ -17,7 +17,8 @@ module Karafka
         rss: 0,
         listeners_count: 0,
         utilization: 0,
-        lag_stored: 0
+        lag_stored: 0,
+        errors: 0
       }.freeze
 
       # Default empty historicals for first record in Kafka
