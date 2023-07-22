@@ -9,6 +9,9 @@
 - [Improvement] Do not include page when page is 1 in the url.
 - [Refactor] Reorganize pagination engine to support offset based pagination.
 
+## 0.6.3 (2023-07-22)
+- [Fix] Remove files from 0.7.0 accidentally added to the release.
+
 ## 0.6.2 (2023-07-22)
 - [Fix] Fix extensive CPU usage when using HPET clock instead of TSC due to interrupt frequency.
 
