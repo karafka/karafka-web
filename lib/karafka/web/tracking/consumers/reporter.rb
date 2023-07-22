@@ -93,12 +93,14 @@ module Karafka
           def call
             @running = true
 
+            # We won't track more often anyhow but want to try frequently not to miss a window
+            # We need to convert the sleep interval into seconds for sleep
+            sleep_time = ::Karafka::Web.config.tracking.interval.to_f / 1_000 / 10
+
             loop do
               report
 
-              # We won't track more often anyhow but want to try frequently not to miss a window
-              # We need to convert the sleep interval into seconds for sleep
-              sleep(::Karafka::Web.config.tracking.interval / 1_000 / 10)
+              sleep(sleep_time)
             end
           end
 

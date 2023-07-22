@@ -1,5 +1,11 @@
 # Karafka Web changelog
 
+## 0.6.3 (2023-07-22)
+- [Fix] Remove files from 0.7.0 accidentally added to the release.
+
+## 0.6.2 (2023-07-22)
+- [Fix] Fix extensive CPU usage when using HPET clock instead of TSC due to interrupt frequency.
+
 ## 0.6.1 (2023-06-25)
 - [Improvement] Include the karafka-web version in the status page tags.
 - [Improvement] Report `karafka-web` version that is running in particular processes.
