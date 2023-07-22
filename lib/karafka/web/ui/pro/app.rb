@@ -81,6 +81,10 @@ module Karafka
                 render_response controller.partition(topic_id, partition_id)
               end
 
+              r.get String do |topic_id|
+                render_response controller.topic(topic_id)
+              end
+
               r.get do
                 render_response controller.index
               end
@@ -99,12 +103,16 @@ module Karafka
             r.on 'errors' do
               controller = Controllers::Errors.new(params)
 
-              r.get Integer do |partition_id|
-                render_response controller.index(partition_id)
-              end
-
               r.get Integer, Integer do |partition_id, offset|
                 render_response controller.show(partition_id, offset)
+              end
+
+              r.get Integer do |partition_id|
+                render_response controller.partition(partition_id)
+              end
+
+              r.get do
+                render_response controller.index
               end
             end
 

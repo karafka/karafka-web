@@ -22,10 +22,12 @@ module Karafka
             def index
               @current_state = Models::State.current!
               @counters = Models::Counters.new(@current_state)
-              @processes, @next_page = Lib::PaginateArray.new.call(
+              @processes, last_page = Lib::Paginations::Paginators::Arrays.call(
                 Models::Processes.active(@current_state),
                 @params.current_page
               )
+
+              paginate(@params.current_page, !last_page)
 
               respond
             end

@@ -33,12 +33,14 @@
 <div class="container">
   <div class="row mb-5">
     <div class="col-sm-12">
-      <%== partial('explorer/partition/watermark_offsets') %>
+      <%== partial('explorer/topic/partitions') %>
 
-      <% if @watermark_offsets.empty? %>
-        <%== partial 'explorer/partition/empty' %>
-      <% elsif @watermark_offsets.cleaned? %>
-        <%== partial 'explorer/partition/cleaned' %>
+      <% if @limited %>
+        <%== partial('explorer/topic/limited') %>
+      <% end %>
+
+      <% if @messages.empty? && params.current_page == 1 %>
+        <%== partial 'explorer/topic/empty' %>
       <% else %>
         <%== partial('explorer/partition/messages') %>
       <% end %>

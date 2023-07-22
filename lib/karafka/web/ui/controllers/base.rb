@@ -12,6 +12,8 @@ module Karafka
             @params = params
           end
 
+          private
+
           # Builds the respond data object with assigned attributes based on instance variables.
           #
           # @return [Responses::Data] data that should be used to render appropriate view
@@ -32,6 +34,21 @@ module Karafka
               "#{scope}/#{action}",
               attributes
             )
+          end
+
+          # Initializes the expected pagination engine and assigns expected arguments
+          # @param args Any arguments accepted by the selected pagination engine
+          def paginate(*args)
+            engine = case args.count
+                     when 2
+                       Ui::Lib::Paginations::PageBased
+                     when 4
+                       Ui::Lib::Paginations::OffsetBased
+                     else
+                       raise ::Karafka::Errors::UnsupportedCaseError, args.count
+                     end
+
+            @pagination = engine.new(*args)
           end
         end
       end

@@ -1,5 +1,14 @@
 # Karafka Web changelog
 
+## 0.7.0 (Unreleased)
+- **[Feature]** Introduce per-topic data exploration in the Explorer.
+- [Improvement] Introduce in-memory cluster state cached to improve performance.
+- [Improvement] Switch to offset based pagination instead of per-page pagination.
+- [Improvement] Avoid double-reading of watermark offsets for explorer and errors display.
+- [Improvement] When no params needed for a page, do not include empty params.
+- [Improvement] Do not include page when page is 1 in the url.
+- [Refactor] Reorganize pagination engine to support offset based pagination.
+
 ## 0.6.3 (2023-07-22)
 - [Fix] Remove files from 0.7.0 accidentally added to the release.
 

@@ -1,28 +1,32 @@
-<% if @current_page && (@current_page > 1 || @next_page) %>
+<% if @pagination && @pagination.paginate? %>
   <div id="pagination" class="container mb-5">
     <div class="row">
       <nav>
         <ul class="pagination justify-content-center">
-          <li class="page-item <%= 'disabled' if @current_page <= 1 %>">
-            <a class="page-link" href="<%= current_path(page: 1) %>">
+          <li class="page-item <%= 'disabled' unless @pagination.first_offset? %>">
+            <a class="page-link" href="<%= current_path(@pagination.offset_key => @pagination.first_offset) %>">
               <span>&laquo;</span>
             </a>
           </li>
 
-          <li class="page-item <%= 'disabled' if @current_page <= 1 %>">
-            <a class="page-link" href="<%= current_path(page: @current_page - 1) %>">
+          <li class="page-item <%= 'disabled' unless @pagination.previous_offset? %>">
+            <a class="page-link" href="<%= current_path(@pagination.offset_key => @pagination.previous_offset) %>">
               <span>&lsaquo; Prev</span>
             </a>
           </li>
 
-          <li class="page-item active disabled">
-            <a class="page-link" href="<%= current_path(page: @current_page) %>">
-              <span><%= @current_page %></span>
-            </a>
-          </li>
+          <% if @pagination.current_offset? %>
+            <li class="page-item active disabled">
+              <a class="page-link" href="<%= current_path(@pagination.offset_key => @pagination.current_offset) %>">
+                <span>
+                  <%= @pagination.current_label %>
+                </span>
+              </a>
+            </li>
+          <% end %>
 
-          <li class="page-item <%= 'disabled' unless @next_page %>">
-            <a class="page-link" href="<%= current_path(page: @next_page) %>">
+          <li class="page-item <%= 'disabled' unless @pagination.next_offset? %>">
+            <a class="page-link" href="<%= current_path(@pagination.offset_key => @pagination.next_offset) %>">
               <span>Next &rsaquo;</span>
             </a>
           </li>

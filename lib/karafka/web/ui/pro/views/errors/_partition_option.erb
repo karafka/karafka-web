@@ -3,5 +3,5 @@
 <% else %>
   <option value="<%= root_path('errors', partition) %>">
 <% end %>
-  <%= partition %>
+  <%= partition || 'All' %>
 </option>

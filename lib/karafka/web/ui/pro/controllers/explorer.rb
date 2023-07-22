@@ -18,13 +18,42 @@ module Karafka
         module Controllers
           # Data explorer controller
           class Explorer < Ui::Controllers::Base
+            include Ui::Lib::Paginations
+
             # Lists all the topics we can explore
             def index
-              @topics = Karafka::Admin
-                        .cluster_info
+              @topics = Models::ClusterInfo
                         .topics
                         .reject { |topic| topic[:topic_name] == '__consumer_offsets' }
                         .sort_by { |topic| topic[:topic_name] }
+
+              respond
+            end
+
+            # Displays aggregated messages from (potentially) all partitions of a topic
+            #
+            # @param topic_id [String]
+            #
+            # @note This view may not be 100% accurate because we merge multiple partitions data
+            #   into a single view and this is never accurate. It can be used however to quickly
+            #   look at most recent data flowing, etc, hence it is still useful for aggregated
+            #   metrics information
+            #
+            # @note We cannot use offset references here because each of the partitions may have
+            #   completely different values
+            def topic(topic_id)
+              @topic_id = topic_id
+              @partitions_count = Models::ClusterInfo.partitions_count(topic_id)
+
+              @active_partitions, materialized_page, @limited = Paginators::Partitions.call(
+                @partitions_count, @params.current_page
+              )
+
+              @messages, next_page = Models::Message.topic_page(
+                topic_id, @active_partitions, materialized_page
+              )
+
+              paginate(@params.current_page, next_page)
 
               respond
             end
@@ -36,13 +65,16 @@ module Karafka
             def partition(topic_id, partition_id)
               @topic_id = topic_id
               @partition_id = partition_id
-
               @watermark_offsets = Ui::Models::WatermarkOffsets.find(topic_id, partition_id)
+              @partitions_count = Models::ClusterInfo.partitions_count(topic_id)
 
-              @previous_page, @messages, @next_page, @partitions_count = Ui::Models::Message.page(
-                @topic_id,
-                @partition_id,
-                @params.current_page
+              previous_offset, @messages, next_offset = current_partition_data
+
+              paginate(
+                previous_offset,
+                @params.current_offset,
+                next_offset,
+                @messages.map(&:offset)
               )
 
               respond
@@ -73,6 +105,19 @@ module Karafka
               end
 
               respond
+            end
+
+            private
+
+            # Fetches current page data
+            # @return [Array] fetched data with pagination information for the requested partition
+            def current_partition_data
+              Ui::Models::Message.offset_page(
+                @topic_id,
+                @partition_id,
+                @params.current_offset,
+                @watermark_offsets
+              )
             end
           end
         end

@@ -10,13 +10,15 @@ module Karafka
         class Errors < Base
           # Lists first page of the errors
           def index
-            @previous_page, @error_messages, @next_page, = Models::Message.page(
-              errors_topic,
-              0,
-              @params.current_page
-            )
-
             @watermark_offsets = Ui::Models::WatermarkOffsets.find(errors_topic, 0)
+            previous_offset, @error_messages, next_offset, = current_page_data
+
+            paginate(
+              previous_offset,
+              @params.current_offset,
+              next_offset,
+              @error_messages.map(&:offset)
+            )
 
             respond
           end
@@ -33,6 +35,17 @@ module Karafka
           end
 
           private
+
+          # @return [Array] Array with requested messages as well as pagination details and other
+          #   obtained metadata
+          def current_page_data
+            Models::Message.offset_page(
+              errors_topic,
+              0,
+              @params.current_offset,
+              @watermark_offsets
+            )
+          end
 
           # @return [String] errors topic
           def errors_topic
