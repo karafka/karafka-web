@@ -23,6 +23,9 @@
 - [Fix] Fix invalid padding on status page.
 - [Refactor] Reorganize pagination engine to support offset based pagination.
 
+## 0.6.2 (2023-07-22)
+- [Fix] Fix extensive CPU usage when using HPET clock instead of TSC due to interrupt frequency.
+
 ## 0.6.1 (2023-06-25)
 - [Improvement] Include the karafka-web version in the status page tags.
 - [Improvement] Report `karafka-web` version that is running in particular processes.
