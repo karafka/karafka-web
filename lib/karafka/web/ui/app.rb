@@ -22,6 +22,12 @@ module Karafka
 
           @current_page = params.current_page
 
+          r.get 'dashboard' do
+            @breadcrumbs = false
+            controller = Controllers::Dashboard.new(params)
+            render_response controller.index
+          end
+
           r.on 'consumers' do
             r.get String, 'subscriptions' do |_process_id|
               raise Errors::Ui::ProOnlyError

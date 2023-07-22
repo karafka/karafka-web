@@ -5,6 +5,11 @@
 <div class="collapse navbar-collapse" id="navbarNav">
   <ul class="navbar-nav">
     <li class="nav-item ms-3">
+      <a class="nav-link <%= nav_class(start_with: '/dashboard') %>" href="<%= root_path('dashboard') %>">
+        Dashboard
+      </a>
+    </li>
+    <li class="nav-item ms-3">
       <a class="nav-link <%= nav_class(start_with: '/consumers') %>" href="<%= root_path('consumers') %>">
         Consumers
       </a>

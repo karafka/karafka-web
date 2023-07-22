@@ -55,9 +55,9 @@ module Karafka
 
           private
 
-          # @return [Hash] hash with current state from Kafka or an empty new initial state
+          # @return [Hash] hash with current state from Kafka
           def state
-            @state ||= State.current
+            @state ||= State.current!
           end
 
           # Updates the report for given process in memory

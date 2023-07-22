@@ -26,7 +26,6 @@ module Karafka
         plugin :error_handler
         plugin :not_found
         plugin :path
-        plugin :json
 
         # Based on
         # https://github.com/sidekiq/sidekiq/blob/ae6ca119/lib/sidekiq/web/application.rb#L8

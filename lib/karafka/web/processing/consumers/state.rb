@@ -13,16 +13,17 @@ module Karafka
             # a blank state. Blank state will not be flushed because materialization into Kafka
             # happens only after first report is received.
             #
-            # @return [Hash, false] last (current) aggregated processes state or false if no
-            #   state is available
-            def current
+            # @return [Hash] last (current) aggregated processes state
+            def current!
               state_message = ::Karafka::Admin.read_topic(
                 Karafka::Web.config.topics.consumers.states,
                 0,
                 1
               ).last
 
-              state_message ? state_message.payload : { processes: {}, stats: {}, historicals: {} }
+              state_message || raise(::Karafka::Web::Errors::Processing::MissingCurrentStateError)
+
+              state_message.payload
             end
           end
         end
