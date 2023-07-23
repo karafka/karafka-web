@@ -20,7 +20,7 @@ module Karafka
           class Health < Ui::Controllers::Base
             # Displays the current system state
             def index
-              current_state = Models::State.current!
+              current_state = Models::ConsumersState.current!
               @stats = Models::Health.current(current_state)
 
               respond

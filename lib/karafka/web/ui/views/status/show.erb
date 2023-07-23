@@ -65,13 +65,13 @@
 
       <%==
         partial(
-          "status/#{@status.initial_state.to_s}",
+          "status/#{@status.initial_consumers_state.to_s}",
           locals: {
-            title: 'Initial state presence',
+            title: 'Initial consumers state presence',
             description: partial(
-              'status/failures/initial_state',
+              'status/failures/initial_consumers_state',
               locals: {
-                details: @status.initial_state.details
+                details: @status.initial_consumers_state.details
               }
             )
           }

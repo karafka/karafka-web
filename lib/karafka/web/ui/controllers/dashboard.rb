@@ -8,7 +8,7 @@ module Karafka
         class Dashboard < Ui::Controllers::Base
           # View with statistics dashboard details
           def index
-            @current_state = Models::State.current!
+            @current_state = Models::ConsumersState.current!
             @counters = Models::Counters.new(@current_state)
             historicals = Models::Historicals.new(@current_state)
             # Load only historicals for the selected range

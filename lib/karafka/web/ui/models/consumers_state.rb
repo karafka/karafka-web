@@ -7,7 +7,7 @@ module Karafka
         # Represents the current consumer processes aggregated state
         # This state is the core of Karafka reporting. It holds the most important aggregated data
         # as well as pointers to states of particular consumers and their details.
-        class State < Lib::HashProxy
+        class ConsumersState < Lib::HashProxy
           extend ::Karafka::Core::Helpers::Time
 
           class << self

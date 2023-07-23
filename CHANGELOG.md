@@ -19,6 +19,7 @@
 - [Improvement] Avoid double-reading of watermark offsets for explorer and errors display.
 - [Improvement] When no params needed for a page, do not include empty params.
 - [Improvement] Do not include page when page is 1 in the url.
+- [Improvement] Align descriptions for the status page, to reflect that state chech happens for consumers initial state.
 - [Fix] Fix headers size inconsistency between Health and Routing.
 - [Fix] Fix invalid padding on status page.
 - [Refactor] Reorganize pagination engine to support offset based pagination.

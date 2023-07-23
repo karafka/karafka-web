@@ -112,10 +112,10 @@ module Karafka
             )
           end
 
-          # @return [Status::Step] Is the initial state present in the setup or not
-          def initial_state
+          # @return [Status::Step] Is the initial consumers state present in the setup or not
+          def initial_consumers_state
             if partitions.success?
-              @current_state ||= Models::State.current
+              @current_state ||= Models::ConsumersState.current
               status = @current_state ? :success : :failure
             else
               status = :halted
@@ -130,7 +130,7 @@ module Karafka
           # @return [Status::Step] Is there at least one active karafka server reporting to the
           #   Web UI
           def live_reporting
-            if initial_state.success?
+            if initial_consumers_state.success?
               @processes ||= Models::Processes.active(@current_state)
               status = @processes.empty? ? :failure : :success
             else

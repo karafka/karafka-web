@@ -8,7 +8,7 @@ module Karafka
         class Jobs < Base
           # Lists jobs
           def index
-            current_state = Models::State.current!
+            current_state = Models::ConsumersState.current!
             processes = Models::Processes.active(current_state)
 
             # Aggregate jobs and inject the process info into them for better reporting
