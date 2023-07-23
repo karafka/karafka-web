@@ -116,6 +116,8 @@ module Karafka
 
           # Injects the most recent current stats that is take from the state except the errors
           #
+          # If this state is from the same moment as the most recent metric, it will be ignored.
+          #
           # @param historicals [Hash] all historicals for all the ranges
           # @param stats [Hash] current stats
           # @param dispatched_at [Float] time of the current state dispatch
@@ -130,6 +132,7 @@ module Karafka
               errors = (time_samples.last || [{ errors: 0 }]).last[:errors]
 
               time_samples << [dispatched_at.to_i, stats.merge(errors: errors)]
+              time_samples.uniq!(&:first)
             end
           end
 

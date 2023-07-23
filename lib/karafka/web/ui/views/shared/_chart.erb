@@ -1,0 +1,4 @@
+<% blurred ||= false %>
+<div class="mt-4 chartjs-wrapper">
+  <canvas id="<%= id %>-chart" data-datasets="<%= data %>" class="chartjs <%= 'blurred' if blurred %>" data-label_type="date"></canvas>
+</div>
