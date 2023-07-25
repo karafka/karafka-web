@@ -36,6 +36,13 @@
     waterdrop
     <%= @sampler.waterdrop_version %>
   </span>
+
+  <% if Object.const_defined?(:Rails, false) %>
+    <span class="badge bg-secondary">
+      rails
+      <%= Rails.gem_version %>
+    </span>
+  <% end %>
 </p>
 
 <hr/>
@@ -48,4 +55,5 @@
   <li>Errors: <code><%= Karafka::Web.config.topics.errors %></code></li>
   <li>Consumers reports: <code><%= Karafka::Web.config.topics.consumers.reports %></code></li>
   <li>Consumers states: <code><%= Karafka::Web.config.topics.consumers.states %></code></li>
+  <li>Consumers metrics: <code><%= Karafka::Web.config.topics.consumers.metrics %></code></li>
 </ul>

@@ -5,7 +5,9 @@
 - **[Feature]** Introduce historical metrics storage.
 - **[Feature]** Introduce per-topic data exploration in the Explorer.
 - **[Feature]** Introduce per-topic and per-partition most recent message view with live reload.
+- **[Feature]** Introduce a new per-process inspection view called "Details" ti display all process real-time aggregated data.
 - [Improvement] Extend status page checks to ensure, that it detects a case when Web-UI is not part of `karafka.rb` but still referenced in routes.
+- [Improvement] Report Rails version when viewing status page (if Rails used).
 - [Improvement] List Web UI topics names on the status page in the info section.
 - [Improvement] Start versioning the materialized states schemas.
 - [Improvement] Drastically improve the consumers view performance.

@@ -33,7 +33,7 @@ module Karafka
             end
 
             # @param process_id [String] id of the process we're interested in
-            def jobs(process_id)
+            def details(process_id)
               current_state = Models::ConsumersState.current!
               @process = Models::Process.find(current_state, process_id)
 
@@ -41,10 +41,14 @@ module Karafka
             end
 
             # @param process_id [String] id of the process we're interested in
-            def subscriptions(process_id)
-              current_state = Models::ConsumersState.current!
-              @process = Models::Process.find(current_state, process_id)
+            def jobs(process_id)
+              details(process_id)
+              respond
+            end
 
+            # @param process_id [String] id of the process we're interested in
+            def subscriptions(process_id)
+              details(process_id)
               respond
             end
           end

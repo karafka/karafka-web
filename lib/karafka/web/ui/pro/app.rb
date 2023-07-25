@@ -59,6 +59,10 @@ module Karafka
                 render_response controller.subscriptions(process_id)
               end
 
+              r.get String, 'details' do |process_id|
+                render_response controller.details(process_id)
+              end
+
               r.get do
                 @breadcrumbs = false
                 render_response controller.index
