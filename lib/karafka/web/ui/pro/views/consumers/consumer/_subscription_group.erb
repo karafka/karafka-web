@@ -65,7 +65,7 @@
 </div>
 
 <% if subscription_group.topics.empty? %>
-  <div class="row">
+  <div class="row mb-4">
     <div class="col-lg-12">
       <div class="alert alert-info" role="alert">
         This process does not consume any messages from any topics of this consumer group.
@@ -81,7 +81,7 @@
             <th>Topic</th>
             <th>Partition</th>
             <th>Lag stored</th>
-            <th>Lag trend</th>
+            <th>Lag stored trend</th>
             <th>Committed offset</th>
             <th>Stored offset</th>
             <th>Fetch state</th>

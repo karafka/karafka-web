@@ -14,10 +14,10 @@ module Karafka
       # @return [Object] deserialized data
       def call(message)
         raw_payload = if message.headers.key?('zlib')
-          Zlib::Inflate.inflate(message.raw_payload)
-        else
-          message.raw_payload
-        end
+                        Zlib::Inflate.inflate(message.raw_payload)
+                      else
+                        message.raw_payload
+                      end
 
         ::JSON.parse(
           raw_payload,

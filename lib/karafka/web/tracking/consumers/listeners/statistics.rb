@@ -104,6 +104,8 @@ module Karafka
             # @return [Hash] extracted partition metrics
             def extract_partition_metrics(pt_stats)
               metrics = pt_stats.slice(
+                'consumer_lag',
+                'consumer_lag_d',
                 'consumer_lag_stored',
                 'consumer_lag_stored_d',
                 'committed_offset',

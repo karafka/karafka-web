@@ -40,13 +40,24 @@ module Karafka
               .sort_by(&:started_at)
           end
 
-          # @return [Integer] collective lag on this process
+          # @return [Integer] collective stored lag on this process
           def lag_stored
             consumer_groups
               .flat_map(&:subscription_groups)
               .flat_map(&:topics)
               .flat_map(&:partitions)
               .map(&:lag_stored)
+              .delete_if(&:negative?)
+              .sum
+          end
+
+          # @return [Integer] collective lag on this process
+          def lag
+            consumer_groups
+              .flat_map(&:subscription_groups)
+              .flat_map(&:topics)
+              .flat_map(&:partitions)
+              .map(&:lag)
               .delete_if(&:negative?)
               .sum
           end

@@ -23,10 +23,10 @@ module Karafka
 
       # Default empty historicals for first record in Kafka
       DEFAULT_AGGREGATED = Processing::Consumers::TimeSeriesTracker::TIME_RANGES
-                            .keys
-                            .map { |range| [range, []] }
-                            .to_h
-                            .freeze
+                           .keys
+                           .map { |range| [range, []] }
+                           .to_h
+                           .freeze
 
       # WHole default empty state (aside from dispatch time)
       DEFAULT_STATE = {

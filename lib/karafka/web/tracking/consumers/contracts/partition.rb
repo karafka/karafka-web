@@ -10,6 +10,8 @@ module Karafka
             configure
 
             required(:id) { |val| val.is_a?(Integer) && val >= 0 }
+            required(:lag) { |val| val.is_a?(Integer) }
+            required(:lag_d) { |val| val.is_a?(Integer) }
             required(:lag_stored) { |val| val.is_a?(Integer) }
             required(:lag_stored_d) { |val| val.is_a?(Integer) }
             required(:committed_offset) { |val| val.is_a?(Integer) }

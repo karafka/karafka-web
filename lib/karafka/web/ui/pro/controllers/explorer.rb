@@ -117,14 +117,14 @@ module Karafka
                 active_partitions = [partition_id]
               else
                 partitions_count = Models::ClusterInfo.partitions_count(topic_id)
-                active_partitions, _, _ = Paginators::Partitions.call(partitions_count, 1)
+                active_partitions, = Paginators::Partitions.call(partitions_count, 1)
               end
 
               # This selects first page with most recent messages
-              messages, _ = Models::Message.topic_page(topic_id, active_partitions, 1)
+              messages, = Models::Message.topic_page(topic_id, active_partitions, 1)
 
               # Selects newest out of all partitions
-              recent = messages.sort_by(&:timestamp).last
+              recent = messages.max_by(&:timestamp)
 
               recent || raise(::Karafka::Web::Errors::Ui::NotFoundError)
 

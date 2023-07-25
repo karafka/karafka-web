@@ -23,6 +23,8 @@
 - [Improvement] Align descriptions for the status page, to reflect that state check happens for consumers initial state.
 - [Improvement] Report bytesize of raw payload when viewing message in the explorer.
 - [Improvement] Use zlib compression for Karafka Web UI topics. Reduces space needed from 50 to 91%.
+- [Improvement] Rename lag to lag stored in counters to reflect what it does.
+- [Improvement] Collect both stored lag and lag.
 - [Fix] Fix a case where upon multiple rebalances, part of the states materialization could be lost.
 - [Fix] Make sure, that the flushing interval computation division happens with float.
 - [Fix] Fix headers size inconsistency between Health and Routing.

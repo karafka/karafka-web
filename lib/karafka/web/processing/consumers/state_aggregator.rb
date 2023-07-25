@@ -124,6 +124,7 @@ module Karafka
             stats[:processes] = 0
             stats[:rss] = 0
             stats[:listeners_count] = 0
+            stats[:lag] = 0
             stats[:lag_stored] = 0
             utilization = 0
 
@@ -142,6 +143,7 @@ module Karafka
                 stats[:processes] += 1
                 stats[:rss] += report_process[:memory_usage]
                 stats[:listeners_count] += report_process[:listeners]
+                stats[:lag] += model.lag
                 stats[:lag_stored] += model.lag_stored
                 utilization += report_stats[:utilization]
               end
