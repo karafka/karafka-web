@@ -15,8 +15,9 @@ module Karafka
         def initialize(*args)
           super
 
-          @flush_interval = ::Karafka::Web.config.processing.interval / 1_000
-          @consumers_aggregator = ::Karafka::Web.config.processing.consumers.aggregator
+          @flush_interval = ::Karafka::Web.config.processing.interval / 1_000.to_f
+          @state_aggregator = ::Karafka::Web::Processing::Consumers::StateAggregator.new
+          @metrics_aggregator = ::Karafka::Web::Processing::Consumers::MetricsAggregator.new
           # We set this that way so we report with first batch and so we report in the development
           # mode. In the development mode, there is a new instance per each invocation, thus we need
           # to always initially report, so the web UI works well in the dev mode where consumer
@@ -28,7 +29,12 @@ module Karafka
         def consume
           messages
             .select { |message| message.payload[:type] == 'consumer' }
-            .each { |message| @consumers_aggregator.add(message.payload, message.offset) }
+            .each { |message| @state_aggregator.add(message.payload, message.offset) }
+            .each { |message| @metrics_aggregator.add(message.payload) }
+
+          # Only update the aggregated state after the states aggregation is done for a given
+          # batch of reports
+          @metrics_aggregator.update_aggregated_stats(@state_aggregator.stats)
 
           return unless periodic_flush?
 
@@ -39,7 +45,7 @@ module Karafka
 
         # Flush final state on shutdown
         def shutdown
-          flush if @consumers_aggregator
+          flush if @state_aggregator
         end
 
         private
@@ -53,12 +59,24 @@ module Karafka
         def flush
           @flushed_at = monotonic_now
 
-          producer.produce_async(
-            topic: Karafka::Web.config.topics.consumers.states,
-            payload: @consumers_aggregator.to_json,
-            # This will ensure that the consumer states are compacted
-            key: Karafka::Web.config.topics.consumers.states,
-            partition: 0
+          producer.produce_many_async(
+            [
+              {
+                topic: Karafka::Web.config.topics.consumers.states,
+                payload: Zlib::Deflate.deflate(@state_aggregator.to_json),
+                # This will ensure that the consumer states are compacted
+                key: Karafka::Web.config.topics.consumers.states,
+                partition: 0,
+                headers: { 'zlib' => 'true' }
+              },
+              {
+                topic: Karafka::Web.config.topics.consumers.metrics,
+                payload: Zlib::Deflate.deflate(@metrics_aggregator.to_json),
+                key: Karafka::Web.config.topics.consumers.metrics,
+                partition: 0,
+                headers: { 'zlib' => 'true' }
+              }
+            ]
           )
         end
       end

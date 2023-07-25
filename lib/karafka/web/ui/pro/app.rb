@@ -85,6 +85,14 @@ module Karafka
             r.on 'explorer' do
               controller = Controllers::Explorer.new(params)
 
+              r.get String, Integer, 'recent' do |topic_id, partition_id|
+                render_response controller.recent(topic_id, partition_id)
+              end
+
+              r.get String, 'recent' do |topic_id|
+                render_response controller.recent(topic_id, nil)
+              end
+
               r.get String, Integer, Integer do |topic_id, partition_id, offset|
                 render_response controller.show(topic_id, partition_id, offset)
               end

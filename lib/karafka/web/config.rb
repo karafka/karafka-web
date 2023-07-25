@@ -23,6 +23,9 @@ module Karafka
 
           # Topic for storing states aggregated info
           setting :states, default: 'karafka_consumers_states'
+
+          # Topic for storing consumers historical metrics info
+          setting :metrics, default: 'karafka_consumers_metrics'
         end
       end
 
@@ -73,10 +76,6 @@ module Karafka
 
         # How often should we report the aggregated state
         setting :interval, default: 1_000
-
-        setting :consumers do
-          setting :aggregator, default: Processing::Consumers::Aggregator.new
-        end
       end
 
       setting :ui do

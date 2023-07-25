@@ -11,7 +11,10 @@ module Karafka
       module Processing
         # Raised when we try to process reports but we do not have the current state bootstrapped
         # If you see this error, it probably means, that you did not bootstrap Web-UI correctly
-        MissingCurrentStateError = Class.new(BaseError)
+        MissingConsumersStateError = Class.new(BaseError)
+
+        # Similar to the above. It should be created during install
+        MissingConsumersMetricsError = Class.new(BaseError)
       end
 
       # Tracking related errors

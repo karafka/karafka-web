@@ -22,7 +22,7 @@ module Karafka
       }.freeze
 
       # Default empty historicals for first record in Kafka
-      DEFAULT_HISTORICALS = Processing::Consumers::Historicals::TIME_RANGES
+      DEFAULT_AGGREGATED = Processing::Consumers::TimeSeriesTracker::TIME_RANGES
                             .keys
                             .map { |range| [range, []] }
                             .to_h
@@ -31,9 +31,10 @@ module Karafka
       # WHole default empty state (aside from dispatch time)
       DEFAULT_STATE = {
         processes: {},
-        historicals: DEFAULT_HISTORICALS,
         stats: DEFAULT_STATS
       }.freeze
+
+      private_constant :DEFAULT_STATS, :DEFAULT_AGGREGATED, :DEFAULT_STATE
 
       # Creates needed topics and the initial zero state, so even if no `karafka server` processes
       # are running, we can still display the empty UI
@@ -41,7 +42,7 @@ module Karafka
       # @param replication_factor [Integer] replication factor we want to use (1 by default)
       def bootstrap!(replication_factor: 1)
         bootstrap_topics!(replication_factor)
-        bootstrap_consumers_state!
+        bootstrap_consumers_states!
       end
 
       # Removes all the Karafka topics and creates them again with the same replication factor
@@ -83,13 +84,22 @@ module Karafka
               max_wait_time ::Karafka::Web.config.processing.interval / 2
               max_messages 1_000
               consumer ::Karafka::Web::Processing::Consumer
+              # This needs to be true in order not to reload the consumer in dev. This consumer
+              # should not be affected by the end user development process
+              consumer_persistence true
               deserializer web_deserializer
               manual_offset_management true
             end
 
-            # We define those two here without consumption, so Web understands how to deserialize
+            # We define those three here without consumption, so Web understands how to deserialize
             # them when used / viewed
             topic ::Karafka::Web.config.topics.consumers.states do
+              config(active: false)
+              active false
+              deserializer web_deserializer
+            end
+
+            topic ::Karafka::Web.config.topics.consumers.metrics do
               config(active: false)
               active false
               deserializer web_deserializer
@@ -123,6 +133,7 @@ module Karafka
         existing_topics = ::Karafka::Admin.cluster_info.topics.map { |topic| topic[:topic_name] }
 
         consumers_states_topic = ::Karafka::Web.config.topics.consumers.states
+        consumers_metrics_topic = ::Karafka::Web.config.topics.consumers.metrics
         consumers_reports_topic = ::Karafka::Web.config.topics.consumers.reports
         errors_topic = ::Karafka::Web.config.topics.errors
 
@@ -136,6 +147,20 @@ module Karafka
             # We care only about the most recent state, previous are irrelevant. So we can easily
             # compact after one minute. We do not use this beyond the most recent collective
             # state, hence it all can easily go away.
+            {
+              'cleanup.policy': 'compact',
+              'retention.ms': 60 * 60 * 1_000
+            }
+          )
+        end
+
+        unless existing_topics.include?(consumers_metrics_topic)
+          # This topic needs to have one partition
+          # Same as states - only most recent is relevant as it is a materialized state
+          ::Karafka::Admin.create_topic(
+            consumers_metrics_topic,
+            1,
+            replication_factor,
             {
               'cleanup.policy': 'compact',
               'retention.ms': 60 * 60 * 1_000
@@ -173,11 +198,20 @@ module Karafka
       end
 
       # Creates the initial state record with all values being empty
-      def bootstrap_consumers_state!
+      def bootstrap_consumers_states!
         ::Karafka.producer.produce_sync(
           topic: Karafka::Web.config.topics.consumers.states,
           key: Karafka::Web.config.topics.consumers.states,
           payload: DEFAULT_STATE.to_json
+        )
+
+        ::Karafka.producer.produce_sync(
+          topic: Karafka::Web.config.topics.consumers.metrics,
+          key: Karafka::Web.config.topics.consumers.metrics,
+          payload: {
+            aggregated: DEFAULT_AGGREGATED,
+            consumer_groups: DEFAULT_AGGREGATED
+          }.to_json
         )
       end
     end

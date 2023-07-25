@@ -107,6 +107,30 @@ module Karafka
               respond
             end
 
+            # Displays the most recent message on a topic/partition
+            #
+            # @param topic_id [String]
+            # @param partition_id [Integer, nil] partition we're interested in or nil if we are
+            #   interested in the most recent message from all the partitions
+            def recent(topic_id, partition_id)
+              if partition_id
+                active_partitions = [partition_id]
+              else
+                partitions_count = Models::ClusterInfo.partitions_count(topic_id)
+                active_partitions, _, _ = Paginators::Partitions.call(partitions_count, 1)
+              end
+
+              # This selects first page with most recent messages
+              messages, _ = Models::Message.topic_page(topic_id, active_partitions, 1)
+
+              # Selects newest out of all partitions
+              recent = messages.sort_by(&:timestamp).last
+
+              recent || raise(::Karafka::Web::Errors::Ui::NotFoundError)
+
+              show(topic_id, recent.partition, recent.offset)
+            end
+
             private
 
             # Fetches current page data

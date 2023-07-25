@@ -4,6 +4,7 @@
 - **[Feature]** Introduce graphs.
 - **[Feature]** Introduce historical metrics storage.
 - **[Feature]** Introduce per-topic data exploration in the Explorer.
+- **[Feature]** Introduce per-topic and per-partition most recent message view with live reload.
 - [Improvement] Extend status page checks to ensure, that it detects a case when Web-UI is not part of `karafka.rb` but still referenced in routes.
 - [Improvement] List Web UI topics names on the status page in the info section.
 - [Improvement] Start versioning the materialized states schemas.
@@ -19,7 +20,11 @@
 - [Improvement] Avoid double-reading of watermark offsets for explorer and errors display.
 - [Improvement] When no params needed for a page, do not include empty params.
 - [Improvement] Do not include page when page is 1 in the url.
-- [Improvement] Align descriptions for the status page, to reflect that state chech happens for consumers initial state.
+- [Improvement] Align descriptions for the status page, to reflect that state check happens for consumers initial state.
+- [Improvement] Report bytesize of raw payload when viewing message in the explorer.
+- [Improvement] Use zlib compression for Karafka Web UI topics. Reduces space needed from 50 to 91%.
+- [Fix] Fix a case where upon multiple rebalances, part of the states materialization could be lost.
+- [Fix] Make sure, that the flushing interval computation division happens with float.
 - [Fix] Fix headers size inconsistency between Health and Routing.
 - [Fix] Fix invalid padding on status page.
 - [Refactor] Reorganize pagination engine to support offset based pagination.

@@ -24,6 +24,16 @@
               )
             %>
           <% end %>
+
+          <%==
+            partial(
+              'explorer/detail',
+              locals: {
+                k: 'bytesize',
+                v: format_memory((@message.raw_payload.bytesize / 1024.to_f).round(2))
+              }
+            )
+          %>
         </tbody>
       </table>
     </div>
