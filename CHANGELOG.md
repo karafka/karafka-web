@@ -28,7 +28,7 @@
 - [Fix] Fix headers size inconsistency between Health and Routing.
 - [Fix] Fix invalid padding on status page.
 - [Refactor] Reorganize pagination engine to support offset based pagination.
-- [Maintenance] Require `karafka` `2.1.7` due to fixes in the Iterator API.
+- [Maintenance] Require `karafka` `2.1.8` due to fixes in the Iterator API and routing API extensions.
 
 ## 0.6.3 (2023-07-22)
 - [Fix] Remove files from 0.7.0 accidentally added to the release.
