@@ -9,7 +9,7 @@ module Karafka
           #
           # Any outgoing reporting needs to match this format for it to work with the statuses
           # consumer.
-          class Report < Tracking::Contracts::Base
+          class Report < Web::Contracts::Base
             configure
 
             required(:schema_version) { |val| val.is_a?(String) && !val.empty? }
@@ -53,11 +53,11 @@ module Karafka
               required(:utilization) { |val| val.is_a?(Numeric) && val >= 0 }
 
               nested(:total) do
-                required(:batches) { |val| val.is_a?(Numeric) && val >= 0 }
-                required(:messages) { |val| val.is_a?(Numeric) && val >= 0 }
-                required(:errors) { |val| val.is_a?(Numeric) && val >= 0 }
-                required(:retries) { |val| val.is_a?(Numeric) && val >= 0 }
-                required(:dead) { |val| val.is_a?(Numeric) && val >= 0 }
+                required(:batches) { |val| val.is_a?(Integer) && val >= 0 }
+                required(:messages) { |val| val.is_a?(Integer) && val >= 0 }
+                required(:errors) { |val| val.is_a?(Integer) && val >= 0 }
+                required(:retries) { |val| val.is_a?(Integer) && val >= 0 }
+                required(:dead) { |val| val.is_a?(Integer) && val >= 0 }
               end
             end
 
@@ -73,7 +73,7 @@ module Karafka
               cg_contract = ConsumerGroup.new
 
               # Consumer group id (key) is irrelevant because it is also in the details
-              data.fetch(:consumer_groups).each do |_, details|
+              data.fetch(:consumer_groups).each_value do |details|
                 cg_contract.validate!(details)
               end
 

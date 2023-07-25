@@ -7,6 +7,10 @@ module Karafka
       # Base class for all errors related to the web ui
       BaseError = Class.new(::Karafka::Errors::BaseError)
 
+      # Raised when the a report is not valid for any reason
+      # This should never happen and if you see this, please open an issue.
+      ContractError = Class.new(BaseError)
+
       # Processing related errors namespace
       module Processing
         # Raised when we try to process reports but we do not have the current state bootstrapped
@@ -15,13 +19,6 @@ module Karafka
 
         # Similar to the above. It should be created during install
         MissingConsumersMetricsError = Class.new(BaseError)
-      end
-
-      # Tracking related errors
-      module Tracking
-        # Raised when the a report is not valid for any reason
-        # This should never happen and if you see this, please open an issue.
-        ContractError = Class.new(BaseError)
       end
 
       # Ui related errors

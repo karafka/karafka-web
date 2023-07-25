@@ -6,7 +6,7 @@ module Karafka
       module Consumers
         module Contracts
           # Partition metrics required for web to operate
-          class Partition < Tracking::Contracts::Base
+          class Partition < Web::Contracts::Base
             configure
 
             required(:id) { |val| val.is_a?(Integer) && val >= 0 }

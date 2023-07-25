@@ -16,12 +16,14 @@ module Karafka
           super
 
           @flush_interval = ::Karafka::Web.config.processing.interval / 1_000.to_f
-          @state_aggregator = ::Karafka::Web::Processing::Consumers::StateAggregator.new
-          @metrics_aggregator = ::Karafka::Web::Processing::Consumers::MetricsAggregator.new
-          # We set this that way so we report with first batch and so we report in the development
-          # mode. In the development mode, there is a new instance per each invocation, thus we need
-          # to always initially report, so the web UI works well in the dev mode where consumer
-          # instances are not long-living.
+
+          @state_aggregator = Consumers::Aggregators::State.new
+          @state_contract = Consumers::Contracts::State.new
+
+          @metrics_aggregator = Consumers::Aggregators::Metrics.new
+          @metrics_contract = Consumers::Contracts::Metrics.new
+
+          # We set this that way so we report with first batch and so we report as fast as possible
           @flushed_at = monotonic_now - @flush_interval
         end
 
@@ -38,6 +40,10 @@ module Karafka
 
           return unless periodic_flush?
 
+          @state = @state_aggregator.to_h
+          @metrics = @metrics_aggregator.to_h
+
+          validate!
           flush
 
           mark_as_consumed(messages.last)
@@ -55,6 +61,13 @@ module Karafka
           (monotonic_now - @flushed_at) > @flush_interval
         end
 
+        # Ensures that the aggregated data complies with our schema expectation.
+        # If you ever get to this place, this is probably a bug and you should report it.
+        def validate!
+          @state_contract.validate!(@state)
+          @metrics_contract.validate!(@metrics)
+        end
+
         # Persists the new current state by flushing it to Kafka
         def flush
           @flushed_at = monotonic_now
@@ -63,7 +76,7 @@ module Karafka
             [
               {
                 topic: Karafka::Web.config.topics.consumers.states,
-                payload: Zlib::Deflate.deflate(@state_aggregator.to_json),
+                payload: Zlib::Deflate.deflate(@state.to_json),
                 # This will ensure that the consumer states are compacted
                 key: Karafka::Web.config.topics.consumers.states,
                 partition: 0,
@@ -71,7 +84,7 @@ module Karafka
               },
               {
                 topic: Karafka::Web.config.topics.consumers.metrics,
-                payload: Zlib::Deflate.deflate(@metrics_aggregator.to_json),
+                payload: Zlib::Deflate.deflate(@metrics.to_json),
                 key: Karafka::Web.config.topics.consumers.metrics,
                 partition: 0,
                 headers: { 'zlib' => 'true' }

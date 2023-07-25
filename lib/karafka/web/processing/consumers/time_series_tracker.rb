@@ -102,6 +102,12 @@ module Karafka
 
               grouped = values.group_by { |sample| sample.first / resolution }
               times = grouped.values.map(&:first)
+
+              # Inject the most recent to always have it in each reporting range
+              # Otherwise for a longer time ranges we would not have the most recent state
+              # available
+              times << values.last
+
               times.uniq!(&:first)
               # Squash in case there would be two events from the same time
               times.sort_by!(&:first)

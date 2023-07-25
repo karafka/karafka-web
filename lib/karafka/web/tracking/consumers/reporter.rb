@@ -52,9 +52,10 @@ module Karafka
               messages = [
                 {
                   topic: ::Karafka::Web.config.topics.consumers.reports,
-                  payload: report.to_json,
+                  payload: Zlib::Deflate.deflate(report.to_json),
                   key: process_name,
-                  partition: 0
+                  partition: 0,
+                  headers: { 'zlib' => 'true' }
                 }
               ]
 
@@ -64,9 +65,10 @@ module Karafka
 
                 {
                   topic: Karafka::Web.config.topics.errors,
-                  payload: error.to_json,
+                  payload: Zlib::Deflate.deflate(error.to_json),
                   # Always dispatch errors from the same process to the same partition
-                  key: process_name
+                  key: process_name,
+                  headers: { 'zlib' => 'true' }
                 }
               end
 
