@@ -112,7 +112,7 @@ module Karafka
             )
           end
 
-          # @return [Status::Step] Is the initial consumers state present in the setup or not
+          # @return [Status::Step] Is the initial consumers state present in Kafka
           def initial_consumers_state
             if partitions.success?
               @current_state ||= Models::ConsumersState.current
@@ -127,10 +127,25 @@ module Karafka
             )
           end
 
+          # @return [Status::Step] Is the initial consumers metrics record present in Kafka
+          def initial_consumers_metrics
+            if initial_consumers_state.success?
+              @current_state ||= Models::ConsumersMetrics.current
+              status = @current_state ? :success : :failure
+            else
+              status = :halted
+            end
+
+            Step.new(
+              status,
+              nil
+            )
+          end
+
           # @return [Status::Step] Is there at least one active karafka server reporting to the
           #   Web UI
           def live_reporting
-            if initial_consumers_state.success?
+            if initial_consumers_metrics.success?
               @processes ||= Models::Processes.active(@current_state)
               status = @processes.empty? ? :failure : :success
             else

@@ -25,7 +25,7 @@
       <%= message.key %>
     </td>
     <td class="text-center">
-      <a href="<%= root_path('explorer', message.topic, message.partition, message.offset) %>" class="btn btn-sm btn-secondary">
+      <a href="<%= explorer_path(message.topic, message.partition, message.offset) %>" class="btn btn-sm btn-secondary">
         Details
       </a>
     </td>

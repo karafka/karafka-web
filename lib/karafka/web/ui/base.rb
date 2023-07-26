@@ -5,6 +5,7 @@ module Karafka
     module Ui
       # Base Roda application
       class Base < Roda
+        include Helpers::PathsHelper
         include Helpers::ApplicationHelper
 
         # Details that need to be evaluated in the context of OSS or Pro web UI.

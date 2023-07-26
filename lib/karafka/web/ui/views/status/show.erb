@@ -80,6 +80,21 @@
 
       <%==
         partial(
+          "status/#{@status.initial_consumers_metrics.to_s}",
+          locals: {
+            title: 'Initial consumers metrics presence',
+            description: partial(
+              'status/failures/initial_consumers_metrics',
+              locals: {
+                details: @status.initial_consumers_metrics.details
+              }
+            )
+          }
+        )
+      %>
+
+      <%==
+        partial(
           "status/#{@status.live_reporting.to_s}",
           locals: {
             title: 'Live reporting',

@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-sm-6 ms-0 ps-0">
       <% if @messages && !@messages.empty? %>
-        <a href="<%= root_path('explorer', @topic_id, 'recent') %>" class="btn btn-secondary btn-sm" title="Display the most recent message for this partition">
+        <a href="<%= explorer_path(@topic_id, 'recent') %>" class="btn btn-secondary btn-sm" title="Display the most recent message for this partition">
           &#x2192; Recent
         </a>
       <% end %>
