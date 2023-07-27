@@ -40,8 +40,6 @@ module Karafka
               r.public
             end
 
-            @current_page = params.current_page
-
             r.get 'dashboard' do
               @breadcrumbs = false
               controller = Controllers::Dashboard.new(params)
@@ -98,7 +96,13 @@ module Karafka
               end
 
               r.get String, Integer, Integer do |topic_id, partition_id, offset|
-                render_response controller.show(topic_id, partition_id, offset)
+                # If when viewing given message we get an offset of different message, we should
+                # redirect there. This allows us to support pagination with the current engine
+                if params.current_offset != -1
+                  r.redirect explorer_path(topic_id, partition_id, params.current_offset)
+                else
+                  render_response controller.show(topic_id, partition_id, offset)
+                end
               end
 
               r.get String, Integer do |topic_id, partition_id|
@@ -128,7 +132,11 @@ module Karafka
               controller = Controllers::Errors.new(params)
 
               r.get Integer, Integer do |partition_id, offset|
-                render_response controller.show(partition_id, offset)
+                if params.current_offset != -1
+                  r.redirect root_path('errors', partition_id, params.current_offset)
+                else
+                  render_response controller.show(partition_id, offset)
+                end
               end
 
               r.get Integer do |partition_id|

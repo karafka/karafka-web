@@ -8,9 +8,15 @@ module Karafka
         module Aggregators
           # Aggregator that tracks consumers processes states, aggregates the metrics and converts
           # data points into a materialized current state.
-          class State
-            include ::Karafka::Core::Helpers::Time
-
+          #
+          # There are two types of metrics:
+          #   - totals - metrics that represent absolute values like number of messages processed
+          #     in total. Things that need to be incremented/updated with each incoming consumer
+          #     process report. They cannot be "batch computed" because they do not represent a
+          #     a state of time but progress.
+          #   - aggregated state - a state that represents a "snapshot" of things happening right
+          #     now. Right now is the moment of time on which we operate.
+          class State < Base
             # Current schema version
             # This can be used in the future for detecting incompatible changes and writing
             # migrations
@@ -18,29 +24,25 @@ module Karafka
 
             private_constant :SCHEMA_VERSION
 
-            def initialize
-              # We keep whole reports for computation of active, current counters
-              @active_reports = {}
-            end
-
             # Uses provided process state report to update the current materialized state
             # @param report [Hash] consumer process state report
             # @param offset [Integer] offset of the message with the state report. This offset is
             #   needed as we need to be able to get all the consumers reports from a given offset.
             def add(report, offset)
-              memoize_process_report(report)
+              super(report)
               increment_total_counters(report)
               update_process_state(report, offset)
               # We always evict after counters updates because we want to use expired (stopped)
               # data for counters as it was valid previously. This can happen only when web consumer
               # had a lag and is catching up.
               evict_expired_processes
-              # We could calculate this on a per request basis but this would require fetching all
-              # the active processes for each view and we do not want that for performance reasons
+              # current means current in the context of processing window (usually now but in case
+              # of lag, this state may be from the past)
               refresh_current_stats
             end
 
-            # @return [Hash] aggregated current stats value
+            # @return [Array<Hash, Float>] aggregated current stats value and time from which this
+            #   aggregation comes from
             #
             # @note We return a copy, because we use the internal one to track state changes and
             #   unless we would return a copy, other aggregators could have this mutated in an
@@ -65,12 +67,6 @@ module Karafka
             # @return [Hash] hash with current state from Kafka
             def state
               @state ||= Consumers::State.current!
-            end
-
-            # Updates the report for given process in memory
-            # @param report [Hash]
-            def memoize_process_report(report)
-              @active_reports[report[:process][:name]] = report
             end
 
             # Increments the total counters based on the provided report
@@ -101,7 +97,7 @@ module Karafka
             #   stopped processes for extra time within the ttl limitations. This makes tracking of
             #   things from UX perspective nicer.
             def evict_expired_processes
-              max_ttl = float_now - ::Karafka::Web.config.ttl / 1_000
+              max_ttl = @aggregated_from - ::Karafka::Web.config.ttl / 1_000
 
               state[:processes].delete_if do |_name, details|
                 details[:dispatched_at] < max_ttl
@@ -133,10 +129,16 @@ module Karafka
                 .values
                 .reject { |report| report[:process][:status] == 'stopped' }
                 .each do |report|
-                  model = Ui::Models::Process.new(report)
+                  report_stats = report[:stats]
+                  report_process = report[:process]
 
-                  report_stats = model.stats
-                  report_process = model.process
+                  lags = []
+                  lags_stored = []
+
+                  iterate_partitions(report) do |partition_stats|
+                    lags << partition_stats[:lag]
+                    lags_stored << partition_stats[:lag_stored]
+                  end
 
                   stats[:busy] += report_stats[:busy]
                   stats[:enqueued] += report_stats[:enqueued]
@@ -144,12 +146,25 @@ module Karafka
                   stats[:processes] += 1
                   stats[:rss] += report_process[:memory_usage]
                   stats[:listeners_count] += report_process[:listeners]
-                  stats[:lag] += model.lag
-                  stats[:lag_stored] += model.lag_stored
+                  stats[:lag] += lags.reject(&:negative?).sum
+                  stats[:lag_stored] += lags_stored.reject(&:negative?).sum
                   utilization += report_stats[:utilization]
                 end
 
               stats[:utilization] = utilization / (stats[:processes] + 0.0001)
+            end
+
+            # @param report [Hash]
+            def iterate_partitions(report)
+              report[:consumer_groups].each_value do |consumer_group|
+                consumer_group[:subscription_groups].each_value do |subscription_group|
+                  subscription_group[:topics].each_value do |topic|
+                    topic[:partitions].each_value do |partition|
+                      yield(partition)
+                    end
+                  end
+                end
+              end
             end
           end
         end

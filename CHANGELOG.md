@@ -6,6 +6,8 @@
 - **[Feature]** Introduce per-topic data exploration in the Explorer.
 - **[Feature]** Introduce per-topic and per-partition most recent message view with live reload.
 - **[Feature]** Introduce a new per-process inspection view called "Details" ti display all process real-time aggregated data.
+- [Improvement] Provide previous / next navigation when viewing particular messages in the explorer.
+- [Improvement] Provide previous / next navigation when viewing particular errors.
 - [Improvement] Link all explorable offsets to the explorer.
 - [Improvement] Extend status page checks to ensure, that it detects a case when Web-UI is not part of `karafka.rb` but still referenced in routes.
 - [Improvement] Extend status page checks to ensure, that it detects a case where there is no initial consumers metrics in Kafka topic.
@@ -30,10 +32,16 @@
 - [Improvement] Rename lag to lag stored in counters to reflect what it does.
 - [Improvement] Collect both stored lag and lag.
 - [Improvement] Introduce states and metrics schema validation.
+- [Improvement] Prevent locking in sampler for time of OS data aggregation.
+- [Fix] Fix a case where states materializing consumer would update state too often.
+- [Fix] Fix a bug when rapid non-initialized shutdown could mess up the metrics.
 - [Fix] Fix a case where upon multiple rebalances, part of the states materialization could be lost.
 - [Fix] Make sure, that the flushing interval computation division happens with float.
+- [Fix] Fix a case where app client id change could force web-ui to recompute the metrics.
+- [Fix] Make sure, that when re-using same Karafka Web-UI topics as a different up, all states and reports are not recomputed back.
 - [Fix] Fix headers size inconsistency between Health and Routing.
 - [Fix] Fix invalid padding on status page.
+- [Refactor] Limit usage of UI models for data intense computation to speed up states materialization under load.
 - [Refactor] Reorganize pagination engine to support offset based pagination.
 - [Maintenance] Require `karafka` `2.1.8` due to fixes in the Iterator API and routing API extensions.
 

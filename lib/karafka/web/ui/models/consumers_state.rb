@@ -32,7 +32,7 @@ module Karafka
 
             # @return [State] current aggregated state
             # @raise [::Karafka::Web::Errors::Ui::NotFoundError] raised when there is no current
-            #   state. Probably because `karafka server` was never executed
+            #   state.
             def current!
               current || raise(::Karafka::Web::Errors::Ui::NotFoundError)
             end

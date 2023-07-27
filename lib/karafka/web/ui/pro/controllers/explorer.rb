@@ -74,7 +74,8 @@ module Karafka
                 previous_offset,
                 @params.current_offset,
                 next_offset,
-                @messages.map(&:offset)
+                # If message is an array, it means it's a compacted dummy offset representation
+                @messages.map { |message| message.is_a?(Array) ? message.last : message.offset }
               )
 
               respond
@@ -103,6 +104,10 @@ module Karafka
               rescue StandardError => e
                 @payload_error = e
               end
+
+              # We need watermark offsets to decide if we can paginate left and right
+              watermark_offsets = Ui::Models::WatermarkOffsets.find(topic_id, partition_id)
+              paginate(offset, watermark_offsets.low, watermark_offsets.high)
 
               respond
             end

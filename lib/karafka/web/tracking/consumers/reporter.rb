@@ -32,6 +32,14 @@ module Karafka
           # @param forced [Boolean] should we report bypassing the time frequency or should we
           #   report only in case we would not send the report for long enough time.
           def report(forced: false)
+            # Do not even mutex if not needed
+            return unless report?(forced)
+
+            # We run this sampling before the mutex so sampling does not stop things in case
+            # other threads would need this mutex. This can take up to 25ms and we do not want to
+            # block during this time
+            sampler.sample
+
             MUTEX.synchronize do
               # Start background thread only when needed
               # This prevents us from starting it too early or for non-consumer processes where
@@ -71,8 +79,6 @@ module Karafka
                   headers: { 'zlib' => 'true' }
                 }
               end
-
-              return if messages.empty?
 
               produce(messages)
 

@@ -22,12 +22,12 @@
         <%== partial 'shared/tab_nav', locals: { title: 'Messages', id: 'messages', active: true } %>
         <%== partial 'shared/tab_nav', locals: { title: 'Batches', id: 'batches' } %>
         <%== partial 'shared/tab_nav', locals: { title: 'In progress', id: 'in-progress' } %>
-        <%== partial 'shared/tab_nav', locals: { title: 'Total lag', id: 'total-lag' } %>
+        <%== partial 'shared/tab_nav', locals: { title: 'Lag stored', id: 'lag-stored' } %>
       </ul>
 
       <div class="tab-content">
         <div class="tab-pane show active" id="messages" role="tabpanel">
-          <% data = @charts.with(:messages) %>
+          <% data = @aggregated_charts.with(:messages) %>
           <%== partial 'shared/chart', locals: { data: data, id: 'messages' } %>
         </div>
 
@@ -43,10 +43,10 @@
           <%== partial 'shared/chart', locals: { data: data, id: 'in-progress', blurred: true } %>
         </div>
 
-        <div class="tab-pane" id="total-lag" role="tabpanel">
+        <div class="tab-pane" id="lag-stored" role="tabpanel">
           <%== partial 'dashboard/feature_pro' %>
           <% data = { lag_stored: set.call }.to_json %>
-          <%== partial 'shared/chart', locals: { data: data, id: 'total-lag', blurred: true } %>
+          <%== partial 'shared/chart', locals: { data: data, id: 'lag-stored', blurred: true } %>
         </div>
       </div>
     </div>

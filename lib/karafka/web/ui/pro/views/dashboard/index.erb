@@ -12,28 +12,27 @@
         <%== partial 'shared/tab_nav', locals: { title: 'Messages', id: 'messages', active: true } %>
         <%== partial 'shared/tab_nav', locals: { title: 'Batches', id: 'batches' } %>
         <%== partial 'shared/tab_nav', locals: { title: 'In progress', id: 'in-progress' } %>
-        <%== partial 'shared/tab_nav', locals: { title: 'Total lag', id: 'total-lag' } %>
+        <%== partial 'shared/tab_nav', locals: { title: 'Lags stored', id: 'lags-stored' } %>
       </ul>
 
       <div class="tab-content">
         <div class="tab-pane show active" id="messages" role="tabpanel">
-          <% data = @charts.with(:messages, :errors, :dead, :retries, :batch_size) %>
+          <% data = @aggregated_charts.with(:messages, :errors, :dead, :retries, :batch_size) %>
           <%== partial 'shared/chart', locals: { data: data, id: 'messages' } %>
         </div>
 
         <div class="tab-pane" id="batches" role="tabpanel">
-          <% data = @charts.with(:batches, :errors, :dead, :retries) %>
+          <% data = @aggregated_charts.with(:batches, :errors, :dead, :retries) %>
           <%== partial 'shared/chart', locals: { data: data, id: 'batches' } %>
         </div>
 
         <div class="tab-pane" id="in-progress" role="tabpanel">
-          <% data = @charts.with(:enqueued, :busy) %>
+          <% data = @aggregated_charts.with(:enqueued, :busy) %>
           <%== partial 'shared/chart', locals: { data: data, id: 'in-progress' } %>
         </div>
 
-        <div class="tab-pane" id="total-lag" role="tabpanel">
-          <% data = @charts.with(:lag_stored) %>
-          <%== partial 'shared/chart', locals: { data: data, id: 'total-lag' } %>
+        <div class="tab-pane" id="lags-stored" role="tabpanel">
+          <%== partial 'shared/chart', locals: { data: @topics_charts.lags_stored, id: 'lags-stored' } %>
         </div>
       </div>
     </div>
@@ -50,23 +49,23 @@
       <ul class="nav nav-tabs" id="graphs2" role="tablist">
         <%== partial 'shared/tab_nav', locals: { title: 'Utilization', id: 'utilization', active: true } %>
         <%== partial 'shared/tab_nav', locals: { title: 'RSS', id: 'rss' } %>
-        <%== partial 'shared/tab_nav', locals: { title: 'Processes', id: 'processes' } %>
+        <%== partial 'shared/tab_nav', locals: { title: 'Concurrency', id: 'concurrency' } %>
       </ul>
 
       <div class="tab-content">
         <div class="tab-pane show active" id="utilization" role="tabpanel">
-          <% data = @charts.with(:utilization) %>
+          <% data = @aggregated_charts.with(:utilization) %>
           <%== partial 'shared/chart', locals: { data: data, id: 'utilization' } %>
         </div>
 
         <div class="tab-pane show" id="rss" role="tabpanel">
-          <% data = @charts.with(:rss, :process_rss) %>
+          <% data = @aggregated_charts.with(:rss, :process_rss) %>
           <%== partial 'shared/chart', locals: { data: data, id: 'rss' } %>
         </div>
 
-        <div class="tab-pane show" id="processes" role="tabpanel">
-          <% data = @charts.with(:processes, :threads, :listeners) %>
-          <%== partial 'shared/chart', locals: { data: data, id: 'processes' } %>
+        <div class="tab-pane show" id="concurrency" role="tabpanel">
+          <% data = @aggregated_charts.with(:processes, :threads, :listeners) %>
+          <%== partial 'shared/chart', locals: { data: data, id: 'concurrency' } %>
         </div>
       </div>
     </div>

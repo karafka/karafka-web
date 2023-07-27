@@ -89,6 +89,10 @@ module Karafka
               consumer_persistence true
               deserializer web_deserializer
               manual_offset_management true
+              # Start from the most recent data, do not materialize historical states
+              # This prevents us from dealing with cases, where client id would be changed and
+              # consumer group name would be renamed and we would start consuming all historical
+              initial_offset 'latest'
             end
 
             # We define those three here without consumption, so Web understands how to deserialize

@@ -64,11 +64,11 @@ module Karafka
                 status: ::Karafka::App.config.internal.status.to_s,
                 listeners: listeners,
                 concurrency: concurrency,
-                memory_usage: memory_usage,
-                memory_total_usage: memory_total_usage,
+                memory_usage: @memory_usage,
+                memory_total_usage: @memory_total_usage,
                 memory_size: memory_size,
                 cpu_count: cpu_count,
-                cpu_usage: cpu_usage,
+                cpu_usage: @cpu_usage,
                 tags: Karafka::Process.tags
               },
 
@@ -99,6 +99,14 @@ module Karafka
             @counters.each { |k, _| @counters[k] = 0 }
 
             @errors.clear
+          end
+
+          # @note This should run before any mutexes, so other threads can continue as those
+          #   operations may invoke shell commands
+          def sample
+            @memory_usage = memory_usage
+            @memory_total_usage = memory_total_usage
+            @cpu_usage = cpu_usage
           end
 
           private

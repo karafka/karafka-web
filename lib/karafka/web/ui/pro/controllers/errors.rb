@@ -74,6 +74,9 @@ module Karafka
                 @offset
               )
 
+              watermark_offsets = Ui::Models::WatermarkOffsets.find(errors_topic, partition_id)
+              paginate(offset, watermark_offsets.low, watermark_offsets.high)
+
               respond
             end
 

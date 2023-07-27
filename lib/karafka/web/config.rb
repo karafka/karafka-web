@@ -74,8 +74,10 @@ module Karafka
         # What should be the consumer group name for web consumer
         setting :consumer_group, default: 'karafka_web'
 
-        # How often should we report the aggregated state
-        setting :interval, default: 1_000
+        # How often should we report the aggregated state and metrics
+        # By default we flush the states twice as often as the data reporting.
+        # This will allow us to have closer to real-time reporting.
+        setting :interval, default: 2_500
       end
 
       setting :ui do

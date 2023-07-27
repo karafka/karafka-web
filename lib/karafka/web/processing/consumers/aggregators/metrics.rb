@@ -8,9 +8,7 @@ module Karafka
           # Aggregates metrics for metrics topic. Tracks consumers data and converts it into a
           # state that can then be used to enrich previous time based states to get a time-series
           # values for charts and metrics
-          class Metrics
-            include ::Karafka::Core::Helpers::Time
-
+          class Metrics < Base
             # Current schema version
             # This can be used in the future for detecting incompatible changes and writing
             # migrations
@@ -19,25 +17,28 @@ module Karafka
             private_constant :SCHEMA_VERSION
 
             def initialize
-              @active_reports = {}
+              super
+              @aggregated_tracker = TimeSeriesTracker.new(metrics.fetch(:aggregated))
+              @consumer_groups_tracker = TimeSeriesTracker.new(metrics.fetch(:consumer_groups))
             end
 
             # Adds the current report to active reports and removes old once
             #
             # @param report [Hash] single process full report
-            def add(report)
-              memoize_process_report(report)
+            def add_report(report)
+              add(report)
               evict_expired_processes
+              update_consumers_groups_metrics
             end
 
             # Updates the aggregated stats metrics
             #
             # @param stats [Hash] aggregated statistics
-            def update_aggregated_stats(stats)
-              metrics[:aggregated] = TimeSeriesTracker.new(
-                metrics.fetch(:aggregated),
-                stats
-              ).to_h
+            def add_stats(stats)
+              metrics[:aggregated] = @aggregated_tracker.add(
+                stats,
+                @aggregated_from
+              )
             end
 
             # Converts our current knowledge into a report hash.
@@ -50,11 +51,8 @@ module Karafka
             def to_h(*_args)
               metrics[:schema_version] = SCHEMA_VERSION
               metrics[:dispatched_at] = float_now
-
-              metrics[:consumer_groups] = TimeSeriesTracker.new(
-                metrics.fetch(:consumer_groups),
-                materialize_consumers_groups_current_state
-              ).to_h
+              metrics[:aggregated] = @aggregated_tracker.to_h
+              metrics[:consumer_groups] = @consumer_groups_tracker.to_h
 
               metrics
             end
@@ -66,23 +64,24 @@ module Karafka
               @metrics ||= Consumers::Metrics.current!
             end
 
-            # Updates the report for given process in memory
-            # @param report [Hash]
-            def memoize_process_report(report)
-              @active_reports[report[:process][:name]] = report
-            end
-
             # Evicts outdated reports.
             #
             # @onte This eviction differs from the one that we have for the states. For states we do
             #   not evict stopped because we want to report them for a moment. Here we do not care
             #   about what a stopped process was doing and we can also remove it from active reports.
             def evict_expired_processes
-              max_ttl = float_now - ::Karafka::Web.config.ttl / 1_000
+              max_ttl = @aggregated_from - ::Karafka::Web.config.ttl / 1_000
 
               @active_reports.delete_if do |_name, report|
                 report[:dispatched_at] < max_ttl || report[:process][:status] == 'stopped'
               end
+            end
+
+            def update_consumers_groups_metrics
+              @consumer_groups_tracker.add(
+                materialize_consumers_groups_current_state,
+                @aggregated_from
+              )
             end
 
             # Materializes the current state of consumers group data
@@ -103,7 +102,7 @@ module Karafka
                       partitions_data = topic_details.fetch(:partitions).values
 
                       lags = partitions_data
-                             .map { |p_details| p_details.fetch(:lag) }
+                             .map { |p_details| p_details[:lag] || 0 }
                              .reject(&:negative?)
 
                       lags_stored = partitions_data

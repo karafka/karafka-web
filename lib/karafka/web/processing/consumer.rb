@@ -15,7 +15,7 @@ module Karafka
         def initialize(*args)
           super
 
-          @flush_interval = ::Karafka::Web.config.processing.interval / 1_000.to_f
+          @flush_interval = ::Karafka::Web.config.processing.interval
 
           @state_aggregator = Consumers::Aggregators::State.new
           @state_contract = Consumers::Contracts::State.new
@@ -31,19 +31,19 @@ module Karafka
         def consume
           messages
             .select { |message| message.payload[:type] == 'consumer' }
-            .each { |message| @state_aggregator.add(message.payload, message.offset) }
-            .each { |message| @metrics_aggregator.add(message.payload) }
-
-          # Only update the aggregated state after the states aggregation is done for a given
-          # batch of reports
-          @metrics_aggregator.update_aggregated_stats(@state_aggregator.stats)
+            .each do |message|
+              # We need to run the aggregations on each message in order to compensate for
+              # potential lags.
+              @state_aggregator.add(message.payload, message.offset)
+              @metrics_aggregator.add_report(message.payload)
+              @metrics_aggregator.add_stats(@state_aggregator.stats)
+            end
 
           return unless periodic_flush?
 
-          @state = @state_aggregator.to_h
-          @metrics = @metrics_aggregator.to_h
-
+          materialize
           validate!
+
           flush
 
           mark_as_consumed(messages.last)
@@ -51,7 +51,11 @@ module Karafka
 
         # Flush final state on shutdown
         def shutdown
-          flush if @state_aggregator
+          return unless @state_aggregator
+
+          materialize
+          validate!
+          flush
         end
 
         private
@@ -59,6 +63,12 @@ module Karafka
         # @return [Boolean] is it time to persist the new current state
         def periodic_flush?
           (monotonic_now - @flushed_at) > @flush_interval
+        end
+
+        # Materializes the current state and metrics for flushing
+        def materialize
+          @state = @state_aggregator.to_h
+          @metrics = @metrics_aggregator.to_h
         end
 
         # Ensures that the aggregated data complies with our schema expectation.

@@ -22,9 +22,27 @@ module Karafka
             def index
               @current_state = Models::ConsumersState.current!
               @counters = Models::Counters.new(@current_state)
-              historicals = Models::Historicals.new(@current_state)
+
+              current_metrics = Models::ConsumersMetrics.current!
+
+              # Build the charts data using the aggregated metrics
+              @aggregated = Models::Metrics::Aggregated.new(
+                current_metrics.to_h.fetch(:aggregated)
+              )
+
+              # Build the charts data about topics using the consumers groups metrics
+              @topics = Models::Metrics::Topics.new(
+                current_metrics.to_h.fetch(:consumer_groups)
+              )
+
               # Load only historicals for the selected range
-              @charts = Models::Charts.new(historicals, @params.current_range)
+              @aggregated_charts = Models::Metrics::Charts::Aggregated.new(
+                @aggregated, @params.current_range
+              )
+
+              @topics_charts = Models::Metrics::Charts::Topics.new(
+                @topics, @params.current_range
+              )
 
               respond
             end

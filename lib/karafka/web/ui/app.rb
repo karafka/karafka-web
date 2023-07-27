@@ -20,8 +20,6 @@ module Karafka
             r.public
           end
 
-          @current_page = params.current_page
-
           r.get 'dashboard' do
             @breadcrumbs = false
             controller = Controllers::Dashboard.new(params)
