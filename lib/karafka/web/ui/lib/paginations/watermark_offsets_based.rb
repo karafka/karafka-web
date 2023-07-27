@@ -38,7 +38,7 @@ module Karafka
               @current_offset < @high_watermark_offset - 1
             end
 
-            # @param [Integer] highest available offset
+            # @return [Integer] highest available offset
             def first_offset
               @high_watermark_offset - 1
             end

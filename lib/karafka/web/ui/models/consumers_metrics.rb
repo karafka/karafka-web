@@ -4,6 +4,7 @@ module Karafka
   module Web
     module Ui
       module Models
+        # Model representing the current consumers metrics most recent state
         class ConsumersMetrics < Lib::HashProxy
           class << self
             # @return [State, false] current consumers metrics or false if not found
