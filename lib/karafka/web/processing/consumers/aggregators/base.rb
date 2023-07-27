@@ -4,6 +4,8 @@ module Karafka
   module Web
     module Processing
       module Consumers
+        # Namespace for data aggregators that track changes based on the incoming reports and
+        # aggregate metrics over time
         module Aggregators
           # Base for all the consumer related aggregators that operate on processes reports
           #
@@ -23,6 +25,7 @@ module Karafka
 
             # Adds report to the internal active reports hash and updates the aggregation time
             # for internal time reference usage
+            # @param report [Hash] incoming process state report
             def add(report)
               memoize_process_report(report)
               update_aggregated_from

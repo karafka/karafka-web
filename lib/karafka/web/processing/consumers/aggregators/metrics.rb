@@ -28,7 +28,7 @@ module Karafka
             def add_report(report)
               add(report)
               evict_expired_processes
-              update_consumers_groups_metrics
+              add_consumers_groups_metrics
             end
 
             # Updates the aggregated stats metrics
@@ -48,7 +48,7 @@ module Karafka
             #   on each update that would not be dispatched would be pointless.
             #
             # @return [Hash] Statistics hash
-            def to_h(*_args)
+            def to_h
               metrics[:schema_version] = SCHEMA_VERSION
               metrics[:dispatched_at] = float_now
               metrics[:aggregated] = @aggregated_tracker.to_h
@@ -66,9 +66,10 @@ module Karafka
 
             # Evicts outdated reports.
             #
-            # @onte This eviction differs from the one that we have for the states. For states we do
-            #   not evict stopped because we want to report them for a moment. Here we do not care
-            #   about what a stopped process was doing and we can also remove it from active reports.
+            # @note This eviction differs from the one that we have for the states. For states we
+            #   do not evict stopped because we want to report them for a moment. Here we do not
+            #   care about what a stopped process was doing and we can also remove it from active
+            #   reports.
             def evict_expired_processes
               max_ttl = @aggregated_from - ::Karafka::Web.config.ttl / 1_000
 
@@ -77,7 +78,8 @@ module Karafka
               end
             end
 
-            def update_consumers_groups_metrics
+            # Materialize and add consumers groups states into the tracker
+            def add_consumers_groups_metrics
               @consumer_groups_tracker.add(
                 materialize_consumers_groups_current_state,
                 @aggregated_from
@@ -86,8 +88,8 @@ module Karafka
 
             # Materializes the current state of consumers group data
             #
-            # At the moment we report only topics lags but the format we are using supports extending
-            # this information in the future if it would be needed.
+            # At the moment we report only topics lags but the format we are using supports
+            # extending this information in the future if it would be needed.
             #
             # @return [Hash] hash with nested consumers and their topics details structure
             # @note We do **not** report on a per partition basis because it would significantly
@@ -110,7 +112,7 @@ module Karafka
                                     .reject(&:negative?)
 
                       # If there is no lag that would not be negative, it means we did not mark
-                      # any messages as consumed on this topic in any partitons, hence we cannot
+                      # any messages as consumed on this topic in any partitions, hence we cannot
                       # compute lag easily
                       # We do not want to initialize any data for this topic, when there is nothing
                       # useful we could present

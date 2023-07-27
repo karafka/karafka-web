@@ -6,24 +6,28 @@ module Karafka
       module Models
         module Metrics
           module Charts
+            # Model for preparing data about topics states
             class Topics
-              def initialize(data, range)
-                @data = data.to_h.fetch(range)
+              # @param topics_data [Hash] topics aggregated metrics data
+              # @param period [Symbol] period that we are interested in
+              def initialize(topics_data, period)
+                @data = topics_data.to_h.fetch(period)
               end
 
               def lags_stored
                 total = Hash.new { |h, v| h[v] = 0 }
 
                 res = @data.to_h.map do |topic, metrics|
-                  metrics.each { |metric|
+                  metrics.each do |metric|
                     if metric.last[:lag_stored]
                       total[metric.first] ||= 0
                       total[metric.first] += metric.last[:lag_stored]
                     else
                       next if total.key?(metric.first)
+
                       total[metric.first] = nil
                     end
-                  }
+                  end
 
                   [
                     topic,

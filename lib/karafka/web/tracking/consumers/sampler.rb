@@ -101,7 +101,7 @@ module Karafka
             @errors.clear
           end
 
-          # @note This should run before any mutexes, so other threads can continue as those
+          # @note This should run before any mutex, so other threads can continue as those
           #   operations may invoke shell commands
           def sample
             @memory_usage = memory_usage

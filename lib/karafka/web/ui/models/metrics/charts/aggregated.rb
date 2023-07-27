@@ -5,16 +5,17 @@ module Karafka
     module Ui
       module Models
         module Metrics
+          # Namespace for models related to presentation of charts
           module Charts
-            # 
+            # Model for formatting aggregated metrics data for charts
             class Aggregated < Lib::HashProxy
-              # @param historicals [Hash] all historicals for all periods
+              # @param aggregated [Hash] all aggregated for all periods
               # @param period [Symbol] period that we are interested in
-              def initialize(historicals, period)
-                @data = historicals.to_h.fetch(period)
+              def initialize(aggregated, period)
+                @data = aggregated.to_h.fetch(period)
               end
 
-              # @param args [Array<String>] names of historicals we want to show
+              # @param args [Array<String>] names of aggregated we want to show
               # @return [String] JSON with data about all the charts we were interested in
               def with(*args)
                 args

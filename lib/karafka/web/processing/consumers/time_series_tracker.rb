@@ -15,9 +15,9 @@ module Karafka
         #   a given time window. This needs to be computed in the frontend as we want to have
         #   state facts in the storage.
         #
-        # @param Please note we evict and cleanup data only before we want to use it. This will put
+        # @note Please note we evict and cleanup data only before we want to use it. This will put
         #   more stress on memory but makes this tracker 70-90% faster. Since by default we anyhow
-        #   sample every few seconds, this traid-off makes sense.
+        #   sample every few seconds, this trade-off makes sense.
         class TimeSeriesTracker
           include ::Karafka::Core::Helpers::Time
 
@@ -62,7 +62,7 @@ module Karafka
 
           # Adds current state into the states for tracking
           # @param current [Hash] hash with current state
-          # @param state [Float] float UTC time from which the state comes
+          # @param state_time [Float] float UTC time from which the state comes
           def add(current, state_time)
             # Inject the time point into all the historicals
             inject(current, state_time)
@@ -80,6 +80,7 @@ module Karafka
 
           # Import existing previous historical metrics as they are
           #
+          # @param existing [Hash] existing historical metrics
           def import_existing(existing)
             existing.each do |range_name, values|
               @historicals[range_name] = values
@@ -91,6 +92,7 @@ module Karafka
           # given time window is completed
           #
           # @param current [Hash] current stats
+          # @param state_time [Float] time from which this state comes
           def inject(current, state_time)
             @historicals.each_value do |points|
               points << [state_time.floor, current]
