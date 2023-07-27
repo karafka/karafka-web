@@ -10,8 +10,7 @@ module Karafka
           class Topics < Lib::HashProxy
             # @param consumers_groups [Hash] historical metrics for consumers groups
             def initialize(consumers_groups)
-              consumers_groups
-                .then { |consumers_groups| aggregate_topics_data(consumers_groups) }
+              aggregate_topics_data(consumers_groups)
                 .tap { |topics_metrics| nulify_gaps(topics_metrics) }
                 .then { |topics_metrics| super(topics_metrics) }
             end

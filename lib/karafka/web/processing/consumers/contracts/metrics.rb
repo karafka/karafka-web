@@ -12,7 +12,6 @@ module Karafka
             required(:dispatched_at) { |val| val.is_a?(Numeric) && val.positive? }
             required(:schema_version) { |val| val.is_a?(String) && !val.empty? }
 
-
             # Ensure, that all aggregated metrics are as expected (values)
             virtual do |data, errors|
               next unless errors.empty?

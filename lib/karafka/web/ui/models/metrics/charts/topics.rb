@@ -39,7 +39,6 @@ module Karafka
 
                 sum.to_json
               end
-
             end
           end
         end

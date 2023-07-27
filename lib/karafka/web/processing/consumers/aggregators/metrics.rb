@@ -98,8 +98,8 @@ module Karafka
               cgs = {}
 
               @active_reports.each do |_, details|
-                details.fetch(:consumer_groups).each do |group_name, details|
-                  details.fetch(:subscription_groups).each do |_sg_name, sg_details|
+                details.fetch(:consumer_groups).each do |group_name, group_details|
+                  group_details.fetch(:subscription_groups).each do |_sg_name, sg_details|
                     sg_details.fetch(:topics).each do |topic_name, topic_details|
                       partitions_data = topic_details.fetch(:partitions).values
 
@@ -119,7 +119,7 @@ module Karafka
                       #
                       # In theory lag stored must mean that lag must exist but just to be sure we
                       # check both here
-                      next if lags.empty? ||lags_stored.empty?
+                      next if lags.empty? || lags_stored.empty?
 
                       cgs[group_name] ||= {}
                       cgs[group_name][topic_name] = {

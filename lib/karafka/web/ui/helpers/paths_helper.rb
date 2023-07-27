@@ -28,7 +28,6 @@ module Karafka
             root_path("assets/#{Karafka::Web::VERSION}/#{local_path}")
           end
 
-
           # Helps build explorer paths. We often link offsets to proper messages, etc so this
           # allows us to short-track this
           # @param topic_name [String, nil] name of the topic where we want to go within the
