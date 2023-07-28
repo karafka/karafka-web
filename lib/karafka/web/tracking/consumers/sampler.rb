@@ -39,7 +39,7 @@ module Karafka
           # Base for states that are not growing counters we can clear and count again but values
           # that represent a state in time that can change in between flushes
           STATES_BASE = {
-            # Number of messages that are under processing at the moment (not yet finised)
+            # Number of messages that are under processing at the moment (not yet finished)
             ongoing: 0
           }.freeze
 

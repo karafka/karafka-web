@@ -55,12 +55,12 @@
       <div class="tab-content">
         <div class="tab-pane show active" id="utilization" role="tabpanel">
           <% data = @aggregated_charts.with(:utilization) %>
-          <%== partial 'shared/chart', locals: { data: data, id: 'utilization' } %>
+          <%== partial 'shared/chart', locals: { data: data, id: 'utilization', label_type_y: 'percentage' } %>
         </div>
 
         <div class="tab-pane show" id="rss" role="tabpanel">
           <% data = @aggregated_charts.with(:rss, :process_rss) %>
-          <%== partial 'shared/chart', locals: { data: data, id: 'rss' } %>
+          <%== partial 'shared/chart', locals: { data: data, id: 'rss', label_type_y: 'memory' } %>
         </div>
 
         <div class="tab-pane show" id="concurrency" role="tabpanel">
