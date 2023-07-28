@@ -51,6 +51,7 @@ module Karafka
               required(:busy) { |val| val.is_a?(Integer) && val >= 0 }
               required(:enqueued) { |val| val.is_a?(Integer) && val >= 0 }
               required(:utilization) { |val| val.is_a?(Numeric) && val >= 0 }
+              required(:ongoing) { |val| val.is_a?(Integer) && val >= 0 }
 
               nested(:total) do
                 required(:batches) { |val| val.is_a?(Integer) && val >= 0 }

@@ -27,7 +27,7 @@
         </div>
 
         <div class="tab-pane" id="in-progress" role="tabpanel">
-          <% data = @aggregated_charts.with(:enqueued, :busy) %>
+          <% data = @aggregated_charts.with(:enqueued, :busy, :ongoing) %>
           <%== partial 'shared/chart', locals: { data: data, id: 'in-progress' } %>
         </div>
 

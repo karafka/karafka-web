@@ -21,7 +21,7 @@ module Karafka
             # @param event [Karafka::Core::Monitoring::Event]
             def on_consumer_consume(event)
               consumer = event.payload[:caller]
-              messages_count = consumer.messages.count
+              messages_count = consumer.messages.size
               jid = job_id(consumer, 'consume')
               job_details = job_details(consumer, 'consume')
 
@@ -30,6 +30,7 @@ module Karafka
                 # if error occurs, etc.
                 sampler.counters[:batches] += 1
                 sampler.counters[:messages] += messages_count
+                sampler.states[:ongoing] += messages_count
                 sampler.jobs[jid] = job_details
               end
             end
@@ -59,6 +60,10 @@ module Karafka
                 # This also refers only to consumer work that runs user operations.
                 return unless type
 
+                if type == 'consumer.consume.error'
+                  sampler.states[:ongoing] -= consumer.messages.size
+                end
+
                 sampler.jobs.delete(
                   job_id(event[:caller], type)
                 )
@@ -73,12 +78,13 @@ module Karafka
               consumer = event.payload[:caller]
               topic = consumer.topic
               consumer_group_id = topic.consumer_group.id
-              messages_count = consumer.messages.count
+              messages_count = consumer.messages.size
               time = event[:time]
               jid = job_id(consumer, 'consume')
 
               track do |sampler|
                 sampler.jobs.delete(jid)
+                sampler.states[:ongoing] -= messages_count
                 sampler.times[consumer_group_id] << [topic.name, time, messages_count]
               end
             end
@@ -163,7 +169,7 @@ module Karafka
                 # In theory this is redundant because hawe have first and last offset, but it is
                 # needed because VPs do not have linear count. For VPs first and last offset
                 # will be further away than the total messages count for a particular VP
-                messages: consumer.messages.count,
+                messages: consumer.messages.size,
                 consumer: consumer.class.to_s,
                 consumer_group: consumer.topic.consumer_group.id,
                 type: type,

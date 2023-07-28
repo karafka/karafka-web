@@ -9,7 +9,7 @@ module Karafka
         class Sampler < Tracking::Sampler
           include ::Karafka::Core::Helpers::Time
 
-          attr_reader :counters, :consumer_groups, :errors, :times, :pauses, :jobs
+          attr_reader :counters, :consumer_groups, :errors, :times, :pauses, :jobs, :states
 
           # Current schema version
           # This can be used in the future for detecting incompatible changes and writing
@@ -22,18 +22,34 @@ module Karafka
           # Times ttl in ms
           TIMES_TTL_MS = TIMES_TTL * 1_000
 
-          private_constant :TIMES_TTL, :TIMES_TTL_MS, :SCHEMA_VERSION
+          # Counters that count events occurrences during the given window
+          COUNTERS_BASE = {
+            # Number of processed batches
+            batches: 0,
+            # Number of processed messages
+            messages: 0,
+            # Number of errors that occurred
+            errors: 0,
+            # Number of retries that occurred
+            retries: 0,
+            # Number of messages considered dead
+            dead: 0
+          }.freeze
+
+          # Base for states that are not growing counters we can clear and count again but values
+          # that represent a state in time that can change in between flushes
+          STATES_BASE = {
+            # Number of messages that are under processing at the moment (not yet finised)
+            ongoing: 0
+          }.freeze
+
+          private_constant :TIMES_TTL, :TIMES_TTL_MS, :SCHEMA_VERSION, :COUNTERS_BASE, :STATES_BASE
 
           def initialize
             super
 
-            @counters = {
-              batches: 0,
-              messages: 0,
-              errors: 0,
-              retries: 0,
-              dead: 0
-            }
+            @counters = COUNTERS_BASE.dup
+            @states = STATES_BASE.dup
             @times = TtlHash.new(TIMES_TTL_MS)
             @consumer_groups = {}
             @errors = []
@@ -84,7 +100,7 @@ module Karafka
 
               stats: jobs_queue_statistics.merge(
                 utilization: utilization
-              ).merge(total: @counters),
+              ).merge(total: @counters).merge(@states),
 
               consumer_groups: @consumer_groups,
               jobs: jobs.values
@@ -160,6 +176,8 @@ module Karafka
           # @return [Hash] job queue statistics
           def jobs_queue_statistics
             # We return empty stats in case jobs queue is not yet initialized
+            # busy - represents number of jobs that are being executed currently
+            # enqueued - represents number of jobs that are enqueued to be processed
             Karafka::Server.jobs_queue&.statistics || { busy: 0, enqueued: 0 }
           end
 

@@ -12,6 +12,7 @@ module Karafka
         dead: 0,
         busy: 0,
         enqueued: 0,
+        processing: 0,
         threads_count: 0,
         processes: 0,
         rss: 0,
