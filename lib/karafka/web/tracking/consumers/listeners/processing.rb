@@ -60,7 +60,10 @@ module Karafka
                 # This also refers only to consumer work that runs user operations.
                 return unless type
 
-                if type == 'consumer.consume.error'
+                # Decrement number of ongoing messages only in case of consume because only for it
+                # we increment
+                if type == 'consume'
+                  consumer = event.payload[:caller]
                   sampler.states[:ongoing] -= consumer.messages.size
                 end
 
