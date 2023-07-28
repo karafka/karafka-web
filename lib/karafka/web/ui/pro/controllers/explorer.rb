@@ -86,7 +86,8 @@ module Karafka
             # @param topic_id [String]
             # @param partition_id [Integer]
             # @param offset [Integer] offset of the message we want to display
-            def show(topic_id, partition_id, offset)
+            # @param paginate [Boolean] do we want to have pagination
+            def show(topic_id, partition_id, offset, paginate: true)
               @topic_id = topic_id
               @partition_id = partition_id
               @offset = offset
@@ -105,9 +106,14 @@ module Karafka
                 @payload_error = e
               end
 
-              # We need watermark offsets to decide if we can paginate left and right
-              watermark_offsets = Ui::Models::WatermarkOffsets.find(topic_id, partition_id)
-              paginate(offset, watermark_offsets.low, watermark_offsets.high)
+              # This may be off for certain views like recent view where we are interested only
+              # in the most recent all the time. It does not make any sense to display pagination
+              # there
+              if paginate
+                # We need watermark offsets to decide if we can paginate left and right
+                watermark_offsets = Ui::Models::WatermarkOffsets.find(topic_id, partition_id)
+                paginate(offset, watermark_offsets.low, watermark_offsets.high)
+              end
 
               respond
             end
@@ -133,7 +139,7 @@ module Karafka
 
               recent || raise(::Karafka::Web::Errors::Ui::NotFoundError)
 
-              show(topic_id, recent.partition, recent.offset)
+              show(topic_id, recent.partition, recent.offset, paginate: false)
             end
 
             private

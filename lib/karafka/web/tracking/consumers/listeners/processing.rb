@@ -160,6 +160,10 @@ module Karafka
                 processing_lag: consumer.messages.metadata.processing_lag,
                 consumption_lag: consumer.messages.metadata.consumption_lag,
                 committed_offset: consumer.coordinator.seek_offset - 1,
+                # In theory this is redundant because hawe have first and last offset, but it is
+                # needed because VPs do not have linear count. For VPs first and last offset
+                # will be further away than the total messages count for a particular VP
+                messages: consumer.messages.count,
                 consumer: consumer.class.to_s,
                 consumer_group: consumer.topic.consumer_group.id,
                 type: type,
