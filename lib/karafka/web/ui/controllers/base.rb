@@ -43,7 +43,7 @@ module Karafka
                      when 2
                        Ui::Lib::Paginations::PageBased
                      when 3
-                      Ui::Lib::Paginations::WatermarkOffsetsBased
+                       Ui::Lib::Paginations::WatermarkOffsetsBased
                      when 4
                        Ui::Lib::Paginations::OffsetBased
                      else
