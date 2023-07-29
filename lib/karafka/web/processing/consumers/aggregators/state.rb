@@ -123,7 +123,6 @@ module Karafka
               stats[:listeners_count] = 0
               stats[:lag] = 0
               stats[:lag_stored] = 0
-              stats[:ongoing] = 0
               utilization = 0
 
               @active_reports
@@ -141,7 +140,6 @@ module Karafka
                     lags_stored << partition_stats[:lag_stored]
                   end
 
-                  stats[:ongoing] += report_stats[:ongoing]
                   stats[:busy] += report_stats[:busy]
                   stats[:enqueued] += report_stats[:enqueued]
                   stats[:threads_count] += report_process[:concurrency]

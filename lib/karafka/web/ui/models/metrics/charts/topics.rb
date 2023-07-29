@@ -39,6 +39,35 @@ module Karafka
 
                 sum.to_json
               end
+
+              def produced
+                res = @data.to_h.map do |topic, metrics|
+                  previous = nil
+                  [
+                    topic,
+                    metrics.map do |metric|
+                      unless previous
+                        previous = metric
+                        next
+                      end
+
+                      current = metric.last[:offset_hi]
+
+                      if previous.last[:offset_hi].nil? || current.nil?
+                        r = [metric.first, 0]
+                      else
+                        r = [metric.first, current - previous.last[:offset_hi]]
+                      end
+
+                      previous = metric
+
+                      r
+                    end.compact
+                  ]
+                end.compact.to_h
+
+                res.to_json
+              end
             end
           end
         end

@@ -151,10 +151,12 @@ module Karafka
             replication_factor,
             # We care only about the most recent state, previous are irrelevant. So we can easily
             # compact after one minute. We do not use this beyond the most recent collective
-            # state, hence it all can easily go away.
+            # state, hence it all can easily go away. We also limit the segment size to at most
+            # 100MB not to use more space ever.
             {
               'cleanup.policy': 'compact',
-              'retention.ms': 60 * 60 * 1_000
+              'retention.ms': 60 * 60 * 1_000,
+              'log.segment.bytes': 104_857_600 # 10MB
             }
           )
         end
@@ -168,7 +170,8 @@ module Karafka
             replication_factor,
             {
               'cleanup.policy': 'compact',
-              'retention.ms': 60 * 60 * 1_000
+              'retention.ms': 60 * 60 * 1_000,
+              'log.segment.bytes': 104_857_600 # 10MB
             }
           )
         end

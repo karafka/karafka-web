@@ -30,7 +30,6 @@ module Karafka
                 # if error occurs, etc.
                 sampler.counters[:batches] += 1
                 sampler.counters[:messages] += messages_count
-                sampler.states[:ongoing] += messages_count
                 sampler.jobs[jid] = job_details
               end
             end
@@ -60,13 +59,6 @@ module Karafka
                 # This also refers only to consumer work that runs user operations.
                 return unless type
 
-                # Decrement number of ongoing messages only in case of consume because only for it
-                # we increment
-                if type == 'consume'
-                  consumer = event.payload[:caller]
-                  sampler.states[:ongoing] -= consumer.messages.size
-                end
-
                 sampler.jobs.delete(
                   job_id(event[:caller], type)
                 )
@@ -87,7 +79,6 @@ module Karafka
 
               track do |sampler|
                 sampler.jobs.delete(jid)
-                sampler.states[:ongoing] -= messages_count
                 sampler.times[consumer_group_id] << [topic.name, time, messages_count]
               end
             end

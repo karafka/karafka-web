@@ -34,6 +34,8 @@
 - [Improvement] Introduce states and metrics schema validation.
 - [Improvement] Prevent locking in sampler for time of OS data aggregation.
 - [Improvement] Collect and report number of messages in particular jobs.
+- [Improvement] Limit segment size for Web topics to ensure, that Web-UI does not drain resources.
+- [Fix] Fix a case where live-poll would be disabled but would still update data.
 - [Fix] Fix a case where states materializing consumer would update state too often.
 - [Fix] Fix a bug when rapid non-initialized shutdown could mess up the metrics.
 - [Fix] Fix a case where upon multiple rebalances, part of the states materialization could be lost.

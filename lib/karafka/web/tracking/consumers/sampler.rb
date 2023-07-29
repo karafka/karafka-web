@@ -9,7 +9,7 @@ module Karafka
         class Sampler < Tracking::Sampler
           include ::Karafka::Core::Helpers::Time
 
-          attr_reader :counters, :consumer_groups, :errors, :times, :pauses, :jobs, :states
+          attr_reader :counters, :consumer_groups, :errors, :times, :pauses, :jobs
 
           # Current schema version
           # This can be used in the future for detecting incompatible changes and writing
@@ -36,20 +36,12 @@ module Karafka
             dead: 0
           }.freeze
 
-          # Base for states that are not growing counters we can clear and count again but values
-          # that represent a state in time that can change in between flushes
-          STATES_BASE = {
-            # Number of messages that are under processing at the moment (not yet finished)
-            ongoing: 0
-          }.freeze
-
-          private_constant :TIMES_TTL, :TIMES_TTL_MS, :SCHEMA_VERSION, :COUNTERS_BASE, :STATES_BASE
+          private_constant :TIMES_TTL, :TIMES_TTL_MS, :SCHEMA_VERSION, :COUNTERS_BASE
 
           def initialize
             super
 
             @counters = COUNTERS_BASE.dup
-            @states = STATES_BASE.dup
             @times = TtlHash.new(TIMES_TTL_MS)
             @consumer_groups = {}
             @errors = []
@@ -100,7 +92,7 @@ module Karafka
 
               stats: jobs_queue_statistics.merge(
                 utilization: utilization
-              ).merge(total: @counters).merge(@states),
+              ).merge(total: @counters),
 
               consumer_groups: @consumer_groups,
               jobs: jobs.values

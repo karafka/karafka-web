@@ -16,6 +16,7 @@ module Karafka
             required(:lag_stored_d) { |val| val.is_a?(Integer) }
             required(:committed_offset) { |val| val.is_a?(Integer) }
             required(:stored_offset) { |val| val.is_a?(Integer) }
+            required(:hi_offset) { |val| val.is_a?(Integer) }
           end
         end
       end

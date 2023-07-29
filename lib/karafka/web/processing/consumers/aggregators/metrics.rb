@@ -111,6 +111,10 @@ module Karafka
                                     .map { |p_details| p_details.fetch(:lag_stored) }
                                     .reject(&:negative?)
 
+                      offsets_hi = partitions_data
+                                   .map { |p_details| p_details.fetch(:hi_offset) }
+                                   .reject(&:negative?)
+
                       # If there is no lag that would not be negative, it means we did not mark
                       # any messages as consumed on this topic in any partitions, hence we cannot
                       # compute lag easily
@@ -124,7 +128,8 @@ module Karafka
                       cgs[group_name] ||= {}
                       cgs[group_name][topic_name] = {
                         lag_stored: lags_stored.sum,
-                        lag: lags.sum
+                        lag: lags.sum,
+                        offset_hi: offsets_hi.sum
                       }
                     end
                   end

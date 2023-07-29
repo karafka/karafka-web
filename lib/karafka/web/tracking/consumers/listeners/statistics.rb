@@ -110,7 +110,8 @@ module Karafka
                 'consumer_lag_stored_d',
                 'committed_offset',
                 'stored_offset',
-                'fetch_state'
+                'fetch_state',
+                'hi_offset'
               )
 
               # Rename as we do not need `consumer_` prefix
