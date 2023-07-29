@@ -19,7 +19,7 @@ module Karafka
               def lags_stored
                 total = Hash.new { |h, v| h[v] = 0 }
 
-                @data.to_h.each do |topic, metrics|
+                @data.to_h.each_value do |metrics|
                   metrics.each do |metric|
                     time = metric.first
                     lag_stored = metric.last[:lag_stored]
@@ -76,10 +76,10 @@ module Karafka
 
                     previous = current
 
-                    unless previous_high && current_high
-                      [timestamp, 0]
-                    else
+                    if previous_high && current_high
                       [timestamp, current_high - previous_high]
+                    else
+                      [timestamp, 0]
                     end
                   end
                 end
