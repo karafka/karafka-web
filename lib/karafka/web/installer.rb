@@ -27,7 +27,7 @@ module Karafka
         puts
       end
 
-      # Creates missing topics and missing zero states. Needs to run for each environment wher we
+      # Creates missing topics and missing zero states. Needs to run for each environment where we
       # want to use Web-UI
       #
       # @param replication_factor [Integer] replication factor we want to use (1 by default)
@@ -43,6 +43,7 @@ module Karafka
       end
 
       # Removes all the Karafka topics and creates them again with the same replication factor
+      # @param replication_factor [Integer] replication factor we want to use (1 by default)
       def reset!(replication_factor: 1)
         puts
         puts 'Resetting Karafka Web UI...'

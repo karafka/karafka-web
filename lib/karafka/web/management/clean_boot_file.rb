@@ -3,7 +3,7 @@
 module Karafka
   module Web
     module Management
-      # Cleans the bootfile from Karafka Web-UI details.
+      # Cleans the boot file from Karafka Web-UI details.
       class CleanBootFile < Base
         # Web-UI enabled code
         ENABLER_CODE = ExtendBootFile::ENABLER_CODE

@@ -3,7 +3,8 @@
 module Karafka
   module Web
     module Management
-        class CreateInitialStates < Base
+      # Creates the records needed for the Web-UI to operate.
+      class CreateInitialStates < Base
         # Defaults stats state that we create in Kafka
         DEFAULT_STATS = {
           batches: 0,
