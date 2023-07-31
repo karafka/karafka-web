@@ -1,0 +1,31 @@
+{
+  "processes": {
+    "shinra:1:1": {
+      "dispatched_at": 2690818669.526218,
+      "offset": 2343
+    },
+    "shinra:2:2": {
+      "dispatched_at": 2690818667.249022,
+      "offset": 2342
+    }
+  },
+  "stats": {
+    "batches": 16351,
+    "messages": 37625,
+    "retries": 0,
+    "dead": 0,
+    "busy": 0,
+    "enqueued": 0,
+    "processing": 0,
+    "threads_count": 4,
+    "processes": 2,
+    "rss": 252744,
+    "listeners_count": 4,
+    "utilization": 4.991228965553596,
+    "lag_stored": 0,
+    "errors": 0,
+    "lag": 20
+  },
+  "schema_version": "1.1.0",
+  "dispatched_at": 2690818670.7824733
+}

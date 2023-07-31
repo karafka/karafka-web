@@ -33,4 +33,39 @@ RSpec.describe_current do
       expect { parsing }.to raise_error(JSON::ParserError)
     end
   end
+
+  context 'when we detect zlib usage' do
+    let(:headers) { { 'zlib' => 'true' } }
+    let(:raw_payload) { Zlib::Deflate.deflate('{"key":"value"}') }
+
+    context 'when JSON is parsed successfully' do
+      it 'returns a hash' do
+        expect(parsing).to be_a(Hash)
+      end
+
+      it 'returns a hash with symbolized keys' do
+        expect(parsing.keys.all? { |key| key.is_a?(Symbol) }).to be(true)
+      end
+
+      it 'returns a hash with expected values' do
+        expect(parsing).to eq({ key: 'value' })
+      end
+    end
+
+    context 'when JSON parsing fails' do
+      let(:raw_payload) { Zlib::Deflate.deflate('invalid json') }
+
+      it 'raises a JSON::ParserError' do
+        expect { parsing }.to raise_error(JSON::ParserError)
+      end
+    end
+
+    context 'when data is not compressed' do
+      let(:raw_payload) { 'not compressed' }
+
+      it 'raises a Zlib::DataError' do
+        expect { parsing }.to raise_error(Zlib::DataError)
+      end
+    end
+  end
 end
