@@ -8,7 +8,7 @@
     <div class="col-sm-12">
       <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
         <tbody>
-          <% @topic.to_h.each do |k, v| %>
+          <% flat_hash(@topic.to_h).each do |k, v| %>
             <%==
               partial(
                 'routing/detail',

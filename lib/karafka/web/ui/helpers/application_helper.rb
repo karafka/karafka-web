@@ -174,6 +174,27 @@ module Karafka
               </div>
             HTML
           end
+
+          # @param hash [Hash] we want to flatten
+          # @param parent_key [String] key for recursion
+          # @param result [Hash] result for recursion
+          # @return [Hash]
+          def flat_hash(hash, parent_key = nil, result = {})
+            hash.each do |key, value|
+              current_key = parent_key ? "#{parent_key}.#{key}" : key.to_s
+              if value.is_a?(Hash)
+                flat_hash(value, current_key, result)
+              elsif value.is_a?(Array)
+                value.each_with_index do |item, index|
+                  flat_hash({ index => item }, current_key, result)
+                end
+              else
+                result[current_key] = value
+              end
+            end
+
+            result
+          end
         end
       end
     end

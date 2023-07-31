@@ -163,7 +163,11 @@ module Karafka
           #   consumed actively.
           def state_calculation
             if live_reporting.success?
-              @subscriptions ||= Models::Health.current(@current_state).values.flat_map(&:keys)
+              @subscriptions ||= Models::Health
+                                 .current(@current_state)
+                                 .values.map { |consumer_group| consumer_group[:topics] }
+                                 .flat_map(&:keys)
+
               status = @subscriptions.include?(topics_consumers_reports) ? :success : :failure
             else
               status = :halted
