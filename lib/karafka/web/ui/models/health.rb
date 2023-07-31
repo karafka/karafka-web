@@ -16,11 +16,22 @@ module Karafka
                 cg_name = consumer_group.id
                 t_name = topic.name
                 pt_id = partition.id
+                dispatched_at = process.dispatched_at
 
-                stats[cg_name] ||= {}
-                stats[cg_name][t_name] ||= {}
-                stats[cg_name][t_name][pt_id] = partition.to_h
-                stats[cg_name][t_name][pt_id][:process] = process
+                ages = consumer_group[:subscription_groups].values.map do |sub_group_details|
+                  rebalance_age = sub_group_details[:state][:rebalance_age] / 1_000
+                  dispatched_at - rebalance_age
+                end
+
+                stats[cg_name] ||= { topics: {}, rebalance_ages: [] }
+                stats[cg_name][:topics][t_name] ||= {}
+                stats[cg_name][:topics][t_name][pt_id] = partition.to_h
+                stats[cg_name][:topics][t_name][pt_id][:process] = process
+                stats[cg_name][:rebalance_ages] += ages
+              end
+
+              stats.each_value do |details|
+                details[:rebalanced_at] = details[:rebalance_ages].max
               end
 
               stats

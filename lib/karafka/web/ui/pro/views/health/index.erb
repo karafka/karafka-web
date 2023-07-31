@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <div class="row mb-5">
+    <div class="row mb-3">
       <div class="col-sm-12">
         <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
           <thead>
@@ -38,7 +38,7 @@
             </tr>
           </thead>
           <tbody>
-            <% details.sort_by(&:first).each do |topic_name, partitions| %>
+            <% details[:topics].sort_by(&:first).each do |topic_name, partitions| %>
               <% partitions.sort_by(&:first).each do |partition_id, details| %>
                 <%==
                   partial(
@@ -54,6 +54,17 @@
             <% end %>
           </tbody>
         </table>
+      </div>
+    </div>
+
+    <div class="row mb-5">
+      <div class="col-sm-12">
+        <span class="float-end">
+          Last rebalance:
+          <span class="badge bg-secondary">
+            <%== relative_time(details[:rebalanced_at]) %>
+          </span>
+        </span>
       </div>
     </div>
   </div>
