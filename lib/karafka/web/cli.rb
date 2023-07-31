@@ -6,11 +6,6 @@ module Karafka
     class Cli < Thor
       include ::Karafka::Helpers::Colorize
 
-      # Code that is needed in the `karafka.rb` to connect Web UI to Karafka
-      ENABLER_CODE = 'Karafka::Web.enable!'
-
-      private_constant :ENABLER_CODE
-
       package_name 'Karafka Web'
 
       desc 'install', 'Installs the Web UI'
@@ -20,60 +15,48 @@ module Karafka
         default: 1,
         type: :numeric
       )
-      # Installs Karafka Web
+      # Installs Karafka Web. Creates all needed topics, populates the data and adds the needed
+      # code to `karafka.rb`.
       def install
-        puts
-        puts 'Installing Karafka Web UI...'
-        puts
-        puts 'Creating necessary topics and populating state data...'
+        Karafka::Web::Installer.new.install!
+      end
 
-        Karafka::Web::Installer.new.bootstrap!(replication_factor: options[:replication_factor])
-
-        puts 'Updating the Karafka boot file...'
-
-        if File.read(Karafka.boot_file).include?(ENABLER_CODE)
-          puts "Web UI #{green('already')} installed."
-        else
-          File.open(Karafka.boot_file, 'a') do |f|
-            f << "\n#{ENABLER_CODE}\n"
-          end
-        end
-
-        puts
-        puts("Installation #{green('completed')}. Have fun!")
-        puts
+      desc 'migrate', 'Creates necessary topics if not present and populates state data'
+      method_option(
+        :replication_factor,
+        desc: 'Replication factor for created topics',
+        default: 1,
+        type: :numeric
+      )
+      # Creates new topics (if any) and populates missing data.
+      # It does **not** remove topics and will not populate data if it is already there.
+      #
+      # Useful in two scenarios:
+      #   1. When setting up Web-UI in a new environment, so the Web-UI has the proper initial
+      #      state.
+      #   2. When upgrading Web-UI in-between versions that would require extra topics and/or extra
+      #      states populated.
+      def migrate
+        Karafka::Web::Installer.new.migrate!(replication_factor: options[:replication_factor])
       end
 
       desc 'reset', 'Resets the Web UI by removing all the Web topics and creating them again'
-      # Resets Karafka Web
+      method_option(
+        :replication_factor,
+        desc: 'Replication factor for created topics',
+        default: 1,
+        type: :numeric
+      )
+      # Resets Karafka Web. Removes the topics, creates them again and populates the initial state
+      # again. This is useful in case the Web-UI metrics or anything else got corrupted.
       def reset
-        puts
-        puts 'Resetting Karafka Web UI...'
         Karafka::Web::Installer.new.reset!
-        puts
-        puts("Resetting #{green('completed')}. Have fun!")
-        puts
       end
 
       desc 'uninstall', 'Removes all the Web UI topics and the enabled code'
       # Uninstalls Karafka Web
       def uninstall
-        puts
-        puts 'Uninstalling Karafka Web UI...'
         Karafka::Web::Installer.new.uninstall!
-
-        puts 'Updating the Karafka boot file...'
-
-        karafka_rb = File.readlines(Karafka.boot_file)
-        if karafka_rb.any? { |line| line.include?(ENABLER_CODE) }
-          karafka_rb.delete_if { |line| line.include?(ENABLER_CODE) }
-
-          File.write(Karafka.boot_file, karafka_rb.join)
-        end
-
-        puts
-        puts("Uninstalling #{green('completed')}. Goodbye!")
-        puts
       end
     end
   end

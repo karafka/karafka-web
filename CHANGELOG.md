@@ -6,6 +6,7 @@
 - **[Feature]** Introduce per-topic data exploration in the Explorer.
 - **[Feature]** Introduce per-topic and per-partition most recent message view with live reload.
 - **[Feature]** Introduce a new per-process inspection view called "Details" ti display all process real-time aggregated data.
+- **[Feature]** Introduce `bundle exec karafka-web migrate` that can be used to bootstrap the proper topics and initial data in environments where Karafka Web-UI should be used but is missing the initial setup.
 - [Improvement] Provide previous / next navigation when viewing particular messages in the explorer.
 - [Improvement] Provide previous / next navigation when viewing particular errors.
 - [Improvement] Link all explorable offsets to the explorer.
