@@ -36,8 +36,11 @@ module Karafka
               end
             end
 
+            # Aggregates rebalances ages data
+            # @param state [Hash]
+            # @param stats [Hash] hash where we will store all the aggregated data
             def fetch_rebalance_ages(state, stats)
-              iterate_partitions(state) do |process, consumer_group, topic, partition|
+              iterate_partitions(state) do |process, consumer_group|
                 cg_name = consumer_group.id
                 dispatched_at = process.dispatched_at
 
