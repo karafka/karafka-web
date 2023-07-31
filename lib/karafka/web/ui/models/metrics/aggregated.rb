@@ -46,6 +46,11 @@ module Karafka
                 .then { |enriched| super(enriched) }
             end
 
+            # @return [Boolean] do we have enough data to draw any basic charts
+            def sufficient?
+              seconds.size > 2
+            end
+
             private
 
             # Since our reporting is not ms precise, there are cases where sampling can drift.

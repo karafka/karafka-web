@@ -156,7 +156,8 @@ module Karafka
             {
               'cleanup.policy': 'compact',
               'retention.ms': 60 * 60 * 1_000,
-              'log.segment.bytes': 104_857_600 # 10MB
+              'segment.ms': 86_400_000, # 24h
+              'segment.bytes': 104_857_600 # 10MB
             }
           )
         end
@@ -171,7 +172,8 @@ module Karafka
             {
               'cleanup.policy': 'compact',
               'retention.ms': 60 * 60 * 1_000,
-              'log.segment.bytes': 104_857_600 # 10MB
+              'segment.ms': 86_400_000, # 24h
+              'segment.bytes': 104_857_600 # 10MB
             }
           )
         end

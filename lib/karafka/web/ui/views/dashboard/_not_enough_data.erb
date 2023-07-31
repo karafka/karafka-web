@@ -1,0 +1,15 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="alert alert-info" role="alert">
+        <p>
+          There needs to be more data to draw meaningful graphs.
+        </p>
+
+        <p class="mb-0">
+          If you are sure you are running at least one <code>karafka server</code> instance, please make sure that it can report to the <code><%= Karafka::Web.config.topics.consumers.reports %></code> topic and that Web-UI is correctly installed.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

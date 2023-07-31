@@ -100,6 +100,7 @@ module Karafka
               status = :success
               status = :failure if topics_details[topics_consumers_states][:partitions] != 1
               status = :failure if topics_details[topics_consumers_reports][:partitions] != 1
+              status = :failure if topics_details[topics_consumers_metrics][:partitions] != 1
               details = topics_details
             else
               status = :halted
@@ -202,6 +203,11 @@ module Karafka
             ::Karafka::Web.config.topics.consumers.reports.to_s
           end
 
+          # @return [String] consumers metrics topic name
+          def topics_consumers_metrics
+            ::Karafka::Web.config.topics.consumers.metrics.to_s
+          end
+
           # @return [String] errors topic name
           def topics_errors
             ::Karafka::Web.config.topics.errors
@@ -212,6 +218,7 @@ module Karafka
             topics = {
               topics_consumers_states => { present: false, partitions: 0 },
               topics_consumers_reports => { present: false, partitions: 0 },
+              topics_consumers_metrics => { present: false, partitions: 0 },
               topics_errors => { present: false, partitions: 0 }
             }
 
