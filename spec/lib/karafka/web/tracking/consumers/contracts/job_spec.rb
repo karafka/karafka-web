@@ -16,7 +16,8 @@ RSpec.describe_current do
       type: 'consume',
       tags: Karafka::Core::Taggable::Tags.new,
       consumption_lag: 0,
-      processing_lag: 0
+      processing_lag: 0,
+      messages: 2
     }
   end
 
@@ -74,6 +75,18 @@ RSpec.describe_current do
 
   context 'when topic is not a string' do
     before { job[:topic] = 123 }
+
+    it { expect(contract.call(job)).not_to be_success }
+  end
+
+  context 'when messages is missing' do
+    before { job.delete(:messages) }
+
+    it { expect(contract.call(job)).not_to be_success }
+  end
+
+  context 'when messages is not a number' do
+    before { job[:messages] = 'xda' }
 
     it { expect(contract.call(job)).not_to be_success }
   end

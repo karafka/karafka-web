@@ -69,6 +69,9 @@ RSpec.describe_current do
                   0 => {
                     lag_stored: 0,
                     lag_stored_d: 0,
+                    lag: 0,
+                    lag_d: 0,
+                    hi_offset: 0,
                     committed_offset: 18,
                     stored_offset: 18,
                     fetch_state: 'active',

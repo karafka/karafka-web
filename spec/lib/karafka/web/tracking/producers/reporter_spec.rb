@@ -53,7 +53,7 @@ RSpec.describe_current do
       before { sampler.errors << {} }
 
       it do
-        expect { reporter.report }.to raise_error(Karafka::Web::Errors::Tracking::ContractError)
+        expect { reporter.report }.to raise_error(Karafka::Web::Errors::ContractError)
       end
     end
 

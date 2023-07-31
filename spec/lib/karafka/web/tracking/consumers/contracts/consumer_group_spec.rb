@@ -28,7 +28,10 @@ RSpec.describe_current do
                   stored_offset: 18,
                   fetch_state: 'active',
                   id: 0,
-                  poll_state: 'active'
+                  poll_state: 'active',
+                  hi_offset: 10,
+                  lag_d: 10,
+                  lag: 10
                 }
               }
             }
@@ -73,7 +76,7 @@ RSpec.describe_current do
   end
 
   context 'when subscription_group does not have an id' do
-    let(:expected_error) { Karafka::Web::Errors::Tracking::ContractError }
+    let(:expected_error) { Karafka::Web::Errors::ContractError }
 
     before { consumer_group[:subscription_groups]['c81e728d9d4c_1'].delete(:id) }
 
