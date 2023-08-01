@@ -80,6 +80,16 @@ def produce(topic, payload = SecureRandom.uuid, details = {})
   )
 end
 
+# Sends multiple messages to kafka efficiently
+# @param topic [String] topic name
+# @param payloads [Array<String, nil>] data we want to send
+# @param details [Hash] other details
+def produce_many(topic, payloads, details = {})
+  messages = payloads.map { |payload| details.merge(topic: topic, payload: payload) }
+
+  Karafka::App.producer.produce_many_sync(messages)
+end
+
 # Fetches fixture content
 # @param file_name [String] fixture file name
 # @return [String] fixture content
