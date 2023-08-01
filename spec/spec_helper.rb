@@ -62,7 +62,7 @@ Karafka::Web.enable!
 # @param topic_name [String] topic name. Default will generate automatically
 # @param partitions [Integer] number of partitions (one by default)
 # @return [String] generated topic name
-def create_topic(topic_name = SecureRandom.uuid, partitions = 1)
+def create_topic(topic_name: SecureRandom.uuid, partitions: 1)
   Karafka::Admin.create_topic(topic_name, partitions, 1)
   topic_name
 end

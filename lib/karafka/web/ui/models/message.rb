@@ -215,6 +215,7 @@ module Karafka
             # @param start_offset [Integer] offset of the first message (lowest) that we received
             # @param count [Integer] how many messages we wanted - we need that to fill spots to
             #   have exactly the number that was  requested and not more
+            # @param high_offset [Integer] high watermark offset
             # @return [Array<Karafka::Messages::Message, Integer>] array with gaps filled with the
             #   missing offset
             def fill_compacted(messages, partition_id, start_offset, count, high_offset)
