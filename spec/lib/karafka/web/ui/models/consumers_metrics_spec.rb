@@ -29,8 +29,10 @@ RSpec.describe_current do
   context 'when one metric exists and karafka-web is enabled' do
     before { produce(metrics_topic, fixture) }
 
-    it { expect(metrics.current).to be_a(described_class) }
-    it { expect(metrics.current.to_h).to eq(fixture_hash) }
+    it 'expect to load data correctly' do
+      expect(metrics.current).to be_a(described_class)
+      expect(metrics.current.to_h).to eq(fixture_hash)
+    end
   end
 
   context 'when there are more metrics and karafka-web is enabled' do
@@ -46,8 +48,10 @@ RSpec.describe_current do
       produce(metrics_topic, fixture_hash2.to_json)
     end
 
-    it { expect(metrics.current).to be_a(described_class) }
-    it { expect(metrics.current.dispatched_at).to eq(1) }
-    it { expect(metrics.current!.dispatched_at).to eq(1) }
+    it 'expect to load data correctly' do
+      expect(metrics.current).to be_a(described_class)
+      expect(metrics.current.dispatched_at).to eq(1)
+      expect(metrics.current!.dispatched_at).to eq(1)
+    end
   end
 end

@@ -33,7 +33,7 @@ module Karafka
                 'cleanup.policy': 'compact',
                 'retention.ms': 60 * 60 * 1_000,
                 'segment.ms': 86_400_000, # 24h
-                'segment.bytes': 104_857_600 # 10MB
+                'segment.bytes': 104_857_600 # 100MB
               }
             )
             created(consumers_states_topic)
@@ -53,7 +53,7 @@ module Karafka
                 'cleanup.policy': 'compact',
                 'retention.ms': 60 * 60 * 1_000,
                 'segment.ms': 86_400_000, # 24h
-                'segment.bytes': 104_857_600 # 10MB
+                'segment.bytes': 104_857_600 # 100MB
               }
             )
             created(consumers_metrics_topic)

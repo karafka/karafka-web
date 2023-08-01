@@ -29,8 +29,10 @@ RSpec.describe_current do
   context 'when one state exists and karafka-web is enabled' do
     before { produce(states_topic, fixture) }
 
-    it { expect(state.current).to be_a(described_class) }
-    it { expect(state.current.to_h).to eq(fixture_hash) }
+    it 'expect to load data correctly' do
+      expect(state.current).to be_a(described_class)
+      expect(state.current.to_h).to eq(fixture_hash)
+    end
   end
 
   context 'when there are more states and karafka-web is enabled' do
@@ -46,9 +48,11 @@ RSpec.describe_current do
       produce(states_topic, fixture_hash2.to_json)
     end
 
-    it { expect(state.current).to be_a(described_class) }
-    it { expect(state.current.dispatched_at).to eq(1) }
-    it { expect(state.current!.dispatched_at).to eq(1) }
+    it 'expect to load data correctly' do
+      expect(state.current).to be_a(described_class)
+      expect(state.current.dispatched_at).to eq(1)
+      expect(state.current!.dispatched_at).to eq(1)
+    end
   end
 
   context 'when our state contains only old processes data' do
@@ -58,8 +62,10 @@ RSpec.describe_current do
       produce(states_topic, fixture_hash.to_json)
     end
 
-    it { expect(state.current).to be_a(described_class) }
-    it { expect(state.current.processes).to be_empty }
+    it 'expect to load data correctly' do
+      expect(state.current).to be_a(described_class)
+      expect(state.current.processes).to be_empty
+    end
   end
 
   context 'when our state contains old and new processes data' do
@@ -69,9 +75,11 @@ RSpec.describe_current do
       produce(states_topic, fixture_hash.to_json)
     end
 
-    it { expect(state.current).to be_a(described_class) }
-    it { expect(state.current.processes.size).to eq(1) }
-    it { expect(state.current.processes.keys).to include(:'shinra:2:2') }
+    it 'expect to load data correctly' do
+      expect(state.current).to be_a(described_class)
+      expect(state.current.processes.size).to eq(1)
+      expect(state.current.processes.keys).to include(:'shinra:2:2')
+    end
   end
 
   context 'when our state contains data about processes in non-asc order' do

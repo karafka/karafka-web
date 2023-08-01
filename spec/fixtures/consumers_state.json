@@ -2,11 +2,11 @@
   "processes": {
     "shinra:1:1": {
       "dispatched_at": 2690818669.526218,
-      "offset": 2343
+      "offset": 0
     },
     "shinra:2:2": {
       "dispatched_at": 2690818667.249022,
-      "offset": 2342
+      "offset": 1
     }
   },
   "stats": {

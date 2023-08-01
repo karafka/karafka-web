@@ -29,6 +29,10 @@ module Karafka
             @hash
           end
 
+          def key?(name)
+            @hash.key?(name)
+          end
+
           # @param method_name [String] method name
           # @param args [Object] all the args of the method
           # @param block [Proc] block for the method
