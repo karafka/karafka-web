@@ -22,7 +22,7 @@ RSpec.describe_current do
     context 'when requested processes are too old' do
       let(:report) do
         report = JSON.parse(fixtures_file('consumer_report.json'), symbolize_names: true)
-        report[:dispatched_at] = 1690883271
+        report[:dispatched_at] = 1_690_883_271
         report
       end
 

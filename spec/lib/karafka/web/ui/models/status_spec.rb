@@ -58,7 +58,7 @@ RSpec.describe_current do
     context 'when we can connect fast' do
       it { expect(result.success?).to eq(true) }
       it { expect(result.to_s).to eq('success') }
-      it { expect(result.details[:time]). not_to eq(nil) }
+      it { expect(result.details[:time]).not_to eq(nil) }
       it { expect(result.partial_namespace).to eq('successes') }
     end
 
@@ -71,7 +71,7 @@ RSpec.describe_current do
 
       it { expect(result.success?).to eq(false) }
       it { expect(result.to_s).to eq('failure') }
-      it { expect(result.details[:time]). not_to eq(nil) }
+      it { expect(result.details[:time]).not_to eq(nil) }
       it { expect(result.partial_namespace).to eq('failures') }
     end
   end
