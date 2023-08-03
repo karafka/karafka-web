@@ -131,8 +131,8 @@ module Karafka
           # @return [Status::Step] Is the initial consumers metrics record present in Kafka
           def initial_consumers_metrics
             if initial_consumers_state.success?
-              @current_state ||= Models::ConsumersMetrics.current
-              status = @current_state ? :success : :failure
+              @current_metrics ||= Models::ConsumersMetrics.current
+              status = @current_metrics ? :success : :failure
             else
               status = :halted
             end
