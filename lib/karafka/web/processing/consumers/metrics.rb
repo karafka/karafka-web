@@ -9,7 +9,7 @@ module Karafka
           class << self
             # Fetch the current metrics data that is expected to exist
             #
-            # @return [Hash] last (current) aggregated metrics state
+            # @return [Hash] latest (current) aggregated metrics state
             def current!
               metrics_message = ::Karafka::Admin.read_topic(
                 Karafka::Web.config.topics.consumers.metrics,
