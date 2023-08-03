@@ -22,7 +22,11 @@
       <%== time_with_label(message.timestamp) %>
     </td>
     <td>
-      <%= message.key %>
+      <% if @visibility_filter.key?(message) %>
+        <%= message.key %>
+      <% else %>
+        <span class="text-muted">[Filtered]</span>
+      <% end %>
     </td>
     <td class="text-center">
       <a href="<%= explorer_path(message.topic, message.partition, message.offset) %>" class="btn btn-sm btn-secondary">

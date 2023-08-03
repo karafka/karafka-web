@@ -7,6 +7,8 @@
 - **[Feature]** Introduce per-topic and per-partition most recent message view with live reload.
 - **[Feature]** Introduce a new per-process inspection view called "Details" ti display all process real-time aggregated data.
 - **[Feature]** Introduce `bundle exec karafka-web migrate` that can be used to bootstrap the proper topics and initial data in environments where Karafka Web-UI should be used but is missing the initial setup.
+- **[Feature]** Replace `decrypt` with a pluggable API for deciding which topics data to display.
+- [Improvement] Link error reported first and last offset to the explorer.
 - [Improvement] Expand routing details to compensate for nested values in declarative topics.
 - [Improvement] Include last rebalance age in the health view per consumer group.
 - [Improvement] Provide previous / next navigation when viewing particular messages in the explorer.

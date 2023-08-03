@@ -22,6 +22,8 @@ module Karafka
 
             # Lists all the topics we can explore
             def index
+              @visibility_filter = ::Karafka::Web.config.ui.visibility_filter
+
               @topics = Models::ClusterInfo
                         .topics
                         .reject { |topic| topic[:topic_name] == '__consumer_offsets' }
@@ -42,6 +44,8 @@ module Karafka
             # @note We cannot use offset references here because each of the partitions may have
             #   completely different values
             def topic(topic_id)
+              @visibility_filter = ::Karafka::Web.config.ui.visibility_filter
+
               @topic_id = topic_id
               @partitions_count = Models::ClusterInfo.partitions_count(topic_id)
 
@@ -63,6 +67,7 @@ module Karafka
             # @param topic_id [String]
             # @param partition_id [Integer]
             def partition(topic_id, partition_id)
+              @visibility_filter = ::Karafka::Web.config.ui.visibility_filter
               @topic_id = topic_id
               @partition_id = partition_id
               @watermark_offsets = Ui::Models::WatermarkOffsets.find(topic_id, partition_id)
@@ -88,6 +93,7 @@ module Karafka
             # @param offset [Integer] offset of the message we want to display
             # @param paginate [Boolean] do we want to have pagination
             def show(topic_id, partition_id, offset, paginate: true)
+              @visibility_filter = ::Karafka::Web.config.ui.visibility_filter
               @topic_id = topic_id
               @partition_id = partition_id
               @offset = offset

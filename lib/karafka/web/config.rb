@@ -81,14 +81,16 @@ module Karafka
       end
 
       setting :ui do
+        # UI cache to improve performance of views that reuse states that are not often changed
         setting :cache, default: Ui::Lib::TtlCache.new(60_000 * 5)
-
-        # Should the payload be decrypted for the Pro Web UI. Default to `false` due to security
-        # reasons
-        setting :decrypt, default: false
 
         # How many elements should we display on pages that support pagination
         setting :per_page, default: 25
+
+        # Allows to manage visibility of payload, headers and message key in the UI
+        # In some cases you may want to limit what is being displayed due to the type of data you
+        # are dealing with
+        setting :visibility_filter, default: Ui::Models::VisibilityFilter.new
       end
     end
   end
