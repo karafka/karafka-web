@@ -45,7 +45,7 @@ module Karafka
 
             # @return [Boolean]
             def previous_offset?
-              @current_offset < @high_watermark_offset - 2
+              @current_offset < @high_watermark_offset - 1
             end
 
             # @return [Boolean] We always show current offset
