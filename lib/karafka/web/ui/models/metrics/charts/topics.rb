@@ -47,12 +47,8 @@ module Karafka
                 per_topic.merge('total sum' => total.to_a).to_json
               end
 
-              # @return [String] JSON with messages production rate based on high watermark offset
-              # @note There may be a case where the same data is reported multiple times because
-              #   we consume same topics in multiple consumer groups and we have data coming from
-              #   multiple consumer groups about that. We reject that as this data should not be
-              #   consumer group dependent and we can just pick any encounter of given topics
-              def produced
+              # @return [String] JSON with current high watermark offsets
+              def high_offsets
                 topics = {}
 
                 @data.to_h.each do |topic, metrics|
@@ -61,26 +57,8 @@ module Karafka
                   # If we've already seen this topic data, we can skip
                   next if topics.include?(topic_without_cg)
 
-                  previous = nil
-
                   topics[topic_without_cg] = metrics.map do |current|
-                    unless previous
-                      previous = current
-
-                      next
-                    end
-
-                    previous_high = previous.last[:offset_hi]
-                    current_high = current.last[:offset_hi]
-                    timestamp = current.first
-
-                    previous = current
-
-                    if previous_high && current_high
-                      [timestamp, current_high - previous_high]
-                    else
-                      [timestamp, 0]
-                    end
+                    [current.first, current.last[:offset_hi]]
                   end
                 end
 
