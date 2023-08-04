@@ -399,6 +399,69 @@ RSpec.describe_current do
     end
   end
 
+  describe '#consumers_reports_schema_state' do
+    subject(:result) { status.consumers_reports_schema_state }
+
+    context 'when there is no state computation' do
+      before { ready_topics }
+
+      it 'expect to halt' do
+        expect(result.success?).to eq(false)
+        expect(result.to_s).to eq('halted')
+        expect(result.details).to eq(nil)
+        expect(result.partial_namespace).to eq('failures')
+      end
+    end
+
+    context 'when the schema state is compatible' do
+      before do
+        all_topics
+        produce(states_topic, state)
+        produce(metrics_topic, metrics)
+
+        parsed = JSON.parse(report)
+        cg = parsed['consumer_groups']['example_app6_app']['subscription_groups']['c4ca4238a0b9_0']
+        cg['topics'][reports_topic] = cg['topics']['default']
+        cg['topics'][reports_topic]['name'] = reports_topic
+
+        produce(reports_topic, parsed.to_json)
+      end
+
+      it 'expect all to be ok' do
+        expect(result.success?).to eq(true)
+        expect(result.to_s).to eq('success')
+        expect(result.details).to eq(nil)
+        expect(result.partial_namespace).to eq('successes')
+      end
+    end
+
+    context 'when the schema state is not compatible' do
+      before do
+        all_topics
+
+        parsed = JSON.parse(state)
+        parsed['schema_state'] = 'incompatible'
+
+        produce(states_topic, parsed.to_json)
+        produce(metrics_topic, metrics)
+
+        parsed = JSON.parse(report)
+        cg = parsed['consumer_groups']['example_app6_app']['subscription_groups']['c4ca4238a0b9_0']
+        cg['topics'][reports_topic] = cg['topics']['default']
+        cg['topics'][reports_topic]['name'] = reports_topic
+
+        produce(reports_topic, parsed.to_json)
+      end
+
+      it 'expect all to be ok' do
+        expect(result.success?).to eq(false)
+        expect(result.to_s).to eq('failure')
+        expect(result.details).to eq(nil)
+        expect(result.partial_namespace).to eq('failures')
+      end
+    end
+  end
+
   describe '#pro_subscription' do
     subject(:result) { status.pro_subscription }
 

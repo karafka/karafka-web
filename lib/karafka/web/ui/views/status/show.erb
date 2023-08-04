@@ -125,6 +125,18 @@
 
       <%==
         partial(
+          "status/#{@status.consumers_reports_schema_state.to_s}",
+          locals: {
+            title: 'Consumers reports schema compatibility',
+            description: partial(
+              'status/failures/consumers_reports_schema_state'
+            )
+          }
+        )
+      %>
+
+      <%==
+        partial(
           "status/#{@status.pro_subscription.to_s}",
           locals: {
             title: 'Karafka Pro subscription',

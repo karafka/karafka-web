@@ -179,11 +179,26 @@ module Karafka
             )
           end
 
+          # @return [Status::Step] Are we able to actually digest the consumers reports with the
+          #   consumer that is consuming them.
+          def consumers_reports_schema_state
+            status = if state_calculation.success?
+                       @current_state[:schema_state] == 'compatible' ? :success : :failure
+                     else
+                       :halted
+                     end
+
+            Step.new(
+              status,
+              nil
+            )
+          end
+
           # @return [Status::Step] is Pro enabled with all of its features.
           # @note It's not an error not to have it but we want to warn, that some of the features
           #   may not work without Pro.
           def pro_subscription
-            status = if state_calculation.success?
+            status = if consumers_reports_schema_state.success?
                        ::Karafka.pro? ? :success : :warning
                      else
                        :halted
