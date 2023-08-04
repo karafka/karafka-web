@@ -11,10 +11,16 @@ module Karafka
           class State < Web::Contracts::Base
             configure
 
+            # Valid schema manager states
+            VALID_SCHEMA_STATES = %w[compatible incompatible].freeze
+
+            private_constant :VALID_SCHEMA_STATES
+
             required(:schema_version) { |val| val.is_a?(String) && !val.empty? }
             required(:dispatched_at) { |val| val.is_a?(Numeric) && val.positive? }
             required(:stats) { |val| val.is_a?(Hash) }
             required(:processes) { |val| val.is_a?(Hash) }
+            required(:schema_state) { |val| VALID_SCHEMA_STATES.include?(val) }
 
             virtual do |data, errors|
               next unless errors.empty?

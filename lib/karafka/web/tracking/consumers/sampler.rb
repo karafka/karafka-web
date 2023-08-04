@@ -36,7 +36,7 @@ module Karafka
             dead: 0
           }.freeze
 
-          private_constant :TIMES_TTL, :TIMES_TTL_MS, :SCHEMA_VERSION, :COUNTERS_BASE
+          private_constant :TIMES_TTL, :TIMES_TTL_MS, :COUNTERS_BASE
 
           def initialize
             super

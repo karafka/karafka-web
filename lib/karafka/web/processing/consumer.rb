@@ -17,7 +17,8 @@ module Karafka
 
           @flush_interval = ::Karafka::Web.config.processing.interval
 
-          @state_aggregator = Consumers::Aggregators::State.new
+          @schema_manager = Consumers::SchemaManager.new
+          @state_aggregator = Consumers::Aggregators::State.new(@schema_manager)
           @state_contract = Consumers::Contracts::State.new
 
           @metrics_aggregator = Consumers::Aggregators::Metrics.new
@@ -29,9 +30,11 @@ module Karafka
 
         # Aggregates consumers state into a single current state representation
         def consume
-          messages
-            .select { |message| message.payload[:type] == 'consumer' }
-            .each do |message|
+          consumers_messages = messages.select { |message| message.payload[:type] == 'consumer' }
+
+          # If there is even one incompatible message, we need to stop
+          if consumers_messages.all? { |message| @schema_manager.compatible?(message) }
+            consumers_messages.each do |message|
               # We need to run the aggregations on each message in order to compensate for
               # potential lags.
               @state_aggregator.add(message.payload, message.offset)
@@ -39,14 +42,16 @@ module Karafka
               @metrics_aggregator.add_stats(@state_aggregator.stats)
             end
 
-          return unless periodic_flush?
+            return unless periodic_flush?
 
-          materialize
-          validate!
+            dispatch
 
-          flush
+            mark_as_consumed(messages.last)
+          else
+            dispatch
 
-          mark_as_consumed(messages.last)
+            raise ::Karafka::Web::Errors::Processing::IncompatibleSchemaError
+          end
         end
 
         # Flush final state on shutdown
@@ -59,6 +64,13 @@ module Karafka
         end
 
         private
+
+        # Flushes the state of the Web-UI to the DB
+        def dispatch
+          materialize
+          validate!
+          flush
+        end
 
         # @return [Boolean] is it time to persist the new current state
         def periodic_flush?

@@ -19,6 +19,18 @@ module Karafka
 
         # Similar to the above. It should be created during install
         MissingConsumersMetricsError = Class.new(BaseError)
+
+        # This error occurs when consumer running older version of the web-ui tries to materialize
+        # states from newer versions. Karafka Web-UI provides only backwards compatibility, so
+        # you need to have an up-to-date consumer materializing reported states.
+        #
+        # If you see this error, please make sure that the consumer process that is materializing
+        # your states is running at least the same version as the consumers that are reporting
+        # the states
+        #
+        # If you see this error do not worry. When you get a consumer with up-to-date version,
+        # all the historical metrics will catch up.
+        IncompatibleSchemaError = Class.new(BaseError)
       end
 
       # Ui related errors

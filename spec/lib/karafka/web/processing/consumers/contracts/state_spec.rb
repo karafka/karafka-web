@@ -7,6 +7,7 @@ RSpec.describe_current do
     {
       schema_version: '1.0.0',
       dispatched_at: Time.now.to_f,
+      schema_state: 'compatible',
       stats: {
         batches: 10,
         messages: 100,
@@ -73,5 +74,11 @@ RSpec.describe_current do
     before { params[:processes] = { 'test' => {} } }
 
     it { expect { contract.call(params) }.to raise_error(Karafka::Web::Errors::ContractError) }
+  end
+
+  context 'when schema state is not one of the accepted' do
+    before { params[:schema_state] = 'na' }
+
+    it { expect(contract.call(params)).not_to be_success }
   end
 end

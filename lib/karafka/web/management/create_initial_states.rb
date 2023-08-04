@@ -33,7 +33,10 @@ module Karafka
         # WHole default empty state (aside from dispatch time)
         DEFAULT_STATE = {
           processes: {},
-          stats: DEFAULT_STATS
+          stats: DEFAULT_STATS,
+          schema_state: 'accepted',
+          schema_version: Processing::Consumers::Aggregators::State::SCHEMA_VERSION,
+          dispatched_at: Time.now.to_f
         }.freeze
 
         private_constant :DEFAULT_STATS, :DEFAULT_AGGREGATED, :DEFAULT_STATE

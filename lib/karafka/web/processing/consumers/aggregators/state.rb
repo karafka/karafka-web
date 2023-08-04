@@ -22,7 +22,10 @@ module Karafka
             # migrations
             SCHEMA_VERSION = '1.1.0'
 
-            private_constant :SCHEMA_VERSION
+            def initialize(schema_manager)
+              super()
+              @schema_manager = schema_manager
+            end
 
             # Uses provided process state report to update the current materialized state
             # @param report [Hash] consumer process state report
@@ -58,6 +61,7 @@ module Karafka
             def to_h(*_args)
               state[:schema_version] = SCHEMA_VERSION
               state[:dispatched_at] = float_now
+              state[:schema_state] = @schema_manager.to_s
 
               state
             end

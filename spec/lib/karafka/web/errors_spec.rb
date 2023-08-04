@@ -25,6 +25,12 @@ RSpec.describe_current do
 
       specify { expect(error).to be < described_class::BaseError }
     end
+
+    describe 'IncompatibleSchemaError' do
+      subject(:error) { described_class::Processing::IncompatibleSchemaError }
+
+      specify { expect(error).to be < described_class::BaseError }
+    end
   end
 
   context 'when in Ui namespace' do
