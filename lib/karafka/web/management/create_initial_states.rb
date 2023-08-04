@@ -24,7 +24,7 @@ module Karafka
         }.freeze
 
         # Default empty historicals for first record in Kafka
-        DEFAULT_AGGREGATED = Processing::Consumers::TimeSeriesTracker::TIME_RANGES
+        DEFAULT_AGGREGATED = Processing::TimeSeriesTracker::TIME_RANGES
                              .keys
                              .map { |range| [range, []] }
                              .to_h
