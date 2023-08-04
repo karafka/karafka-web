@@ -22,6 +22,8 @@ module Karafka
             # migrations
             SCHEMA_VERSION = '1.1.0'
 
+            # @param schema_manager [Karafka::Web::Processing::Consumers::SchemaManager] schema
+            #   manager that tracks the compatibility of schemas.
             def initialize(schema_manager)
               super()
               @schema_manager = schema_manager
