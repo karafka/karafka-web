@@ -14,7 +14,7 @@ module Karafka
           # Current schema version
           # This can be used in the future for detecting incompatible changes and writing
           # migrations
-          SCHEMA_VERSION = '1.2.2'
+          SCHEMA_VERSION = '1.2.3'
 
           # 60 seconds window for time tracked window-based metrics
           TIMES_TTL = 60
@@ -71,11 +71,12 @@ module Karafka
                 name: process_name,
                 status: ::Karafka::App.config.internal.status.to_s,
                 listeners: listeners,
-                concurrency: concurrency,
+                workers: workers,
                 memory_usage: @memory_usage,
                 memory_total_usage: @memory_total_usage,
                 memory_size: memory_size,
-                cpu_count: cpu_count,
+                cpus: cpus,
+                threads: threads,
                 cpu_usage: @cpu_usage,
                 tags: Karafka::Process.tags
               },
@@ -112,9 +113,12 @@ module Karafka
           # @note This should run before any mutex, so other threads can continue as those
           #   operations may invoke shell commands
           def sample
+            memory_threads_ps
+
             @memory_usage = memory_usage
             @memory_total_usage = memory_total_usage
             @cpu_usage = cpu_usage
+            @threads = threads
           end
 
           private
@@ -131,7 +135,7 @@ module Karafka
 
             # We divide by 1_000 to convert from milliseconds
             # We multiply by 100 to have it in % scale
-            times[:total].sum / 1_000 / concurrency / timefactor * 100
+            times[:total].sum / 1_000 / workers / timefactor * 100
           end
 
           # @return [Integer] number of listeners
@@ -175,15 +179,9 @@ module Karafka
 
           # Total memory used in the OS
           def memory_total_usage
-            case RUBY_PLATFORM
-            when /darwin|bsd|linux/
-              @shell
-                .call('ps -A -o rss=')
-                .split("\n")
-                .inject { |a, e| a.to_i + e.strip.to_i }
-            else
-              0
-            end
+            return 0 unless @memory_threads_ps
+
+            @memory_threads_ps.map(&:first).sum
           end
 
           # @return [Integer] total amount of memory
@@ -224,14 +222,36 @@ module Karafka
             end
           end
 
+          # @return [Integer] number of process threads.
+          # @note This returns total number of threads from the OS perspective including native
+          #   extensions threads, etc.
+          def threads
+            return 0 unless @memory_threads_ps
+
+            @memory_threads_ps.find { |row| row.last == ::Process.pid }[1]
+          end
+
           # @return [Integer] CPU count
-          def cpu_count
-            @cpu_count ||= Etc.nprocessors
+          def cpus
+            @cpus ||= Etc.nprocessors
           end
 
           # @return [Integer] number of threads that process work
-          def concurrency
-            @concurrency ||= Karafka::App.config.concurrency
+          def workers
+            @workers ||= Karafka::App.config.concurrency
+          end
+
+          # Loads our ps results into memory so we can extract from them whatever we need
+          def memory_threads_ps
+            case RUBY_PLATFORM
+            when /darwin|bsd|linux/
+              @memory_threads_ps = @shell
+                                   .call('ps -A -o rss=,thcount,pid')
+                                   .split("\n")
+                                   .map { |row| row.strip.split(' ').map(&:to_i) }
+            else
+              @memory_threads_ps = false
+            end
           end
         end
       end

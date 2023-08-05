@@ -37,11 +37,12 @@ RSpec.describe_current do
       name: 'shinra:3548178:324ae2b47a12',
       status: 'running',
       listeners: 2,
-      concurrency: 2,
+      workers: 2,
+      threads: 10,
       memory_usage: 103_364,
       memory_total_usage: 22_637_828,
       memory_size: 32_783_440,
-      cpu_count: 8,
+      cpus: 8,
       cpu_usage: [2.9, 1.69, 1.47],
       tags: ::Karafka::Core::Taggable::Tags.new
     }
@@ -130,8 +131,8 @@ RSpec.describe_current do
   end
 
   %i[
-    started_at name memory_usage memory_total_usage memory_size status listeners concurrency tags
-    cpu_usage
+    started_at name memory_usage memory_total_usage memory_size status listeners workers tags
+    cpu_usage threads cpus
   ].each do |attr|
     context "when process.#{attr} is missing" do
       before { report[:process].delete(attr) }
@@ -296,22 +297,40 @@ RSpec.describe_current do
     it { expect(contract.call(report)).not_to be_success }
   end
 
-  context 'when process.concurrency is missing' do
-    before { report[:process].delete(:concurrency) }
+  context 'when process.workers is missing' do
+    before { report[:process].delete(:workers) }
 
     it { expect(contract.call(report)).not_to be_success }
   end
 
-  context 'when process.concurrency is not an integer' do
-    before { report[:process][:concurrency] = 'not_an_integer' }
+  context 'when process.workers is not an integer' do
+    before { report[:process][:workers] = 'not_an_integer' }
 
     it { expect(contract.call(report)).not_to be_success }
   end
 
-  context 'when process.concurrency is non-positive' do
-    before { report[:process][:concurrency] = 0 }
+  context 'when process.workers is non-positive' do
+    before { report[:process][:workers] = 0 }
 
     it { expect(contract.call(report)).not_to be_success }
+  end
+
+  context 'when process.threads is missing' do
+    before { report[:process].delete(:threads) }
+
+    it { expect(contract.call(report)).not_to be_success }
+  end
+
+  context 'when process.threads is not an integer' do
+    before { report[:process][:threads] = 'not_an_integer' }
+
+    it { expect(contract.call(report)).not_to be_success }
+  end
+
+  context 'when process.threads is non-positive' do
+    before { report[:process][:threads] = 0 }
+
+    it { expect(contract.call(report)).to be_success }
   end
 
   context 'when process.tags is missing' do

@@ -17,10 +17,10 @@ module Karafka
             required(:errors) { |val| val.is_a?(Integer) && val >= 0 }
             required(:busy) { |val| val.is_a?(Integer) && val >= 0 }
             required(:enqueued) { |val| val.is_a?(Integer) && val >= 0 }
-            required(:threads_count) { |val| val.is_a?(Integer) && val >= 0 }
+            required(:workers) { |val| val.is_a?(Integer) && val >= 0 }
             required(:processes) { |val| val.is_a?(Integer) && val >= 0 }
             required(:rss) { |val| val.is_a?(Numeric) && val >= 0 }
-            required(:listeners_count) { |val| val.is_a?(Integer) && val >= 0 }
+            required(:listeners) { |val| val.is_a?(Integer) && val >= 0 }
             required(:utilization) { |val| val.is_a?(Numeric) && val >= 0 }
             required(:lag_stored) { |val| val.is_a?(Integer) }
             required(:lag) { |val| val.is_a?(Integer) }

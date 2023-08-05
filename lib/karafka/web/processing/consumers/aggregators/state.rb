@@ -123,10 +123,10 @@ module Karafka
 
               stats[:busy] = 0
               stats[:enqueued] = 0
-              stats[:threads_count] = 0
+              stats[:workers] = 0
               stats[:processes] = 0
               stats[:rss] = 0
-              stats[:listeners_count] = 0
+              stats[:listeners] = 0
               stats[:lag] = 0
               stats[:lag_stored] = 0
               utilization = 0
@@ -148,10 +148,10 @@ module Karafka
 
                   stats[:busy] += report_stats[:busy]
                   stats[:enqueued] += report_stats[:enqueued]
-                  stats[:threads_count] += report_process[:concurrency]
+                  stats[:workers] += report_process[:workers] || 0
+                  stats[:listeners] += report_process[:listeners] || 0
                   stats[:processes] += 1
                   stats[:rss] += report_process[:memory_usage]
-                  stats[:listeners_count] += report_process[:listeners]
                   stats[:lag] += lags.reject(&:negative?).sum
                   stats[:lag_stored] += lags_stored.reject(&:negative?).sum
                   utilization += report_stats[:utilization]

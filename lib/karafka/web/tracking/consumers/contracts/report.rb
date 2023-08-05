@@ -21,12 +21,14 @@ module Karafka
             nested(:process) do
               required(:started_at) { |val| val.is_a?(Numeric) && val.positive? }
               required(:name) { |val| val.is_a?(String) && val.count(':') >= 2 }
+              required(:cpus) { |val| val.is_a?(Integer) && val >= 1 }
               required(:memory_usage) { |val| val.is_a?(Integer) && val >= 0 }
               required(:memory_total_usage) { |val| val.is_a?(Integer) && val >= 0 }
               required(:memory_size) { |val| val.is_a?(Integer) && val >= 0 }
               required(:status) { |val| ::Karafka::Status::STATES.key?(val.to_s.to_sym) }
+              required(:threads) { |val| val.is_a?(Integer) && val >= 0 }
               required(:listeners) { |val| val.is_a?(Integer) && val >= 0 }
-              required(:concurrency) { |val| val.is_a?(Integer) && val.positive? }
+              required(:workers) { |val| val.is_a?(Integer) && val.positive? }
               required(:tags) { |val| val.is_a?(Karafka::Core::Taggable::Tags) }
 
               required(:cpu_usage) do |val|

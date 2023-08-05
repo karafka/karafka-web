@@ -14,10 +14,10 @@ module Karafka
           busy: 0,
           enqueued: 0,
           processing: 0,
-          threads_count: 0,
+          workers: 0,
           processes: 0,
           rss: 0,
-          listeners_count: 0,
+          listeners: 0,
           utilization: 0,
           lag_stored: 0,
           errors: 0

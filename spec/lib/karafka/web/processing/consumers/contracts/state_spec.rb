@@ -16,10 +16,10 @@ RSpec.describe_current do
         errors: 3,
         busy: 4,
         enqueued: 6,
-        threads_count: 5,
+        workers: 5,
         processes: 2,
         rss: 512.45,
-        listeners_count: 3,
+        listeners: 3,
         utilization: 70.2,
         lag_stored: 50,
         lag: 10

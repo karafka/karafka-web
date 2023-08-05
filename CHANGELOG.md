@@ -9,6 +9,8 @@
 - **[Feature]** Introduce `bundle exec karafka-web migrate` that can be used to bootstrap the proper topics and initial data in environments where Karafka Web-UI should be used but is missing the initial setup.
 - **[Feature]** Replace `decrypt` with a pluggable API for deciding which topics data to display.
 - **[Feature]** Make sure, that the karafka server process that is materializing UI states is not processing any data having unsupported (newer) schemas. This state will be also visible in the status page.
+- [Improvement] Collect total number of threads per process for the process details view.
+- [Improvement] Normalize naming of metrics to better reflect what they do (in reports and in the Web UI).
 - [Improvement] Link error reported first and last offset to the explorer.
 - [Improvement] Expand routing details to compensate for nested values in declarative topics.
 - [Improvement] Include last rebalance age in the health view per consumer group.
