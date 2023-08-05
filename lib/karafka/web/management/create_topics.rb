@@ -32,7 +32,7 @@ module Karafka
               {
                 'cleanup.policy': 'compact',
                 'retention.ms': 60 * 60 * 1_000,
-                'segment.ms': 86_400_000, # 24h
+                'segment.ms': 24 * 60 * 60 * 1_000, # 1 day
                 'segment.bytes': 104_857_600 # 100MB
               }
             )
@@ -51,8 +51,8 @@ module Karafka
               replication_factor,
               {
                 'cleanup.policy': 'compact',
-                'retention.ms': 60 * 60 * 1_000,
-                'segment.ms': 86_400_000, # 24h
+                'retention.ms': 60 * 60 * 1_000, # 1h
+                'segment.ms': 24 * 60 * 60 * 1_000, # 1 day
                 'segment.bytes': 104_857_600 # 100MB
               }
             )
@@ -68,11 +68,15 @@ module Karafka
               consumers_reports_topic,
               1,
               replication_factor,
-              # We do not need to to store this data for longer than 7 days as this data is only
+              # We do not need to to store this data for longer than 1 day as this data is only
               # used to materialize the end states
               # On the other hand we do not want to have it really short-living because in case of
-              # a consumer crash, we may want to use this info to catch up and backfill the state
-              { 'retention.ms': 7 * 24 * 60 * 60 * 1_000 }
+              # a consumer crash, we may want to use this info to catch up and backfill the state.
+              # In case its not consumed because no processes are running, it also usually means
+              # there's no data to consume because no karafka servers report
+              {
+                'retention.ms': 24 * 60 * 60 * 1_000 # 1 day
+              }
             )
             created(consumers_reports_topic)
           end
@@ -90,7 +94,9 @@ module Karafka
               1,
               replication_factor,
               # Remove really old errors (older than 3 months just to preserve space)
-              { 'retention.ms': 3 * 31 * 24 * 60 * 60 * 1_000 }
+              {
+                'retention.ms': 3 * 31 * 24 * 60 * 60 * 1_000 # 3 months
+              }
             )
             created(errors_topic)
           end
