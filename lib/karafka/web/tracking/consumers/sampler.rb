@@ -246,9 +246,9 @@ module Karafka
             @memory_threads_ps = case RUBY_PLATFORM
                                  when /darwin|bsd|linux/
                                    @shell
-                                     .call('ps -A -o rss=,thcount,pid')
-                                     .split("\n")
-                                     .map { |row| row.strip.split(' ').map(&:to_i) }
+                                 .call('ps -A -o rss=,thcount,pid')
+                                 .split("\n")
+                                 .map { |row| row.strip.split(' ').map(&:to_i) }
                                  else
                                    @memory_threads_ps = false
                                  end
