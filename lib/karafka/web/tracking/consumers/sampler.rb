@@ -49,6 +49,9 @@ module Karafka
             @pauses = Set.new
             @jobs = {}
             @shell = MemoizedShell.new
+            @memory_total_usage = 0
+            @memory_usage = 0
+            @cpu_usage = [-1, -1, -1]
           end
 
           # We cannot report and track the same time, that is why we use mutex here. To make sure
@@ -180,6 +183,7 @@ module Karafka
           # Total memory used in the OS
           def memory_total_usage
             return 0 unless @memory_threads_ps
+
 
             @memory_threads_ps.map(&:first).sum
           end
