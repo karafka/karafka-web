@@ -1,26 +1,20 @@
 # frozen_string_literal: true
 
 require 'factory_bot'
+require 'simplecov'
 
-coverage = !ENV.key?('GITHUB_WORKFLOW')
-coverage = true if ENV['GITHUB_COVERAGE'] == 'true'
+# Don't include unnecessary stuff into rcov
+SimpleCov.start do
+  add_filter '/spec/'
+  add_filter '/vendor/'
+  add_filter '/gems/'
+  add_filter '/.bundle/'
+  add_filter '/doc/'
+  add_filter '/config/'
 
-if coverage
-  require 'simplecov'
-
-  # Don't include unnecessary stuff into rcov
-  SimpleCov.start do
-    add_filter '/spec/'
-    add_filter '/vendor/'
-    add_filter '/gems/'
-    add_filter '/.bundle/'
-    add_filter '/doc/'
-    add_filter '/config/'
-
-    merge_timeout 600
-    minimum_coverage 0
-    enable_coverage :branch
-  end
+  merge_timeout 600
+  minimum_coverage 73
+  enable_coverage :branch
 end
 
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |f| require f }
@@ -35,6 +29,7 @@ RSpec.configure do |config|
   end
 
   config.before do
+    ::Karafka::Web.config.tracking.consumers.sampler.clear
     ::Karafka::Web.config.tracking.producers.sampler.clear
   end
 end
