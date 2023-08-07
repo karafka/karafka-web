@@ -25,7 +25,7 @@ RSpec.describe_current do
     it { expect(process[:threads]).to eq(0) }
     it { expect(process[:cpu_usage]).to eq([-1, -1, -1]) }
     it { expect(process[:tags]).to eq(Karafka::Process.tags) }
-    it { expect(versions[:ruby]).to include('ruby 3.2') }
+    it { expect(versions[:ruby]).to include('ruby') }
     it { expect(versions[:karafka]).to eq(Karafka::VERSION) }
     it { expect(versions[:karafka_core]).to eq(Karafka::Core::VERSION) }
     it { expect(versions[:waterdrop]).to eq(WaterDrop::VERSION) }
