@@ -11,8 +11,6 @@ module Karafka
             #
             # @param event [Karafka::Core::Monitoring::Event]
             def on_statistics_emitted(event)
-              #File.write('/home/mencio/Pulpit/emitted_statistics.json', event[:statistics].to_json)
-
               statistics = event[:statistics]
               topics = statistics.fetch('topics')
               cgrp = statistics.fetch('cgrp')

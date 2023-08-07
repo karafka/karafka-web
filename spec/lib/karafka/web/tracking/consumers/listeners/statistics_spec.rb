@@ -37,7 +37,7 @@ RSpec.describe_current do
   it { expect(default_p0[:id]).to eq(0) }
   it { expect(default_p0[:lag]).to eq(73_568) }
   it { expect(default_p0[:lag_d]).to eq(-1856) }
-  it { expect(default_p0[:lag_stored]).to eq(71705) }
+  it { expect(default_p0[:lag_stored]).to eq(71_705) }
   it { expect(default_p0[:lag_stored_d]).to eq(-1811) }
   it { expect(default_p0[:poll_state]).to eq('active') }
   it { expect(default_p0[:stored_offset]).to eq(2_859_193) }
