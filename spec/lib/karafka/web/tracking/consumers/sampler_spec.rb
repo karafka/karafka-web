@@ -3,7 +3,7 @@
 RSpec.describe_current do
   subject(:sampler) { described_class.new }
 
-  context 'before we run system sampling and start with empty state' do
+  context 'when we do not run system sampling and start with empty state' do
     let(:process) { sampler.to_report[:process] }
     let(:stats) { sampler.to_report[:stats] }
     let(:versions) { sampler.to_report[:versions] }

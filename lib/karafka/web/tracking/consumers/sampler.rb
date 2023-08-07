@@ -184,7 +184,6 @@ module Karafka
           def memory_total_usage
             return 0 unless @memory_threads_ps
 
-
             @memory_threads_ps.map(&:first).sum
           end
 
