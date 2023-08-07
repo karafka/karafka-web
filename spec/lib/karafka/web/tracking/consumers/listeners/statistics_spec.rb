@@ -8,6 +8,7 @@ RSpec.describe_current do
   let(:sg_details) { sampler.consumer_groups['cgid'][:subscription_groups] }
   let(:default_p0) { sg_details['sgid'][:topics]['default'][:partitions][0] }
   let(:test2_p0) { sg_details['sgid'][:topics]['test2'][:partitions][0] }
+  let(:visits_p0) { sg_details['sgid'][:topics]['visits'][:partitions][0] }
   let(:event) do
     {
       consumer_group_id: 'cgid',
@@ -52,7 +53,14 @@ RSpec.describe_current do
   it { expect(test2_p0[:poll_state]).to eq('active') }
   it { expect(test2_p0[:stored_offset]).to eq(-1_001) }
 
-  #it { expect(sg_details['sgid'][:topics]['test2']).to eq('a') }
-  #it { expect(sg_details['sgid'][:topics]['visits']).to eq('a') }
-  #it { expect(sg_details['sgid']).to eq('a') }
+  it { expect(visits_p0[:committed_offset]).to eq(52) }
+  it { expect(visits_p0[:fetch_state]).to eq('active') }
+  it { expect(visits_p0[:hi_offset]).to eq(52) }
+  it { expect(visits_p0[:id]).to eq(0) }
+  it { expect(visits_p0[:lag]).to eq(0) }
+  it { expect(visits_p0[:lag_d]).to eq(0) }
+  it { expect(visits_p0[:lag_stored]).to eq(-1) }
+  it { expect(visits_p0[:lag_stored_d]).to eq(0) }
+  it { expect(visits_p0[:poll_state]).to eq('active') }
+  it { expect(visits_p0[:stored_offset]).to eq(-1_001) }
 end
