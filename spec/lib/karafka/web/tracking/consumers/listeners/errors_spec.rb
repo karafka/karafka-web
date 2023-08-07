@@ -32,7 +32,7 @@ RSpec.describe_current do
     it 'expect to increase the retry counter' do
       listener.on_consumer_consuming_retry(nil)
 
-      expect(sampler.counters[:dead]).to eq(1)
+      expect(sampler.counters[:retries]).to eq(1)
     end
   end
 end
