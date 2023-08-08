@@ -24,16 +24,6 @@ module Karafka
                   .to_json
               end
 
-              # @return [Array<Array>] alias for `listeners_count` for a nicer name
-              def listeners
-                public_send(:listeners_count)
-              end
-
-              # @return [Array<Array>] alias for `threads_count` for a nicer name
-              def threads
-                public_send(:threads_count)
-              end
-
               # @param method_name [String]
               # @param include_private [Boolean]
               def respond_to_missing?(method_name, include_private = false)

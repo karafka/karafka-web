@@ -65,7 +65,7 @@
           </div>
 
           <div class="tab-pane show" id="concurrency" role="tabpanel">
-            <% data = @aggregated_charts.with(:processes, :threads, :listeners) %>
+            <% data = @aggregated_charts.with(:processes, :workers, :listeners) %>
             <%== partial 'shared/chart', locals: { data: data, id: 'concurrency' } %>
           </div>
         </div>
