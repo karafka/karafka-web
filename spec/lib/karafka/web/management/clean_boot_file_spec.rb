@@ -5,9 +5,7 @@ RSpec.describe_current do
 
   let(:boot_file) { Tempfile.new }
 
-  before do
-    allow(Karafka).to receive(:boot_file).and_return(boot_file)
-  end
+  before { allow(Karafka).to receive(:boot_file).and_return(boot_file) }
 
   context 'when the boot file contains the web setup code' do
     before do
