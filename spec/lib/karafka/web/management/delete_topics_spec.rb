@@ -19,6 +19,10 @@ RSpec.describe_current do
     Karafka::Web.config.topics.errors = errors_topic
   end
 
+  context 'when topics do not exist' do
+    it { expect { delete }.not_to(change { topics.call.count }) }
+  end
+
   context 'when consumers states topic exists' do
     let(:consumers_states_topic) { create_topic }
 
@@ -26,10 +30,6 @@ RSpec.describe_current do
       expect { delete }
         .to change { topics.call.include?(consumers_states_topic) }.from(true).to(false)
     end
-  end
-
-  context 'when consumers states topic does not exist' do
-    it { expect { delete }.not_to change { topics.call.count } }
   end
 
   context 'when consumers metrics topic exists' do
@@ -41,10 +41,6 @@ RSpec.describe_current do
     end
   end
 
-  context 'when consumers metrics topic does not exist' do
-    it { expect { delete }.not_to change { topics.call.count } }
-  end
-
   context 'when consumers reports topic exists' do
     let(:consumers_reports_topic) { create_topic }
 
@@ -54,10 +50,6 @@ RSpec.describe_current do
     end
   end
 
-  context 'when consumers reports topic does not exist' do
-    it { expect { delete }.not_to change { topics.call.count } }
-  end
-
   context 'when errors topic exists' do
     let(:errors_topic) { create_topic }
 
@@ -65,9 +57,5 @@ RSpec.describe_current do
       expect { delete }
         .to change { topics.call.include?(errors_topic) }.from(true).to(false)
     end
-  end
-
-  context 'when errors topic does not exist' do
-    it { expect { delete }.not_to change { topics.call.count } }
   end
 end
