@@ -39,7 +39,15 @@ module Karafka
           dispatched_at: Time.now.to_f
         }.freeze
 
-        private_constant :DEFAULT_STATS, :DEFAULT_AGGREGATED, :DEFAULT_STATE
+        # Default metrics state
+        DEFAULT_METRICS = {
+          aggregated: DEFAULT_AGGREGATED,
+          consumer_groups: DEFAULT_AGGREGATED,
+          dispatched_at: Time.now.to_f,
+          schema_version: Processing::Consumers::Aggregators::Metrics::SCHEMA_VERSION
+        }.freeze
+
+        private_constant :DEFAULT_STATS, :DEFAULT_AGGREGATED
 
         # Creates the initial states for the Web-UI if needed (if they don't exist)
         def call
@@ -62,12 +70,7 @@ module Karafka
             ::Karafka.producer.produce_sync(
               topic: Karafka::Web.config.topics.consumers.metrics,
               key: Karafka::Web.config.topics.consumers.metrics,
-              payload: {
-                aggregated: DEFAULT_AGGREGATED,
-                consumer_groups: DEFAULT_AGGREGATED,
-                dispatched_at: Time.now.to_f,
-                schema_version: Processing::Consumers::Aggregators::Metrics::SCHEMA_VERSION
-              }.to_json
+              payload: DEFAULT_METRICS.merge(dispatched_at: Time.now.to_f).to_json
             )
             created('consumers metrics')
           end

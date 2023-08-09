@@ -48,6 +48,7 @@ module Karafka
 
             # @return [Boolean] do we have enough data to draw any basic charts
             def sufficient?
+              p seconds.size
               seconds.size > 2
             end
 
