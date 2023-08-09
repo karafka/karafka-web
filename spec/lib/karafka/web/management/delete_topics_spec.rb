@@ -20,7 +20,7 @@ RSpec.describe_current do
   end
 
   context 'when consumers states topic exists' do
-   let(:consumers_states_topic) { create_topic }
+    let(:consumers_states_topic) { create_topic }
 
     it 'expect to remove it' do
       expect { delete }
@@ -33,7 +33,7 @@ RSpec.describe_current do
   end
 
   context 'when consumers metrics topic exists' do
-   let(:consumers_metrics_topic) { create_topic }
+    let(:consumers_metrics_topic) { create_topic }
 
     it 'expect to remove it' do
       expect { delete }
@@ -46,7 +46,7 @@ RSpec.describe_current do
   end
 
   context 'when consumers reports topic exists' do
-   let(:consumers_reports_topic) { create_topic }
+    let(:consumers_reports_topic) { create_topic }
 
     it 'expect to remove it' do
       expect { delete }
@@ -59,7 +59,7 @@ RSpec.describe_current do
   end
 
   context 'when errors topic exists' do
-   let(:errors_topic) { create_topic }
+    let(:errors_topic) { create_topic }
 
     it 'expect to remove it' do
       expect { delete }
