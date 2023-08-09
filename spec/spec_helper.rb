@@ -3,7 +3,6 @@
 require 'factory_bot'
 require 'simplecov'
 require 'rack/test'
-require 'karafka/web'
 
 # Don't include unnecessary stuff into rcov
 SimpleCov.start do
@@ -19,6 +18,8 @@ SimpleCov.start do
   enable_coverage :branch
 end
 
+require 'karafka/web'
+
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |f| require f }
 
 RSpec.configure do |config|
@@ -26,6 +27,7 @@ RSpec.configure do |config|
   config.order = :random
   config.include FactoryBot::Syntax::Methods
   config.include Rack::Test::Methods, type: :controller
+  config.include ControllerHelper, type: :controller
 
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
@@ -46,7 +48,7 @@ RSpec.configure do |config|
 end
 
 RSpec.extend RSpecLocator.new(__FILE__)
-include TopicsManager
+include TopicsManagerHelper
 
 # Fetches fixture content
 # @param file_name [String] fixture file name
@@ -71,11 +73,12 @@ module Karafka
   end
 end
 
+# Topics that we will use for all the tests as the primary karafka-web topics for valid cases
 TOPICS = Array.new(4) { create_topic }
 
 RSpec.configure do |config|
   # Set existing topics
-  config.before(:each) do
+  config.before do
     ::Karafka::Web.config.topics.consumers.states = TOPICS[0]
     ::Karafka::Web.config.topics.consumers.metrics = TOPICS[1]
     ::Karafka::Web.config.topics.consumers.reports = TOPICS[2]

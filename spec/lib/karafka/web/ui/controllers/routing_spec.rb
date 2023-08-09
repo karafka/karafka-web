@@ -6,26 +6,34 @@ RSpec.describe_current do
   describe '#index' do
     before { get 'routing' }
 
-    it { expect(last_response).to be_ok }
-    it { expect(last_response.body).to include(Karafka::Web.config.topics.consumers.states) }
-    it { expect(last_response.body).to include(Karafka::Web.config.topics.consumers.metrics) }
-    it { expect(last_response.body).to include(Karafka::Web.config.topics.consumers.reports) }
-    it { expect(last_response.body).to include(Karafka::Web.config.topics.errors) }
-    it { expect(last_response.body).to include('karafka_web') }
+    it do
+      expect(response).to be_ok
+      expect(body).to include(topics_config.consumers.states)
+      expect(body).to include(topics_config.consumers.metrics)
+      expect(body).to include(topics_config.consumers.reports)
+      expect(body).to include(topics_config.errors)
+      expect(body).to include('karafka_web')
+      expect(body).to include(breadcrumbs)
+    end
   end
 
   describe '#show' do
     before { get "routing/#{Karafka::App.routes.first.topics.first.id}" }
 
-    it { expect(last_response).to be_ok }
-    it { expect(last_response.body).to include('kafka.topic.metadata.refresh.interval.ms') }
-    it { expect(last_response.body).to include('Please help us') }
+    it do
+      expect(response).to be_ok
+      expect(body).to include('kafka.topic.metadata.refresh.interval.ms')
+      expect(body).to include(support_message)
+      expect(body).to include(breadcrumbs)
+    end
 
     context 'when given route is not available' do
       before { get 'routing/na' }
 
-      it { expect(last_response).not_to be_ok }
-      it { expect(last_response.status).to eq(404) }
+      it do
+        expect(response).not_to be_ok
+        expect(status).to eq(404)
+      end
     end
   end
 end

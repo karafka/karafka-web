@@ -1,4 +1,7 @@
-module TopicsManager
+# frozen_string_literal: true
+
+# Extra methods for topics management in specs
+module TopicsManagerHelper
   # @param topic_name [String] topic name. Default will generate automatically
   # @param partitions [Integer] number of partitions (one by default)
   # @return [String] generated topic name

@@ -7,22 +7,28 @@ RSpec.describe_current do
     context 'when all that is needed is there' do
       before { get 'status' }
 
-      it { expect(last_response).to be_ok }
-      it { expect(last_response.body).to include('Please help us') }
+      it do
+        expect(response).to be_ok
+        expect(body).to include(support_message)
+        expect(body).to include(breadcrumbs)
+      end
     end
 
     context 'when topics are missing' do
       before do
-        ::Karafka::Web.config.topics.consumers.states = SecureRandom.uuid
-        ::Karafka::Web.config.topics.consumers.metrics = SecureRandom.uuid
-        ::Karafka::Web.config.topics.consumers.reports = SecureRandom.uuid
-        ::Karafka::Web.config.topics.errors = SecureRandom.uuid
+        topics_config.consumers.states = SecureRandom.uuid
+        topics_config.consumers.metrics = SecureRandom.uuid
+        topics_config.consumers.reports = SecureRandom.uuid
+        topics_config.errors = SecureRandom.uuid
 
         get 'status'
       end
 
-      it { expect(last_response).to be_ok }
-      it { expect(last_response.body).to include('Please help us') }
+      it do
+        expect(response).to be_ok
+        expect(body).to include(support_message)
+        expect(body).to include(breadcrumbs)
+      end
     end
   end
 end
