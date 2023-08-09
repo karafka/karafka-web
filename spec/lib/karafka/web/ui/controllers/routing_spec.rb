@@ -19,6 +19,7 @@ RSpec.describe_current do
 
     it { expect(last_response).to be_ok }
     it { expect(last_response.body).to include('kafka.topic.metadata.refresh.interval.ms') }
+    it { expect(last_response.body).to include('Please help us') }
 
     context 'when given route is not available' do
       before { get 'routing/na' }

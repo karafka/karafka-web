@@ -3,6 +3,7 @@
 require 'factory_bot'
 require 'simplecov'
 require 'rack/test'
+require 'karafka/web'
 
 # Don't include unnecessary stuff into rcov
 SimpleCov.start do
@@ -34,11 +35,28 @@ RSpec.configure do |config|
     ::Karafka::Web.config.tracking.consumers.sampler.clear
     ::Karafka::Web.config.tracking.producers.sampler.clear
   end
+
+  # Restore them as some specs modify those
+  config.after do
+    ::Karafka::Web.config.topics.consumers.states = TOPICS[0]
+    ::Karafka::Web.config.topics.consumers.metrics = TOPICS[1]
+    ::Karafka::Web.config.topics.consumers.reports = TOPICS[2]
+    ::Karafka::Web.config.topics.errors = TOPICS[3]
+  end
 end
 
 RSpec.extend RSpecLocator.new(__FILE__)
+include TopicsManager
 
-require 'karafka/web'
+# Fetches fixture content
+# @param file_name [String] fixture file name
+# @return [String] fixture content
+def fixtures_file(file_name)
+  File
+    .dirname(__FILE__)
+    .then { |location| File.join(location, 'fixtures', file_name) }
+    .then { |fixture_path| File.read(fixture_path) }
+end
 
 module Karafka
   # Configuration for test env
@@ -53,45 +71,27 @@ module Karafka
   end
 end
 
+TOPICS = Array.new(4) { create_topic }
+
+RSpec.configure do |config|
+  # Set existing topics
+  config.before(:each) do
+    ::Karafka::Web.config.topics.consumers.states = TOPICS[0]
+    ::Karafka::Web.config.topics.consumers.metrics = TOPICS[1]
+    ::Karafka::Web.config.topics.consumers.reports = TOPICS[2]
+    ::Karafka::Web.config.topics.errors = TOPICS[3]
+  end
+end
+
+Karafka::Web.setup do |config|
+  config.topics.consumers.states = TOPICS[0]
+  config.topics.consumers.metrics = TOPICS[1]
+  config.topics.consumers.reports = TOPICS[2]
+  config.topics.errors = TOPICS[3]
+end
+
+produce(TOPICS[0], fixtures_file('consumers_state.json'))
+produce(TOPICS[1], fixtures_file('consumers_metrics.json'))
+produce(TOPICS[2], fixtures_file('consumer_report.json'))
+
 Karafka::Web.enable!
-
-# @param topic_name [String] topic name. Default will generate automatically
-# @param partitions [Integer] number of partitions (one by default)
-# @return [String] generated topic name
-def create_topic(topic_name: SecureRandom.uuid, partitions: 1)
-  Karafka::Admin.create_topic(topic_name, partitions, 1)
-  topic_name
-end
-
-# Sends data to Kafka in a sync way
-# @param topic [String] topic name
-# @param payload [String, nil] data we want to send
-# @param details [Hash] other details
-def produce(topic, payload = SecureRandom.uuid, details = {})
-  Karafka::App.producer.produce_sync(
-    **details.merge(
-      topic: topic,
-      payload: payload
-    )
-  )
-end
-
-# Sends multiple messages to kafka efficiently
-# @param topic [String] topic name
-# @param payloads [Array<String, nil>] data we want to send
-# @param details [Hash] other details
-def produce_many(topic, payloads, details = {})
-  messages = payloads.map { |payload| details.merge(topic: topic, payload: payload) }
-
-  Karafka::App.producer.produce_many_sync(messages)
-end
-
-# Fetches fixture content
-# @param file_name [String] fixture file name
-# @return [String] fixture content
-def fixtures_file(file_name)
-  File
-    .dirname(__FILE__)
-    .then { |location| File.join(location, 'fixtures', file_name) }
-    .then { |fixture_path| File.read(fixture_path) }
-end
