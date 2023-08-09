@@ -9,6 +9,7 @@ gemspec
 group :test do
   gem 'byebug'
   gem 'factory_bot'
+  gem 'rack-test'
   gem 'rspec'
   gem 'simplecov'
 end

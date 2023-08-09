@@ -2,6 +2,7 @@
 
 require 'factory_bot'
 require 'simplecov'
+require 'rack/test'
 
 # Don't include unnecessary stuff into rcov
 SimpleCov.start do
@@ -23,6 +24,7 @@ RSpec.configure do |config|
   config.disable_monkey_patching!
   config.order = :random
   config.include FactoryBot::Syntax::Methods
+  config.include Rack::Test::Methods, type: :controller
 
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
@@ -34,8 +36,7 @@ RSpec.configure do |config|
   end
 end
 
-require 'karafka/core/helpers/rspec_locator'
-RSpec.extend Karafka::Core::Helpers::RSpecLocator.new(__FILE__)
+RSpec.extend RSpecLocator.new(__FILE__)
 
 require 'karafka/web'
 

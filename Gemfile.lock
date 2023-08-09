@@ -41,6 +41,8 @@ GEM
     mini_portile2 (2.8.4)
     minitest (5.18.1)
     rack (3.0.8)
+    rack-test (2.1.0)
+      rack (>= 1.3)
     rackup (0.2.3)
       rack (>= 3.0.0.beta1)
       webrick
@@ -83,6 +85,7 @@ DEPENDENCIES
   byebug
   factory_bot
   karafka-web!
+  rack-test
   rackup (~> 0.2)
   rspec
   simplecov

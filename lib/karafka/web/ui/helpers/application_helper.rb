@@ -29,7 +29,7 @@ module Karafka
 
           # Renders per scope breadcrumbs
           def render_breadcrumbs
-            scope = request.path.gsub(root_path, '').split('/')[0]
+            scope = request.path.delete_prefix(root_path).split('/')[0]
 
             render "#{scope}/_breadcrumbs"
           end
