@@ -36,4 +36,9 @@ module ControllerHelper
   def breadcrumbs
     '<ol class="breadcrumb">'
   end
+
+  # @return [String] pagination matching string
+  def pagination
+    'id="pagination"'
+  end
 end

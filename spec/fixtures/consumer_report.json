@@ -8,6 +8,8 @@
     "status": "running",
     "listeners": 2,
     "concurrency": 2,
+    "threads": 2,
+    "workers": 5,
     "memory_usage": 123852,
     "memory_total_usage": 26421728,
     "memory_size": 32763220,

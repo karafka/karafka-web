@@ -14,7 +14,7 @@ SimpleCov.start do
   add_filter '/config/'
 
   merge_timeout 600
-  minimum_coverage 78
+  minimum_coverage 85
   enable_coverage :branch
 end
 
