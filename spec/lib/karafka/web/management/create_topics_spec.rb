@@ -16,7 +16,7 @@ RSpec.describe_current do
 
     it 'expect not to create it again' do
       create
-      expect { Karafka::Web::Processing::Consumers::State.current!  }.not_to raise_error
+      expect { Karafka::Web::Processing::Consumers::State.current! }.not_to raise_error
     end
   end
 
@@ -41,7 +41,7 @@ RSpec.describe_current do
 
     it 'expect not to create it again' do
       create
-      expect { Karafka::Web::Processing::Consumers::Metrics.current!  }.not_to raise_error
+      expect { Karafka::Web::Processing::Consumers::Metrics.current! }.not_to raise_error
     end
   end
 
