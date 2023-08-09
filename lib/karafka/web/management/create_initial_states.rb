@@ -64,7 +64,9 @@ module Karafka
               key: Karafka::Web.config.topics.consumers.metrics,
               payload: {
                 aggregated: DEFAULT_AGGREGATED,
-                consumer_groups: DEFAULT_AGGREGATED
+                consumer_groups: DEFAULT_AGGREGATED,
+                dispatched_at: Time.now.to_f,
+                schema_version: Processing::Consumers::Aggregators::Metrics::SCHEMA_VERSION
               }.to_json
             )
             created('consumers metrics')

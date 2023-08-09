@@ -14,8 +14,6 @@ module Karafka
             # migrations
             SCHEMA_VERSION = '1.0.0'
 
-            private_constant :SCHEMA_VERSION
-
             def initialize
               super
               @aggregated_tracker = TimeSeriesTracker.new(metrics.fetch(:aggregated))
