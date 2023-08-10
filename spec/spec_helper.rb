@@ -4,6 +4,9 @@ require 'factory_bot'
 require 'simplecov'
 require 'rack/test'
 
+# Are we running regular specs or pro specs
+SPECS_TYPE = ENV.fetch('SPECS_TYPE', 'default')
+
 # Don't include unnecessary stuff into rcov
 SimpleCov.start do
   add_filter '/spec/'
@@ -13,10 +16,12 @@ SimpleCov.start do
   add_filter '/doc/'
   add_filter '/config/'
 
-  merge_timeout 600
-  minimum_coverage 86
+  command_name SPECS_TYPE
+  merge_timeout 3600
   enable_coverage :branch
 end
+
+SimpleCov.minimum_coverage(86) if SPECS_TYPE == 'pro'
 
 # Load Pro components when running pro specs
 if ENV['SPECS_TYPE'] == 'pro'
