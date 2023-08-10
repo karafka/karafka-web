@@ -2,5 +2,5 @@
 
 set -e
 
-SPECS_TYPE=regular bundle exec rspec --tag ~type:pro
-SPECS_TYPE=pro bundle exec rspec --tag type:pro
+SPECS_TYPE=regular bundle exec rspec --exclude-pattern "**/pro/**/*_spec.rb"
+SPECS_TYPE=pro bundle exec rspec --pattern "**/pro/**/*_spec.rb"

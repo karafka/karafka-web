@@ -54,7 +54,8 @@ jobs:
       - name: Run all tests
         env:
           GITHUB_COVERAGE: ${{matrix.coverage}}
-        run: bundle exec rspec
+          KARAFKA_PRO_LICENSE_TOKEN: ${{ secrets.KARAFKA_PRO_LICENSE_TOKEN }}
+        run: bin/rspecs
 
   diffend:
     runs-on: ubuntu-latest
