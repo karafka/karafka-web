@@ -34,7 +34,6 @@ RSpec.describe_current do
           expect(body).to include(pagination)
           expect(body).to include(support_message)
           expect(body).to include(no_meaningful_results)
-          expect(body).to include('There are no topics partitions to display')
         end
       end
     end

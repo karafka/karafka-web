@@ -48,13 +48,14 @@ module Karafka
 
         # Display appropriate error specific to a given error type
         plugin :error_handler, classes: [
-          ::Karafka::Web::Errors::Ui::NotFoundError,
           ::Rdkafka::RdkafkaError,
+          Errors::Ui::NotFoundError,
           Errors::Ui::ProOnlyError
         ] do |e|
           @error = true
 
           if e.is_a?(Errors::Ui::ProOnlyError)
+            response.status = 402
             view 'shared/exceptions/pro_only'
           else
             response.status = 404

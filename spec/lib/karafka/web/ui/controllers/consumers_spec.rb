@@ -16,7 +16,7 @@ RSpec.describe_current do
 
     it do
       expect(response).not_to be_ok
-      expect(response.status).to eq(404)
+      expect(status).to eq(404)
     end
   end
 

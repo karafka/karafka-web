@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe_current do
-  subject(:app) { Karafka::Web::Ui::App }
+  subject(:app) { Karafka::Web::Ui::Pro::App }
 
   describe '#index' do
     before { get 'routing' }
@@ -14,8 +14,7 @@ RSpec.describe_current do
       expect(body).to include(topics_config.errors)
       expect(body).to include('karafka_web')
       expect(body).to include(breadcrumbs)
-      expect(body).to include(support_message)
-
+      expect(body).not_to include(support_message)
     end
   end
 
@@ -25,8 +24,8 @@ RSpec.describe_current do
     it do
       expect(response).to be_ok
       expect(body).to include('kafka.topic.metadata.refresh.interval.ms')
-      expect(body).to include(support_message)
       expect(body).to include(breadcrumbs)
+      expect(body).not_to include(support_message)
     end
 
     context 'when given route is not available' do

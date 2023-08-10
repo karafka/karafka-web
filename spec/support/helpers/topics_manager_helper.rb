@@ -2,12 +2,17 @@
 
 # Extra methods for topics management in specs
 module TopicsManagerHelper
+  # @return [String] topic name with a pid reference for laster removal (if needed)
+  def topic_name
+    "#{Process.pid}-#{SecureRandom.uuid}"
+  end
+
   # @param topic_name [String] topic name. Default will generate automatically
   # @param partitions [Integer] number of partitions (one by default)
   # @return [String] generated topic name
-  def create_topic(topic_name: SecureRandom.uuid, partitions: 1)
-    Karafka::Admin.create_topic(topic_name, partitions, 1)
-    topic_name
+  def create_topic(topic_name_string: topic_name, partitions: 1)
+    Karafka::Admin.create_topic(topic_name_string, partitions, 1)
+    topic_name_string
   end
 
   # Sends data to Kafka in a sync way

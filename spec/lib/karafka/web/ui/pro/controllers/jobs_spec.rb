@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe_current do
-  subject(:app) { Karafka::Web::Ui::App }
+  subject(:app) { Karafka::Web::Ui::Pro::App }
 
   let(:states_topic) { create_topic }
   let(:reports_topic) { create_topic }
@@ -19,7 +19,7 @@ RSpec.describe_current do
 
       it do
         expect(response).not_to be_ok
-        expect(status).to eq(404)
+        expect(response.status).to eq(404)
       end
     end
 
@@ -30,7 +30,7 @@ RSpec.describe_current do
         expect(response).to be_ok
         expect(body).to include('2023-08-01T09:47:51')
         expect(body).to include('ActiveJob::Consumer')
-        expect(body).to include(support_message)
+        expect(body).not_to include(support_message)
         expect(body).to include(breadcrumbs)
         expect(body).not_to include(pagination)
       end
@@ -71,7 +71,7 @@ RSpec.describe_current do
           expect(response).to be_ok
           expect(body).to include('2023-08-01T09:47:51')
           expect(body.scan('ActiveJob::Consumer').size).to eq(25)
-          expect(body).to include(support_message)
+          expect(body).not_to include(support_message)
           expect(body).to include(breadcrumbs)
           expect(body).to include(pagination)
           expect(body).to include('shinra:0:0')
@@ -88,7 +88,7 @@ RSpec.describe_current do
         it do
           expect(response).to be_ok
           expect(body).to include(pagination)
-          expect(body).to include(support_message)
+          expect(body).not_to include(support_message)
           expect(body).to include('shinra:32:32')
           expect(body).to include('shinra:34:34')
           expect(body).to include('shinra:35:35')
@@ -103,7 +103,7 @@ RSpec.describe_current do
         it do
           expect(response).to be_ok
           expect(body).to include(pagination)
-          expect(body).to include(support_message)
+          expect(body).not_to include(support_message)
           expect(body.scan('shinra:').size).to eq(0)
           expect(body).to include(no_meaningful_results)
         end

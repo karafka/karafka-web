@@ -18,6 +18,19 @@ SimpleCov.start do
   enable_coverage :branch
 end
 
+# Load Pro components when running pro specs
+if ENV['SPECS_TYPE'] == 'pro'
+  mod = Module.new do
+    def self.token
+      ENV.fetch('KARAFKA_PRO_LICENSE_TOKEN')
+    end
+  end
+
+  Karafka.const_set('License', mod)
+  require 'zeitwerk'
+  require 'karafka/pro/loader'
+end
+
 require 'karafka/web'
 
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |f| require f }

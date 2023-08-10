@@ -22,8 +22,6 @@ module Karafka
 
             # Lists all the topics we can explore
             def index
-              @visibility_filter = ::Karafka::Web.config.ui.visibility_filter
-
               @topics = Models::ClusterInfo
                         .topics
                         .reject { |topic| topic[:topic_name] == '__consumer_offsets' }

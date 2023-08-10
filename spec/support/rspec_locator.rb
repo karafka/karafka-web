@@ -16,9 +16,10 @@ class RSpecLocator < ::Karafka::Core::Helpers::RSpecLocator
     # @param block [Proc] block with specs
     rspec.define_singleton_method :describe_current do |&block|
       # Mark specs from pro namespace as pro
-      type = this.inherited.to_s.include?('::Ui::Controllers') ? :controller : :regular
+      types = this.inherited.to_s.include?('::Controllers') ? %i[controller] : %i[regular]
+      types << :pro if this.inherited.to_s.include?('::Pro::')
 
-      describe(this.inherited, type: type, &block)
+      describe(this.inherited, type: types, &block)
     end
   end
 end

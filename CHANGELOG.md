@@ -43,6 +43,7 @@
 - [Improvement] Prevent locking in sampler for time of OS data aggregation.
 - [Improvement] Collect and report number of messages in particular jobs.
 - [Improvement] Limit segment size for Web topics to ensure, that Web-UI does not drain resources.
+- [Fix] Return 402 status instead of 500 on Pro features that are not available in OSS.
 - [Fix] Fix a case where errors would not be visible without Rails due to the `String#first` usage.
 - [Fix] Fix a case where live-poll would be disabled but would still update data.
 - [Fix] Fix a case where states materializing consumer would update state too often.
