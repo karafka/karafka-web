@@ -50,7 +50,7 @@ RSpec.describe_current do
           name = "shinra:#{i}:#{i}"
 
           data['processes'][name] = {
-            dispatched_at: 2690818669.526218,
+            dispatched_at: 2_690_818_669.526_218,
             offset: i
           }
 
@@ -83,30 +83,30 @@ RSpec.describe_current do
       end
 
       context 'when visiting higher page' do
-      before { get 'jobs?page=2' }
+        before { get 'jobs?page=2' }
 
-      it do
-        expect(response).to be_ok
-        expect(body).to include(pagination)
-        expect(body).to include(support_message)
-        expect(body).to include('shinra:32:32')
-        expect(body).to include('shinra:34:34')
-        expect(body).to include('shinra:35:35')
-        expect(body).to include('shinra:35:35')
-        expect(body.scan('shinra:').size).to eq(25)
-      end
+        it do
+          expect(response).to be_ok
+          expect(body).to include(pagination)
+          expect(body).to include(support_message)
+          expect(body).to include('shinra:32:32')
+          expect(body).to include('shinra:34:34')
+          expect(body).to include('shinra:35:35')
+          expect(body).to include('shinra:35:35')
+          expect(body.scan('shinra:').size).to eq(25)
+        end
       end
 
       context 'when visiting page beyond available' do
-      before { get 'jobs?page=100' }
+        before { get 'jobs?page=100' }
 
-      it do
-        expect(response).to be_ok
-        expect(body).to include(pagination)
-        expect(body).to include(support_message)
-        expect(body.scan('shinra:').size).to eq(0)
-        expect(body).to include(no_meaningful_results)
-      end
+        it do
+          expect(response).to be_ok
+          expect(body).to include(pagination)
+          expect(body).to include(support_message)
+          expect(body.scan('shinra:').size).to eq(0)
+          expect(body).to include(no_meaningful_results)
+        end
       end
     end
   end

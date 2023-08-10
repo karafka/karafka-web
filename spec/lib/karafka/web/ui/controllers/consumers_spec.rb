@@ -66,7 +66,7 @@ RSpec.describe_current do
         name = "shinra:#{i}:#{i}"
 
         data['processes'][name] = {
-          dispatched_at: 2690818669.526218,
+          dispatched_at: 2_690_818_669.526_218,
           offset: i
         }
 
