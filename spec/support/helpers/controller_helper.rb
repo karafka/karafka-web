@@ -41,4 +41,9 @@ module ControllerHelper
   def pagination
     'id="pagination"'
   end
+
+  # @return [String] no results on pagination string
+  def no_meaningful_results
+    'first page to get meaningful results'
+  end
 end
