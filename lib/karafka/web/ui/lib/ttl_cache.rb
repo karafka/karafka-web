@@ -56,6 +56,14 @@ module Karafka
             end
           end
 
+          # Clears the whole cache
+          def clear
+            @mutex.synchronize do
+              @times.clear
+              @values.clear
+            end
+          end
+
           private
 
           # Removes expired elements from the cache

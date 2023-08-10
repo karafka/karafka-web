@@ -54,6 +54,7 @@ RSpec.configure do |config|
   config.before do
     ::Karafka::Web.config.tracking.consumers.sampler.clear
     ::Karafka::Web.config.tracking.producers.sampler.clear
+    ::Karafka::Web.config.ui.cache.clear
   end
 
   # Restore them as some specs modify those

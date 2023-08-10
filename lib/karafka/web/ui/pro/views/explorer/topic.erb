@@ -13,17 +13,17 @@
     </div>
 
     <div class="col pt-1 mb-0 pb-0">
-        <div class="col-auto">
-          <select class="form-select form-select-sm mb-0 form-control" id="current-partition">
-            <%==
-              each_partial(
-                [nil] + @partitions_count.times.to_a,
-                'explorer/partition_option',
-                local: :partition
-              )
-            %>
-          </select>
-        </div>
+      <div class="col-auto">
+        <select class="form-select form-select-sm mb-0 form-control" id="current-partition">
+          <%==
+            each_partial(
+              [nil] + @partitions_count.times.to_a,
+              'explorer/partition_option',
+              local: :partition
+            )
+          %>
+        </select>
+      </div>
     </div>
   </div>
 
@@ -41,6 +41,8 @@
 
       <% if @messages.empty? && params.current_page == 1 %>
         <%== partial 'explorer/topic/empty' %>
+      <% elsif @messages.empty? %>
+        <%== partial 'shared/no_paginated_data' %>
       <% else %>
         <%== partial('explorer/partition/messages') %>
       <% end %>

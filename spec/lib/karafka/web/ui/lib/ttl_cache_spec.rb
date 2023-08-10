@@ -49,6 +49,15 @@ RSpec.describe_current do
     end
   end
 
+  describe '#clear' do
+    before do
+      cache.write(1, 2)
+      cache.clear
+    end
+
+    it { expect(cache.read(1)).to be_nil }
+  end
+
   describe '#fetch' do
     context 'when the key exists in the cache' do
       let(:key) { :existing_key }
