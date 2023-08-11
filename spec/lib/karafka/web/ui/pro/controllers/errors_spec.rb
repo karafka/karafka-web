@@ -36,7 +36,7 @@ RSpec.describe_current do
 
     context 'when there are only few errors in one partition' do
       before do
-        produce_many(errors_topic, Array.new(3) { error_report })
+        produce_many(errors_topic, Array.new(3) { error_report }, partition: 0)
 
         get 'errors'
       end
@@ -238,7 +238,7 @@ RSpec.describe_current do
 
     context 'when visiting error that does exist' do
       before do
-        produce(errors_topic, error_report)
+        produce(errors_topic, error_report, partition: 0)
 
         get 'errors/0/0'
       end
