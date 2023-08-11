@@ -230,7 +230,7 @@ RSpec.describe_current do
       before { produce_many(topic, Array.new(100, '1')) }
 
       context 'when we view the from the highest available offset' do
-        before { get "explorer/#{topic}/#{0}?offset=99" }
+        before { get "explorer/#{topic}/0?offset=99" }
 
         it do
           expect(response).to be_ok
@@ -248,7 +248,7 @@ RSpec.describe_current do
       end
 
       context 'when we view the from the highest full page' do
-        before { get "explorer/#{topic}/#{0}?offset=75" }
+        before { get "explorer/#{topic}/0?offset=75" }
 
         it do
           expect(response).to be_ok
@@ -269,7 +269,7 @@ RSpec.describe_current do
       end
 
       context 'when we view the lowest offsets' do
-        before { get "explorer/#{topic}/#{0}?offset=0" }
+        before { get "explorer/#{topic}/0?offset=0" }
 
         it do
           expect(response).to be_ok
@@ -291,7 +291,7 @@ RSpec.describe_current do
       end
 
       context 'when we go way above the existing offsets' do
-        before { get "explorer/#{topic}/#{0}?offset=1000" }
+        before { get "explorer/#{topic}/0?offset=1000" }
 
         it do
           expect(response).to be_ok
