@@ -98,12 +98,6 @@ module Karafka
               @message = Ui::Models::Message.find(@topic_id, @partition_id, @offset)
               @payload_error = false
 
-              @decrypt = if ::Karafka::App.config.encryption.active
-                           ::Karafka::Web.config.ui.decrypt
-                         else
-                           true
-                         end
-
               begin
                 @pretty_payload = JSON.pretty_generate(@message.payload)
               rescue StandardError => e
