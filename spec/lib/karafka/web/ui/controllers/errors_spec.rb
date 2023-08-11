@@ -27,6 +27,9 @@ RSpec.describe_current do
       it do
         expect(response).to be_ok
         expect(body).to include(no_errors)
+        expect(body).to include(support_message)
+        expect(body).to include(breadcrumbs)
+        expect(body).not_to include(pagination)
       end
     end
 
