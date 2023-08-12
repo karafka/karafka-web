@@ -74,7 +74,7 @@ RSpec.describe_current do
       expect(body).to include(support_message)
       expect(body).not_to include(breadcrumbs)
       expect(body).to include(only_pro_feature)
-      expect(body).to include('High offsets')
+      expect(body).to include('Topics pace')
       expect(body).to include('Batches')
       expect(body).to include('Message')
       expect(body).to include('id="counters"')

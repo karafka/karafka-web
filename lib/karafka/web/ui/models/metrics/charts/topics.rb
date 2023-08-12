@@ -49,7 +49,7 @@ module Karafka
 
               # @return [String] JSON with producers pace that represents high-watermarks sum for
               #   each topic
-              def producers_pace
+              def topics_pace
                 topics = {}
 
                 @data.to_h.each do |topic, metrics|

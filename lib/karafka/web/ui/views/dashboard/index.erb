@@ -24,7 +24,7 @@
           <%== partial 'shared/tab_nav', locals: { title: 'Messages', id: 'messages', active: true } %>
           <%== partial 'shared/tab_nav', locals: { title: 'Batches', id: 'batches' } %>
           <%== partial 'shared/tab_nav', locals: { title: 'Lags stored', id: 'lags-stored' } %>
-          <%== partial 'shared/tab_nav', locals: { title: 'Producers pace', id: 'producers-pace' } %>
+          <%== partial 'shared/tab_nav', locals: { title: 'Topics pace', id: 'topics-pace' } %>
         </ul>
 
         <div class="tab-content">
@@ -45,10 +45,10 @@
             <%== partial 'shared/chart', locals: { data: data, id: 'lags-stored', blurred: true } %>
           </div>
 
-          <div class="tab-pane" id="producers-pace" role="tabpanel">
+          <div class="tab-pane" id="topics-pace" role="tabpanel">
             <%== partial 'dashboard/feature_pro' %>
             <% data = { topic1: set.call(20), topic2: set.call(10), topic3: set.call(100) }.to_json %>
-            <%== partial 'shared/chart', locals: { data: data, id: 'producers-pace', blurred: true } %>
+            <%== partial 'shared/chart', locals: { data: data, id: 'topics-pace', blurred: true } %>
           </div>
         </div>
       </div>
