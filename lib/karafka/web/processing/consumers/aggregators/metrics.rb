@@ -127,7 +127,7 @@ module Karafka
                       cgs[group_name][topic_name] = {
                         lag_stored: lags_stored.sum,
                         lag: lags.sum,
-                        offset_hi: offsets_hi.sum
+                        pace: offsets_hi.sum
                       }
                     end
                   end

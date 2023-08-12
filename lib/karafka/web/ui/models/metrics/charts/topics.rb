@@ -47,8 +47,9 @@ module Karafka
                 per_topic.merge('total sum' => total.to_a).to_json
               end
 
-              # @return [String] JSON with current high watermark offsets
-              def high_offsets
+              # @return [String] JSON with producers pace that represents high-watermarks sum for
+              #   each topic
+              def producers_pace
                 topics = {}
 
                 @data.to_h.each do |topic, metrics|
@@ -58,7 +59,7 @@ module Karafka
                   next if topics.include?(topic_without_cg)
 
                   topics[topic_without_cg] = metrics.map do |current|
-                    [current.first, current.last[:offset_hi]]
+                    [current.first, current.last[:pace]]
                   end
                 end
 

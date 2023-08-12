@@ -2643,19 +2643,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 3,
-              "offset_hi": 63569
+              "pace": 63569
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2046
+              "pace": 2046
             }
           }
         }
@@ -2674,19 +2674,19 @@
             "default": {
               "lag_stored": 3,
               "lag": 3,
-              "offset_hi": 39949
+              "pace": 39949
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 6
+              "pace": 6
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 291
+              "pace": 291
             }
           }
         }
@@ -2698,19 +2698,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 41711
+              "pace": 41711
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 6
+              "pace": 6
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 649
+              "pace": 649
             }
           }
         }
@@ -2722,19 +2722,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 2,
-              "offset_hi": 43925
+              "pace": 43925
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 10
+              "pace": 10
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 1,
               "lag": 1,
-              "offset_hi": 1013
+              "pace": 1013
             }
           }
         }
@@ -2746,19 +2746,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 4,
-              "offset_hi": 48616
+              "pace": 48616
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 17
+              "pace": 17
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 1,
-              "offset_hi": 1371
+              "pace": 1371
             }
           }
         }
@@ -2770,19 +2770,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 1,
-              "offset_hi": 57254
+              "pace": 57254
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 1,
-              "offset_hi": 1729
+              "pace": 1729
             }
           }
         }
@@ -2794,19 +2794,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 3,
-              "offset_hi": 63569
+              "pace": 63569
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2046
+              "pace": 2046
             }
           }
         }
@@ -2820,19 +2820,19 @@
             "default": {
               "lag_stored": 3,
               "lag": 3,
-              "offset_hi": 47536
+              "pace": 47536
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 17
+              "pace": 17
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1335
+              "pace": 1335
             }
           }
         }
@@ -2844,19 +2844,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 3,
-              "offset_hi": 47895
+              "pace": 47895
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 17
+              "pace": 17
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1347
+              "pace": 1347
             }
           }
         }
@@ -2868,19 +2868,19 @@
             "default": {
               "lag_stored": 3,
               "lag": 3,
-              "offset_hi": 48270
+              "pace": 48270
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 17
+              "pace": 17
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1359
+              "pace": 1359
             }
           }
         }
@@ -2892,19 +2892,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 4,
-              "offset_hi": 48616
+              "pace": 48616
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 17
+              "pace": 17
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 1,
-              "offset_hi": 1371
+              "pace": 1371
             }
           }
         }
@@ -2916,19 +2916,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 6,
-              "offset_hi": 48986
+              "pace": 48986
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 17
+              "pace": 17
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 1,
-              "offset_hi": 1383
+              "pace": 1383
             }
           }
         }
@@ -2940,19 +2940,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 49065
+              "pace": 49065
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 17
+              "pace": 17
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 1,
               "lag": 1,
-              "offset_hi": 1395
+              "pace": 1395
             }
           }
         }
@@ -2964,19 +2964,19 @@
             "default": {
               "lag_stored": 3,
               "lag": 5,
-              "offset_hi": 49226
+              "pace": 49226
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 21
+              "pace": 21
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1407
+              "pace": 1407
             }
           }
         }
@@ -2988,19 +2988,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 6,
-              "offset_hi": 49675
+              "pace": 49675
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 25
+              "pace": 25
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1419
+              "pace": 1419
             }
           }
         }
@@ -3012,19 +3012,19 @@
             "default": {
               "lag_stored": 3,
               "lag": 6,
-              "offset_hi": 50105
+              "pace": 50105
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 25
+              "pace": 25
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1430
+              "pace": 1430
             }
           }
         }
@@ -3036,19 +3036,19 @@
             "default": {
               "lag_stored": 4,
               "lag": 4,
-              "offset_hi": 50598
+              "pace": 50598
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 25
+              "pace": 25
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1442
+              "pace": 1442
             }
           }
         }
@@ -3060,19 +3060,19 @@
             "default": {
               "lag_stored": 3,
               "lag": 4,
-              "offset_hi": 51059
+              "pace": 51059
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 25
+              "pace": 25
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1454
+              "pace": 1454
             }
           }
         }
@@ -3084,19 +3084,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 6,
-              "offset_hi": 51543
+              "pace": 51543
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 25
+              "pace": 25
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1466
+              "pace": 1466
             }
           }
         }
@@ -3108,19 +3108,19 @@
             "default": {
               "lag_stored": 5,
               "lag": 7,
-              "offset_hi": 52019
+              "pace": 52019
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 25
+              "pace": 25
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1478
+              "pace": 1478
             }
           }
         }
@@ -3132,19 +3132,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 52457
+              "pace": 52457
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 25
+              "pace": 25
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1490
+              "pace": 1490
             }
           }
         }
@@ -3156,19 +3156,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 5,
-              "offset_hi": 52669
+              "pace": 52669
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1502
+              "pace": 1502
             }
           }
         }
@@ -3180,19 +3180,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 3,
-              "offset_hi": 52925
+              "pace": 52925
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1514
+              "pace": 1514
             }
           }
         }
@@ -3204,19 +3204,19 @@
             "default": {
               "lag_stored": 3,
               "lag": 6,
-              "offset_hi": 53178
+              "pace": 53178
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1526
+              "pace": 1526
             }
           }
         }
@@ -3228,19 +3228,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 4,
-              "offset_hi": 53420
+              "pace": 53420
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1538
+              "pace": 1538
             }
           }
         }
@@ -3252,19 +3252,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 2,
-              "offset_hi": 53665
+              "pace": 53665
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 1,
               "lag": 1,
-              "offset_hi": 1550
+              "pace": 1550
             }
           }
         }
@@ -3276,19 +3276,19 @@
             "default": {
               "lag_stored": 4,
               "lag": 4,
-              "offset_hi": 53923
+              "pace": 53923
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 1,
               "lag": 1,
-              "offset_hi": 1562
+              "pace": 1562
             }
           }
         }
@@ -3300,19 +3300,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 3,
-              "offset_hi": 54163
+              "pace": 54163
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 1,
               "lag": 1,
-              "offset_hi": 1574
+              "pace": 1574
             }
           }
         }
@@ -3324,19 +3324,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 2,
-              "offset_hi": 54413
+              "pace": 54413
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1586
+              "pace": 1586
             }
           }
         }
@@ -3348,19 +3348,19 @@
             "default": {
               "lag_stored": 3,
               "lag": 5,
-              "offset_hi": 54651
+              "pace": 54651
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1598
+              "pace": 1598
             }
           }
         }
@@ -3372,19 +3372,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 3,
-              "offset_hi": 54888
+              "pace": 54888
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1610
+              "pace": 1610
             }
           }
         }
@@ -3396,19 +3396,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 4,
-              "offset_hi": 55102
+              "pace": 55102
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1621
+              "pace": 1621
             }
           }
         }
@@ -3420,19 +3420,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 2,
-              "offset_hi": 55333
+              "pace": 55333
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1633
+              "pace": 1633
             }
           }
         }
@@ -3444,19 +3444,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 3,
-              "offset_hi": 55573
+              "pace": 55573
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1645
+              "pace": 1645
             }
           }
         }
@@ -3468,19 +3468,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 55815
+              "pace": 55815
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1657
+              "pace": 1657
             }
           }
         }
@@ -3492,19 +3492,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 2,
-              "offset_hi": 56055
+              "pace": 56055
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1669
+              "pace": 1669
             }
           }
         }
@@ -3516,19 +3516,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 4,
-              "offset_hi": 56289
+              "pace": 56289
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1681
+              "pace": 1681
             }
           }
         }
@@ -3540,19 +3540,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 5,
-              "offset_hi": 56532
+              "pace": 56532
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1693
+              "pace": 1693
             }
           }
         }
@@ -3564,19 +3564,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 5,
-              "offset_hi": 56772
+              "pace": 56772
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1705
+              "pace": 1705
             }
           }
         }
@@ -3588,19 +3588,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 3,
-              "offset_hi": 57022
+              "pace": 57022
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1717
+              "pace": 1717
             }
           }
         }
@@ -3612,19 +3612,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 1,
-              "offset_hi": 57254
+              "pace": 57254
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 1,
-              "offset_hi": 1729
+              "pace": 1729
             }
           }
         }
@@ -3636,19 +3636,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 3,
-              "offset_hi": 57494
+              "pace": 57494
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 1,
-              "offset_hi": 1741
+              "pace": 1741
             }
           }
         }
@@ -3660,19 +3660,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 3,
-              "offset_hi": 57739
+              "pace": 57739
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 1,
               "lag": 1,
-              "offset_hi": 1753
+              "pace": 1753
             }
           }
         }
@@ -3684,19 +3684,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 4,
-              "offset_hi": 58007
+              "pace": 58007
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1765
+              "pace": 1765
             }
           }
         }
@@ -3708,19 +3708,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 2,
-              "offset_hi": 58249
+              "pace": 58249
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1777
+              "pace": 1777
             }
           }
         }
@@ -3732,19 +3732,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 3,
-              "offset_hi": 58487
+              "pace": 58487
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1789
+              "pace": 1789
             }
           }
         }
@@ -3756,19 +3756,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 4,
-              "offset_hi": 58694
+              "pace": 58694
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1800
+              "pace": 1800
             }
           }
         }
@@ -3780,19 +3780,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 2,
-              "offset_hi": 58932
+              "pace": 58932
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1812
+              "pace": 1812
             }
           }
         }
@@ -3804,19 +3804,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 3,
-              "offset_hi": 59149
+              "pace": 59149
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1824
+              "pace": 1824
             }
           }
         }
@@ -3828,19 +3828,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 2,
-              "offset_hi": 59377
+              "pace": 59377
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1836
+              "pace": 1836
             }
           }
         }
@@ -3852,19 +3852,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 2,
-              "offset_hi": 59618
+              "pace": 59618
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1848
+              "pace": 1848
             }
           }
         }
@@ -3876,19 +3876,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 2,
-              "offset_hi": 59855
+              "pace": 59855
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1860
+              "pace": 1860
             }
           }
         }
@@ -3900,19 +3900,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 1,
-              "offset_hi": 60104
+              "pace": 60104
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1872
+              "pace": 1872
             }
           }
         }
@@ -3924,19 +3924,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 3,
-              "offset_hi": 60353
+              "pace": 60353
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1884
+              "pace": 1884
             }
           }
         }
@@ -3948,19 +3948,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 2,
-              "offset_hi": 60585
+              "pace": 60585
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1896
+              "pace": 1896
             }
           }
         }
@@ -3972,19 +3972,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 2,
-              "offset_hi": 60832
+              "pace": 60832
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 1,
               "lag": 1,
-              "offset_hi": 1908
+              "pace": 1908
             }
           }
         }
@@ -3996,19 +3996,19 @@
             "default": {
               "lag_stored": 3,
               "lag": 4,
-              "offset_hi": 61071
+              "pace": 61071
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 1,
               "lag": 1,
-              "offset_hi": 1920
+              "pace": 1920
             }
           }
         }
@@ -4020,19 +4020,19 @@
             "default": {
               "lag_stored": 4,
               "lag": 7,
-              "offset_hi": 61307
+              "pace": 61307
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 1,
               "lag": 1,
-              "offset_hi": 1932
+              "pace": 1932
             }
           }
         }
@@ -4044,19 +4044,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 4,
-              "offset_hi": 61550
+              "pace": 61550
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 1,
               "lag": 1,
-              "offset_hi": 1944
+              "pace": 1944
             }
           }
         }
@@ -4068,19 +4068,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 2,
-              "offset_hi": 61796
+              "pace": 61796
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1956
+              "pace": 1956
             }
           }
         }
@@ -4092,19 +4092,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 4,
-              "offset_hi": 62043
+              "pace": 62043
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1968
+              "pace": 1968
             }
           }
         }
@@ -4116,19 +4116,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 1,
-              "offset_hi": 62258
+              "pace": 62258
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1979
+              "pace": 1979
             }
           }
         }
@@ -4140,19 +4140,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 5,
-              "offset_hi": 62501
+              "pace": 62501
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1991
+              "pace": 1991
             }
           }
         }
@@ -4164,19 +4164,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 2,
-              "offset_hi": 62732
+              "pace": 62732
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2003
+              "pace": 2003
             }
           }
         }
@@ -4188,19 +4188,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 2,
-              "offset_hi": 62965
+              "pace": 62965
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2015
+              "pace": 2015
             }
           }
         }
@@ -4212,19 +4212,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 2,
-              "offset_hi": 63198
+              "pace": 63198
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2027
+              "pace": 2027
             }
           }
         }
@@ -4236,19 +4236,19 @@
             "default": {
               "lag_stored": 4,
               "lag": 4,
-              "offset_hi": 63437
+              "pace": 63437
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2039
+              "pace": 2039
             }
           }
         }
@@ -4260,19 +4260,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 3,
-              "offset_hi": 63569
+              "pace": 63569
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2046
+              "pace": 2046
             }
           }
         }
@@ -4286,19 +4286,19 @@
             "default": {
               "lag_stored": 3,
               "lag": 3,
-              "offset_hi": 62401
+              "pace": 62401
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1986
+              "pace": 1986
             }
           }
         }
@@ -4310,19 +4310,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 2,
-              "offset_hi": 62422
+              "pace": 62422
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1987
+              "pace": 1987
             }
           }
         }
@@ -4334,19 +4334,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 2,
-              "offset_hi": 62441
+              "pace": 62441
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1988
+              "pace": 1988
             }
           }
         }
@@ -4358,19 +4358,19 @@
             "default": {
               "lag_stored": 3,
               "lag": 3,
-              "offset_hi": 62458
+              "pace": 62458
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1989
+              "pace": 1989
             }
           }
         }
@@ -4382,19 +4382,19 @@
             "default": {
               "lag_stored": 3,
               "lag": 4,
-              "offset_hi": 62480
+              "pace": 62480
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1990
+              "pace": 1990
             }
           }
         }
@@ -4406,19 +4406,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 5,
-              "offset_hi": 62501
+              "pace": 62501
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1991
+              "pace": 1991
             }
           }
         }
@@ -4430,19 +4430,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 2,
-              "offset_hi": 62522
+              "pace": 62522
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1992
+              "pace": 1992
             }
           }
         }
@@ -4454,19 +4454,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 3,
-              "offset_hi": 62541
+              "pace": 62541
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1993
+              "pace": 1993
             }
           }
         }
@@ -4478,19 +4478,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 4,
-              "offset_hi": 62561
+              "pace": 62561
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1994
+              "pace": 1994
             }
           }
         }
@@ -4502,19 +4502,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 3,
-              "offset_hi": 62581
+              "pace": 62581
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1995
+              "pace": 1995
             }
           }
         }
@@ -4526,19 +4526,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 3,
-              "offset_hi": 62601
+              "pace": 62601
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1996
+              "pace": 1996
             }
           }
         }
@@ -4550,19 +4550,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 4,
-              "offset_hi": 62619
+              "pace": 62619
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1997
+              "pace": 1997
             }
           }
         }
@@ -4574,19 +4574,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 3,
-              "offset_hi": 62636
+              "pace": 62636
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1998
+              "pace": 1998
             }
           }
         }
@@ -4598,19 +4598,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 2,
-              "offset_hi": 62652
+              "pace": 62652
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 1999
+              "pace": 1999
             }
           }
         }
@@ -4622,19 +4622,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 1,
-              "offset_hi": 62668
+              "pace": 62668
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2000
+              "pace": 2000
             }
           }
         }
@@ -4646,19 +4646,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 3,
-              "offset_hi": 62686
+              "pace": 62686
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2001
+              "pace": 2001
             }
           }
         }
@@ -4670,19 +4670,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 3,
-              "offset_hi": 62711
+              "pace": 62711
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2002
+              "pace": 2002
             }
           }
         }
@@ -4694,19 +4694,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 2,
-              "offset_hi": 62732
+              "pace": 62732
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2003
+              "pace": 2003
             }
           }
         }
@@ -4718,19 +4718,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 4,
-              "offset_hi": 62756
+              "pace": 62756
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2004
+              "pace": 2004
             }
           }
         }
@@ -4742,19 +4742,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 4,
-              "offset_hi": 62777
+              "pace": 62777
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2005
+              "pace": 2005
             }
           }
         }
@@ -4766,19 +4766,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 2,
-              "offset_hi": 62797
+              "pace": 62797
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2006
+              "pace": 2006
             }
           }
         }
@@ -4790,19 +4790,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 5,
-              "offset_hi": 62815
+              "pace": 62815
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2007
+              "pace": 2007
             }
           }
         }
@@ -4814,19 +4814,19 @@
             "default": {
               "lag_stored": 3,
               "lag": 4,
-              "offset_hi": 62834
+              "pace": 62834
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2008
+              "pace": 2008
             }
           }
         }
@@ -4838,19 +4838,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 3,
-              "offset_hi": 62853
+              "pace": 62853
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2009
+              "pace": 2009
             }
           }
         }
@@ -4862,19 +4862,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 3,
-              "offset_hi": 62870
+              "pace": 62870
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2010
+              "pace": 2010
             }
           }
         }
@@ -4886,19 +4886,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 4,
-              "offset_hi": 62888
+              "pace": 62888
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2011
+              "pace": 2011
             }
           }
         }
@@ -4910,19 +4910,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 3,
-              "offset_hi": 62908
+              "pace": 62908
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2012
+              "pace": 2012
             }
           }
         }
@@ -4934,19 +4934,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 4,
-              "offset_hi": 62926
+              "pace": 62926
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2013
+              "pace": 2013
             }
           }
         }
@@ -4958,19 +4958,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 3,
-              "offset_hi": 62945
+              "pace": 62945
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2014
+              "pace": 2014
             }
           }
         }
@@ -4982,19 +4982,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 2,
-              "offset_hi": 62965
+              "pace": 62965
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2015
+              "pace": 2015
             }
           }
         }
@@ -5006,19 +5006,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 2,
-              "offset_hi": 62984
+              "pace": 62984
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2016
+              "pace": 2016
             }
           }
         }
@@ -5030,19 +5030,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 6,
-              "offset_hi": 63007
+              "pace": 63007
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2017
+              "pace": 2017
             }
           }
         }
@@ -5054,19 +5054,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 4,
-              "offset_hi": 63029
+              "pace": 63029
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2018
+              "pace": 2018
             }
           }
         }
@@ -5078,19 +5078,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 4,
-              "offset_hi": 63048
+              "pace": 63048
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2019
+              "pace": 2019
             }
           }
         }
@@ -5102,19 +5102,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 3,
-              "offset_hi": 63062
+              "pace": 63062
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2020
+              "pace": 2020
             }
           }
         }
@@ -5126,19 +5126,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 4,
-              "offset_hi": 63081
+              "pace": 63081
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2021
+              "pace": 2021
             }
           }
         }
@@ -5150,19 +5150,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 4,
-              "offset_hi": 63100
+              "pace": 63100
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2022
+              "pace": 2022
             }
           }
         }
@@ -5174,19 +5174,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 2,
-              "offset_hi": 63118
+              "pace": 63118
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2023
+              "pace": 2023
             }
           }
         }
@@ -5198,19 +5198,19 @@
             "default": {
               "lag_stored": 3,
               "lag": 3,
-              "offset_hi": 63138
+              "pace": 63138
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2024
+              "pace": 2024
             }
           }
         }
@@ -5222,19 +5222,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 2,
-              "offset_hi": 63154
+              "pace": 63154
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2025
+              "pace": 2025
             }
           }
         }
@@ -5246,19 +5246,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 6,
-              "offset_hi": 63178
+              "pace": 63178
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2026
+              "pace": 2026
             }
           }
         }
@@ -5270,19 +5270,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 2,
-              "offset_hi": 63198
+              "pace": 63198
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2027
+              "pace": 2027
             }
           }
         }
@@ -5294,19 +5294,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 5,
-              "offset_hi": 63217
+              "pace": 63217
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2028
+              "pace": 2028
             }
           }
         }
@@ -5318,19 +5318,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 3,
-              "offset_hi": 63235
+              "pace": 63235
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2029
+              "pace": 2029
             }
           }
         }
@@ -5342,19 +5342,19 @@
             "default": {
               "lag_stored": 4,
               "lag": 7,
-              "offset_hi": 63259
+              "pace": 63259
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2030
+              "pace": 2030
             }
           }
         }
@@ -5366,19 +5366,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 3,
-              "offset_hi": 63276
+              "pace": 63276
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2031
+              "pace": 2031
             }
           }
         }
@@ -5390,19 +5390,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 3,
-              "offset_hi": 63300
+              "pace": 63300
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2032
+              "pace": 2032
             }
           }
         }
@@ -5414,19 +5414,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 4,
-              "offset_hi": 63322
+              "pace": 63322
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2033
+              "pace": 2033
             }
           }
         }
@@ -5438,19 +5438,19 @@
             "default": {
               "lag_stored": 3,
               "lag": 4,
-              "offset_hi": 63340
+              "pace": 63340
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2034
+              "pace": 2034
             }
           }
         }
@@ -5462,19 +5462,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 3,
-              "offset_hi": 63355
+              "pace": 63355
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2035
+              "pace": 2035
             }
           }
         }
@@ -5486,19 +5486,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 2,
-              "offset_hi": 63371
+              "pace": 63371
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2036
+              "pace": 2036
             }
           }
         }
@@ -5510,19 +5510,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 2,
-              "offset_hi": 63392
+              "pace": 63392
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2037
+              "pace": 2037
             }
           }
         }
@@ -5534,19 +5534,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 3,
-              "offset_hi": 63412
+              "pace": 63412
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2038
+              "pace": 2038
             }
           }
         }
@@ -5558,19 +5558,19 @@
             "default": {
               "lag_stored": 4,
               "lag": 4,
-              "offset_hi": 63437
+              "pace": 63437
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2039
+              "pace": 2039
             }
           }
         }
@@ -5582,19 +5582,19 @@
             "default": {
               "lag_stored": 3,
               "lag": 4,
-              "offset_hi": 63452
+              "pace": 63452
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2040
+              "pace": 2040
             }
           }
         }
@@ -5606,19 +5606,19 @@
             "default": {
               "lag_stored": 2,
               "lag": 4,
-              "offset_hi": 63472
+              "pace": 63472
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2041
+              "pace": 2041
             }
           }
         }
@@ -5630,19 +5630,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 4,
-              "offset_hi": 63494
+              "pace": 63494
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2042
+              "pace": 2042
             }
           }
         }
@@ -5654,19 +5654,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 3,
-              "offset_hi": 63513
+              "pace": 63513
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2043
+              "pace": 2043
             }
           }
         }
@@ -5678,19 +5678,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 2,
-              "offset_hi": 63534
+              "pace": 63534
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2044
+              "pace": 2044
             }
           }
         }
@@ -5702,19 +5702,19 @@
             "default": {
               "lag_stored": 0,
               "lag": 3,
-              "offset_hi": 63553
+              "pace": 63553
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2045
+              "pace": 2045
             }
           }
         }
@@ -5726,19 +5726,19 @@
             "default": {
               "lag_stored": 1,
               "lag": 3,
-              "offset_hi": 63569
+              "pace": 63569
             },
             "visits": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 27
+              "pace": 27
             }
           },
           "example_app6_karafka_web": {
             "karafka_consumers_reports": {
               "lag_stored": 0,
               "lag": 0,
-              "offset_hi": 2046
+              "pace": 2046
             }
           }
         }

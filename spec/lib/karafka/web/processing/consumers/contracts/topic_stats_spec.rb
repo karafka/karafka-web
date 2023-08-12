@@ -7,7 +7,7 @@ RSpec.describe_current do
     {
       lag_stored: 10,
       lag: 5,
-      offset_hi: 3
+      pace: 3
     }
   end
 
@@ -41,14 +41,14 @@ RSpec.describe_current do
     it { expect(contract.call(topic_stats)).not_to be_success }
   end
 
-  context 'when offset_hi is not a number' do
-    before { topic_stats[:offset_hi] = 'test' }
+  context 'when pace is not a number' do
+    before { topic_stats[:pace] = 'test' }
 
     it { expect(contract.call(topic_stats)).not_to be_success }
   end
 
-  context 'when offset_hi is missing' do
-    before { topic_stats.delete(:offset_hi) }
+  context 'when pace is missing' do
+    before { topic_stats.delete(:pace) }
 
     it { expect(contract.call(topic_stats)).not_to be_success }
   end
