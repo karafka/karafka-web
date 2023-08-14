@@ -58,6 +58,7 @@
 - [Fix] Fix a case where upon hitting a too high page of consumers we would inform that no consumers are reporting instead of information that this page does not contain any reporting.
 - [Refactor] Limit usage of UI models for data intense computation to speed up states materialization under load.
 - [Refactor] Reorganize pagination engine to support offset based pagination.
+- [Refactor] Use Roda `custom_block_results` plugin for controllers results handling.
 - [Maintenance] Require `karafka` `2.1.8` due to fixes in the Iterator API and routing API extensions.
 
 ## 0.6.3 (2023-07-22)

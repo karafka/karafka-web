@@ -46,6 +46,12 @@ module Karafka
           csp.base_uri "'self'"
         end
 
+        plugin :custom_block_results
+
+        handle_block_result Controllers::Responses::Data do |result|
+          render_response(result)
+        end
+
         # Display appropriate error specific to a given error type
         plugin :error_handler, classes: [
           ::Rdkafka::RdkafkaError,

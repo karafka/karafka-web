@@ -5,7 +5,7 @@ PATH
       erubi (~> 1.4)
       karafka (>= 2.1.8, < 3.0.0)
       karafka-core (>= 2.0.13, < 3.0.0)
-      roda (~> 3.68, >= 3.68)
+      roda (~> 3.68, >= 3.69)
       tilt (~> 2.0)
 
 GEM
