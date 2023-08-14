@@ -126,14 +126,17 @@ RSpec.describe_current do
   end
 
   describe '#details' do
-    before { get 'consumers/1/details' }
+    context 'when details exist' do
+      before { get 'consumers/1/details' }
 
-    it do
-      expect(response).to be_ok
-      expect(body).to include('code class="wrapped json p-0 m-0"')
-      expect(body).not_to include(pagination)
-      expect(body).not_to include(support_message)
+      it do
+        expect(response).to be_ok
+        expect(body).to include('code class="wrapped json p-0 m-0"')
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
     end
+
 
     context 'when given process does not exist' do
       before { get 'consumers/4e8f7174ae53/details' }
@@ -146,17 +149,35 @@ RSpec.describe_current do
   end
 
   describe '#jobs' do
-    before { get 'consumers/1/jobs' }
+    context 'when process has jobs' do
+      before { get 'consumers/1/jobs' }
 
-    it do
-      expect(response).to be_ok
-      expect(body).to include('Karafka::Pro::ActiveJob::Consumer')
-      expect(body).not_to include(pagination)
-      expect(body).not_to include(support_message)
+      it do
+        expect(response).to be_ok
+        expect(body).to include('Karafka::Pro::ActiveJob::Consumer')
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
     end
 
     context 'when given process has no jobs running' do
-      pending
+      before do
+        topics_config.consumers.reports = reports_topic
+
+        report = JSON.parse(fixtures_file('consumer_report.json'))
+        report['jobs'] = []
+
+        produce(reports_topic, report.to_json)
+
+        get 'consumers/1/jobs'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('This process is not running any jobs at the moment')
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
     end
 
     context 'when given process does not exist' do
@@ -170,14 +191,16 @@ RSpec.describe_current do
   end
 
   describe '#subscriptions' do
-    before { get 'consumers/1/subscriptions' }
+    context 'when subscriptions exist' do
+      before { get 'consumers/1/subscriptions' }
 
-    it do
-      expect(response).to be_ok
-      expect(body).to include('Rebalance count:')
-      expect(body).to include('This process does not consume any')
-      expect(body).not_to include(pagination)
-      expect(body).not_to include(support_message)
+      it do
+        expect(response).to be_ok
+        expect(body).to include('Rebalance count:')
+        expect(body).to include('This process does not consume any')
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
     end
 
     context 'when given process has no subscriptions at all' do
@@ -185,7 +208,11 @@ RSpec.describe_current do
     end
 
     context 'when given process does not exist' do
-      before { get 'consumers/4e8f7174ae53/subscriptions' }
+      before do
+        topics_config.consumers.reports = reports_topic
+
+        get 'consumers/4e8f7174ae53/subscriptions'
+      end
 
       it do
         expect(response).not_to be_ok

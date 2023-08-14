@@ -43,7 +43,7 @@ RSpec.describe_current do
       expect(topic_data[0][:process][:type]).to eq('consumer')
       expect(topic_data[0][:process][:dispatched_at]).to eq(2_690_883_271.575_513)
       expect(topic_data[0][:process][:process][:concurrency]).to eq(2)
-      expect(topic_data[0][:process][:process][:cpu_count]).to eq(8)
+      expect(topic_data[0][:process][:process][:cpus]).to eq(8)
       expect(topic_data[0][:process][:process][:cpu_usage]).to eq([1.33, 1.1, 1.1])
       expect(topic_data[0][:process][:process][:listeners]).to eq(2)
       expect(topic_data[0][:process][:process][:memory_size]).to eq(32_763_220)
