@@ -11,7 +11,7 @@ module Karafka
       # file.
       #
       # @param replication_factor [Integer] replication factor we want to use (1 by default)
-      def install!(replication_factor: 1)
+      def install(replication_factor: 1)
         puts
         puts 'Installing Karafka Web UI...'
         puts
@@ -31,7 +31,7 @@ module Karafka
       # want to use Web-UI
       #
       # @param replication_factor [Integer] replication factor we want to use (1 by default)
-      def migrate!(replication_factor: 1)
+      def migrate(replication_factor: 1)
         puts
         puts 'Creating necessary topics and populating state data...'
         puts
@@ -44,7 +44,7 @@ module Karafka
 
       # Removes all the Karafka topics and creates them again with the same replication factor
       # @param replication_factor [Integer] replication factor we want to use (1 by default)
-      def reset!(replication_factor: 1)
+      def reset(replication_factor: 1)
         puts
         puts 'Resetting Karafka Web UI...'
         puts
@@ -59,7 +59,7 @@ module Karafka
       end
 
       # Removes all the Karafka Web topics and cleans after itself.
-      def uninstall!
+      def uninstall
         puts
         puts 'Uninstalling Karafka Web UI...'
         puts
