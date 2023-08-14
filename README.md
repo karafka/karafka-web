@@ -18,6 +18,8 @@ Karafka Web UI documentation is part of the Karafka framework documentation and 
 
 The Enhanced Web UI, aside from all the features from the OSS version, also offers additional features and capabilities not available in the free version, making it a better option for those looking for more robust monitoring and management capabilities for their Karafka applications. Some of the key benefits of the Enhanced Web UI version include the following:
 
+- Real-time and historical processing and utilization metrics.
+- Real-time topics lag awareness.
 - Enhanced consumers utilization metrics providing much better insights into processes resources utilization.
 - Consumer process inspection to quickly analyze the state of a given consuming process.
 - Consumer jobs inspection to view currently running jobs on a per-process basis.
