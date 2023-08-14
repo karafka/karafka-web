@@ -19,6 +19,7 @@
                   <%== relative_time @process.started_at %>
                 </span>
               </li>
+
               <li class="align-items-center d-flex justify-content-between">
                 State from:
                 <span class="badge bg-secondary">
@@ -41,13 +42,13 @@
             <p class="card-text">
             <ul style="list-style: square !important;">
               <li class="align-items-center d-flex justify-content-between">
-                Threads:
+                Workers:
                 <span class="badge bg-primary">
-                  <%= @process.concurrency %>
+                  <%= @process.workers %>
                 </span>
               </li>
               <li class="align-items-center d-flex justify-content-between">
-                Threads utilization:
+                Utilization:
                 <span class="badge bg-primary">
                   <%= @process.utilization.round(2) %>%
                 </span>
@@ -55,7 +56,7 @@
               <li class="align-items-center d-flex justify-content-between">
                 CPUs:
                 <span class="badge bg-primary">
-                  <%= @process.cpu_count %>
+                  <%= @process.cpus %>
                 </span>
               </li>
               <li class="align-items-center d-flex justify-content-between">

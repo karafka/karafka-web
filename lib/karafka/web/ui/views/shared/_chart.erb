@@ -1,0 +1,14 @@
+<%
+  blurred ||= false
+  label_type_y ||= 'numerical'
+  label_type_x ||= 'date'
+%>
+<div class="mt-4 chartjs-wrapper">
+  <canvas
+    id="<%= id %>-chart"
+    class="chartjs <%= 'blurred' if blurred %>"
+    data-datasets="<%= data %>"
+    data-label_type_y="<%= label_type_y %>"
+    data-label_type_x="<%= label_type_x %>"
+  ></canvas>
+</div>

@@ -32,98 +32,130 @@ module Karafka
           ]
 
           route do |r|
-            r.root { r.redirect root_path('consumers') }
+            r.root { r.redirect root_path('dashboard') }
 
-            @current_page = params.current_page
+            # Serve current version specific assets to prevent users from fetching old assets
+            # after upgrade
+            r.on(:assets, Karafka::Web::VERSION) do
+              r.public
+            end
+
+            r.get 'dashboard' do
+              @breadcrumbs = false
+              controller = Controllers::Dashboard.new(params)
+              controller.index
+            end
 
             r.on 'consumers' do
               controller = Controllers::Consumers.new(params)
 
               r.get String, 'jobs' do |process_id|
-                render_response controller.jobs(process_id)
+                controller.jobs(process_id)
               end
 
               r.get String, 'subscriptions' do |process_id|
-                render_response controller.subscriptions(process_id)
+                controller.subscriptions(process_id)
+              end
+
+              r.get String, 'details' do |process_id|
+                controller.details(process_id)
               end
 
               r.get do
                 @breadcrumbs = false
-                render_response controller.index
+                controller.index
               end
             end
 
             r.get 'jobs' do
               controller = Controllers::Jobs.new(params)
-              render_response controller.index
+              controller.index
             end
 
             r.on 'routing' do
               controller = Controllers::Routing.new(params)
 
               r.get String do |topic_id|
-                render_response controller.show(topic_id)
+                controller.show(topic_id)
               end
 
               r.get do
-                render_response controller.index
+                controller.index
               end
             end
 
             r.on 'explorer' do
               controller = Controllers::Explorer.new(params)
 
+              r.get String, Integer, 'recent' do |topic_id, partition_id|
+                controller.recent(topic_id, partition_id)
+              end
+
+              r.get String, 'recent' do |topic_id|
+                controller.recent(topic_id, nil)
+              end
+
               r.get String, Integer, Integer do |topic_id, partition_id, offset|
-                render_response controller.show(topic_id, partition_id, offset)
+                # If when viewing given message we get an offset of different message, we should
+                # redirect there. This allows us to support pagination with the current engine
+                if params.current_offset != -1
+                  r.redirect explorer_path(topic_id, partition_id, params.current_offset)
+                else
+                  controller.show(topic_id, partition_id, offset)
+                end
               end
 
               r.get String, Integer do |topic_id, partition_id|
-                render_response controller.partition(topic_id, partition_id)
+                controller.partition(topic_id, partition_id)
               end
 
               r.get String do |topic_id|
-                render_response controller.topic(topic_id)
+                controller.topic(topic_id)
               end
 
               r.get do
-                render_response controller.index
+                controller.index
               end
             end
 
             r.get 'health' do
               controller = Controllers::Health.new(params)
-              render_response controller.index
+              controller.index
             end
 
             r.get 'cluster' do
               controller = Controllers::Cluster.new(params)
-              render_response controller.index
+              controller.index
             end
 
             r.on 'errors' do
               controller = Controllers::Errors.new(params)
 
               r.get Integer, Integer do |partition_id, offset|
-                render_response controller.show(partition_id, offset)
+                if params.current_offset != -1
+                  r.redirect root_path('errors', partition_id, params.current_offset)
+                else
+                  controller.show(partition_id, offset)
+                end
               end
 
               r.get Integer do |partition_id|
-                render_response controller.partition(partition_id)
+                controller.partition(partition_id)
               end
 
               r.get do
-                render_response controller.index
+                controller.index
               end
             end
 
             r.get 'dlq' do
               controller = Controllers::Dlq.new(params)
-              render_response controller.index
+              controller.index
             end
 
             r.get 'status' do
               controller = Controllers::Status.new(params)
-              render_response controller.show
+              controller.show
             end
           end
         end

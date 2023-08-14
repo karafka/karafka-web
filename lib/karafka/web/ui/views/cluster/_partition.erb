@@ -3,11 +3,11 @@
 <% if topic[:topic_name] != '__consumer_offsets' %>
   <tr>
     <td>
-      <a href="<%= root_path('explorer', topic[:topic_name]) %>">
+      <a href="<%= explorer_path(topic[:topic_name]) %>">
         <%= topic[:topic_name] %>
       </a>
     <td>
-      <a href="<%= root_path('explorer', topic[:topic_name], partition[:partition_id]) %>">
+      <a href="<%= explorer_path(topic[:topic_name], partition[:partition_id]) %>">
         <%= partition[:partition_id] %>
       </a>
     </td>

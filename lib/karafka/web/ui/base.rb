@@ -5,15 +5,18 @@ module Karafka
     module Ui
       # Base Roda application
       class Base < Roda
+        include Helpers::PathsHelper
         include Helpers::ApplicationHelper
 
         # Details that need to be evaluated in the context of OSS or Pro web UI.
         # If those would be evaluated in the base, they would not be initialized as expected
         CONTEXT_DETAILS = lambda do
           plugin(
-            :static,
-            %w[/javascripts /stylesheets /images],
-            root: Karafka::Web.gem_root.join('lib/karafka/web/ui/public')
+            :public,
+            root: Karafka::Web.gem_root.join('lib/karafka/web/ui/public'),
+            # Cache all static files for the end user for as long as possible
+            # We can do it because we ship per version assets so they invalidate with gem bumps
+            headers: { 'Cache-Control' => 'max-age=604800' }
           )
           plugin :render_each
           plugin :partials
@@ -43,15 +46,22 @@ module Karafka
           csp.base_uri "'self'"
         end
 
+        plugin :custom_block_results
+
+        handle_block_result Controllers::Responses::Data do |result|
+          render_response(result)
+        end
+
         # Display appropriate error specific to a given error type
         plugin :error_handler, classes: [
-          ::Karafka::Web::Errors::Ui::NotFoundError,
           ::Rdkafka::RdkafkaError,
+          Errors::Ui::NotFoundError,
           Errors::Ui::ProOnlyError
         ] do |e|
           @error = true
 
           if e.is_a?(Errors::Ui::ProOnlyError)
+            response.status = 402
             view 'shared/exceptions/pro_only'
           else
             response.status = 404

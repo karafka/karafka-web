@@ -17,10 +17,16 @@
         Running jobs
       </a>
     </li>
-  <% else %>
+  <% elsif current_path.include?('/subscriptions') %>
     <li class="breadcrumb-item">
       <a href="<%= root_path('consumers', @process.id, 'subscriptions') %>">
         Active subscriptions
+      </a>
+    </li>
+  <% else %>
+    <li class="breadcrumb-item">
+      <a href="<%= root_path('consumers', @process.id, 'details') %>">
+        Details
       </a>
     </li>
   <% end %>

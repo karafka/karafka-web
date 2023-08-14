@@ -1,0 +1,200 @@
+{
+  "aggregated": {
+    "days": [
+      [
+        1690806938,
+        {
+          "batches": 0,
+          "messages": 0,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "processing": 0,
+          "threads_count": 2,
+          "processes": 1,
+          "rss": 106608,
+          "listeners_count": 2,
+          "utilization": 0.0,
+          "lag_stored": 0,
+          "errors": 0,
+          "lag": 0
+        }
+      ]
+    ],
+    "hours": [
+      [
+        1690806938,
+        {
+          "batches": 0,
+          "messages": 0,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "processing": 0,
+          "threads_count": 2,
+          "processes": 1,
+          "rss": 106608,
+          "listeners_count": 2,
+          "utilization": 0.0,
+          "lag_stored": 0,
+          "errors": 0,
+          "lag": 0
+        }
+      ]
+    ],
+    "minutes": [
+      [
+        1690806938,
+        {
+          "batches": 0,
+          "messages": 0,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "processing": 0,
+          "threads_count": 2,
+          "processes": 1,
+          "rss": 106608,
+          "listeners_count": 2,
+          "utilization": 0.0,
+          "lag_stored": 0,
+          "errors": 0,
+          "lag": 0
+        }
+      ]
+    ],
+    "seconds": [
+      [
+        1690806938,
+        {
+          "batches": 0,
+          "messages": 0,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "processing": 0,
+          "threads_count": 2,
+          "processes": 1,
+          "rss": 106608,
+          "listeners_count": 2,
+          "utilization": 0.0,
+          "lag_stored": 0,
+          "errors": 0,
+          "lag": 0
+        }
+      ]
+    ]
+  },
+  "consumer_groups": {
+    "days": [
+      [
+        1690817196,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_stored": 1,
+              "lag": 3,
+              "offset_hi": 63569
+            },
+            "visits": {
+              "lag_stored": 0,
+              "lag": 0,
+              "offset_hi": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_stored": 0,
+              "lag": 0,
+              "offset_hi": 2046
+            }
+          }
+        }
+      ]
+    ],
+    "hours": [
+      [
+        1690817196,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_stored": 1,
+              "lag": 3,
+              "offset_hi": 63569
+            },
+            "visits": {
+              "lag_stored": 0,
+              "lag": 0,
+              "offset_hi": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_stored": 0,
+              "lag": 0,
+              "offset_hi": 2046
+            }
+          }
+        }
+      ]
+    ],
+    "minutes": [
+      [
+        1690817196,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_stored": 1,
+              "lag": 3,
+              "offset_hi": 63569
+            },
+            "visits": {
+              "lag_stored": 0,
+              "lag": 0,
+              "offset_hi": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_stored": 0,
+              "lag": 0,
+              "offset_hi": 2046
+            }
+          }
+        }
+      ]
+    ],
+    "seconds": [
+      [
+        1690817196,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_stored": 1,
+              "lag": 3,
+              "offset_hi": 63569
+            },
+            "visits": {
+              "lag_stored": 0,
+              "lag": 0,
+              "offset_hi": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_stored": 0,
+              "lag": 0,
+              "offset_hi": 2046
+            }
+          }
+        }
+      ]
+    ]
+  },
+  "dispatched_at": 1691597886.821382,
+  "schema_version": "1.0.0"
+}

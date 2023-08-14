@@ -42,6 +42,8 @@ module Karafka
             # @note We cannot use offset references here because each of the partitions may have
             #   completely different values
             def topic(topic_id)
+              @visibility_filter = ::Karafka::Web.config.ui.visibility_filter
+
               @topic_id = topic_id
               @partitions_count = Models::ClusterInfo.partitions_count(topic_id)
 
@@ -63,6 +65,7 @@ module Karafka
             # @param topic_id [String]
             # @param partition_id [Integer]
             def partition(topic_id, partition_id)
+              @visibility_filter = ::Karafka::Web.config.ui.visibility_filter
               @topic_id = topic_id
               @partition_id = partition_id
               @watermark_offsets = Ui::Models::WatermarkOffsets.find(topic_id, partition_id)
@@ -74,7 +77,8 @@ module Karafka
                 previous_offset,
                 @params.current_offset,
                 next_offset,
-                @messages.map(&:offset)
+                # If message is an array, it means it's a compacted dummy offset representation
+                @messages.map { |message| message.is_a?(Array) ? message.last : message.offset }
               )
 
               respond
@@ -85,18 +89,14 @@ module Karafka
             # @param topic_id [String]
             # @param partition_id [Integer]
             # @param offset [Integer] offset of the message we want to display
-            def show(topic_id, partition_id, offset)
+            # @param paginate [Boolean] do we want to have pagination
+            def show(topic_id, partition_id, offset, paginate: true)
+              @visibility_filter = ::Karafka::Web.config.ui.visibility_filter
               @topic_id = topic_id
               @partition_id = partition_id
               @offset = offset
               @message = Ui::Models::Message.find(@topic_id, @partition_id, @offset)
               @payload_error = false
-
-              @decrypt = if ::Karafka::App.config.encryption.active
-                           ::Karafka::Web.config.ui.decrypt
-                         else
-                           true
-                         end
 
               begin
                 @pretty_payload = JSON.pretty_generate(@message.payload)
@@ -104,7 +104,40 @@ module Karafka
                 @payload_error = e
               end
 
+              # This may be off for certain views like recent view where we are interested only
+              # in the most recent all the time. It does not make any sense to display pagination
+              # there
+              if paginate
+                # We need watermark offsets to decide if we can paginate left and right
+                watermark_offsets = Ui::Models::WatermarkOffsets.find(topic_id, partition_id)
+                paginate(offset, watermark_offsets.low, watermark_offsets.high)
+              end
+
               respond
+            end
+
+            # Displays the most recent message on a topic/partition
+            #
+            # @param topic_id [String]
+            # @param partition_id [Integer, nil] partition we're interested in or nil if we are
+            #   interested in the most recent message from all the partitions
+            def recent(topic_id, partition_id)
+              if partition_id
+                active_partitions = [partition_id]
+              else
+                partitions_count = Models::ClusterInfo.partitions_count(topic_id)
+                active_partitions, = Paginators::Partitions.call(partitions_count, 1)
+              end
+
+              # This selects first page with most recent messages
+              messages, = Models::Message.topic_page(topic_id, active_partitions, 1)
+
+              # Selects newest out of all partitions
+              recent = messages.max_by(&:timestamp)
+
+              recent || raise(::Karafka::Web::Errors::Ui::NotFoundError)
+
+              show(topic_id, recent.partition, recent.offset, paginate: false)
             end
 
             private

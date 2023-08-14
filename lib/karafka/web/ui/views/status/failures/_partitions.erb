@@ -1,10 +1,18 @@
 <p>
-  Both
-  <code><%= Karafka::Web.config.topics.consumers.states %></code>
-  and
-  <code><%= Karafka::Web.config.topics.consumers.reports %></code>
-  topics need to be configured with <strong>exactly</strong> one partition.
+  Following topics need to be configured with <strong>exactly</strong> one partition:
 </p>
+
+<ul>
+  <li>
+    <code><%= Karafka::Web.config.topics.consumers.states %></code>
+  </li>
+  <li>
+    <code><%= Karafka::Web.config.topics.consumers.reports %></code>
+  </li>
+  <li>
+    <code><%= Karafka::Web.config.topics.consumers.metrics %></code>
+  </li>
+</ul>
 
 <p>
   Your current setup contains the following:
@@ -13,7 +21,7 @@
 <ul class="mb-0">
   <% details.each do |name, details| %>
     <li>
-      <code><%= name %> </code> with <code><%= details[:partitions] %> </code> partitions.
+      <code><%= name %> </code> with <code><%= details[:partitions] %></code> partitions.
     </li>
   <% end %>
 </ul>

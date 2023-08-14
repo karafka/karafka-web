@@ -1,8 +1,23 @@
 <%== view_title('Web UI status details') %>
 
-<div class="container mb-5">
+<div class="container">
   <div class="row">
     <div class="col-lg-10 offset-md-1">
+      <%==
+        partial(
+          "status/#{@status.enabled.to_s}",
+          locals: {
+            title: 'Web-UI setup in karafka.rb',
+            description: partial(
+              "status/#{@status.enabled.partial_namespace}/enabled",
+              locals: {
+                details: @status.enabled.details
+              }
+            )
+          }
+        )
+      %>
+
       <%==
         partial(
           "status/#{@status.connection.to_s}",
@@ -50,13 +65,28 @@
 
       <%==
         partial(
-          "status/#{@status.initial_state.to_s}",
+          "status/#{@status.initial_consumers_state.to_s}",
           locals: {
-            title: 'Initial state presence',
+            title: 'Initial consumers state presence',
             description: partial(
-              'status/failures/initial_state',
+              'status/failures/initial_consumers_state',
               locals: {
-                details: @status.initial_state.details
+                details: @status.initial_consumers_state.details
+              }
+            )
+          }
+        )
+      %>
+
+      <%==
+        partial(
+          "status/#{@status.initial_consumers_metrics.to_s}",
+          locals: {
+            title: 'Initial consumers metrics presence',
+            description: partial(
+              'status/failures/initial_consumers_metrics',
+              locals: {
+                details: @status.initial_consumers_metrics.details
               }
             )
           }
@@ -88,6 +118,18 @@
               locals: {
                 details: @status.state_calculation.details
               }
+            )
+          }
+        )
+      %>
+
+      <%==
+        partial(
+          "status/#{@status.consumers_reports_schema_state.to_s}",
+          locals: {
+            title: 'Consumers reports schema compatibility',
+            description: partial(
+              'status/failures/consumers_reports_schema_state'
             )
           }
         )

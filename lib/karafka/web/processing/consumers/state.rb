@@ -6,23 +6,20 @@ module Karafka
       module Consumers
         # Fetches the current consumer processes aggregated state
         class State
-          extend ::Karafka::Core::Helpers::Time
-
           class << self
-            # Try bootstrapping from the current state from Kafka if exists and if not, just use
-            # a blank state. Blank state will not be flushed because materialization into Kafka
-            # happens only after first report is received.
+            # Fetch the current consumers state that is expected to exist
             #
-            # @return [Hash, false] last (current) aggregated processes state or false if no
-            #   state is available
-            def current
+            # @return [Hash] last (current) aggregated processes state
+            def current!
               state_message = ::Karafka::Admin.read_topic(
                 Karafka::Web.config.topics.consumers.states,
                 0,
                 1
               ).last
 
-              state_message ? state_message.payload : { processes: {}, stats: {} }
+              return state_message.payload if state_message
+
+              raise(::Karafka::Web::Errors::Processing::MissingConsumersStateError)
             end
           end
         end

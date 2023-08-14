@@ -1,0 +1,95 @@
+<%
+  # Generates a nice set of semi-random data that does not change more often than once every
+  # 24 hours not to make OSS users angry
+  rand = Random.new(Date.today.to_time.to_i)
+  baseline = Date.today.strftime('%m').to_i + 2
+  set = ->(modifier = 0, range = (-2..2)) do
+    Array.new(60) { |i| [i, baseline + rand.rand(range) + modifier] }
+  end
+%>
+
+<%== partial 'consumers/counters' %>
+
+<% if @aggregated.sufficient? %>
+  <%== partial 'dashboard/ranges_selector' %>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h5 class="mb-3">Processing metrics</h5>
+
+        <hr class="mb-4"/>
+
+        <ul class="nav nav-tabs" id="graphs1" role="tablist">
+          <%== partial 'shared/tab_nav', locals: { title: 'Messages', id: 'messages', active: true } %>
+          <%== partial 'shared/tab_nav', locals: { title: 'Batches', id: 'batches' } %>
+          <%== partial 'shared/tab_nav', locals: { title: 'Lags stored', id: 'lags-stored' } %>
+          <%== partial 'shared/tab_nav', locals: { title: 'Topics pace', id: 'topics-pace' } %>
+        </ul>
+
+        <div class="tab-content">
+          <div class="tab-pane show active" id="messages" role="tabpanel">
+            <% data = @aggregated_charts.with(:messages) %>
+            <%== partial 'shared/chart', locals: { data: data, id: 'messages' } %>
+          </div>
+
+          <div class="tab-pane" id="batches" role="tabpanel">
+            <%== partial 'dashboard/feature_pro' %>
+            <% data = { batches: set.call(20), errors: set.call, dead: set.call, retries: set.call }.to_json %>
+            <%== partial 'shared/chart', locals: { data: data, id: 'batches', blurred: true } %>
+          </div>
+
+          <div class="tab-pane" id="lags-stored" role="tabpanel">
+            <%== partial 'dashboard/feature_pro' %>
+            <% data = { enqueued: set.call, busy: set.call }.to_json %>
+            <%== partial 'shared/chart', locals: { data: data, id: 'lags-stored', blurred: true } %>
+          </div>
+
+          <div class="tab-pane" id="topics-pace" role="tabpanel">
+            <%== partial 'dashboard/feature_pro' %>
+            <% data = { topic1: set.call(20), topic2: set.call(10), topic3: set.call(100) }.to_json %>
+            <%== partial 'shared/chart', locals: { data: data, id: 'topics-pace', blurred: true } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h5 class="mb-3">Utilization metrics</h5>
+
+        <hr class="mb-4"/>
+
+        <ul class="nav nav-tabs" id="graphs2" role="tablist">
+          <%== partial 'shared/tab_nav', locals: { title: 'Utilization', id: 'utilization', active: true } %>
+          <%== partial 'shared/tab_nav', locals: { title: 'RSS', id: 'rss' } %>
+          <%== partial 'shared/tab_nav', locals: { title: 'Concurrency', id: 'concurrency' } %>
+        </ul>
+
+        <div class="tab-content">
+          <div class="tab-pane show active" id="utilization" role="tabpanel">
+            <%== partial 'dashboard/feature_pro' %>
+            <% data = { utilization: set.call(50) }.to_json %>
+            <%== partial 'shared/chart', locals: { data: data, id: 'utilization', blurred: true } %>
+          </div>
+
+          <div class="tab-pane show" id="rss" role="tabpanel">
+            <%== partial 'dashboard/feature_pro' %>
+            <% data = { rss: set.call(1_050), process_rss: set.call(1_000) }.to_json %>
+            <%== partial 'shared/chart', locals: { data: data, id: 'rss', blurred: true } %>
+          </div>
+
+          <div class="tab-pane show" id="concurrency" role="tabpanel">
+            <%== partial 'dashboard/feature_pro' %>
+            <% data = { processes: set.call(2, 0..0), workers: set.call(4, 0..0), listeners: set.call(3, 0..0) }.to_json %>
+            <%== partial 'shared/chart', locals: { data: data, id: 'concurrency', blurred: true } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <%== partial 'dashboard/not_enough_data' %>
+<% end %>

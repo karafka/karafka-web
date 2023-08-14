@@ -5,6 +5,7 @@ RSpec.describe_current do
 
   let(:producer) { WaterDrop::Producer.new }
   let(:sampler) { ::Karafka::Web.config.tracking.producers.sampler }
+  let(:errors_topic) { SecureRandom.uuid }
   let(:valid_error) do
     {
       schema_version: '1.0.0',
@@ -19,6 +20,7 @@ RSpec.describe_current do
   end
 
   before do
+    Karafka::Web.config.topics.errors = errors_topic
     allow(Karafka).to receive(:producer).and_return(producer)
     allow(producer.status).to receive(:active?).and_return(true)
     allow(Karafka.producer).to receive(:produce_many_sync)
@@ -53,7 +55,7 @@ RSpec.describe_current do
       before { sampler.errors << {} }
 
       it do
-        expect { reporter.report }.to raise_error(Karafka::Web::Errors::Tracking::ContractError)
+        expect { reporter.report }.to raise_error(Karafka::Web::Errors::ContractError)
       end
     end
 
@@ -65,14 +67,14 @@ RSpec.describe_current do
 
         expect(producer)
           .to have_received(:produce_many_async)
-          .with([{ key: 'my-process', payload: valid_error.to_json, topic: 'karafka_errors' }])
+          .with([{ key: 'my-process', payload: valid_error.to_json, topic: errors_topic }])
       end
     end
 
     context 'when there is more than 25 errors' do
       let(:dispatch) do
         Array.new(26) do
-          { key: 'my-process', payload: valid_error.to_json, topic: 'karafka_errors' }
+          { key: 'my-process', payload: valid_error.to_json, topic: errors_topic }
         end
       end
 

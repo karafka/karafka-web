@@ -8,18 +8,6 @@ module Karafka
       module Helpers
         # Main application helper
         module ApplicationHelper
-          # Generates a full path with the root path out of the provided arguments
-          #
-          # @param args [Array<String, Numeric>] arguments that will make the path
-          # @return [String] path from the root
-          #
-          # @note This needs to be done that way with the `#root_path` because the web UI can be
-          #   mounted in a sub-path and we need to make sure our all paths are relative to "our"
-          #   root, not the root of the app in which it was mounted.
-          def root_path(*args)
-            "#{env.fetch('SCRIPT_NAME')}/#{args.join('/')}"
-          end
-
           # Adds active class to the current location in the nav if needed
           # @param location [Hash]
           def nav_class(location)
@@ -41,7 +29,7 @@ module Karafka
 
           # Renders per scope breadcrumbs
           def render_breadcrumbs
-            scope = request.path.gsub(root_path, '').split('/')[0]
+            scope = request.path.delete_prefix(root_path).split('/')[0]
 
             render "#{scope}/_breadcrumbs"
           end
@@ -137,14 +125,32 @@ module Karafka
             %(<span title="#{stamp}">#{time}</span>)
           end
 
+          # @param lag [Integer] lag
+          # @return [String] lag if correct or `N/A` with labeled explanation
+          # @see #offset_with_label
+          def lag_with_label(lag)
+            if lag.negative?
+              title = 'Not available until first offset commit'
+              %(<span class="badge bg-secondary" title="#{title}">N/A</span>)
+            else
+              lag.to_s
+            end
+          end
+
+          # @param topic_name [String] name of the topic for explorer path
+          # @param partition_id [Integer] partition for the explorer path
           # @param offset [Integer] offset
+          # @param explore [Boolean] should we generate (when allowed) a link to message explorer
           # @return [String] offset if correct or `N/A` with labeled explanation for offsets
           #   that are less than 0. Offset with less than 0 indicates, that the offset was not
           #   yet committed and there is no value we know of
-          def offset_with_label(offset)
+          def offset_with_label(topic_name, partition_id, offset, explore: false)
             if offset.negative?
               title = 'Not available until first offset commit'
               %(<span class="badge bg-secondary" title="#{title}">N/A</span>)
+            elsif explore
+              path = explorer_path(topic_name, partition_id, offset)
+              %(<a href="#{path}">#{offset}</a>)
             else
               offset.to_s
             end
@@ -167,6 +173,27 @@ module Karafka
                 #{hr ? '<hr/>' : ''}
               </div>
             HTML
+          end
+
+          # @param hash [Hash] we want to flatten
+          # @param parent_key [String] key for recursion
+          # @param result [Hash] result for recursion
+          # @return [Hash]
+          def flat_hash(hash, parent_key = nil, result = {})
+            hash.each do |key, value|
+              current_key = parent_key ? "#{parent_key}.#{key}" : key.to_s
+              if value.is_a?(Hash)
+                flat_hash(value, current_key, result)
+              elsif value.is_a?(Array)
+                value.each_with_index do |item, index|
+                  flat_hash({ index => item }, current_key, result)
+                end
+              else
+                result[current_key] = value
+              end
+            end
+
+            result
           end
         end
       end

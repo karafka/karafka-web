@@ -12,9 +12,19 @@ module Karafka
         instance_exec(&CONTEXT_DETAILS)
 
         route do |r|
-          r.root { r.redirect root_path('consumers') }
+          r.root { r.redirect root_path('dashboard') }
 
-          @current_page = params.current_page
+          # Serve current version specific assets to prevent users from fetching old assets
+          # after upgrade
+          r.on(:assets, Karafka::Web::VERSION) do
+            r.public
+          end
+
+          r.get 'dashboard' do
+            @breadcrumbs = false
+            controller = Controllers::Dashboard.new(params)
+            controller.index
+          end
 
           r.on 'consumers' do
             r.get String, 'subscriptions' do |_process_id|
@@ -24,7 +34,7 @@ module Karafka
             r.get do
               @breadcrumbs = false
               controller = Controllers::Consumers.new(params)
-              render_response controller.index
+              controller.index
             end
           end
 
@@ -40,41 +50,41 @@ module Karafka
 
           r.get 'jobs' do
             controller = Controllers::Jobs.new(params)
-            render_response controller.index
+            controller.index
           end
 
           r.on 'routing' do
             controller = Controllers::Routing.new(params)
 
             r.get String do |topic_id|
-              render_response controller.show(topic_id)
+              controller.show(topic_id)
             end
 
             r.get do
-              render_response controller.index
+              controller.index
             end
           end
 
           r.get 'cluster' do
             controller = Controllers::Cluster.new(params)
-            render_response controller.index
+            controller.index
           end
 
           r.on 'errors' do
             controller = Controllers::Errors.new(params)
 
             r.get Integer do |offset|
-              render_response controller.show(offset)
+              controller.show(offset)
             end
 
             r.get do
-              render_response controller.index
+              controller.index
             end
           end
 
           r.get 'status' do
             controller = Controllers::Status.new(params)
-            render_response controller.show
+            controller.show
           end
         end
       end

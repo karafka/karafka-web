@@ -3,11 +3,12 @@
 module Karafka
   module Web
     module Tracking
+      # Namespace for all tracking related contracts
       module Contracts
         # Contract for error reporting
         # Since producers and consumers report their errors to the same topic, we need to have
         # a unified contract for both
-        class Error < Base
+        class Error < Web::Contracts::Base
           configure
 
           required(:schema_version) { |val| val.is_a?(String) }

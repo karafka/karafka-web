@@ -1,0 +1,12 @@
+<tr>
+  <td>
+    key
+  </td>
+  <td>
+    <% if @visibility_filter.key?(message) %>
+      <%= message.key %>
+    <% else %>
+      <span class="text-muted">[Filtered]</span>
+    <% end %>
+  </td>
+</tr>

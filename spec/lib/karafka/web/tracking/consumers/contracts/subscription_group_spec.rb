@@ -14,8 +14,11 @@ RSpec.describe_current do
               id: 0,
               lag_stored: 10,
               lag_stored_d: 5,
+              lag: 0,
+              lag_d: 0,
               committed_offset: 100,
-              stored_offset: 95
+              stored_offset: 95,
+              hi_offset: 2
             }
           }
         }

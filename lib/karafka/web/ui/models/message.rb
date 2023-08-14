@@ -104,7 +104,7 @@ module Karafka
                   # If there is a potential previous page with more recent data, compute its
                   # offset
                   previous_offset >= high_offset ? false : previous_offset,
-                  fill_compacted(messages, partition_id, context_offset, context_count).reverse,
+                  fill_compacted(messages, partition_id, context_offset, context_count, high_offset).reverse,
                   next_offset
                 ]
               end
@@ -215,14 +215,22 @@ module Karafka
             # @param start_offset [Integer] offset of the first message (lowest) that we received
             # @param count [Integer] how many messages we wanted - we need that to fill spots to
             #   have exactly the number that was  requested and not more
+            # @param high_offset [Integer] high watermark offset
             # @return [Array<Karafka::Messages::Message, Integer>] array with gaps filled with the
             #   missing offset
-            def fill_compacted(messages, partition_id, start_offset, count)
-              Array.new(count) do |index|
+            def fill_compacted(messages, partition_id, start_offset, count, high_offset)
+              filled = Array.new(count) do |index|
                 messages.find do |message|
                   (message.offset - start_offset) == index
                 end || [partition_id, start_offset + index]
               end
+
+              # Remove dummies provisioned over the high offset
+              filled.delete_if do |message|
+                message.is_a?(Array) && message.last >= high_offset
+              end
+
+              filled
             end
           end
         end

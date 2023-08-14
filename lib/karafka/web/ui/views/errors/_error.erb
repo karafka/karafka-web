@@ -22,7 +22,7 @@
     </td>
     <td>
       <%= error[:error_class] %>:
-      <%= error[:error_message].first(200) %>
+      <%= error[:error_message][0..199] %>
     </td>
     <td>
       <%== relative_time error[:occurred_at] %>

@@ -5,6 +5,7 @@
   roda
   etc
   open3
+  zlib
 ].each { |lib| require lib }
 
 module Karafka

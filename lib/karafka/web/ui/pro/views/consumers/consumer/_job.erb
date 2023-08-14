@@ -17,13 +17,13 @@
     <code>#<%= job.type %></code>
   </td>
   <td>
-    <%== offset_with_label job.first_offset %>
+    <%== offset_with_label job.topic, job.partition, job.first_offset, explore: true %>
   </td>
   <td>
-    <%== offset_with_label job.last_offset %>
+    <%== offset_with_label job.topic, job.partition, job.last_offset, explore: true %>
   </td>
   <td>
-    <%== offset_with_label job.committed_offset %>
+    <%== offset_with_label job.topic, job.partition, job.committed_offset, explore: true %>
   </td>
   <td>
     <%== relative_time job.started_at %>

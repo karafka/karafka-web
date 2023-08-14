@@ -59,4 +59,40 @@ RSpec.describe_current do
       it { expect(watermarks.cleaned?).to eq(true) }
     end
   end
+
+  context 'when Kafka topic does not exist' do
+    it { expect { described_class.find('na', 0) }.to raise_error(Rdkafka::RdkafkaError) }
+  end
+
+  context 'when Kafka partition does not exist' do
+    let(:topic) { create_topic }
+
+    it { expect { described_class.find(topic, 2) }.to raise_error(Rdkafka::RdkafkaError) }
+  end
+
+  context 'when topic and partition and there is no data' do
+    let(:topic) { create_topic }
+
+    it 'expect to return correct values' do
+      result = described_class.find(topic, 0)
+      expect(result.low).to eq(0)
+      expect(result.high).to eq(0)
+      expect(result.empty?).to eq(true)
+      expect(result.cleaned?).to eq(false)
+    end
+  end
+
+  context 'when topic and partition and there is some no data' do
+    let(:topic) { create_topic }
+
+    before { 2.times { produce(topic) } }
+
+    it 'expect to return correct values' do
+      result = described_class.find(topic, 0)
+      expect(result.low).to eq(0)
+      expect(result.high).to eq(2)
+      expect(result.empty?).to eq(false)
+      expect(result.cleaned?).to eq(false)
+    end
+  end
 end

@@ -1,13 +1,88 @@
 # Karafka Web changelog
 
 ## 0.7.0 (Unreleased)
+- **[Feature]** Introduce graphs.
+- **[Feature]** Introduce historical metrics storage.
 - **[Feature]** Introduce per-topic data exploration in the Explorer.
+- **[Feature]** Introduce per-topic and per-partition most recent message view with live reload.
+- **[Feature]** Introduce a new per-process inspection view called "Details" ti display all process real-time aggregated data.
+- **[Feature]** Introduce `bundle exec karafka-web migrate` that can be used to bootstrap the proper topics and initial data in environments where Karafka Web-UI should be used but is missing the initial setup.
+- **[Feature]** Replace `decrypt` with a pluggable API for deciding which topics data to display.
+- **[Feature]** Make sure, that the karafka server process that is materializing UI states is not processing any data having unsupported (newer) schemas. This state will be also visible in the status page.
+- [Improvement] Collect total number of threads per process for the process details view.
+- [Improvement] Normalize naming of metrics to better reflect what they do (in reports and in the Web UI).
+- [Improvement] Link error reported first and last offset to the explorer.
+- [Improvement] Expand routing details to compensate for nested values in declarative topics.
+- [Improvement] Include last rebalance age in the health view per consumer group.
+- [Improvement] Provide previous / next navigation when viewing particular messages in the explorer.
+- [Improvement] Provide previous / next navigation when viewing particular errors.
+- [Improvement] Link all explorable offsets to the explorer.
+- [Improvement] Extend status page checks to ensure, that it detects a case when Web-UI is not part of `karafka.rb` but still referenced in routes.
+- [Improvement] Extend status page checks to ensure, that it detects a case where there is no initial consumers metrics in Kafka topic.
+- [Improvement] Report Rails version when viewing status page (if Rails used).
+- [Improvement] List Web UI topics names on the status page in the info section.
+- [Improvement] Start versioning the materialized states schemas.
+- [Improvement] Drastically improve the consumers view performance.
+- [Improvement] Ship versioned assets to prevent invalid assets loading due to cache.
+- [Improvement] Use `Cache-Control` to cache all the static assets.
+- [Improvement] Link `counters` counter to jobs page.
+- [Improvement] Include a sticky footer with the most important links and copyrights.
+- [Improvement] Store lag in counters for performance improvement and historical metrics.
+- [Improvement] Move top navbar content to the left to gain space for new features.
 - [Improvement] Introduce in-memory cluster state cached to improve performance.
 - [Improvement] Switch to offset based pagination instead of per-page pagination.
 - [Improvement] Avoid double-reading of watermark offsets for explorer and errors display.
 - [Improvement] When no params needed for a page, do not include empty params.
 - [Improvement] Do not include page when page is 1 in the url.
+- [Improvement] Align descriptions for the status page, to reflect that state check happens for consumers initial state.
+- [Improvement] Report bytesize of raw payload when viewing message in the explorer.
+- [Improvement] Use zlib compression for Karafka Web UI topics reports (all). Reduces space needed from 50 to 91%.
+- [Improvement] Rename lag to lag stored in counters to reflect what it does.
+- [Improvement] Collect both stored lag and lag.
+- [Improvement] Introduce states and metrics schema validation.
+- [Improvement] Prevent locking in sampler for time of OS data aggregation.
+- [Improvement] Collect and report number of messages in particular jobs.
+- [Improvement] Limit segment size for Web topics to ensure, that Web-UI does not drain resources.
+- [Fix] Return 402 status instead of 500 on Pro features that are not available in OSS.
+- [Fix] Fix a case where errors would not be visible without Rails due to the `String#first` usage.
+- [Fix] Fix a case where live-poll would be disabled but would still update data.
+- [Fix] Fix a case where states materializing consumer would update state too often.
+- [Fix] Fix a bug when rapid non-initialized shutdown could mess up the metrics.
+- [Fix] Fix a case where upon multiple rebalances, part of the states materialization could be lost.
+- [Fix] Make sure, that the flushing interval computation division happens with float.
+- [Fix] Fix a case where app client id change could force web-ui to recompute the metrics.
+- [Fix] Make sure, that when re-using same Karafka Web-UI topics as a different up, all states and reports are not recomputed back.
+- [Fix] Fix headers size inconsistency between Health and Routing.
+- [Fix] Fix invalid padding on status page.
+- [Fix] Fix a case where root mounted Karafka Web-UI would not work.
+- [Fix] Fix a case where upon hitting a too high page of consumers we would inform that no consumers are reporting instead of information that this page does not contain any reporting.
+- [Refactor] Limit usage of UI models for data intense computation to speed up states materialization under load.
 - [Refactor] Reorganize pagination engine to support offset based pagination.
+- [Refactor] Use Roda `custom_block_results` plugin for controllers results handling.
+- [Maintenance] Require `karafka` `2.1.8` due to fixes in the Iterator API and routing API extensions.
+
+### Upgrade Notes
+
+This is a **major** release that brings many things to the table.
+
+#### Deployment
+
+Because of the reporting schema update and new web-ui topics introduction, it is recommended to:
+
+1. Upgrade the codebase based on the below details.
+2. **Stop** the consumer materializing Web-UI. Unless you are running a Web-UI dedicated consumer as recommended [here](https://karafka.io/docs/Web-UI-Development-vs-Production/), you will have to stop all the consumers. This is **crucial** because of schema changes. `karafka-web` `0.7.0` introduces the detection of schema changes, so this step should not be needed in the future.
+3. Run a migration command: `bundle exec karafka-web migrate` that will create missing states and missing topics. 
+4. Deploy **all** the Karafka consumer processes (`karafka server`).
+5. Deploy the Web update to your web server and check that everything is OK by visiting the status page.
+
+Please note that if you decide to use the updated Web UI with not updated consumers, you may hit a 500 error, or offset-related data may not be displayed correctly.
+
+#### Code and API changes
+
+1. `bundle exec karafka-web install` is now a single-purpose command that should run **only** when installing the Web-UI for the first time.
+2. For creating needed topics and states per environment and during upgrades, please use the newly introduced non-destructive `bundle exec karafka-web migrate`. It will assess changes required and will apply only those.
+3. Is no longer`ui.decrypt` has been replaced with `ui.visibility_filter` API. This API by default also does not decrypt data. To change this behavior, please implement your visibility filter as presented in our documentation.
+4. Karafka Web-UI `0.7.0` introduces an in-memory topics cache for some views. This means that rapid topics changes (repartitions/new topics) may be visible up to 5 minutes after those changes.
 
 ## 0.6.3 (2023-07-22)
 - [Fix] Remove files from 0.7.0 accidentally added to the release.
@@ -46,7 +121,7 @@
 - [Refactor] Remove not used and redundant partials.
 - [Maintenance] Require `karafka` `2.1.4` due to fixes in metrics usage for workless flows.
 
-### Upgrade notes
+### Upgrade Notes
 
 Because of the reporting schema update, it is recommended to:
 
@@ -94,7 +169,7 @@ Please make sure **not** to do it for the default `Karafka.producer` because it 
 - [Fix] Fix misspelling of word `committed`.
 - [Fix] Shutdown and revocation jobs statistics extraction crashes when idle initialized without messages (#53)
 
-### Upgrade notes
+### Upgrade Notes
 
 Because of the reporting schema change, it is recommended to:
 
@@ -115,7 +190,7 @@ Please note that if you decide to use the updated Web UI with not updated consum
 - [Fix] Add missing support for using multiple subscription groups within a single consumer group.
 - [Fix] Mask SASL credentials in topic routing view (#46)
 
-### Upgrade notes
+### Upgrade Notes
 
 Because of the reporting schema change, it is recommended to:
 
@@ -129,7 +204,7 @@ Please note that if you decide to use the updated Web UI with not updated consum
 - [Fix] Fix display of compacted messages placeholders for offsets lower than low watermark.
 - [Fix] Fix invalid pagination per page count.
 
-### Upgrade notes
+### Upgrade Notes
 
 If upgrading from `0.3.0`, nothing.
 
@@ -154,7 +229,7 @@ If upgrading from lower, please follow `0.3.0` upgrade procedure.
 - [Maintenance] Remove compatibility fallbacks for job and process tags (#1342)
 - [Maintenance] Extract base sampler for tracking and web.
 
-### Upgrade notes
+### Upgrade Notes
 
 Because of the removal of compatibility fallbacks for some metrics fetches, it is recommended to:
 

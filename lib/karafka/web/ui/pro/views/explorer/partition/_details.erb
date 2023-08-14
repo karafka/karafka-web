@@ -1,0 +1,22 @@
+<div class="container mb-4">
+  <div class="row">
+    <div class="col-sm-6 ms-0 ps-0">
+      <% if @messages && !@messages.empty? %>
+        <a href="<%= explorer_path(@topic_id, @partition_id, 'recent') %>" class="btn btn-secondary btn-sm" title="Display the most recent message for this partition">
+          &#x2192; Recent
+        </a>
+      <% end %>
+    </div>
+
+    <div class="col-sm-6 text-end me-0 pe-0">
+      Watermark offsets:
+      <span class="badge bg-secondary mt-1 mb-1">
+        high: <%= @watermark_offsets.high %>
+      </span>
+
+      <span class="badge bg-secondary mt-1 mb-1">
+        low: <%= @watermark_offsets.low %>
+      </span>
+    </div>
+  </div>
+</div>

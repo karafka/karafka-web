@@ -20,7 +20,7 @@ module Karafka
           class Consumers < Ui::Controllers::Base
             # Consumers list
             def index
-              @current_state = Models::State.current!
+              @current_state = Models::ConsumersState.current!
               @counters = Models::Counters.new(@current_state)
               @processes, last_page = Lib::Paginations::Paginators::Arrays.call(
                 Models::Processes.active(@current_state),
@@ -33,18 +33,22 @@ module Karafka
             end
 
             # @param process_id [String] id of the process we're interested in
-            def jobs(process_id)
-              current_state = Models::State.current!
+            def details(process_id)
+              current_state = Models::ConsumersState.current!
               @process = Models::Process.find(current_state, process_id)
 
               respond
             end
 
             # @param process_id [String] id of the process we're interested in
-            def subscriptions(process_id)
-              current_state = Models::State.current!
-              @process = Models::Process.find(current_state, process_id)
+            def jobs(process_id)
+              details(process_id)
+              respond
+            end
 
+            # @param process_id [String] id of the process we're interested in
+            def subscriptions(process_id)
+              details(process_id)
               respond
             end
           end

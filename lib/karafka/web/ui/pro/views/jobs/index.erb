@@ -1,7 +1,9 @@
 <%== view_title('Running jobs', hr: true) %>
 
-<% if @jobs.empty? %>
+<% if @jobs.empty? && params.current_page <= 1 %>
   <%== partial 'jobs/no_jobs' %>
+<% elsif @jobs.empty? %>
+  <%== partial 'shared/no_paginated_data' %>
 <% else %>
   <div class="container">
     <div class="row mb-5">
@@ -13,6 +15,7 @@
               <th>Topic</th>
               <th>Consumer</th>
               <th>Type</th>
+              <th>Messages</th>
               <th>First offset</th>
               <th>Last offset</th>
               <th>Committed offset</th>

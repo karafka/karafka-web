@@ -23,6 +23,9 @@ module Karafka
 
           # Topic for storing states aggregated info
           setting :states, default: 'karafka_consumers_states'
+
+          # Topic for storing consumers historical metrics info
+          setting :metrics, default: 'karafka_consumers_metrics'
         end
       end
 
@@ -71,23 +74,23 @@ module Karafka
         # What should be the consumer group name for web consumer
         setting :consumer_group, default: 'karafka_web'
 
-        # How often should we report the aggregated state
-        setting :interval, default: 1_000
-
-        setting :consumers do
-          setting :aggregator, default: Processing::Consumers::Aggregator.new
-        end
+        # How often should we report the aggregated state and metrics
+        # By default we flush the states twice as often as the data reporting.
+        # This will allow us to have closer to real-time reporting.
+        setting :interval, default: 2_500
       end
 
       setting :ui do
+        # UI cache to improve performance of views that reuse states that are not often changed
         setting :cache, default: Ui::Lib::TtlCache.new(60_000 * 5)
-
-        # Should the payload be decrypted for the Pro Web UI. Default to `false` due to security
-        # reasons
-        setting :decrypt, default: false
 
         # How many elements should we display on pages that support pagination
         setting :per_page, default: 25
+
+        # Allows to manage visibility of payload, headers and message key in the UI
+        # In some cases you may want to limit what is being displayed due to the type of data you
+        # are dealing with
+        setting :visibility_filter, default: Ui::Models::VisibilityFilter.new
       end
     end
   end

@@ -9,7 +9,7 @@ module Karafka
           #
           # Any outgoing reporting needs to match this format for it to work with the statuses
           # consumer.
-          class Report < Tracking::Contracts::Base
+          class Report < Web::Contracts::Base
             configure
 
             required(:schema_version) { |val| val.is_a?(String) && !val.empty? }
@@ -21,12 +21,14 @@ module Karafka
             nested(:process) do
               required(:started_at) { |val| val.is_a?(Numeric) && val.positive? }
               required(:name) { |val| val.is_a?(String) && val.count(':') >= 2 }
+              required(:cpus) { |val| val.is_a?(Integer) && val >= 1 }
               required(:memory_usage) { |val| val.is_a?(Integer) && val >= 0 }
               required(:memory_total_usage) { |val| val.is_a?(Integer) && val >= 0 }
               required(:memory_size) { |val| val.is_a?(Integer) && val >= 0 }
               required(:status) { |val| ::Karafka::Status::STATES.key?(val.to_s.to_sym) }
+              required(:threads) { |val| val.is_a?(Integer) && val >= 0 }
               required(:listeners) { |val| val.is_a?(Integer) && val >= 0 }
-              required(:concurrency) { |val| val.is_a?(Integer) && val.positive? }
+              required(:workers) { |val| val.is_a?(Integer) && val.positive? }
               required(:tags) { |val| val.is_a?(Karafka::Core::Taggable::Tags) }
 
               required(:cpu_usage) do |val|
@@ -53,11 +55,11 @@ module Karafka
               required(:utilization) { |val| val.is_a?(Numeric) && val >= 0 }
 
               nested(:total) do
-                required(:batches) { |val| val.is_a?(Numeric) && val >= 0 }
-                required(:messages) { |val| val.is_a?(Numeric) && val >= 0 }
-                required(:errors) { |val| val.is_a?(Numeric) && val >= 0 }
-                required(:retries) { |val| val.is_a?(Numeric) && val >= 0 }
-                required(:dead) { |val| val.is_a?(Numeric) && val >= 0 }
+                required(:batches) { |val| val.is_a?(Integer) && val >= 0 }
+                required(:messages) { |val| val.is_a?(Integer) && val >= 0 }
+                required(:errors) { |val| val.is_a?(Integer) && val >= 0 }
+                required(:retries) { |val| val.is_a?(Integer) && val >= 0 }
+                required(:dead) { |val| val.is_a?(Integer) && val >= 0 }
               end
             end
 
@@ -73,7 +75,7 @@ module Karafka
               cg_contract = ConsumerGroup.new
 
               # Consumer group id (key) is irrelevant because it is also in the details
-              data.fetch(:consumer_groups).each do |_, details|
+              data.fetch(:consumer_groups).each_value do |details|
                 cg_contract.validate!(details)
               end
 

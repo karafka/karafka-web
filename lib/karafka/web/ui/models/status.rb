@@ -25,6 +25,7 @@ module Karafka
               when :success then 'successes'
               when :warning then 'warnings'
               when :failure then 'failures'
+              when :halted  then 'failures'
               else
                 raise ::Karafka::Errors::UnsupportedCaseError, status
               end
@@ -36,22 +37,40 @@ module Karafka
             end
           end
 
-          # Initializes the status object and tries to connect to Kafka
-          def initialize
-            connect
+          # Is karafka-web enabled in the `karafka.rb`
+          # Checks if the consumer group for web-ui is injected.
+          # It does **not** check if the group is active because this may depend on the
+          # configuration details, but for the Web-UI web app to work, the routing needs to be
+          # aware of the deserializer, etc
+          def enabled
+            enabled = ::Karafka::App.routes.map(&:name).include?(
+              ::Karafka::Web.config.processing.consumer_group
+            )
+
+            Step.new(
+              enabled ? :success : :failure,
+              nil
+            )
           end
 
           # @return [Status::Step] were we able to connect to Kafka or not and how fast.
           # Some people try to work with Kafka over the internet with really high latency and this
           # should be highlighted in the UI as often the connection just becomes unstable
           def connection
-            level = if @connection_time < 1_000
-                      :success
-                    elsif @connection_time < 1_000_000
-                      :warning
-                    else
-                      :failure
-                    end
+            if enabled.success?
+              # Do not connect more than once during the status object lifetime
+              @connection_time || connect
+
+              level = if @connection_time < 1_000
+                        :success
+                      elsif @connection_time < 1_000_000
+                        :warning
+                      else
+                        :failure
+                      end
+            else
+              level = :halted
+            end
 
             Step.new(
               level,
@@ -81,6 +100,7 @@ module Karafka
               status = :success
               status = :failure if topics_details[topics_consumers_states][:partitions] != 1
               status = :failure if topics_details[topics_consumers_reports][:partitions] != 1
+              status = :failure if topics_details[topics_consumers_metrics][:partitions] != 1
               details = topics_details
             else
               status = :halted
@@ -93,11 +113,26 @@ module Karafka
             )
           end
 
-          # @return [Status::Step] Is the initial state present in the setup or not
-          def initial_state
+          # @return [Status::Step] Is the initial consumers state present in Kafka
+          def initial_consumers_state
             if partitions.success?
-              @current_state ||= Models::State.current
+              @current_state ||= Models::ConsumersState.current
               status = @current_state ? :success : :failure
+            else
+              status = :halted
+            end
+
+            Step.new(
+              status,
+              nil
+            )
+          end
+
+          # @return [Status::Step] Is the initial consumers metrics record present in Kafka
+          def initial_consumers_metrics
+            if initial_consumers_state.success?
+              @current_metrics ||= Models::ConsumersMetrics.current
+              status = @current_metrics ? :success : :failure
             else
               status = :halted
             end
@@ -111,7 +146,7 @@ module Karafka
           # @return [Status::Step] Is there at least one active karafka server reporting to the
           #   Web UI
           def live_reporting
-            if initial_state.success?
+            if initial_consumers_metrics.success?
               @processes ||= Models::Processes.active(@current_state)
               status = @processes.empty? ? :failure : :success
             else
@@ -128,7 +163,11 @@ module Karafka
           #   consumed actively.
           def state_calculation
             if live_reporting.success?
-              @subscriptions ||= Models::Health.current(@current_state).values.flat_map(&:keys)
+              @subscriptions ||= Models::Health
+                                 .current(@current_state)
+                                 .values.map { |consumer_group| consumer_group[:topics] }
+                                 .flat_map(&:keys)
+
               status = @subscriptions.include?(topics_consumers_reports) ? :success : :failure
             else
               status = :halted
@@ -140,11 +179,26 @@ module Karafka
             )
           end
 
+          # @return [Status::Step] Are we able to actually digest the consumers reports with the
+          #   consumer that is consuming them.
+          def consumers_reports_schema_state
+            status = if state_calculation.success?
+                       @current_state[:schema_state] == 'compatible' ? :success : :failure
+                     else
+                       :halted
+                     end
+
+            Step.new(
+              status,
+              nil
+            )
+          end
+
           # @return [Status::Step] is Pro enabled with all of its features.
           # @note It's not an error not to have it but we want to warn, that some of the features
           #   may not work without Pro.
           def pro_subscription
-            status = if state_calculation.success?
+            status = if consumers_reports_schema_state.success?
                        ::Karafka.pro? ? :success : :warning
                      else
                        :halted
@@ -168,6 +222,11 @@ module Karafka
             ::Karafka::Web.config.topics.consumers.reports.to_s
           end
 
+          # @return [String] consumers metrics topic name
+          def topics_consumers_metrics
+            ::Karafka::Web.config.topics.consumers.metrics.to_s
+          end
+
           # @return [String] errors topic name
           def topics_errors
             ::Karafka::Web.config.topics.errors
@@ -178,6 +237,7 @@ module Karafka
             topics = {
               topics_consumers_states => { present: false, partitions: 0 },
               topics_consumers_reports => { present: false, partitions: 0 },
+              topics_consumers_metrics => { present: false, partitions: 0 },
               topics_errors => { present: false, partitions: 0 }
             }
 

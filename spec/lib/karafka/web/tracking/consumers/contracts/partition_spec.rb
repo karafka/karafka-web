@@ -8,8 +8,11 @@ RSpec.describe_current do
       id: 0,
       lag_stored: 0,
       lag_stored_d: 0,
+      lag: 2,
+      lag_d: -1,
       committed_offset: 0,
-      stored_offset: 0
+      stored_offset: 0,
+      hi_offset: 1
     }
   end
 
@@ -27,8 +30,11 @@ RSpec.describe_current do
     id
     lag_stored
     lag_stored_d
+    lag
+    lag_d
     committed_offset
     stored_offset
+    hi_offset
   ].each do |key|
     context "when #{key} is not numeric" do
       before { config[key] = '2' }

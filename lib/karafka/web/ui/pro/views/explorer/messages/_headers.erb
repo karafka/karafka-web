@@ -1,0 +1,15 @@
+<% visible = @visibility_filter.headers?(message) %>
+<% message.metadata.to_h.fetch(:headers).each do |k, v| %>
+  <tr>
+    <td>
+      <%= "headers.#{k}" %>
+    </td>
+    <td>
+      <% if visible %>
+        <%= object_value_to_s(v) %>
+      <% else %>
+        <span class="text-muted">[Filtered]</span>
+      <% end %>
+    </td>
+  </tr>
+<% end %>

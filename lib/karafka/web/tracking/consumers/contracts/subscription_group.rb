@@ -7,7 +7,7 @@ module Karafka
         module Contracts
           # Expected data for each subscription group
           # It's mostly about topics details
-          class SubscriptionGroup < Tracking::Contracts::Base
+          class SubscriptionGroup < Web::Contracts::Base
             configure
 
             required(:id) { |val| val.is_a?(String) && !val.empty? }
@@ -19,7 +19,7 @@ module Karafka
 
               topic_contract = Topic.new
 
-              data.fetch(:topics).each do |_topic_name, details|
+              data.fetch(:topics).each_value do |details|
                 topic_contract.validate!(details)
               end
 

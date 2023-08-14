@@ -14,19 +14,21 @@
                 <div class="desc">Batches</div>
               </li>
               <li class="col-sm">
-                <div class="count mb-1"><%= @processes.sum(&:lag_stored) %></div>
-                <div class="desc">Lag</div>
+                <div class="count mb-1"><%= @counters.lag_stored %></div>
+                <div class="desc">Lag stored</div>
               </li>
               <li class="col-sm">
-                <div class="count mb-1"><%= @counters.busy %></div>
-                <div class="desc">Busy</div>
+                <a href="<%= root_path('jobs') %>">
+                  <div class="count mb-1"><%= @counters.busy %></div>
+                  <div class="desc">Busy</div>
+                </a>
               </li>
               <li class="col-sm">
                 <div class="count mb-1"><%= @counters.enqueued %></div>
                 <div class="desc">Enqueued</div>
               </li>
               <li class="col-sm">
-                <a href="<%= root_path('errors/0') %>">
+                <a href="<%= root_path('errors') %>">
                   <div class="count mb-1"><%= @counters.errors %></div>
                   <div class="desc">Errors</div>
                 </a>

@@ -21,7 +21,7 @@ module Karafka
             # @param event [Karafka::Core::Monitoring::Event]
             def on_consumer_consume(event)
               consumer = event.payload[:caller]
-              messages_count = consumer.messages.count
+              messages_count = consumer.messages.size
               jid = job_id(consumer, 'consume')
               job_details = job_details(consumer, 'consume')
 
@@ -73,7 +73,7 @@ module Karafka
               consumer = event.payload[:caller]
               topic = consumer.topic
               consumer_group_id = topic.consumer_group.id
-              messages_count = consumer.messages.count
+              messages_count = consumer.messages.size
               time = event[:time]
               jid = job_id(consumer, 'consume')
 
@@ -160,6 +160,10 @@ module Karafka
                 processing_lag: consumer.messages.metadata.processing_lag,
                 consumption_lag: consumer.messages.metadata.consumption_lag,
                 committed_offset: consumer.coordinator.seek_offset - 1,
+                # In theory this is redundant because we have first and last offset, but it is
+                # needed because VPs do not have linear count. For VPs first and last offset
+                # will be further away than the total messages count for a particular VP
+                messages: consumer.messages.size,
                 consumer: consumer.class.to_s,
                 consumer_group: consumer.topic.consumer_group.id,
                 type: type,

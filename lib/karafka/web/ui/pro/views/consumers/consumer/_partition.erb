@@ -6,7 +6,7 @@
     <%= partition.id %>
   </td>
   <td>
-    <%== offset_with_label partition.lag_stored.to_i %>
+    <%== lag_with_label partition.lag_stored %>
   </td>
   <td>
     <span class="badge <%= lag_trend_bg(partition.lag_stored_d) %>">
@@ -14,10 +14,14 @@
     </span>
   </td>
   <td>
-    <%== offset_with_label partition.committed_offset.to_i %>
+    <% if partition.stored_offset.negative? %>
+      <%== offset_with_label topic.name, partition.id, partition.committed_offset - 1 %>
+    <% else %>
+      <%== offset_with_label topic.name, partition.id, partition.committed_offset %>
+    <% end %>
   </td>
   <td>
-    <%== offset_with_label partition.stored_offset.to_i %>
+    <%== offset_with_label topic.name, partition.id, partition.stored_offset %>
   </td>
   <td>
     <span class="badge <%= kafka_state_bg(partition.fetch_state) %> mt-1 mb-1">

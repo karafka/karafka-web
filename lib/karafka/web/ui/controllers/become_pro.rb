@@ -6,7 +6,7 @@ module Karafka
       module Controllers
         # Pro message reporting info controller
         class BecomePro < Base
-          # Display a message, that a give feature is available only in Pro
+          # Display a message, that a given feature is available only in Pro
           def show
             respond
           end
