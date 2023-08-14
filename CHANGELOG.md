@@ -61,6 +61,29 @@
 - [Refactor] Use Roda `custom_block_results` plugin for controllers results handling.
 - [Maintenance] Require `karafka` `2.1.8` due to fixes in the Iterator API and routing API extensions.
 
+### Upgrade Notes
+
+This is a **major** release that brings many things to the table.
+
+#### Deployment
+
+Because of the reporting schema update and new web-ui topics introduction, it is recommended to:
+
+1. Upgrade the codebase based on the below details.
+2. **Stop** the consumer materializing Web-UI. Unless you are running a Web-UI dedicated consumer as recommended [here](https://karafka.io/docs/Web-UI-Development-vs-Production/), you will have to stop all the consumers. This is **crucial** because of schema changes. `karafka-web` `0.7.0` introduces the detection of schema changes, so this step should not be needed in the future.
+3. Run a migration command: `bundle exec karafka-web migrate` that will create missing states and missing topics. 
+4. Deploy **all** the Karafka consumer processes (`karafka server`).
+5. Deploy the Web update to your web server and check that everything is OK by visiting the status page.
+
+Please note that if you decide to use the updated Web UI with not updated consumers, you may hit a 500 error, or offset-related data may not be displayed correctly.
+
+#### Code and API changes
+
+1. `bundle exec karafka-web install` is now a single-purpose command that should run **only** when installing the Web-UI for the first time.
+2. For creating needed topics and states per environment and during upgrades, please use the newly introduced non-destructive `bundle exec karafka-web migrate`. It will assess changes required and will apply only those.
+3. Is no longer`ui.decrypt` has been replaced with `ui.visibility_filter` API. This API by default also does not decrypt data. To change this behavior, please implement your visibility filter as presented in our documentation.
+4. Karafka Web-UI `0.7.0` introduces an in-memory topics cache for some views. This means that rapid topics changes (repartitions/new topics) may be visible up to 5 minutes after those changes.
+
 ## 0.6.3 (2023-07-22)
 - [Fix] Remove files from 0.7.0 accidentally added to the release.
 
@@ -98,7 +121,7 @@
 - [Refactor] Remove not used and redundant partials.
 - [Maintenance] Require `karafka` `2.1.4` due to fixes in metrics usage for workless flows.
 
-### Upgrade notes
+### Upgrade Notes
 
 Because of the reporting schema update, it is recommended to:
 
@@ -146,7 +169,7 @@ Please make sure **not** to do it for the default `Karafka.producer` because it 
 - [Fix] Fix misspelling of word `committed`.
 - [Fix] Shutdown and revocation jobs statistics extraction crashes when idle initialized without messages (#53)
 
-### Upgrade notes
+### Upgrade Notes
 
 Because of the reporting schema change, it is recommended to:
 
@@ -167,7 +190,7 @@ Please note that if you decide to use the updated Web UI with not updated consum
 - [Fix] Add missing support for using multiple subscription groups within a single consumer group.
 - [Fix] Mask SASL credentials in topic routing view (#46)
 
-### Upgrade notes
+### Upgrade Notes
 
 Because of the reporting schema change, it is recommended to:
 
@@ -181,7 +204,7 @@ Please note that if you decide to use the updated Web UI with not updated consum
 - [Fix] Fix display of compacted messages placeholders for offsets lower than low watermark.
 - [Fix] Fix invalid pagination per page count.
 
-### Upgrade notes
+### Upgrade Notes
 
 If upgrading from `0.3.0`, nothing.
 
@@ -206,7 +229,7 @@ If upgrading from lower, please follow `0.3.0` upgrade procedure.
 - [Maintenance] Remove compatibility fallbacks for job and process tags (#1342)
 - [Maintenance] Extract base sampler for tracking and web.
 
-### Upgrade notes
+### Upgrade Notes
 
 Because of the removal of compatibility fallbacks for some metrics fetches, it is recommended to:
 
