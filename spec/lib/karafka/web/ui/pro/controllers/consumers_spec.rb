@@ -137,7 +137,6 @@ RSpec.describe_current do
       end
     end
 
-
     context 'when given process does not exist' do
       before { get 'consumers/4e8f7174ae53/details' }
 
@@ -204,7 +203,23 @@ RSpec.describe_current do
     end
 
     context 'when given process has no subscriptions at all' do
-      pending
+      before do
+        topics_config.consumers.reports = reports_topic
+
+        report = JSON.parse(fixtures_file('consumer_report.json'))
+        report['consumer_groups'] = {}
+
+        produce(reports_topic, report.to_json)
+
+        get 'consumers/1/subscriptions'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('This process is not subscribed to any topics')
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
     end
 
     context 'when given process does not exist' do
