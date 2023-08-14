@@ -13,7 +13,7 @@
     "memory_usage": 123852,
     "memory_total_usage": 26421728,
     "memory_size": 32763220,
-    "cpu_count": 8,
+    "cpus": 8,
     "cpu_usage": [
       1.33,
       1.1,

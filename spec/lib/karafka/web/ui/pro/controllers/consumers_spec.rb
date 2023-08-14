@@ -126,14 +126,71 @@ RSpec.describe_current do
   end
 
   describe '#details' do
-    pending
+    before { get 'consumers/1/details' }
+
+    it do
+      expect(response).to be_ok
+      expect(body).to include('code class="wrapped json p-0 m-0"')
+      expect(body).not_to include(pagination)
+      expect(body).not_to include(support_message)
+    end
+
+    context 'when given process does not exist' do
+      before { get 'consumers/4e8f7174ae53/details' }
+
+      it do
+        expect(response).not_to be_ok
+        expect(status).to eq(404)
+      end
+    end
   end
 
   describe '#jobs' do
-    pending
+    before { get 'consumers/1/jobs' }
+
+    it do
+      expect(response).to be_ok
+      expect(body).to include('Karafka::Pro::ActiveJob::Consumer')
+      expect(body).not_to include(pagination)
+      expect(body).not_to include(support_message)
+    end
+
+    context 'when given process has no jobs running' do
+      pending
+    end
+
+    context 'when given process does not exist' do
+      before { get 'consumers/4e8f7174ae53/jobs' }
+
+      it do
+        expect(response).not_to be_ok
+        expect(status).to eq(404)
+      end
+    end
   end
 
   describe '#subscriptions' do
-    pending
+    before { get 'consumers/1/subscriptions' }
+
+    it do
+      expect(response).to be_ok
+      expect(body).to include('Rebalance count:')
+      expect(body).to include('This process does not consume any')
+      expect(body).not_to include(pagination)
+      expect(body).not_to include(support_message)
+    end
+
+    context 'when given process has no subscriptions at all' do
+      pending
+    end
+
+    context 'when given process does not exist' do
+      before { get 'consumers/4e8f7174ae53/subscriptions' }
+
+      it do
+        expect(response).not_to be_ok
+        expect(status).to eq(404)
+      end
+    end
   end
 end
