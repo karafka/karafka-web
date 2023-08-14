@@ -21,7 +21,7 @@ SimpleCov.start do
   enable_coverage :branch
 end
 
-SimpleCov.minimum_coverage(90) if SPECS_TYPE == 'pro'
+SimpleCov.minimum_coverage(92) if SPECS_TYPE == 'pro'
 
 # Load Pro components when running pro specs
 if ENV['SPECS_TYPE'] == 'pro'
