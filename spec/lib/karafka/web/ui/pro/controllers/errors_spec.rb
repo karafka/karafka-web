@@ -253,5 +253,14 @@ RSpec.describe_current do
         expect(body).not_to include('This feature is available only')
       end
     end
+
+    context 'when viewing an error but having a different one in the offset' do
+      before { get 'errors/0/0?offset=1' }
+
+      it 'expect to redirect to the one from the offset' do
+        expect(response.status).to eq(302)
+        expect(response.headers['location']).to include('errors/0/1')
+      end
+    end
   end
 end

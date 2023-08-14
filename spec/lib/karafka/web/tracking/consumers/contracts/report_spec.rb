@@ -662,4 +662,10 @@ RSpec.describe_current do
 
     it { expect(contract.call(report)).not_to be_success }
   end
+
+  context 'when jobs exist but are not valid' do
+    before { report[:jobs] = [{ valid: false }] }
+
+    it { expect { contract.call(report) }.to raise_error(Karafka::Web::Errors::ContractError) }
+  end
 end
