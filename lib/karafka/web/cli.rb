@@ -18,7 +18,7 @@ module Karafka
       # Installs Karafka Web. Creates all needed topics, populates the data and adds the needed
       # code to `karafka.rb`.
       def install
-        Karafka::Web::Installer.new.install
+        Karafka::Web::Installer.new.install(replication_factor: options[:replication_factor])
       end
 
       desc 'migrate', 'Creates necessary topics if not present and populates state data'
@@ -50,7 +50,7 @@ module Karafka
       # Resets Karafka Web. Removes the topics, creates them again and populates the initial state
       # again. This is useful in case the Web-UI metrics or anything else got corrupted.
       def reset
-        Karafka::Web::Installer.new.reset
+        Karafka::Web::Installer.new.reset(replication_factor: options[:replication_factor])
       end
 
       desc 'uninstall', 'Removes all the Web UI topics and the enabled code'
