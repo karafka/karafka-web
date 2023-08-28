@@ -51,6 +51,21 @@ RSpec.describe_current do
       end
     end
 
+    context 'when we view topic with one nil message' do
+      before do
+        produce_many(topic, [nil])
+        get "explorer/#{topic}"
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('total: 1')
+        expect(body).to include(breadcrumbs)
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
+
     context 'when we view first page from a topic with one partition with data' do
       before do
         produce_many(topic, Array.new(30, '1'))
@@ -342,6 +357,22 @@ RSpec.describe_current do
         expect(body).to include('<code class="wrapped json')
         expect(body).to include('Metadata')
         expect(body).not_to include(cannot_deserialize)
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
+
+    context 'when requested message exists but is nil' do
+      before do
+        produce(topic, nil)
+        get "explorer/#{topic}/0/0"
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(breadcrumbs)
+        expect(body).to include('<code class="wrapped json')
+        expect(body).to include('Metadata')
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
       end
