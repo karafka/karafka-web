@@ -33,25 +33,28 @@ module Karafka
           consumers_messages = messages.select { |message| message.payload[:type] == 'consumer' }
 
           # If there is even one incompatible message, we need to stop
-          if consumers_messages.all? { |message| @schema_manager.compatible?(message) }
-            consumers_messages.each do |message|
-              # We need to run the aggregations on each message in order to compensate for
-              # potential lags.
-              @state_aggregator.add(message.payload, message.offset)
-              @metrics_aggregator.add_report(message.payload)
-              @metrics_aggregator.add_stats(@state_aggregator.stats)
+          consumers_messages.each do |message|
+            unless @schema_manager.compatible?(message)
+              dispatch
+
+              raise ::Karafka::Web::Errors::Processing::IncompatibleSchemaError
             end
 
-            return unless periodic_flush?
+            # We need to run the aggregations on each message in order to compensate for
+            # potential lags.
+            @state_aggregator.add(message.payload, message.offset)
+            @metrics_aggregator.add_report(message.payload)
+            @metrics_aggregator.add_stats(@state_aggregator.stats)
 
-            dispatch
-
-            mark_as_consumed(messages.last)
-          else
-            dispatch
-
-            raise ::Karafka::Web::Errors::Processing::IncompatibleSchemaError
+            # Optimize memory usage in pro
+            message.clean! if Karafka.pro?
           end
+
+          return unless periodic_flush?
+
+          dispatch
+
+          mark_as_consumed(messages.last)
         end
 
         # Flush final state on shutdown
