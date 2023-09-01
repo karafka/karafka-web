@@ -1,0 +1,26 @@
+<%==
+  title = [@topic.consumer_group.name, @topic.subscription_group, @topic.name].join(': ')
+  view_title(title, hr: true)
+%>
+
+<div class="container">
+  <div class="row mb-5">
+    <div class="col-sm-12">
+      <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+        <tbody>
+          <% flat_hash(@topic.to_h).each do |k, v| %>
+            <%==
+              partial(
+                'routing/detail',
+                locals: {
+                  k: k,
+                  v: v
+                }
+              )
+            %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

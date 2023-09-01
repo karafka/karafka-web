@@ -9,6 +9,7 @@
 - **[Feature]** Introduce `bundle exec karafka-web migrate` that can be used to bootstrap the proper topics and initial data in environments where Karafka Web-UI should be used but is missing the initial setup.
 - **[Feature]** Replace `decrypt` with a pluggable API for deciding which topics data to display.
 - **[Feature]** Make sure, that the karafka server process that is materializing UI states is not processing any data having unsupported (newer) schemas. This state will be also visible in the status page.
+- [Improvement] Support pattern subscriptions details in the routing view both by displaying the pattern as well as expanded routing details.
 - [Improvement] Collect total number of threads per process for the process details view.
 - [Improvement] Normalize naming of metrics to better reflect what they do (in reports and in the Web UI).
 - [Improvement] Link error reported first and last offset to the explorer.
@@ -59,7 +60,7 @@
 - [Refactor] Limit usage of UI models for data intense computation to speed up states materialization under load.
 - [Refactor] Reorganize pagination engine to support offset based pagination.
 - [Refactor] Use Roda `custom_block_results` plugin for controllers results handling.
-- [Maintenance] Require `karafka` `2.1.8` due to fixes in the Iterator API and routing API extensions.
+- [Maintenance] Require `karafka` `2.2.0` due to fixes in the Iterator API and routing API extensions.
 
 ### Upgrade Notes
 
