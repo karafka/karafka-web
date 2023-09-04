@@ -12,8 +12,8 @@ module Karafka
         # Session secret needs to be set per user and per env
         SETUP_TEMPLATE = <<~CONFIG
           Karafka::Web.setup do |config|
-            # You may want to set it per ENV
-            config.ui.sessions.secret = '#{SecureRandom.hex(64)}'
+            # You may want to set it per ENV. This value was randomly generated.
+            config.ui.sessions.secret = '#{SecureRandom.hex(32)}'
           end
 
           #{ENABLER_CODE}
