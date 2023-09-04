@@ -34,9 +34,16 @@ RSpec.describe_current do
 
     before { File.write(boot_file, content) }
 
-    it 'expect to add it at the end' do
+    it 'expect to add the enabled' do
       extend_boot_file
-      expect(File.read(boot_file)).to eq("#{content}\nKarafka::Web.enable!\n")
+      expect(File.read(boot_file)).to include("\nKarafka::Web.enable!\n")
+    end
+
+    it 'expect to add the configurator' do
+      extend_boot_file
+      updated = File.read(boot_file)
+      expect(updated).to include('config.ui.sessions.secret')
+      expect(updated).to include('Karafka::Web.setup do |config|')
     end
   end
 end

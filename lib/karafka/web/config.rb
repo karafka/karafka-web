@@ -81,6 +81,16 @@ module Karafka
       end
 
       setting :ui do
+        # UI session settings
+        # Should be set per ENV.
+        setting :sessions do
+          # Cookie key name
+          setting :key, default: '_karafka_session'
+
+          # Secret for the session cookie
+          setting :secret, default: SecureRandom.hex(32)
+        end
+
         # UI cache to improve performance of views that reuse states that are not often changed
         setting :cache, default: Ui::Lib::TtlCache.new(60_000 * 5)
 

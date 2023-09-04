@@ -27,6 +27,11 @@ module Karafka
         plugin :error_handler
         plugin :not_found
         plugin :path
+        # The secret here will be reconfigured after Web UI configuration setup
+        # This is why we assign here a random value as it will have to be changed by the end
+        # user to make the Web UI work.
+        plugin :sessions, key: '_karafka_session', secret: SecureRandom.hex(64)
+        plugin :route_csrf
 
         # Based on
         # https://github.com/sidekiq/sidekiq/blob/ae6ca119/lib/sidekiq/web/application.rb#L8
