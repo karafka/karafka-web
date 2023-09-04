@@ -1,0 +1,23 @@
+<tr>
+  <td>
+    <%= subscription_group.id %>
+  </td>
+  <td>
+    <%= topic.name %>
+  </td>
+  <td>
+    <span class="badge bg-secondary">
+      <%= topic.patterns.type %>
+    </span>
+  </td>
+  <td>
+    <span class="badge bg-<%= topic.active? ? 'success' : 'warning text-dark' %>">
+    <%= topic.active? %>
+    </span>
+  </td>
+  <td class="text-center">
+    <a href="<%= root_path('routing', topic.id) %>" class="btn btn-sm btn-secondary text-white">
+      Details
+    </a>
+  </td>
+</tr>

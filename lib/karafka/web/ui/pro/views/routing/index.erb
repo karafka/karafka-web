@@ -1,0 +1,10 @@
+<%== view_title('Routing details') %>
+
+<div class="container mb-5">
+  <%==
+    each_partial(
+      @routes,
+      'routing/consumer_group'
+    )
+  %>
+</div>

@@ -1,0 +1,35 @@
+<div class="row mb-4">
+  <div class="col-sm-12">
+    <h4 class="mb-2">
+      <%= consumer_group.id %>
+    </h4>
+    <hr/>
+  </div>
+</div>
+
+<div class="row mb-5">
+  <div class="col-sm-12">
+    <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+      <thead>
+        <tr class="align-middle">
+          <th>Subscription group</th>
+          <th>Topic</th>
+          <th>Type</th>
+          <th>Active</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% consumer_group.subscription_groups.each do |subscription_group| %>
+          <%==
+            each_partial(
+              subscription_group.topics,
+              'routing/topic',
+              locals: { subscription_group: subscription_group }
+            )
+          %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
