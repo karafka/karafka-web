@@ -151,11 +151,14 @@ RSpec.describe_current do
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when per_page is not between 1 and 100' do
+    context 'when per_page is more than 100' do
       before { params[:ui][:per_page] = 101 }
 
       it { expect(contract.call(params)).not_to be_success }
+    end
 
+
+    context 'when per_page is less than 1' do
       before { params[:ui][:per_page] = 0 }
 
       it { expect(contract.call(params)).not_to be_success }
