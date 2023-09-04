@@ -10,7 +10,7 @@ module Karafka
 
         # Template with initial Web UI configuration
         # Session secret needs to be set per user and per env
-        SETUP_TEMPLATE = <<~CONFIG
+        SETUP_TEMPLATE = <<~CONFIG.freeze
           Karafka::Web.setup do |config|
             # You may want to set it per ENV. This value was randomly generated.
             config.ui.sessions.secret = '#{SecureRandom.hex(32)}'
