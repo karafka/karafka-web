@@ -8,6 +8,17 @@ module Karafka
         # Code that is needed in the `karafka.rb` to connect Web UI to Karafka
         ENABLER_CODE = 'Karafka::Web.enable!'
 
+        # Template with initial Web UI configuration
+        # Session secret needs to be set per user and per env
+        SETUP_TEMPLATE = <<~CONFIG
+          Karafka::Web.setup do |config|
+            # You may want to set it per ENV
+            config.ui.sessions.secret = '#{SecureRandom.hex(64)}'
+          end
+
+          #{ENABLER_CODE}
+        CONFIG
+
         # Adds needed code
         def call
           if File.read(Karafka.boot_file).include?(ENABLER_CODE)
@@ -15,7 +26,7 @@ module Karafka
           else
             puts 'Updating the Karafka boot file...'
             File.open(Karafka.boot_file, 'a') do |f|
-              f << "\n#{ENABLER_CODE}\n"
+              f << "\n#{SETUP_TEMPLATE}\n"
             end
             puts "Karafka boot file #{successfully} updated."
           end

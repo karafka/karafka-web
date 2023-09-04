@@ -20,6 +20,7 @@ module Karafka
 
             File.write(Karafka.boot_file, karafka_rb.join)
             puts "Karafka boot file #{successfully} updated."
+            puts "Make sure to remove configuration and other customizations as well."
           else
             puts 'Karafka Web UI components not found in the boot file.'
           end

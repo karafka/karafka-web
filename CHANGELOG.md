@@ -68,6 +68,21 @@
 
 This is a **major** release that brings many things to the table.
 
+#### Configuration
+
+Karafka Web UI now relies on Roda session management. Please configure the `ui.sessions.secret` key with a secret value string of at least 64 characters:
+
+```ruby
+# Configure it BEFORE enabling
+Karafka::Web.setup do |config|
+  # REPLACE THIS with your own value. You can use `SecureRandom.hex(64)` to generate it
+  # You may want to set it per ENV
+  config.ui.sessions.secret = 'REPLACE ME! b94b2215cc66371f2c34b7d0c0df1a010f83ca45 REPLACE ME!'
+end
+
+Karafka::Web.enable!
+```
+
 #### Deployment
 
 Because of the reporting schema update and new web-ui topics introduction, it is recommended to:

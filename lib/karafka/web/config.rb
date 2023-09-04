@@ -88,7 +88,7 @@ module Karafka
           setting :key, default: '_karafka_session'
 
           # Secret for the session cookie
-          setting :secret, default: SecureRandom.hex(64)
+          setting :secret, default: SecureRandom.hex(32)
         end
 
         # UI cache to improve performance of views that reuse states that are not often changed
