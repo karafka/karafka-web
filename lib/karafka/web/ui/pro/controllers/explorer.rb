@@ -155,7 +155,7 @@ module Karafka
               elements = 0
 
               # Position the offset as close to the middle of offset based page as possible
-              ::Karafka::Web.config.ui.per_page.times do |i|
+              ::Karafka::Web.config.ui.per_page.times do
                 break if elements >= ::Karafka::Web.config.ui.per_page
 
                 elements += 1 if offset + shift < watermark_offsets.high
