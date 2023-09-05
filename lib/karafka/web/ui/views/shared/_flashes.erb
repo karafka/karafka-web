@@ -1,0 +1,9 @@
+<% flash.each do |name, message| %>
+  <div class="mb-4">
+    <div class="container">
+      <p class="alert alert-<%= name %>">
+        <%= message %>
+      </p>
+    </div>
+  </div>
+<% end %>
