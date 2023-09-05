@@ -150,6 +150,9 @@ module Karafka
             def surrounding(topic_id, partition_id, offset)
               watermark_offsets = Ui::Models::WatermarkOffsets.find(topic_id, partition_id)
 
+              raise ::Karafka::Web::Errors::Ui::NotFoundError if offset < watermark_offsets.low
+              raise ::Karafka::Web::Errors::Ui::NotFoundError if offset >= watermark_offsets.high
+
               # Assume we start from this offset
               shift = 0
               elements = 0
