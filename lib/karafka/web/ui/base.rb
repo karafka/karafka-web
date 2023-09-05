@@ -20,18 +20,20 @@ module Karafka
           )
           plugin :render_each
           plugin :partials
+          # The secret here will be reconfigured after Web UI configuration setup
+          # This is why we assign here a random value as it will have to be changed by the end
+          # user to make the Web UI work.
+          plugin :sessions, key: '_karafka_session', secret: SecureRandom.hex(64)
+          plugin :route_csrf
         end
 
         plugin :render, escape: true, engine: 'erb'
         plugin :run_append_slash
         plugin :error_handler
         plugin :not_found
+        plugin :hooks
+        plugin :flash
         plugin :path
-        # The secret here will be reconfigured after Web UI configuration setup
-        # This is why we assign here a random value as it will have to be changed by the end
-        # user to make the Web UI work.
-        plugin :sessions, key: '_karafka_session', secret: SecureRandom.hex(64)
-        plugin :route_csrf
 
         # Based on
         # https://github.com/sidekiq/sidekiq/blob/ae6ca119/lib/sidekiq/web/application.rb#L8
@@ -57,6 +59,14 @@ module Karafka
           render_response(result)
         end
 
+        # Redirect either to referer back or to the desired path
+        handle_block_result Controllers::Responses::Redirect do |result|
+          # Map redirect flashes (if any) to Roda flash messages
+          result.flashes.each { |key, value| flash[key] = value }
+
+          response.redirect result.back? ? request.referer : root_path(result.path)
+        end
+
         # Display appropriate error specific to a given error type
         plugin :error_handler, classes: [
           ::Rdkafka::RdkafkaError,
@@ -78,6 +88,10 @@ module Karafka
           @error = true
           response.status = 404
           view 'shared/exceptions/not_found'
+        end
+
+        before do
+          check_csrf!
         end
 
         # Allows us to build current path with additional params

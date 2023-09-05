@@ -36,6 +36,15 @@ module Karafka
             )
           end
 
+          # Builds a redirect data object with assigned flashes (if any)
+          # @param path [String, Symbol] relative (without root path) path where we want to be
+          #   redirected or `:back` to use referer back
+          # @param flashes [Hash] hash where key is the flash type and value is the message
+          # @return [Responses::Redirect] redirect result
+          def redirect(path = :back, flashes = {})
+            Responses::Redirect.new(path, flashes)
+          end
+
           # Initializes the expected pagination engine and assigns expected arguments
           # @param args Any arguments accepted by the selected pagination engine
           def paginate(*args)

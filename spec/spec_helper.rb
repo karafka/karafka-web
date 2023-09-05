@@ -117,3 +117,6 @@ produce(TOPICS[1], fixtures_file('consumers_metrics.json'))
 produce(TOPICS[2], fixtures_file('consumer_report.json'))
 
 Karafka::Web.enable!
+
+# Disable CSRF checks for RSpec
+Karafka::Web::App.engine.plugin(:route_csrf, check_request_methods: [])

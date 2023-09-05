@@ -91,6 +91,10 @@ module Karafka
                 controller.recent(topic_id, partition_id)
               end
 
+              r.get String, Integer, Integer, 'surrounding' do |topic_id, partition_id, offset|
+                controller.surrounding(topic_id, partition_id, offset)
+              end
+
               r.get String, 'recent' do |topic_id|
                 controller.recent(topic_id, nil)
               end
@@ -115,6 +119,14 @@ module Karafka
 
               r.get do
                 controller.index
+              end
+            end
+
+            r.on 'messages' do
+              controller = Controllers::Messages.new(params)
+
+              r.post String, Integer, Integer, 'republish' do |topic_id, partition_id, offset|
+                controller.republish(topic_id, partition_id, offset)
               end
             end
 

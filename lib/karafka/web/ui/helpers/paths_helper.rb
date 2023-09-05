@@ -36,9 +36,10 @@ module Karafka
           #   if we want to go to the topic root
           # @param offset [Integer, nil] offset of particular message or nil of we want to just go
           #   to the partition root
+          # @param action [String, nil] specific routed action or nil
           # @return [String] path to the expected location
-          def explorer_path(topic_name = nil, partition_id = nil, offset = nil)
-            root_path(*['explorer', topic_name, partition_id, offset].compact)
+          def explorer_path(topic_name = nil, partition_id = nil, offset = nil, action = nil)
+            root_path(*['explorer', topic_name, partition_id, offset, action].compact)
           end
         end
       end

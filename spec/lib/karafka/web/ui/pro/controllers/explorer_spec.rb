@@ -467,4 +467,72 @@ RSpec.describe_current do
       end
     end
   end
+
+  describe '#surrounding' do
+    context 'when given offset is lower than that exists' do
+      before { get "explorer/#{topic}/0/0/surrounding" }
+
+      it do
+        expect(response).not_to be_ok
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context 'when given offset is higher than that exists' do
+      before { get "explorer/#{topic}/0/100/surrounding" }
+
+      it do
+        expect(response).not_to be_ok
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context 'when given message is the only one' do
+      before do
+        produce(topic, { test: 'me' }.to_json)
+        get "explorer/#{topic}/0/0/surrounding"
+      end
+
+      it do
+        expect(response.status).to eq(302)
+        expect(response.location).to eq("/explorer/#{topic}/0?offset=0")
+      end
+    end
+
+    context 'when given message is the newest one' do
+      before do
+        produce_many(topic, Array.new(50, '1'))
+        get "explorer/#{topic}/0/49/surrounding"
+      end
+
+      it do
+        expect(response.status).to eq(302)
+        expect(response.location).to eq("/explorer/#{topic}/0?offset=25")
+      end
+    end
+
+    context 'when given message is first out of many' do
+      before do
+        produce_many(topic, Array.new(50, '1'))
+        get "explorer/#{topic}/0/0/surrounding"
+      end
+
+      it do
+        expect(response.status).to eq(302)
+        expect(response.location).to eq("/explorer/#{topic}/0?offset=0")
+      end
+    end
+
+    context 'when given message is a middle one out of many' do
+      before do
+        produce_many(topic, Array.new(50, '1'))
+        get "explorer/#{topic}/0/25/surrounding"
+      end
+
+      it do
+        expect(response.status).to eq(302)
+        expect(response.location).to eq("/explorer/#{topic}/0?offset=12")
+      end
+    end
+  end
 end

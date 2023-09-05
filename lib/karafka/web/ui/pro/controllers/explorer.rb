@@ -140,6 +140,40 @@ module Karafka
               show(topic_id, recent.partition, recent.offset, paginate: false)
             end
 
+            # Computes a page on which the given offset is in the middle of the page (if possible)
+            # Useful often when debugging to be able to quickly jump to the historical location
+            # of message and its surrounding to understand failure
+            #
+            # @param topic_id [String]
+            # @param partition_id [Integer]
+            # @param offset [Integer] offset of the message we want to display
+            def surrounding(topic_id, partition_id, offset)
+              watermark_offsets = Ui::Models::WatermarkOffsets.find(topic_id, partition_id)
+
+              raise ::Karafka::Web::Errors::Ui::NotFoundError if offset < watermark_offsets.low
+              raise ::Karafka::Web::Errors::Ui::NotFoundError if offset >= watermark_offsets.high
+
+              # Assume we start from this offset
+              shift = 0
+              elements = 0
+
+              # Position the offset as close to the middle of offset based page as possible
+              ::Karafka::Web.config.ui.per_page.times do
+                break if elements >= ::Karafka::Web.config.ui.per_page
+
+                elements += 1 if offset + shift < watermark_offsets.high
+
+                if offset - shift > watermark_offsets.low
+                  shift += 1
+                  elements += 1
+                end
+              end
+
+              target = offset - shift
+
+              redirect("explorer/#{topic_id}/#{partition_id}?offset=#{target}")
+            end
+
             private
 
             # Fetches current page data
