@@ -41,7 +41,7 @@ module Karafka
         # Inject correct settings for the Web-UI sessions plugin based on the user configuration
         # We cannot configure this automatically like other Roda plugins because it requires safe
         # custom values provided by our user
-        Ui::Base.plugin(:sessions, **config.ui.sessions.to_h)
+        App.engine.plugin(:sessions, **config.ui.sessions.to_h)
       end
     end
   end

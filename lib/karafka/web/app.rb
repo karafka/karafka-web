@@ -8,8 +8,12 @@ module Karafka
         # @param env [Hash] Rack env
         # @param block [Proc] Rack block
         def call(env, &block)
-          handler = Karafka.pro? ? Ui::Pro::App : Ui::App
-          handler.call(env, &block)
+          engine.call(env, &block)
+        end
+
+        # @return [Class] regular or pro Web engine
+        def engine
+          ::Karafka.pro? ? Ui::Pro::App : Ui::App
         end
       end
     end
