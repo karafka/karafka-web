@@ -113,9 +113,30 @@ module Karafka
             )
           end
 
+          # @return [Status::Step] do we have correct replication for given env
+          def replication
+            if partitions.success?
+              status = :success
+              # low replication is not an error but just a warning and a potential problem
+              # in case of a crash, this is why we do not fail but warn only
+              status = :warning if topics_details.values.any? { |det| det[:replication] < 2 }
+              # Allow for non-production setups to use replication 1 as it is not that relevant
+              status = :success unless Karafka.env.production?
+              details = topics_details
+            else
+              status = :halted
+              details = {}
+            end
+
+            Step.new(
+              status,
+              details
+            )
+          end
+
           # @return [Status::Step] Is the initial consumers state present in Kafka
           def initial_consumers_state
-            if partitions.success?
+            if replication.success?
               @current_state ||= Models::ConsumersState.current
               status = @current_state ? :success : :failure
             else
@@ -234,11 +255,13 @@ module Karafka
 
           # @return [Hash] hash with topics with which we work details (even if don't exist)
           def topics_details
+            base = { present: false, partitions: 0, replication: 1 }
+
             topics = {
-              topics_consumers_states => { present: false, partitions: 0 },
-              topics_consumers_reports => { present: false, partitions: 0 },
-              topics_consumers_metrics => { present: false, partitions: 0 },
-              topics_errors => { present: false, partitions: 0 }
+              topics_consumers_states => base.dup,
+              topics_consumers_reports => base.dup,
+              topics_consumers_metrics => base.dup,
+              topics_errors => base.dup
             }
 
             @cluster_info.topics.each do |topic|
@@ -246,8 +269,11 @@ module Karafka
 
               next unless topics.key?(name)
 
-              topics[name][:present] = true
-              topics[name][:partitions] = topic[:partition_count]
+              topics[name].merge!(
+                present: true,
+                partitions: topic[:partition_count],
+                replication: topic[:partitions].map { |part| part[:replica_count] }.max
+              )
             end
 
             topics

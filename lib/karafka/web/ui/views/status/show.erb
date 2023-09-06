@@ -65,6 +65,21 @@
 
       <%==
         partial(
+          "status/#{@status.replication.to_s}",
+          locals: {
+            title: 'Replication factors',
+            description: partial(
+              'status/warnings/replication',
+              locals: {
+                details: @status.replication.details
+              }
+            )
+          }
+        )
+      %>
+
+      <%==
+        partial(
           "status/#{@status.initial_consumers_state.to_s}",
           locals: {
             title: 'Initial consumers state presence',

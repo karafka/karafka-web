@@ -30,5 +30,20 @@ RSpec.describe_current do
         expect(body).to include(breadcrumbs)
       end
     end
+
+    context 'when replication factor is less than 2 in production' do
+      before do
+        allow(Karafka.env).to receive(:production?).and_return(true)
+        get 'status'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(support_message)
+        expect(body).to include(breadcrumbs)
+        expect(body).to include('Please ensure all those topics have a replication')
+        expect(body).to include('Warning')
+      end
+    end
   end
 end
