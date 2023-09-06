@@ -256,6 +256,22 @@ RSpec.describe_current do
         expect(result.partial_namespace).to eq('successes')
       end
     end
+
+    context 'when state is present but replication factor is 1 in prod' do
+      before do
+        all_topics
+        produce(states_topic, state)
+        # This will force a warning because in prod replication is expected to be > 1
+        allow(Karafka.env).to receive(:production).and_return(true)
+      end
+
+      it 'expect all to be ok because replication is a warning' do
+        expect(result.success?).to eq(true)
+        expect(result.to_s).to eq('success')
+        expect(result.details).to eq(nil)
+        expect(result.partial_namespace).to eq('successes')
+      end
+    end
   end
 
   describe '#initial_consumers_metrics' do
