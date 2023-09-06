@@ -45,5 +45,16 @@ RSpec.describe_current do
         expect(body).to include('Warning')
       end
     end
+
+    context 'when replication factor is less than 2 in non-production' do
+      before { get 'status' }
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(support_message)
+        expect(body).to include(breadcrumbs)
+        expect(body).not_to include('Please ensure all those topics have a replication')
+      end
+    end
   end
 end
