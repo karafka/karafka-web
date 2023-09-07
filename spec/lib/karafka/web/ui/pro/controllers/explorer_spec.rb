@@ -535,4 +535,69 @@ RSpec.describe_current do
       end
     end
   end
+
+  describe '#closest' do
+    context 'when requested topic does not exist' do
+      before { get 'explorer/topic/100/2023-10-10/12:12:12' }
+
+      it do
+        expect(response).not_to be_ok
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context 'when requested date is not a valid date' do
+      before { get 'explorer/topic/100/2023-13-10/27:12:12' }
+
+      it do
+        expect(response).not_to be_ok
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context 'when we have only one older message' do
+      before do
+        produce(topic, '1')
+        get "explorer/#{topic}/0/2100-01-01/12:00:12"
+      end
+
+      it do
+        expect(response.status).to eq(302)
+        expect(response.location).to eq("/explorer/#{topic}/0?offset=0")
+      end
+    end
+
+    context 'when we have many messages and we request earlier time' do
+      before do
+        produce_many(topic, Array.new(100, '1'))
+        get "explorer/#{topic}/0/2000-01-01/12:00:12"
+      end
+
+      it do
+        expect(response.status).to eq(302)
+        expect(response.location).to eq("/explorer/#{topic}/0?offset=0")
+      end
+    end
+
+    context 'when we have many messages and we request earlier time' do
+      before do
+        produce_many(topic, Array.new(100, '1'))
+        get "explorer/#{topic}/0/2100-01-01/12:00:12"
+      end
+
+      it do
+        expect(response.status).to eq(302)
+        expect(response.location).to eq("/explorer/#{topic}/0?offset=99")
+      end
+    end
+
+    context 'when we request a time on an empty topic partition' do
+      before { get "explorer/#{topic}/0/2100-01-01/12:00:12" }
+
+      it do
+        expect(response.status).to eq(302)
+        expect(response.location).to eq("/explorer/#{topic}/0")
+      end
+    end
+  end
 end

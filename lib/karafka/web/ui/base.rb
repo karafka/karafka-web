@@ -94,6 +94,20 @@ module Karafka
           check_csrf!
         end
 
+        plugin :class_matchers
+
+        # Match a date-time. Useful for time-related routes
+        # @note In case the date-time is invalid, raise and render 404
+        # @note The time component is optional as `Time#parse` will fallback to lowest time
+        #   available, so we can build only date based lookups
+        class_matcher(Time, /(\d{4}-\d{2}-\d{2}\/?(\d{2})?(:\d{2})?(:\d{2})?)/) do |datetime|
+          begin
+            [Time.parse(datetime)]
+          rescue ArgumentError
+            raise Errors::Ui::NotFoundError
+          end
+        end
+
         # Allows us to build current path with additional params
         # @param query_data [Hash] query params we want to add to the current path
         path :current do |query_data = {}|
