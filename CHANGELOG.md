@@ -11,6 +11,7 @@
 - **[Feature]** Make sure, that the karafka server process that is materializing UI states is not processing any data having unsupported (newer) schemas. This state will be also visible in the status page.
 - **[Feature]** Provide ability to reproduce a given message to the same topic partition with all the details from the per message explorer view.
 - **[Feature]** Provide "surrounding" navigation link that allows to view the given message in the context of its surrounding. Useful for debugging of failures where the batch context may be relevant.
+- **[Feature]** Allow for time based lookups per topic partition.
 - [Improvement] Support pattern subscriptions details in the routing view both by displaying the pattern as well as expanded routing details.
 - [Improvement] Collect total number of threads per process for the process details view.
 - [Improvement] Normalize naming of metrics to better reflect what they do (in reports and in the Web UI).

@@ -99,6 +99,11 @@ module Karafka
                 controller.recent(topic_id, nil)
               end
 
+              # Jumps to offset matching the expected time
+              r.get String, Integer, Time do |topic_id, partition_id, time|
+                controller.closest(topic_id, partition_id, time)
+              end
+
               r.get String, Integer, Integer do |topic_id, partition_id, offset|
                 # If when viewing given message we get an offset of different message, we should
                 # redirect there. This allows us to support pagination with the current engine

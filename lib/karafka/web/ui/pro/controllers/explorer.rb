@@ -174,6 +174,21 @@ module Karafka
               redirect("explorer/#{topic_id}/#{partition_id}?offset=#{target}")
             end
 
+            # Finds the closest offset matching the requested time and redirects to this location
+            # Note, that it redirects to closest but always younger.
+            #
+            # @param topic_id [String]
+            # @param partition_id [Integer]
+            # @param time [Time] time of the message
+            def closest(topic_id, partition_id, time)
+              target = ::Karafka::Admin.read_topic(topic_id, partition_id, 1, time).first
+
+              partition_path = "explorer/#{topic_id}/#{partition_id}"
+              partition_path += "?offset=#{target.offset}" if target
+
+              redirect(partition_path)
+            end
+
             private
 
             # Fetches current page data
