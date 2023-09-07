@@ -579,7 +579,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when we have many messages and we request earlier time' do
+    context 'when we have many messages and we request later time' do
       before do
         produce_many(topic, Array.new(100, '1'))
         get "explorer/#{topic}/0/2100-01-01/12:00:12"
