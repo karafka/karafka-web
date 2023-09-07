@@ -100,7 +100,7 @@ module Karafka
         # @note In case the date-time is invalid, raise and render 404
         # @note The time component is optional as `Time#parse` will fallback to lowest time
         #   available, so we can build only date based lookups
-        class_matcher(Time, %r{(\d{4}-\d{2}-\d{2}\/?(\d{2})?(:\d{2})?(:\d{2})?)}) do |datetime|
+        class_matcher(Time, %r{(\d{4}-\d{2}-\d{2}/?(\d{2})?(:\d{2})?(:\d{2})?)}) do |datetime|
           [Time.parse(datetime)]
         rescue ArgumentError
           raise Errors::Ui::NotFoundError
