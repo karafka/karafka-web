@@ -97,7 +97,7 @@ module Karafka
         plugin :class_matchers
 
         # Time matcher with optional hours, minutes and seconds
-        TIME_MATCHER = %r{(\d{4}-\d{2}-\d{2}/?(\d{2})?(:\d{2})?(:\d{2})?)}.freeze
+        TIME_MATCHER = %r{(\d{4}-\d{2}-\d{2}/?(\d{2})?(:\d{2})?(:\d{2})?)}
 
         private_constant :TIME_MATCHER
 
