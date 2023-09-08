@@ -2,10 +2,23 @@
   <div class="row">
     <div class="col-sm-6 ms-0 ps-0">
       <% if @messages && !@messages.empty? %>
-        <a href="<%= explorer_path(@topic_id, @partition_id, 'recent') %>" class="btn btn-secondary btn-sm" title="Display the most recent message for this partition">
+        <a
+          href="<%= explorer_path(@topic_id, @partition_id, 'recent') %>"
+          class="btn btn-secondary btn-sm"
+          title="Display the most recent message for this partition"
+        >
           &#x2192; Recent
         </a>
       <% end %>
+
+      <% closest_path = explorer_path(@topic_id, @partition_id) %>
+      <input
+        type="button"
+        class="btn-secondary btn btn-sm"
+        id="offset-lookup-datepicker"
+        value="&#128198;"
+        data-target="<%= closest_path %>"
+      />
     </div>
 
     <div class="col-sm-6 text-end me-0 pe-0">
