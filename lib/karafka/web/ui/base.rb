@@ -96,11 +96,16 @@ module Karafka
 
         plugin :class_matchers
 
+        # Time matcher with optional hours, minutes and seconds
+        TIME_MATCHER = %r{(\d{4}-\d{2}-\d{2}/?(\d{2})?(:\d{2})?(:\d{2})?)}
+
+        private_constant :TIME_MATCHER
+
         # Match a date-time. Useful for time-related routes
         # @note In case the date-time is invalid, raise and render 404
         # @note The time component is optional as `Time#parse` will fallback to lowest time
         #   available, so we can build only date based lookups
-        class_matcher(Time, %r{(\d{4}-\d{2}-\d{2}/?(\d{2})?(:\d{2})?(:\d{2})?)}) do |datetime|
+        class_matcher(Time, TIME_MATCHER) do |datetime|
           [Time.parse(datetime)]
         rescue ArgumentError
           raise Errors::Ui::NotFoundError
