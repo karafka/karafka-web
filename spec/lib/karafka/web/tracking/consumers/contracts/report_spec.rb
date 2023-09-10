@@ -72,12 +72,17 @@ RSpec.describe_current do
                     lag_stored_d: 0,
                     lag: 0,
                     lag_d: 0,
-                    hi_offset: 0,
                     committed_offset: 18,
                     stored_offset: 18,
                     fetch_state: 'active',
                     id: 0,
-                    poll_state: 'active'
+                    poll_state: 'active',
+                    hi_offset: 1,
+                    lo_offset: 0,
+                    eof_offset: 0,
+                    ls_offset: 0,
+                    ls_offset_d: 0,
+                    ls_offset_fd: 0
                   }
                 }
               }
