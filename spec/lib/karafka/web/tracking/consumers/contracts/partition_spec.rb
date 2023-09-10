@@ -12,7 +12,14 @@ RSpec.describe_current do
       lag_d: -1,
       committed_offset: 0,
       stored_offset: 0,
-      hi_offset: 1
+      fetch_state: 'active',
+      poll_state: 'active',
+      hi_offset: 1,
+      lo_offset: 0,
+      eof_offset: 0,
+      ls_offset: 0,
+      ls_offset_d: 0,
+      ls_offset_fd: 0
     }
   end
 
@@ -27,6 +34,29 @@ RSpec.describe_current do
   end
 
   %i[
+    fetch_state
+    poll_state
+  ].each do |state|
+    context "when #{state} is not present" do
+      before { config.delete(state) }
+
+      it { expect(contract.call(config)).not_to be_success }
+    end
+
+    context "when #{state} is not a string" do
+      before { config[state] = rand }
+
+      it { expect(contract.call(config)).not_to be_success }
+    end
+
+    context "when #{state} is empty" do
+      before { config[state] = '' }
+
+      it { expect(contract.call(config)).not_to be_success }
+    end
+  end
+
+  %i[
     id
     lag_stored
     lag_stored_d
@@ -35,6 +65,11 @@ RSpec.describe_current do
     committed_offset
     stored_offset
     hi_offset
+    lo_offset
+    eof_offset
+    ls_offset
+    ls_offset_d
+    ls_offset_fd
   ].each do |key|
     context "when #{key} is not numeric" do
       before { config[key] = '2' }
@@ -47,5 +82,11 @@ RSpec.describe_current do
 
       it { expect(contract.call(config)).not_to be_success }
     end
+  end
+
+  context 'when ls_offset_fd is less than 0' do
+    before { config[:ls_offset_fd] = -1 }
+
+    it { expect(contract.call(config)).not_to be_success }
   end
 end

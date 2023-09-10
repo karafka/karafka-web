@@ -111,7 +111,13 @@ module Karafka
                 'committed_offset',
                 'stored_offset',
                 'fetch_state',
-                'hi_offset'
+                'hi_offset',
+                'lo_offset',
+                'eof_offset',
+                'ls_offset',
+                # Two below can be useful for detection of hanging transactions
+                'ls_offset_d',
+                'ls_offset_fd'
               )
 
               # Rename as we do not need `consumer_` prefix

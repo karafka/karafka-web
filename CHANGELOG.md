@@ -52,6 +52,7 @@
 - [Improvement] Provide flash messages support.
 - [Improvement] Use replication factor of two by default (if not overridden) for Web UI topics when there is more than one broker.
 - [Improvement] Show a warning when replication factor of 1 is used for Web UI topics in production.
+- [Improvement] Collect extra additional metrics useful for hanging transactions detection.
 - [Fix] Return 402 status instead of 500 on Pro features that are not available in OSS.
 - [Fix] Fix a case where errors would not be visible without Rails due to the `String#first` usage.
 - [Fix] Fix a case where live-poll would be disabled but would still update data.
