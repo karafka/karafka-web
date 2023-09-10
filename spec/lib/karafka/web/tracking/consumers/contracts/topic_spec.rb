@@ -15,7 +15,14 @@ RSpec.describe_current do
           lag_d: 1,
           committed_offset: 100,
           stored_offset: 95,
-          hi_offset: 10
+          fetch_state: 'active',
+          poll_state: 'active',
+          hi_offset: 1,
+          lo_offset: 0,
+          eof_offset: 0,
+          ls_offset: 0,
+          ls_offset_d: 0,
+          ls_offset_fd: 0
         }
       }
     }

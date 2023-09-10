@@ -31,7 +31,12 @@ RSpec.describe_current do
                   poll_state: 'active',
                   hi_offset: 10,
                   lag_d: 10,
-                  lag: 10
+                  lag: 10,
+                  lo_offset: 0,
+                  eof_offset: 0,
+                  ls_offset: 0,
+                  ls_offset_d: 0,
+                  ls_offset_fd: 0
                 }
               }
             }
