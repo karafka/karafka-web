@@ -94,6 +94,10 @@ module Karafka
         # UI cache to improve performance of views that reuse states that are not often changed
         setting :cache, default: Ui::Lib::TtlCache.new(60_000 * 5)
 
+        # Should we display internal topics of Kafka. The once starting with `__`
+        # By default we do not display them as they are not usable from regular users perspective
+        setting :show_internal_topics, default: false
+
         # How many elements should we display on pages that support pagination
         setting :per_page, default: 25
 

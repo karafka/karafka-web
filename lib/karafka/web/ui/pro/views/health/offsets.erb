@@ -1,0 +1,7 @@
+<%== view_title('Consumers groups offsets details') %>
+
+<% if @stats.empty? %>
+  <%== partial 'health/no_data' %>
+<% else %>
+  <%== partial 'health/tabs' %>
+<% end %>

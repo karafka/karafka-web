@@ -19,9 +19,16 @@ module Karafka
           # Health state controller
           class Health < Ui::Controllers::Base
             # Displays the current system state
-            def index
+            def overview
               current_state = Models::ConsumersState.current!
               @stats = Models::Health.current(current_state)
+
+              respond
+            end
+
+            def offsets
+              # Same data as overview but presented differently
+              overview
 
               respond
             end

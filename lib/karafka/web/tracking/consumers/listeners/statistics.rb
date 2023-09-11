@@ -109,7 +109,11 @@ module Karafka
                 'consumer_lag_stored',
                 'consumer_lag_stored_d',
                 'committed_offset',
+                # Can be useful to track the frequency of flushes when there is progress
+                'committed_offset_fd',
                 'stored_offset',
+                # Can be useful to track the frequency of flushes when there is progress
+                'stored_offset_fd',
                 'fetch_state',
                 'hi_offset',
                 'lo_offset',

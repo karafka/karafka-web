@@ -7,7 +7,7 @@ RSpec.describe_current do
     context 'when no report data' do
       before do
         topics_config.consumers.reports = create_topic
-        get 'health'
+        get 'health/overview'
       end
 
       it do
@@ -20,7 +20,7 @@ RSpec.describe_current do
     end
 
     context 'when data is present' do
-      before { get 'health' }
+      before { get 'health/overview' }
 
       it do
         expect(response).to be_ok

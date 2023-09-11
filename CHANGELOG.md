@@ -12,6 +12,7 @@
 - **[Feature]** Provide ability to reproduce a given message to the same topic partition with all the details from the per message explorer view.
 - **[Feature]** Provide "surrounding" navigation link that allows to view the given message in the context of its surrounding. Useful for debugging of failures where the batch context may be relevant.
 - **[Feature]** Allow for time based lookups per topic partition.
+- **[Feature]** Introduce Offsets Health inspection view for frozen LSO lookups.
 - [Improvement] Support pattern subscriptions details in the routing view both by displaying the pattern as well as expanded routing details.
 - [Improvement] Collect total number of threads per process for the process details view.
 - [Improvement] Normalize naming of metrics to better reflect what they do (in reports and in the Web UI).
@@ -53,6 +54,8 @@
 - [Improvement] Use replication factor of two by default (if not overridden) for Web UI topics when there is more than one broker.
 - [Improvement] Show a warning when replication factor of 1 is used for Web UI topics in production.
 - [Improvement] Collect extra additional metrics useful for hanging transactions detection.
+- [Improvement] Reorganize how the Health view looks.
+- [Improvement] Hide all private Kafka topics by default in the explorer. Configurable with `show_internal_topics` config setting.
 - [Fix] Return 402 status instead of 500 on Pro features that are not available in OSS.
 - [Fix] Fix a case where errors would not be visible without Rails due to the `String#first` usage.
 - [Fix] Fix a case where live-poll would be disabled but would still update data.
