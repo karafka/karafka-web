@@ -67,6 +67,8 @@ module Karafka
                 topics.to_json
               end
 
+              # @return [String] JSON with per-topic, highest LSO freeze duration. Useful for
+              #   debugging of issues arising from hanging transactions
               def max_lso_time
                 topics = Hash.new { |h, k| h[k] = Hash.new { |h2, k2| h2[k2] = [] } }
 
@@ -74,7 +76,10 @@ module Karafka
                   topic_without_cg = topic.split('[').first
 
                   metrics.each do |current|
-                    topics[topic_without_cg][current.first] << ((current.last[:ls_offset_fd] || 0) / 1_000).round
+                    # We convert this to seconds from milliseconds due to our Web UI precision
+                    # Reporting is in ms for consistency
+                    normalized_fd =((current.last[:ls_offset_fd] || 0) / 1_000).round
+                    topics[topic_without_cg][current.first] << normalized_fd
                   end
                 end
 

@@ -8,7 +8,7 @@ RSpec.describe_current do
       lag_stored: 10,
       lag: 5,
       pace: 3,
-      lso_fd: 2
+      ls_offset_fd: 2
     }
   end
 
@@ -54,20 +54,20 @@ RSpec.describe_current do
     it { expect(contract.call(topic_stats)).not_to be_success }
   end
 
-  context 'when lso_fd is not a number' do
-    before { topic_stats[:lso_fd] = 'test' }
+  context 'when ls_offset_fd is not a number' do
+    before { topic_stats[:ls_offset_fd] = 'test' }
 
     it { expect(contract.call(topic_stats)).not_to be_success }
   end
 
-  context 'when lso_fd is less than 0' do
-    before { topic_stats[:lso_fd] = -2 }
+  context 'when ls_offset_fd is less than 0' do
+    before { topic_stats[:ls_offset_fd] = -2 }
 
     it { expect(contract.call(topic_stats)).not_to be_success }
   end
 
-  context 'when lso_fd is missing' do
-    before { topic_stats.delete(:lso_fd) }
+  context 'when ls_offset_fd is missing' do
+    before { topic_stats.delete(:ls_offset_fd) }
 
     it { expect(contract.call(topic_stats)).not_to be_success }
   end
