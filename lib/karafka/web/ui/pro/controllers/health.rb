@@ -26,6 +26,7 @@ module Karafka
               respond
             end
 
+            # Displays details about offsets and their progression/statuses
             def offsets
               # Same data as overview but presented differently
               overview

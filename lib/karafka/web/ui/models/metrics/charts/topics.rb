@@ -82,7 +82,7 @@ module Karafka
 
                     # We convert this to seconds from milliseconds due to our Web UI precision
                     # Reporting is in ms for consistency
-                    normalized_fd = ((current.last[:ls_offset_fd] || 0) / 1_000).round
+                    normalized_fd = (ls_offset_fd / 1_000).round
                     # In case ls_offset and hi_offset are the same, it means we're reached eof
                     # and we just don't have more data. In cases like this, LSO freeze duration
                     # will grow because LSO will remain unchanged, but it does not mean it is
