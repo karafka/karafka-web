@@ -15,6 +15,7 @@
           <%== partial 'shared/tab_nav', locals: { title: 'Batches', id: 'batches' } %>
           <%== partial 'shared/tab_nav', locals: { title: 'Lags stored', id: 'lags-stored' } %>
           <%== partial 'shared/tab_nav', locals: { title: 'Topics pace', id: 'topics-pace' } %>
+          <%== partial 'shared/tab_nav', locals: { title: 'Max LSO time', id: 'max-lso-time' } %>
         </ul>
 
         <div class="tab-content">
@@ -34,6 +35,10 @@
 
           <div class="tab-pane" id="topics-pace" role="tabpanel">
             <%== partial 'shared/chart', locals: { data: @topics_charts.topics_pace, id: 'topics-pace' } %>
+          </div>
+
+          <div class="tab-pane" id="max-lso-time" role="tabpanel">
+            <%== partial 'shared/chart', locals: { data: @topics_charts.max_lso_time, id: 'max-lso-time' } %>
           </div>
         </div>
       </div>

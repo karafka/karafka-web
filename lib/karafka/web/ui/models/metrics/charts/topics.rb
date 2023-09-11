@@ -66,6 +66,23 @@ module Karafka
                 topics.each_value(&:compact!)
                 topics.to_json
               end
+
+              def max_lso_time
+                topics = Hash.new { |h, k| h[k] = Hash.new { |h2, k2| h2[k2] = [] } }
+
+                @data.to_h.each do |topic, metrics|
+                  topic_without_cg = topic.split('[').first
+
+                  metrics.each do |current|
+                    topics[topic_without_cg][current.first] << ((current.last[:ls_offset_fd] || 0) / 1_000).round
+                  end
+                end
+
+                topics.each_value(&:compact!)
+                topics.each_value { |metrics| metrics.transform_values!(&:max) }
+                topics.transform_values! { |values| values.to_a.sort_by!(&:first) }
+                topics.to_json
+              end
             end
           end
         end
