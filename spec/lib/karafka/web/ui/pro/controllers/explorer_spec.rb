@@ -603,6 +603,20 @@ RSpec.describe_current do
       end
     end
 
+    context 'when we have many messages and we request earlier time on a higher partition' do
+      let(:partitions) { 2 }
+
+      before do
+        produce_many(topic, Array.new(100, '1'), partition: 1)
+        get "explorer/#{topic}/1/2000-01-01/12:00:12"
+      end
+
+      it do
+        expect(response.status).to eq(302)
+        expect(response.location).to eq("/explorer/#{topic}/1?offset=0")
+      end
+    end
+
     context 'when we have many messages and we request later time' do
       before do
         produce_many(topic, Array.new(100, '1'))
