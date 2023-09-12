@@ -18,6 +18,9 @@
     <%== relative_time(Time.now - details.stored_offset_fd / 1_000) %>
   </td>
   <td>
+    <%== offset_with_label topic_name, partition_id, details.lo_offset %>
+  </td>
+  <td>
     <%== offset_with_label topic_name, partition_id, details.hi_offset %>
   </td>
   <td>

@@ -89,9 +89,10 @@ RSpec.describe_current do
 
       keys = %i[
         lag lag_d lag_stored lag_stored_d committed_offset stored_offset fetch_state hi_offset id
-        poll_state process
-      ]
-      expect(sg[:topics][:default][:partitions]['0'.to_sym].keys).to eq(keys)
+        poll_state process hi_offset_fd stored_offset_fd lo_offset ls_offset ls_offset_fd
+        eof_offset committed_offset_fd
+      ].sort
+      expect(sg[:topics][:default][:partitions]['0'.to_sym].keys.sort).to eq(keys)
     end
   end
 end
