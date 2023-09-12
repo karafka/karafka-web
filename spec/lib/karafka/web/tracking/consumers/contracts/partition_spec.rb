@@ -17,6 +17,7 @@ RSpec.describe_current do
       fetch_state: 'active',
       poll_state: 'active',
       hi_offset: 1,
+      hi_offset_fd: 0,
       lo_offset: 0,
       eof_offset: 0,
       ls_offset: 0,
@@ -69,6 +70,7 @@ RSpec.describe_current do
     stored_offset
     stored_offset_fd
     hi_offset
+    hi_offset_fd
     lo_offset
     eof_offset
     ls_offset
@@ -92,6 +94,7 @@ RSpec.describe_current do
     committed_offset_fd
     stored_offset_fd
     ls_offset_fd
+    hi_offset_fd
   ].each do |fd|
     context "when #{fd} is less than 0" do
       before { config[fd] = -1 }

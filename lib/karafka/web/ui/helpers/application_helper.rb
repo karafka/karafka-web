@@ -156,6 +156,22 @@ module Karafka
             end
           end
 
+          # @param details [::Karafka::Web::Ui::Models::Partition] partition information with
+          #   lso risk state info
+          # @return [String] background classes for row marking
+          def lso_risk_state_bg(details)
+            case details.lso_risk_state
+            when :active
+              ''
+            when :at_risk
+              'bg-warning bg-opacity-25'
+            when :stopped
+              'bg-danger bg-opacity-25'
+            else
+              raise ::Karafka::Errors::UnsupportedCaseError
+            end
+          end
+
           # Returns the view title html code
           #
           # @param title [String] page title

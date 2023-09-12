@@ -30,7 +30,7 @@
           <table class="processes bg-white table table-hover table-bordered table-striped align-middle <%= (index+1 < topics.size) ? 'mb-5' : 'mb-3' %>">
             <thead>
               <tr class="align-middle">
-                <th colspan="8">
+                <th colspan="100">
                   <h5 class="mb-0"><%= topic_name %></h4>
                 </th>
               </tr>
@@ -42,6 +42,7 @@
                 <th>Stored offset</th>
                 <th>Fetch state</th>
                 <th>Poll state</th>
+                <th>LSO state</th>
                 <th>Process name</th>
               </tr>
             </thead>

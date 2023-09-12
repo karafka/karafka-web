@@ -101,6 +101,11 @@ module Karafka
         # How many elements should we display on pages that support pagination
         setting :per_page, default: 25
 
+        # Time beyond which the last stable offset freeze is considered a risk
+        # (unless same as high). This is used to show on the UI that there may be a hanging
+        # transaction that will cause given consumer group to halt processing and wait
+        setting :lso_threshold, default: 5 * 60 * 1_000
+
         # Allows to manage visibility of payload, headers and message key in the UI
         # In some cases you may want to limit what is being displayed due to the type of data you
         # are dealing with

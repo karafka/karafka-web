@@ -1,0 +1,37 @@
+<tr class="align-middle <%= lso_risk_state_bg(details) %> status-row-<%= details.process.status %>">
+  <td>
+    <%= partition_id %>
+  </td>
+  <td>
+    <%== lag_with_label details.lag_stored %>
+  </td>
+  <td>
+    <%== offset_with_label topic_name, partition_id, details.committed_offset %>
+  </td>
+  <td>
+    <%== relative_time(Time.now - details.committed_offset_fd / 1_000) %>
+  </td>
+  <td>
+    <%== offset_with_label topic_name, partition_id, details.stored_offset %>
+  </td>
+  <td>
+    <%== relative_time(Time.now - details.stored_offset_fd / 1_000) %>
+  </td>
+  <td>
+    <%== offset_with_label topic_name, partition_id, details.hi_offset %>
+  </td>
+  <td>
+    <%== relative_time(Time.now - details.hi_offset_fd / 1_000) %>
+  </td>
+  <td>
+    <%== offset_with_label topic_name, partition_id, details.ls_offset %>
+  </td>
+  <td>
+    <%== relative_time(Time.now - details.ls_offset_fd / 1_000) %>
+  </td>
+  <td>
+    <span class="badge bg-success <%= lso_risk_state_bg(details) %> bg-opacity-100">
+      <%= details.lso_risk_state %>
+    </span>
+  </td>
+</tr>

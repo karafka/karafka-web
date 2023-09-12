@@ -21,6 +21,7 @@ RSpec.describe_current do
               stored_offset: 95,
               stored_offset_fd: 0,
               hi_offset: 2,
+              hi_offset_fd: 2,
               lo_offset: 0,
               eof_offset: 0,
               ls_offset: 0,

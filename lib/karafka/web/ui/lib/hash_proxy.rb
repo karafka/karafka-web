@@ -24,6 +24,10 @@ module Karafka
             @hash[key]
           end
 
+          def []=(key, value)
+            @hash[key] = value
+          end
+
           # @return [Original hash]
           def to_h
             @hash
