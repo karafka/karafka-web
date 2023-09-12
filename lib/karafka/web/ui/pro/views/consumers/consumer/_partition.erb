@@ -1,4 +1,4 @@
-<tr>
+<tr class="align-middle <%= lso_risk_state_bg(partition) %>">
   <td>
     <%= topic.name %>
   </td>
@@ -31,6 +31,11 @@
   <td>
     <span class="badge <%= kafka_state_bg(partition.poll_state) %> mt-1 mb-1">
       <%= partition.poll_state %>
+    </span>
+  </td>
+  <td>
+    <span class="badge bg-success <%= lso_risk_state_bg(partition) %> bg-opacity-100">
+      <%= partition.lso_risk_state %>
     </span>
   </td>
 </tr>
