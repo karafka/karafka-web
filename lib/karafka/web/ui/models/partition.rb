@@ -21,7 +21,7 @@ module Karafka
             # If last stable is falling behind the high watermark
             if ls_offset < hi_offset
               # But it is changing and moving fast enough, it does not mean it is stuck
-              return :active unless ls_offset_fd >= ::Karafka::Web.config.ui.lso_threshold
+              return :active if ls_offset_fd < ::Karafka::Web.config.ui.lso_threshold
 
               # If it is stuck but we still have work to do, this is not a tragic situation because
               # maybe it will unstuck before we reach it
