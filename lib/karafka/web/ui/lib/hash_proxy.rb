@@ -24,6 +24,9 @@ module Karafka
             @hash[key]
           end
 
+          # Assigns a new value to the key
+          # @param key [Object] hash key for assignment
+          # @param value [Object] anything we want to assign
           def []=(key, value)
             @hash[key] = value
           end
