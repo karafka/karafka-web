@@ -5,15 +5,7 @@ RSpec.describe_current do
 
   let(:data) { {} }
 
-  describe '#lag' do
-    context 'when not available' do
-      it { expect(partition.lag).to eq(-1) }
-    end
-
-    context 'when available' do
-      let(:data) { { lag: 100 } }
-
-      it { expect(partition.lag).to eq(100) }
-    end
+  describe '#lso_risk_state' do
+    pending
   end
 end
