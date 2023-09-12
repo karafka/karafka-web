@@ -12,6 +12,7 @@ module Karafka
             required(:lag_stored) { |val| val.is_a?(Integer) }
             required(:lag) { |val| val.is_a?(Integer) }
             required(:pace) { |val| val.is_a?(Integer) }
+            required(:ls_offset_fd) { |val| val.is_a?(Integer) && val >= 0 }
           end
         end
       end

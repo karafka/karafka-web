@@ -11,10 +11,13 @@ RSpec.describe_current do
       lag: 2,
       lag_d: -1,
       committed_offset: 0,
+      committed_offset_fd: 0,
       stored_offset: 0,
+      stored_offset_fd: 0,
       fetch_state: 'active',
       poll_state: 'active',
       hi_offset: 1,
+      hi_offset_fd: 0,
       lo_offset: 0,
       eof_offset: 0,
       ls_offset: 0,
@@ -63,8 +66,11 @@ RSpec.describe_current do
     lag
     lag_d
     committed_offset
+    committed_offset_fd
     stored_offset
+    stored_offset_fd
     hi_offset
+    hi_offset_fd
     lo_offset
     eof_offset
     ls_offset
@@ -84,9 +90,16 @@ RSpec.describe_current do
     end
   end
 
-  context 'when ls_offset_fd is less than 0' do
-    before { config[:ls_offset_fd] = -1 }
+  %i[
+    committed_offset_fd
+    stored_offset_fd
+    ls_offset_fd
+    hi_offset_fd
+  ].each do |fd|
+    context "when #{fd} is less than 0" do
+      before { config[fd] = -1 }
 
-    it { expect(contract.call(config)).not_to be_success }
+      it { expect(contract.call(config)).not_to be_success }
+    end
   end
 end

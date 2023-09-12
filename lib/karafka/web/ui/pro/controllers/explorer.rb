@@ -24,8 +24,11 @@ module Karafka
             def index
               @topics = Models::ClusterInfo
                         .topics
-                        .reject { |topic| topic[:topic_name] == '__consumer_offsets' }
                         .sort_by { |topic| topic[:topic_name] }
+
+              unless ::Karafka::Web.config.ui.show_internal_topics
+                @topics.reject! { |topic| topic[:topic_name].start_with?('__') }
+              end
 
               respond
             end

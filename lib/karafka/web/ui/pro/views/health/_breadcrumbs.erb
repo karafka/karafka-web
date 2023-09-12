@@ -3,3 +3,19 @@
     Consumers groups health
   </a>
 </li>
+
+<% if current_path.include?('/overview') %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('health', 'overview') %>">
+      Overview
+    </a>
+  </li>
+<% end %>
+
+<% if current_path.include?('/offsets') %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('health', 'offsets') %>">
+      Offsets
+    </a>
+  </li>
+<% end %>

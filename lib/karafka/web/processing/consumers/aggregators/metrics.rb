@@ -113,6 +113,12 @@ module Karafka
                                    .map { |p_details| p_details.fetch(:hi_offset) }
                                    .reject(&:negative?)
 
+                      # Last stable offsets freeze durations - we pick the max freeze to indicate
+                      # the longest open transaction that potentially may be hanging
+                      ls_offsets_fd = partitions_data
+                                      .map { |p_details| p_details.fetch(:ls_offset_fd) }
+                                      .reject(&:negative?)
+
                       # If there is no lag that would not be negative, it means we did not mark
                       # any messages as consumed on this topic in any partitions, hence we cannot
                       # compute lag easily
@@ -127,7 +133,11 @@ module Karafka
                       cgs[group_name][topic_name] = {
                         lag_stored: lags_stored.sum,
                         lag: lags.sum,
-                        pace: offsets_hi.sum
+                        pace: offsets_hi.sum,
+                        # Take max last stable offset duration without any change. This can
+                        # indicate a hanging transaction, because the offset will not move forward
+                        # and will stay with a growing freeze duration when stuck
+                        ls_offset_fd: ls_offsets_fd.max
                       }
                     end
                   end

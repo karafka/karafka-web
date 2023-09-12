@@ -66,6 +66,40 @@ module Karafka
                 topics.each_value(&:compact!)
                 topics.to_json
               end
+
+              # @return [String] JSON with per-topic, highest LSO freeze duration. Useful for
+              #   debugging of issues arising from hanging transactions
+              def max_lso_time
+                topics = Hash.new { |h, k| h[k] = Hash.new { |h2, k2| h2[k2] = [] } }
+
+                @data.to_h.each do |topic, metrics|
+                  topic_without_cg = topic.split('[').first
+
+                  metrics.each do |current|
+                    ls_offset = current.last[:ls_offset] || 0
+                    ls_offset_fd = current.last[:ls_offset_fd] || 0
+                    hi_offset = current.last[:hi_offset] || 0
+
+                    # We convert this to seconds from milliseconds due to our Web UI precision
+                    # Reporting is in ms for consistency
+                    normalized_fd = (ls_offset_fd / 1_000).round
+                    # In case ls_offset and hi_offset are the same, it means we're reached eof
+                    # and we just don't have more data. In cases like this, LSO freeze duration
+                    # will grow because LSO will remain unchanged, but it does not mean it is
+                    # frozen. It means there is just no more data in the topic partition
+                    # This means we need to nullify this case, otherwise it would report, that
+                    # lso is hanging.
+                    normalized_fd = 0 if ls_offset == hi_offset
+
+                    topics[topic_without_cg][current.first] << normalized_fd
+                  end
+                end
+
+                topics.each_value(&:compact!)
+                topics.each_value { |metrics| metrics.transform_values!(&:max) }
+                topics.transform_values! { |values| values.to_a.sort_by!(&:first) }
+                topics.to_json
+              end
             end
           end
         end

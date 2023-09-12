@@ -35,10 +35,13 @@ module Karafka
           # @return [Array<Hash>] array with topics to be displayed sorted in an alphabetical
           #   order
           def displayable_topics(cluster_info)
-            cluster_info
-              .topics
-              .reject { |topic| topic[:topic_name] == '__consumer_offsets' }
-              .sort_by { |topic| topic[:topic_name] }
+            all = cluster_info
+                  .topics
+                  .sort_by { |topic| topic[:topic_name] }
+
+            return all if ::Karafka::Web.config.ui.show_internal_topics
+
+            all.reject { |topic| topic[:topic_name].start_with?('__') }
           end
         end
       end

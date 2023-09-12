@@ -135,9 +135,20 @@ module Karafka
               end
             end
 
-            r.get 'health' do
+            r.on 'health' do
               controller = Controllers::Health.new(params)
-              controller.index
+
+              r.get 'offsets' do
+                controller.offsets
+              end
+
+              r.get 'overview' do
+                controller.overview
+              end
+
+              r.get do
+                r.redirect root_path('health/overview')
+              end
             end
 
             r.get 'cluster' do

@@ -31,7 +31,7 @@ module Karafka
 
                 stats[cg_name] ||= { topics: {} }
                 stats[cg_name][:topics][t_name] ||= {}
-                stats[cg_name][:topics][t_name][pt_id] = partition.to_h
+                stats[cg_name][:topics][t_name][pt_id] = partition
                 stats[cg_name][:topics][t_name][pt_id][:process] = process
               end
             end

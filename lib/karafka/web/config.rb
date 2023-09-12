@@ -94,8 +94,17 @@ module Karafka
         # UI cache to improve performance of views that reuse states that are not often changed
         setting :cache, default: Ui::Lib::TtlCache.new(60_000 * 5)
 
+        # Should we display internal topics of Kafka. The once starting with `__`
+        # By default we do not display them as they are not usable from regular users perspective
+        setting :show_internal_topics, default: false
+
         # How many elements should we display on pages that support pagination
         setting :per_page, default: 25
+
+        # Time beyond which the last stable offset freeze is considered a risk
+        # (unless same as high). This is used to show on the UI that there may be a hanging
+        # transaction that will cause given consumer group to halt processing and wait
+        setting :lso_threshold, default: 5 * 60 * 1_000
 
         # Allows to manage visibility of payload, headers and message key in the UI
         # In some cases you may want to limit what is being displayed due to the type of data you

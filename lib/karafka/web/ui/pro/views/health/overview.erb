@@ -1,0 +1,68 @@
+<%== view_title('Consumers groups overview') %>
+
+<% if @stats.empty? %>
+  <%== partial 'health/no_data' %>
+<% else %>
+  <%== partial 'health/tabs' %>
+<% end %>
+
+<% @stats.each_with_index do |(cg_name, details), index| %>
+  <div class="container mb-5">
+    <div class="row mb-4">
+      <div class="col-sm-8">
+        <h4 class="mb-4"><%= cg_name %></h4>
+      </div>
+
+      <div class="col-sm-4">
+        <span class="float-end">
+          Last rebalance:
+          <span class="badge bg-secondary">
+            <%== relative_time(details[:rebalanced_at]) %>
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-sm-12">
+        <% topics = details[:topics].sort_by(&:first) %>
+        <% topics.each_with_index do |(topic_name, partitions), index| %>
+          <table class="processes bg-white table table-hover table-bordered table-striped align-middle <%= (index+1 < topics.size) ? 'mb-5' : 'mb-3' %>">
+            <thead>
+              <tr class="align-middle">
+                <th colspan="100">
+                  <h5 class="mb-0"><%= topic_name %></h4>
+                </th>
+              </tr>
+              <tr class="align-middle">
+                <th>Partition</th>
+                <th>Lag stored</th>
+                <th>Lag stored trend</th>
+                <th>Committed offset</th>
+                <th>Stored offset</th>
+                <th>Fetch state</th>
+                <th>Poll state</th>
+                <th>LSO state</th>
+                <th>Process name</th>
+              </tr>
+            </thead>
+            <tbody>
+                <% partitions.sort_by(&:first).each do |partition_id, details| %>
+                  <%==
+                    partial(
+                      'health/partition',
+                      locals: {
+                        topic_name: topic_name,
+                        partition_id: partition_id,
+                        details: details
+                      }
+                    )
+                  %>
+                <% end %>
+            </tbody>
+          </table>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

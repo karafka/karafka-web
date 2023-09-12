@@ -6,9 +6,13 @@ RSpec.describe_current do
   let(:topic) { create_topic(partitions: partitions) }
   let(:partitions) { 1 }
   let(:removed_or_compacted) { 'This message has either been removed or compacted' }
+  let(:internal_topic) { "__#{SecureRandom.uuid}" }
 
   describe '#index' do
-    before { get 'explorer' }
+    before do
+      create_topic(topic_name: internal_topic)
+      get 'explorer'
+    end
 
     it do
       expect(response).to be_ok
@@ -19,6 +23,7 @@ RSpec.describe_current do
       expect(body).to include(topics_config.consumers.metrics)
       expect(body).to include(topics_config.consumers.reports)
       expect(body).to include(topics_config.errors)
+      expect(body).not_to include(internal_topic)
     end
 
     context 'when there are no topics' do
@@ -33,6 +38,25 @@ RSpec.describe_current do
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
         expect(body).to include('There are no available topics in the current cluster')
+      end
+    end
+
+    context 'when internal topics should be displayed' do
+      before do
+        allow(::Karafka::Web.config.ui).to receive(:show_internal_topics).and_return(true)
+        get 'explorer'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(breadcrumbs)
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+        expect(body).to include(topics_config.consumers.states)
+        expect(body).to include(topics_config.consumers.metrics)
+        expect(body).to include(topics_config.consumers.reports)
+        expect(body).to include(topics_config.errors)
+        expect(body).to include(internal_topic)
       end
     end
   end

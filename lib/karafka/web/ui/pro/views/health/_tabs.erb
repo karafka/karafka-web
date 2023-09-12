@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="row mb-5">
+    <div class="col-sm-12">
+
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a
+            class="nav-link <%= nav_class(include: 'overview') %>"
+            href="<%= root_path('health', 'overview') %>"
+          >
+            Overview
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link <%= nav_class(include: 'offsets') %>"
+            href="<%= root_path('health', 'offsets') %>"
+          >
+            Offsets
+          </a>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</div>
