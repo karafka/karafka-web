@@ -33,7 +33,6 @@
 - [Improvement] Link `counters` counter to jobs page.
 - [Improvement] Include a sticky footer with the most important links and copyrights.
 - [Improvement] Store lag in counters for performance improvement and historical metrics.
-- [Improvement] Move top navbar content to the left to gain space for new features.
 - [Improvement] Introduce in-memory cluster state cached to improve performance.
 - [Improvement] Switch to offset based pagination instead of per-page pagination.
 - [Improvement] Avoid double-reading of watermark offsets for explorer and errors display.

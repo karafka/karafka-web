@@ -20,12 +20,14 @@
         </tr>
       </thead>
       <tbody>
-        <% consumer_group.subscription_groups.each do |subscription_group| %>
+        <% consumer_group.topics.each do |topic| %>
           <%==
-            each_partial(
-              subscription_group.topics,
+            partial(
               'routing/topic',
-              locals: { subscription_group: subscription_group }
+              locals: {
+                subscription_group: topic.subscription_group,
+                topic: topic
+              }
             )
           %>
         <% end %>
