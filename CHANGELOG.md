@@ -96,6 +96,7 @@ Karafka::Web.enable!
 
 Because of the reporting schema update and new web-ui topics introduction, it is recommended to:
 
+0. Make sure you have upgraded to `0.6.3` before and that it was deployed. To all the environments you want to migrate to `0.7.0`.
 1. Upgrade the codebase based on the below details.
 2. **Stop** the consumer materializing Web-UI. Unless you are running a Web-UI dedicated consumer as recommended [here](https://karafka.io/docs/Web-UI-Development-vs-Production/), you will have to stop all the consumers. This is **crucial** because of schema changes. `karafka-web` `0.7.0` introduces the detection of schema changes, so this step should not be needed in the future.
 3. Run a migration command: `bundle exec karafka-web migrate` that will create missing states and missing topics. You **need** to run it for each of the environments where you use Karafka Web UI.
