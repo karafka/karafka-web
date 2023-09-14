@@ -110,6 +110,8 @@ Please note that if you decide to use the updated Web UI with not updated consum
 2. For creating needed topics and states per environment and during upgrades, please use the newly introduced non-destructive `bundle exec karafka-web migrate`. It will assess changes required and will apply only those.
 3. Is no longer`ui.decrypt` has been replaced with `ui.visibility_filter` API. This API by default also does not decrypt data. To change this behavior, please implement your visibility filter as presented in our documentation.
 4. Karafka Web UI `0.7.0` introduces an in-memory topics cache for some views. This means that rapid topics changes (repartitions/new topics) may be visible up to 5 minutes after those changes.
+3. `ui.decrypt` setting has been replaced with `ui.visibility_filter` API. This API by default also does not decrypt data. To change this behavior, please implement your visibility filter as presented in our documentation.
+4. Karafka Web-UI `0.7.0` introduces an in-memory topics cache for some views. This means that rapid topics changes (repartitions/new topics) may be visible up to 5 minutes after those changes.
 5. Karafka Web UI requires now a new topic called `karafka_consumers_metrics`. If you use strict topic creation and ACL policies, please make sure it exists and that Karafka can both read and write to it.
 
 ## 0.6.3 (2023-07-22)
