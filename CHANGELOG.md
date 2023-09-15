@@ -1,5 +1,8 @@
 # Karafka Web changelog
 
+## 0.7.1 (Unreleased)
+- **[Fix]** Validate refresh time.
+
 ## 0.7.0 (2023-09-14)
 - **[Feature]** Introduce graphs.
 - **[Feature]** Introduce historical metrics storage.
