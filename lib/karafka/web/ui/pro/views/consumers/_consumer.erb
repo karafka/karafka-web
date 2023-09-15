@@ -14,7 +14,11 @@
           <% subscription_group.topics.each do |topic| %>
             <span class="badge bg-secondary badge-topic" title="Consumer group: <%= consumer_group.id %>">
               <%= topic.name %>:
-              <%= topic.partitions.map(&:id).join(',') %>
+              <% if topic.partitions.size > 10 %>
+                <%= "#{topic.partitions.first(10).map(&:id).join(',')}..." %>
+              <% else %>
+                <%= topic.partitions.map(&:id).join(',') %>
+              <% end %>
             </span>
           <% end %>
         <% end %>

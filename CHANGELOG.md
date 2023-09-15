@@ -1,7 +1,10 @@
 # Karafka Web changelog
 
 ## 0.7.1 (Unreleased)
-- **[Fix]** Validate refresh time.
+- [Improvement] Limit number of partitions listed on the Consumers view if they exceed 10 to improve readability and indicate, that there are more.
+- [Improvement] Make sure, that small messages size (less than 100 bytes) is correctly displayed.
+- [Fix] Validate refresh time.
+- [Fix] Fix invalid message payload size display (KB instead of B, etc).
 
 ## 0.7.0 (2023-09-14)
 - **[Feature]** Introduce graphs.
