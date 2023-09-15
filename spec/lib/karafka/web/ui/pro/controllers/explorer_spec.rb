@@ -427,6 +427,40 @@ RSpec.describe_current do
         expect(response.headers['location']).to include("explorer/#{topic}/0/1")
       end
     end
+
+    context 'when requested message exists and is of 1 byte' do
+      before do
+        produce(topic, rand(256).chr)
+        get "explorer/#{topic}/0/0"
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(breadcrumbs)
+        expect(body).to include('<code class="wrapped json')
+        expect(body).to include('Metadata')
+        expect(body).to include('0.001 KB')
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
+
+    context 'when requested message exists and is of 100 byte' do
+      before do
+        produce(topic, SecureRandom.random_bytes(100))
+        get "explorer/#{topic}/0/0"
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(breadcrumbs)
+        expect(body).to include('<code class="wrapped json')
+        expect(body).to include('Metadata')
+        expect(body).to include('0.0977 KB')
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
   end
 
   describe '#recent' do

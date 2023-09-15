@@ -49,7 +49,7 @@
               'explorer/messages/detail',
               locals: {
                 k: 'bytesize',
-                v: format_memory((@message.raw_payload&.bytesize || 0 / 1024.to_f).round(2))
+                v: format_memory(((@message.raw_payload&.bytesize || 0) / 1024.to_f).round(4))
               }
             )
           %>
