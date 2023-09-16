@@ -93,8 +93,8 @@ module Karafka
 
         # UI cache to improve performance of views that reuse states that are not often changed
         setting :cache, default: Ui::Lib::TtlCache.new(
-          # Use the TTL for internal cache in prod but invalidate quickly in other envs, as for
-          # example in development things may change frequently
+          # Use the TTL for internal cache in prod but invalidate quickly in other environments,
+          # as for example in development things may change frequently
           Karafka.env.production? ? 60_000 * 5 : 5_000
         )
 
