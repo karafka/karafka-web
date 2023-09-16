@@ -1,5 +1,8 @@
 # Karafka Web changelog
 
+## 0.7.2 (Unreleased) 
+- [Improvement] Display hidden by accident errors for OSS metrics.
+
 ## 0.7.1 (2023-09-15)
 - [Improvement] Limit number of partitions listed on the Consumers view if they exceed 10 to improve readability and indicate, that there are more.
 - [Improvement] Make sure, that small messages size (less than 100 bytes) is correctly displayed.
