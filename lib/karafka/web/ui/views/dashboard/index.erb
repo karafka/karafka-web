@@ -29,7 +29,7 @@
 
         <div class="tab-content">
           <div class="tab-pane show active" id="messages" role="tabpanel">
-            <% data = @aggregated_charts.with(:messages) %>
+            <% data = @aggregated_charts.with(:messages, :errors) %>
             <%== partial 'shared/chart', locals: { data: data, id: 'messages' } %>
           </div>
 
