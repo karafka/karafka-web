@@ -2,9 +2,11 @@
 
 ## 0.7.2 (Unreleased) 
 - [Improvement] Display hidden by accident errors for OSS metrics.
+- [Improvement] Use a five second cache for non-production environments to improve dev experience.
+- [Improvement] Limit number of partitions listed on the Consumers view if they exceed 10 to improve readability and indicate, that there are more in OSS similar to Pro.
 
 ## 0.7.1 (2023-09-15)
-- [Improvement] Limit number of partitions listed on the Consumers view if they exceed 10 to improve readability and indicate, that there are more.
+- [Improvement] Limit number of partitions listed on the Consumers view if they exceed 10 to improve readability and indicate, that there are more in Pro.
 - [Improvement] Make sure, that small messages size (less than 100 bytes) is correctly displayed.
 - [Fix] Validate refresh time.
 - [Fix] Fix invalid message payload size display (KB instead of B, etc).
