@@ -106,17 +106,17 @@ module Karafka
                              .reject(&:negative?)
 
                       lags_stored = partitions_data
-                                    .map { |p_details| p_details.fetch(:lag_stored) }
+                                    .map { |p_details| p_details.fetch(:lag_stored, -1) }
                                     .reject(&:negative?)
 
                       offsets_hi = partitions_data
-                                   .map { |p_details| p_details.fetch(:hi_offset) }
+                                   .map { |p_details| p_details.fetch(:hi_offset, -1) }
                                    .reject(&:negative?)
 
                       # Last stable offsets freeze durations - we pick the max freeze to indicate
                       # the longest open transaction that potentially may be hanging
                       ls_offsets_fd = partitions_data
-                                      .map { |p_details| p_details.fetch(:ls_offset_fd) }
+                                      .map { |p_details| p_details.fetch(:ls_offset_fd, 0) }
                                       .reject(&:negative?)
 
                       # If there is no lag that would not be negative, it means we did not mark
