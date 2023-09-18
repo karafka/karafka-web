@@ -1,5 +1,8 @@
 # Karafka Web changelog
 
+## 0.7.3 (2023-09-18)
+- [Improvement] Mitigate a case where a race-condition during upgrade would crash data.
+
 ## 0.7.2 (2023-09-18) 
 - [Improvement] Display hidden by accident errors for OSS metrics.
 - [Improvement] Use a five second cache for non-production environments to improve dev experience.
