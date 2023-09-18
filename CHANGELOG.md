@@ -5,6 +5,7 @@
 - [Improvement] Use a five second cache for non-production environments to improve dev experience.
 - [Improvement] Limit number of partitions listed on the Consumers view if they exceed 10 to improve readability and indicate, that there are more in OSS similar to Pro.
 - [Improvement] Squash processes reports based on the key instead of payload skipping deserialization for duplicated reports.
+- [Improvement] Make sure, that the Karafka topics present data can be deserialized and report on the status page if not.
 - [Fix] Extensive data-poll on processes despite no processes being available.
 
 ## 0.7.1 (2023-09-15)
