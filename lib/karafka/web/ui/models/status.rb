@@ -143,7 +143,7 @@ module Karafka
               begin
                 @current_state ||= Models::ConsumersState.current
                 status = @current_state ? :success : :failure
-              rescue JSON::ParserError  => e
+              rescue JSON::ParserError
                 status = :failure
                 details[:issue_type] = :deserialization
               end
@@ -166,7 +166,7 @@ module Karafka
               begin
                 @current_metrics ||= Models::ConsumersMetrics.current
                 status = @current_metrics ? :success : :failure
-              rescue JSON::ParserError => e
+              rescue JSON::ParserError
                 status = :failure
                 details[:issue_type] = :deserialization
               end
@@ -197,11 +197,11 @@ module Karafka
           # @return [Status::Step] Is there at least one active karafka server reporting to the
           #   Web UI
           def live_reporting
-            if consumers_reports.success?
-              status = @processes.empty? ? :failure : :success
-            else
-              status = :halted
-            end
+            status = if consumers_reports.success?
+                       @processes.empty? ? :failure : :success
+                     else
+                       :halted
+                     end
 
             Step.new(
               status,

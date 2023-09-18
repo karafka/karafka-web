@@ -51,7 +51,7 @@ module Karafka
 
         # Creates the initial states for the Web-UI if needed (if they don't exist)
         def call
-          if false && Ui::Models::ConsumersState.current
+          if Ui::Models::ConsumersState.current
             exists('consumers state')
           else
             creating('consumers state')
