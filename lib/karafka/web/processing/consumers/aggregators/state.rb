@@ -152,8 +152,8 @@ module Karafka
                   stats[:listeners] += report_process[:listeners] || 0
                   stats[:processes] += 1
                   stats[:rss] += report_process[:memory_usage]
-                  stats[:lag] += lags.reject(&:negative?).sum
-                  stats[:lag_stored] += lags_stored.reject(&:negative?).sum
+                  stats[:lag] += lags.compact.reject(&:negative?).sum
+                  stats[:lag_stored] += lags_stored.compact.reject(&:negative?).sum
                   utilization += report_stats[:utilization]
                 end
 
