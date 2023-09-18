@@ -134,45 +134,74 @@ module Karafka
             )
           end
 
-          # @return [Status::Step] Is the initial consumers state present in Kafka
+          # @return [Status::Step] Is the initial consumers state present in Kafka and that they
+          #   can be deserialized
           def initial_consumers_state
+            details = { issue_type: :presence }
+
             if replication.success?
-              @current_state ||= Models::ConsumersState.current
-              status = @current_state ? :success : :failure
+              begin
+                @current_state ||= Models::ConsumersState.current
+                status = @current_state ? :success : :failure
+              rescue JSON::ParserError
+                status = :failure
+                details[:issue_type] = :deserialization
+              end
             else
               status = :halted
             end
 
             Step.new(
               status,
-              nil
+              details
             )
           end
 
-          # @return [Status::Step] Is the initial consumers metrics record present in Kafka
+          # @return [Status::Step] Is the initial consumers metrics record present in Kafka and
+          #   that they can be deserialized
           def initial_consumers_metrics
+            details = { issue_type: :presence }
+
             if initial_consumers_state.success?
-              @current_metrics ||= Models::ConsumersMetrics.current
-              status = @current_metrics ? :success : :failure
+              begin
+                @current_metrics ||= Models::ConsumersMetrics.current
+                status = @current_metrics ? :success : :failure
+              rescue JSON::ParserError
+                status = :failure
+                details[:issue_type] = :deserialization
+              end
             else
               status = :halted
             end
 
             Step.new(
               status,
-              nil
+              details
             )
+          end
+
+          # @return [Status::Step] could we read and operate on the current processes data (if any)
+          def consumers_reports
+            if initial_consumers_metrics.success?
+              @processes ||= Models::Processes.active(@current_state)
+              status = :success
+            else
+              status = :halted
+            end
+
+            Step.new(status, nil)
+          rescue JSON::ParserError
+            Step.new(:failure, nil)
           end
 
           # @return [Status::Step] Is there at least one active karafka server reporting to the
           #   Web UI
           def live_reporting
-            if initial_consumers_metrics.success?
-              @processes ||= Models::Processes.active(@current_state)
-              status = @processes.empty? ? :failure : :success
-            else
-              status = :halted
-            end
+            status = if consumers_reports.success?
+                       @processes.empty? ? :failure : :success
+                     else
+                       :halted
+                     end
 
             Step.new(
               status,

@@ -1,0 +1,11 @@
+<p>
+  At least one consumer report appears to be corrupted.
+</p>
+
+<p>
+  This issue typically arises when invalid messages have been sent to the Karafka consumers' reports topic or when the topic has been populated with data from a newer Karafka Web UI without updating it.
+</p>
+
+<p class="mb-0">
+  To resolve this, please first attempt to upgrade the Karafka Web UI. If the problem persists, execute <code>bundle exec karafka-web reset</code> to reset the Web UI.
+</p>

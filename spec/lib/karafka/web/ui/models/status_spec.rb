@@ -227,7 +227,7 @@ RSpec.describe_current do
       it 'expect to halt' do
         expect(result.success?).to eq(false)
         expect(result.to_s).to eq('halted')
-        expect(result.details).to eq(nil)
+        expect(result.details).to eq({ issue_type: :presence })
         expect(result.partial_namespace).to eq('failures')
       end
     end
@@ -238,7 +238,7 @@ RSpec.describe_current do
       it 'expect to fail' do
         expect(result.success?).to eq(false)
         expect(result.to_s).to eq('failure')
-        expect(result.details).to eq(nil)
+        expect(result.details).to eq({ issue_type: :presence })
         expect(result.partial_namespace).to eq('failures')
       end
     end
@@ -252,8 +252,22 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to eq(true)
         expect(result.to_s).to eq('success')
-        expect(result.details).to eq(nil)
+        expect(result.details).to eq({ issue_type: :presence })
         expect(result.partial_namespace).to eq('successes')
+      end
+    end
+
+    context 'when state is present but corrupted' do
+      before do
+        all_topics
+        produce(states_topic, '{')
+      end
+
+      it 'expect all to be ok' do
+        expect(result.success?).to eq(false)
+        expect(result.to_s).to eq('failure')
+        expect(result.details).to eq({ issue_type: :deserialization })
+        expect(result.partial_namespace).to eq('failures')
       end
     end
 
@@ -268,7 +282,7 @@ RSpec.describe_current do
       it 'expect all to be ok because replication is a warning' do
         expect(result.success?).to eq(true)
         expect(result.to_s).to eq('success')
-        expect(result.details).to eq(nil)
+        expect(result.details).to eq({ issue_type: :presence })
         expect(result.partial_namespace).to eq('successes')
       end
     end
@@ -288,7 +302,7 @@ RSpec.describe_current do
       it 'expect to halt' do
         expect(result.success?).to eq(false)
         expect(result.to_s).to eq('halted')
-        expect(result.details).to eq(nil)
+        expect(result.details).to eq({ issue_type: :presence })
         expect(result.partial_namespace).to eq('failures')
       end
     end
@@ -302,7 +316,22 @@ RSpec.describe_current do
       it 'expect to fail' do
         expect(result.success?).to eq(false)
         expect(result.to_s).to eq('failure')
-        expect(result.details).to eq(nil)
+        expect(result.details).to eq({ issue_type: :presence })
+        expect(result.partial_namespace).to eq('failures')
+      end
+    end
+
+    context 'when initial consumers metrics are present but corrupted' do
+      before do
+        all_topics
+        produce(states_topic, state)
+        produce(metrics_topic, '{')
+      end
+
+      it 'expect to fail' do
+        expect(result.success?).to eq(false)
+        expect(result.to_s).to eq('failure')
+        expect(result.details).to eq({ issue_type: :deserialization })
         expect(result.partial_namespace).to eq('failures')
       end
     end
@@ -313,8 +342,68 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to eq(true)
         expect(result.to_s).to eq('success')
+        expect(result.details).to eq({ issue_type: :presence })
+        expect(result.partial_namespace).to eq('successes')
+      end
+    end
+  end
+
+  describe '#consumers_reports' do
+    subject(:result) { status.consumers_reports }
+
+    context 'when there is no initial consumers metrics state' do
+      before do
+        all_topics
+        produce(states_topic, state)
+      end
+
+      it 'expect to halt' do
+        expect(result.success?).to eq(false)
+        expect(result.to_s).to eq('halted')
+        expect(result.details).to eq(nil)
+        expect(result.partial_namespace).to eq('failures')
+      end
+    end
+
+    context 'when at least one process is active' do
+      before { ready_topics }
+
+      it 'expect all to be ok' do
+        expect(result.success?).to eq(true)
+        expect(result.to_s).to eq('success')
         expect(result.details).to eq(nil)
         expect(result.partial_namespace).to eq('successes')
+      end
+    end
+
+    context 'when there are no processes' do
+      before do
+        all_topics
+        produce(states_topic, state)
+        produce(metrics_topic, metrics)
+      end
+
+      it 'expect all to be ok' do
+        expect(result.success?).to eq(true)
+        expect(result.to_s).to eq('success')
+        expect(result.details).to eq(nil)
+        expect(result.partial_namespace).to eq('successes')
+      end
+    end
+
+    context 'when process data is corrupted' do
+      before do
+        all_topics
+        produce(states_topic, state)
+        produce(metrics_topic, metrics)
+        produce(reports_topic, '{')
+      end
+
+      it 'expect all to be ok' do
+        expect(result.success?).to eq(false)
+        expect(result.to_s).to eq('failure')
+        expect(result.details).to eq(nil)
+        expect(result.partial_namespace).to eq('failures')
       end
     end
   end
@@ -322,10 +411,11 @@ RSpec.describe_current do
   describe '#live_reporting' do
     subject(:result) { status.live_reporting }
 
-    context 'when there is no initial consumers metrics state' do
+    context 'when initial metrics state is corrupted' do
       before do
         all_topics
         produce(states_topic, state)
+        produce(metrics_topic, '{')
       end
 
       it 'expect to halt' do

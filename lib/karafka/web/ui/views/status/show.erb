@@ -82,7 +82,7 @@
         partial(
           "status/#{@status.initial_consumers_state.to_s}",
           locals: {
-            title: 'Initial consumers state presence',
+            title: 'Initial consumers state',
             description: partial(
               'status/failures/initial_consumers_state',
               locals: {
@@ -97,11 +97,26 @@
         partial(
           "status/#{@status.initial_consumers_metrics.to_s}",
           locals: {
-            title: 'Initial consumers metrics presence',
+            title: 'Initial consumers metrics',
             description: partial(
               'status/failures/initial_consumers_metrics',
               locals: {
                 details: @status.initial_consumers_metrics.details
+              }
+            )
+          }
+        )
+      %>
+
+      <%==
+        partial(
+          "status/#{@status.consumers_reports.to_s}",
+          locals: {
+            title: 'Consumers reports',
+            description: partial(
+              'status/failures/consumers_reports',
+              locals: {
+                details: @status.consumers_reports.details
               }
             )
           }

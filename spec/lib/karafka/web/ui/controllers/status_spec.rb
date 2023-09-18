@@ -11,6 +11,7 @@ RSpec.describe_current do
         expect(response).to be_ok
         expect(body).to include(support_message)
         expect(body).to include(breadcrumbs)
+        expect(body).not_to include('The initial state of the consumers appears to')
       end
     end
 
@@ -54,6 +55,43 @@ RSpec.describe_current do
         expect(body).to include(support_message)
         expect(body).to include(breadcrumbs)
         expect(body).not_to include('Please ensure all those topics have a replication')
+      end
+    end
+
+    context 'when consumers states topic received corrupted data' do
+      let(:states_topic) { create_topic }
+
+      before do
+        topics_config.consumers.states = states_topic
+        # Corrupted on purpose
+        produce(states_topic, '{')
+
+        get 'status'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(support_message)
+        expect(body).to include(breadcrumbs)
+        expect(body).to include('The initial state of the consumers appears to')
+      end
+    end
+
+    context 'when consumers metrics topic received corrupted data' do
+      let(:metrics_topic) { create_topic }
+
+      before do
+        topics_config.consumers.metrics = metrics_topic
+        produce(metrics_topic, '{')
+
+        get 'status'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(support_message)
+        expect(body).to include(breadcrumbs)
+        expect(body).to include('The initial state of the consumers metrics appears to')
       end
     end
   end
