@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-## 0.7.2 (Unreleased) 
+## 0.7.2 (2023-09-18) 
 - [Improvement] Display hidden by accident errors for OSS metrics.
 - [Improvement] Use a five second cache for non-production environments to improve dev experience.
 - [Improvement] Limit number of partitions listed on the Consumers view if they exceed 10 to improve readability and indicate, that there are more in OSS similar to Pro.
