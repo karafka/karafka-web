@@ -60,8 +60,6 @@ RSpec.describe_current do
       data = JSON.parse(fixtures_file('consumers_state.json'))
       base_report = JSON.parse(fixtures_file('consumer_report.json'))
 
-      reports = []
-
       100.times do |i|
         name = "shinra:#{i}:#{i}"
 
