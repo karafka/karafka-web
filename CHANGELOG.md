@@ -4,6 +4,8 @@
 - [Improvement] Display hidden by accident errors for OSS metrics.
 - [Improvement] Use a five second cache for non-production environments to improve dev experience.
 - [Improvement] Limit number of partitions listed on the Consumers view if they exceed 10 to improve readability and indicate, that there are more in OSS similar to Pro.
+- [Improvement] Squash processes reports based on the key instead of payload skipping deserialization for duplicated reports.
+- [Fix] Extensive data-poll on processes despite no processes being available.
 
 ## 0.7.1 (2023-09-15)
 - [Improvement] Limit number of partitions listed on the Consumers view if they exceed 10 to improve readability and indicate, that there are more in Pro.
