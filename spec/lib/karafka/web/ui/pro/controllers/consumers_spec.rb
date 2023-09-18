@@ -61,8 +61,6 @@ RSpec.describe_current do
         data = JSON.parse(fixtures_file('consumers_state.json'))
         base_report = JSON.parse(fixtures_file('consumer_report.json'))
 
-        reports = []
-
         100.times do |i|
           name = "shinra:#{i}:#{i}"
 
@@ -74,11 +72,10 @@ RSpec.describe_current do
           report = base_report.dup
           report['process']['name'] = name
 
-          reports << report.to_json
+          produce(reports_topic, report.to_json, key: name)
         end
 
         produce(states_topic, data.to_json)
-        produce_many(reports_topic, reports)
       end
 
       context 'when we visit first page' do

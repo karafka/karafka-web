@@ -18,9 +18,10 @@ module Karafka
             # @param state [State] current system state from which we can get processes metadata
             # @return [Array<Process>]
             def active(state)
-              processes = fetch_reports(state)
+              messages = fetch_reports(state)
+              messages = squash_processes_data(messages)
+              processes = messages.map(&:payload)
               evict_expired_processes(processes)
-              processes = squash_processes_data(processes)
               processes = sort_processes(processes)
 
               processes.map { |process_hash| Process.new(process_hash) }
@@ -32,7 +33,13 @@ module Karafka
             # @param state [State]
             # @return [Array<Hash>] array with deserialized processes reports
             def fetch_reports(state)
-              offsets = state[:processes]
+              processes = state[:processes]
+
+              # Short track when no processes not to run a read when nothing will be given
+              # This allows us to handle a case where we would load 10k of reports for nothing
+              return [] if processes.empty?
+
+              offsets = processes
                         .values
                         .map { |process| process[:offset] }
                         .sort
@@ -46,7 +53,7 @@ module Karafka
                 # was bypassed by state changes in the processes
                 10_000,
                 offsets.first || -1
-              ).map(&:payload)
+              )
             end
 
             # Collapses processes data and only keeps the most recent report for give process
@@ -55,7 +62,7 @@ module Karafka
             def squash_processes_data(processes)
               processes
                 .reverse
-                .uniq { |consumer| consumer[:process][:name] }
+                .uniq(&:key)
                 .reverse
             end
 
