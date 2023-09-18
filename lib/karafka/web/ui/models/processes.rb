@@ -62,7 +62,7 @@ module Karafka
             def squash_processes_data(processes)
               processes
                 .reverse
-                .uniq { |message| message.key }
+                .uniq(&:key)
                 .reverse
             end
 
