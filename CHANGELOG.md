@@ -1,7 +1,17 @@
 # Karafka Web changelog
 
 ## 0.7.5 (Unreleased)
-- Introduce ability to download raw payloads.
+- **[Feature]** Introduce ability to download raw payloads.
+- **[Feature]** Introduce ability to download deserialized message payload as JSON.
+- [Refactor] Rename `ui.show_internal_topics` to `ui.visibility.internal_topics_display`
+
+### Upgrade Notes
+
+**NO** rolling upgrade needed. Just configuration update.
+
+1. If you are using `ui.visibility_filter` this option is now `ui.visibility.filter` (yes, only `.` difference).
+2. `ui.show_internal_topics` is now `ui.visibility.internal_topics_display`
+3. If you are using visibility filtering to hide part of the payload from being visible via the Web UI, you may want to disable the ability to download raw payload by setting the `ui.visibility.raw_payload_download` to `false`. JSON export exports **exactly** what is visible on the UI **after** the visibility filter application, so **no risk** in data exposure beyond what is visible in the Web UI.
 
 ## 0.7.4 (2023-09-19)
 - [Improvement] Skip aggregations on older schemas during upgrades. This only skips process-reports (that are going to be rolled) on the 5s window in case of an upgrade that should not be a rolling one anyhow. This simplifies the operations and minimizes the risk on breaking upgrades.

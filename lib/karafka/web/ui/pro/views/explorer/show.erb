@@ -1,22 +1,5 @@
-<%
-  republish_path = root_path('messages', @message.topic, @message.partition, @message.offset, 'republish')
-  surrounding_path = explorer_path(@message.topic, @message.partition, @message.offset, 'surrounding')
-%>
-
 <div class="container">
-  <div class="row mb-0">
-    <div class="col-sm-12 text-end">
-      <a href="<%= surrounding_path %>" class="btn btn-secondary btn-sm float-end ms-1">
-        &#8651;
-        Surrounding
-      </a>
-
-      <form action="<%= republish_path %>" method="post" class="confirm-action float-end">
-        <%== csrf_tag(republish_path) %>
-        <input type="submit" value="&#10227; Republish" class="btn btn-primary btn-sm"/>
-      </form>
-    </div>
-  </div>
+  <%== partial 'explorer/message/message_actions' %>
 
   <div class="row mb-4">
     <div class="col-sm-12">
@@ -28,49 +11,7 @@
     </div>
   </div>
 
-  <div class="row mb-5">
-    <div class="col-sm-12">
-      <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
-        <tbody>
-          <% @message.metadata.to_h.except(:received_at, :key, :headers).each do |k, v| %>
-            <%==
-              partial(
-                'explorer/messages/detail',
-                locals: {
-                  k: k,
-                  v: v
-                }
-              )
-            %>
-          <% end %>
-
-          <%==
-            partial(
-              'explorer/messages/detail',
-              locals: {
-                k: 'bytesize',
-                v: format_memory(((@message.raw_payload&.bytesize || 0) / 1024.to_f).round(4))
-              }
-            )
-          %>
-
-          <%==
-            partial(
-              'explorer/messages/key',
-              locals: { message: @message }
-            )
-          %>
-
-          <%==
-            partial(
-              'explorer/messages/headers',
-              locals: { message: @message }
-            )
-          %>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <%== partial 'explorer/message/metadata' %>
 </div>
 
 <div class="container">
@@ -80,39 +21,13 @@
         Payload
       </h5>
 
-      <a
-        href="<%= root_path('messages', @message.topic, @message.partition, @message.offset, 'download') %>"
-        class="btn btn-secondary btn-sm float-end"
-      >
-        &#8659; Download
-      </a>
+      <%== partial 'explorer/message/payload_actions' %>
 
       <div class="clearfix"></div>
 
       <hr/>
-
     </div>
   </div>
 
-  <% if @visibility_filter.payload?(@message) %>
-    <div class="row">
-      <div class="col-sm-12 mb-4">
-        <% if @payload_error %>
-          <%== partial 'explorer/failed_deserialization' %>
-        <% end %>
-
-        <div class="card">
-          <div class="card-body">
-            <% if @payload_error %>
-              <pre class="m-0 p-0"><code class="wrapped json p-0 m-0"><%= @message.raw_payload %></code></pre>
-            <% else %>
-              <pre class="m-0 p-0"><code class="wrapped json p-0 m-0"><%= @pretty_payload %></code></pre>
-            <% end %>
-          </div>
-        </div>
-      </div>
-    </div>
-  <% else %>
-    <%== partial 'explorer/filtered' %>
-  <% end %>
+  <%== partial 'explorer/message/payload' %>
 </div>

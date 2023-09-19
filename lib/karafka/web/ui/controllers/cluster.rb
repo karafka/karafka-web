@@ -39,7 +39,7 @@ module Karafka
                   .topics
                   .sort_by { |topic| topic[:topic_name] }
 
-            return all if ::Karafka::Web.config.ui.show_internal_topics
+            return all if ::Karafka::Web.config.ui.visibility.internal_topics_display
 
             all.reject { |topic| topic[:topic_name].start_with?('__') }
           end

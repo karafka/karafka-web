@@ -134,8 +134,18 @@ module Karafka
                 controller.republish(topic_id, partition_id, offset)
               end
 
-              r.get String, Integer, Integer, 'download' do |topic_id, partition_id, offset|
-                controller.download(topic_id, partition_id, offset)
+              # Only allow download when enabled
+              if ::Karafka::Web.config.ui.visibility.raw_payload_download
+                r.get String, Integer, Integer, 'download' do |topic_id, partition_id, offset|
+                  controller.download(topic_id, partition_id, offset)
+                end
+              end
+
+              # Only allow export when enabled
+              if ::Karafka::Web.config.ui.visibility.payload_export
+                r.get String, Integer, Integer, 'export' do |topic_id, partition_id, offset|
+                  controller.export(topic_id, partition_id, offset)
+                end
               end
             end
 

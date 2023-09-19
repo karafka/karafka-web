@@ -52,10 +52,15 @@ module Karafka
             required(:secret) { |val| val.is_a?(String) && val.length >= 64 }
           end
 
-          required(:show_internal_topics) { |val| [true, false].include?(val) }
           required(:cache) { |val| !val.nil? }
           required(:per_page) { |val| val.is_a?(Integer) && val >= 1 && val <= 100 }
-          required(:visibility_filter) { |val| !val.nil? }
+
+          nested(:visibility) do
+            required(:filter) { |val| !val.nil? }
+            required(:internal_topics_display) { |val| [true, false].include?(val) }
+            required(:raw_payload_download) { |val| [true, false].include?(val) }
+            required(:payload_export) { |val| [true, false].include?(val) }
+          end
         end
       end
     end

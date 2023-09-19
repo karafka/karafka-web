@@ -56,6 +56,23 @@ module Karafka
               )
             end
 
+            # Dispatches the message payload first deserialized and then serialized to JSON
+            # It differs from the raw payload in cases where raw payload is compressed or binary
+            # or contains data that the Web UI user should not see that was altered on the Web UI
+            # with the visibility filter.
+            #
+            # @param topic_id [String]
+            # @param partition_id [Integer]
+            # @param offset [Integer] offset of the message we want to export
+            def export(topic_id, partition_id, offset)
+              message = Ui::Models::Message.find(topic_id, partition_id, offset)
+
+              file(
+                message.payload.to_json,
+                "#{topic_id}_#{partition_id}_#{offset}_payload.json"
+              )
+            end
+
             private
 
             # @param message [Karafka::Messages::Message]

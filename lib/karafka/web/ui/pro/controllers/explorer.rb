@@ -26,7 +26,7 @@ module Karafka
                         .topics
                         .sort_by { |topic| topic[:topic_name] }
 
-              unless ::Karafka::Web.config.ui.show_internal_topics
+              unless ::Karafka::Web.config.ui.visibility.internal_topics_display
                 @topics.reject! { |topic| topic[:topic_name].start_with?('__') }
               end
 
@@ -45,7 +45,7 @@ module Karafka
             # @note We cannot use offset references here because each of the partitions may have
             #   completely different values
             def topic(topic_id)
-              @visibility_filter = ::Karafka::Web.config.ui.visibility_filter
+              @visibility_filter = ::Karafka::Web.config.ui.visibility.filter
 
               @topic_id = topic_id
               @partitions_count = Models::ClusterInfo.partitions_count(topic_id)
@@ -68,7 +68,7 @@ module Karafka
             # @param topic_id [String]
             # @param partition_id [Integer]
             def partition(topic_id, partition_id)
-              @visibility_filter = ::Karafka::Web.config.ui.visibility_filter
+              @visibility_filter = ::Karafka::Web.config.ui.visibility.filter
               @topic_id = topic_id
               @partition_id = partition_id
               @watermark_offsets = Ui::Models::WatermarkOffsets.find(topic_id, partition_id)
@@ -94,7 +94,7 @@ module Karafka
             # @param offset [Integer] offset of the message we want to display
             # @param paginate [Boolean] do we want to have pagination
             def show(topic_id, partition_id, offset, paginate: true)
-              @visibility_filter = ::Karafka::Web.config.ui.visibility_filter
+              @visibility_filter = ::Karafka::Web.config.ui.visibility.filter
               @topic_id = topic_id
               @partition_id = partition_id
               @offset = offset

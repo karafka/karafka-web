@@ -1,0 +1,19 @@
+<div class="float-end text-end">
+  <% if Karafka::Web.config.ui.visibility.raw_payload_download %>
+    <a
+      href="<%= root_path('messages', @message.topic, @message.partition, @message.offset, 'download') %>"
+      class="btn btn-secondary btn-sm"
+    >
+      &#8659; Download raw payload
+    </a>
+  <% end %>
+
+  <% if Karafka::Web.config.ui.visibility.payload_export && !@payload_error %>
+    <a
+      href="<%= root_path('messages', @message.topic, @message.partition, @message.offset, 'export') %>"
+      class="btn btn-secondary btn-sm"
+    >
+      &#8659; Export as JSON
+    </a>
+  <% end %>
+</div>
