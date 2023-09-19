@@ -247,11 +247,20 @@ module Karafka
           # Loads our ps results into memory so we can extract from them whatever we need
           def memory_threads_ps
             @memory_threads_ps = case RUBY_PLATFORM
-                                 when /darwin|bsd|linux/
+                                 when /linux/
                                    @shell
-                                 .call('ps -A -o rss=,thcount,pid')
+                                 .call('ps -A -o rss=,thcount=,pid=')
                                  .split("\n")
                                  .map { |row| row.strip.split(' ').map(&:to_i) }
+                                 # thcount is not available on macos ps
+                                 # because of that we inject 0 as threads count similar to how
+                                 # we do on windows
+                                 when /darwin|bsd/
+                                   @shell
+                                 .call('ps -A -o rss=,pid=')
+                                 .split("\n")
+                                 .map { |row| row.strip.split(' ').map(&:to_i) }
+                                 .map { |row| [row.first, 0, row.last] }
                                  else
                                    @memory_threads_ps = false
                                  end

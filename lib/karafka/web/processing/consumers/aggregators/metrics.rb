@@ -102,7 +102,7 @@ module Karafka
                       partitions_data = topic_details.fetch(:partitions).values
 
                       lags = partitions_data
-                             .map { |p_details| p_details[:lag] || 0 }
+                             .map { |p_details| p_details.fetch(:lag, -1) }
                              .reject(&:negative?)
 
                       lags_stored = partitions_data
