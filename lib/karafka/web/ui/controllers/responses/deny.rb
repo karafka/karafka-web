@@ -5,6 +5,7 @@ module Karafka
     module Ui
       module Controllers
         module Responses
+          # Response that will make Roda render 403 deny
           class Deny
           end
         end
