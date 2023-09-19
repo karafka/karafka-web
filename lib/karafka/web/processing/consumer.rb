@@ -26,7 +26,7 @@ module Karafka
 
           # We set this that way so we report with first batch and so we report as fast as possible
           @flushed_at = monotonic_now - @flush_interval
-          @changed = false
+          @established = false
         end
 
         # Aggregates consumers state into a single current state representation
@@ -62,8 +62,8 @@ module Karafka
             @metrics_aggregator.add_stats(@state_aggregator.stats)
             # Indicates that we had at least one report we used to enrich data
             # If there were no state changes, there is no reason to flush data. This can occur
-            # when we had some messages but we skipped them for any reason
-            @changed = true
+            # when we had some messages but we skipped them for any reason on a first run
+            @established = true
 
             # Optimize memory usage in pro
             message.clean! if Karafka.pro?
@@ -85,13 +85,11 @@ module Karafka
 
         # Flushes the state of the Web-UI to the DB
         def dispatch
-          return unless @changed
+          return unless @established
 
           materialize
           validate!
           flush
-
-          @changed = false
         end
 
         # @return [Boolean] is it time to persist the new current state
