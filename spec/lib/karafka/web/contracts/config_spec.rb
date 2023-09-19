@@ -39,7 +39,7 @@ RSpec.describe_current do
         },
         visibility: {
           filter: Object.new,
-          internal_topics_display: true
+          internal_topics: true
         },
         cache: Object.new,
         per_page: 50
@@ -172,14 +172,14 @@ RSpec.describe_current do
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when internal_topics_display is nil' do
-      before { params[:ui][:visibility][:internal_topics_display] = nil }
+    context 'when internal_topics is nil' do
+      before { params[:ui][:visibility][:internal_topics] = nil }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when internal_topics_display is not boolean' do
-      before { params[:ui][:visibility][:internal_topics_display] = '1' }
+    context 'when internal_topics is not boolean' do
+      before { params[:ui][:visibility][:internal_topics] = '1' }
 
       it { expect(contract.call(params)).not_to be_success }
     end

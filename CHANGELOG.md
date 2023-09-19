@@ -11,6 +11,7 @@
 
 1. If you are using `ui.visibility_filter` this option is now `ui.visibility.filter` (yes, only `.` difference).
 2. If you are using a custom visibility filter, it requires now two extra methods: `#download?` and `#export?`. The default visibility filter allows both actions unless message is encrypted.
+3. `ui.show_internal_topics` config option has been moved and renamed to `ui.visibility.internal_topics`.
 
 ## 0.7.4 (2023-09-19)
 - [Improvement] Skip aggregations on older schemas during upgrades. This only skips process-reports (that are going to be rolled) on the 5s window in case of an upgrade that should not be a rolling one anyhow. This simplifies the operations and minimizes the risk on breaking upgrades.

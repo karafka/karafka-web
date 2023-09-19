@@ -57,7 +57,7 @@ module Karafka
 
           nested(:visibility) do
             required(:filter) { |val| !val.nil? }
-            required(:internal_topics_display) { |val| [true, false].include?(val) }
+            required(:internal_topics) { |val| [true, false].include?(val) }
           end
         end
       end

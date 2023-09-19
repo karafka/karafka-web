@@ -44,7 +44,7 @@ RSpec.describe_current do
     context 'when internal topics should be displayed' do
       before do
         allow(::Karafka::Web.config.ui.visibility)
-          .to receive(:internal_topics_display)
+          .to receive(:internal_topics)
           .and_return(true)
 
         get 'explorer'
