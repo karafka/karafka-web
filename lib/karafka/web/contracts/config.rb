@@ -58,8 +58,6 @@ module Karafka
           nested(:visibility) do
             required(:filter) { |val| !val.nil? }
             required(:internal_topics_display) { |val| [true, false].include?(val) }
-            required(:raw_payload_download) { |val| [true, false].include?(val) }
-            required(:payload_export) { |val| [true, false].include?(val) }
           end
         end
       end

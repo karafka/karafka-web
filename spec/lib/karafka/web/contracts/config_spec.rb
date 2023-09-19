@@ -39,9 +39,7 @@ RSpec.describe_current do
         },
         visibility: {
           filter: Object.new,
-          internal_topics_display: true,
-          raw_payload_download: true,
-          payload_export: true
+          internal_topics_display: true
         },
         cache: Object.new,
         per_page: 50
@@ -169,7 +167,7 @@ RSpec.describe_current do
     end
 
     context 'when visibility_filter is nil' do
-      before { params[:ui][:visibility_filter] = nil }
+      before { params[:ui][:visibility][:filter] = nil }
 
       it { expect(contract.call(params)).not_to be_success }
     end

@@ -54,6 +54,11 @@ module Karafka
             Responses::File.new(content, file_name)
           end
 
+          # Builds a halt 403 response
+          def deny
+            Responses::Deny.new
+          end
+
           # Initializes the expected pagination engine and assigns expected arguments
           # @param args Any arguments accepted by the selected pagination engine
           def paginate(*args)

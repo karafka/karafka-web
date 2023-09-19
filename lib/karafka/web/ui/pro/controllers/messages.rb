@@ -50,6 +50,9 @@ module Karafka
             def download(topic_id, partition_id, offset)
               message = Ui::Models::Message.find(topic_id, partition_id, offset)
 
+              # Check if downloads are allowed
+              return deny unless visibility_filter.download?(message)
+
               file(
                 message.raw_payload,
                 "#{topic_id}_#{partition_id}_#{offset}_payload.msg"
@@ -66,6 +69,9 @@ module Karafka
             # @param offset [Integer] offset of the message we want to export
             def export(topic_id, partition_id, offset)
               message = Ui::Models::Message.find(topic_id, partition_id, offset)
+
+              # Check if exports are allowed
+              return deny unless visibility_filter.export?(message)
 
               file(
                 message.payload.to_json,
@@ -84,6 +90,11 @@ module Karafka
                 has been sent again to #{message.topic}##{message.partition}
                 and received offset #{delivery.offset}.
               MSG
+            end
+
+            # @return [Object] visibility filter. Either default or user-based
+            def visibility_filter
+              ::Karafka::Web.config.ui.visibility.filter
             end
           end
         end

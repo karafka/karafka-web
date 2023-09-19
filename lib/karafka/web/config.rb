@@ -107,17 +107,6 @@ module Karafka
           # Should we display internal topics of Kafka. The once starting with `__`
           # By default we do not display them as they are not usable from regular users perspective
           setting :internal_topics_display, default: false
-
-          # Should the user be allowed to download raw payload
-          # When false, neither the button nor the URL will work
-          # This can be used when hiding parts of the payload for security/compliance reasons
-          # Raw payload will contain them not hidden, hence exposing sensitive data
-          setting :raw_payload_download, default: true
-
-          # Should the user be allowed to export the de-serialized payload (if de-serializable)
-          # from the UI. This does NOT contain private data if visibility  filter was used.
-          # It is what user sees in the UI
-          setting :payload_export, default: true
         end
 
         # How many elements should we display on pages that support pagination

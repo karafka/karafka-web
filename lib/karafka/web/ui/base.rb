@@ -59,6 +59,12 @@ module Karafka
           render_response(result)
         end
 
+        handle_block_result Controllers::Responses::Deny do
+          @error = true
+          response.status = 403
+          view 'shared/exceptions/not_allowed'
+        end
+
         # Redirect either to referer back or to the desired path
         handle_block_result Controllers::Responses::Redirect do |result|
           # Map redirect flashes (if any) to Roda flash messages
