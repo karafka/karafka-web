@@ -26,6 +26,7 @@ module Karafka
 
           # We set this that way so we report with first batch and so we report as fast as possible
           @flushed_at = monotonic_now - @flush_interval
+          @established = false
         end
 
         # Aggregates consumers state into a single current state representation
@@ -34,10 +35,24 @@ module Karafka
 
           # If there is even one incompatible message, we need to stop
           consumers_messages.each do |message|
-            unless @schema_manager.compatible?(message)
+            case @schema_manager.call(message)
+            when :current
+              true
+            when :newer
+              @schema_manager.invalidate!
+
               dispatch
 
               raise ::Karafka::Web::Errors::Processing::IncompatibleSchemaError
+            # Older reports mean someone is in the middle of upgrade. Schema change related
+            # upgrades always should happen without a rolling-upgrade, hence we can reject those
+            # requests without significant or any impact on data quality but without having to
+            # worry about backwards compatibility. Errors are tracked independently, so it should
+            # not be a problem.
+            when :older
+              next
+            else
+              raise ::Karafka::Errors::UnsupportedCaseError
             end
 
             # We need to run the aggregations on each message in order to compensate for
@@ -45,6 +60,10 @@ module Karafka
             @state_aggregator.add(message.payload, message.offset)
             @metrics_aggregator.add_report(message.payload)
             @metrics_aggregator.add_stats(@state_aggregator.stats)
+            # Indicates that we had at least one report we used to enrich data
+            # If there were no state changes, there is no reason to flush data. This can occur
+            # when we had some messages but we skipped them for any reason on a first run
+            @established = true
 
             # Optimize memory usage in pro
             message.clean! if Karafka.pro?
@@ -59,17 +78,15 @@ module Karafka
 
         # Flush final state on shutdown
         def shutdown
-          return unless @state_aggregator
-
-          materialize
-          validate!
-          flush
+          dispatch
         end
 
         private
 
         # Flushes the state of the Web-UI to the DB
         def dispatch
+          return unless @established
+
           materialize
           validate!
           flush

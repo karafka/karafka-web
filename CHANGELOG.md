@@ -1,5 +1,9 @@
 # Karafka Web changelog
 
+## 0.7.4 (Unreleased)
+- [Improvement] Skip aggregations on older schemas during upgrades. This only skips process-reports (that are going to be rolled) on the 5s window in case of an upgrade that should not be a rolling one anyhow. This simplifies the operations and minimizes the risk on breaking upgrades.
+- [Fix] Fix not working `ps` for macOS.
+
 ## 0.7.3 (2023-09-18)
 - [Improvement] Mitigate a case where a race-condition during upgrade would crash data.
 

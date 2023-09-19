@@ -27,12 +27,8 @@ module Karafka
           end
 
           # @param message [Karafka::Messages::Message] consumer report
-          # @return [Boolean] true if all good or false if incompatible
-          #
-          # @note The state switch is one-direction only. If we encounter an incompatible message
-          #   we need to stop processing so further checks even with valid should not switch it
-          #   back to valid
-          def compatible?(message)
+          # @return [Symbol] is the given message using older, newer or current schema
+          def call(message)
             schema_version = message.payload[:schema_version]
 
             # Save on memory allocation by reusing
@@ -40,8 +36,19 @@ module Karafka
             # an object with each message
             message_version = @cache[schema_version] ||= ::Gem::Version.new(schema_version)
 
-            return true if message_version <= CURRENT_VERSION
+            return :older if message_version < CURRENT_VERSION
+            return :newer if message_version > CURRENT_VERSION
 
+            :current
+          end
+
+          # Moves the schema manager state to incompatible to indicate in the Web-UI that we
+          # cannot move forward because schema is incompatible.
+          #
+          # @note The state switch is one-direction only. If we encounter an incompatible message
+          #   we need to stop processing so further checks even with valid should not switch it
+          #   back to valid
+          def invalidate!
             @valid = false
           end
 
