@@ -18,7 +18,7 @@ module Karafka
 
             paginate(@params.current_page, !last_page)
 
-            respond
+            render
           end
         end
       end

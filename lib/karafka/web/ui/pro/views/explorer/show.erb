@@ -76,9 +76,19 @@
 <div class="container">
   <div class="row mb-4">
     <div class="col-sm-12">
-      <h5 class="mb-2">
+      <h5 class="mb-2 float-start">
         Payload
       </h5>
+
+      <a
+        href="<%= root_path('messages', @message.topic, @message.partition, @message.offset, 'download') %>"
+        class="btn btn-secondary btn-sm float-end"
+      >
+        &#8659; Download
+      </a>
+
+      <div class="clearfix"></div>
+
       <hr/>
 
     </div>

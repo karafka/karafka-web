@@ -133,6 +133,10 @@ module Karafka
               r.post String, Integer, Integer, 'republish' do |topic_id, partition_id, offset|
                 controller.republish(topic_id, partition_id, offset)
               end
+
+              r.get String, Integer, Integer, 'download' do |topic_id, partition_id, offset|
+                controller.download(topic_id, partition_id, offset)
+              end
             end
 
             r.on 'health' do

@@ -10,7 +10,7 @@ module Karafka
           def index
             @routes = Karafka::App.routes
 
-            respond
+            render
           end
 
           # Given route details
@@ -21,7 +21,7 @@ module Karafka
 
             @topic || raise(::Karafka::Web::Errors::Ui::NotFoundError, topic_id)
 
-            respond
+            render
           end
         end
       end

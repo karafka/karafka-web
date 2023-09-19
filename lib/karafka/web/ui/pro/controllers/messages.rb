@@ -42,6 +42,16 @@ module Karafka
               )
             end
 
+            def download(topic_id, partition_id, offset)
+              message = Ui::Models::Message.find(topic_id, partition_id, offset)
+              message.raw_payload
+
+              file(
+                message.raw_payload,
+                "#{topic_id}_#{partition_id}_#{offset}_payload.msg"
+              )
+            end
+
             private
 
             # @param message [Karafka::Messages::Message]

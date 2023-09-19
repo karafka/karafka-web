@@ -30,7 +30,7 @@ module Karafka
                 @topics.reject! { |topic| topic[:topic_name].start_with?('__') }
               end
 
-              respond
+              render
             end
 
             # Displays aggregated messages from (potentially) all partitions of a topic
@@ -60,7 +60,7 @@ module Karafka
 
               paginate(@params.current_page, next_page)
 
-              respond
+              render
             end
 
             # Shows messages available in a given partition
@@ -84,7 +84,7 @@ module Karafka
                 @messages.map { |message| message.is_a?(Array) ? message.last : message.offset }
               )
 
-              respond
+              render
             end
 
             # Displays given message
@@ -116,7 +116,7 @@ module Karafka
                 paginate(offset, watermark_offsets.low, watermark_offsets.high)
               end
 
-              respond
+              render
             end
 
             # Displays the most recent message on a topic/partition
