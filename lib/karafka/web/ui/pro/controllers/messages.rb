@@ -42,9 +42,13 @@ module Karafka
               )
             end
 
+            # Dispatches the message raw payload to the browser as a file
+            #
+            # @param topic_id [String]
+            # @param partition_id [Integer]
+            # @param offset [Integer] offset of the message we want to download
             def download(topic_id, partition_id, offset)
               message = Ui::Models::Message.find(topic_id, partition_id, offset)
-              message.raw_payload
 
               file(
                 message.raw_payload,

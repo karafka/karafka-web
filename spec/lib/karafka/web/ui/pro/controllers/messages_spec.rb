@@ -32,4 +32,33 @@ RSpec.describe_current do
       end
     end
   end
+
+  describe '#download' do
+    context 'when we want to download message from a non-existing topic' do
+      before { get 'messages/non-existing/0/1/download' }
+
+      it do
+        expect(response).not_to be_ok
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context 'when message exists' do
+      let(:payload) { rand.to_s }
+      let(:expected_file_name) { "#{topic}_0_0_payload.msg" }
+      let(:expected_disposition) { "attachment; filename=\"#{expected_file_name}\"" }
+
+      before do
+        produce(topic, payload)
+        get "messages/#{topic}/0/0/download"
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(response.headers['content-disposition']).to eq(expected_disposition)
+        expect(response.headers['content-type']).to eq('application/octet-stream')
+        expect(response.body).to eq(payload)
+      end
+    end
+  end
 end
