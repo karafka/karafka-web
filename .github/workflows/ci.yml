@@ -36,10 +36,15 @@ jobs:
         run: |
           docker-compose up -d
 
+      - name: Wait for Kafka
+        run: |
+          bundle exec bin/wait_for_kafka
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{matrix.ruby}}
+          bundler-cache: true
 
       - name: Install latest bundler
         run: |
