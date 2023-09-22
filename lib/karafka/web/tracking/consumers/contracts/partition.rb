@@ -20,6 +20,7 @@ module Karafka
             required(:stored_offset_fd) { |val| val.is_a?(Integer) && val >= 0 }
             required(:fetch_state) { |val| val.is_a?(String) && !val.empty? }
             required(:poll_state) { |val| val.is_a?(String) && !val.empty? }
+            required(:poll_state_ch) { |val| val.is_a?(Integer) && val >= 0 }
             required(:hi_offset) { |val| val.is_a?(Integer) }
             required(:hi_offset_fd) { |val| val.is_a?(Integer) && val >= 0 }
             required(:lo_offset) { |val| val.is_a?(Integer) }

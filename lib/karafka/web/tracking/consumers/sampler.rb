@@ -46,7 +46,7 @@ module Karafka
             @consumer_groups = {}
             @errors = []
             @started_at = float_now
-            @pauses = Set.new
+            @pauses = {}
             @jobs = {}
             @shell = MemoizedShell.new
             @memory_total_usage = 0

@@ -42,10 +42,11 @@ module Karafka
                     }
 
                     topic_details[:partitions][pt_id] = metrics.merge(
-                      id: pt_id,
+                      id: pt_id
+                    ).merge(
                       # Pauses are stored on a consumer group since we do not process same topic
                       # twice in the multiple subscription groups
-                      poll_state: poll_state(cg_id, topic_name, pt_id)
+                      poll_details(sg_id, topic_name, pt_id)
                     )
                   end
                 end
@@ -136,10 +137,19 @@ module Karafka
             # @param topic_name [String]
             # @param pt_id [Integer]
             # @return [String] poll state / is partition paused or not
-            def poll_state(cg_id, topic_name, pt_id)
-              pause_id = [cg_id, topic_name, pt_id].join('-')
+            def poll_details(sg_id, topic_name, pt_id)
+              pause_id = [sg_id, topic_name, pt_id].join('-')
 
-              sampler.pauses.include?(pause_id) ? 'paused' : 'active'
+              details = { poll_state: 'active', poll_state_ch: 0 }
+
+              pause_details = sampler.pauses[pause_id]
+
+              return details unless pause_details
+
+              {
+                poll_state: 'paused',
+                poll_state_ch: [(pause_details.fetch(:paused_till) - monotonic_now).round, 0].max
+              }
             end
           end
         end
