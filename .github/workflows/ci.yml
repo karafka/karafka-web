@@ -34,7 +34,7 @@ jobs:
 
       - name: Start Kafka with docker-compose
         run: |
-          docker-compose up -d
+          docker-compose up -d || (sleep 5 && docker-compose up -d)
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
