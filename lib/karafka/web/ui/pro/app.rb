@@ -36,7 +36,7 @@ module Karafka
 
             # Serve current version specific assets to prevent users from fetching old assets
             # after upgrade
-            r.on(:assets, Karafka::Web::VERSION) do
+            r.on 'assets', Karafka::Web::VERSION do
               r.public
             end
 
