@@ -1,6 +1,7 @@
 # Karafka Web changelog
 
 ## 0.7.5 (Unreleased)
+- [Enhancement] Update order of topics creation for the setup of Web to support zero-downtime setup of Web in running Karafka projects.
 - [Fix] Cache assets for 1 year instead of 7 days.
 - [Fix] Remove source maps pointing to non-existing locations.
 - [Maintenance] Include license and copyrights notice for `timeago.js` that was missing in the JS min file. 
