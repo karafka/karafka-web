@@ -16,7 +16,7 @@ module Karafka
             root: Karafka::Web.gem_root.join('lib/karafka/web/ui/public'),
             # Cache all static files for the end user for as long as possible
             # We can do it because we ship per version assets so they invalidate with gem bumps
-            headers: { 'Cache-Control' => 'max-age=604800' }
+            headers: { 'Cache-Control' => 'max-age=31536000, immutable' }
           )
           plugin :render_each
           plugin :partials
