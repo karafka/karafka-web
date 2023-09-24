@@ -2,7 +2,7 @@
 
 ## 0.7.5 (Unreleased)
 - [Fix] Cache assets for 1 year instead of 7 days.
-- [Fix] Remove sourcemaps pointing to non-existing locations.
+- [Fix] Remove source maps pointing to non-existing locations.
 - [Maintenance] Include license and copyrights notice for `timeago.js` that was missing in the JS min file. 
 
 ## 0.7.4 (2023-09-19)
