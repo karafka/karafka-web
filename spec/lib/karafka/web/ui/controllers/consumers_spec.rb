@@ -57,8 +57,8 @@ RSpec.describe_current do
       topics_config.consumers.states = states_topic
       topics_config.consumers.reports = reports_topic
 
-      data = JSON.parse(fixtures_file('consumers_state.json'))
-      base_report = JSON.parse(fixtures_file('consumer_report.json'))
+      data = Fixtures.json('consumers_state', symbolize_names: false)
+      base_report = Fixtures.json('consumer_report', symbolize_names: false)
 
       100.times do |i|
         name = "shinra:#{i}:#{i}"

@@ -4,6 +4,8 @@
 - **[Feature]** Introduce ability to download raw payloads.
 - **[Feature]** Introduce ability to download deserialized message payload as JSON.
 - [Enhancement] Update order of topics creation for the setup of Web to support zero-downtime setup of Web in running Karafka projects.
+- [Fix] Fix a case where charts aggregated data would not include all topics.
+- [Fix] Make sure, that most recent per partition data for Health is never overwritten by an old state from a previous partition owner.
 - [Fix] Cache assets for 1 year instead of 7 days.
 - [Fix] Remove source maps pointing to non-existing locations.
 - [Maintenance] Include license and copyrights notice for `timeago.js` that was missing in the JS min file. 
