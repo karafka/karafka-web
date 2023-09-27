@@ -1,7 +1,6 @@
 # Karafka Web changelog
 
 ## 0.7.5 (Unreleased)
-- [Enhancement] Raise descriptive errors when consumers states and metrics do not exist instead of `unknown_partition`.
 - [Enhancement] Update order of topics creation for the setup of Web to support zero-downtime setup of Web in running Karafka projects.
 - [Fix] Fix a case where charts aggregated data would not include all topics.
 - [Fix] Make sure, that most recent per partition data for Health is never overwritten by an old state from a previous partition owner.
