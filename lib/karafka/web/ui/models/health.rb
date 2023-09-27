@@ -62,7 +62,11 @@ module Karafka
             #
             # @param state [State]
             def iterate_partitions(state)
-              processes = Processes.active(state)
+              # By default processes are sort by name and this is not what we want here
+              # We want to make sure that the newest data is processed the last, so we get
+              # the most accurate state in case of deployments and shutdowns, etc without the
+              # expired processes partitions data overwriting the newly created processes
+              processes = Processes.active(state).sort_by!(&:dispatched_at)
 
               processes.each do |process|
                 process.consumer_groups.each do |consumer_group|
