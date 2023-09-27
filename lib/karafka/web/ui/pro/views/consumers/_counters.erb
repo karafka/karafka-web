@@ -6,40 +6,56 @@
           <div class="col-sm-12">
             <ul class="list-unstyled row text-center mb-0 mt-0">
               <li class="col-sm">
-                <div class="count mb-1"><%= @counters.messages %></div>
+                <div class="count mb-1">
+                  <%= number_with_delimiter @counters.messages, ' ' %>
+                </div>
                 <div class="desc">Messages</div>
               </li>
               <li class="col-sm">
-                <div class="count mb-1"><%= @counters.batches %></div>
+                <div class="count mb-1">
+                  <%= number_with_delimiter @counters.batches, ' ' %>
+                </div>
                 <div class="desc">Batches</div>
               </li>
               <li class="col-sm">
-                <div class="count mb-1"><%= @counters.lag_stored %></div>
+                <div class="count mb-1">
+                  <%= number_with_delimiter @counters.lag_stored, ' ' %>
+                </div>
                 <div class="desc">Lag stored</div>
               </li>
               <li class="col-sm">
                 <a href="<%= root_path('jobs') %>">
-                  <div class="count mb-1"><%= @counters.busy %></div>
+                  <div class="count mb-1">
+                    <%= number_with_delimiter @counters.busy, ' ' %>
+                  </div>
                   <div class="desc">Busy</div>
                 </a>
               </li>
               <li class="col-sm">
-                <div class="count mb-1"><%= @counters.enqueued %></div>
+                <div class="count mb-1">
+                  <%= number_with_delimiter @counters.enqueued, ' ' %>
+                </div>
                 <div class="desc">Enqueued</div>
               </li>
               <li class="col-sm">
                 <a href="<%= root_path('errors') %>">
-                  <div class="count mb-1"><%= @counters.errors %></div>
+                  <div class="count mb-1">
+                    <%= number_with_delimiter @counters.errors, ' ' %>
+                  </div>
                   <div class="desc">Errors</div>
                 </a>
               </li>
               <li class="col-sm">
-                <div class="count mb-1"><%= @counters.retries %></div>
+                <div class="count mb-1">
+                  <%= number_with_delimiter @counters.retries, ' ' %>
+                </div>
                 <div class="desc">Retries</div>
               </li>
               <li class="col-sm">
                 <a href="<%= root_path('dlq') %>">
-                  <div class="count mb-1"><%= @counters.dead %></div>
+                  <div class="count mb-1">
+                    <%= number_with_delimiter @counters.dead, ' ' %>
+                  </div>
                   <div class="desc">Dead</div>
                 </a>
               </li>
