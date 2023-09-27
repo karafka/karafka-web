@@ -126,20 +126,14 @@ module Karafka
               cgs
             end
 
-            private
-
             # Converts our reports data into an iterator per partition
             # Compensates for a case where same partition data would be available for a short
             # period of time in multiple processes reports due to rebalances.
             def iterate_partitions_data
-              cgs_topics = Hash.new do |h, v|
-                             h[v] = Hash.new do |h2, v2|
-                               h2[v2] = {}
-                             end
-                           end
+              cgs_topics = Hash.new { |h, v| h[v] = Hash.new { |h2, v2| h2[v2] = {} } }
 
               # We need to sort them in case we have same reports containing data about same
-              # topics partitons. Mostly during shutdowns and rebalances
+              # topics partitions. Mostly during shutdowns and rebalances
               @active_reports
                 .values
                 .sort_by { |report| report.fetch(:dispatched_at) }
