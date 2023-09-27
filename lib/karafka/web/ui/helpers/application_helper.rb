@@ -101,12 +101,13 @@ module Karafka
 
           # Converts number to a more friendly delimiter based version
           # @param number [Numeric]
+          # @param delimiter [String] delimiter (comma by default)
           # @return [String] number with delimiter
-          def number_with_delimiter(number)
+          def number_with_delimiter(number, delimiter = ',')
             return '' unless number
 
             parts = number.to_s.to_str.split('.')
-            parts[0].gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, '\1,')
+            parts[0].gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1#{delimiter}")
             parts.join('.')
           end
 
