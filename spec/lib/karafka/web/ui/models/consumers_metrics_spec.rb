@@ -4,8 +4,8 @@ RSpec.describe_current do
   subject(:metrics) { described_class }
 
   let(:metrics_topic) { create_topic }
-  let(:fixture) { fixtures_file('consumers_metrics.json') }
-  let(:fixture_hash) { JSON.parse(fixture, symbolize_names: true) }
+  let(:fixture) { Fixtures.file('consumers_metrics.json') }
+  let(:fixture_hash) { Fixtures.json('consumers_metrics') }
 
   before { Karafka::Web.config.topics.consumers.metrics = metrics_topic }
 
@@ -20,7 +20,7 @@ RSpec.describe_current do
     before do
       allow(status.class).to receive(:new).and_return(status)
       allow(status).to receive(:enabled).and_return(OpenStruct.new(success?: false))
-      produce(metrics_topic, fixtures_file('consumers_metrics.json'))
+      produce(metrics_topic, Fixtures.file('consumers_metrics.json'))
     end
 
     it { expect(metrics.current).to eq(false) }
@@ -36,10 +36,10 @@ RSpec.describe_current do
   end
 
   context 'when there are more metrics and karafka-web is enabled' do
-    let(:fixture1) { fixtures_file('consumers_metrics.json') }
-    let(:fixture2) { fixtures_file('consumers_metrics.json') }
-    let(:fixture_hash1) { JSON.parse(fixture1, symbolize_names: true) }
-    let(:fixture_hash2) { JSON.parse(fixture2, symbolize_names: true) }
+    let(:fixture1) { Fixtures.file('consumers_metrics.json') }
+    let(:fixture2) { Fixtures.file('consumers_metrics.json') }
+    let(:fixture_hash1) { Fixtures.json('consumers_metrics') }
+    let(:fixture_hash2) { Fixtures.json('consumers_metrics') }
 
     before do
       fixture_hash2[:dispatched_at] = 1

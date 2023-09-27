@@ -41,19 +41,19 @@ RSpec.describe_current do
         topics_config.consumers.states = states_topic
         topics_config.consumers.reports = reports_topic
 
-        data = JSON.parse(fixtures_file('consumers_state.json'))
-        base_report = JSON.parse(fixtures_file('consumer_report.json'))
+        data = Fixtures.json('consumers_state')
+        base_report = Fixtures.json('consumer_report')
 
         100.times do |i|
-          name = "shinra:#{i}:#{i}"
+          name = "shinra:#{i}:#{i}".to_sym
 
-          data['processes'][name] = {
+          data[:processes][name] = {
             dispatched_at: 2_690_818_669.526_218,
             offset: i
           }
 
           report = base_report.dup
-          report['process']['name'] = name
+          report[:process][:name] = name
 
           produce(reports_topic, report.to_json, key: name)
         end

@@ -7,9 +7,9 @@ RSpec.describe_current do
   let(:reports_topic) { Karafka::Web.config.topics.consumers.reports = create_topic }
   let(:metrics_topic) { Karafka::Web.config.topics.consumers.metrics = create_topic }
   let(:states_topic) { Karafka::Web.config.topics.consumers.states = create_topic }
-  let(:state) { fixtures_file('consumers_state.json') }
-  let(:metrics) { fixtures_file('consumers_metrics.json') }
-  let(:report) { fixtures_file('consumer_report.json') }
+  let(:state) { Fixtures.file('consumers_state.json') }
+  let(:metrics) { Fixtures.file('consumers_metrics.json') }
+  let(:report) { Fixtures.file('consumer_report.json') }
 
   let(:all_topics) do
     errors_topic

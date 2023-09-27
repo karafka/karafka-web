@@ -58,8 +58,8 @@ RSpec.describe_current do
         topics_config.consumers.states = states_topic
         topics_config.consumers.reports = reports_topic
 
-        data = JSON.parse(fixtures_file('consumers_state.json'))
-        base_report = JSON.parse(fixtures_file('consumer_report.json'))
+        data = Fixtures.file('consumers_state.json')
+        base_report = Fixtures.json('consumer_report')
 
         100.times do |i|
           name = "shinra:#{i}:#{i}"
@@ -160,7 +160,7 @@ RSpec.describe_current do
       before do
         topics_config.consumers.reports = reports_topic
 
-        report = JSON.parse(fixtures_file('consumer_report.json'))
+        report = Fixtures.json('consumer_report')
         report['jobs'] = []
 
         produce(reports_topic, report.to_json)
@@ -203,7 +203,7 @@ RSpec.describe_current do
       before do
         topics_config.consumers.reports = reports_topic
 
-        report = JSON.parse(fixtures_file('consumer_report.json'))
+        report Fixtures.json('consumer_report')
         report['consumer_groups'] = {}
 
         produce(reports_topic, report.to_json)

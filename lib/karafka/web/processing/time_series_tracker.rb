@@ -116,9 +116,12 @@ module Karafka
             # available
             times << values.last unless values.empty?
 
-            times.uniq!(&:first)
-
+            # Keep the most recent state out of many that would come from the same time moment
             # Squash in case there would be two events from the same time
+            times.reverse!
+            times.uniq!(&:first)
+            times.reverse!
+
             times.sort_by!(&:first)
 
             @historicals[range_name] = times.last(limit)

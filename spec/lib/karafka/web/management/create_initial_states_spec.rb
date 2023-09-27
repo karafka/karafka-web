@@ -14,7 +14,7 @@ RSpec.describe_current do
   end
 
   context 'when the consumers state already exists' do
-    before { produce(consumers_states_topic, fixtures_file('consumers_state.json')) }
+    before { produce(consumers_states_topic, Fixtures.file('consumers_state.json')) }
 
     it 'expect not to overwrite it' do
       create
@@ -53,7 +53,7 @@ RSpec.describe_current do
   end
 
   context 'when the consumers metrics already exists' do
-    before { produce(consumers_metrics_topic, fixtures_file('consumers_metrics.json')) }
+    before { produce(consumers_metrics_topic, Fixtures.file('consumers_metrics.json')) }
 
     it 'expect not to overwrite it' do
       create

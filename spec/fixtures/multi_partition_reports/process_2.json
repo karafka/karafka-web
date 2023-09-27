@@ -1,0 +1,182 @@
+{
+  "schema_version": "1.2.3",
+  "type": "consumer",
+  "dispatched_at": 1695813054.4401045,
+  "process": {
+    "started_at": 1695802478.2217133,
+    "name": "shinra:1817047:0bddec5483b0",
+    "status": "running",
+    "listeners": 2,
+    "workers": 2,
+    "memory_usage": 142944,
+    "memory_total_usage": 25984244,
+    "memory_size": 32763212,
+    "cpus": 8,
+    "threads": 25,
+    "cpu_usage": [
+      1.56,
+      1.56,
+      1.75
+    ],
+    "tags": [
+      "#b2e822e"
+    ]
+  },
+  "versions": {
+    "ruby": "ruby 3.2.2-53 e51014",
+    "karafka": "2.2.6",
+    "karafka_core": "2.2.2",
+    "karafka_web": "0.7.4",
+    "waterdrop": "2.6.7",
+    "rdkafka": "0.13.5",
+    "librdkafka": "2.2.0"
+  },
+  "stats": {
+    "busy": 0,
+    "enqueued": 0,
+    "utilization": 1.953262352347374,
+    "total": {
+      "batches": 16,
+      "messages": 38,
+      "errors": 1,
+      "retries": 1,
+      "dead": 0
+    }
+  },
+  "consumer_groups": {
+    "example_app_app": {
+      "id": "example_app_app",
+      "subscription_groups": {
+        "c4ca4238a0b9_0": {
+          "id": "c4ca4238a0b9_0",
+          "state": {
+            "state": "up",
+            "join_state": "steady",
+            "stateage": 10575679,
+            "rebalance_age": 10563674,
+            "rebalance_cnt": 3,
+            "rebalance_reason": "rebalance in progress"
+          },
+          "topics": {
+            "default": {
+              "name": "default",
+              "partitions": {
+                "3": {
+                  "lag": 0,
+                  "lag_d": -3,
+                  "lag_stored": 0,
+                  "lag_stored_d": 0,
+                  "committed_offset": 163010,
+                  "committed_offset_fd": 0,
+                  "stored_offset": 163010,
+                  "stored_offset_fd": 0,
+                  "fetch_state": "active",
+                  "hi_offset": 163010,
+                  "hi_offset_fd": 0,
+                  "lo_offset": 0,
+                  "eof_offset": 163010,
+                  "ls_offset": 163010,
+                  "ls_offset_d": 12,
+                  "ls_offset_fd": 0,
+                  "id": 3,
+                  "poll_state": "active"
+                },
+                "4": {
+                  "lag": 6,
+                  "lag_d": 3,
+                  "lag_stored": 0,
+                  "lag_stored_d": -3,
+                  "committed_offset": 162416,
+                  "committed_offset_fd": 0,
+                  "stored_offset": 162422,
+                  "stored_offset_fd": 0,
+                  "fetch_state": "active",
+                  "hi_offset": 162422,
+                  "hi_offset_fd": 0,
+                  "lo_offset": 0,
+                  "eof_offset": 162419,
+                  "ls_offset": 162422,
+                  "ls_offset_d": 9,
+                  "ls_offset_fd": 0,
+                  "id": 4,
+                  "poll_state": "active"
+                }
+              }
+            },
+            "visits": {
+              "name": "visits",
+              "partitions": {
+                "1": {
+                  "lag": 2,
+                  "lag_d": 1,
+                  "lag_stored": 2,
+                  "lag_stored_d": 1,
+                  "committed_offset": 135419,
+                  "committed_offset_fd": 0,
+                  "stored_offset": 135419,
+                  "stored_offset_fd": 0,
+                  "fetch_state": "active",
+                  "hi_offset": 135421,
+                  "hi_offset_fd": 0,
+                  "lo_offset": 0,
+                  "eof_offset": 135421,
+                  "ls_offset": 135421,
+                  "ls_offset_d": 11,
+                  "ls_offset_fd": 0,
+                  "id": 1,
+                  "poll_state": "paused"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "example_app_karafka_web": {
+      "id": "example_app_karafka_web",
+      "subscription_groups": {
+        "c81e728d9d4c_1": {
+          "id": "c81e728d9d4c_1",
+          "state": {
+            "state": "up",
+            "join_state": "steady",
+            "stateage": 10575551,
+            "rebalance_age": 10563545,
+            "rebalance_cnt": 3,
+            "rebalance_reason": "rebalance in progress"
+          },
+          "topics": {
+            "karafka_consumers_reports": {
+              "name": "karafka_consumers_reports",
+              "partitions": {
+                "0": {
+                  "lag": 0,
+                  "lag_d": 0,
+                  "lag_stored": 0,
+                  "lag_stored_d": 0,
+                  "committed_offset": 28972,
+                  "committed_offset_fd": 0,
+                  "stored_offset": 28972,
+                  "stored_offset_fd": 0,
+                  "fetch_state": "active",
+                  "hi_offset": 28972,
+                  "hi_offset_fd": 0,
+                  "lo_offset": 0,
+                  "eof_offset": 28972,
+                  "ls_offset": 28972,
+                  "ls_offset_d": 2,
+                  "ls_offset_fd": 0,
+                  "id": 0,
+                  "poll_state": "active"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "jobs": [
+
+  ]
+}
