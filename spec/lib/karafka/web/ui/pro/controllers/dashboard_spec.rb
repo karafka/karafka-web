@@ -52,7 +52,7 @@ RSpec.describe_current do
       defaults = ::Karafka::Web::Management::CreateInitialStates
 
       produce(states_topic, defaults::DEFAULT_STATE.to_json)
-      produce(metrics_topic, fixtures_file('consumers_single_metrics.json'))
+      produce(metrics_topic, Fixtures.file('consumers_single_metrics.json'))
 
       get 'dashboard'
     end

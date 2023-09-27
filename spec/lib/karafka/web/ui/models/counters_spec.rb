@@ -3,7 +3,7 @@
 RSpec.describe_current do
   subject(:stats) { described_class.new(state) }
 
-  let(:state) { JSON.parse(fixtures_file('consumers_state.json'), symbolize_names: true) }
+  let(:state) { Fixtures.json('consumers_state') }
   let(:errors_topic) { create_topic }
 
   before { Karafka::Web.config.topics.errors = errors_topic }

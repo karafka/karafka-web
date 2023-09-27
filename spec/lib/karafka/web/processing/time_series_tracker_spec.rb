@@ -10,7 +10,7 @@ RSpec.describe_current do
   end
 
   context 'when there is existing data' do
-    let(:metrics) { JSON.parse(fixtures_file('consumers_metrics.json'), symbolize_names: true) }
+    let(:metrics) { Fixtures.json('consumers_metrics') }
     let(:existing) { metrics.fetch(:aggregated) }
 
     it { expect(tracker.to_h[:days]).to eq(existing[:days]) }
@@ -28,10 +28,10 @@ RSpec.describe_current do
     end
 
     it 'expect to only keep the oldest one after materialization in a time window' do
-      expect(tracker.to_h[:days]).to eq([[1, { a: 1 }], [1_000_000, { a: 3 }]])
-      expect(tracker.to_h[:hours]).to eq([[1, { a: 1 }], [1_000_000, { a: 3 }]])
-      expect(tracker.to_h[:minutes]).to eq([[1, { a: 1 }], [1_000_000, { a: 3 }]])
-      expect(tracker.to_h[:seconds]).to eq([[1, { a: 1 }], [1_000_000, { a: 3 }]])
+      expect(tracker.to_h[:days]).to eq([[1, { a: 1 }], [1_000_000, { a: 4 }]])
+      expect(tracker.to_h[:hours]).to eq([[1, { a: 1 }], [1_000_000, { a: 4 }]])
+      expect(tracker.to_h[:minutes]).to eq([[1, { a: 1 }], [1_000_000, { a: 4 }]])
+      expect(tracker.to_h[:seconds]).to eq([[1, { a: 1 }], [1_000_000, { a: 4 }]])
     end
   end
 end
