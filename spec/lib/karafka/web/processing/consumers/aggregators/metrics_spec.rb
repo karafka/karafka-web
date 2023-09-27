@@ -20,7 +20,7 @@ RSpec.describe_current do
   context 'when there are no initial metrics' do
     let(:expected_error) { Karafka::Web::Errors::Processing::MissingConsumersMetricsError }
 
-    it { expect { metrics_aggregator.to_h }.to raise_error(expected_error)  }
+    it { expect { metrics_aggregator.to_h }.to raise_error(expected_error) }
   end
 
   context 'when there are initial metrics but no other data' do
