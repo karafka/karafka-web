@@ -20,6 +20,10 @@ module Karafka
               return metrics_message.payload if metrics_message
 
               raise(::Karafka::Web::Errors::Processing::MissingConsumersMetricsError)
+            rescue Rdkafka::RdkafkaError => e
+              raise(e) unless e.code == :unknown_partition
+
+              raise(::Karafka::Web::Errors::Processing::MissingConsumersMetricsTopicError)
             end
           end
         end
