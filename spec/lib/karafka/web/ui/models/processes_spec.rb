@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe_current do
-  let(:state) { JSON.parse(fixtures_file('consumers_state.json'), symbolize_names: true) }
-  let(:report) { JSON.parse(fixtures_file('consumer_report.json'), symbolize_names: true) }
+  let(:state) { Fixtures.json('consumers_state') }
+  let(:report) { Fixtures.json('consumer_report') }
   let(:reports_topic) { create_topic }
 
   before do
@@ -21,7 +21,7 @@ RSpec.describe_current do
 
     context 'when requested processes are too old' do
       let(:report) do
-        report = JSON.parse(fixtures_file('consumer_report.json'), symbolize_names: true)
+        report = Fixtures.json('consumer_report')
         report[:dispatched_at] = 1_690_883_271
         report
       end

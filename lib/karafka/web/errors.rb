@@ -17,8 +17,17 @@ module Karafka
         # If you see this error, it probably means, that you did not bootstrap Web-UI correctly
         MissingConsumersStateError = Class.new(BaseError)
 
-        # Similar to the above. It should be created during install
+        # Raised when we try to materialize the state but the consumers states topic does not
+        # exist and we do not have a way to get the initial state.
+        # It differs from the above because above indicates that the topic exists but that there
+        # is no initial state, while this indicates, that there is no consumers states topic.
+        MissingConsumersStatesTopicError = Class.new(BaseError)
+
+        # Similar to the above. It should be created during install / migration
         MissingConsumersMetricsError = Class.new(BaseError)
+
+        # Similar to the one related to consumers states
+        MissingConsumersMetricsTopicError = Class.new(BaseError)
 
         # This error occurs when consumer running older version of the web-ui tries to materialize
         # states from newer versions. Karafka Web-UI provides only backwards compatibility, so

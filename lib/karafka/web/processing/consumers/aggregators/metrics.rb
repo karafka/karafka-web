@@ -86,65 +86,75 @@ module Karafka
 
             # Materializes the current state of consumers group data
             #
-            # At the moment we report only topics lags but the format we are using supports
-            # extending this information in the future if it would be needed.
-            #
             # @return [Hash] hash with nested consumers and their topics details structure
             # @note We do **not** report on a per partition basis because it would significantly
             #   increase needed storage.
             def materialize_consumers_groups_current_state
               cgs = {}
 
-              @active_reports.each do |_, details|
-                details.fetch(:consumer_groups).each do |group_name, group_details|
-                  group_details.fetch(:subscription_groups).each do |_sg_name, sg_details|
-                    sg_details.fetch(:topics).each do |topic_name, topic_details|
-                      partitions_data = topic_details.fetch(:partitions).values
+              iterate_partitions_data do |group_name, topic_name, partitions_data|
+                lags = partitions_data
+                       .map { |p_details| p_details.fetch(:lag, -1) }
+                       .reject(&:negative?)
 
-                      lags = partitions_data
-                             .map { |p_details| p_details.fetch(:lag, -1) }
+                lags_stored = partitions_data
+                              .map { |p_details| p_details.fetch(:lag_stored, -1) }
+                              .reject(&:negative?)
+
+                offsets_hi = partitions_data
+                             .map { |p_details| p_details.fetch(:hi_offset, -1) }
                              .reject(&:negative?)
 
-                      lags_stored = partitions_data
-                                    .map { |p_details| p_details.fetch(:lag_stored, -1) }
-                                    .reject(&:negative?)
+                # Last stable offsets freeze durations - we pick the max freeze to indicate
+                # the longest open transaction that potentially may be hanging
+                ls_offsets_fd = partitions_data
+                                .map { |p_details| p_details.fetch(:ls_offset_fd, 0) }
+                                .reject(&:negative?)
 
-                      offsets_hi = partitions_data
-                                   .map { |p_details| p_details.fetch(:hi_offset, -1) }
-                                   .reject(&:negative?)
-
-                      # Last stable offsets freeze durations - we pick the max freeze to indicate
-                      # the longest open transaction that potentially may be hanging
-                      ls_offsets_fd = partitions_data
-                                      .map { |p_details| p_details.fetch(:ls_offset_fd, 0) }
-                                      .reject(&:negative?)
-
-                      # If there is no lag that would not be negative, it means we did not mark
-                      # any messages as consumed on this topic in any partitions, hence we cannot
-                      # compute lag easily
-                      # We do not want to initialize any data for this topic, when there is nothing
-                      # useful we could present
-                      #
-                      # In theory lag stored must mean that lag must exist but just to be sure we
-                      # check both here
-                      next if lags.empty? || lags_stored.empty?
-
-                      cgs[group_name] ||= {}
-                      cgs[group_name][topic_name] = {
-                        lag_stored: lags_stored.sum,
-                        lag: lags.sum,
-                        pace: offsets_hi.sum,
-                        # Take max last stable offset duration without any change. This can
-                        # indicate a hanging transaction, because the offset will not move forward
-                        # and will stay with a growing freeze duration when stuck
-                        ls_offset_fd: ls_offsets_fd.max
-                      }
-                    end
-                  end
-                end
+                cgs[group_name] ||= {}
+                cgs[group_name][topic_name] = {
+                  lag_stored: lags_stored.sum,
+                  lag: lags.sum,
+                  pace: offsets_hi.sum,
+                  # Take max last stable offset duration without any change. This can
+                  # indicate a hanging transaction, because the offset will not move forward
+                  # and will stay with a growing freeze duration when stuck
+                  ls_offset_fd: ls_offsets_fd.max || 0
+                }
               end
 
               cgs
+            end
+
+            # Converts our reports data into an iterator per partition
+            # Compensates for a case where same partition data would be available for a short
+            # period of time in multiple processes reports due to rebalances.
+            def iterate_partitions_data
+              cgs_topics = Hash.new { |h, v| h[v] = Hash.new { |h2, v2| h2[v2] = {} } }
+
+              # We need to sort them in case we have same reports containing data about same
+              # topics partitions. Mostly during shutdowns and rebalances
+              @active_reports
+                .values
+                .sort_by { |report| report.fetch(:dispatched_at) }
+                .map { |details| details.fetch(:consumer_groups) }
+                .each do |consumer_groups|
+                  consumer_groups.each do |group_name, group_details|
+                    group_details.fetch(:subscription_groups).each_value do |sg_details|
+                      sg_details.fetch(:topics).each do |topic_name, topic_details|
+                        topic_details.fetch(:partitions).each do |partition_id, partition_data|
+                          cgs_topics[group_name][topic_name][partition_id] = partition_data
+                        end
+                      end
+                    end
+                  end
+                end
+
+              cgs_topics.each do |group_name, topics_data|
+                topics_data.each do |topic_name, partitions_data|
+                  yield(group_name, topic_name, partitions_data.values)
+                end
+              end
             end
           end
         end

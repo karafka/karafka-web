@@ -2,6 +2,13 @@
 
 ## 0.7.5 (Unreleased)
 - [Improvement] Normalize per-process job tables and health tables structure (topic name on top).
+- [Enhancement] Update order of topics creation for the setup of Web to support zero-downtime setup of Web in running Karafka projects.
+- [Enhancement] Add space delimiter to counters numbers to make them look better.
+- [Fix] Fix a case where charts aggregated data would not include all topics.
+- [Fix] Make sure, that most recent per partition data for Health is never overwritten by an old state from a previous partition owner.
+- [Fix] Cache assets for 1 year instead of 7 days.
+- [Fix] Remove source maps pointing to non-existing locations.
+- [Maintenance] Include license and copyrights notice for `timeago.js` that was missing in the JS min file. 
 
 ## 0.7.4 (2023-09-19)
 - [Improvement] Skip aggregations on older schemas during upgrades. This only skips process-reports (that are going to be rolled) on the 5s window in case of an upgrade that should not be a rolling one anyhow. This simplifies the operations and minimizes the risk on breaking upgrades.

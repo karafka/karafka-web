@@ -2,7 +2,7 @@
 
 RSpec.describe_current do
   let(:states_topic) { Karafka::Web.config.topics.consumers.states = create_topic }
-  let(:fixture) { fixtures_file('consumers_state.json') }
+  let(:fixture) { Fixtures.file('consumers_state.json') }
 
   describe '#current!' do
     subject(:state) { described_class.current! }
@@ -11,6 +11,16 @@ RSpec.describe_current do
 
     context 'when there is no current state' do
       let(:expected_error) { ::Karafka::Web::Errors::Processing::MissingConsumersStateError }
+
+      it { expect { state }.to raise_error(expected_error) }
+    end
+
+    context 'when states topic does not exist' do
+      let(:expected_error) do
+        ::Karafka::Web::Errors::Processing::MissingConsumersStatesTopicError
+      end
+
+      before { Karafka::Web.config.topics.consumers.states = SecureRandom.uuid }
 
       it { expect { state }.to raise_error(expected_error) }
     end

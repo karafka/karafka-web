@@ -69,16 +69,6 @@ end
 RSpec.extend RSpecLocator.new(__FILE__)
 include TopicsManagerHelper
 
-# Fetches fixture content
-# @param file_name [String] fixture file name
-# @return [String] fixture content
-def fixtures_file(file_name)
-  File
-    .dirname(__FILE__)
-    .then { |location| File.join(location, 'fixtures', file_name) }
-    .then { |fixture_path| File.read(fixture_path) }
-end
-
 module Karafka
   # Configuration for test env
   class App
@@ -112,9 +102,9 @@ Karafka::Web.setup do |config|
   config.topics.errors = TOPICS[3]
 end
 
-produce(TOPICS[0], fixtures_file('consumers_state.json'))
-produce(TOPICS[1], fixtures_file('consumers_metrics.json'))
-produce(TOPICS[2], fixtures_file('consumer_report.json'))
+produce(TOPICS[0], Fixtures.file('consumers_state.json'))
+produce(TOPICS[1], Fixtures.file('consumers_metrics.json'))
+produce(TOPICS[2], Fixtures.file('consumer_report.json'))
 
 Karafka::Web.enable!
 
