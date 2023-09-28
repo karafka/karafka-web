@@ -3,6 +3,7 @@
 ## 0.7.5 (Unreleased)
 - [Enhancement] Update order of topics creation for the setup of Web to support zero-downtime setup of Web in running Karafka projects.
 - [Enhancement] Add space delimiter to counters numbers to make them look better.
+- [Improvement] Normalize per-process job tables and health tables structure (topic name on top).
 - [Fix] Fix a case where charts aggregated data would not include all topics.
 - [Fix] Make sure, that most recent per partition data for Health is never overwritten by an old state from a previous partition owner.
 - [Fix] Cache assets for 1 year instead of 7 days.
