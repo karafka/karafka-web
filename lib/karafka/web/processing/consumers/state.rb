@@ -20,6 +20,10 @@ module Karafka
               return state_message.payload if state_message
 
               raise(::Karafka::Web::Errors::Processing::MissingConsumersStateError)
+            rescue Rdkafka::RdkafkaError => e
+              raise(e) unless e.code == :unknown_partition
+
+              raise(::Karafka::Web::Errors::Processing::MissingConsumersStatesTopicError)
             end
           end
         end

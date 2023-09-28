@@ -18,7 +18,7 @@ module Karafka
         puts 'Creating necessary topics and populating state data...'
         puts
         Management::CreateTopics.new.call(replication_factor)
-        puts
+        wait_for_topics
         Management::CreateInitialStates.new.call
         puts
         Management::ExtendBootFile.new.call
@@ -36,6 +36,7 @@ module Karafka
         puts 'Creating necessary topics and populating state data...'
         puts
         Management::CreateTopics.new.call(replication_factor)
+        wait_for_topics
         Management::CreateInitialStates.new.call
         puts
         puts("Migration #{green('completed')}. Have fun!")
@@ -51,7 +52,7 @@ module Karafka
         Management::DeleteTopics.new.call
         puts
         Management::CreateTopics.new.call(replication_factor)
-        puts
+        wait_for_topics
         Management::CreateInitialStates.new.call
         puts
         puts("Resetting #{green('completed')}. Have fun!")
@@ -73,6 +74,30 @@ module Karafka
       # Enables the Web-UI in the karafka app. Sets up needed routes and listeners.
       def enable!
         Management::Enable.new.call
+      end
+
+      private
+
+      # Waits with a message, that we are waiting on topics
+      # This is not doing much, just waiting as there are some cases that it takes a bit of time
+      # for Kafka to actually propagate new topics knowledge across the cluster. We give it that
+      # bit of time just in case.
+      def wait_for_topics
+        puts
+        print 'Waiting for the topics to synchronize in the cluster'
+        wait(5)
+        puts
+      end
+
+      # Waits for given number of seconds and prints `.` every second.
+      # @param time_in_seconds [Integer] time of wait
+      def wait(time_in_seconds)
+        time_in_seconds.times do
+          sleep(1)
+          print '.'
+        end
+
+        print "\n"
       end
     end
   end
