@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-## 0.7.5 (Unreleased)
+## 0.7.5 (2023-09-29)
 - [Enhancement] Update order of topics creation for the setup of Web to support zero-downtime setup of Web in running Karafka projects.
 - [Enhancement] Add space delimiter to counters numbers to make them look better.
 - [Improvement] Normalize per-process job tables and health tables structure (topic name on top).
