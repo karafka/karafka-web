@@ -73,39 +73,45 @@
     </div>
   </div>
 <% else %>
-  <div class="row mb-5">
-    <div class="col-sm-12">
-      <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
-        <thead>
-          <tr class="align-middle">
-            <th>Topic</th>
-            <th>Partition</th>
-            <th>Lag stored</th>
-            <th>Lag stored trend</th>
-            <th>Committed offset</th>
-            <th>Stored offset</th>
-            <th>Fetch state</th>
-            <th>Poll state</th>
-            <th>LSO state</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% subscription_group.topics.each do |topic| %>
-            <% topic.partitions.each do |partition| %>
-              <%==
-                partial(
-                  'consumers/consumer/partition',
-                  locals: {
-                    topic: topic,
-                    partition: partition,
-                    subscription_group: subscription_group
-                  }
-                )
-              %>
-            <% end %>
-          <% end %>
-        </tbody>
-      </table>
+  <% subscription_group.topics.each do |topic| %>
+    <div class="row mb-5">
+      <div class="col-sm-12">
+        <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+          <thead>
+            <tr class="align-middle">
+              <th colspan="10">
+                <h5 class="mb-0">
+                  <%= topic.name %>
+                </h5>
+              </th>
+            <tr class="align-middle">
+            </tr>
+              <th>Partition</th>
+              <th>Lag stored</th>
+              <th>Lag stored trend</th>
+              <th>Committed offset</th>
+              <th>Stored offset</th>
+              <th>Fetch state</th>
+              <th>Poll state</th>
+              <th>LSO state</th>
+            </tr>
+          </thead>
+          <tbody>
+              <% topic.partitions.each do |partition| %>
+                <%==
+                  partial(
+                    'consumers/consumer/partition',
+                    locals: {
+                      topic: topic,
+                      partition: partition,
+                      subscription_group: subscription_group
+                    }
+                  )
+                %>
+              <% end %>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
+  <% end %>
 <% end %>

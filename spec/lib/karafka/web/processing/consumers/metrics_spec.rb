@@ -15,6 +15,16 @@ RSpec.describe_current do
       it { expect { metrics }.to raise_error(expected_error) }
     end
 
+    context 'when metrics topic does not exist' do
+      let(:expected_error) do
+        ::Karafka::Web::Errors::Processing::MissingConsumersMetricsTopicError
+      end
+
+      before { Karafka::Web.config.topics.consumers.metrics = SecureRandom.uuid }
+
+      it { expect { metrics }.to raise_error(expected_error) }
+    end
+
     context 'when current state exists' do
       before { produce(metrics_topic, fixture) }
 
