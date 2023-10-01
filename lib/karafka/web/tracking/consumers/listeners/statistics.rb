@@ -55,7 +55,17 @@ module Karafka
                   subscription_groups: {}
                 }
 
-                sampler.consumer_groups[cg_id][:subscription_groups][sg_id] = sg_details
+                # Include karafka level subscription group related metrics
+                # We inject it into the state scope because that's where other subscription
+                # group non-topic related metrics already are
+                extracted_details = sg_details
+                extracted_details[:state].merge!(
+                  # This needs to be always present because we initialize this value prior to
+                  # each subscription group first poll
+                  polled_at: sampler.subscription_groups.fetch(sg_id).fetch(:polled_at)
+                )
+
+                sampler.consumer_groups[cg_id][:subscription_groups][sg_id] = extracted_details
               end
             end
 
@@ -75,7 +85,7 @@ module Karafka
                   'rebalance_age',
                   'rebalance_cnt',
                   'rebalance_reason'
-                ),
+                ).transform_keys(&:to_sym),
                 topics: {}
               }
             end

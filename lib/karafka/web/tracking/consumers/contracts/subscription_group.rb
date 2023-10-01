@@ -12,7 +12,16 @@ module Karafka
 
             required(:id) { |val| val.is_a?(String) && !val.empty? }
             required(:topics) { |val| val.is_a?(Hash) }
-            required(:state) { |val| val.is_a?(Hash) }
+
+            nested(:state) do
+              required(:state) { |val| val.is_a?(String) && !val.empty? }
+              required(:join_state) { |val| val.is_a?(String) && !val.empty? }
+              required(:stateage) { |val| val.is_a?(Integer) && val >= 0 }
+              required(:rebalance_age) { |val| val.is_a?(Integer) && val >= 0 }
+              required(:rebalance_cnt) { |val| val.is_a?(Integer) && val >= 0 }
+              required(:rebalance_reason) { |val| val.is_a?(String) && !val.empty? }
+              required(:polled_at) { |val| val.is_a?(Numeric) && val >= 0 }
+            end
 
             virtual do |data, errors|
               next unless errors.empty?

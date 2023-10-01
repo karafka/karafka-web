@@ -39,7 +39,8 @@ RSpec.describe_current do
         stateage: 90_002,
         rebalance_age: 90_000,
         rebalance_cnt: 1,
-        rebalance_reason: 'Metadata for subscribed topic(s) has changed'
+        rebalance_reason: 'Metadata for subscribed topic(s) has changed',
+        polled_at: Time.now.to_f
       }
     }
   end
@@ -84,8 +85,8 @@ RSpec.describe_current do
     it { expect(contract.call(subscription_group)).not_to be_success }
   end
 
-  context 'when state is not a hash' do
-    before { subscription_group[:state] = 'not a hash' }
+  context 'when polled_at in state is missing' do
+    before { subscription_group[:state].delete(:polled_at) }
 
     it { expect(contract.call(subscription_group)).not_to be_success }
   end

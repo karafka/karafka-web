@@ -61,7 +61,8 @@ RSpec.describe_current do
               stateage: 90_002,
               rebalance_age: 90_000,
               rebalance_cnt: 1,
-              rebalance_reason: 'Metadata for subscribed topic(s) has changed'
+              rebalance_reason: 'Metadata for subscribed topic(s) has changed',
+              polled_at: Time.now.to_f
             },
             topics: {
               'karafka_consumers_reports' => {

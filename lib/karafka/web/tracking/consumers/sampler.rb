@@ -9,12 +9,13 @@ module Karafka
         class Sampler < Tracking::Sampler
           include ::Karafka::Core::Helpers::Time
 
-          attr_reader :counters, :consumer_groups, :errors, :times, :pauses, :jobs
+          attr_reader :counters, :consumer_groups, :subscription_groups, :errors, :times, :pauses,
+                      :jobs
 
           # Current schema version
-          # This can be used in the future for detecting incompatible changes and writing
-          # migrations
-          SCHEMA_VERSION = '1.2.3'
+          # This is used for detecting incompatible changes and not using outdated data during
+          # upgrades
+          SCHEMA_VERSION = '1.2.4'
 
           # 60 seconds window for time tracked window-based metrics
           TIMES_TTL = 60
@@ -44,6 +45,7 @@ module Karafka
             @counters = COUNTERS_BASE.dup
             @times = TtlHash.new(TIMES_TTL_MS)
             @consumer_groups = {}
+            @subscription_groups = {}
             @errors = []
             @started_at = float_now
             @pauses = Set.new

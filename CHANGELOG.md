@@ -1,5 +1,10 @@
 # Karafka Web changelog
 
+## 0.7.6 (Unreleased)
+- [Enhancement] Report last poll time for each subscription group.
+- [Enhancement] Show last poll time per consumer instance.
+- [Maintenance] Introduce granular subscription group contracts.
+
 ## 0.7.5 (2023-09-29)
 - [Enhancement] Update order of topics creation for the setup of Web to support zero-downtime setup of Web in running Karafka projects.
 - [Enhancement] Add space delimiter to counters numbers to make them look better.
