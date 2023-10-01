@@ -35,7 +35,7 @@ module Karafka
 
               paginate(@params.current_page, next_page)
 
-              respond
+              render
             end
 
             # @param partition_id [Integer] id of the partition of errors we are interested in
@@ -58,7 +58,7 @@ module Karafka
                 @error_messages.map(&:offset)
               )
 
-              respond
+              render
             end
 
             # Shows given error details
@@ -77,7 +77,7 @@ module Karafka
               watermark_offsets = Ui::Models::WatermarkOffsets.find(errors_topic, partition_id)
               paginate(offset, watermark_offsets.low, watermark_offsets.high)
 
-              respond
+              render
             end
 
             private

@@ -1,5 +1,9 @@
 # Karafka Web changelog
 
+## 0.7.6 (Unreleased)
+- **[Feature]** Introduce ability to download raw payloads.
+- **[Feature]** Introduce ability to download deserialized message payload as JSON.
+
 ## 0.7.5 (2023-09-29)
 - [Enhancement] Update order of topics creation for the setup of Web to support zero-downtime setup of Web in running Karafka projects.
 - [Enhancement] Add space delimiter to counters numbers to make them look better.
@@ -9,6 +13,15 @@
 - [Fix] Cache assets for 1 year instead of 7 days.
 - [Fix] Remove source maps pointing to non-existing locations.
 - [Maintenance] Include license and copyrights notice for `timeago.js` that was missing in the JS min file. 
+- [Refactor] Rename `ui.show_internal_topics` to `ui.visibility.internal_topics_display`
+
+### Upgrade Notes
+
+**NO** rolling upgrade needed. Just configuration update.
+
+1. If you are using `ui.visibility_filter` this option is now `ui.visibility.filter` (yes, only `.` difference).
+2. If you are using a custom visibility filter, it requires now two extra methods: `#download?` and `#export?`. The default visibility filter allows both actions unless message is encrypted.
+3. `ui.show_internal_topics` config option has been moved and renamed to `ui.visibility.internal_topics`.
 
 ## 0.7.4 (2023-09-19)
 - [Improvement] Skip aggregations on older schemas during upgrades. This only skips process-reports (that are going to be rolled) on the 5s window in case of an upgrade that should not be a rolling one anyhow. This simplifies the operations and minimizes the risk on breaking upgrades.

@@ -26,6 +26,22 @@ module Karafka
           def payload?(message)
             !message.headers.key?('encryption')
           end
+
+          # Should it be allowed to download this message raw payload
+          #
+          # @param message [::Karafka::Messages::Message]
+          # @return [Boolean] true if downloads allowed
+          def download?(message)
+            payload?(message)
+          end
+
+          # Should it be allowed to download the deserialized and sanitized payload as JSON
+          #
+          # @param message [::Karafka::Messages::Message]
+          # @return [Boolean] true if exports allowed
+          def export?(message)
+            payload?(message)
+          end
         end
       end
     end

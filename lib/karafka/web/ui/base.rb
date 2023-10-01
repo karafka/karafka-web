@@ -55,8 +55,14 @@ module Karafka
 
         plugin :custom_block_results
 
-        handle_block_result Controllers::Responses::Data do |result|
+        handle_block_result Controllers::Responses::Render do |result|
           render_response(result)
+        end
+
+        handle_block_result Controllers::Responses::Deny do
+          @error = true
+          response.status = 403
+          view 'shared/exceptions/not_allowed'
         end
 
         # Redirect either to referer back or to the desired path
@@ -65,6 +71,12 @@ module Karafka
           result.flashes.each { |key, value| flash[key] = value }
 
           response.redirect result.back? ? request.referer : root_path(result.path)
+        end
+
+        handle_block_result Controllers::Responses::File do |result|
+          response.headers['Content-Type'] = 'application/octet-stream'
+          response.headers['Content-Disposition'] = "attachment; filename=\"#{result.file_name}\""
+          response.write result.content
         end
 
         # Display appropriate error specific to a given error type

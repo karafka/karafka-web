@@ -15,7 +15,7 @@ module Karafka
             @status = Models::Status.new
             @sampler = Tracking::Sampler.new
 
-            respond
+            render
           end
         end
       end
