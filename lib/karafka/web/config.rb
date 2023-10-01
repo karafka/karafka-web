@@ -45,11 +45,11 @@ module Karafka
           setting :listeners, default: [
             Tracking::Consumers::Listeners::Status.new,
             Tracking::Consumers::Listeners::Errors.new,
+            Tracking::Consumers::Listeners::Connections.new,
             Tracking::Consumers::Listeners::Statistics.new,
             Tracking::Consumers::Listeners::Pausing.new,
             Tracking::Consumers::Listeners::Processing.new,
-            Tracking::Consumers::Listeners::Tags.new,
-            Tracking::Consumers::Listeners::Connections.new
+            Tracking::Consumers::Listeners::Tags.new
           ]
         end
 
