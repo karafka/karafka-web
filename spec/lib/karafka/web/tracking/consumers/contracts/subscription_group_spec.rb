@@ -85,9 +85,51 @@ RSpec.describe_current do
     it { expect(contract.call(subscription_group)).not_to be_success }
   end
 
-  context 'when polled_at in state is missing' do
-    before { subscription_group[:state].delete(:polled_at) }
+  %i[
+    state
+    join_state
+    rebalance_reason
+  ].each do |key|
+    context "when #{key} in state is missing" do
+      before { subscription_group[:state].delete(key) }
 
-    it { expect(contract.call(subscription_group)).not_to be_success }
+      it { expect(contract.call(subscription_group)).not_to be_success }
+    end
+
+    context "when #{key} is not a string" do
+      before { subscription_group[:state][key] = rand }
+
+      it { expect(contract.call(subscription_group)).not_to be_success }
+    end
+
+    context "when #{key} is empty" do
+      before { subscription_group[:state][key] = '' }
+
+      it { expect(contract.call(subscription_group)).not_to be_success }
+    end
+  end
+
+  %i[
+    stateage
+    rebalance_age
+    rebalance_cnt
+  ].each do |key|
+    context "when #{key} in state is missing" do
+      before { subscription_group[:state].delete(key) }
+
+      it { expect(contract.call(subscription_group)).not_to be_success }
+    end
+
+    context "when #{key} is not a numeric value" do
+      before { subscription_group[:state][key] = 'not a number' }
+
+      it { expect(contract.call(subscription_group)).not_to be_success }
+    end
+
+    context "when #{key} is less than 0" do
+      before { subscription_group[:state][key] = -1 }
+
+      it { expect(contract.call(subscription_group)).not_to be_success }
+    end
   end
 end
