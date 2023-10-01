@@ -99,9 +99,16 @@ module Karafka
           Karafka.env.production? ? 60_000 * 5 : 5_000
         )
 
-        # Should we display internal topics of Kafka. The once starting with `__`
-        # By default we do not display them as they are not usable from regular users perspective
-        setting :show_internal_topics, default: false
+        setting :visibility do
+          # Allows to manage visibility of payload, headers and message key in the UI
+          # In some cases you may want to limit what is being displayed due to the type of data you
+          # are dealing with
+          setting :filter, default: Ui::Models::VisibilityFilter.new
+
+          # Should we display internal topics of Kafka. The once starting with `__`
+          # By default we do not display them as they are not usable from regular users perspective
+          setting :internal_topics, default: false
+        end
 
         # How many elements should we display on pages that support pagination
         setting :per_page, default: 25
@@ -110,11 +117,6 @@ module Karafka
         # (unless same as high). This is used to show on the UI that there may be a hanging
         # transaction that will cause given consumer group to halt processing and wait
         setting :lso_threshold, default: 5 * 60 * 1_000
-
-        # Allows to manage visibility of payload, headers and message key in the UI
-        # In some cases you may want to limit what is being displayed due to the type of data you
-        # are dealing with
-        setting :visibility_filter, default: Ui::Models::VisibilityFilter.new
       end
     end
   end

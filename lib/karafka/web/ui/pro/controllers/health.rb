@@ -23,7 +23,7 @@ module Karafka
               current_state = Models::ConsumersState.current!
               @stats = Models::Health.current(current_state)
 
-              respond
+              render
             end
 
             # Displays details about offsets and their progression/statuses
@@ -31,7 +31,7 @@ module Karafka
               # Same data as overview but presented differently
               overview
 
-              respond
+              render
             end
           end
         end

@@ -23,7 +23,7 @@ module Karafka
               @aggregated, :seconds
             )
 
-            respond
+            render
           end
         end
       end

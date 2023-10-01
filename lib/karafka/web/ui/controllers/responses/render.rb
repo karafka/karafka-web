@@ -6,10 +6,10 @@ module Karafka
       module Controllers
         # Response related components
         module Responses
-          # Response data object. It is used to transfer attributes assigned in controllers into
-          # views
+          # Response render data object. It is used to transfer attributes assigned in controllers
+          # into views
           # It acts as a simplification / transport layer for assigned attributes
-          class Data
+          class Render
             attr_reader :path, :attributes
 
             # @param path [String] render path

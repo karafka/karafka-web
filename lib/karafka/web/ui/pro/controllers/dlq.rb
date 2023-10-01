@@ -33,7 +33,7 @@ module Karafka
                             .select { |topic| dlq_topic_names.include?(topic[:topic_name]) }
                             .sort_by { |topic| topic[:topic_name] }
 
-              respond
+              render
             end
           end
         end
