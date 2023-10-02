@@ -22,7 +22,7 @@ module Karafka
 
               track do |sampler|
                 sampler.subscription_groups[sg_id] = {
-                  polled_at: Time.now.to_f
+                  polled_at: monotonic_now
                 }
               end
             end

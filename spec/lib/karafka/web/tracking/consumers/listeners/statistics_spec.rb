@@ -21,7 +21,7 @@ RSpec.describe_current do
     # This data is set in the connections listener prior to any polling
     sampler.track do |sampler|
       sampler.subscription_groups['sgid'] = {
-        polled_at: Time.now.to_f
+        polled_at: sampler.monotonic_now
       }
     end
 
@@ -38,7 +38,6 @@ RSpec.describe_current do
   it { expect(sg_details['sgid'][:state][:rebalance_reason]).to include('Metadata for') }
   it { expect(sg_details['sgid'][:state][:state]).to eq('up') }
   it { expect(sg_details['sgid'][:state][:stateage]).to eq(9_998) }
-  it { expect(sg_details['sgid'][:state][:polled_at]).to be_within(10).of(Time.now.to_f) }
   it { expect(sg_details['sgid'][:topics]['default'][:name]).to eq('default') }
 
   it { expect(default_p0[:committed_offset]).to eq(2_857_330) }

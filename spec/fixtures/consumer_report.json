@@ -57,7 +57,7 @@
             "rebalance_age": 64615986,
             "rebalance_cnt": 1,
             "rebalance_reason": "Metadata for subscribed topic(s) has changed",
-            "polled_at": 1696188358.3259034
+            "poll_age": 123
           },
           "topics": {
             "default": {
@@ -148,7 +148,7 @@
             "rebalance_age": 64614000,
             "rebalance_cnt": 1,
             "rebalance_reason": "Metadata for subscribed topic(s) has changed",
-            "polled_at": 1696188358.3259034
+            "poll_age": 123
           },
           "topics": {
           }

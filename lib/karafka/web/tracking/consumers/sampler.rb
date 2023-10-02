@@ -100,7 +100,7 @@ module Karafka
                 utilization: utilization
               ).merge(total: @counters),
 
-              consumer_groups: @consumer_groups,
+              consumer_groups: enriched_consumer_groups,
               jobs: jobs.values
             }
           end
@@ -266,6 +266,22 @@ module Karafka
                                  else
                                    @memory_threads_ps = false
                                  end
+          end
+
+          # Consumer group details need to be enriched with details about polling that comes from
+          # Karafka level. It is also time based, hence we need to materialize it only at the
+          # moment of message dispatch to have it accurate.
+          def enriched_consumer_groups
+            @consumer_groups.each do |_cg_id, cg_details|
+              cg_details.each do
+                cg_details.fetch(:subscription_groups, {}).each do |sg_id, sg_details|
+                  polled_at = subscription_groups.fetch(sg_id).fetch(:polled_at)
+                  sg_details[:state][:poll_age] = monotonic_now - polled_at
+                end
+              end
+            end
+
+            @consumer_groups
           end
         end
       end

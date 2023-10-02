@@ -40,7 +40,7 @@ RSpec.describe_current do
         rebalance_age: 90_000,
         rebalance_cnt: 1,
         rebalance_reason: 'Metadata for subscribed topic(s) has changed',
-        polled_at: Time.now.to_f
+        poll_age: 12
       }
     }
   end
@@ -113,6 +113,7 @@ RSpec.describe_current do
     stateage
     rebalance_age
     rebalance_cnt
+    poll_age
   ].each do |key|
     context "when #{key} in state is missing" do
       before { subscription_group[:state].delete(key) }

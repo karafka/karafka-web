@@ -56,7 +56,7 @@
             "rebalance_age": 10563674,
             "rebalance_cnt": 3,
             "rebalance_reason": "rebalance in progress",
-            "polled_at": 1696188358.3259034
+            "poll_age": 132
           },
           "topics": {
             "default": {
@@ -145,7 +145,7 @@
             "rebalance_age": 10563545,
             "rebalance_cnt": 3,
             "rebalance_reason": "rebalance in progress",
-            "polled_at": 1696188358.3259034
+            "poll_age": 123
           },
           "topics": {
             "karafka_consumers_reports": {

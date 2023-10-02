@@ -43,7 +43,7 @@
           <span class="badge bg-secondary mt-1 mb-1">
             <%==
               relative_time(
-                Time.at(subscription_group.polled_at)
+                Time.at(@process.dispatched_at) - (subscription_group.poll_age / 1_000)
               )
             %>
           </span>
