@@ -275,6 +275,10 @@ module Karafka
             @consumer_groups.each do |_cg_id, cg_details|
               cg_details.each do
                 cg_details.fetch(:subscription_groups, {}).each do |sg_id, sg_details|
+                  # This should be always available, since we subscription group polled at time
+                  # is first initialized before we start polling, there should be no case where
+                  # we have statistics about a given subscription group but we do not have the
+                  # last polling time
                   polled_at = subscription_groups.fetch(sg_id).fetch(:polled_at)
                   sg_details[:state][:poll_age] = monotonic_now - polled_at
                 end
