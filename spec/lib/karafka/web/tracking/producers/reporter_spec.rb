@@ -39,7 +39,7 @@ RSpec.describe_current do
   context 'when there is a report but it is not yet time to dispatch due to previous dispatch' do
     before do
       reporter.report
-      sampler.errors << {}
+      sampler.errors << valid_error
     end
 
     it 'expect not to dispatch any messages yet' do
