@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-## 0.7.6 (Unreleased)
+## 0.7.6 (2023-10-10)
 - [Fix] Fix nested SASL/SAML data visible in the routing details (#173)
 
 ## 0.7.5 (2023-09-29)
