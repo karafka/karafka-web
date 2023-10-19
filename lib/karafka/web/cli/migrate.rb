@@ -3,6 +3,7 @@
 module Karafka
   module Web
     class Cli
+      # Migrates the Web UI topics and states if needed
       class Migrate < Base
         desc 'Runs necessary migrations of Web UI topics and states'
 

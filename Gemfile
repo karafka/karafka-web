@@ -2,9 +2,7 @@
 
 source 'https://rubygems.org'
 
-#plugin 'diffend'
-
-gem 'karafka', path: '/mnt/software/Karafka/karafka'
+plugin 'diffend'
 
 gemspec
 
