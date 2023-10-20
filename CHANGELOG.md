@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-## 0.7.7 (Unreleased)
+## 0.7.7 (2023-10-20)
 - [Fix] Remove `thor` as a CLI engine due to breaking changes.
 
 ## 0.7.6 (2023-10-10)
