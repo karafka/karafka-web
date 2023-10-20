@@ -1,13 +1,21 @@
 # frozen_string_literal: true
 
 RSpec.describe_current do
-  subject(:cli) { described_class.new }
+  subject(:cli_class) { described_class }
 
-  let(:installer) { Karafka::Web::Installer.new }
+  describe '#commands' do
+    let(:expected_commands) do
+      [
+        Karafka::Web::Cli::Help,
+        Karafka::Web::Cli::Install,
+        Karafka::Web::Cli::Migrate,
+        Karafka::Web::Cli::Reset,
+        Karafka::Web::Cli::Uninstall
+      ]
+    end
 
-  before { allow(Karafka::Web::Installer).to receive(:new).and_return(installer) }
-
-  describe '#start' do
-    pending
+    it 'expect to include all supported commands' do
+      expect(cli_class.send(:commands)).to eq(expected_commands)
+    end
   end
 end
