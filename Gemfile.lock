@@ -3,18 +3,10 @@ PATH
   specs:
     karafka-web (0.7.6)
       erubi (~> 1.4)
-      karafka (>= 2.2.6, < 3.0.0)
+      karafka (>= 2.2.8.beta1, < 3.0.0)
       karafka-core (>= 2.2.2, < 3.0.0)
       roda (~> 3.68, >= 3.69)
       tilt (~> 2.0)
-
-PATH
-  remote: /mnt/software/Karafka/karafka
-  specs:
-    karafka (2.2.8)
-      karafka-core (>= 2.2.2, < 2.3.0)
-      waterdrop (>= 2.6.6, < 3.0.0)
-      zeitwerk (~> 2.3)
 
 GEM
   remote: https://rubygems.org/
@@ -34,6 +26,10 @@ GEM
     ffi (1.15.5)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
+    karafka (2.2.8)
+      karafka-core (>= 2.2.2, < 2.3.0)
+      waterdrop (>= 2.6.6, < 3.0.0)
+      zeitwerk (~> 2.3)
     karafka-core (2.2.2)
       concurrent-ruby (>= 1.1)
       karafka-rdkafka (>= 0.13.1, < 0.14.0)
@@ -86,7 +82,6 @@ PLATFORMS
 DEPENDENCIES
   byebug
   factory_bot
-  karafka!
   karafka-web!
   rack-test
   rackup (~> 0.2)
