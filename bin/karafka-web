@@ -3,6 +3,7 @@
 require 'karafka'
 require 'karafka/web'
 
-::Karafka::Cli::Base.load
+ENV['KARAFKA_CLI'] = 'true'
 
+::Karafka::Cli::Base.load
 ::Karafka::Web::Cli.start

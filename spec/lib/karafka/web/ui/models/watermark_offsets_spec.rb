@@ -61,7 +61,9 @@ RSpec.describe_current do
   end
 
   context 'when Kafka topic does not exist' do
-    it { expect { described_class.find('na', 0) }.to raise_error(Rdkafka::RdkafkaError) }
+    it do
+      expect { described_class.find(SecureRandom.uuid, 0) }.to raise_error(Rdkafka::RdkafkaError)
+    end
   end
 
   context 'when Kafka partition does not exist' do

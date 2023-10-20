@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe_current do
-  subject(:cli_class) { described_class }
+  subject(:base_cli_class) { described_class }
 
   describe '#commands' do
     let(:expected_commands) do
@@ -15,7 +15,7 @@ RSpec.describe_current do
     end
 
     it 'expect to include all supported commands' do
-      expect(cli_class.send(:commands)).to eq(expected_commands)
+      expect(base_cli_class.commands).to eq(expected_commands)
     end
   end
 end
