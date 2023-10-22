@@ -14,8 +14,9 @@ module TopicsManagerHelper
   # @param topic [String] topic name
   # @param payload [String, nil] data we want to send
   # @param details [Hash] other details
-  # @param type [Symbol] producer type (`:regular` or `:transactional`)
-  def produce(topic, payload = SecureRandom.uuid, details = {}, type: :regular)
+  def produce(topic, payload = SecureRandom.uuid, details = {})
+    type = details.delete(:type) || :regular
+
     PRODUCERS.public_send(type).produce_sync(
       **details.merge(
         topic: topic,
