@@ -43,6 +43,8 @@ module Karafka
 
             private
 
+            # @return [Hash] kafka config for Web UI interface.
+            # @note It does **not** affect tracking or processing
             def config
               ::Karafka::Web.config.ui.kafka
             end
