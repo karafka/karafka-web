@@ -1,5 +1,8 @@
 # Karafka Web changelog
 
+## 0.7.8 (Unreleased)
+- [Enhancement] Support transactional producer usage with Web UI.
+
 ## 0.7.7 (2023-10-20)
 - [Fix] Remove `thor` as a CLI engine due to breaking changes.
 

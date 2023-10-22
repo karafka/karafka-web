@@ -14,7 +14,10 @@ module Karafka
               metrics_message = ::Karafka::Admin.read_topic(
                 Karafka::Web.config.topics.consumers.metrics,
                 0,
-                1
+                # We need to take more in case there would be transactions running.
+                # In theory we could take two but this compensates for any involuntary
+                # revocations and cases where two producers would write to the same state
+                5
               ).last
 
               return metrics_message.payload if metrics_message

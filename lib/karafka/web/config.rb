@@ -114,6 +114,37 @@ module Karafka
         # In some cases you may want to limit what is being displayed due to the type of data you
         # are dealing with
         setting :visibility_filter, default: Ui::Models::VisibilityFilter.new
+
+        # Specific kafka settings that are tuned to operate within the Web UI interface.
+        #
+        # Please do not change them unless you know what you are doing as their misconfiguration
+        # may cause Web UI to misbehave
+        #
+        # The settings are inherited as follows:
+        #   1. root routing level `kafka` settings
+        #   2. admin `kafka` settings
+        #   3. web ui `kafka` settings from here
+        #
+        # Those settings impact ONLY Web UI interface and do not affect other scopes. This is done
+        # on purpose as we want to improve responsiveness of the interface by tuning some of the
+        # settings and this is not that relevant for processing itself.
+        #
+        # option [Hash] extra changes to the default admin kafka settings
+        setting :kafka, default: {
+          # optimizes the responsiveness of the Web UI in three scenarios:
+          #   - topics to which writes happen only in transactions so EOF is yield faster
+          #   - heavily compacted topics
+          #   - Web UI topics read operations when using transactional producer
+          #
+          # This can be configured to be higher if you do not use transactional WaterDrop producer.
+          # This value is used when last message (first from the high watermark offset) is the
+          # transaction commit message. In cases like this the EOF gets propagated after this time
+          # so we have to wait. Default 500ms means, that for some views, where we take our data
+          # that might have been committed via transactional producer, we would wait for 1 second
+          # to get needed data. If you are experiencing timeouts or other issues with the Web IU
+          # interface, you can increase this.
+          'fetch.wait.max.ms': 100
+        }
       end
     end
   end

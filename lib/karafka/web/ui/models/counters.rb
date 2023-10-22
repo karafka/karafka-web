@@ -25,7 +25,7 @@ module Karafka
 
             MAX_ERROR_PARTITIONS.times do |partition|
               begin
-                offsets = Karafka::Admin.read_watermark_offsets(
+                offsets = Lib::Admin.read_watermark_offsets(
                   ::Karafka::Web.config.topics.errors,
                   partition
                 )

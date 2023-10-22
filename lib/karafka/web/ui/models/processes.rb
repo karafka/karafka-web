@@ -44,7 +44,7 @@ module Karafka
                         .map { |process| process[:offset] }
                         .sort
 
-              ::Karafka::Admin.read_topic(
+              Lib::Admin.read_topic(
                 ::Karafka::Web.config.topics.consumers.reports,
                 0,
                 # We set 10k here because we start from the latest offset of the reports, hence
