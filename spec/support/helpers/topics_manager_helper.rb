@@ -14,8 +14,9 @@ module TopicsManagerHelper
   # @param topic [String] topic name
   # @param payload [String, nil] data we want to send
   # @param details [Hash] other details
-  def produce(topic, payload = SecureRandom.uuid, details = {})
-    Karafka::App.producer.produce_sync(
+  # @param type [Symbol] producer type (`:regular` or `:transactional`)
+  def produce(topic, payload = SecureRandom.uuid, details = {}, type: :regular)
+    PRODUCERS.public_send(type).produce_sync(
       **details.merge(
         topic: topic,
         payload: payload
@@ -30,6 +31,6 @@ module TopicsManagerHelper
   def produce_many(topic, payloads, details = {})
     messages = payloads.map { |payload| details.merge(topic: topic, payload: payload) }
 
-    Karafka::App.producer.produce_many_sync(messages)
+    PRODUCERS.regular.produce_many_sync(messages)
   end
 end

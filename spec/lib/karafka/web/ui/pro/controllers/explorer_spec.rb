@@ -5,7 +5,7 @@ RSpec.describe_current do
 
   let(:topic) { create_topic(partitions: partitions) }
   let(:partitions) { 1 }
-  let(:removed_or_compacted) { 'This message has either been removed or compacted' }
+  let(:removed_or_compacted) { 'This offset does not contain any data.' }
   let(:internal_topic) { "__#{SecureRandom.uuid}" }
 
   describe '#index' do
