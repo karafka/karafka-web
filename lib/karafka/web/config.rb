@@ -36,6 +36,10 @@ module Karafka
         # 5 seconds should be enough
         setting :interval, default: 5_000
 
+        # Main Web UI reporting scheduler that runs a background thread and reports periodically
+        # from the consumer reporter and producer reporter
+        setting :scheduler, default: Tracking::Scheduler.new
+
         setting :consumers do
           # Reports the metrics collected in the sampler
           setting :reporter, default: Tracking::Consumers::Reporter.new
@@ -58,8 +62,7 @@ module Karafka
           setting :sampler, default: Tracking::Producers::Sampler.new
 
           setting :listeners, default: [
-            Tracking::Producers::Listeners::Errors.new,
-            Tracking::Producers::Listeners::Reporter.new
+            Tracking::Producers::Listeners::Errors.new
           ]
         end
       end

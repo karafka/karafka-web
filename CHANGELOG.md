@@ -2,6 +2,8 @@
 
 ## 0.7.8 (Unreleased)
 - [Enhancement] Support transactional producer usage with Web UI.
+- [Fix] Fix a bug where critical errors (like `IRB::Abort`) would not abort the ongoing transaction.
+- [Fix] Prevent a scenario where an ongoing transactional producer would have stats emitted and an error that could not have been dispatched because of the transaction, creating a dead-lock.
 
 ## 0.7.7 (2023-10-20)
 - [Fix] Remove `thor` as a CLI engine due to breaking changes.

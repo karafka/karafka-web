@@ -26,6 +26,9 @@ module Karafka
           # We cannot report and track the same time, that is why we use mutex here. To make sure
           # that samples aggregations and counting does not interact with reporter flushing.
           def track
+            # Prevents deadlocks when something producer related fails in the Web UI reporter
+            return yield(self) if Reporter::MUTEX.owned?
+
             Reporter::MUTEX.synchronize do
               yield(self)
             end
