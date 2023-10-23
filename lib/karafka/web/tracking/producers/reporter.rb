@@ -9,9 +9,7 @@ module Karafka
         # @note Producer reported does not have to operate with the `forced` dispatch mainly
         #   because there is no expectation on immediate status updates for producers and their
         #   dispatch flow is always periodic based.
-        class Reporter
-          include ::Karafka::Core::Helpers::Time
-
+        class Reporter < Tracking::Reporter
           # Minimum number of messages to produce to produce them in sync mode
           # This acts as a small back-off not to overload the system in case we would have
           # extremely big number of errors happening
@@ -24,6 +22,7 @@ module Karafka
           MUTEX = Mutex.new
 
           def initialize
+            super
             # If there are any errors right after we started sampling, dispatch them immediately
             @tracked_at = monotonic_now - 10_000
             @error_contract = Tracking::Contracts::Error.new
@@ -62,7 +61,7 @@ module Karafka
 
           # @return [Boolean] Should we report or is it not yet time to do so
           def report?
-            return false unless ::Karafka.producer.status.active?
+            return false unless active?
 
             (monotonic_now - @tracked_at) >= ::Karafka::Web.config.tracking.interval
           end
@@ -93,6 +92,9 @@ module Karafka
           # and we can just safely ignore this
           rescue WaterDrop::Errors::ProducerClosedError
             nil
+          rescue StandardError => e
+            p '------------------------------------------------'
+            p e
           end
         end
       end

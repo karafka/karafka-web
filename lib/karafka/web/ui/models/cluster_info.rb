@@ -4,7 +4,7 @@ module Karafka
   module Web
     module Ui
       module Models
-        # Wraps around the `Karafka::Admin#cluster_info` with caching and some additional aliases
+        # Wraps around the `Lib::Admin#cluster_info` with caching and some additional aliases
         # so we can reference relevant information easily
         class ClusterInfo
           class << self
@@ -18,7 +18,7 @@ module Karafka
               cluster_info = cache.read(:cluster_info)
 
               if cluster_info.nil? || !cached
-                cluster_info = cache.write(:cluster_info, Karafka::Admin.cluster_info)
+                cluster_info = cache.write(:cluster_info, Lib::Admin.cluster_info)
               end
 
               cluster_info

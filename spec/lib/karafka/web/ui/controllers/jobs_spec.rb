@@ -79,6 +79,32 @@ RSpec.describe_current do
         end
       end
 
+      context 'when visiting page with data reported in a transactional fashion' do
+        before do
+          topics_config.consumers.states = states_topic
+          topics_config.consumers.reports = reports_topic
+
+          produce(states_topic, Fixtures.file('consumers_state.json'), type: :transactional)
+          produce(reports_topic, Fixtures.file('consumer_report.json'), type: :transactional)
+
+          get 'jobs'
+        end
+
+        it do
+          expect(response).to be_ok
+          expect(body).to include('2023-08-01T09:47:51')
+          expect(body.scan('ActiveJob::Consumer').size).to eq(25)
+          expect(body).to include(support_message)
+          expect(body).to include(breadcrumbs)
+          expect(body).to include(pagination)
+          expect(body).to include('shinra:0:0')
+          expect(body).to include('shinra:1:1')
+          expect(body).to include('shinra:11:11')
+          expect(body).to include('shinra:12:12')
+          expect(body.scan('shinra:').size).to eq(25)
+        end
+      end
+
       context 'when visiting higher page' do
         before { get 'jobs?page=2' }
 

@@ -132,11 +132,22 @@ module Karafka
                 active_partitions, = Paginators::Partitions.call(partitions_count, 1)
               end
 
-              # This selects first page with most recent messages
-              messages, = Models::Message.topic_page(topic_id, active_partitions, 1)
+              recent = nil
 
-              # Selects newest out of all partitions
-              recent = messages.max_by(&:timestamp)
+              # This selects first pages with most recent messages and moves to next if first
+              # contains only compacted data, etc.
+              #
+              # We do it until we find a message we could refer to (if doable) within first
+              # ten pages
+              10.times do |page|
+                messages, = Models::Message.topic_page(topic_id, active_partitions, page + 1)
+
+                # Selects newest out of all partitions
+                # Reject compacted messages and transaction-related once
+                recent = messages.reject { |message| message.is_a?(Array) }.max_by(&:timestamp)
+
+                break if recent
+              end
 
               recent || raise(::Karafka::Web::Errors::Ui::NotFoundError)
 
@@ -184,7 +195,7 @@ module Karafka
             # @param partition_id [Integer]
             # @param time [Time] time of the message
             def closest(topic_id, partition_id, time)
-              target = ::Karafka::Admin.read_topic(topic_id, partition_id, 1, time).first
+              target = Lib::Admin.read_topic(topic_id, partition_id, 1, time).first
 
               partition_path = "explorer/#{topic_id}/#{partition_id}"
               partition_path += "?offset=#{target.offset}" if target

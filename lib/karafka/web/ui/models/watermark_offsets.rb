@@ -13,7 +13,7 @@ module Karafka
             # @param partition_id [Integer]
             # @return [WatermarkOffsets]
             def find(topic_id, partition_id)
-              offsets = ::Karafka::Admin.read_watermark_offsets(topic_id, partition_id)
+              offsets = Lib::Admin.read_watermark_offsets(topic_id, partition_id)
 
               new(
                 low: offsets.first,

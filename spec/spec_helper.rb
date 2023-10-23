@@ -64,6 +64,11 @@ RSpec.configure do |config|
     ::Karafka::Web.config.topics.consumers.reports = TOPICS[2]
     ::Karafka::Web.config.topics.errors = TOPICS[3]
   end
+
+  config.after(:suite) do
+    PRODUCERS.regular.close
+    PRODUCERS.transactional.close
+  end
 end
 
 RSpec.extend RSpecLocator.new(__FILE__)
@@ -81,6 +86,17 @@ module Karafka
     end
   end
 end
+
+# Alias for two producers that we need in specs. Regular one that is not transactional and the
+# other one that is transactional for transactional specs
+PRODUCERS = OpenStruct.new(
+  regular: Karafka.producer,
+  transactional: ::WaterDrop::Producer.new do |p_config|
+    p_config.kafka = ::Karafka::Setup::AttributesMap.producer(Karafka::App.config.kafka.dup)
+    p_config.kafka[:'transactional.id'] = SecureRandom.uuid
+    p_config.logger = Karafka::App.config.logger
+  end
+)
 
 # Topics that we will use for all the tests as the primary karafka-web topics for valid cases
 TOPICS = Array.new(4) { create_topic }
