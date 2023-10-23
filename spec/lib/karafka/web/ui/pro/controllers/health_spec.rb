@@ -122,6 +122,8 @@ RSpec.describe_current do
 
     context 'when one of partitions is at risk due to LSO' do
       before do
+        topics_config.consumers.reports = reports_topic
+
         report = Fixtures.json('consumer_report', symbolize_names: false)
 
         partition_data = report.dig(*partition_scope)
@@ -150,6 +152,8 @@ RSpec.describe_current do
 
     context 'when one of partitions is stopped due to LSO' do
       before do
+        topics_config.consumers.reports = reports_topic
+
         report = Fixtures.json('consumer_report', symbolize_names: false)
 
         partition_data = report.dig(*partition_scope)

@@ -27,6 +27,14 @@ module ControllerHelper
     'This feature is available only to'
   end
 
+  # @return [String] Message we display for offsets without user data
+  def compacted_or_transactional_offset
+    <<~MSG.tr("\n", ' ')
+      This offset does not contain any data.
+      The message may have been compacted or is a system entry.
+    MSG
+  end
+
   # @return [Integer] http response status
   def status
     response.status

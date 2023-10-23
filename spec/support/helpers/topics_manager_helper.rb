@@ -30,8 +30,10 @@ module TopicsManagerHelper
   # @param payloads [Array<String, nil>] data we want to send
   # @param details [Hash] other details
   def produce_many(topic, payloads, details = {})
+    type = details.delete(:type) || :regular
+
     messages = payloads.map { |payload| details.merge(topic: topic, payload: payload) }
 
-    PRODUCERS.regular.produce_many_sync(messages)
+    PRODUCERS.public_send(type).produce_many_sync(messages)
   end
 end
