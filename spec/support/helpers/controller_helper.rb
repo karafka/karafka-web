@@ -29,7 +29,7 @@ module ControllerHelper
 
   # @return [String] Message we display for offsets without user data
   def compacted_or_transactional_offset
-    <<~MSG.tr("\n", ' ')
+    <<~MSG.tr("\n", ' ').strip
       This offset does not contain any data.
       The message may have been compacted or is a system entry.
     MSG
