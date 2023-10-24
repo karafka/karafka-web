@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-## 0.7.8 (Unreleased)
+## 0.7.8 (2023-10-24)
 - [Enhancement] Support transactional producer usage with Web UI.
 - [Fix] Fix a bug where critical errors (like `IRB::Abort`) would not abort the ongoing transaction.
 - [Fix] Prevent a scenario where an ongoing transactional producer would have stats emitted and an error that could not have been dispatched because of the transaction, creating a dead-lock.
