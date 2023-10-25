@@ -5,7 +5,7 @@ RSpec.describe_current do
 
   describe '#active?' do
     context 'when producer is not yet created' do
-      before { allow(Karafka).to receive(:producer).and_return(nil) }
+      before { allow(Karafka::Web).to receive(:producer).and_return(nil) }
 
       it { expect(reporter.active?).to eq(false) }
     end

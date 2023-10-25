@@ -21,18 +21,18 @@ RSpec.describe_current do
 
   before do
     Karafka::Web.config.topics.errors = errors_topic
-    allow(Karafka).to receive(:producer).and_return(producer)
+    allow(Karafka::Web).to receive(:producer).and_return(producer)
     allow(producer.status).to receive(:active?).and_return(true)
-    allow(Karafka.producer).to receive(:produce_many_sync)
-    allow(Karafka.producer).to receive(:produce_many_async)
+    allow(Karafka::Web.producer).to receive(:produce_many_sync)
+    allow(Karafka::Web.producer).to receive(:produce_many_async)
   end
 
   context 'when there is nothing to report' do
     it 'expect not to dispatch any messages' do
       reporter.report
 
-      expect(::Karafka.producer).not_to have_received(:produce_many_sync)
-      expect(::Karafka.producer).not_to have_received(:produce_many_async)
+      expect(::Karafka::Web.producer).not_to have_received(:produce_many_sync)
+      expect(::Karafka::Web.producer).not_to have_received(:produce_many_async)
     end
   end
 
@@ -45,8 +45,8 @@ RSpec.describe_current do
     it 'expect not to dispatch any messages yet' do
       reporter.report
 
-      expect(::Karafka.producer).not_to have_received(:produce_many_sync)
-      expect(::Karafka.producer).not_to have_received(:produce_many_async)
+      expect(::Karafka::Web.producer).not_to have_received(:produce_many_sync)
+      expect(::Karafka::Web.producer).not_to have_received(:produce_many_async)
     end
   end
 
@@ -103,13 +103,13 @@ RSpec.describe_current do
 
   describe '#active?' do
     context 'when producer is not yet created' do
-      before { allow(Karafka).to receive(:producer).and_return(nil) }
+      before { allow(Karafka::Web).to receive(:producer).and_return(nil) }
 
       it { expect(reporter.active?).to eq(false) }
     end
 
     context 'when producer is not active' do
-      before { allow(Karafka.producer.status).to receive(:active?).and_return(false) }
+      before { allow(Karafka::Web.producer.status).to receive(:active?).and_return(false) }
 
       it { expect(reporter.active?).to eq(false) }
     end

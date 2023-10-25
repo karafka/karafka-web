@@ -135,9 +135,9 @@ module Karafka
           #   slowdown any processing.
           def produce(messages)
             if messages.count >= PRODUCE_SYNC_THRESHOLD
-              ::Karafka.producer.produce_many_sync(messages)
+              ::Karafka::Web.producer.produce_many_sync(messages)
             else
-              ::Karafka.producer.produce_many_async(messages)
+              ::Karafka::Web.producer.produce_many_async(messages)
             end
           # Since we run this in a background thread, there may be a case upon shutdown, where the
           # producer is closed right before a potential dispatch. It is not worth dealing with this
