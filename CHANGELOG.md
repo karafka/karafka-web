@@ -1,13 +1,15 @@
 # Karafka Web changelog
 
+## 0.7.9 (2023-10-25)
+- [Enhancement] Allow for `Karafka::Web.producer` reconfiguration from the default (`Karafka.producer`).
+- [Change] Rely on `karafka-core` `>=` `2.2.4` to support lazy loaded custom web producer.
+
 ## 0.7.8 (2023-10-24)
 - [Enhancement] Support transactional producer usage with Web UI.
-- [Fix] Fix a bug where critical errors (like `IRB::Abort`) would not abort the ongoing transaction.
 - [Fix] Prevent a scenario where an ongoing transactional producer would have stats emitted and an error that could not have been dispatched because of the transaction, creating a dead-lock.
 - [Fix] Make sure that the `recent` displays the most recent non-compacted, non-system message.
 - [Fix] Improve the `recent` message display to compensate for aborted transactions.
 - [Fix] Fix `ReferenceError: response is not defined` that occurs when Web UI returns refresh non 200.
-- [Change] Rely on `karafka-core` `>=` `2.2.4` to support lazy loaded custom web producer.
 
 ## 0.7.7 (2023-10-20)
 - [Fix] Remove `thor` as a CLI engine due to breaking changes.
