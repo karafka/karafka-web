@@ -11,6 +11,17 @@ module Karafka
       # This is used both in the processing for eviction and in the UI
       setting :ttl, default: 30_000
 
+      # Producer for the Web UI. By default it is a `Karafka.producer`, however it may be
+      # overwritten if we want to use a separate instance in case of heavy usage of the
+      # transactional producer as a default. In cases like this, Karafka may not be able to report
+      # data because it uses this producer and it may be locked because of the transaction in a
+      # user space.
+      setting(
+        :producer,
+        constructor: -> { ::Karafka.producer },
+        lazy: true
+      )
+
       # Topics naming - used for processing and UI
       setting :topics do
         # All the errors encountered will be dispatched to this topic for inspection
@@ -41,11 +52,13 @@ module Karafka
         setting :scheduler, default: Tracking::Scheduler.new
 
         setting :consumers do
-          # Reports the metrics collected in the sampler
+          # Reports the metrics collected in the consumer sampler
           setting :reporter, default: Tracking::Consumers::Reporter.new
 
+          # Samples for fetching and storing metrics samples about the consumer process
           setting :sampler, default: Tracking::Consumers::Sampler.new
 
+          # Listeners needed for the Web UI to track consumer related changes
           setting :listeners, default: [
             Tracking::Consumers::Listeners::Status.new,
             Tracking::Consumers::Listeners::Errors.new,
@@ -57,10 +70,13 @@ module Karafka
         end
 
         setting :producers do
+          # Reports the metrics collected in the producer sampler
           setting :reporter, default: Tracking::Producers::Reporter.new
 
+          # Sampler for errors from producers
           setting :sampler, default: Tracking::Producers::Sampler.new
 
+          # Listeners needed for the Web UI to track producers related stuff
           setting :listeners, default: [
             Tracking::Producers::Listeners::Errors.new
           ]

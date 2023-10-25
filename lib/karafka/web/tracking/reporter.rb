@@ -14,8 +14,8 @@ module Karafka
         #
         # @return [Boolean]
         def active?
-          return false unless ::Karafka::App.producer
-          return false unless ::Karafka::App.producer.status.active?
+          return false unless ::Karafka::Web.producer
+          return false unless ::Karafka::Web.producer.status.active?
 
           true
         end

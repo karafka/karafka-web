@@ -11,6 +11,7 @@ module Karafka
         def call
           extend_routing
           subscribe_to_monitor
+          subscribe_to_close_web_producer
         end
 
         private
@@ -71,9 +72,28 @@ module Karafka
             ::Karafka.monitor.subscribe(listener)
           end
 
-          # Installs all the producer related listeners
+          # Installs all the producer related listeners into Karafka default listener and
+          # into Karafka::Web listener in case it would be different than the Karafka one
           ::Karafka::Web.config.tracking.producers.listeners.each do |listener|
             ::Karafka.producer.monitor.subscribe(listener)
+
+            # Do not instrument twice in case only one default producer is used
+            next if ::Karafka.producer == ::Karafka::Web.producer
+
+            ::Karafka::Web.producer.monitor.subscribe(listener)
+          end
+        end
+
+        # In most cases we want to close the producer if possible.
+        # While we cannot do it easily in user processes and we should rely on WaterDrop
+        # finalization logic, we can do it in `karafka server` on terminate
+        #
+        # In other places, this producer anyhow should not be used.
+        def subscribe_to_close_web_producer
+          ::Karafka::App.monitor.subscribe('app.terminated') do
+            # If Web producer is the same as `Karafka.producer` it will do nothing as you can
+            # call `#close` multiple times without side effects
+            ::Karafka::Web.producer.close
           end
         end
       end

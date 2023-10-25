@@ -4,7 +4,7 @@ PATH
     karafka-web (0.7.8)
       erubi (~> 1.4)
       karafka (>= 2.2.9, < 3.0.0)
-      karafka-core (>= 2.2.2, < 3.0.0)
+      karafka-core (>= 2.2.4, < 3.0.0)
       roda (~> 3.68, >= 3.69)
       tilt (~> 2.0)
 
@@ -40,7 +40,7 @@ GEM
       karafka-core (>= 2.2.2, < 2.3.0)
       waterdrop (>= 2.6.10, < 3.0.0)
       zeitwerk (~> 2.3)
-    karafka-core (2.2.3)
+    karafka-core (2.2.4)
       concurrent-ruby (>= 1.1)
       karafka-rdkafka (>= 0.13.6, < 0.14.0)
     karafka-rdkafka (0.13.6)

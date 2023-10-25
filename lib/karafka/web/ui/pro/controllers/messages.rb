@@ -28,7 +28,7 @@ module Karafka
             def republish(topic_id, partition_id, offset)
               message = Ui::Models::Message.find(topic_id, partition_id, offset)
 
-              delivery = ::Karafka.producer.produce_sync(
+              delivery = ::Karafka::Web.producer.produce_sync(
                 topic: topic_id,
                 partition: partition_id,
                 payload: message.raw_payload,
