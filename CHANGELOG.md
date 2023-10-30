@@ -1,5 +1,8 @@
 # Karafka Web changelog
 
+## 0.7.10 (Unreleased)
+- [Fix] Max LSO chart does not work as expected (#201)
+
 ## 0.7.9 (2023-10-25)
 - [Enhancement] Allow for `Karafka::Web.producer` reconfiguration from the default (`Karafka.producer`).
 - [Change] Rely on `karafka-core` `>=` `2.2.4` to support lazy loaded custom web producer.
