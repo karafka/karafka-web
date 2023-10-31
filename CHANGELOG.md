@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-## 0.7.10 (Unreleased)
+## 0.7.10 (2023-10-31)
 - [Fix] Max LSO chart does not work as expected (#201)
 
 ## 0.7.9 (2023-10-25)
