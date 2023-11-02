@@ -75,7 +75,7 @@ module Karafka
                   'rebalance_age',
                   'rebalance_cnt',
                   'rebalance_reason'
-                ),
+                ).transform_keys(&:to_sym),
                 topics: {}
               }
             end

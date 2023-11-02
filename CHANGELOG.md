@@ -3,6 +3,9 @@
 ## 0.8.0 (Unreleased)
 - **[Feature]** Introduce ability to download raw payloads.
 - **[Feature]** Introduce ability to download deserialized message payload as JSON.
+- [Enhancement] Report last poll time for each subscription group.
+- [Enhancement] Show last poll time per consumer instance.
+- [Maintenance] Introduce granular subscription group contracts.
 
 ## 0.7.10 (2023-10-31)
 - [Fix] Max LSO chart does not work as expected (#201)

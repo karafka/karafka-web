@@ -5,7 +5,7 @@ RSpec.describe_current do
 
   it { expect(sampler.ruby_version).to start_with('ruby ') }
   it { expect(sampler.karafka_version).to include('2.2.') }
-  it { expect(sampler.karafka_web_version).to include('0.7.') }
+  it { expect(sampler.karafka_web_version).to include('0.8.') }
   it { expect(sampler.karafka_core_version).to include('2.2.') }
   it { expect(sampler.rdkafka_version).to start_with('0.1') }
   it { expect(sampler.librdkafka_version).to start_with('2.2') }

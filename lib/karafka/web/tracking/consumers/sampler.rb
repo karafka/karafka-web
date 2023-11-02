@@ -9,12 +9,13 @@ module Karafka
         class Sampler < Tracking::Sampler
           include ::Karafka::Core::Helpers::Time
 
-          attr_reader :counters, :consumer_groups, :errors, :times, :pauses, :jobs
+          attr_reader :counters, :consumer_groups, :subscription_groups, :errors, :times, :pauses,
+                      :jobs
 
           # Current schema version
-          # This can be used in the future for detecting incompatible changes and writing
-          # migrations
-          SCHEMA_VERSION = '1.2.3'
+          # This is used for detecting incompatible changes and not using outdated data during
+          # upgrades
+          SCHEMA_VERSION = '1.2.4'
 
           # 60 seconds window for time tracked window-based metrics
           TIMES_TTL = 60
@@ -44,6 +45,7 @@ module Karafka
             @counters = COUNTERS_BASE.dup
             @times = TtlHash.new(TIMES_TTL_MS)
             @consumer_groups = {}
+            @subscription_groups = {}
             @errors = []
             @started_at = float_now
             @pauses = Set.new
@@ -98,7 +100,7 @@ module Karafka
                 utilization: utilization
               ).merge(total: @counters),
 
-              consumer_groups: @consumer_groups,
+              consumer_groups: enriched_consumer_groups,
               jobs: jobs.values
             }
           end
@@ -264,6 +266,26 @@ module Karafka
                                  else
                                    @memory_threads_ps = false
                                  end
+          end
+
+          # Consumer group details need to be enriched with details about polling that comes from
+          # Karafka level. It is also time based, hence we need to materialize it only at the
+          # moment of message dispatch to have it accurate.
+          def enriched_consumer_groups
+            @consumer_groups.each do |_cg_id, cg_details|
+              cg_details.each do
+                cg_details.fetch(:subscription_groups, {}).each do |sg_id, sg_details|
+                  # This should be always available, since we subscription group polled at time
+                  # is first initialized before we start polling, there should be no case where
+                  # we have statistics about a given subscription group but we do not have the
+                  # last polling time
+                  polled_at = subscription_groups.fetch(sg_id).fetch(:polled_at)
+                  sg_details[:state][:poll_age] = monotonic_now - polled_at
+                end
+              end
+            end
+
+            @consumer_groups
           end
         end
       end
