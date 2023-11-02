@@ -13,6 +13,12 @@ module Karafka
   # Karafka Web UI + Karafka web monitoring
   module Web
     class << self
+      # @return [WaterDrop::Producer, nil] waterdrop messages producer or nil if not yet fully
+      #   initialized. It may not be fully initialized until the configuration is done
+      def producer
+        @producer ||= Web.config.producer
+      end
+
       # @return [String] root path of this gem
       def gem_root
         Pathname.new(File.expand_path('../..', __dir__))

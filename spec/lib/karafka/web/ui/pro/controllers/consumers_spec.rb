@@ -53,6 +53,30 @@ RSpec.describe_current do
       end
     end
 
+    context 'when there are active consumers reported in a transactional fashion' do
+      before do
+        topics_config.consumers.states = states_topic
+        topics_config.consumers.reports = reports_topic
+
+        produce(states_topic, Fixtures.file('consumers_state.json'), type: :transactional)
+        produce(reports_topic, Fixtures.file('consumer_report.json'), type: :transactional)
+
+        get 'consumers'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).not_to include(support_message)
+        expect(body).not_to include(breadcrumbs)
+        expect(body).not_to include(no_processes)
+        expect(body).not_to include(pagination)
+        expect(body).to include('246 MB')
+        expect(body).to include('shinra:1:1')
+        expect(body).to include('/consumers/1/subscriptions')
+        expect(body).to include('2690818651.82293')
+      end
+    end
+
     context 'when there are more consumers that we fit in a single page' do
       before do
         topics_config.consumers.states = states_topic
@@ -134,6 +158,25 @@ RSpec.describe_current do
       end
     end
 
+    context 'when details exist written in a transactional fashion' do
+      before do
+        topics_config.consumers.states = states_topic
+        topics_config.consumers.reports = reports_topic
+
+        produce(states_topic, Fixtures.file('consumers_state.json'), type: :transactional)
+        produce(reports_topic, Fixtures.file('consumer_report.json'), type: :transactional)
+
+        get 'consumers/1/details'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('code class="wrapped json p-0 m-0"')
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
+
     context 'when given process does not exist' do
       before { get 'consumers/4e8f7174ae53/details' }
 
@@ -147,6 +190,25 @@ RSpec.describe_current do
   describe '#jobs' do
     context 'when process has jobs' do
       before { get 'consumers/1/jobs' }
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('Karafka::Pro::ActiveJob::Consumer')
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
+
+    context 'when process has jobs reported in a transactional fashion' do
+      before do
+        topics_config.consumers.states = states_topic
+        topics_config.consumers.reports = reports_topic
+
+        produce(states_topic, Fixtures.file('consumers_state.json'), type: :transactional)
+        produce(reports_topic, Fixtures.file('consumer_report.json'), type: :transactional)
+
+        get 'consumers/1/jobs'
+      end
 
       it do
         expect(response).to be_ok
@@ -189,6 +251,26 @@ RSpec.describe_current do
   describe '#subscriptions' do
     context 'when subscriptions exist' do
       before { get 'consumers/1/subscriptions' }
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('Rebalance count:')
+        expect(body).to include('This process does not consume any')
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
+
+    context 'when subscriptions exist and was reported in a transactional fashion' do
+      before do
+        topics_config.consumers.states = states_topic
+        topics_config.consumers.reports = reports_topic
+
+        produce(states_topic, Fixtures.file('consumers_state.json'), type: :transactional)
+        produce(reports_topic, Fixtures.file('consumer_report.json'), type: :transactional)
+
+        get 'consumers/1/subscriptions'
+      end
 
       it do
         expect(response).to be_ok

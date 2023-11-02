@@ -1,8 +1,29 @@
 # Karafka Web changelog
 
-## 0.7.6 (Unreleased)
+## 0.8.0 (Unreleased)
 - **[Feature]** Introduce ability to download raw payloads.
 - **[Feature]** Introduce ability to download deserialized message payload as JSON.
+
+## 0.7.10 (2023-10-31)
+- [Fix] Max LSO chart does not work as expected (#201)
+
+## 0.7.9 (2023-10-25)
+- [Enhancement] Allow for `Karafka::Web.producer` reconfiguration from the default (`Karafka.producer`).
+- [Change] Rely on `karafka-core` `>=` `2.2.4` to support lazy loaded custom web producer.
+
+## 0.7.8 (2023-10-24)
+- [Enhancement] Support transactional producer usage with Web UI.
+- [Fix] Prevent a scenario where an ongoing transactional producer would have stats emitted and an error that could not have been dispatched because of the transaction, creating a dead-lock.
+- [Fix] Make sure that the `recent` displays the most recent non-compacted, non-system message.
+- [Fix] Improve the `recent` message display to compensate for aborted transactions.
+- [Fix] Fix `ReferenceError: response is not defined` that occurs when Web UI returns refresh non 200.
+
+## 0.7.7 (2023-10-20)
+- [Fix] Remove `thor` as a CLI engine due to breaking changes.
+
+## 0.7.6 (2023-10-10)
+- [Fix] Fix nested SASL/SAML data visible in the routing details (#173)
+>>>>>>> master
 
 ## 0.7.5 (2023-09-29)
 - [Enhancement] Update order of topics creation for the setup of Web to support zero-downtime setup of Web in running Karafka projects.

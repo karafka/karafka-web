@@ -5,7 +5,7 @@ RSpec.describe_current do
 
   let(:topic) { create_topic(partitions: partitions) }
   let(:partitions) { 1 }
-  let(:removed_or_compacted) { 'This message has either been removed or compacted' }
+  let(:removed_or_compacted) { 'This offset does not contain any data.' }
   let(:internal_topic) { "__#{SecureRandom.uuid}" }
 
   describe '#index' do
@@ -105,6 +105,25 @@ RSpec.describe_current do
         expect(body).to include(pagination)
         expect(body).to include("#{topic}/0/5")
         expect(body).to include("#{topic}/0/29")
+        expect(body).not_to include("#{topic}/0/30")
+        expect(body).not_to include("#{topic}/0/4")
+        expect(body).not_to include(support_message)
+      end
+    end
+
+    context 'when we view first page from a topic with one partition with transactional data' do
+      before do
+        produce_many(topic, Array.new(30, '1'), type: :transactional)
+        get "explorer/#{topic}"
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(breadcrumbs)
+        expect(body).to include(pagination)
+        expect(body).to include("#{topic}/0/6")
+        expect(body).to include("#{topic}/0/29")
+        expect(body).to include(compacted_or_transactional_offset)
         expect(body).not_to include("#{topic}/0/30")
         expect(body).not_to include("#{topic}/0/4")
         expect(body).not_to include(support_message)
@@ -237,6 +256,24 @@ RSpec.describe_current do
         expect(body).to include(breadcrumbs)
         expect(body).to include('Watermark offsets')
         expect(body).to include('high: 1')
+        expect(body).to include('low: 0')
+        expect(body).not_to include(no_data)
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
+
+    context 'when only single transactional result in a given partition is present' do
+      before do
+        produce(topic, '1', type: :transactional)
+        get "explorer/#{topic}/0"
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(breadcrumbs)
+        expect(body).to include('Watermark offsets')
+        expect(body).to include('high: 2')
         expect(body).to include('low: 0')
         expect(body).not_to include(no_data)
         expect(body).not_to include(pagination)

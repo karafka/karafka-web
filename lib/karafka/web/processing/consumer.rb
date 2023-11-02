@@ -114,7 +114,7 @@ module Karafka
         def flush
           @flushed_at = monotonic_now
 
-          producer.produce_many_async(
+          ::Karafka::Web.producer.produce_many_async(
             [
               {
                 topic: Karafka::Web.config.topics.consumers.states,

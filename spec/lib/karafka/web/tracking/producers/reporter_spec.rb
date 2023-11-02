@@ -21,32 +21,32 @@ RSpec.describe_current do
 
   before do
     Karafka::Web.config.topics.errors = errors_topic
-    allow(Karafka).to receive(:producer).and_return(producer)
+    allow(Karafka::Web).to receive(:producer).and_return(producer)
     allow(producer.status).to receive(:active?).and_return(true)
-    allow(Karafka.producer).to receive(:produce_many_sync)
-    allow(Karafka.producer).to receive(:produce_many_async)
+    allow(Karafka::Web.producer).to receive(:produce_many_sync)
+    allow(Karafka::Web.producer).to receive(:produce_many_async)
   end
 
   context 'when there is nothing to report' do
     it 'expect not to dispatch any messages' do
       reporter.report
 
-      expect(::Karafka.producer).not_to have_received(:produce_many_sync)
-      expect(::Karafka.producer).not_to have_received(:produce_many_async)
+      expect(::Karafka::Web.producer).not_to have_received(:produce_many_sync)
+      expect(::Karafka::Web.producer).not_to have_received(:produce_many_async)
     end
   end
 
   context 'when there is a report but it is not yet time to dispatch due to previous dispatch' do
     before do
       reporter.report
-      sampler.errors << {}
+      sampler.errors << valid_error
     end
 
     it 'expect not to dispatch any messages yet' do
       reporter.report
 
-      expect(::Karafka.producer).not_to have_received(:produce_many_sync)
-      expect(::Karafka.producer).not_to have_received(:produce_many_async)
+      expect(::Karafka::Web.producer).not_to have_received(:produce_many_sync)
+      expect(::Karafka::Web.producer).not_to have_received(:produce_many_async)
     end
   end
 
@@ -98,6 +98,24 @@ RSpec.describe_current do
       it 'expect to clear the dispatcher errors accumulator' do
         expect(sampler.errors).to be_empty
       end
+    end
+  end
+
+  describe '#active?' do
+    context 'when producer is not yet created' do
+      before { allow(Karafka::Web).to receive(:producer).and_return(nil) }
+
+      it { expect(reporter.active?).to eq(false) }
+    end
+
+    context 'when producer is not active' do
+      before { allow(Karafka::Web.producer.status).to receive(:active?).and_return(false) }
+
+      it { expect(reporter.active?).to eq(false) }
+    end
+
+    context 'when producer exists and is active' do
+      it { expect(reporter.active?).to eq(true) }
     end
   end
 end

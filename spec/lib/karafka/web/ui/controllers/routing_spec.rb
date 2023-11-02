@@ -36,5 +36,51 @@ RSpec.describe_current do
         expect(status).to eq(404)
       end
     end
+
+    context 'when there are saml details' do
+      before do
+        Karafka::App.routes.draw do
+          topic SecureRandom.uuid do
+            consumer Karafka::BaseConsumer
+            kafka(
+              'sasl.username': 'username',
+              'sasl.password': 'password',
+              'sasl.mechanisms': 'SCRAM-SHA-512'
+            )
+          end
+        end
+
+        get "routing/#{Karafka::App.routes.last.topics.last.id}"
+      end
+
+      it 'expect to hide them' do
+        expect(response).to be_ok
+        expect(body).to include('kafka.sasl.username')
+        expect(body).to include('***')
+        expect(body).to include(support_message)
+        expect(body).to include(breadcrumbs)
+      end
+    end
+
+    context 'when there are ssl details' do
+      before do
+        Karafka::App.routes.draw do
+          topic SecureRandom.uuid do
+            consumer Karafka::BaseConsumer
+            kafka('ssl.key.password': 'password')
+          end
+        end
+
+        get "routing/#{Karafka::App.routes.last.topics.last.id}"
+      end
+
+      it 'expect to hide them' do
+        expect(response).to be_ok
+        expect(body).to include('kafka.ssl.key.password')
+        expect(body).to include('***')
+        expect(body).to include(support_message)
+        expect(body).to include(breadcrumbs)
+      end
+    end
   end
 end
