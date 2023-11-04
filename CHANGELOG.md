@@ -26,7 +26,6 @@
 
 ## 0.7.6 (2023-10-10)
 - [Fix] Fix nested SASL/SAML data visible in the routing details (#173)
->>>>>>> master
 
 ## 0.7.5 (2023-09-29)
 - [Enhancement] Update order of topics creation for the setup of Web to support zero-downtime setup of Web in running Karafka projects.
