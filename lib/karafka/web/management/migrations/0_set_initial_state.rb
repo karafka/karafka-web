@@ -2,15 +2,15 @@
 
 module Karafka
   module Web
-    module Processing
+    module Management
       module Migrations
-        class AddInitialState < Base
-          self.created_at = 0
+        class SetInitialState < Base
+          # Run this only on the first setup
           self.versions_until = '0.0.1'
           self.type = :consumers_state
 
           def migrate(state)
-            {
+            state.merge!(
               processes: {},
               stats: {
                 batches: 0,
@@ -28,11 +28,10 @@ module Karafka
                 errors: 0,
                 lag_stored: 0,
                 lag: 0
-             },
-             :schema_state=>"accepted",
-             :schema_version=>"1.1.0",
-             :dispatched_at=>1699547097.6254404}
-
+              },
+              schema_state: 'accepted',
+              dispatched_at: float_now
+            )
           end
         end
       end

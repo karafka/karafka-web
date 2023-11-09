@@ -2,10 +2,9 @@
 
 module Karafka
   module Web
-    module Processing
+    module Management
       module Migrations
         class FillMissingReceivedAndSentBytesInMetrics < Base
-          self.created_at = 1699543515
           self.versions_until = '1.1.0'
           self.type = :consumers_metrics
 
@@ -16,8 +15,6 @@ module Karafka
                 metric.last[:bytes_received] = 0
               end
             end
-
-            state
           end
         end
       end

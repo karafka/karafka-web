@@ -53,7 +53,7 @@ module Karafka
             #   unless we would return a copy, other aggregators could have this mutated in an
             #   unexpected way
             def stats
-              state.fetch(:stats).dup
+              states.fetch(:stats).dup
             end
 
             # Sets the dispatch time and returns the hash that can be shipped to the states topic
@@ -61,26 +61,26 @@ module Karafka
             # @param _args [Object] extra parsing arguments (not used)
             # @return [Hash] Hash that we can use to ship states data to Kafka
             def to_h(*_args)
-              state[:schema_version] = SCHEMA_VERSION
-              state[:dispatched_at] = float_now
-              state[:schema_state] = @schema_manager.to_s
+              states[:schema_version] = SCHEMA_VERSION
+              states[:dispatched_at] = float_now
+              states[:schema_state] = @schema_manager.to_s
 
-              state
+              states
             end
 
             private
 
             # @return [Hash] hash with current state from Kafka
-            def state
-              @state ||= Consumers::State.current!
+            def states
+              @states ||= Consumers::States.current!
             end
 
             # Increments the total counters based on the provided report
             # @param report [Hash]
             def increment_total_counters(report)
               report[:stats][:total].each do |key, value|
-                state[:stats][key] ||= 0
-                state[:stats][key] += value
+                states[:stats][key] ||= 0
+                states[:stats][key] += value
               end
             end
 
@@ -91,7 +91,7 @@ module Karafka
             def update_process_state(report, offset)
               process_name = report[:process][:name]
 
-              state[:processes][process_name] = {
+              states[:processes][process_name] = {
                 dispatched_at: report[:dispatched_at],
                 offset: offset
               }
@@ -105,7 +105,7 @@ module Karafka
             def evict_expired_processes
               max_ttl = @aggregated_from - ::Karafka::Web.config.ttl / 1_000
 
-              state[:processes].delete_if do |_name, details|
+              states[:processes].delete_if do |_name, details|
                 details[:dispatched_at] < max_ttl
               end
 
@@ -119,7 +119,7 @@ module Karafka
             # few seconds but it is much more optimal from performance perspective than computing
             # this fetching all data from Kafka for each view.
             def refresh_current_stats
-              stats = state[:stats]
+              stats = states[:stats]
 
               stats[:busy] = 0
               stats[:enqueued] = 0
