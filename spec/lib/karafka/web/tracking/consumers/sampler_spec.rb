@@ -45,7 +45,6 @@ RSpec.describe_current do
     before do
       sampler.track do |sampler|
         sampler.counters[:messages] += 1
-        sampler.times[:test] << 1
         sampler.jobs[:test] = 1
         sampler.consumer_groups[:test] = 1
         sampler.errors << 1
@@ -57,10 +56,6 @@ RSpec.describe_current do
 
     it 'expect to clear counters' do
       expect(sampler.counters[:messages]).to eq(0)
-    end
-
-    it 'expect not to clear times' do
-      expect(sampler.times).not_to be_empty
     end
 
     it 'expect not to clear jobs' do

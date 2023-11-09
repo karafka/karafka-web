@@ -12,7 +12,7 @@ module Karafka
             # @param event [Karafka::Core::Monitoring::Event]
             def on_worker_processed(event)
               track do |sampler|
-                sampler.times[:total] << event[:time]
+                sampler.windows.m1[:processed_total_time] << event[:time]
               end
             end
 
@@ -24,6 +24,7 @@ module Karafka
               messages_count = consumer.messages.size
               jid = job_id(consumer, 'consume')
               job_details = job_details(consumer, 'consume')
+              job_details[:status] = 'active'
 
               track do |sampler|
                 # We count batches and messages prior to the execution, so they are tracked even
@@ -72,14 +73,10 @@ module Karafka
             def on_consumer_consumed(event)
               consumer = event.payload[:caller]
               topic = consumer.topic
-              consumer_group_id = topic.consumer_group.id
-              messages_count = consumer.messages.size
-              time = event[:time]
               jid = job_id(consumer, 'consume')
 
               track do |sampler|
                 sampler.jobs.delete(jid)
-                sampler.times[consumer_group_id] << [topic.name, time, messages_count]
               end
             end
 

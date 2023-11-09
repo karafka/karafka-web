@@ -37,6 +37,7 @@ RSpec.describe_current do
         rss: 0,
         listeners: 0,
         utilization: 0,
+        lag: 0,
         lag_stored: 0,
         errors: 0
       }

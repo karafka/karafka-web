@@ -129,6 +129,8 @@ module Karafka
               stats[:listeners] = 0
               stats[:lag] = 0
               stats[:lag_stored] = 0
+              stats[:bytes_received] = 0
+              stats[:bytes_sent] = 0
               utilization = 0
 
               @active_reports
@@ -149,6 +151,8 @@ module Karafka
                   stats[:busy] += report_stats[:busy]
                   stats[:enqueued] += report_stats[:enqueued]
                   stats[:workers] += report_process[:workers] || 0
+                  stats[:bytes_received] += report_process[:bytes_received] || 0
+                  stats[:bytes_sent] += report_process[:bytes_sent] || 0
                   stats[:listeners] += report_process[:listeners] || 0
                   stats[:processes] += 1
                   stats[:rss] += report_process[:memory_usage]
