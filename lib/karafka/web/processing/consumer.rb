@@ -15,6 +15,12 @@ module Karafka
         def initialize(*args)
           super
 
+          # Run the migrator on the assignment to make sure all our data is as expected
+          # While users may run the CLI command this is a fail-safe for zero downtime deployments
+          # It costs us two extra requests to Kafka topics as we migrate prior to fetching the
+          # states to the aggregators but this is done on purpose not to mix those two contexts.
+          Migrator.call
+
           @flush_interval = ::Karafka::Web.config.processing.interval
 
           @schema_manager = Consumers::SchemaManager.new
@@ -114,24 +120,9 @@ module Karafka
         def flush
           @flushed_at = monotonic_now
 
-          ::Karafka::Web.producer.produce_many_async(
-            [
-              {
-                topic: Karafka::Web.config.topics.consumers.states,
-                payload: Zlib::Deflate.deflate(@state.to_json),
-                # This will ensure that the consumer states are compacted
-                key: Karafka::Web.config.topics.consumers.states,
-                partition: 0,
-                headers: { 'zlib' => 'true' }
-              },
-              {
-                topic: Karafka::Web.config.topics.consumers.metrics,
-                payload: Zlib::Deflate.deflate(@metrics.to_json),
-                key: Karafka::Web.config.topics.consumers.metrics,
-                partition: 0,
-                headers: { 'zlib' => 'true' }
-              }
-            ]
+          Publisher.call(
+            @state,
+            @metrics
           )
         end
       end

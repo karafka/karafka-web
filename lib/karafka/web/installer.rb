@@ -39,6 +39,9 @@ module Karafka
         wait_for_topics
         Management::CreateInitialStates.new.call
         puts
+        puts 'Running data migrations...'
+        Management::UpdateStatesData.new.call
+        puts
         puts("Migration #{green('completed')}. Have fun!")
         puts
       end

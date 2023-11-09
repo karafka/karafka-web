@@ -16,6 +16,7 @@ module Karafka
                 @data = aggregated.to_h.fetch(period)
               end
 
+              # @return [String] JSON with bytes sent and bytes received metrics
               def data_transfers
                 scale_factor = Processing::TimeSeriesTracker::TIME_RANGES
                                .fetch(@period)

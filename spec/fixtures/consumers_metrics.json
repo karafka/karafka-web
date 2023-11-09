@@ -18,7 +18,9 @@
           "utilization": 0.0,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 0
+          "lag": 0,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -38,7 +40,9 @@
           "utilization": 5.230708671634096,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ]
     ],
@@ -60,7 +64,9 @@
           "utilization": 0.0,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 0
+          "lag": 0,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -80,7 +86,9 @@
           "utilization": 6.22332662625086,
           "lag_stored": 3,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -100,7 +108,9 @@
           "utilization": 0.1293035317265113,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 0
+          "lag": 0,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -120,7 +130,9 @@
           "utilization": 5.829202666726227,
           "lag_stored": 3,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -140,7 +152,9 @@
           "utilization": 8.077714671310822,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 5
+          "lag": 5,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -160,7 +174,9 @@
           "utilization": 5.365092632266175,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -180,7 +196,9 @@
           "utilization": 5.230708671634096,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ]
     ],
@@ -202,7 +220,9 @@
           "utilization": 8.307049022381875,
           "lag_stored": 3,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -222,7 +242,9 @@
           "utilization": 8.874620013732384,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -242,7 +264,9 @@
           "utilization": 8.632191782915024,
           "lag_stored": 3,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -262,7 +286,9 @@
           "utilization": 8.077714671310822,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 5
+          "lag": 5,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -282,7 +308,9 @@
           "utilization": 8.757563006324427,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 7
+          "lag": 7,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -302,7 +330,9 @@
           "utilization": 1.2937300744320683,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 1
+          "lag": 1,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -322,7 +352,9 @@
           "utilization": 3.8182326331915935,
           "lag_stored": 3,
           "errors": 0,
-          "lag": 5
+          "lag": 5,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -342,7 +374,9 @@
           "utilization": 10.940327007794458,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 6
+          "lag": 6,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -362,7 +396,9 @@
           "utilization": 11.177056335280055,
           "lag_stored": 3,
           "errors": 0,
-          "lag": 6
+          "lag": 6,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -382,7 +418,9 @@
           "utilization": 11.91885297911821,
           "lag_stored": 4,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -402,7 +440,9 @@
           "utilization": 11.230664450228382,
           "lag_stored": 3,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -422,7 +462,9 @@
           "utilization": 10.707963078760153,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 6
+          "lag": 6,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -442,7 +484,9 @@
           "utilization": 11.264203816172529,
           "lag_stored": 5,
           "errors": 0,
-          "lag": 7
+          "lag": 7,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -462,7 +506,9 @@
           "utilization": 9.56375481796055,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 0
+          "lag": 0,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -482,7 +528,9 @@
           "utilization": 5.542142388900352,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 5
+          "lag": 5,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -502,7 +550,9 @@
           "utilization": 5.917343297720043,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -522,7 +572,9 @@
           "utilization": 5.736853252691941,
           "lag_stored": 3,
           "errors": 0,
-          "lag": 6
+          "lag": 6,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -542,7 +594,9 @@
           "utilization": 5.795536747543914,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -562,7 +616,9 @@
           "utilization": 6.203800891592627,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -582,7 +638,9 @@
           "utilization": 5.835235642937069,
           "lag_stored": 5,
           "errors": 0,
-          "lag": 5
+          "lag": 5,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -602,7 +660,9 @@
           "utilization": 5.69909264857549,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -622,7 +682,9 @@
           "utilization": 5.292309618463469,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -642,7 +704,9 @@
           "utilization": 5.705861206655125,
           "lag_stored": 3,
           "errors": 0,
-          "lag": 5
+          "lag": 5,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -662,7 +726,9 @@
           "utilization": 5.424542254306267,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -682,7 +748,9 @@
           "utilization": 5.318373795712356,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -702,7 +770,9 @@
           "utilization": 5.202809571663594,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -722,7 +792,9 @@
           "utilization": 5.449599370524767,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -742,7 +814,9 @@
           "utilization": 5.819965873015538,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 0
+          "lag": 0,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -762,7 +836,9 @@
           "utilization": 5.629021581147499,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -782,7 +858,9 @@
           "utilization": 5.751722739568708,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -802,7 +880,9 @@
           "utilization": 5.467318302114236,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 5
+          "lag": 5,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -822,7 +902,9 @@
           "utilization": 5.291599948910901,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 5
+          "lag": 5,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -842,7 +924,9 @@
           "utilization": 5.212669717754177,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -862,7 +946,9 @@
           "utilization": 5.365092632266175,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -882,7 +968,9 @@
           "utilization": 5.5193326705512025,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -902,7 +990,9 @@
           "utilization": 6.220256811228807,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -922,7 +1012,9 @@
           "utilization": 5.688301062053892,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -942,7 +1034,9 @@
           "utilization": 5.795025576377986,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -962,7 +1056,9 @@
           "utilization": 5.370078375350395,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -982,7 +1078,9 @@
           "utilization": 5.421234423194897,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -1002,7 +1100,9 @@
           "utilization": 5.501402294548758,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -1022,7 +1122,9 @@
           "utilization": 5.215093284170894,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -1042,7 +1144,9 @@
           "utilization": 5.450604240111509,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -1062,7 +1166,9 @@
           "utilization": 5.750694073021733,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -1082,7 +1188,9 @@
           "utilization": 5.66366745667295,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -1102,7 +1210,9 @@
           "utilization": 6.1242681358097615,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 1
+          "lag": 1,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -1122,7 +1232,9 @@
           "utilization": 5.908255265902802,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [
@@ -1142,7 +1254,9 @@
           "utilization": 5.5812165806127645,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_received": 11250,
+          "bytes_sent": 2986
         }
       ],
       [

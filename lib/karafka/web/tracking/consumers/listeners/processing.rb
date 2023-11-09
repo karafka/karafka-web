@@ -72,7 +72,6 @@ module Karafka
             # @param event [Karafka::Core::Monitoring::Event]
             def on_consumer_consumed(event)
               consumer = event.payload[:caller]
-              topic = consumer.topic
               jid = job_id(consumer, 'consume')
 
               track do |sampler|
