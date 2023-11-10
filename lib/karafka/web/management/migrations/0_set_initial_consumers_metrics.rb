@@ -4,10 +4,14 @@ module Karafka
   module Web
     module Management
       module Migrations
-        class SetInitialMetrics < Base
+        # Initial migration that sets the consumers metrics initial first state.
+        # This is the basic of metrics as they were when they were introduced.
+        class SetInitialConsumersMetrics < Base
+          # Always migrate from empty up
           self.versions_until = '0.0.1'
           self.type = :consumers_metrics
 
+          # @param state [Hash] initial empty state
           def migrate(state)
             state.merge!(
               aggregated: {

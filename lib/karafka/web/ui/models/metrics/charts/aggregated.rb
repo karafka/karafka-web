@@ -24,11 +24,11 @@ module Karafka
                                .then { |factor| factor / 1_024.to_f }
 
                 received = bytes_received.map do |element|
-                  [element[0], element[1].to_i * scale_factor]
+                  [element[0], element[1] * scale_factor]
                 end
 
                 sent = bytes_sent.map do |element|
-                  [element[0], element[1].to_i * scale_factor]
+                  [element[0], element[1] * scale_factor]
                 end
 
                 { received: received, sent: sent }.to_json

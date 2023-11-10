@@ -4,11 +4,14 @@ module Karafka
   module Web
     module Management
       module Migrations
-        class SetInitialState < Base
+        # Initial migration that sets the consumers state initial first state.
+        # This is the basic of state as they were when they were introduced.
+        class SetInitialConsumersState < Base
           # Run this only on the first setup
           self.versions_until = '0.0.1'
           self.type = :consumers_state
 
+          # @param state [Hash]
           def migrate(state)
             state.merge!(
               processes: {},
