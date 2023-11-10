@@ -3,9 +3,12 @@
 RSpec.describe_current do
   subject(:migrate) { described_class.new.call }
 
-  let(:migrator) { Karafka::Management::Migrator.new }
+  let(:migrator) { Karafka::Web::Management::Migrator.new }
 
-  before { allow(migrator.class).to receive(:new).and_return(migrator) }
+  before do
+    allow(migrator.class).to receive(:new).and_return(migrator)
+    allow(migrator).to receive(:call)
+  end
 
   it 'expect to run the migrator' do
     migrate
