@@ -45,9 +45,8 @@ RSpec.describe_current do
       topics_config.consumers.metrics = metrics_topic
 
       ::Karafka::Web::Management::Actions::CreateInitialStates.new.call
-      ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
-
       produce(metrics_topic, Fixtures.file('consumers_single_metrics.json'))
+      ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
 
       get 'dashboard'
     end
@@ -85,6 +84,7 @@ RSpec.describe_current do
 
       produce(states_topic, Fixtures.file('consumers_state.json'), type: :transactional)
       produce(metrics_topic, Fixtures.file('consumers_metrics.json'), type: :transactional)
+      ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
 
       get 'dashboard'
     end
