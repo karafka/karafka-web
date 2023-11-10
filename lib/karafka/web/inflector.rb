@@ -6,10 +6,10 @@ module Karafka
     # to how Rails does that.
     class Inflector < Zeitwerk::GemInflector
       # Checks if given path is a migration one
-      MIGRATION_ABSPATH_REGEXP = %r{migrations/[0-9]+_(.*)}
+      MIGRATION_ABSPATH_REGEXP = /migrations\/[0-9]+_(.*)/
 
       # Checks if it is a migration file
-      MIGRATION_BASENAME_REGEXP = %r{\A[0-9]+_(.*)}
+      MIGRATION_BASENAME_REGEXP = /\A[0-9]+_(.*)/
 
       private_constant :MIGRATION_ABSPATH_REGEXP, :MIGRATION_BASENAME_REGEXP
 
