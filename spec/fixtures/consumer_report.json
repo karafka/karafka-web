@@ -160,7 +160,7 @@
   },
   "jobs": [
     {
-      "started_at": 1690883271.5342352,
+      "updated_at": 1690883271.5342352,
       "topic": "default",
       "partition": 0,
       "first_offset": 327359,
@@ -172,6 +172,7 @@
       "consumer": "Karafka::Pro::ActiveJob::Consumer",
       "consumer_group": "example_app6_app",
       "type": "consume",
+      "status": "running",
       "tags": [
         "active_job",
         "VisitorsJob"

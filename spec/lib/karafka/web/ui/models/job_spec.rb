@@ -14,7 +14,7 @@ RSpec.describe_current do
   end
 
   it 'expect to have proper attributes' do
-    expect(job.started_at).to eq(1_690_883_271.5_342_352)
+    expect(job.updated_at).to eq(1_690_883_271.5_342_352)
     expect(job.topic).to eq('default')
     expect(job.partition).to eq(0)
     expect(job.first_offset).to eq(327_359)

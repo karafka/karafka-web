@@ -40,8 +40,10 @@ module Karafka
               render
             end
 
+            # Renders details about running jobs
+            #
             # @param process_id [String] id of the process we're interested in
-            def jobs(process_id)
+            def running_jobs(process_id)
               details(process_id)
               render
             end

@@ -5,8 +5,11 @@
 - **[Feature]** Introduce "Data transfers" chart with data received and data sent to the cluster.
 - **[Feature]** Introduce ability to download raw payloads.
 - **[Feature]** Introduce ability to download deserialized message payload as JSON.
+- [Enhancement] Make sure only running jobs are displayed in running jobs
+- [Enhancement] Improve jobs related breadcrumbs
 - [Enhancement] Report last poll time for each subscription group.
 - [Enhancement] Show last poll time per consumer instance.
+- [Change] Rename "Active subscriptions" to "Subscriptions" as process subscriptions are always active.
 - [Maintenance] Introduce granular subscription group contracts.
 
 ## 0.7.10 (2023-10-31)

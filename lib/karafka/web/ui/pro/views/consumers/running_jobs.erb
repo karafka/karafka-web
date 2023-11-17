@@ -1,3 +1,5 @@
+<% running_jobs = @process.jobs.running %>
+
 <%== view_title(@process.name) %>
 
 <% if @process.status == 'stopped' %>
@@ -8,7 +10,7 @@
 
 <%== partial 'consumers/consumer/tabs' %>
 
-<% if @process.jobs.empty? %>
+<% if running_jobs.empty? %>
   <%== partial 'consumers/consumer/no_jobs' %>
 <% else %>
   <div class="container">
@@ -29,7 +31,7 @@
           <tbody>
             <%==
               render_each(
-                @process.jobs,
+                running_jobs,
                 'consumers/consumer/_job',
                 local: :job
               )

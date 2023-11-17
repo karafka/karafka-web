@@ -14,13 +14,19 @@
   <% if current_path.include?('/jobs') %>
     <li class="breadcrumb-item">
       <a href="<%= root_path('consumers', @process.id, 'jobs') %>">
-        Running jobs
+        Jobs
+      </a>
+    </li>
+
+    <li class="breadcrumb-item">
+      <a href="<%= root_path('consumers', @process.id, 'jobs') %>">
+        Running
       </a>
     </li>
   <% elsif current_path.include?('/subscriptions') %>
     <li class="breadcrumb-item">
       <a href="<%= root_path('consumers', @process.id, 'subscriptions') %>">
-        Active subscriptions
+        Subscriptions
       </a>
     </li>
   <% else %>

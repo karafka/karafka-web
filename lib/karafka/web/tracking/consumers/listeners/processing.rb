@@ -24,7 +24,7 @@ module Karafka
               messages_count = consumer.messages.size
               jid = job_id(consumer, 'consume')
               job_details = job_details(consumer, 'consume')
-              job_details[:status] = 'active'
+              job_details[:status] = 'running'
 
               track do |sampler|
                 # We count batches and messages prior to the execution, so they are tracked even
@@ -148,7 +148,7 @@ module Karafka
             #   more details.
             def job_details(consumer, type)
               {
-                started_at: float_now,
+                updated_at: float_now,
                 topic: consumer.topic.name,
                 partition: consumer.partition,
                 first_offset: consumer.messages.metadata.first_offset,

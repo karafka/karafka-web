@@ -48,9 +48,13 @@ module Karafka
             end
           end
 
-          r.get 'jobs' do
-            controller = Controllers::Jobs.new(params)
-            controller.index
+          r.on 'jobs' do
+            r.get 'running' do
+              controller = Controllers::Jobs.new(params)
+              controller.running
+            end
+
+            r.redirect root_path('jobs/running')
           end
 
           r.on 'routing' do
