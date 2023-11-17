@@ -24,14 +24,17 @@ RSpec.describe_current do
   end
 
   context 'when there are initial metrics but no other data' do
-    before { Karafka::Web::Management::CreateInitialStates.new.call }
+    before do
+      Karafka::Web::Management::Actions::CreateInitialStates.new.call
+      Karafka::Web::Management::Actions::MigrateStatesData.new.call
+    end
 
     it 'expect to have basic empty stats' do
       hashed = metrics_aggregator.to_h
 
       expect(hashed[:aggregated]).to eq(days: [], hours: [], minutes: [], seconds: [])
       expect(hashed[:consumer_groups]).to eq(days: [], hours: [], minutes: [], seconds: [])
-      expect(hashed[:schema_version]).to eq('1.0.0')
+      expect(hashed[:schema_version]).to eq('1.1.0')
       expect(hashed.key?(:dispatched_at)).to eq(true)
     end
   end
@@ -50,7 +53,8 @@ RSpec.describe_current do
     end
 
     before do
-      Karafka::Web::Management::CreateInitialStates.new.call
+      Karafka::Web::Management::Actions::CreateInitialStates.new.call
+      Karafka::Web::Management::Actions::MigrateStatesData.new.call
 
       [process1_report, process2_report].each_with_index do |report, index|
         state_aggregator.add(report, index)

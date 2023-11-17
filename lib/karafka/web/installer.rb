@@ -17,11 +17,14 @@ module Karafka
         puts
         puts 'Creating necessary topics and populating state data...'
         puts
-        Management::CreateTopics.new.call(replication_factor)
+        Management::Actions::CreateTopics.new.call(replication_factor)
         wait_for_topics
-        Management::CreateInitialStates.new.call
+        Management::Actions::CreateInitialStates.new.call
         puts
-        Management::ExtendBootFile.new.call
+        puts 'Running data migrations...'
+        Management::Actions::MigrateStatesData.new.call
+        puts
+        Management::Actions::ExtendBootFile.new.call
         puts
         puts("Installation #{green('completed')}. Have fun!")
         puts
@@ -35,9 +38,12 @@ module Karafka
         puts
         puts 'Creating necessary topics and populating state data...'
         puts
-        Management::CreateTopics.new.call(replication_factor)
+        Management::Actions::CreateTopics.new.call(replication_factor)
         wait_for_topics
-        Management::CreateInitialStates.new.call
+        Management::Actions::CreateInitialStates.new.call
+        puts
+        puts 'Running data migrations...'
+        Management::Actions::MigrateStatesData.new.call
         puts
         puts("Migration #{green('completed')}. Have fun!")
         puts
@@ -49,11 +55,14 @@ module Karafka
         puts
         puts 'Resetting Karafka Web UI...'
         puts
-        Management::DeleteTopics.new.call
+        Management::Actions::DeleteTopics.new.call
         puts
-        Management::CreateTopics.new.call(replication_factor)
+        Management::Actions::CreateTopics.new.call(replication_factor)
         wait_for_topics
-        Management::CreateInitialStates.new.call
+        Management::Actions::CreateInitialStates.new.call
+        puts
+        puts 'Running data migrations...'
+        Management::Actions::MigrateStatesData.new.call
         puts
         puts("Resetting #{green('completed')}. Have fun!")
         puts
@@ -64,8 +73,8 @@ module Karafka
         puts
         puts 'Uninstalling Karafka Web UI...'
         puts
-        Management::DeleteTopics.new.call
-        Management::CleanBootFile.new.call
+        Management::Actions::DeleteTopics.new.call
+        Management::Actions::CleanBootFile.new.call
         puts
         puts("Uninstalling #{green('completed')}. Goodbye!")
         puts
@@ -73,7 +82,7 @@ module Karafka
 
       # Enables the Web-UI in the karafka app. Sets up needed routes and listeners.
       def enable!
-        Management::Enable.new.call
+        Management::Actions::Enable.new.call
       end
 
       private

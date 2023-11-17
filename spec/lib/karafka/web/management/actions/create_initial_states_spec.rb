@@ -23,32 +23,11 @@ RSpec.describe_current do
   end
 
   context 'when the consumers state is missing' do
-    let(:initial_stats) do
-      {
-        batches: 0,
-        messages: 0,
-        retries: 0,
-        dead: 0,
-        busy: 0,
-        enqueued: 0,
-        processing: 0,
-        workers: 0,
-        processes: 0,
-        rss: 0,
-        listeners: 0,
-        utilization: 0,
-        lag_stored: 0,
-        errors: 0
-      }
-    end
+    let(:initial_state) { { schema_version: '0.0.0' } }
 
     it 'expect to create it with appropriate values' do
       create
-      expect(consumers_state[:processes]).to be_empty
-      expect(consumers_state[:stats]).to eq(initial_stats)
-      expect(consumers_state[:dispatched_at]).not_to be_nil
-      expect(consumers_state[:schema_state]).to eq('accepted')
-      expect(consumers_state[:schema_version]).to eq('1.1.0')
+      expect(consumers_state).to eq(initial_state)
     end
   end
 
@@ -62,30 +41,11 @@ RSpec.describe_current do
   end
 
   context 'when the consumers metrics is missing' do
-    let(:initial_aggregated) do
-      {
-        days: [],
-        hours: [],
-        minutes: [],
-        seconds: []
-      }
-    end
-
-    let(:initial_consumer_groups) do
-      {
-        days: [],
-        hours: [],
-        minutes: [],
-        seconds: []
-      }
-    end
+    let(:initial_state) { { schema_version: '0.0.0' } }
 
     it 'expect to create it with appropriate values' do
       create
-      expect(consumers_metrics[:aggregated]).to eq(initial_aggregated)
-      expect(consumers_metrics[:consumer_groups]).to eq(initial_consumer_groups)
-      expect(consumers_metrics[:schema_version]).to eq('1.0.0')
-      expect(consumers_metrics[:dispatched_at]).not_to be_nil
+      expect(consumers_metrics).to eq(initial_state)
     end
   end
 end

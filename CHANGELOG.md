@@ -1,6 +1,8 @@
 # Karafka Web changelog
 
 ## 0.8.0 (Unreleased)
+- **[Feature]** Introduce states migrations for seamless upgrades.
+- **[Feature]** Introduce "Data transfers" chart with data received and data sent to the cluster.
 - **[Feature]** Introduce ability to download raw payloads.
 - **[Feature]** Introduce ability to download deserialized message payload as JSON.
 - [Enhancement] Report last poll time for each subscription group.

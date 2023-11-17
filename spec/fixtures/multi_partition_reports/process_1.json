@@ -20,7 +20,9 @@
     ],
     "tags": [
       "#b2e822e"
-    ]
+    ],
+    "bytes_received": 12450,
+    "bytes_sent": 3866
   },
   "versions": {
     "ruby": "ruby 3.2.2-53 e51014",
