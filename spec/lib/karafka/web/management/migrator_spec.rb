@@ -60,9 +60,6 @@ RSpec.describe_current do
 
       %i[days hours minutes seconds].each do |stats_key|
         expect(metrics_state[:aggregated][stats_key]).to eq([])
-      end
-
-      %i[days hours minutes seconds].each do |stats_key|
         expect(metrics_state[:consumer_groups][stats_key]).to eq([])
       end
     end
