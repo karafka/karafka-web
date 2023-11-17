@@ -7,8 +7,8 @@ module Karafka
         # Similar to filling in consumers metrics, we initialize this with zeros so it is always
         # present as expected
         class FillMissingReceivedAndSentBytesInConsumersState < Base
-          # Network metrics were introduced with schema 1.1.0
-          self.versions_until = '1.1.0'
+          # Network metrics were introduced with schema 1.2.0
+          self.versions_until = '1.2.0'
           self.type = :consumers_state
 
           # @param state [Hash]
