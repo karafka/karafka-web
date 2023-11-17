@@ -11,6 +11,18 @@ module Karafka
       # This should never happen and if you see this, please open an issue.
       ContractError = Class.new(BaseError)
 
+      # Errors specific to management
+      module Management
+        # Similar to processing error with the same name, it is raised when a critical
+        # incompatibility is detected.
+        #
+        # This error is raised when there was an attempt to operate on aggregated Web UI states
+        # that are already in a newer version that the one in the current process. We prevent
+        # this from happening not to corrupt the data. Please upgrade all the Web UI consumers to
+        # the same version
+        IncompatibleSchemaError = Class.new(BaseError)
+      end
+
       # Processing related errors namespace
       module Processing
         # Raised when we try to process reports but we do not have the current state bootstrapped

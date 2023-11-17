@@ -10,9 +10,8 @@ module Karafka
           # values for charts and metrics
           class Metrics < Base
             # Current schema version
-            # This can be used in the future for detecting incompatible changes and writing
-            # migrations
-            SCHEMA_VERSION = '1.0.0'
+            # This is used for detecting incompatible changes and writing migrations
+            SCHEMA_VERSION = '1.1.0'
 
             def initialize
               super

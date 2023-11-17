@@ -122,6 +122,9 @@ produce(TOPICS[0], Fixtures.file('consumers_state.json'))
 produce(TOPICS[1], Fixtures.file('consumers_metrics.json'))
 produce(TOPICS[2], Fixtures.file('consumer_report.json'))
 
+# Run the migrations so even if we use older fixtures, the data in Kafka is aligned
+::Karafka::Web::Management::Actions::MigrateStatesData.new.call
+
 Karafka::Web.enable!
 
 # Disable CSRF checks for RSpec

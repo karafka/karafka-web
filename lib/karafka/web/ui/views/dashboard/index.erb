@@ -25,6 +25,7 @@
           <%== partial 'shared/tab_nav', locals: { title: 'Batches', id: 'batches' } %>
           <%== partial 'shared/tab_nav', locals: { title: 'Lags stored', id: 'lags-stored' } %>
           <%== partial 'shared/tab_nav', locals: { title: 'Topics pace', id: 'topics-pace' } %>
+          <%== partial 'shared/tab_nav', locals: { title: 'Max LSO time', id: 'max-lso-time' } %>
         </ul>
 
         <div class="tab-content">
@@ -50,6 +51,12 @@
             <% data = { topic1: set.call(20), topic2: set.call(10), topic3: set.call(100) }.to_json %>
             <%== partial 'shared/chart', locals: { data: data, id: 'topics-pace', blurred: true } %>
           </div>
+
+          <div class="tab-pane" id="max-lso-time" role="tabpanel">
+            <%== partial 'dashboard/feature_pro' %>
+            <% data = { max_lso: set.call(2, 0..5) }.to_json %>
+            <%== partial 'shared/chart', locals: { data: data, id: 'max-lso-time', blurred: true } %>
+          </div>
         </div>
       </div>
     </div>
@@ -66,6 +73,7 @@
           <%== partial 'shared/tab_nav', locals: { title: 'Utilization', id: 'utilization', active: true } %>
           <%== partial 'shared/tab_nav', locals: { title: 'RSS', id: 'rss' } %>
           <%== partial 'shared/tab_nav', locals: { title: 'Concurrency', id: 'concurrency' } %>
+          <%== partial 'shared/tab_nav', locals: { title: 'Data transfers', id: 'data-transfers' } %>
         </ul>
 
         <div class="tab-content">
@@ -85,6 +93,12 @@
             <%== partial 'dashboard/feature_pro' %>
             <% data = { processes: set.call(2, 0..0), workers: set.call(4, 0..0), listeners: set.call(3, 0..0) }.to_json %>
             <%== partial 'shared/chart', locals: { data: data, id: 'concurrency', blurred: true } %>
+          </div>
+
+          <div class="tab-pane show" id="data-transfers" role="tabpanel">
+            <%== partial 'dashboard/feature_pro' %>
+            <% data = { bytes_received: set.call(4, 10..15), bytes_sent: set.call(2, 0..5) }.to_json %>
+            <%== partial 'shared/chart', locals: { data: data, id: 'data-transfers', blurred: true } %>
           </div>
         </div>
       </div>

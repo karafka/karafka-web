@@ -15,7 +15,7 @@ RSpec.describe_current do
 
   before do
     sampler.jobs.clear
-    sampler.times.clear
+    sampler.windows.clear
   end
 
   describe '#on_error_occurred' do
@@ -115,7 +115,7 @@ RSpec.describe_current do
 
     it 'expect to track execution time in totals' do
       listener.on_worker_processed(event)
-      expect(sampler.times[:total]).to include(123.456)
+      expect(sampler.windows.m1[:processed_total_time]).to include(123.456)
     end
   end
 
@@ -162,10 +162,6 @@ RSpec.describe_current do
     it 'expect to remove job from running' do
       expect(sampler.jobs).to be_empty
     end
-
-    it 'expect to track execution time' do
-      expect(sampler.times[caller.topic.consumer_group.id]).not_to be_empty
-    end
   end
 
   describe '#on_consumer_revoke' do
@@ -211,10 +207,6 @@ RSpec.describe_current do
     it 'expect to remove job from running' do
       expect(sampler.jobs).to be_empty
     end
-
-    it 'expect not to track execution time' do
-      expect(sampler.times[caller.topic.consumer_group.id]).to be_empty
-    end
   end
 
   describe '#on_consumer_shutting_down' do
@@ -259,10 +251,6 @@ RSpec.describe_current do
 
     it 'expect to remove job from running' do
       expect(sampler.jobs).to be_empty
-    end
-
-    it 'expect not to track execution time' do
-      expect(sampler.times[caller.topic.consumer_group.id]).to be_empty
     end
   end
 end
