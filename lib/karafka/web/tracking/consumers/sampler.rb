@@ -92,7 +92,7 @@ module Karafka
                 librdkafka: librdkafka_version
               },
 
-              stats: jobs_queue_statistics.merge(
+              stats: jobs_queue_statistics.slice(:busy, :enqueued).merge(
                 utilization: utilization
               ).merge(total: @counters),
 
