@@ -90,9 +90,8 @@
           </div>
 
           <div class="tab-pane show" id="concurrency" role="tabpanel">
-            <%== partial 'dashboard/feature_pro' %>
-            <% data = { processes: set.call(2, 0..0), workers: set.call(4, 0..0), listeners: set.call(3, 0..0) }.to_json %>
-            <%== partial 'shared/chart', locals: { data: data, id: 'concurrency', blurred: true } %>
+            <% data = @aggregated_charts.with(:processes, :workers, :listeners) %>
+            <%== partial 'shared/chart', locals: { data: data, id: 'concurrency' } %>
           </div>
 
           <div class="tab-pane show" id="data-transfers" role="tabpanel">
