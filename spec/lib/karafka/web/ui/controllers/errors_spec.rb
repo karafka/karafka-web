@@ -155,9 +155,8 @@ RSpec.describe_current do
         expect(body).to include('shinra:1555833:4e8f7174ae53')
         expect(body.scan('StandardError').size).to eq(4)
         expect(body).not_to include(pagination)
-        expect(body).to include(support_message)
-        expect(body).to include('This feature is available only')
         expect(body).to include(breadcrumbs)
+        expect(body).to include('app/jobs/visitors_job.rb:9:in')
       end
     end
   end

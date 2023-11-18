@@ -5,6 +5,7 @@
 - **[Feature]** Introduce "Data transfers" chart with data received and data sent to the cluster.
 - **[Feature]** Introduce ability to download raw payloads.
 - **[Feature]** Introduce ability to download deserialized message payload as JSON.
+- [Enhancement] Display errors backtraces in OSS.
 - [Enhancement] Report last poll time for each subscription group.
 - [Enhancement] Show last poll time per consumer instance.
 - [Maintenance] Introduce granular subscription group contracts.
