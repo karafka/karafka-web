@@ -20,7 +20,7 @@ module Karafka
 
             # Load only historicals for the selected range
             @aggregated_charts = Models::Metrics::Charts::Aggregated.new(
-              @aggregated, :seconds
+              @aggregated, @params.current_range
             )
 
             render

@@ -2,20 +2,36 @@
   <div class="row">
     <div class="col-sm-12 text-end">
       <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
-        <a type="button" href="<%= root_path('dashboard') %>" class="btn btn-outline-primary active">
+        <%
+          path = root_path('dashboard?range=seconds')
+          active = params.current_range == :seconds ? 'active' : false
+        %>
+        <a type="button" href="<%= path %>" class="btn btn-outline-primary <%= active %>">
           5 minutes
         </a>
 
-        <a type="button" href="#" class="btn btn-outline-primary disabled" title="Pro feature">
-          <s>1 hour</s>
+        <%
+          path = root_path('dashboard?range=minutes')
+          active = params.current_range == :minutes ? 'active' : false
+        %>
+        <a type="button" href="<%= path %>" class="btn btn-outline-primary <%= active %>">
+          1 hour
         </a>
 
-        <a type="button" href="#" class="btn btn-outline-primary disabled" title="Pro feature">
-          <s>24 hours</s>
+        <%
+          path = root_path('dashboard?range=hours')
+          active = params.current_range == :hours ? 'active' : false
+        %>
+        <a type="button" href="<%= path %>" class="btn btn-outline-primary <%= active %>">
+          24 hours
         </a>
 
-        <a type="button" href="#" class="btn btn-outline-primary disabled" title="Pro feature">
-          <s>7 days</s>
+        <%
+          path = root_path('dashboard?range=days')
+          active = params.current_range == :days ? 'active' : false
+        %>
+        <a type="button" href="<%= path %>" class="btn btn-outline-primary <%= active %>">
+          7 days
         </a>
       </div>
     </div>
