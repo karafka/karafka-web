@@ -6,6 +6,8 @@
 - **[Feature]** Introduce ability to download raw payloads.
 - **[Feature]** Introduce ability to download deserialized message payload as JSON.
 - [Enhancement] Display errors backtraces in OSS.
+- [Enhancement] Display concurrency graph in OSS.
+- [Enhancement] Support time ranges for graphs in OSS.
 - [Enhancement] Report last poll time for each subscription group.
 - [Enhancement] Show last poll time per consumer instance.
 - [Maintenance] Introduce granular subscription group contracts.
