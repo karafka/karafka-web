@@ -1,6 +1,7 @@
 # Karafka Web changelog
 
 ## 0.8.0 (Unreleased)
+- **[Feature]** Introduce pending jobs visibility alongside of running jobs both in total and per process.
 - **[Feature]** Introduce states migrations for seamless upgrades.
 - **[Feature]** Introduce "Data transfers" chart with data received and data sent to the cluster.
 - **[Feature]** Introduce ability to download raw payloads.
@@ -14,6 +15,7 @@
 - [Enhancement] Support time ranges for graphs in OSS.
 - [Enhancement] Report last poll time for each subscription group.
 - [Enhancement] Show last poll time per consumer instance.
+- [Change] Rename "Busy" to "Running" to align with "Running Jobs".
 - [Change] Rename "Active subscriptions" to "Subscriptions" as process subscriptions are always active.
 - [Maintenance] Introduce granular subscription group contracts.
 

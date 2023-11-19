@@ -23,6 +23,11 @@ module Karafka
             select { |job| job.status == 'running' }
           end
 
+          # @return [Jobs] pending jobs
+          def pending
+            select { |job| job.status == 'pending' }
+          end
+
           # Creates a new Jobs object with selected jobs
           # @param block [Proc] select proc
           # @return [Jobs] selected jobs enclosed with the Jobs object

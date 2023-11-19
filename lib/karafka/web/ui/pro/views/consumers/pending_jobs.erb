@@ -1,4 +1,4 @@
-<% running_jobs = @process.jobs.running %>
+<% pending_jobs = @process.jobs.pending %>
 
 <%== view_title(@process.name) %>
 
@@ -10,8 +10,8 @@
 
 <%== partial 'consumers/consumer/tabs' %>
 
-<% if running_jobs.empty? %>
-  <%== partial 'consumers/consumer/no_jobs', locals: { type: 'running' } %>
+<% if pending_jobs.empty? %>
+  <%== partial 'consumers/consumer/no_jobs', locals: { type: 'pending' } %>
 <% else %>
   <div class="container">
     <div class="row mb-5">
@@ -25,13 +25,13 @@
               <th>First offset</th>
               <th>Last offset</th>
               <th>Committed offset</th>
-              <th>Started at</th>
+              <th>Scheduled at</th>
             </tr>
           </thead>
           <tbody>
             <%==
               render_each(
-                running_jobs,
+                pending_jobs,
                 'consumers/consumer/_job',
                 local: :job
               )
