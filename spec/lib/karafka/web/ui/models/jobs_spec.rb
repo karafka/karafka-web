@@ -21,6 +21,10 @@ RSpec.describe_current do
     it { expect(jobs.running.size).to eq(1) }
   end
 
+  describe '#pending' do
+    it { expect(jobs.pending.size).to eq(0) }
+  end
+
   describe '#select' do
     it 'expect to return selection enclosed in jobs collection' do
       result = jobs.select(&:nil?)

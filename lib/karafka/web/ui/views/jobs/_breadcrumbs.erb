@@ -4,8 +4,18 @@
   </a>
 </li>
 
-<li class="breadcrumb-item">
-  <a href="<%= root_path('jobs') %>">
-    Running
-  </a>
-</li>
+<% if current_path.include?('/running') %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('jobs/running') %>">
+      Running
+    </a>
+  </li>
+<% end %>
+
+<% if current_path.include?('/pending') %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('jobs/pending') %>">
+      Pending
+    </a>
+  </li>
+<% end %>

@@ -1,7 +1,7 @@
-<%== view_title('Running jobs', hr: true) %>
+<%== view_title('Pending jobs', hr: true) %>
 
 <% if @jobs.empty? && params.current_page <= 1 %>
-  <%== partial 'jobs/no_jobs', locals: { type: 'running' } %>
+  <%== partial 'jobs/no_jobs', locals: { type: 'pending' } %>
 <% elsif @jobs.empty? %>
   <%== partial 'shared/no_paginated_data' %>
 <% else %>
@@ -15,7 +15,7 @@
               <th>Topic</th>
               <th>Consumer</th>
               <th>Type</th>
-              <th>Started at</th>
+              <th>Scheduled at</th>
             </tr>
           </thead>
           <tbody>

@@ -48,6 +48,14 @@ module Karafka
               render
             end
 
+            # Renders details about pending jobs
+            #
+            # @param process_id [String] id of the process we're interested in
+            def pending_jobs(process_id)
+              details(process_id)
+              render
+            end
+
             # @param process_id [String] id of the process we're interested in
             def subscriptions(process_id)
               details(process_id)
