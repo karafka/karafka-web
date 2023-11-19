@@ -17,4 +17,15 @@ RSpec.describe_current do
       expect(stats.processes).to eq(2)
     end
   end
+
+  describe '#pending' do
+    before do
+      state[:stats][:enqueued] = 5
+      state[:stats][:waiting] = 7
+    end
+
+    it 'expect to sum enqueued and waiting' do
+      expect(stats.pending).to eq(12)
+    end
+  end
 end
