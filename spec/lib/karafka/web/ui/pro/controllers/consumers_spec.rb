@@ -215,7 +215,7 @@ RSpec.describe_current do
 
       it do
         expect(response).to be_ok
-        expect(body).to include('This process is not running any jobs at the moment')
+        expect(body).to include('This process has no running jobs at the moment')
         expect(body).not_to include('Karafka::Pro::ActiveJob::Consumer')
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
@@ -266,7 +266,7 @@ RSpec.describe_current do
 
       it do
         expect(response).to be_ok
-        expect(body).to include('This process is not running any jobs at the moment')
+        expect(body).to include('This process has no running jobs at the moment')
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
       end
@@ -274,6 +274,104 @@ RSpec.describe_current do
 
     context 'when given process does not exist' do
       before { get 'consumers/4e8f7174ae53/jobs/running' }
+
+      it do
+        expect(response).not_to be_ok
+        expect(status).to eq(404)
+      end
+    end
+  end
+
+  describe '#pending_jobs' do
+    context 'when process has jobs but not pending' do
+      before do
+        topics_config.consumers.states = states_topic
+        topics_config.consumers.reports = reports_topic
+
+        report = Fixtures.json('consumer_report', symbolize_names: false)
+        report['jobs'][0]['status'] = 'running'
+
+        produce(states_topic, Fixtures.file('consumers_state.json'))
+        produce(reports_topic, report.to_json)
+
+        get 'consumers/1/jobs/pending'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('This process has no pending jobs at the moment')
+        expect(body).not_to include('Karafka::Pro::ActiveJob::Consumer')
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
+
+    context 'when process has pending jobs' do
+      before do
+        topics_config.consumers.states = states_topic
+        topics_config.consumers.reports = reports_topic
+
+        report = Fixtures.json('consumer_report', symbolize_names: false)
+        report['jobs'][0]['status'] = 'pending'
+
+        produce(states_topic, Fixtures.file('consumers_state.json'))
+        produce(reports_topic, report.to_json)
+
+        get 'consumers/1/jobs/pending'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('Karafka::Pro::ActiveJob::Consumer')
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
+
+    context 'when process has jobs reported in a transactional fashion' do
+      before do
+        topics_config.consumers.states = states_topic
+        topics_config.consumers.reports = reports_topic
+
+        report = Fixtures.json('consumer_report', symbolize_names: false)
+        report['jobs'].first['status'] = 'pending'
+
+        produce(states_topic, Fixtures.file('consumers_state.json'), type: :transactional)
+        produce(reports_topic, report.to_json, type: :transactional)
+
+        get 'consumers/1/jobs/pending'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('Karafka::Pro::ActiveJob::Consumer')
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
+
+    context 'when given process has no jobs pending' do
+      before do
+        topics_config.consumers.reports = reports_topic
+
+        report = Fixtures.json('consumer_report', symbolize_names: false)
+        report['jobs'] = []
+
+        produce(reports_topic, report.to_json)
+
+        get 'consumers/1/jobs/pending'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('This process has no pending jobs at the moment')
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
+
+    context 'when given process does not exist' do
+      before { get 'consumers/4e8f7174ae53/jobs/pending' }
 
       it do
         expect(response).not_to be_ok
