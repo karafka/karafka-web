@@ -7,6 +7,7 @@
 - **[Feature]** Introduce ability to download deserialized message payload as JSON.
 - [Enhancement] Make sure only running jobs are displayed in running jobs
 - [Enhancement] Improve jobs related breadcrumbs
+- [Enhancement] Display errors backtraces in OSS.
 - [Enhancement] Report last poll time for each subscription group.
 - [Enhancement] Show last poll time per consumer instance.
 - [Change] Rename "Active subscriptions" to "Subscriptions" as process subscriptions are always active.

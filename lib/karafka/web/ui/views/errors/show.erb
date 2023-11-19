@@ -36,7 +36,7 @@
     </div>
   </div>
 
-  <div class="row mb-2">
+  <div class="row mb-4">
     <div class="col-sm-12">
       <h5 class="mb-2">
         Backtrace
@@ -45,32 +45,11 @@
     </div>
   </div>
 
-  <div class="mb-4">
-    <%== partial 'shared/feature_pro' %>
-  </div>
-
   <div class="row mb-5">
     <div class="col-sm-12">
       <div class="card">
         <div class="card-body">
-          <pre class="m-0 p-0 blurred"><code class="wrapped json p-0 m-0">this is just an example backtrace
-please subscribe to our Pro offering to be able to view the real one
-gems/karafka-rdkafka/lib/rdkafka/consumer.rb:255:in `query_watermark_offsets'
-gems/karafka/lib/karafka/admin.rb:56:in `block in read_topic'
-gems/karafka/lib/karafka/admin.rb:184:in `with_consumer'
-gems/karafka/lib/karafka/admin.rb:55:in `read_topic'
-/mnt/software/Karafka/karafka-web/lib/karafka/web/processing/consumers/state.rb:19:in `current'
-/mnt/software/Karafka/karafka-web/lib/karafka/web/processing/consumers/aggregator.rb:45:in `state'
-/mnt/software/Karafka/karafka-web/lib/karafka/web/processing/consumers/aggregator.rb:38:in `to_json'
-gems/karafka/lib/karafka/processing/strategies/default.rb:136:in `block in handle_shutdown'
-gems/karafka-core/lib/karafka/core/monitoring/notifications.rb:118:in `measure_time_taken'
-gems/karafka-core/lib/karafka/core/monitoring/notifications.rb:94:in `instrument'
-gems/karafka-core/lib/karafka/core/monitoring/monitor.rb:34:in `instrument'
-gems/karafka/lib/karafka/processing/strategies/default.rb:135:in `handle_shutdown'
-gems/karafka/lib/karafka/base_consumer.rb:134:in `on_shutdown'
-gems/karafka/lib/karafka/processing/executor.rb:123:in `shutdown'
-gems/karafka/lib/karafka/processing/jobs/shutdown.rb:18:in `call'
-gems/karafka/lib/karafka/helpers/async.rb:28:in `block in async_call'</code></pre>
+          <pre class="m-0 p-0"><code class="wrapped json p-0 m-0"><%= @error_message.payload[:backtrace] %></code></pre>
         </div>
       </div>
     </div>
