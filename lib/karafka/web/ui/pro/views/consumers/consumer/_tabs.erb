@@ -5,15 +5,15 @@
       <ul class="nav nav-tabs">
         <li class="nav-item">
           <a class="nav-link <%= nav_class(include: 'subscriptions') %>" href="<%= root_path('consumers', @process.id, 'subscriptions') %>">
-            Active subscriptions
+            Subscriptions
             (<%= @process.subscribed_partitions_count %>)
           </a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link <%= nav_class(include: 'jobs') %>" href="<%= root_path('consumers', @process.id, 'jobs') %>">
+          <a class="nav-link <%= nav_class(include: 'jobs') %>" href="<%= root_path('consumers', @process.id, 'jobs', 'running') %>">
             Running jobs
-            (<%= @process.jobs.count %>)
+            (<%= @process.jobs.running.count %>)
           </a>
         </li>
 

@@ -5,11 +5,16 @@
 - **[Feature]** Introduce "Data transfers" chart with data received and data sent to the cluster.
 - **[Feature]** Introduce ability to download raw payloads.
 - **[Feature]** Introduce ability to download deserialized message payload as JSON.
+- [Enhancement] Track pending jobs. Pending jobs are jobs that are not yet scheduled for execution by advanced schedulers.
+- [Enhancement] Rename "Enqueued" to "Pending" to support jobs that are not yet enqueued but within a scheduler.
+- [Enhancement] Make sure only running jobs are displayed in running jobs
+- [Enhancement] Improve jobs related breadcrumbs
 - [Enhancement] Display errors backtraces in OSS.
 - [Enhancement] Display concurrency graph in OSS.
 - [Enhancement] Support time ranges for graphs in OSS.
 - [Enhancement] Report last poll time for each subscription group.
 - [Enhancement] Show last poll time per consumer instance.
+- [Change] Rename "Active subscriptions" to "Subscriptions" as process subscriptions are always active.
 - [Maintenance] Introduce granular subscription group contracts.
 
 ## 0.7.10 (2023-10-31)

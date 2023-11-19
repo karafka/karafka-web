@@ -137,7 +137,7 @@ RSpec.describe_current do
     it 'expect to have job details' do
       job = sampler.jobs.values.first
 
-      expect(job.keys).to include(:started_at)
+      expect(job.keys).to include(:updated_at)
       expect(job[:topic]).to eq('test')
       expect(job[:partition]).to eq(0)
       expect(job[:first_offset]).to eq(0)
@@ -182,7 +182,7 @@ RSpec.describe_current do
     it 'expect to have job details' do
       job = sampler.jobs.values.first
 
-      expect(job.keys).to include(:started_at)
+      expect(job.keys).to include(:updated_at)
       expect(job[:topic]).to eq('test')
       expect(job[:partition]).to eq(0)
       expect(job[:first_offset]).to eq(0)
@@ -227,7 +227,7 @@ RSpec.describe_current do
     it 'expect to have job details' do
       job = sampler.jobs.values.first
 
-      expect(job.keys).to include(:started_at)
+      expect(job.keys).to include(:updated_at)
       expect(job[:topic]).to eq('test')
       expect(job[:partition]).to eq(0)
       expect(job[:first_offset]).to eq(0)

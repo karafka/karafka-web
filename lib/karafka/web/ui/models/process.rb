@@ -37,7 +37,8 @@ module Karafka
           def jobs
             super
               .map { |job| Job.new(job) }
-              .sort_by(&:started_at)
+              .sort_by(&:updated_at)
+              .then { |jobs| Jobs.new(jobs) }
           end
 
           # @return [Integer] collective stored lag on this process

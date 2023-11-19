@@ -16,6 +16,28 @@ module Karafka
               end
             end
 
+            # We do not track idle jobs here because they are internal and not user-facing
+            %i[
+              consume
+              revoked
+              shutdown
+            ].each do |action|
+              # Tracks the job that is going to be scheduled so we can also display pending jobs
+              class_eval <<~RUBY, __FILE__, __LINE__ + 1
+                # @param event [Karafka::Core::Monitoring::Event]
+                def on_consumer_before_schedule_#{action}(event)
+                  consumer = event.payload[:caller]
+                  jid = job_id(consumer, '#{action}')
+                  job_details = job_details(consumer, '#{action}')
+                  job_details[:status] = 'pending'
+
+                  track do |sampler|
+                    sampler.jobs[jid] = job_details
+                  end
+                end
+              RUBY
+            end
+
             # Counts work execution and processing states in consumer instances
             #
             # @param event [Karafka::Core::Monitoring::Event]
@@ -24,7 +46,7 @@ module Karafka
               messages_count = consumer.messages.size
               jid = job_id(consumer, 'consume')
               job_details = job_details(consumer, 'consume')
-              job_details[:status] = 'active'
+              job_details[:status] = 'running'
 
               track do |sampler|
                 # We count batches and messages prior to the execution, so they are tracked even
@@ -148,7 +170,7 @@ module Karafka
             #   more details.
             def job_details(consumer, type)
               {
-                started_at: float_now,
+                updated_at: float_now,
                 topic: consumer.topic.name,
                 partition: consumer.partition,
                 first_offset: consumer.messages.metadata.first_offset,

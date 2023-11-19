@@ -40,22 +40,22 @@ RSpec.describe_current do
       migrate
     end
 
-    it 'expect to migrate consumers states to 1.2.0 with all needed details' do
-      expect(states_state[:schema_version]).to eq('1.2.0')
+    it 'expect to migrate consumers states to 1.2.1 with all needed details' do
+      expect(states_state[:schema_version]).to eq('1.2.1')
       expect(states_state[:schema_state]).to eq('accepted')
       expect(states_state[:processes]).to eq({})
       expect(states_state[:dispatched_at]).to be < Time.now.to_f
 
       %i[
-        batches messages retries dead busy enqueued processing workers processes rss listeners
+        batches messages retries dead busy enqueued waiting workers processes rss listeners
         utilization errors lag_stored lag bytes_sent bytes_received
       ].each do |stats_key|
         expect(states_state[:stats][stats_key]).to eq(0)
       end
     end
 
-    it 'expect to migrate consumers metrics to 1.1.0 with all needed details' do
-      expect(metrics_state[:schema_version]).to eq('1.1.0')
+    it 'expect to migrate consumers metrics to 1.1.1 with all needed details' do
+      expect(metrics_state[:schema_version]).to eq('1.1.1')
       expect(states_state[:dispatched_at]).to be < Time.now.to_f
 
       %i[days hours minutes seconds].each do |stats_key|

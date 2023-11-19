@@ -6,14 +6,14 @@ module Karafka
       module Controllers
         # Active jobs (work) reporting controller
         class Jobs < Base
-          # Lists jobs
-          def index
+          # Lists running jobs
+          def running
             current_state = Models::ConsumersState.current!
             processes = Models::Processes.active(current_state)
 
             # Aggregate jobs and inject the process info into them for better reporting
             jobs_total = processes.flat_map do |process|
-              process.jobs.map do |job|
+              process.jobs.running.map do |job|
                 job.to_h[:process] = process
                 job
               end

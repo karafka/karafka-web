@@ -7,7 +7,7 @@ RSpec.describe_current do
     {
       consumer: 'consumer1',
       consumer_group: 'consumer_group1',
-      started_at: 1_624_301_554.123,
+      updated_at: 1_624_301_554.123,
       topic: 'topic1',
       partition: 0,
       first_offset: 0,
@@ -17,12 +17,25 @@ RSpec.describe_current do
       tags: Karafka::Core::Taggable::Tags.new,
       consumption_lag: 0,
       processing_lag: 0,
-      messages: 2
+      messages: 2,
+      status: 'running'
     }
   end
 
   context 'when config is valid' do
     it { expect(contract.call(job)).to be_success }
+  end
+
+  context 'when status is missing' do
+    before { job.delete(:status) }
+
+    it { expect(contract.call(job)).not_to be_success }
+  end
+
+  context 'when status is not running nor pending' do
+    before { job[:status] = rand.to_s }
+
+    it { expect(contract.call(job)).not_to be_success }
   end
 
   context 'when consumer is missing' do
@@ -49,20 +62,20 @@ RSpec.describe_current do
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when started_at is missing' do
-    before { job.delete(:started_at) }
+  context 'when updated_at is missing' do
+    before { job.delete(:updated_at) }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when started_at is not a float' do
-    before { job[:started_at] = 'not a float' }
+  context 'when updated_at is not a float' do
+    before { job[:updated_at] = 'not a float' }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when started_at is less than 0' do
-    before { job[:started_at] = -1.0 }
+  context 'when updated_at is less than 0' do
+    before { job[:updated_at] = -1.0 }
 
     it { expect(contract.call(job)).not_to be_success }
   end

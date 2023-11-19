@@ -49,8 +49,12 @@ module Karafka
             r.on 'consumers' do
               controller = Controllers::Consumers.new(params)
 
-              r.get String, 'jobs' do |process_id|
-                controller.jobs(process_id)
+              r.on String, 'jobs' do |process_id|
+                r.get 'running' do
+                  controller.running_jobs(process_id)
+                end
+
+                r.redirect root_path("consumers/#{process_id}/jobs/running")
               end
 
               r.get String, 'subscriptions' do |process_id|
@@ -67,9 +71,13 @@ module Karafka
               end
             end
 
-            r.get 'jobs' do
-              controller = Controllers::Jobs.new(params)
-              controller.index
+            r.on 'jobs' do
+              r.get 'running' do
+                controller = Controllers::Jobs.new(params)
+                controller.running
+              end
+
+              r.redirect root_path('jobs/running')
             end
 
             r.on 'routing' do

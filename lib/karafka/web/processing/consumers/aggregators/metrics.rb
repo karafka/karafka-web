@@ -11,7 +11,7 @@ module Karafka
           class Metrics < Base
             # Current schema version
             # This is used for detecting incompatible changes and writing migrations
-            SCHEMA_VERSION = '1.1.0'
+            SCHEMA_VERSION = '1.1.1'
 
             def initialize
               super

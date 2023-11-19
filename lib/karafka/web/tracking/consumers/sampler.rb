@@ -15,7 +15,7 @@ module Karafka
           # Current schema version
           # This is used for detecting incompatible changes and not using outdated data during
           # upgrades
-          SCHEMA_VERSION = '1.2.5'
+          SCHEMA_VERSION = '1.2.7'
 
           # Counters that count events occurrences during the given window
           COUNTERS_BASE = {
@@ -92,7 +92,7 @@ module Karafka
                 librdkafka: librdkafka_version
               },
 
-              stats: jobs_queue_statistics.slice(:busy, :enqueued).merge(
+              stats: jobs_queue_statistics.merge(
                 utilization: utilization
               ).merge(total: @counters),
 
@@ -174,9 +174,14 @@ module Karafka
           # @return [Hash] job queue statistics
           def jobs_queue_statistics
             # We return empty stats in case jobs queue is not yet initialized
+            base = Karafka::Server.jobs_queue&.statistics || { busy: 0, enqueued: 0 }
+            stats = base.slice(:busy, :enqueued, :waiting)
+            stats[:waiting] ||= 0
             # busy - represents number of jobs that are being executed currently
-            # enqueued - represents number of jobs that are enqueued to be processed
-            Karafka::Server.jobs_queue&.statistics || { busy: 0, enqueued: 0 }
+            # enqueued - jobs that are in the queue but not being picked up yet
+            # waiting - jobs that are not scheduled on the queue but will be
+            # be enqueued in case of advanced schedulers
+            stats
           end
 
           # Total memory used in the OS

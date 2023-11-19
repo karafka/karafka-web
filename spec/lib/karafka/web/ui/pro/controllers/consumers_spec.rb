@@ -187,9 +187,43 @@ RSpec.describe_current do
     end
   end
 
-  describe '#jobs' do
-    context 'when process has jobs' do
+  describe 'jobs/ path redirect' do
+    context 'when visiting the jobs/ path without type indicator' do
       before { get 'consumers/1/jobs' }
+
+      it 'expect to redirect to running jobs page' do
+        expect(response.status).to eq(302)
+        expect(response.headers['location']).to include('consumers/1/jobs/running')
+      end
+    end
+  end
+
+  describe '#running_jobs' do
+    context 'when process has jobs but not running' do
+      before do
+        topics_config.consumers.states = states_topic
+        topics_config.consumers.reports = reports_topic
+
+        report = Fixtures.json('consumer_report', symbolize_names: false)
+        report['jobs'][0]['status'] = 'pending'
+
+        produce(states_topic, Fixtures.file('consumers_state.json'))
+        produce(reports_topic, report.to_json)
+
+        get 'consumers/1/jobs/running'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('This process is not running any jobs at the moment')
+        expect(body).not_to include('Karafka::Pro::ActiveJob::Consumer')
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
+
+    context 'when process has running jobs' do
+      before { get 'consumers/1/jobs/running' }
 
       it do
         expect(response).to be_ok
@@ -207,7 +241,7 @@ RSpec.describe_current do
         produce(states_topic, Fixtures.file('consumers_state.json'), type: :transactional)
         produce(reports_topic, Fixtures.file('consumer_report.json'), type: :transactional)
 
-        get 'consumers/1/jobs'
+        get 'consumers/1/jobs/running'
       end
 
       it do
@@ -227,7 +261,7 @@ RSpec.describe_current do
 
         produce(reports_topic, report.to_json)
 
-        get 'consumers/1/jobs'
+        get 'consumers/1/jobs/running'
       end
 
       it do
@@ -239,7 +273,7 @@ RSpec.describe_current do
     end
 
     context 'when given process does not exist' do
-      before { get 'consumers/4e8f7174ae53/jobs' }
+      before { get 'consumers/4e8f7174ae53/jobs/running' }
 
       it do
         expect(response).not_to be_ok

@@ -6,7 +6,18 @@ RSpec.describe_current do
   let(:states_topic) { create_topic }
   let(:reports_topic) { create_topic }
 
-  describe '#index' do
+  describe 'jobs/ path redirect' do
+    context 'when visiting the jobs/ path without type indicator' do
+      before { get 'jobs' }
+
+      it 'expect to redirect to running jobs page' do
+        expect(response.status).to eq(302)
+        expect(response.headers['location']).to include('jobs/running')
+      end
+    end
+  end
+
+  describe '#running' do
     context 'when needed topics are missing' do
       before do
         topics_config.consumers.states = SecureRandom.uuid
@@ -14,7 +25,7 @@ RSpec.describe_current do
         topics_config.consumers.reports = SecureRandom.uuid
         topics_config.errors = SecureRandom.uuid
 
-        get 'jobs'
+        get 'jobs/running'
       end
 
       it do
@@ -24,12 +35,37 @@ RSpec.describe_current do
     end
 
     context 'when needed topics are present' do
-      before { get 'jobs' }
+      before { get 'jobs/running' }
 
       it do
         expect(response).to be_ok
         expect(body).to include('2023-08-01T09:47:51')
         expect(body).to include('ActiveJob::Consumer')
+        expect(body).to include(support_message)
+        expect(body).to include(breadcrumbs)
+        expect(body).not_to include(pagination)
+      end
+    end
+
+    context 'when we have only jobs different than running' do
+      before do
+        topics_config.consumers.states = states_topic
+        topics_config.consumers.reports = reports_topic
+
+        data = Fixtures.json('consumers_state', symbolize_names: false)
+        report = Fixtures.json('consumer_report', symbolize_names: false)
+        report['jobs'][0]['status'] = 'pending'
+
+        produce(reports_topic, report.to_json)
+        produce(states_topic, data.to_json)
+
+        get 'jobs/running'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('There are no running jobs at the moment')
+        expect(body).not_to include('ActiveJob::Consumer')
         expect(body).to include(support_message)
         expect(body).to include(breadcrumbs)
         expect(body).not_to include(pagination)
@@ -62,7 +98,7 @@ RSpec.describe_current do
       end
 
       context 'when visiting first page' do
-        before { get 'jobs' }
+        before { get 'jobs/running' }
 
         it do
           expect(response).to be_ok
@@ -87,7 +123,7 @@ RSpec.describe_current do
           produce(states_topic, Fixtures.file('consumers_state.json'), type: :transactional)
           produce(reports_topic, Fixtures.file('consumer_report.json'), type: :transactional)
 
-          get 'jobs'
+          get 'jobs/running'
         end
 
         it do
@@ -106,7 +142,7 @@ RSpec.describe_current do
       end
 
       context 'when visiting higher page' do
-        before { get 'jobs?page=2' }
+        before { get 'jobs/running?page=2' }
 
         it do
           expect(response).to be_ok
@@ -121,7 +157,7 @@ RSpec.describe_current do
       end
 
       context 'when visiting page beyond available' do
-        before { get 'jobs?page=100' }
+        before { get 'jobs/running?page=100' }
 
         it do
           expect(response).to be_ok

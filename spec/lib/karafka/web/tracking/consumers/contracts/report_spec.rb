@@ -21,6 +21,7 @@ RSpec.describe_current do
       busy: 0,
       enqueued: 0,
       utilization: 0.006,
+      waiting: 0,
       total: {
         batches: 1,
         messages: 1,
