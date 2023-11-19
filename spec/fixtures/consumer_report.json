@@ -37,6 +37,7 @@
   "stats": {
     "busy": 1,
     "enqueued": 0,
+    "waiting": 0,
     "utilization": 5.634919553399087,
     "total": {
       "batches": 9,
