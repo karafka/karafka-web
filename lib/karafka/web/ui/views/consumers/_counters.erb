@@ -33,9 +33,9 @@
               </li>
               <li class="col-sm">
                 <div class="count mb-1">
-                  <%= number_with_delimiter @counters.enqueued, ' ' %>
+                  <%= number_with_delimiter @counters.pending, ' ' %>
                 </div>
-                <div class="desc">Enqueued</div>
+                <div class="desc">Pending</div>
               </li>
               <li class="col-sm">
                 <a href="<%= root_path('errors') %>">
