@@ -48,7 +48,7 @@ RSpec.describe_current do
         sampler.jobs[:test] = 1
         sampler.consumer_groups[:test] = 1
         sampler.errors << 1
-        sampler.pauses << 1
+        sampler.pauses[:test] = 1
       end
 
       sampler.clear

@@ -83,7 +83,8 @@
                   "ls_offset": 200,
                   "ls_offset_fd": 1000,
                   "id": 0,
-                  "poll_state": "active"
+                  "poll_state": "active",
+                  "poll_state_ch": 0
                 }
               }
             },
@@ -107,7 +108,8 @@
                   "ls_offset": 0,
                   "ls_offset_fd": 0,
                   "id": 0,
-                  "poll_state": "active"
+                  "poll_state": "active",
+                  "poll_state_ch": 0
                 }
               }
             },
@@ -131,7 +133,8 @@
                   "ls_offset": 0,
                   "ls_offset_fd": 0,
                   "id": 0,
-                  "poll_state": "active"
+                  "poll_state": "active",
+                  "poll_state_ch": 0
                 }
               }
             }

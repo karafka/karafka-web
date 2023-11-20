@@ -32,6 +32,7 @@ RSpec.describe_current do
                   fetch_state: 'active',
                   id: 0,
                   poll_state: 'active',
+                  poll_state_ch: 0,
                   hi_offset: 10,
                   hi_offset_fd: 10,
                   lag_d: 10,
