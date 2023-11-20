@@ -80,7 +80,7 @@ module Karafka
 
                     # We convert this to seconds from milliseconds due to our Web UI precision
                     # Reporting is in ms for consistency
-                    normalized_fd = (ls_offset_fd / 1_000).round
+                    normalized_fd = (ls_offset_fd / 1_000.0).round
 
                     topics[topic_without_cg][current.first] << normalized_fd
                   end

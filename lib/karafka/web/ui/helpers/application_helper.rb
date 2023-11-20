@@ -126,6 +126,40 @@ module Karafka
             %(<span title="#{stamp}">#{time}</span>)
           end
 
+          # @param state [String] poll state
+          # @param state_ch [Integer] time until next change of the poll state
+          #   (from paused to active)
+          # @return [String] span tag with label and title with change time if present
+          def poll_state_with_change_time_label(state, state_ch)
+            year_in_seconds = 131_556_926
+            state_ch_in_seconds = state_ch / 1_000.0
+
+            # If state is active, there is no date of change
+            if state == 'active'
+              %(
+                <span class="badge #{kafka_state_bg(state)} mt-1 mb-1">#{state}</span>
+              )
+            elsif state_ch_in_seconds > year_in_seconds
+              %(
+                <span
+                  class="badge #{kafka_state_bg(state)} mt-1 mb-1"
+                  title="until manual resume"
+                >
+                  #{state}
+                </span>
+              )
+            else
+              %(
+                <span
+                  class="badge #{kafka_state_bg(state)} time-title mt-1 mb-1"
+                  title="#{Time.now + state_ch_in_seconds}"
+                >
+                  #{state}
+                </span>
+              )
+            end
+          end
+
           # @param lag [Integer] lag
           # @return [String] lag if correct or `N/A` with labeled explanation
           # @see #offset_with_label

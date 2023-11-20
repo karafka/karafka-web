@@ -11,9 +11,12 @@ module Karafka
             # Indicate pause
             #
             # @param event [Karafka::Core::Monitoring::Event]
-            def on_client_pause(event)
+            def on_consumer_consuming_pause(event)
               track do |sampler|
-                sampler.pauses << pause_id(event)
+                sampler.pauses[pause_id(event)] = {
+                  timeout: event[:timeout],
+                  paused_till: monotonic_now + event[:timeout]
+                }
               end
             end
 
@@ -33,9 +36,9 @@ module Karafka
             def pause_id(event)
               topic = event[:topic]
               partition = event[:partition]
-              consumer_group_id = event[:subscription_group].consumer_group.id
+              subscription_group_id = event[:subscription_group].id
 
-              [consumer_group_id, topic, partition].join('-')
+              [subscription_group_id, topic, partition].join('-')
             end
           end
         end

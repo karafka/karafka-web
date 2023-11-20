@@ -16,6 +16,7 @@ RSpec.describe_current do
       stored_offset_fd: 0,
       fetch_state: 'active',
       poll_state: 'active',
+      poll_state_ch: 0,
       hi_offset: 1,
       hi_offset_fd: 0,
       lo_offset: 0,
@@ -76,6 +77,7 @@ RSpec.describe_current do
     ls_offset
     ls_offset_d
     ls_offset_fd
+    poll_state_ch
   ].each do |key|
     context "when #{key} is not numeric" do
       before { config[key] = '2' }
@@ -95,6 +97,7 @@ RSpec.describe_current do
     stored_offset_fd
     ls_offset_fd
     hi_offset_fd
+    poll_state_ch
   ].each do |fd|
     context "when #{fd} is less than 0" do
       before { config[fd] = -1 }

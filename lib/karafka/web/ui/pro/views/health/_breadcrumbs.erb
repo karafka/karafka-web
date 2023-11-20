@@ -19,3 +19,11 @@
     </a>
   </li>
 <% end %>
+
+<% if current_path.include?('/changes') %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('health', 'changes') %>">
+      Changes
+    </a>
+  </li>
+<% end %>

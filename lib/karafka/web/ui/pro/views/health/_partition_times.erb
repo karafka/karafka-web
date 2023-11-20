@@ -1,0 +1,32 @@
+<tr class="align-middle <%= lso_risk_state_bg(details) %> status-row-<%= details.process.status %>">
+  <td>
+    <%= partition_id %>
+  </td>
+  <td>
+    <%== relative_time(Time.now - details.committed_offset_fd / 1_000.0) %>
+  </td>
+  <td>
+    <%== relative_time(Time.now - details.stored_offset_fd / 1_000.0) %>
+  </td>
+  <td>
+    <%== relative_time(Time.now - details.hi_offset_fd / 1_000.0) %>
+  </td>
+  <td>
+    <%== relative_time(Time.now - details.ls_offset_fd / 1_000.0) %>
+  </td>
+  <td>
+    <% change_in_seconds = details.poll_state_ch / 1_000.0 %>
+
+    <% if details.poll_state == 'active' %>
+      <span class="badge bg-secondary">
+        N/A
+      </span>
+    <% elsif change_in_seconds >= 60 * 60 * 31 * 12 %>
+      <span class="badge bg-secondary">
+        Until manual resume
+      </span>
+    <% else %>
+      <%== relative_time(Time.now + change_in_seconds) %>
+    <% end %>
+  </td>
+</tr>

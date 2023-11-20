@@ -171,6 +171,10 @@ module Karafka
                 controller.overview
               end
 
+              r.get 'changes' do
+                controller.changes
+              end
+
               r.get do
                 r.redirect root_path('health/overview')
               end

@@ -26,9 +26,7 @@
     </span>
   </td>
   <td>
-    <span class="badge <%= kafka_state_bg(partition.poll_state) %> mt-1 mb-1">
-      <%= partition.poll_state %>
-    </span>
+    <%== poll_state_with_change_time_label(partition.poll_state, partition.poll_state_ch) %>
   </td>
   <td>
     <span class="badge bg-success <%= lso_risk_state_bg(partition) %> bg-opacity-100">

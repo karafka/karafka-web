@@ -25,7 +25,7 @@
 
     <div class="row mb-3">
       <div class="col-sm-12">
-        <% topics = details[:topics].sort_by(&:first) %>
+        <% topics = details[:topics] %>
         <% topics.each_with_index do |(topic_name, partitions), index| %>
           <table class="processes bg-white table table-hover table-bordered table-striped align-middle <%= (index+1 < topics.size) ? 'mb-5' : 'mb-3' %>">
             <thead>
@@ -47,7 +47,7 @@
               </tr>
             </thead>
             <tbody>
-                <% partitions.sort_by(&:first).each do |partition_id, details| %>
+                <% partitions.each do |partition_id, details| %>
                   <%==
                     partial(
                       'health/partition',
