@@ -155,9 +155,9 @@ module Karafka
               metrics
             end
 
-            # @param cg_id [String]
+            # @param sg_id [String] subscription group id
             # @param topic_name [String]
-            # @param pt_id [Integer]
+            # @param pt_id [Integer] partition id
             # @return [String] poll state / is partition paused or not
             def poll_details(sg_id, topic_name, pt_id)
               pause_id = [sg_id, topic_name, pt_id].join('-')
