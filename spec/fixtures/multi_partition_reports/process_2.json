@@ -20,7 +20,9 @@
     ],
     "tags": [
       "#b2e822e"
-    ]
+    ],
+    "bytes_received": 12450,
+    "bytes_sent": 3866
   },
   "versions": {
     "ruby": "ruby 3.2.2-53 e51014",
@@ -55,7 +57,8 @@
             "stateage": 10575679,
             "rebalance_age": 10563674,
             "rebalance_cnt": 3,
-            "rebalance_reason": "rebalance in progress"
+            "rebalance_reason": "rebalance in progress",
+            "poll_age": 132
           },
           "topics": {
             "default": {
@@ -143,7 +146,8 @@
             "stateage": 10575551,
             "rebalance_age": 10563545,
             "rebalance_cnt": 3,
-            "rebalance_reason": "rebalance in progress"
+            "rebalance_reason": "rebalance in progress",
+            "poll_age": 123
           },
           "topics": {
             "karafka_consumers_reports": {

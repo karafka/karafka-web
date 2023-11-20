@@ -18,6 +18,8 @@ module Karafka
               sg_id = event[:subscription_group_id]
               sg_details = extract_sg_details(sg_id, cgrp)
 
+              track_transfers(statistics)
+
               # More than one subscription group from the same consumer group may be reporting
               # almost the same time. To prevent corruption of partial data, we put everything here
               # in track as we merge data from multiple subscription groups
@@ -62,6 +64,26 @@ module Karafka
 
             private
 
+            # Tracks network transfers from and to the client using a 1 minute rolling window
+            #
+            # @param statistics [Hash] statistics hash
+            def track_transfers(statistics)
+              brokers = statistics.fetch('brokers', {})
+
+              return if brokers.empty?
+
+              track do |sampler|
+                client_name = statistics.fetch('name')
+
+                brokers.each do |broker_name, values|
+                  scope_name = "#{client_name}-#{broker_name}"
+
+                  sampler.windows.m1["#{scope_name}-rxbytes"] << values.fetch('rxbytes', 0)
+                  sampler.windows.m1["#{scope_name}-txbytes"] << values.fetch('txbytes', 0)
+                end
+              end
+            end
+
             # Extracts basic consumer group related details
             # @param sg_id [String]
             # @param sg_stats [Hash]
@@ -76,7 +98,7 @@ module Karafka
                   'rebalance_age',
                   'rebalance_cnt',
                   'rebalance_reason'
-                ),
+                ).transform_keys(&:to_sym),
                 topics: {}
               }
             end

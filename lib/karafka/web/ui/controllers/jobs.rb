@@ -6,14 +6,16 @@ module Karafka
       module Controllers
         # Active jobs (work) reporting controller
         class Jobs < Base
-          # Lists jobs
-          def index
+          # Lists running jobs
+          def running
             current_state = Models::ConsumersState.current!
             processes = Models::Processes.active(current_state)
 
+            @jobs_counters = count_jobs_types(processes)
+
             # Aggregate jobs and inject the process info into them for better reporting
             jobs_total = processes.flat_map do |process|
-              process.jobs.map do |job|
+              process.jobs.running.map do |job|
                 job.to_h[:process] = process
                 job
               end
@@ -26,7 +28,47 @@ module Karafka
 
             paginate(@params.current_page, !last_page)
 
-            respond
+            render
+          end
+
+          # Lists pending jobs
+          def pending
+            current_state = Models::ConsumersState.current!
+            processes = Models::Processes.active(current_state)
+
+            @jobs_counters = count_jobs_types(processes)
+
+            # Aggregate jobs and inject the process info into them for better reporting
+            jobs_total = processes.flat_map do |process|
+              process.jobs.pending.map do |job|
+                job.to_h[:process] = process
+                job
+              end
+            end
+
+            @jobs, last_page = Ui::Lib::Paginations::Paginators::Arrays.call(
+              jobs_total,
+              @params.current_page
+            )
+
+            paginate(@params.current_page, !last_page)
+
+            render
+          end
+
+          private
+
+          # @param processes [Array<Models::Process>]
+          # @return [Lib::HashProxy] particular type jobs count
+          def count_jobs_types(processes)
+            counts = { running: 0, pending: 0 }
+
+            processes.flat_map do |process|
+              counts[:running] += process.jobs.running.size
+              counts[:pending] += process.jobs.pending.size
+            end
+
+            Lib::HashProxy.new(counts)
           end
         end
       end

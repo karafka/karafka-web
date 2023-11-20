@@ -11,35 +11,19 @@ module Karafka
       class Consumer < Karafka::BaseConsumer
         include ::Karafka::Core::Helpers::Time
 
-        # @param args [Object] all the arguments `Karafka::BaseConsumer` accepts by default
-        def initialize(*args)
-          super
-
-          @flush_interval = ::Karafka::Web.config.processing.interval
-
-          @schema_manager = Consumers::SchemaManager.new
-          @state_aggregator = Consumers::Aggregators::State.new(@schema_manager)
-          @state_contract = Consumers::Contracts::State.new
-
-          @metrics_aggregator = Consumers::Aggregators::Metrics.new
-          @metrics_contract = Consumers::Contracts::Metrics.new
-
-          # We set this that way so we report with first batch and so we report as fast as possible
-          @flushed_at = monotonic_now - @flush_interval
-          @established = false
-        end
-
         # Aggregates consumers state into a single current state representation
         def consume
+          bootstrap!
+
           consumers_messages = messages.select { |message| message.payload[:type] == 'consumer' }
 
           # If there is even one incompatible message, we need to stop
           consumers_messages.each do |message|
-            case @schema_manager.call(message)
+            case @reports_schema_manager.call(message)
             when :current
               true
             when :newer
-              @schema_manager.invalidate!
+              @reports_schema_manager.invalidate!
 
               dispatch
 
@@ -49,6 +33,9 @@ module Karafka
             # requests without significant or any impact on data quality but without having to
             # worry about backwards compatibility. Errors are tracked independently, so it should
             # not be a problem.
+            #
+            # In case user wants to do a rolling upgrade, the user docs state that this can happen
+            # and it is something user should be aware
             when :older
               next
             else
@@ -83,6 +70,35 @@ module Karafka
 
         private
 
+        # Prepares all the initial objects and ensures all the needed states are as expected
+        # @note We do not run it in the `#initialize` anymore as `#initialize` happens before
+        #   the work starts so errors there are handled differently. We want this initial setup
+        #   to operate and fail (if needed) during messages consumption phase
+        def bootstrap!
+          return if @bootstrapped
+
+          # Run the migrator on the assignment to make sure all our data is as expected
+          # While users may run the CLI command this is a fail-safe for zero downtime deployments
+          # It costs us two extra requests to Kafka topics as we migrate prior to fetching the
+          # states to the aggregators but this is done on purpose not to mix those two contexts.
+          Management::Migrator.new.call
+
+          @flush_interval = ::Karafka::Web.config.processing.interval
+
+          @reports_schema_manager = Consumers::SchemaManager.new
+          @state_aggregator = Consumers::Aggregators::State.new(@reports_schema_manager)
+          @state_contract = Consumers::Contracts::State.new
+
+          @metrics_aggregator = Consumers::Aggregators::Metrics.new
+          @metrics_contract = Consumers::Contracts::Metrics.new
+
+          # We set this that way so we report with first batch and so we report as fast as possible
+          @flushed_at = monotonic_now - @flush_interval
+          @established = false
+
+          @bootstrapped = true
+        end
+
         # Flushes the state of the Web-UI to the DB
         def dispatch
           return unless @established
@@ -114,24 +130,9 @@ module Karafka
         def flush
           @flushed_at = monotonic_now
 
-          producer.produce_many_async(
-            [
-              {
-                topic: Karafka::Web.config.topics.consumers.states,
-                payload: Zlib::Deflate.deflate(@state.to_json),
-                # This will ensure that the consumer states are compacted
-                key: Karafka::Web.config.topics.consumers.states,
-                partition: 0,
-                headers: { 'zlib' => 'true' }
-              },
-              {
-                topic: Karafka::Web.config.topics.consumers.metrics,
-                payload: Zlib::Deflate.deflate(@metrics.to_json),
-                key: Karafka::Web.config.topics.consumers.metrics,
-                partition: 0,
-                headers: { 'zlib' => 'true' }
-              }
-            ]
+          Publisher.publish(
+            @state,
+            @metrics
           )
         end
       end

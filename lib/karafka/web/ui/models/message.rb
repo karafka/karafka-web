@@ -17,7 +17,7 @@ module Karafka
             # @param offset [Integer]
             # @raise [::Karafka::Web::Errors::Ui::NotFoundError] when not found
             def find(topic_id, partition_id, offset)
-              message = Karafka::Admin.read_topic(
+              message = Lib::Admin.read_topic(
                 topic_id,
                 partition_id,
                 1,
@@ -195,7 +195,7 @@ module Karafka
             # @return [Array<Karafka::Messages::Message>, false] topic partition messages or false
             #   in case we hit a non-existing offset
             def read_topic(*args)
-              ::Karafka::Admin.read_topic(*args)
+              Lib::Admin.read_topic(*args)
             rescue Rdkafka::RdkafkaError => e
               return false if e.code == :auto_offset_reset
 

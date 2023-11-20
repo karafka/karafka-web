@@ -12,7 +12,26 @@ module Karafka
               # @param aggregated [Hash] all aggregated for all periods
               # @param period [Symbol] period that we are interested in
               def initialize(aggregated, period)
+                @period = period
                 @data = aggregated.to_h.fetch(period)
+              end
+
+              # @return [String] JSON with bytes sent and bytes received metrics
+              def data_transfers
+                scale_factor = Processing::TimeSeriesTracker::TIME_RANGES
+                               .fetch(@period)
+                               .fetch(:resolution)
+                               .then { |factor| factor / 1_024.to_f }
+
+                received = bytes_received.map do |element|
+                  [element[0], element[1] * scale_factor]
+                end
+
+                sent = bytes_sent.map do |element|
+                  [element[0], element[1] * scale_factor]
+                end
+
+                { received: received, sent: sent }.to_json
               end
 
               # @param args [Array<String>] names of aggregated we want to show

@@ -15,7 +15,9 @@ module TopicsManagerHelper
   # @param payload [String, nil] data we want to send
   # @param details [Hash] other details
   def produce(topic, payload = SecureRandom.uuid, details = {})
-    Karafka::App.producer.produce_sync(
+    type = details.delete(:type) || :regular
+
+    PRODUCERS.public_send(type).produce_sync(
       **details.merge(
         topic: topic,
         payload: payload
@@ -28,8 +30,10 @@ module TopicsManagerHelper
   # @param payloads [Array<String, nil>] data we want to send
   # @param details [Hash] other details
   def produce_many(topic, payloads, details = {})
+    type = details.delete(:type) || :regular
+
     messages = payloads.map { |payload| details.merge(topic: topic, payload: payload) }
 
-    Karafka::App.producer.produce_many_sync(messages)
+    PRODUCERS.public_send(type).produce_many_sync(messages)
   end
 end

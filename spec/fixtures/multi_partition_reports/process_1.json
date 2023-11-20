@@ -20,7 +20,9 @@
     ],
     "tags": [
       "#b2e822e"
-    ]
+    ],
+    "bytes_received": 12450,
+    "bytes_sent": 3866
   },
   "versions": {
     "ruby": "ruby 3.2.2-53 e51014",
@@ -55,7 +57,8 @@
             "stateage": 10565686,
             "rebalance_age": 10563021,
             "rebalance_cnt": 1,
-            "rebalance_reason": "Metadata for subscribed topic(s) has changed"
+            "rebalance_reason": "Metadata for subscribed topic(s) has changed",
+            "poll_age": 123
           },
           "topics": {
             "default": {
@@ -163,7 +166,8 @@
             "stateage": 10565218,
             "rebalance_age": 10562553,
             "rebalance_cnt": 1,
-            "rebalance_reason": "Metadata for subscribed topic(s) has changed"
+            "rebalance_reason": "Metadata for subscribed topic(s) has changed",
+            "poll_age": 123
           },
           "topics": {
           }

@@ -9,18 +9,13 @@ module Karafka
         class Sampler < Tracking::Sampler
           include ::Karafka::Core::Helpers::Time
 
-          attr_reader :counters, :consumer_groups, :errors, :times, :pauses, :jobs
+          attr_reader :counters, :consumer_groups, :subscription_groups, :errors,
+                      :pauses, :jobs, :windows
 
           # Current schema version
-          # This can be used in the future for detecting incompatible changes and writing
-          # migrations
-          SCHEMA_VERSION = '1.2.3'
-
-          # 60 seconds window for time tracked window-based metrics
-          TIMES_TTL = 60
-
-          # Times ttl in ms
-          TIMES_TTL_MS = TIMES_TTL * 1_000
+          # This is used for detecting incompatible changes and not using outdated data during
+          # upgrades
+          SCHEMA_VERSION = '1.2.7'
 
           # Counters that count events occurrences during the given window
           COUNTERS_BASE = {
@@ -36,14 +31,15 @@ module Karafka
             dead: 0
           }.freeze
 
-          private_constant :TIMES_TTL, :TIMES_TTL_MS, :COUNTERS_BASE
+          private_constant :COUNTERS_BASE
 
           def initialize
             super
 
+            @windows = Helpers::Ttls::Windows.new
             @counters = COUNTERS_BASE.dup
-            @times = TtlHash.new(TIMES_TTL_MS)
             @consumer_groups = {}
+            @subscription_groups = {}
             @errors = []
             @started_at = float_now
             @pauses = {}
@@ -81,7 +77,9 @@ module Karafka
                 cpus: cpus,
                 threads: threads,
                 cpu_usage: @cpu_usage,
-                tags: Karafka::Process.tags
+                tags: Karafka::Process.tags,
+                bytes_received: bytes_received,
+                bytes_sent: bytes_sent
               },
 
               versions: {
@@ -98,7 +96,7 @@ module Karafka
                 utilization: utilization
               ).merge(total: @counters),
 
-              consumer_groups: @consumer_groups,
+              consumer_groups: enriched_consumer_groups,
               jobs: jobs.values
             }
           end
@@ -130,15 +128,16 @@ module Karafka
           #   utilized all the time within the given time window. 0% means, nothing is happening
           #   most if not all the time.
           def utilization
-            return 0 if times[:total].empty?
+            totals = windows.m1[:processed_total_time]
 
-            # Max times ttl
+            return 0 if totals.empty?
+
             timefactor = float_now - @started_at
-            timefactor = timefactor > TIMES_TTL ? TIMES_TTL : timefactor
+            timefactor = timefactor > 60 ? 60 : timefactor
 
             # We divide by 1_000 to convert from milliseconds
             # We multiply by 100 to have it in % scale
-            times[:total].sum / 1_000 / workers / timefactor * 100
+            totals.sum / 1_000 / workers / timefactor * 100
           end
 
           # @return [Integer] number of listeners
@@ -175,9 +174,14 @@ module Karafka
           # @return [Hash] job queue statistics
           def jobs_queue_statistics
             # We return empty stats in case jobs queue is not yet initialized
+            base = Karafka::Server.jobs_queue&.statistics || { busy: 0, enqueued: 0 }
+            stats = base.slice(:busy, :enqueued, :waiting)
+            stats[:waiting] ||= 0
             # busy - represents number of jobs that are being executed currently
-            # enqueued - represents number of jobs that are enqueued to be processed
-            Karafka::Server.jobs_queue&.statistics || { busy: 0, enqueued: 0 }
+            # enqueued - jobs that are in the queue but not being picked up yet
+            # waiting - jobs that are not scheduled on the queue but will be
+            # be enqueued in case of advanced schedulers
+            stats
           end
 
           # Total memory used in the OS
@@ -264,6 +268,48 @@ module Karafka
                                  else
                                    @memory_threads_ps = false
                                  end
+          end
+
+          # Consumer group details need to be enriched with details about polling that comes from
+          # Karafka level. It is also time based, hence we need to materialize it only at the
+          # moment of message dispatch to have it accurate.
+          def enriched_consumer_groups
+            @consumer_groups.each do |_cg_id, cg_details|
+              cg_details.each do
+                cg_details.fetch(:subscription_groups, {}).each do |sg_id, sg_details|
+                  # This should be always available, since we subscription group polled at time
+                  # is first initialized before we start polling, there should be no case where
+                  # we have statistics about a given subscription group but we do not have the
+                  # last polling time
+                  polled_at = subscription_groups.fetch(sg_id).fetch(:polled_at)
+                  sg_details[:state][:poll_age] = monotonic_now - polled_at
+                end
+              end
+            end
+
+            @consumer_groups
+          end
+
+          # @return [Integer] number of bytes received per second out of a one minute time window
+          #   by all the consumers
+          # @note We use one minute window to compensate for cases where metrics would be reported
+          #   or recorded faster or slower. This normalizes data
+          def bytes_received
+            @windows
+              .m1
+              .stats_from { |k, _v| k.end_with?('rxbytes') }
+              .rps
+              .round
+          end
+
+          # @return [Integer] number of bytes sent per second out of a one minute time window by
+          #   all the consumers
+          def bytes_sent
+            @windows
+              .m1
+              .stats_from { |k, _v| k.end_with?('txbytes') }
+              .rps
+              .round
           end
         end
       end

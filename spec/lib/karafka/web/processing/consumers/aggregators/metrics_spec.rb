@@ -24,14 +24,17 @@ RSpec.describe_current do
   end
 
   context 'when there are initial metrics but no other data' do
-    before { Karafka::Web::Management::CreateInitialStates.new.call }
+    before do
+      Karafka::Web::Management::Actions::CreateInitialStates.new.call
+      Karafka::Web::Management::Actions::MigrateStatesData.new.call
+    end
 
     it 'expect to have basic empty stats' do
       hashed = metrics_aggregator.to_h
 
       expect(hashed[:aggregated]).to eq(days: [], hours: [], minutes: [], seconds: [])
       expect(hashed[:consumer_groups]).to eq(days: [], hours: [], minutes: [], seconds: [])
-      expect(hashed[:schema_version]).to eq('1.0.0')
+      expect(hashed[:schema_version]).to eq('1.1.1')
       expect(hashed.key?(:dispatched_at)).to eq(true)
     end
   end
@@ -50,7 +53,8 @@ RSpec.describe_current do
     end
 
     before do
-      Karafka::Web::Management::CreateInitialStates.new.call
+      Karafka::Web::Management::Actions::CreateInitialStates.new.call
+      Karafka::Web::Management::Actions::MigrateStatesData.new.call
 
       [process1_report, process2_report].each_with_index do |report, index|
         state_aggregator.add(report, index)
@@ -66,7 +70,7 @@ RSpec.describe_current do
       expect(topics1[:visits][:lag_stored]).to eq(5)
       expect(topics1[:visits][:lag]).to eq(5)
       expect(topics1[:visits][:pace]).to eq(271_066)
-      expect(topics1[:visits][:ls_offset_fd]).to eq(5_000)
+      expect(topics1[:visits][:ls_offset_fd]).to eq(0)
 
       expect(topics1[:default][:lag_stored]).to eq(0)
       expect(topics1[:default][:lag]).to eq(15)
@@ -77,6 +81,24 @@ RSpec.describe_current do
       expect(topics2[:karafka_consumers_reports][:lag]).to eq(0)
       expect(topics2[:karafka_consumers_reports][:pace]).to eq(28_972)
       expect(topics2[:karafka_consumers_reports][:ls_offset_fd]).to eq(0)
+    end
+
+    context 'when lso != ho' do
+      # Alter LSO to be less than HO
+      let(:process1_report) do
+        data = Fixtures.json('multi_partition_reports/process_1')
+        data[:dispatched_at] = Time.now.to_f
+
+        sg = data[:consumer_groups][:example_app_app][:subscription_groups][:c4ca4238a0b9_0]
+        sg[:topics][:visits][:partitions][:'0'][:ls_offset] = 1356
+
+        data
+      end
+
+      it 'expect to include lso metric as the topic partition lags because of it' do
+        topics1 = metrics_aggregator.to_h[:consumer_groups][:seconds][0][1][:example_app_app]
+        expect(topics1[:visits][:ls_offset_fd]).to eq(5_000)
+      end
     end
   end
 end

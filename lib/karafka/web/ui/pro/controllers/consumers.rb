@@ -29,7 +29,7 @@ module Karafka
 
               paginate(@params.current_page, !last_page)
 
-              respond
+              render
             end
 
             # @param process_id [String] id of the process we're interested in
@@ -37,19 +37,29 @@ module Karafka
               current_state = Models::ConsumersState.current!
               @process = Models::Process.find(current_state, process_id)
 
-              respond
+              render
             end
 
+            # Renders details about running jobs
+            #
             # @param process_id [String] id of the process we're interested in
-            def jobs(process_id)
+            def running_jobs(process_id)
               details(process_id)
-              respond
+              render
+            end
+
+            # Renders details about pending jobs
+            #
+            # @param process_id [String] id of the process we're interested in
+            def pending_jobs(process_id)
+              details(process_id)
+              render
             end
 
             # @param process_id [String] id of the process we're interested in
             def subscriptions(process_id)
               details(process_id)
-              respond
+              render
             end
           end
         end

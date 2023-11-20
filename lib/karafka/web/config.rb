@@ -11,6 +11,17 @@ module Karafka
       # This is used both in the processing for eviction and in the UI
       setting :ttl, default: 30_000
 
+      # Producer for the Web UI. By default it is a `Karafka.producer`, however it may be
+      # overwritten if we want to use a separate instance in case of heavy usage of the
+      # transactional producer as a default. In cases like this, Karafka may not be able to report
+      # data because it uses this producer and it may be locked because of the transaction in a
+      # user space.
+      setting(
+        :producer,
+        constructor: -> { ::Karafka.producer },
+        lazy: true
+      )
+
       # Topics naming - used for processing and UI
       setting :topics do
         # All the errors encountered will be dispatched to this topic for inspection
@@ -36,15 +47,22 @@ module Karafka
         # 5 seconds should be enough
         setting :interval, default: 5_000
 
+        # Main Web UI reporting scheduler that runs a background thread and reports periodically
+        # from the consumer reporter and producer reporter
+        setting :scheduler, default: Tracking::Scheduler.new
+
         setting :consumers do
-          # Reports the metrics collected in the sampler
+          # Reports the metrics collected in the consumer sampler
           setting :reporter, default: Tracking::Consumers::Reporter.new
 
+          # Samples for fetching and storing metrics samples about the consumer process
           setting :sampler, default: Tracking::Consumers::Sampler.new
 
+          # Listeners needed for the Web UI to track consumer related changes
           setting :listeners, default: [
             Tracking::Consumers::Listeners::Status.new,
             Tracking::Consumers::Listeners::Errors.new,
+            Tracking::Consumers::Listeners::Connections.new,
             Tracking::Consumers::Listeners::Statistics.new,
             Tracking::Consumers::Listeners::Pausing.new,
             Tracking::Consumers::Listeners::Processing.new,
@@ -53,13 +71,15 @@ module Karafka
         end
 
         setting :producers do
+          # Reports the metrics collected in the producer sampler
           setting :reporter, default: Tracking::Producers::Reporter.new
 
+          # Sampler for errors from producers
           setting :sampler, default: Tracking::Producers::Sampler.new
 
+          # Listeners needed for the Web UI to track producers related stuff
           setting :listeners, default: [
-            Tracking::Producers::Listeners::Errors.new,
-            Tracking::Producers::Listeners::Reporter.new
+            Tracking::Producers::Listeners::Errors.new
           ]
         end
       end
@@ -98,9 +118,16 @@ module Karafka
           Karafka.env.production? ? 60_000 * 5 : 5_000
         )
 
-        # Should we display internal topics of Kafka. The once starting with `__`
-        # By default we do not display them as they are not usable from regular users perspective
-        setting :show_internal_topics, default: false
+        setting :visibility do
+          # Allows to manage visibility of payload, headers and message key in the UI
+          # In some cases you may want to limit what is being displayed due to the type of data you
+          # are dealing with
+          setting :filter, default: Ui::Models::VisibilityFilter.new
+
+          # Should we display internal topics of Kafka. The once starting with `__`
+          # By default we do not display them as they are not usable from regular users perspective
+          setting :internal_topics, default: false
+        end
 
         # How many elements should we display on pages that support pagination
         setting :per_page, default: 25
@@ -114,6 +141,37 @@ module Karafka
         # In some cases you may want to limit what is being displayed due to the type of data you
         # are dealing with
         setting :visibility_filter, default: Ui::Models::VisibilityFilter.new
+
+        # Specific kafka settings that are tuned to operate within the Web UI interface.
+        #
+        # Please do not change them unless you know what you are doing as their misconfiguration
+        # may cause Web UI to misbehave
+        #
+        # The settings are inherited as follows:
+        #   1. root routing level `kafka` settings
+        #   2. admin `kafka` settings
+        #   3. web ui `kafka` settings from here
+        #
+        # Those settings impact ONLY Web UI interface and do not affect other scopes. This is done
+        # on purpose as we want to improve responsiveness of the interface by tuning some of the
+        # settings and this is not that relevant for processing itself.
+        #
+        # option [Hash] extra changes to the default admin kafka settings
+        setting :kafka, default: {
+          # optimizes the responsiveness of the Web UI in three scenarios:
+          #   - topics to which writes happen only in transactions so EOF is yield faster
+          #   - heavily compacted topics
+          #   - Web UI topics read operations when using transactional producer
+          #
+          # This can be configured to be higher if you do not use transactional WaterDrop producer.
+          # This value is used when last message (first from the high watermark offset) is the
+          # transaction commit message. In cases like this the EOF gets propagated after this time
+          # so we have to wait. Default 500ms means, that for some views, where we take our data
+          # that might have been committed via transactional producer, we would wait for 1 second
+          # to get needed data. If you are experiencing timeouts or other issues with the Web IU
+          # interface, you can increase this.
+          'fetch.wait.max.ms': 100
+        }
       end
     end
   end

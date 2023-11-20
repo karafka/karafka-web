@@ -1,25 +1,12 @@
-<% if v.is_a?(Hash) || v.respond_to?(:to_h) %>
-  <% v.to_h.each do |k2, v2| %>
-    <tr>
-      <td>
-        <%= "#{k}.#{k2}" %>
-      </td>
-      <td>
-        <% if %w[sasl ssl].any? { |scope| k2.to_s.include?(scope) } %>
-          ***
-        <% else %>
-          <%= v2 %>
-        <% end %>
-      </td>
-    </tr>
-  <% end %>
-<% else %>
-  <tr>
-    <td>
-      <%= k %>
-    </td>
-    <td>
+<tr>
+  <td>
+    <%= k %>
+  </td>
+  <td>
+    <% if %w[sasl ssl].any? { |scope| k.to_s.include?(scope) } %>
+      ***
+    <% else %>
       <%= object_value_to_s(v) %>
-    </td>
-  </tr>
-<% end %>
+    <% end %>
+  </td>
+</tr>

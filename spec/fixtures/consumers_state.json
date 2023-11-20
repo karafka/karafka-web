@@ -16,7 +16,7 @@
     "dead": 0,
     "busy": 0,
     "enqueued": 0,
-    "processing": 0,
+    "waiting": 0,
     "threads": 4,
     "processes": 2,
     "rss": 252744,

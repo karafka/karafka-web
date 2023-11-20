@@ -13,6 +13,12 @@ module Karafka
   # Karafka Web UI + Karafka web monitoring
   module Web
     class << self
+      # @return [WaterDrop::Producer, nil] waterdrop messages producer or nil if not yet fully
+      #   initialized. It may not be fully initialized until the configuration is done
+      def producer
+        @producer ||= Web.config.producer
+      end
+
       # @return [String] root path of this gem
       def gem_root
         Pathname.new(File.expand_path('../..', __dir__))
@@ -47,7 +53,10 @@ module Karafka
   end
 end
 
+require_relative 'web/inflector'
+
 loader = Zeitwerk::Loader.new
+
 # Make sure pro is not loaded unless Pro
 loader.ignore(Karafka::Web.gem_root.join('lib/karafka/web/ui/pro'))
 
@@ -56,9 +65,10 @@ Karafka::Licenser.detect do
   loader = Zeitwerk::Loader.new
 end
 
-root = File.expand_path('..', __dir__)
 loader.tag = 'karafka-web'
-loader.inflector = Zeitwerk::GemInflector.new("#{root}/karafka/web.rb")
+# Use our custom inflector to support migrations
+root = File.expand_path('..', __dir__)
+loader.inflector = Karafka::Web::Inflector.new("#{root}/karafka/web.rb")
 loader.push_dir(root)
 
 loader.setup

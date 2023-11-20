@@ -17,8 +17,8 @@ Gem::Specification.new do |spec|
   spec.licenses    = %w[LGPL-3.0 Commercial]
 
   spec.add_dependency 'erubi', '~> 1.4'
-  spec.add_dependency 'karafka', '>= 2.2.6', '< 3.0.0'
-  spec.add_dependency 'karafka-core', '>= 2.2.2', '< 3.0.0'
+  spec.add_dependency 'karafka', '>= 2.2.13', '< 3.0.0'
+  spec.add_dependency 'karafka-core', '>= 2.2.4', '< 3.0.0'
   spec.add_dependency 'roda', '~> 3.68', '>= 3.69'
   spec.add_dependency 'tilt', '~> 2.0'
 
@@ -36,7 +36,7 @@ Gem::Specification.new do |spec|
   spec.metadata = {
     'funding_uri' => 'https://karafka.io/#become-pro',
     'homepage_uri' => 'https://karafka.io',
-    'changelog_uri' => 'https://github.com/karafka/karafka-web/blob/master/CHANGELOG.md',
+    'changelog_uri' => 'https://karafka.io/docs/Changelog-Karafka-Web-UI',
     'bug_tracker_uri' => 'https://github.com/karafka/karafka-web/issues',
     'source_code_uri' => 'https://github.com/karafka/karafka-web',
     'documentation_uri' => 'https://karafka.io/docs',

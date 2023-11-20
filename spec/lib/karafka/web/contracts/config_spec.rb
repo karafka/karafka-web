@@ -37,10 +37,12 @@ RSpec.describe_current do
           key: 'some_key',
           secret: 'a' * 64
         },
-        show_internal_topics: true,
+        visibility: {
+          filter: Object.new,
+          internal_topics: true
+        },
         cache: Object.new,
-        per_page: 50,
-        visibility_filter: Object.new
+        per_page: 50
       }
     }
   end
@@ -165,19 +167,19 @@ RSpec.describe_current do
     end
 
     context 'when visibility_filter is nil' do
-      before { params[:ui][:visibility_filter] = nil }
+      before { params[:ui][:visibility][:filter] = nil }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when show_internal_topics is nil' do
-      before { params[:ui][:show_internal_topics] = nil }
+    context 'when internal_topics is nil' do
+      before { params[:ui][:visibility][:internal_topics] = nil }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when show_internal_topics is not boolean' do
-      before { params[:ui][:show_internal_topics] = '1' }
+    context 'when internal_topics is not boolean' do
+      before { params[:ui][:visibility][:internal_topics] = '1' }
 
       it { expect(contract.call(params)).not_to be_success }
     end

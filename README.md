@@ -8,6 +8,9 @@ Karafka Web UI is a user interface for the [Karafka framework](https://github.co
 
 It allows for easy access to various metrics, such as the number of messages consumed, the number of errors, and the number of consumers operating. It also provides a way to view the different Kafka topics, consumers, and groups that are being used by the application.
 
+> [!IMPORTANT]
+> All of Karafka ecosystems components documentation, including the Web UI, can be found [here](https://karafka.io/docs/#web-ui).
+
 ## Getting started
 
 Karafka Web UI documentation is part of the Karafka framework documentation and can be found [here](https://karafka.io/docs).

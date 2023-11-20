@@ -28,7 +28,7 @@ module Karafka
             def republish(topic_id, partition_id, offset)
               message = Ui::Models::Message.find(topic_id, partition_id, offset)
 
-              delivery = ::Karafka.producer.produce_sync(
+              delivery = ::Karafka::Web.producer.produce_sync(
                 topic: topic_id,
                 partition: partition_id,
                 payload: message.raw_payload,
@@ -39,6 +39,43 @@ module Karafka
               redirect(
                 :back,
                 success: reproduced(message, delivery)
+              )
+            end
+
+            # Dispatches the message raw payload to the browser as a file
+            #
+            # @param topic_id [String]
+            # @param partition_id [Integer]
+            # @param offset [Integer] offset of the message we want to download
+            def download(topic_id, partition_id, offset)
+              message = Ui::Models::Message.find(topic_id, partition_id, offset)
+
+              # Check if downloads are allowed
+              return deny unless visibility_filter.download?(message)
+
+              file(
+                message.raw_payload,
+                "#{topic_id}_#{partition_id}_#{offset}_payload.msg"
+              )
+            end
+
+            # Dispatches the message payload first deserialized and then serialized to JSON
+            # It differs from the raw payload in cases where raw payload is compressed or binary
+            # or contains data that the Web UI user should not see that was altered on the Web UI
+            # with the visibility filter.
+            #
+            # @param topic_id [String]
+            # @param partition_id [Integer]
+            # @param offset [Integer] offset of the message we want to export
+            def export(topic_id, partition_id, offset)
+              message = Ui::Models::Message.find(topic_id, partition_id, offset)
+
+              # Check if exports are allowed
+              return deny unless visibility_filter.export?(message)
+
+              file(
+                message.payload.to_json,
+                "#{topic_id}_#{partition_id}_#{offset}_payload.json"
               )
             end
 
@@ -53,6 +90,11 @@ module Karafka
                 has been sent again to #{message.topic}##{message.partition}
                 and received offset #{delivery.offset}.
               MSG
+            end
+
+            # @return [Object] visibility filter. Either default or user-based
+            def visibility_filter
+              ::Karafka::Web.config.ui.visibility.filter
             end
           end
         end

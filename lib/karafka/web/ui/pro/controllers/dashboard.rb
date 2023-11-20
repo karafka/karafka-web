@@ -44,7 +44,7 @@ module Karafka
                 @topics, @params.current_range
               )
 
-              respond
+              render
             end
           end
         end

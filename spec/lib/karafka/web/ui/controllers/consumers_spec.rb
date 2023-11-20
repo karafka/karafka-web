@@ -52,6 +52,30 @@ RSpec.describe_current do
     end
   end
 
+  context 'when there are active consumers reported in a transactional fashion' do
+    before do
+      topics_config.consumers.states = states_topic
+      topics_config.consumers.reports = reports_topic
+
+      produce(states_topic, Fixtures.file('consumers_state.json'), type: :transactional)
+      produce(reports_topic, Fixtures.file('consumer_report.json'), type: :transactional)
+
+      get 'consumers'
+    end
+
+    it do
+      expect(response).to be_ok
+      expect(body).to include(support_message)
+      expect(body).not_to include(breadcrumbs)
+      expect(body).not_to include(no_processes)
+      expect(body).not_to include(pagination)
+      expect(body).to include('246 MB')
+      expect(body).to include('shinra:1:1')
+      expect(body).to include('/consumers/1/subscriptions')
+      expect(body).to include('2690818651.82293')
+    end
+  end
+
   context 'when there are more consumers that we fit in a single page' do
     before do
       topics_config.consumers.states = states_topic

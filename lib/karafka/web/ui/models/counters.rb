@@ -17,6 +17,12 @@ module Karafka
             @hash[:errors] = estimate_errors_count
           end
 
+          # @return [Integer] number of jobs that are not yet running. This includes jobs on the
+          #   workers queue as well as jobs in the scheduling
+          def pending
+            enqueued + waiting
+          end
+
           private
 
           # Estimates the number of errors present in the errors topic.
@@ -25,7 +31,7 @@ module Karafka
 
             MAX_ERROR_PARTITIONS.times do |partition|
               begin
-                offsets = Karafka::Admin.read_watermark_offsets(
+                offsets = Lib::Admin.read_watermark_offsets(
                   ::Karafka::Web.config.topics.errors,
                   partition
                 )

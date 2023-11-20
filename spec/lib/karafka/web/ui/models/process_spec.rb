@@ -35,7 +35,7 @@ RSpec.describe_current do
       cgs = %w[example_app6_app example_app6_karafka_web]
       expect(process.consumer_groups.map(&:id)).to eq(cgs)
       expect(process.jobs.size).to eq(1)
-      expect(process.jobs.first.started_at).to eq(1_690_883_271.5_342_352)
+      expect(process.jobs.first.updated_at).to eq(1_690_883_271.5_342_352)
       expect(process.lag_stored).to eq(1)
       expect(process.lag).to eq(13)
       expect(process.subscribed_partitions_count).to eq(3)

@@ -21,7 +21,9 @@
     ],
     "tags": [
       "#8cbff36"
-    ]
+    ],
+    "bytes_received": 12450,
+    "bytes_sent": 3866
   },
   "versions": {
     "ruby": "ruby 3.2.2-53 e51014",
@@ -35,6 +37,7 @@
   "stats": {
     "busy": 1,
     "enqueued": 0,
+    "waiting": 0,
     "utilization": 5.634919553399087,
     "total": {
       "batches": 9,
@@ -56,7 +59,8 @@
             "stateage": 64618193,
             "rebalance_age": 64615986,
             "rebalance_cnt": 1,
-            "rebalance_reason": "Metadata for subscribed topic(s) has changed"
+            "rebalance_reason": "Metadata for subscribed topic(s) has changed",
+            "poll_age": 123
           },
           "topics": {
             "default": {
@@ -146,7 +150,8 @@
             "stateage": 64616206,
             "rebalance_age": 64614000,
             "rebalance_cnt": 1,
-            "rebalance_reason": "Metadata for subscribed topic(s) has changed"
+            "rebalance_reason": "Metadata for subscribed topic(s) has changed",
+            "poll_age": 123
           },
           "topics": {
           }
@@ -156,7 +161,7 @@
   },
   "jobs": [
     {
-      "started_at": 1690883271.5342352,
+      "updated_at": 1690883271.5342352,
       "topic": "default",
       "partition": 0,
       "first_offset": 327359,
@@ -168,6 +173,7 @@
       "consumer": "Karafka::Pro::ActiveJob::Consumer",
       "consumer_group": "example_app6_app",
       "type": "consume",
+      "status": "running",
       "tags": [
         "active_job",
         "VisitorsJob"

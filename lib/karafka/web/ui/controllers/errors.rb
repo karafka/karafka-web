@@ -20,7 +20,7 @@ module Karafka
               @error_messages.map(&:offset)
             )
 
-            respond
+            render
           end
 
           # @param offset [Integer] given error message offset
@@ -31,7 +31,7 @@ module Karafka
               offset
             )
 
-            respond
+            render
           end
 
           private

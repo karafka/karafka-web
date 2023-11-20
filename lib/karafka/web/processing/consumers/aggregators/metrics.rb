@@ -10,9 +10,8 @@ module Karafka
           # values for charts and metrics
           class Metrics < Base
             # Current schema version
-            # This can be used in the future for detecting incompatible changes and writing
-            # migrations
-            SCHEMA_VERSION = '1.0.0'
+            # This is used for detecting incompatible changes and writing migrations
+            SCHEMA_VERSION = '1.1.1'
 
             def initialize
               super
@@ -107,9 +106,18 @@ module Karafka
 
                 # Last stable offsets freeze durations - we pick the max freeze to indicate
                 # the longest open transaction that potentially may be hanging
-                ls_offsets_fd = partitions_data
-                                .map { |p_details| p_details.fetch(:ls_offset_fd, 0) }
-                                .reject(&:negative?)
+                # We select only those partitions for which LSO != HO as in any other case this
+                # just means we've reached the end of data and ls may freeze because there is no
+                # more data flowing. Such cases should not be reported as ls offset freezes because
+                # there is no more data to be processed and can grow until more data is present
+                # this does not indicate "bad" freezing that we are interested in
+                ls_offsets_fds = partitions_data.map do |p_details|
+                  next if p_details.fetch(:ls_offset, 0) == p_details.fetch(:hi_offset, 0)
+
+                  ls_offset_fd = p_details.fetch(:ls_offset_fd, 0)
+
+                  ls_offset_fd.negative? ? nil : ls_offset_fd
+                end
 
                 cgs[group_name] ||= {}
                 cgs[group_name][topic_name] = {
@@ -119,7 +127,7 @@ module Karafka
                   # Take max last stable offset duration without any change. This can
                   # indicate a hanging transaction, because the offset will not move forward
                   # and will stay with a growing freeze duration when stuck
-                  ls_offset_fd: ls_offsets_fd.max || 0
+                  ls_offset_fd: ls_offsets_fds.compact.max || 0
                 }
               end
 
