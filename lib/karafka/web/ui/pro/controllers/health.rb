@@ -33,6 +33,14 @@ module Karafka
 
               render
             end
+
+            # Displays information related to time of changes of particular attributes
+            def changes
+              # Same data as overview but presented differently
+              overview
+
+              render
+            end
           end
         end
       end

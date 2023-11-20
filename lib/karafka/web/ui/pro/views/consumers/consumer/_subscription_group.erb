@@ -30,7 +30,7 @@
           <span class="badge bg-secondary mt-1 mb-1">
             <%==
               relative_time(
-                Time.at(@process.dispatched_at) - (subscription_group.stateage / 1_000)
+                Time.at(@process.dispatched_at) - (subscription_group.stateage / 1_000.0)
               )
             %>
           </span>
@@ -43,7 +43,7 @@
           <span class="badge bg-secondary mt-1 mb-1">
             <%==
               relative_time(
-                Time.at(@process.dispatched_at) - (subscription_group.poll_age / 1_000)
+                Time.at(@process.dispatched_at) - (subscription_group.poll_age / 1_000.0)
               )
             %>
           </span>
@@ -56,7 +56,7 @@
           <span class="badge bg-secondary mt-1 mb-1">
             <%==
               relative_time(
-                Time.at(@process.dispatched_at) - (subscription_group.rebalance_age / 1_000)
+                Time.at(@process.dispatched_at) - (subscription_group.rebalance_age / 1_000.0)
               )
             %>
           </span>

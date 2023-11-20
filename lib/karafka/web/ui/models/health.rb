@@ -15,7 +15,7 @@ module Karafka
               fetch_topics_data(state, stats)
               fetch_rebalance_ages(state, stats)
 
-              stats
+              sort_structure(stats)
             end
 
             private
@@ -79,6 +79,27 @@ module Karafka
                   end
                 end
               end
+            end
+
+            # Sorts data so we always present it in an alphabetical order
+            #
+            # @param stats [Hash] stats hash
+            # @return [Hash] sorted data
+            def sort_structure(stats)
+              # Ensure that partitions for all topics are in correct order
+              # Ensure topics are in alphabetical order always
+              stats.each do |_cg_name, cg_data|
+                topics = cg_data[:topics]
+
+                topics.each do |topic_name, t_data|
+                  topics[topic_name] = Hash[t_data.sort_by { |key, _| key }]
+                end
+
+                cg_data[:topics] = Hash[topics.sort_by { |key, _| key }]
+              end
+
+              # Ensure that all consumer groups are always in the same order
+              Hash[stats.sort_by { |key, _| key }]
             end
           end
         end
