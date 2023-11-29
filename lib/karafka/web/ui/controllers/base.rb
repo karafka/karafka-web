@@ -59,6 +59,12 @@ module Karafka
             Responses::Deny.new
           end
 
+          # @param [Hash, Array, Lib::HashProxy] object for filtering and sorting
+          # @return [Hash, Array, Lib::HashProxy] filtered and sorted results
+          def refine(resources)
+            Lib::Sorter.new(@params.sort).call(resources)
+          end
+
           # Initializes the expected pagination engine and assigns expected arguments
           # @param args Any arguments accepted by the selected pagination engine
           def paginate(*args)

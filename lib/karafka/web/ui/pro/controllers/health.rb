@@ -21,7 +21,7 @@ module Karafka
             # Displays the current system state
             def overview
               current_state = Models::ConsumersState.current!
-              @stats = Models::Health.current(current_state)
+              @stats = refine(Models::Health.current(current_state))
 
               render
             end

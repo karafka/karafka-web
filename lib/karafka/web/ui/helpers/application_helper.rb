@@ -246,6 +246,28 @@ module Karafka
 
             result
           end
+
+          # @param name [String] link value
+          # @param attribute [Symbol] sorting attribute
+          # @return [String] html link for sorting with arrow when attribute sort enabled
+          def sort_link(name, attribute)
+            if params.sort.empty?
+              return "<a href=\"#{current_path(sort: "#{attribute} desc")}\">#{name}</a>"
+            end
+
+            desc = "#{attribute} desc"
+            asc = "#{attribute} asc"
+
+            if params.sort == desc
+              return "<a href=\"#{current_path(sort: asc)}\">#{name}&nbsp;&#9662;</a>"
+            end
+
+            if params.sort == asc
+              return "<a href=\"#{current_path(sort: desc)}\">#{name}&nbsp;&#9652;</a>"
+            end
+
+            "<a href=\"#{current_path(sort: desc)}\">#{name}</a>"
+          end
         end
       end
     end
