@@ -25,7 +25,7 @@ module Karafka
             # Nodes we already visited in the context of a given attribute lookup
             # We cache them not to look for them over and over again if they are used more than
             # once
-            @visited = Hash.new { |h,k| h[k] = [] }
+            @visited = Hash.new { |h, k| h[k] = [] }
             # Methods invocations cache
             @results = {}
           end

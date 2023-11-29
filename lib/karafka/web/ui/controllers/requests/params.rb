@@ -24,24 +24,9 @@ module Karafka
               @request_params = request_params
             end
 
-            # @return [String] filtering query value
-            def filter
-              @filter ||= begin
-                @request_params['filter'].to_s.downcase
-              end
-            end
-
-            # @return [Boolean] are we running any search. Used in the UI for a different message
-            #   when searching and no results
-            def filter?
-              !filter.empty?
-            end
-
             # @return [String] sort query value
             def sort
-              @sort ||= begin
-                @request_params['sort'].to_s.downcase
-              end
+              @sort ||= @request_params['sort'].to_s.downcase
             end
 
             # @return [Integer] current page for paginated views

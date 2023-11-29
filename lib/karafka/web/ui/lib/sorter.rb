@@ -70,15 +70,15 @@ module Karafka
             # Run sorting on each value, since we may have nested hashes and arrays
             hash.each_value { |value| call(value, current_depth + 1) }
 
-            hash.values.each do |value|
+            hash.each_value do |value|
               return unless value.is_a?(Hash) || value.is_a?(Lib::HashProxy)
               return if sortable_value(value).nil?
             end
 
             # Generate new hash that will have things in our desired order
             sorted = hash
-                     .sort_by { |k, v| sortable_value(v) }
-                     .then { |sorted| desc? ? sorted.reverse : sorted  }
+                     .sort_by { |_, value| sortable_value(value) }
+                     .then { |ordered| desc? ? ordered.reverse : ordered }
                      .to_h
 
             # Clear our hash and inject the new values in the order in which we want to have them
@@ -87,12 +87,20 @@ module Karafka
             hash.merge!(sorted)
           end
 
+          # Sorts an array in-place based on a specified attribute.
+          #
+          # The method iterates over each element in the array and applies the transformation.
+          #
+          # @param array [Array<Object>] The array of elements to be sorted
+          # @param current_depth [Integer] The current depth of the sorting operation,
+          #   used in the `call` method to handle nested structures or recursion.
+          # @note This method modifies the array in place (mutates the caller).
           def sort_array!(array, current_depth)
             # Sort arrays containing hashes by a specific attribute
             array
               .map! { |element| call(element, current_depth + 1) }
               .sort_by! { |element| sortable_value(element) }
-              .tap { |array| desc? ? array.reverse! : array  }
+              .tap { |array| desc? ? array.reverse! : array }
           end
 
           # @return [Boolean] true if we sort in desc, otherwise false
@@ -102,7 +110,7 @@ module Karafka
 
           # Extracts the attribute based on which we should sort (if present)
           #
-          # @param element [Object] takes the element object and dependng on its type, tries to
+          # @param element [Object] takes the element object and depending on its type, tries to
           #   figure out the value based on which we may sort
           # @return [Object, nil] sortable value or nil if nothing to sort
           def sortable_value(element)
