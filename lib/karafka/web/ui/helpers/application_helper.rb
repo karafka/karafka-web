@@ -253,16 +253,20 @@ module Karafka
           def sort_link(name, attribute)
             desc = "#{attribute} desc"
             asc = "#{attribute} asc"
+            path = current_path(sort: desc)
+            full_name = name
 
             if params.sort == desc
-              return "<a href=\"#{current_path(sort: asc)}\">#{name}&nbsp;&#9662;</a>"
+              path = current_path(sort: asc)
+              full_name = "#{name}&nbsp;&#9662;"
             end
 
             if params.sort == asc
-              return "<a href=\"#{current_path(sort: desc)}\">#{name}&nbsp;&#9652;</a>"
+              path = current_path(sort: desc)
+              full_name = "#{name}&nbsp;&#9652;"
             end
 
-            "<a href=\"#{current_path(sort: desc)}\">#{name}</a>"
+            "<a href=\"#{path}\">#{full_name}</a>"
           end
         end
       end

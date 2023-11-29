@@ -70,21 +70,22 @@ module Karafka
             # Run sorting on each value, since we may have nested hashes and arrays
             hash.each_value { |value| call(value, current_depth + 1) }
 
-            hash.each_value do |value|
-              return unless value.is_a?(Hash) || value.is_a?(Lib::HashProxy)
-              return if sortable_value(value).nil?
-            end
+            # We cannot short hashes that are not type aligned. That is, we cannot compare
+            # nested hashes with integers, etc. In some cases we could (Float vs Integer), however
+            # for the same of simplicity, we do not to that
+            return unless hash.values.map(&:class).uniq.size == 1
+            # We also should not modify hashes that do not have values that are sortable
+            # false is sortable but nil is not
+            return unless hash.values.all? { |value| !sortable_value(value).nil? }
 
             # Generate new hash that will have things in our desired order
-            sorted = hash
-                     .sort_by { |_, value| sortable_value(value) }
-                     .then { |ordered| desc? ? ordered.reverse : ordered }
-                     .to_h
+            sorted = hash.sort_by { |_, value| sortable_value(value) }
+            sorted.reverse! if desc?
 
             # Clear our hash and inject the new values in the order in which we want to have them
             # Such clear and merge will ensure things are in the order we desired them
             hash.clear
-            hash.merge!(sorted)
+            hash.merge!(sorted.to_h)
           end
 
           # Sorts an array in-place based on a specified attribute.
@@ -122,7 +123,7 @@ module Karafka
               return element.respond_to?(@field) ? element.public_send(@field) : nil
             end
 
-            element
+            nil
           end
         end
       end
