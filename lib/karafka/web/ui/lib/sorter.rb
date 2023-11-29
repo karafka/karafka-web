@@ -101,7 +101,8 @@ module Karafka
             array
               .map! { |element| call(element, current_depth + 1) }
               .sort_by! { |element| sortable_value(element) }
-              .tap { |array| desc? ? array.reverse! : array }
+
+            array.reverse! if desc?
           end
 
           # @return [Boolean] true if we sort in desc, otherwise false
@@ -115,9 +116,7 @@ module Karafka
           #   figure out the value based on which we may sort
           # @return [Object, nil] sortable value or nil if nothing to sort
           def sortable_value(element)
-            if element.is_a?(Hash)
-              return element[@field] || element[@field.to_sym]
-            end
+            return element[@field] || element[@field.to_sym] if element.is_a?(Hash)
 
             if element.is_a?(Lib::HashProxy)
               return element.respond_to?(@field) ? element.public_send(@field) : nil
