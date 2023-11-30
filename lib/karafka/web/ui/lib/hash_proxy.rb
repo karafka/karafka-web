@@ -25,7 +25,7 @@ module Karafka
             # Nodes we already visited in the context of a given attribute lookup
             # We cache them not to look for them over and over again if they are used more than
             # once
-            @visited = Hash.new { |h, k| h[k] = [] }
+            @visited = Hash.new { |h, k| h[k] = {} }
             # Methods invocations cache
             @results = {}
           end
@@ -74,9 +74,9 @@ module Karafka
           def deep_find(obj, key)
             # Prevent circular dependency lookups by making sure we do not check the same object
             # multiple times
-            return nil if @visited[key].include?(obj)
+            return nil if @visited[key].key?(obj)
 
-            @visited[key] << obj
+            @visited[key][obj] = nil
 
             if obj.respond_to?(:key?) && obj.key?(key)
               obj[key]

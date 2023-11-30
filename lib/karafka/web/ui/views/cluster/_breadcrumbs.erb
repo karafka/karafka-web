@@ -3,3 +3,19 @@
     Cluster informations
   </a>
 </li>
+
+<% if current_path.include?('/brokers') %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('cluster', 'brokers') %>">
+      Brokers
+    </a>
+  </li>
+<% end %>
+
+<% if current_path.include?('/topics') %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('cluster', 'topics') %>">
+      Topics
+    </a>
+  </li>
+<% end %>

@@ -103,14 +103,14 @@
               </th>
             <tr class="align-middle">
             </tr>
-              <th>Partition</th>
-              <th>Lag stored</th>
-              <th>Lag stored trend</th>
-              <th>Committed offset</th>
-              <th>Stored offset</th>
-              <th>Fetch state</th>
-              <th>Poll state</th>
-              <th>LSO state</th>
+              <th><%== sort_link('Partition', :id) %></th>
+              <th><%== sort_link(:lag_stored) %></th>
+              <th><%== sort_link('Lag stored trend', :lag_stored_d) %></th>
+              <th><%== sort_link(:committed_offset) %></th>
+              <th><%== sort_link(:stored_offset) %></th>
+              <th><%== sort_link(:fetch_state) %></th>
+              <th><%== sort_link(:poll_state) %></th>
+              <th><%== sort_link('LSO state', :lso_risk_state) %></th>
             </tr>
           </thead>
           <tbody>

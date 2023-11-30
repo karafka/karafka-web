@@ -6,14 +6,18 @@ module Karafka
       module Controllers
         # Selects cluster info and topics basic info
         class Cluster < Base
-          # List cluster info data
-          def index
-            # Make sure, that for the cluster view we always get the most recent cluster state
-            @cluster_info = Models::ClusterInfo.fetch(cached: false)
+          # Lists available brokers in the cluster
+          def brokers
+            @brokers = refine(cluster_info.brokers)
 
+            render
+          end
+
+          # List topics and partitions with details
+          def topics
             partitions_total = []
 
-            displayable_topics(@cluster_info).each do |topic|
+            displayable_topics(cluster_info).each do |topic|
               topic[:partitions].each do |partition|
                 partitions_total << partition.merge(topic: topic)
               end
@@ -24,12 +28,19 @@ module Karafka
               @params.current_page
             )
 
+            refine(@partitions)
+
             paginate(@params.current_page, !last_page)
 
             render
           end
 
           private
+
+          # Make sure, that for the cluster view we always get the most recent cluster state
+          def cluster_info
+            @cluster_info ||= Models::ClusterInfo.fetch(cached: false)
+          end
 
           # @param cluster_info [Rdkafka::Metadata] cluster metadata
           # @return [Array<Hash>] array with topics to be displayed sorted in an alphabetical

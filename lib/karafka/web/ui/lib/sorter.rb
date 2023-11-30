@@ -13,7 +13,7 @@ module Karafka
           ALLOWED_ORDERS = %w[asc desc].freeze
 
           # Max depth for nested sorting
-          MAX_DEPTH = 10
+          MAX_DEPTH = 8
 
           private_constant :ALLOWED_ORDERS, :MAX_DEPTH
 
@@ -29,7 +29,7 @@ module Karafka
 
             # Things we have already seen and sorted. Prevents crashing on the circular
             # dependencies sorting when same resources are present in different parts of the three
-            @seen = []
+            @seen = {}
           end
 
           # Sorts the structure and returns it sorted.
@@ -40,11 +40,11 @@ module Karafka
             # Skip if there is no sort field at all
             return resource if @field.empty?
             # Skip if we've already seen this resource
-            return resource if @seen.include?(resource)
+            return resource if @seen.key?(resource)
             # Skip if we are too deep
             return resource if current_depth > MAX_DEPTH
 
-            @seen << resource
+            @seen[resource] = nil
 
             case resource
             when Array
@@ -55,6 +55,8 @@ module Karafka
               # We can short hash in place here, because it will be still references (the same)
               # in the hash proxy object, so we can do it that way
               sort_hash!(resource.to_h, current_depth)
+            when Enumerable
+              sort_array!(resource, current_depth)
             end
 
             resource
@@ -68,18 +70,31 @@ module Karafka
           # @param current_depth [Integer] current depth of sorting from root
           def sort_hash!(hash, current_depth)
             # Run sorting on each value, since we may have nested hashes and arrays
-            hash.each_value { |value| call(value, current_depth + 1) }
+            hash.each do |key, value|
+              previous_key = @parent_key
+              @parent_key = key.to_s.downcase
+              call(value, current_depth + 1)
+              @parent_key = previous_key
+            end
 
             # We cannot short hashes that are not type aligned. That is, we cannot compare
             # nested hashes with integers, etc. In some cases we could (Float vs Integer), however
             # for the same of simplicity, we do not to that
             return unless hash.values.map(&:class).uniq.size == 1
-            # We also should not modify hashes that do not have values that are sortable
-            # false is sortable but nil is not
-            return unless hash.values.all? { |value| !sortable_value(value).nil? }
 
-            # Generate new hash that will have things in our desired order
-            sorted = hash.sort_by { |_, value| sortable_value(value) }
+            # Allows sorting based on parent key when hash contains another hash where we want to
+            # sort based on the keys and not based on the value
+            if @parent_key == @field
+              # We also should not modify hashes that do not have values that are sortable
+              # false is sortable but nil is not
+              sorted = hash.sort_by { |key, _| key.to_s }
+            else
+              return unless hash.values.all? { |value| !sortable_value(value).nil? }
+
+              # Generate new hash that will have things in our desired order
+              sorted = hash.sort_by { |_, value| sortable_value(value).to_s }
+            end
+
             sorted.reverse! if desc?
 
             # Clear our hash and inject the new values in the order in which we want to have them
@@ -98,10 +113,11 @@ module Karafka
           # @note This method modifies the array in place (mutates the caller).
           def sort_array!(array, current_depth)
             # Sort arrays containing hashes by a specific attribute
-            array
-              .map! { |element| call(element, current_depth + 1) }
-              .sort_by! { |element| sortable_value(element) }
+            array.map! { |element| call(element, current_depth + 1) }
 
+            return if array.any? { |element| sortable_value(element).nil? }
+
+            array.sort_by! { |element| sortable_value(element).to_s }
             array.reverse! if desc?
           end
 
@@ -119,7 +135,10 @@ module Karafka
             return element[@field] || element[@field.to_sym] if element.is_a?(Hash)
 
             if element.is_a?(Lib::HashProxy)
-              return element.respond_to?(@field) ? element.public_send(@field) : nil
+              result = element.respond_to?(@field) ? element.public_send(@field) : nil
+
+              # If the result is a hash-like object, we cannot sort on them
+              return result.is_a?(Hash) || result.is_a?(Lib::HashProxy) ? nil : result
             end
 
             nil

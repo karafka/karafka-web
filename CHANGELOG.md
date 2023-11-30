@@ -8,6 +8,7 @@
 - **[Feature]** Introduce "Data transfers" chart with data received and data sent to the cluster.
 - **[Feature]** Introduce ability to download raw payloads.
 - **[Feature]** Introduce ability to download deserialized message payload as JSON.
+- [Enhancement] Split cluster info into two tabs, one for brokers and one for topics with partitions.
 - [Enhancement] Track pending jobs. Pending jobs are jobs that are not yet scheduled for execution by advanced schedulers.
 - [Enhancement] Rename "Enqueued" to "Pending" to support jobs that are not yet enqueued but within a scheduler.
 - [Enhancement] Make sure only running jobs are displayed in running jobs
@@ -17,6 +18,7 @@
 - [Enhancement] Support time ranges for graphs in OSS.
 - [Enhancement] Report last poll time for each subscription group.
 - [Enhancement] Show last poll time per consumer instance.
+- [Enhancement] Display number of jobs in a particular process jobs view.
 - [Fix] Fix times precisions that could be incorrectly reported by 1 second in few places.
 - [Fix] Fix random order in Consumers groups Health view.
 - [Change] Rename "Busy" to "Running" to align with "Running Jobs".
