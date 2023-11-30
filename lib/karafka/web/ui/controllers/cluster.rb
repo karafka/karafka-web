@@ -19,16 +19,18 @@ module Karafka
 
             displayable_topics(cluster_info).each do |topic|
               topic[:partitions].each do |partition|
-                partitions_total << partition.merge(topic: topic)
+                partitions_total << partition.merge(
+                  topic: topic,
+                  # Will allow sorting by name
+                  topic_name: topic.fetch(:topic_name)
+                )
               end
             end
 
             @partitions, last_page = Ui::Lib::Paginations::Paginators::Arrays.call(
-              partitions_total,
+              refine(partitions_total),
               @params.current_page
             )
-
-            refine(@partitions)
 
             paginate(@params.current_page, !last_page)
 

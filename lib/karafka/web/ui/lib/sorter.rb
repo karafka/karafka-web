@@ -40,11 +40,12 @@ module Karafka
             # Skip if there is no sort field at all
             return resource if @field.empty?
             # Skip if we've already seen this resource
-            return resource if @seen.key?(resource)
+            # We use object id instead of full object as the objects can get big
+            return resource if @seen.key?(resource.object_id)
             # Skip if we are too deep
             return resource if current_depth > MAX_DEPTH
 
-            @seen[resource] = nil
+            @seen[resource.object_id] = nil
 
             case resource
             when Array
@@ -89,10 +90,13 @@ module Karafka
               # false is sortable but nil is not
               sorted = hash.sort_by { |key, _| key.to_s }
             else
-              return unless hash.values.all? { |value| !sortable_value(value).nil? }
+              values = hash.values.map { |value| sortable_value(value) }
+
+              return if values.any?(&:nil?)
+              return unless values.map(&:class).uniq.size == 1
 
               # Generate new hash that will have things in our desired order
-              sorted = hash.sort_by { |_, value| sortable_value(value).to_s }
+              sorted = hash.sort_by { |_, value| sortable_value(value) }
             end
 
             sorted.reverse! if desc?
@@ -115,9 +119,12 @@ module Karafka
             # Sort arrays containing hashes by a specific attribute
             array.map! { |element| call(element, current_depth + 1) }
 
-            return if array.any? { |element| sortable_value(element).nil? }
+            values = array.map { |element| sortable_value(element) }
 
-            array.sort_by! { |element| sortable_value(element).to_s }
+            return if values.any?(&:nil?)
+            return unless values.map(&:class).uniq.size == 1
+
+            array.sort_by! { |element| sortable_value(element) }
             array.reverse! if desc?
           end
 
@@ -132,16 +139,12 @@ module Karafka
           #   figure out the value based on which we may sort
           # @return [Object, nil] sortable value or nil if nothing to sort
           def sortable_value(element)
-            return element[@field] || element[@field.to_sym] if element.is_a?(Hash)
+            result = nil
+            result = element[@field] || element[@field.to_sym] if element.is_a?(Hash)
+            result = element.public_send(@field) if element.respond_to?(@field)
 
-            if element.is_a?(Lib::HashProxy)
-              result = element.respond_to?(@field) ? element.public_send(@field) : nil
-
-              # If the result is a hash-like object, we cannot sort on them
-              return result.is_a?(Hash) || result.is_a?(Lib::HashProxy) ? nil : result
-            end
-
-            nil
+            # If the result is a hash-like object, we cannot sort on them
+            result.is_a?(Hash) || result.is_a?(Lib::HashProxy) ? nil : result
           end
         end
       end

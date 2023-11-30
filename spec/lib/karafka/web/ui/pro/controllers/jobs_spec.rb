@@ -113,6 +113,12 @@ RSpec.describe_current do
           expect(body).to include('shinra:12:12')
           expect(body.scan('shinra:').size).to eq(25)
         end
+
+        context 'when sorted' do
+          before { get 'jobs/running?sort=consumer+desc' }
+
+          it { expect(response).to be_ok }
+        end
       end
 
       context 'when visiting page with data published in a transactional fashion' do
