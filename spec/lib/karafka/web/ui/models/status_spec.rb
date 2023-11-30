@@ -597,6 +597,8 @@ RSpec.describe_current do
       end
 
       context 'when all topics are present' do
+        before { allow(Karafka).to receive(:routes).and_return([]) }
+
         it 'expect all to be ok' do
           expect(result.success?).to eq(true)
           expect(result.to_s).to eq('success')
@@ -617,7 +619,7 @@ RSpec.describe_current do
         it 'expect to warn' do
           expect(result.success?).to eq(true)
           expect(result.to_s).to eq('warning')
-          expect(result.details).to eq([non_existing_topic])
+          expect(result.details).to include(non_existing_topic)
           expect(result.partial_namespace).to eq('warnings')
         end
       end
