@@ -19,6 +19,8 @@
 - [Enhancement] Report last poll time for each subscription group.
 - [Enhancement] Show last poll time per consumer instance.
 - [Enhancement] Display number of jobs in a particular process jobs view.
+- [Enhancement] Promote "Batches" chart to OSS.
+- [Enhancement] Promote "Utilization" chart to OSS.
 - [Fix] Fix times precisions that could be incorrectly reported by 1 second in few places.
 - [Fix] Fix random order in Consumers groups Health view.
 - [Change] Rename "Busy" to "Running" to align with "Running Jobs".
