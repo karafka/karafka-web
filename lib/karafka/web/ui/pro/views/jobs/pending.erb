@@ -13,15 +13,15 @@
         <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
           <thead>
             <tr class="align-middle">
-              <th>Process</th>
-              <th>Topic</th>
-              <th>Consumer</th>
-              <th>Type</th>
-              <th>Messages</th>
-              <th>First offset</th>
-              <th>Last offset</th>
-              <th>Committed offset</th>
-              <th>Created at</th>
+              <th><%== sort_link('Process', :name) %></th>
+              <th><%== sort_link(:topic) %></th>
+              <th><%== sort_link(:consumer) %></th>
+              <th><%== sort_link(:type) %></th>
+              <th><%== sort_link(:messages) %></th>
+              <th><%== sort_link(:first_offset) %></th>
+              <th><%== sort_link(:last_offset) %></th>
+              <th><%== sort_link(:committed_offset) %></th>
+              <th><%== sort_link('Created at', :updated_at) %></th>
             </tr>
           </thead>
           <tbody>

@@ -12,12 +12,12 @@
         <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
           <thead>
             <tr class="align-middle">
-              <th>Name</th>
-              <th class="col-sm-2">Started</th>
+              <th><%== sort_link(:name) %></th>
+              <th class="col-sm-2"><%== sort_link('Started', :started_at) %></th>
               <th class="col-sm-1">Memory</th>
               <th class="col-sm-1">Performance</th>
               <th class="col-sm-1">Load</th>
-              <th class="col-sm-1">Lag stored</th>
+              <th class="col-sm-1"><%== sort_link(:lag_stored) %></th>
             </tr>
           </thead>
           <tbody>

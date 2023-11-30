@@ -568,8 +568,8 @@ RSpec.describe_current do
     end
   end
 
-  describe '#pro_subscription' do
-    subject(:result) { status.pro_subscription }
+  describe '#routing_topics_presence' do
+    subject(:result) { status.routing_topics_presence }
 
     context 'when there is no state computation' do
       before { ready_topics }
@@ -577,12 +577,12 @@ RSpec.describe_current do
       it 'expect to halt' do
         expect(result.success?).to eq(false)
         expect(result.to_s).to eq('halted')
-        expect(result.details).to eq(nil)
+        expect(result.details).to eq([])
         expect(result.partial_namespace).to eq('failures')
       end
     end
 
-    context 'when pro is on' do
+    context 'when checks steps are satisfied' do
       before do
         all_topics
         produce(states_topic, state)
@@ -594,9 +594,47 @@ RSpec.describe_current do
         cg['topics'][reports_topic]['name'] = reports_topic
 
         produce(reports_topic, parsed.to_json)
-
-        allow(Karafka).to receive(:pro?).and_return(true)
       end
+
+      context 'when all topics are present' do
+        before do
+          routes = Karafka::App.routes
+          # We are interested only in stubbing the result on the last execution
+          allow(Karafka::App).to receive(:routes).and_return(routes, routes, routes, [])
+        end
+
+        it 'expect all to be ok' do
+          expect(result.success?).to eq(true)
+          expect(result.to_s).to eq('success')
+          expect(result.details).to eq([])
+          expect(result.partial_namespace).to eq('successes')
+        end
+      end
+
+      context 'when some routing topics are missing' do
+        let(:non_existing_topic) { SecureRandom.uuid }
+
+        before do
+          allow(::Karafka::App.routes.first.topics.first)
+            .to receive(:name)
+            .and_return(non_existing_topic)
+        end
+
+        it 'expect to warn' do
+          expect(result.success?).to eq(true)
+          expect(result.to_s).to eq('warning')
+          expect(result.details).to include(non_existing_topic)
+          expect(result.partial_namespace).to eq('warnings')
+        end
+      end
+    end
+  end
+
+  describe '#pro_subscription' do
+    subject(:result) { status.pro_subscription }
+
+    context 'when pro is on' do
+      before { allow(Karafka).to receive(:pro?).and_return(true) }
 
       it 'expect all to be ok' do
         expect(result.success?).to eq(true)
@@ -607,18 +645,7 @@ RSpec.describe_current do
     end
 
     context 'when pro is off' do
-      before do
-        all_topics
-        produce(states_topic, state)
-        produce(metrics_topic, metrics)
-
-        parsed = JSON.parse(report)
-        cg = parsed['consumer_groups']['example_app6_app']['subscription_groups']['c4ca4238a0b9_0']
-        cg['topics'][reports_topic] = cg['topics']['default']
-        cg['topics'][reports_topic]['name'] = reports_topic
-
-        produce(reports_topic, parsed.to_json)
-      end
+      before { allow(Karafka).to receive(:pro?).and_return(false) }
 
       it 'expect all to be ok' do
         expect(result.success?).to eq(true)

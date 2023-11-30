@@ -35,9 +35,8 @@
           </div>
 
           <div class="tab-pane" id="batches" role="tabpanel">
-            <%== partial 'dashboard/feature_pro' %>
-            <% data = { batches: set.call(20), errors: set.call, dead: set.call, retries: set.call }.to_json %>
-            <%== partial 'shared/chart', locals: { data: data, id: 'batches', blurred: true } %>
+            <% data = @aggregated_charts.with(:batches, :errors, :dead, :retries) %>
+            <%== partial 'shared/chart', locals: { data: data, id: 'batches' } %>
           </div>
 
           <div class="tab-pane" id="lags-stored" role="tabpanel">
@@ -78,9 +77,8 @@
 
         <div class="tab-content">
           <div class="tab-pane show active" id="utilization" role="tabpanel">
-            <%== partial 'dashboard/feature_pro' %>
-            <% data = { utilization: set.call(50) }.to_json %>
-            <%== partial 'shared/chart', locals: { data: data, id: 'utilization', blurred: true } %>
+            <% data = @aggregated_charts.with(:utilization) %>
+            <%== partial 'shared/chart', locals: { data: data, id: 'utilization', label_type_y: 'percentage' } %>
           </div>
 
           <div class="tab-pane show" id="rss" role="tabpanel">

@@ -1,0 +1,35 @@
+<%== view_title('Cluster informations') %>
+
+<%== partial 'cluster/tabs' %>
+
+<div class="container mb-5">
+  <div class="row">
+    <div class="col-lg-12">
+      <% if @partitions.empty? && params.current_page <= 1 %>
+        <%== partial 'cluster/no_partitions' %>
+      <% elsif @partitions.empty? %>
+        <%== partial 'shared/no_paginated_data' %>
+      <% else %>
+        <table class="processes bg-white table table-hover table-bordered table-striped">
+          <thead>
+            <tr class="align-middle">
+              <th><%== sort_link(:topic_name) %></th>
+              <th><%== sort_link(:partition_id) %></th>
+              <th><%== sort_link(:leader) %></th>
+              <th><%== sort_link(:replica_count) %></th>
+              <th><%== sort_link('In sync brokers', :in_sync_replica_brokers) %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <%==
+              each_partial(
+                @partitions,
+                'cluster/partition'
+              )
+            %>
+          </tbody>
+        </table>
+      <% end %>
+    </div>
+  </div>
+</div>

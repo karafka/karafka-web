@@ -17,12 +17,17 @@ module Karafka
         class HashProxy
           extend Forwardable
 
-          def_delegators :@hash, :[], :[]=, :key?, :each, :find
+          def_delegators :@hash, :[], :[]=, :key?, :each, :find, :values, :keys, :select
 
           # @param hash [Hash] hash we want to convert to a proxy
           def initialize(hash)
             @hash = hash
-            @visited = []
+            # Nodes we already visited in the context of a given attribute lookup
+            # We cache them not to look for them over and over again if they are used more than
+            # once
+            @visited = Hash.new { |h, k| h[k] = {} }
+            # Methods invocations cache
+            @results = {}
           end
 
           # @return [Original hash]
@@ -34,22 +39,32 @@ module Karafka
           # @param args [Object] all the args of the method
           # @param block [Proc] block for the method
           def method_missing(method_name, *args, &block)
+            method_name = method_name.to_sym
+
             return super unless args.empty? && block.nil?
+            return @results[method_name] if @results.key?(method_name)
 
-            @visited.clear
+            result = deep_find(@hash, method_name)
 
-            result = deep_find(@hash, method_name.to_sym)
+            return super if result.nil?
 
-            @visited.clear
-
-            result.nil? ? super : result
+            @results[method_name] = result
           end
 
           # @param method_name [String] method name
           # @param include_private [Boolean]
           def respond_to_missing?(method_name, include_private = false)
-            result = deep_find(@hash, method_name.to_sym)
-            result.nil? ? super : true
+            method_name = method_name.to_sym
+
+            return true if @results.key?(method_name)
+
+            result = deep_find(@hash, method_name)
+
+            return super if result.nil?
+
+            @results[method_name] = result
+
+            true
           end
 
           private
@@ -59,16 +74,16 @@ module Karafka
           def deep_find(obj, key)
             # Prevent circular dependency lookups by making sure we do not check the same object
             # multiple times
-            return nil if @visited.include?(obj)
+            return nil if @visited[key].key?(obj)
 
-            @visited << obj
+            @visited[key][obj] = nil
 
             if obj.respond_to?(:key?) && obj.key?(key)
               obj[key]
             elsif obj.respond_to?(:each)
-              r = nil
-              obj.find { |*a| r = deep_find(a.last, key) }
-              r
+              result = nil
+              obj.find { |*a| result = deep_find(a.last, key) }
+              result
             end
           end
         end

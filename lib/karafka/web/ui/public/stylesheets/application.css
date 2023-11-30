@@ -123,3 +123,7 @@ main {
 .chartjs-wrapper {
   height: 250px;
 }
+
+a.sort {
+  color: inherit;
+}

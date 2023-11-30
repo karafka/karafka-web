@@ -17,6 +17,9 @@
     <code>#<%= job.type %></code>
   </td>
   <td>
+    <%= job.messages %>
+  </td>
+  <td>
     <%== offset_with_label job.topic, job.partition, job.first_offset, explore: true %>
   </td>
   <td>

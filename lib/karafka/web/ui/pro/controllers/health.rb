@@ -23,6 +23,11 @@ module Karafka
               current_state = Models::ConsumersState.current!
               @stats = Models::Health.current(current_state)
 
+              # Refine only on a per topic basis not to resort higher levels
+              @stats.each_value do |cg_details|
+                cg_details.each_value { |topic_details| refine(topic_details) }
+              end
+
               render
             end
 

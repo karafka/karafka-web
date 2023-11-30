@@ -45,6 +45,12 @@ RSpec.describe_current do
         expect(body).to include('Not available until first offset')
         expect(body).to include('327355')
       end
+
+      context 'when sorted' do
+        before { get 'health/overview?sort=id+desc' }
+
+        it { expect(response).to be_ok }
+      end
     end
 
     context 'when data is present but written in a transactional fashion' do

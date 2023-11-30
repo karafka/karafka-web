@@ -35,18 +35,18 @@
                 </th>
               </tr>
               <tr class="align-middle">
-                <th>Partition</th>
-                <th>Lag stored</th>
-                <th>Committed offset</th>
-                <th>Committed offset change</th>
-                <th>Stored offset</th>
-                <th>Stored offset change</th>
-                <th>Low offset</th>
-                <th>High offset</th>
-                <th>High offset change</th>
-                <th>Last stable offset</th>
-                <th>Last stable offset change</th>
-                <th>Last stable offset state</th>
+                <th><%== sort_link('Partition', :id) %></th>
+                <th><%== sort_link(:lag_stored) %></th>
+                <th><%== sort_link(:committed_offset) %></th>
+                <th><%== sort_link('Committed offset change', :committed_offset_fd) %></th>
+                <th><%== sort_link(:stored_offset) %></th>
+                <th><%== sort_link('Stored offset change', :stored_offset_fd) %></th>
+                <th><%== sort_link('Low offset', :lo_offset) %></th>
+                <th><%== sort_link('High offset', :hi_offset) %></th>
+                <th><%== sort_link('High offset change', :hi_offset_fd) %></th>
+                <th><%== sort_link('Last stable offset', :ls_offset) %></th>
+                <th><%== sort_link('Last stable offset change', :ls_offset_fd) %></th>
+                <th><%== sort_link('Last stable offset state', :lso_risk_state) %></th>
               </tr>
             </thead>
             <tbody>

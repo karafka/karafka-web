@@ -22,7 +22,7 @@ module Karafka
             end
 
             @jobs, last_page = Ui::Lib::Paginations::Paginators::Arrays.call(
-              jobs_total,
+              refine(jobs_total),
               @params.current_page
             )
 
@@ -47,7 +47,7 @@ module Karafka
             end
 
             @jobs, last_page = Ui::Lib::Paginations::Paginators::Arrays.call(
-              jobs_total,
+              refine(jobs_total),
               @params.current_page
             )
 

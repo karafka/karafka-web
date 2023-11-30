@@ -1,5 +1,3 @@
-<% running_jobs = @process.jobs.running %>
-
 <%== view_title(@process.name) %>
 
 <% if @process.status == 'stopped' %>
@@ -10,7 +8,7 @@
 
 <%== partial 'consumers/consumer/tabs' %>
 
-<% if running_jobs.empty? %>
+<% if @running_jobs.empty? %>
   <%== partial 'consumers/consumer/no_jobs', locals: { type: 'running' } %>
 <% else %>
   <div class="container">
@@ -19,19 +17,20 @@
         <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
           <thead>
             <tr class="align-middle">
-              <th>Topic</th>
-              <th>Consumer</th>
-              <th>Type</th>
-              <th>First offset</th>
-              <th>Last offset</th>
-              <th>Committed offset</th>
-              <th>Started at</th>
+              <th><%== sort_link(:topic) %></th>
+              <th><%== sort_link(:consumer) %></th>
+              <th><%== sort_link(:type) %></th>
+              <th><%== sort_link(:messages) %></th>
+              <th><%== sort_link(:first_offset) %></th>
+              <th><%== sort_link(:last_offset) %></th>
+              <th><%== sort_link(:committed_offset) %></th>
+              <th><%== sort_link('Started at', :updated_at) %></th>
             </tr>
           </thead>
           <tbody>
             <%==
               render_each(
-                running_jobs,
+                @running_jobs,
                 'consumers/consumer/_job',
                 local: :job
               )

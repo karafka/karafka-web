@@ -49,7 +49,7 @@ module Karafka
                   dispatched_at - rebalance_age_ms / 1_000
                 end
 
-                stats[cg_name][:rebalance_ages] ||= []
+                stats[cg_name][:rebalance_ages] ||= Set.new
                 stats[cg_name][:rebalance_ages] += ages
               end
 

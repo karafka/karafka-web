@@ -51,6 +51,12 @@ RSpec.describe_current do
         expect(body).to include('/consumers/1/subscriptions')
         expect(body).to include('2690818651.82293')
       end
+
+      context 'when sorting' do
+        before { get 'consumers?sort=name+desc' }
+
+        it { expect(response).to be_ok }
+      end
     end
 
     context 'when there are active consumers reported in a transactional fashion' do

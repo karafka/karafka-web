@@ -123,10 +123,14 @@ module Karafka
           raise Errors::Ui::NotFoundError
         end
 
-        # Allows us to build current path with additional params
+        # Allows us to build current path with additional params + it merges existing params into
+        # the query data. Query data takes priority over request params.
         # @param query_data [Hash] query params we want to add to the current path
         path :current do |query_data = {}|
           q = query_data
+              .transform_values(&:to_s)
+              .transform_keys(&:to_s)
+              .then { |candidates| request.params.merge(candidates) }
               .select { |_, v| v }
               .map { |k, v| "#{k}=#{CGI.escape(v.to_s)}" }
               .join('&')

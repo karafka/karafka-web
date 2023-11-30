@@ -22,8 +22,9 @@ module Karafka
             def index
               @current_state = Models::ConsumersState.current!
               @counters = Models::Counters.new(@current_state)
+
               @processes, last_page = Lib::Paginations::Paginators::Arrays.call(
-                Models::Processes.active(@current_state),
+                refine(Models::Processes.active(@current_state)),
                 @params.current_page
               )
 
@@ -45,6 +46,11 @@ module Karafka
             # @param process_id [String] id of the process we're interested in
             def running_jobs(process_id)
               details(process_id)
+
+              @running_jobs = @process.jobs.running
+
+              refine(@running_jobs)
+
               render
             end
 
@@ -53,12 +59,22 @@ module Karafka
             # @param process_id [String] id of the process we're interested in
             def pending_jobs(process_id)
               details(process_id)
+
+              @pending_jobs = @process.jobs.pending
+
+              refine(@pending_jobs)
+
               render
             end
 
             # @param process_id [String] id of the process we're interested in
             def subscriptions(process_id)
               details(process_id)
+
+              # We want to have sorting but on a per subscription group basis and not to sort
+              # everything
+              @process.consumer_groups.each { |subscription_group| refine(subscription_group) }
+
               render
             end
           end
