@@ -597,7 +597,11 @@ RSpec.describe_current do
       end
 
       context 'when all topics are present' do
-        before { allow(Karafka::App).to receive(:routes).and_return([]) }
+        before do
+          routes = Karafka::App.routes
+          # We are interested only in stubbing the result on the last execution
+          allow(Karafka::App).to receive(:routes).and_return(routes, routes, routes, [])
+        end
 
         it 'expect all to be ok' do
           expect(result.success?).to eq(true)
