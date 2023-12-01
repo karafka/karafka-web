@@ -18,7 +18,10 @@ module Karafka
           private_constant :ALLOWED_ORDERS, :MAX_DEPTH
 
           # @param sort_query [String] query for sorting or empty string if no sorting needed
-          def initialize(sort_query)
+          # @param allowed_attributes [Array<String>] attributes on which we allow to sort. Since
+          #   we can sort on method invocations, this needs to be limited and provided on a per
+          #   controller basis.
+          def initialize(sort_query, allowed_attributes:)
             field, order = sort_query.split(' ')
 
             @order = order.to_s.downcase
@@ -26,6 +29,8 @@ module Karafka
 
             # Normalize the key since we do not operate on capitalized values
             @field = field.to_s.downcase
+
+            @field = '' unless allowed_attributes.include?(@field)
 
             # Things we have already seen and sorted. Prevents crashing on the circular
             # dependencies sorting when same resources are present in different parts of the three
@@ -143,8 +148,20 @@ module Karafka
             result = element[@field] || element[@field.to_sym] if element.is_a?(Hash)
             result = element.public_send(@field) if element.respond_to?(@field)
 
-            # If the result is a hash-like object, we cannot sort on them
-            result.is_a?(Hash) || result.is_a?(Lib::HashProxy) ? nil : result
+            # We cannot sort on some of the types and some require mapping, thus we convert
+            # types here when needed
+            case result
+            when Hash
+              nil
+            when Lib::HashProxy
+              nil
+            when true
+              1
+            when false
+              0
+            else
+              result
+            end
           end
         end
       end

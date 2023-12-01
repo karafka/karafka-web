@@ -19,6 +19,7 @@ module Karafka
         module Controllers
           # Cluster controller
           class Cluster < Ui::Controllers::Cluster
+            self.sortable_attributes = Ui::Controllers::Cluster.sortable_attributes
           end
         end
       end

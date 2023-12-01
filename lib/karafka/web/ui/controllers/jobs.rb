@@ -6,6 +6,14 @@ module Karafka
       module Controllers
         # Active jobs (work) reporting controller
         class Jobs < Base
+          self.sortable_attributes = %w[
+            name
+            topic
+            consumer
+            type
+            updated_at
+          ].freeze
+
           # Lists running jobs
           def running
             current_state = Models::ConsumersState.current!

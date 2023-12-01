@@ -18,6 +18,26 @@ module Karafka
         module Controllers
           # Controller for displaying consumers states and details about them
           class Consumers < Ui::Controllers::Base
+            self.sortable_attributes = %w[
+              name
+              started_at
+              lag_stored
+              id
+              lag_stored_d
+              committed_offset
+              stored_offset
+              fetch_state
+              poll_state
+              lso_risk_state
+              topic
+              consumer
+              type
+              messages
+              first_offset
+              last_offset
+              updated_at
+            ].freeze
+
             # Consumers list
             def index
               @current_state = Models::ConsumersState.current!
