@@ -7,6 +7,13 @@ module Karafka
       module Controllers
         # Base controller from which all the controllers should inherit.
         class Base
+          class << self
+            # Attributes on which we can sort in a given controller
+            attr_accessor :sortable_attributes
+          end
+
+          self.sortable_attributes = []
+
           # @param params [Karafka::Web::Ui::Controllers::Requests::Params] request parameters
           def initialize(params)
             @params = params
@@ -62,7 +69,10 @@ module Karafka
           # @param resources [Hash, Array, Lib::HashProxy] object for sorting
           # @return [Hash, Array, Lib::HashProxy] sorted results
           def refine(resources)
-            Lib::Sorter.new(@params.sort).call(resources)
+            Lib::Sorter.new(
+              @params.sort,
+              allowed_attributes: self.class.sortable_attributes
+            ).call(resources)
           end
 
           # Initializes the expected pagination engine and assigns expected arguments

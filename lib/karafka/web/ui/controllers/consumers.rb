@@ -6,6 +6,12 @@ module Karafka
       module Controllers
         # Consumers (consuming processes - `karafka server`) processes display consumer
         class Consumers < Base
+          self.sortable_attributes = %w[
+            name
+            started_at
+            lag_stored
+          ].freeze
+
           # List page with consumers
           # @note For now we load all and paginate over the squashed data.
           def index

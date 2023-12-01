@@ -249,26 +249,35 @@ module Karafka
 
           # @param name [String] link value
           # @param attribute [Symbol, nil] sorting attribute or nil if we provide only symbol name
+          # @param rev [Boolean] when set to true, arrows will be in the reverse position. This is
+          #   used when the description in the link is reverse to data we sort. For example we have
+          #   order on when processes were started and we display "x hours" ago but we sort on
+          #   their age, meaning that it looks like it is the other way around. This flag allows
+          #   us to reverse just he arrow making it look consistent with the presented data order
           # @return [String] html link for sorting with arrow when attribute sort enabled
-          def sort_link(name, attribute = nil)
+          def sort_link(name, attribute = nil, rev: false)
             unless attribute
               attribute = name
               name = attribute.to_s.tr('_', ' ').capitalize
             end
 
+            arrow_both = '&#x21D5;'
+            arrow_down = '&#9662;'
+            arrow_up = '&#9652;'
+
             desc = "#{attribute} desc"
             asc = "#{attribute} asc"
             path = current_path(sort: desc)
-            full_name = "#{name}&nbsp;&#x21D5;"
+            full_name = "#{name}&nbsp;#{arrow_both}"
 
             if params.sort == desc
               path = current_path(sort: asc)
-              full_name = "#{name}&nbsp;&#9662;"
+              full_name = "#{name}&nbsp;#{rev ? arrow_up : arrow_down}"
             end
 
             if params.sort == asc
               path = current_path(sort: desc)
-              full_name = "#{name}&nbsp;&#9652;"
+              full_name = "#{name}&nbsp;#{rev ? arrow_down : arrow_up}"
             end
 
             "<a class=\"sort\" href=\"#{path}\">#{full_name}</a>"

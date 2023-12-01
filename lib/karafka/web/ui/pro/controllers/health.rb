@@ -18,6 +18,25 @@ module Karafka
         module Controllers
           # Health state controller
           class Health < Ui::Controllers::Base
+            self.sortable_attributes = %w[
+              id
+              lag_stored
+              lag_stored_d
+              committed_offset
+              committed_offset_fd
+              stored_offset
+              stored_offset_fd
+              hi_offset
+              hi_offset_fd
+              ls_offset
+              ls_offset_fd
+              fetch_state
+              poll_state
+              lso_risk_state
+              name
+              poll_state_ch
+            ].freeze
+
             # Displays the current system state
             def overview
               current_state = Models::ConsumersState.current!

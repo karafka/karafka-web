@@ -18,6 +18,17 @@ module Karafka
         module Controllers
           # Displays list of active jobs
           class Jobs < Ui::Controllers::Jobs
+            self.sortable_attributes = %w[
+              name
+              topic
+              consumer
+              type
+              messages
+              first_offset
+              last_offset
+              committed_offset
+              updated_at
+            ].freeze
           end
         end
       end

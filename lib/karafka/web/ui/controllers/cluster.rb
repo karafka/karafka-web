@@ -6,6 +6,17 @@ module Karafka
       module Controllers
         # Selects cluster info and topics basic info
         class Cluster < Base
+          self.sortable_attributes = %w[
+            broker_id
+            broker_name
+            broker_port
+            topic_name
+            partition_id
+            leader
+            replica_count
+            in_sync_replica_brokers
+          ].freeze
+
           # Lists available brokers in the cluster
           def brokers
             @brokers = refine(cluster_info.brokers)

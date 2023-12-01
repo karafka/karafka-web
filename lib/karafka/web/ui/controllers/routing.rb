@@ -6,9 +6,20 @@ module Karafka
       module Controllers
         # Routing presentation controller
         class Routing < Base
+          self.sortable_attributes = %w[
+            name
+            active?
+          ].freeze
+
           # Routing list
           def index
             @routes = Karafka::App.routes
+
+            @routes.each do |consumer_group|
+              consumer_group.subscription_groups.each do |subscription_group|
+                refine(consumer_group.topics)
+              end
+            end
 
             render
           end
