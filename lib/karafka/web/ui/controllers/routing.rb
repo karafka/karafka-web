@@ -16,9 +16,7 @@ module Karafka
             @routes = Karafka::App.routes
 
             @routes.each do |consumer_group|
-              consumer_group.subscription_groups.each do |subscription_group|
-                refine(consumer_group.topics)
-              end
+              refine(consumer_group.topics)
             end
 
             render

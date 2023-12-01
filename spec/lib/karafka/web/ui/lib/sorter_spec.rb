@@ -16,7 +16,7 @@ RSpec.describe_current do
     let(:sort_query) { 'clear desc' }
     let(:allowed_attributes) { %w[] }
 
-    it { expect { sorting }.not_to change { resource } }
+    it { expect { sorting }.not_to(change { resource }) }
   end
 
   context 'when we sort array of values in an asc order' do
@@ -84,6 +84,6 @@ RSpec.describe_current do
     let(:sort_query) { 'a asc' }
     let(:allowed_attributes) { %w[a] }
 
-    it { expect { sorting }.not_to change { resource } }
+    it { expect { sorting }.not_to(change { resource }) }
   end
 end
