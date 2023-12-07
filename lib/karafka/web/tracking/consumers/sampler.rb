@@ -274,7 +274,7 @@ module Karafka
           # Karafka level. It is also time based, hence we need to materialize it only at the
           # moment of message dispatch to have it accurate.
           def enriched_consumer_groups
-            @consumer_groups.each do |_cg_id, cg_details|
+            @consumer_groups.each_value do |cg_details|
               cg_details.each do
                 cg_details.fetch(:subscription_groups, {}).each do |sg_id, sg_details|
                   # This should be always available, since we subscription group polled at time

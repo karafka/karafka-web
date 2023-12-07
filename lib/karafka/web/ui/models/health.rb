@@ -88,7 +88,7 @@ module Karafka
             def sort_structure(stats)
               # Ensure that partitions for all topics are in correct order
               # Ensure topics are in alphabetical order always
-              stats.each do |_cg_name, cg_data|
+              stats.each_value do |cg_data|
                 topics = cg_data[:topics]
 
                 topics.each do |topic_name, t_data|

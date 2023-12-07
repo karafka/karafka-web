@@ -11,7 +11,7 @@ module Karafka
 
             required(:consumer) { |val| val.is_a?(String) }
             required(:consumer_group) { |val| val.is_a?(String) }
-            required(:updated_at) { |val| (val.is_a?(Float) && val >= 0) }
+            required(:updated_at) { |val| val.is_a?(Float) && val >= 0 }
             required(:topic) { |val| val.is_a?(String) }
             required(:partition) { |val| val.is_a?(Integer) && val >= 0 }
             required(:first_offset) { |val| val.is_a?(Integer) && (val >= 0 || val == -1001) }
