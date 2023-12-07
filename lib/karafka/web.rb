@@ -53,7 +53,10 @@ module Karafka
   end
 end
 
+require_relative 'web/inflector'
+
 loader = Zeitwerk::Loader.new
+
 # Make sure pro is not loaded unless Pro
 loader.ignore(Karafka::Web.gem_root.join('lib/karafka/web/ui/pro'))
 
@@ -62,9 +65,10 @@ Karafka::Licenser.detect do
   loader = Zeitwerk::Loader.new
 end
 
-root = File.expand_path('..', __dir__)
 loader.tag = 'karafka-web'
-loader.inflector = Zeitwerk::GemInflector.new("#{root}/karafka/web.rb")
+# Use our custom inflector to support migrations
+root = File.expand_path('..', __dir__)
+loader.inflector = Karafka::Web::Inflector.new("#{root}/karafka/web.rb")
 loader.push_dir(root)
 
 loader.setup

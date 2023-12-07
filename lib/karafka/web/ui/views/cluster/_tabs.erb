@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="row mb-4">
+    <div class="col-sm-12">
+
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a
+            class="nav-link <%= nav_class(include: 'brokers') %>"
+            href="<%= root_path('cluster', 'brokers') %>"
+          >
+            Brokers
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link <%= nav_class(include: 'topics') %>"
+            href="<%= root_path('cluster', 'topics') %>"
+          >
+            Topics
+          </a>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</div>

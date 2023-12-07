@@ -8,7 +8,9 @@ module Karafka
         class Topic < Lib::HashProxy
           # @return [Array<Partition>] All topic partitions data
           def partitions
-            super.values.map do |partition_hash|
+            super.map do |partition_id, partition_hash|
+              partition_hash[:partition_id] = partition_id
+
               Partition.new(partition_hash)
             end
           end

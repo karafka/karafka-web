@@ -49,8 +49,16 @@ module Karafka
             r.on 'consumers' do
               controller = Controllers::Consumers.new(params)
 
-              r.get String, 'jobs' do |process_id|
-                controller.jobs(process_id)
+              r.on String, 'jobs' do |process_id|
+                r.get 'running' do
+                  controller.running_jobs(process_id)
+                end
+
+                r.get 'pending' do
+                  controller.pending_jobs(process_id)
+                end
+
+                r.redirect root_path("consumers/#{process_id}/jobs/running")
               end
 
               r.get String, 'subscriptions' do |process_id|
@@ -67,9 +75,18 @@ module Karafka
               end
             end
 
-            r.get 'jobs' do
+            r.on 'jobs' do
               controller = Controllers::Jobs.new(params)
-              controller.index
+
+              r.get 'running' do
+                controller.running
+              end
+
+              r.get 'pending' do
+                controller.pending
+              end
+
+              r.redirect root_path('jobs/running')
             end
 
             r.on 'routing' do
@@ -133,6 +150,14 @@ module Karafka
               r.post String, Integer, Integer, 'republish' do |topic_id, partition_id, offset|
                 controller.republish(topic_id, partition_id, offset)
               end
+
+              r.get String, Integer, Integer, 'download' do |topic_id, partition_id, offset|
+                controller.download(topic_id, partition_id, offset)
+              end
+
+              r.get String, Integer, Integer, 'export' do |topic_id, partition_id, offset|
+                controller.export(topic_id, partition_id, offset)
+              end
             end
 
             r.on 'health' do
@@ -146,14 +171,27 @@ module Karafka
                 controller.overview
               end
 
+              r.get 'changes' do
+                controller.changes
+              end
+
               r.get do
                 r.redirect root_path('health/overview')
               end
             end
 
-            r.get 'cluster' do
+            r.on 'cluster' do
               controller = Controllers::Cluster.new(params)
-              controller.index
+
+              r.get 'brokers' do
+                controller.brokers
+              end
+
+              r.get 'topics' do
+                controller.topics
+              end
+
+              r.redirect root_path('cluster/brokers')
             end
 
             r.on 'errors' do

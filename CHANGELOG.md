@@ -1,5 +1,32 @@
 # Karafka Web changelog
 
+## 0.8.0 (Unreleased)
+- **[Feature]** Provide ability to sort table data for part of the views (note: not all attributes can be sorted due to technical limitations of sub-components fetching from Kafka).
+- **[Feature]** Track and report pause timeouts via "Changes" view in Health.
+- **[Feature]** Introduce pending jobs visibility alongside of running jobs both in total and per process.
+- **[Feature]** Introduce states migrations for seamless upgrades.
+- **[Feature]** Introduce "Data transfers" chart with data received and data sent to the cluster.
+- **[Feature]** Introduce ability to download raw payloads.
+- **[Feature]** Introduce ability to download deserialized message payload as JSON.
+- [Enhancement] Split cluster info into two tabs, one for brokers and one for topics with partitions.
+- [Enhancement] Track pending jobs. Pending jobs are jobs that are not yet scheduled for execution by advanced schedulers.
+- [Enhancement] Rename "Enqueued" to "Pending" to support jobs that are not yet enqueued but within a scheduler.
+- [Enhancement] Make sure only running jobs are displayed in running jobs
+- [Enhancement] Improve jobs related breadcrumbs
+- [Enhancement] Display errors backtraces in OSS.
+- [Enhancement] Display concurrency graph in OSS.
+- [Enhancement] Support time ranges for graphs in OSS.
+- [Enhancement] Report last poll time for each subscription group.
+- [Enhancement] Show last poll time per consumer instance.
+- [Enhancement] Display number of jobs in a particular process jobs view.
+- [Enhancement] Promote "Batches" chart to OSS.
+- [Enhancement] Promote "Utilization" chart to OSS.
+- [Fix] Fix times precisions that could be incorrectly reported by 1 second in few places.
+- [Fix] Fix random order in Consumers groups Health view.
+- [Change] Rename "Busy" to "Running" to align with "Running Jobs".
+- [Change] Rename "Active subscriptions" to "Subscriptions" as process subscriptions are always active.
+- [Maintenance] Introduce granular subscription group contracts.
+
 ## 0.7.10 (2023-10-31)
 - [Fix] Max LSO chart does not work as expected (#201)
 
@@ -29,6 +56,15 @@
 - [Fix] Cache assets for 1 year instead of 7 days.
 - [Fix] Remove source maps pointing to non-existing locations.
 - [Maintenance] Include license and copyrights notice for `timeago.js` that was missing in the JS min file. 
+- [Refactor] Rename `ui.show_internal_topics` to `ui.visibility.internal_topics_display`
+
+### Upgrade Notes
+
+**NO** rolling upgrade needed. Just configuration update.
+
+1. If you are using `ui.visibility_filter` this option is now `ui.visibility.filter` (yes, only `.` difference).
+2. If you are using a custom visibility filter, it requires now two extra methods: `#download?` and `#export?`. The default visibility filter allows both actions unless message is encrypted.
+3. `ui.show_internal_topics` config option has been moved and renamed to `ui.visibility.internal_topics`.
 
 ## 0.7.4 (2023-09-19)
 - [Improvement] Skip aggregations on older schemas during upgrades. This only skips process-reports (that are going to be rolled) on the 5s window in case of an upgrade that should not be a rolling one anyhow. This simplifies the operations and minimizes the risk on breaking upgrades.

@@ -1,0 +1,35 @@
+<%== view_title('Pending jobs', hr: false) %>
+
+<%== partial 'jobs/tabs' %>
+
+<% if @jobs.empty? && params.current_page <= 1 %>
+  <%== partial 'jobs/no_jobs', locals: { type: 'pending' } %>
+<% elsif @jobs.empty? %>
+  <%== partial 'shared/no_paginated_data' %>
+<% else %>
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-sm-12">
+        <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+          <thead>
+            <tr class="align-middle">
+              <th><%== sort_link('Process', :name) %></th>
+              <th><%== sort_link(:topic) %></th>
+              <th><%== sort_link(:consumer) %></th>
+              <th><%== sort_link(:type) %></th>
+              <th><%== sort_link('Created at', :updated_at, rev: true) %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <%==
+              each_partial(
+                @jobs,
+                'jobs/job'
+              )
+            %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<% end %>

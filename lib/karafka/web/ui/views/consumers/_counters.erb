@@ -24,18 +24,20 @@
                 <div class="desc">Lag stored</div>
               </li>
               <li class="col-sm">
-                <a href="<%= root_path('jobs') %>">
+                <a href="<%= root_path('jobs/running') %>">
                   <div class="count mb-1">
                     <%= number_with_delimiter @counters.busy, ' ' %>
                   </div>
-                  <div class="desc">Busy</div>
+                  <div class="desc">Running</div>
                 </a>
               </li>
               <li class="col-sm">
-                <div class="count mb-1">
-                  <%= number_with_delimiter @counters.enqueued, ' ' %>
-                </div>
-                <div class="desc">Enqueued</div>
+                <a href="<%= root_path('jobs/pending') %>">
+                  <div class="count mb-1">
+                    <%= number_with_delimiter @counters.pending, ' ' %>
+                  </div>
+                  <div class="desc">Pending</div>
+                </a>
               </li>
               <li class="col-sm">
                 <a href="<%= root_path('errors') %>">

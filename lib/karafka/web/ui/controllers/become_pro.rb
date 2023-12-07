@@ -8,7 +8,7 @@ module Karafka
         class BecomePro < Base
           # Display a message, that a given feature is available only in Pro
           def show
-            respond
+            render
           end
         end
       end

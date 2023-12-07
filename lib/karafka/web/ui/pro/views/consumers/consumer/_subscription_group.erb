@@ -14,6 +14,7 @@
           </span>
         </div>
       </div>
+
       <div class="card">
         <div class="card-body d-flex flex-column align-items-center justify-content-center p-2">
           Join state:&nbsp;
@@ -22,30 +23,46 @@
           </span>
         </div>
       </div>
+
       <div class="card">
         <div class="card-body d-flex flex-column align-items-center justify-content-center p-2">
           State change:&nbsp;
           <span class="badge bg-secondary mt-1 mb-1">
             <%==
               relative_time(
-                Time.at(@process.dispatched_at) - (subscription_group.stateage / 1_000)
+                Time.at(@process.dispatched_at) - (subscription_group.stateage / 1_000.0)
               )
             %>
           </span>
         </div>
       </div>
+
+      <div class="card">
+        <div class="card-body d-flex flex-column align-items-center justify-content-center p-2">
+          Last Poll:&nbsp;
+          <span class="badge bg-secondary mt-1 mb-1">
+            <%==
+              relative_time(
+                Time.at(@process.dispatched_at) - (subscription_group.poll_age / 1_000.0)
+              )
+            %>
+          </span>
+        </div>
+      </div>
+
       <div class="card">
         <div class="card-body d-flex flex-column align-items-center justify-content-center p-2">
           Last rebalance:&nbsp;
           <span class="badge bg-secondary mt-1 mb-1">
             <%==
               relative_time(
-                Time.at(@process.dispatched_at) - (subscription_group.rebalance_age / 1_000)
+                Time.at(@process.dispatched_at) - (subscription_group.rebalance_age / 1_000.0)
               )
             %>
           </span>
         </div>
       </div>
+
       <div class="card">
         <div class="card-body d-flex flex-column align-items-center justify-content-center p-2">
           Rebalance count:&nbsp;
@@ -86,14 +103,14 @@
               </th>
             <tr class="align-middle">
             </tr>
-              <th>Partition</th>
-              <th>Lag stored</th>
-              <th>Lag stored trend</th>
-              <th>Committed offset</th>
-              <th>Stored offset</th>
-              <th>Fetch state</th>
-              <th>Poll state</th>
-              <th>LSO state</th>
+              <th><%== sort_link('Partition', :id) %></th>
+              <th><%== sort_link(:lag_stored) %></th>
+              <th><%== sort_link('Lag stored trend', :lag_stored_d) %></th>
+              <th><%== sort_link(:committed_offset) %></th>
+              <th><%== sort_link(:stored_offset) %></th>
+              <th><%== sort_link(:fetch_state) %></th>
+              <th><%== sort_link(:poll_state) %></th>
+              <th><%== sort_link('LSO state', :lso_risk_state) %></th>
             </tr>
           </thead>
           <tbody>

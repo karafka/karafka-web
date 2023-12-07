@@ -18,12 +18,36 @@ module Karafka
         module Controllers
           # Health state controller
           class Health < Ui::Controllers::Base
+            self.sortable_attributes = %w[
+              id
+              lag_stored
+              lag_stored_d
+              committed_offset
+              committed_offset_fd
+              stored_offset
+              stored_offset_fd
+              hi_offset
+              hi_offset_fd
+              ls_offset
+              ls_offset_fd
+              fetch_state
+              poll_state
+              lso_risk_state
+              name
+              poll_state_ch
+            ].freeze
+
             # Displays the current system state
             def overview
               current_state = Models::ConsumersState.current!
               @stats = Models::Health.current(current_state)
 
-              respond
+              # Refine only on a per topic basis not to resort higher levels
+              @stats.each_value do |cg_details|
+                cg_details.each_value { |topic_details| refine(topic_details) }
+              end
+
+              render
             end
 
             # Displays details about offsets and their progression/statuses
@@ -31,7 +55,15 @@ module Karafka
               # Same data as overview but presented differently
               overview
 
-              respond
+              render
+            end
+
+            # Displays information related to time of changes of particular attributes
+            def changes
+              # Same data as overview but presented differently
+              overview
+
+              render
             end
           end
         end

@@ -18,18 +18,39 @@ module Karafka
         module Controllers
           # Controller for displaying consumers states and details about them
           class Consumers < Ui::Controllers::Base
+            self.sortable_attributes = %w[
+              name
+              started_at
+              lag_stored
+              id
+              lag_stored_d
+              committed_offset
+              stored_offset
+              fetch_state
+              poll_state
+              lso_risk_state
+              topic
+              consumer
+              type
+              messages
+              first_offset
+              last_offset
+              updated_at
+            ].freeze
+
             # Consumers list
             def index
               @current_state = Models::ConsumersState.current!
               @counters = Models::Counters.new(@current_state)
+
               @processes, last_page = Lib::Paginations::Paginators::Arrays.call(
-                Models::Processes.active(@current_state),
+                refine(Models::Processes.active(@current_state)),
                 @params.current_page
               )
 
               paginate(@params.current_page, !last_page)
 
-              respond
+              render
             end
 
             # @param process_id [String] id of the process we're interested in
@@ -37,19 +58,44 @@ module Karafka
               current_state = Models::ConsumersState.current!
               @process = Models::Process.find(current_state, process_id)
 
-              respond
+              render
             end
 
+            # Renders details about running jobs
+            #
             # @param process_id [String] id of the process we're interested in
-            def jobs(process_id)
+            def running_jobs(process_id)
               details(process_id)
-              respond
+
+              @running_jobs = @process.jobs.running
+
+              refine(@running_jobs)
+
+              render
+            end
+
+            # Renders details about pending jobs
+            #
+            # @param process_id [String] id of the process we're interested in
+            def pending_jobs(process_id)
+              details(process_id)
+
+              @pending_jobs = @process.jobs.pending
+
+              refine(@pending_jobs)
+
+              render
             end
 
             # @param process_id [String] id of the process we're interested in
             def subscriptions(process_id)
               details(process_id)
-              respond
+
+              # We want to have sorting but on a per subscription group basis and not to sort
+              # everything
+              @process.consumer_groups.each { |subscription_group| refine(subscription_group) }
+
+              render
             end
           end
         end

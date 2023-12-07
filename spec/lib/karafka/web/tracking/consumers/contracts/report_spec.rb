@@ -21,6 +21,7 @@ RSpec.describe_current do
       busy: 0,
       enqueued: 0,
       utilization: 0.006,
+      waiting: 0,
       total: {
         batches: 1,
         messages: 1,
@@ -61,7 +62,8 @@ RSpec.describe_current do
               stateage: 90_002,
               rebalance_age: 90_000,
               rebalance_cnt: 1,
-              rebalance_reason: 'Metadata for subscribed topic(s) has changed'
+              rebalance_reason: 'Metadata for subscribed topic(s) has changed',
+              poll_age: 12
             },
             topics: {
               'karafka_consumers_reports' => {
@@ -79,6 +81,7 @@ RSpec.describe_current do
                     fetch_state: 'active',
                     id: 0,
                     poll_state: 'active',
+                    poll_state_ch: 0,
                     hi_offset: 1,
                     hi_offset_fd: 1,
                     lo_offset: 0,

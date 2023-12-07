@@ -244,18 +244,34 @@ module Karafka
             )
           end
 
+          # @return [Status::Step] are there any active topics in the routing that are not present
+          #   in the cluster (does not apply to patterns)
+          def routing_topics_presence
+            if consumers_reports_schema_state.success?
+              existing = @cluster_info.topics.map { |topic| topic[:topic_name] }
+
+              missing = ::Karafka::App
+                        .routes
+                        .flat_map(&:topics)
+                        .flat_map { |topics| topics.map(&:itself) }
+                        .select(&:active?)
+                        .reject { |topic| topic.respond_to?(:patterns?) ? topic.patterns? : false }
+                        .map(&:name)
+                        .uniq
+                        .then { |routed_topics| routed_topics - existing }
+
+              Step.new(missing.empty? ? :success : :warning, missing)
+            else
+              Step.new(:halted, [])
+            end
+          end
+
           # @return [Status::Step] is Pro enabled with all of its features.
           # @note It's not an error not to have it but we want to warn, that some of the features
           #   may not work without Pro.
           def pro_subscription
-            status = if consumers_reports_schema_state.success?
-                       ::Karafka.pro? ? :success : :warning
-                     else
-                       :halted
-                     end
-
             Step.new(
-              status,
+              ::Karafka.pro? ? :success : :warning,
               nil
             )
           end

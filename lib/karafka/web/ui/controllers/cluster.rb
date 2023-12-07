@@ -6,30 +6,54 @@ module Karafka
       module Controllers
         # Selects cluster info and topics basic info
         class Cluster < Base
-          # List cluster info data
-          def index
-            # Make sure, that for the cluster view we always get the most recent cluster state
-            @cluster_info = Models::ClusterInfo.fetch(cached: false)
+          self.sortable_attributes = %w[
+            broker_id
+            broker_name
+            broker_port
+            topic_name
+            partition_id
+            leader
+            replica_count
+            in_sync_replica_brokers
+          ].freeze
 
+          # Lists available brokers in the cluster
+          def brokers
+            @brokers = refine(cluster_info.brokers)
+
+            render
+          end
+
+          # List topics and partitions with details
+          def topics
             partitions_total = []
 
-            displayable_topics(@cluster_info).each do |topic|
+            displayable_topics(cluster_info).each do |topic|
               topic[:partitions].each do |partition|
-                partitions_total << partition.merge(topic: topic)
+                partitions_total << partition.merge(
+                  topic: topic,
+                  # Will allow sorting by name
+                  topic_name: topic.fetch(:topic_name)
+                )
               end
             end
 
             @partitions, last_page = Ui::Lib::Paginations::Paginators::Arrays.call(
-              partitions_total,
+              refine(partitions_total),
               @params.current_page
             )
 
             paginate(@params.current_page, !last_page)
 
-            respond
+            render
           end
 
           private
+
+          # Make sure, that for the cluster view we always get the most recent cluster state
+          def cluster_info
+            @cluster_info ||= Models::ClusterInfo.fetch(cached: false)
+          end
 
           # @param cluster_info [Rdkafka::Metadata] cluster metadata
           # @return [Array<Hash>] array with topics to be displayed sorted in an alphabetical
@@ -39,7 +63,7 @@ module Karafka
                   .topics
                   .sort_by { |topic| topic[:topic_name] }
 
-            return all if ::Karafka::Web.config.ui.show_internal_topics
+            return all if ::Karafka::Web.config.ui.visibility.internal_topics
 
             all.reject { |topic| topic[:topic_name].start_with?('__') }
           end

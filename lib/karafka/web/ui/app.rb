@@ -48,9 +48,18 @@ module Karafka
             end
           end
 
-          r.get 'jobs' do
+          r.on 'jobs' do
             controller = Controllers::Jobs.new(params)
-            controller.index
+
+            r.get 'running' do
+              controller.running
+            end
+
+            r.get 'pending' do
+              controller.pending
+            end
+
+            r.redirect root_path('jobs/running')
           end
 
           r.on 'routing' do
@@ -65,9 +74,18 @@ module Karafka
             end
           end
 
-          r.get 'cluster' do
+          r.on 'cluster' do
             controller = Controllers::Cluster.new(params)
-            controller.index
+
+            r.get 'brokers' do
+              controller.brokers
+            end
+
+            r.get 'topics' do
+              controller.topics
+            end
+
+            r.redirect root_path('cluster/brokers')
           end
 
           r.on 'errors' do

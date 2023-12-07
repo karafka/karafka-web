@@ -22,9 +22,7 @@
     </span>
   </td>
   <td>
-    <span class="badge <%= kafka_state_bg(details.poll_state) %> mt-1 mb-1">
-      <%= details.poll_state %>
-    </span>
+    <%== poll_state_with_change_time_label(details.poll_state, details.poll_state_ch) %>
   </td>
   <td>
     <span class="badge bg-success <%= lso_risk_state_bg(details) %> bg-opacity-100">

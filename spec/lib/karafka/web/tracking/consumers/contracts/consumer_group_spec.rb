@@ -15,7 +15,8 @@ RSpec.describe_current do
             stateage: 90_002,
             rebalance_age: 90_000,
             rebalance_cnt: 1,
-            rebalance_reason: 'Metadata for subscribed topic(s) has changed'
+            rebalance_reason: 'Metadata for subscribed topic(s) has changed',
+            poll_age: 12
           },
           topics: {
             'karafka_consumers_reports' => {
@@ -31,6 +32,7 @@ RSpec.describe_current do
                   fetch_state: 'active',
                   id: 0,
                   poll_state: 'active',
+                  poll_state_ch: 0,
                   hi_offset: 10,
                   hi_offset_fd: 10,
                   lag_d: 10,

@@ -18,13 +18,22 @@ module Karafka
         module Controllers
           # Routing details - same as in OSS
           class Routing < Ui::Controllers::Routing
+            self.sortable_attributes = %w[
+              name
+              active?
+            ].freeze
+
             # Routing list
             def index
               detect_patterns_routes
 
               @routes = Karafka::App.routes
 
-              respond
+              @routes.each do |consumer_group|
+                refine(consumer_group.topics)
+              end
+
+              render
             end
 
             # Given route details
@@ -37,7 +46,7 @@ module Karafka
 
               @topic || raise(::Karafka::Web::Errors::Ui::NotFoundError, topic_id)
 
-              respond
+              render
             end
 
             private

@@ -1,0 +1,15 @@
+<p>
+  The following active topics present in your <code>karafka.rb</code> file were not located in the Kafka cluster:
+</p>
+
+<ul>
+  <% details.each do |topic_name| %>
+    <li>
+      <code><%= topic_name %></code>
+    </li>
+  <% end %>
+</ul>
+
+<p>
+  Although not an error, having topics in <code>karafka.rb</code> that still needs to be added to Kafka could lead to issues. It's better to create these topics beforehand to avoid potential errors.
+</p>

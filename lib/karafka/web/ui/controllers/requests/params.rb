@@ -24,6 +24,11 @@ module Karafka
               @request_params = request_params
             end
 
+            # @return [String] sort query value
+            def sort
+              @sort ||= @request_params['sort'].to_s.downcase
+            end
+
             # @return [Integer] current page for paginated views
             # @note It does basic sanitization
             def current_page

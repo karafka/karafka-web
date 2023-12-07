@@ -17,18 +17,27 @@ RSpec.describe_current do
     }
   end
 
-  before { listener.on_statistics_emitted(event) }
+  before do
+    # This data is set in the connections listener prior to any polling
+    sampler.track do |sampler|
+      sampler.subscription_groups['sgid'] = {
+        polled_at: sampler.monotonic_now
+      }
+    end
+
+    listener.on_statistics_emitted(event)
+  end
 
   it { expect(sampler.consumer_groups['cgid']).not_to be_empty }
   it { expect(sampler.consumer_groups['cgid'][:id]).to eq('cgid') }
   it { expect(sg_details.keys).to include('sgid') }
   it { expect(sg_details['sgid'][:id]).to eq('sgid') }
-  it { expect(sg_details['sgid'][:state]['join_state']).to eq('steady') }
-  it { expect(sg_details['sgid'][:state]['rebalance_age']).to eq(9_997) }
-  it { expect(sg_details['sgid'][:state]['rebalance_cnt']).to eq(1) }
-  it { expect(sg_details['sgid'][:state]['rebalance_reason']).to include('Metadata for') }
-  it { expect(sg_details['sgid'][:state]['state']).to eq('up') }
-  it { expect(sg_details['sgid'][:state]['stateage']).to eq(9_998) }
+  it { expect(sg_details['sgid'][:state][:join_state]).to eq('steady') }
+  it { expect(sg_details['sgid'][:state][:rebalance_age]).to eq(9_997) }
+  it { expect(sg_details['sgid'][:state][:rebalance_cnt]).to eq(1) }
+  it { expect(sg_details['sgid'][:state][:rebalance_reason]).to include('Metadata for') }
+  it { expect(sg_details['sgid'][:state][:state]).to eq('up') }
+  it { expect(sg_details['sgid'][:state][:stateage]).to eq(9_998) }
   it { expect(sg_details['sgid'][:topics]['default'][:name]).to eq('default') }
 
   it { expect(default_p0[:committed_offset]).to eq(2_857_330) }

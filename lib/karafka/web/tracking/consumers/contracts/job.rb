@@ -11,7 +11,7 @@ module Karafka
 
             required(:consumer) { |val| val.is_a?(String) }
             required(:consumer_group) { |val| val.is_a?(String) }
-            required(:started_at) { |val| val.is_a?(Float) && val >= 0 }
+            required(:updated_at) { |val| val.is_a?(Float) && val >= 0 }
             required(:topic) { |val| val.is_a?(String) }
             required(:partition) { |val| val.is_a?(Integer) && val >= 0 }
             required(:first_offset) { |val| val.is_a?(Integer) && (val >= 0 || val == -1001) }
@@ -23,6 +23,7 @@ module Karafka
             # -1 can be here for workless flows
             required(:consumption_lag) { |val| val.is_a?(Integer) && (val >= 0 || val == -1) }
             required(:processing_lag) { |val| val.is_a?(Integer) && (val >= 0 || val == -1) }
+            required(:status) { |val| %w[running pending].include?(val) }
           end
         end
       end

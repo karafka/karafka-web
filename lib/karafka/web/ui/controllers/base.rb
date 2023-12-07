@@ -7,6 +7,13 @@ module Karafka
       module Controllers
         # Base controller from which all the controllers should inherit.
         class Base
+          class << self
+            # Attributes on which we can sort in a given controller
+            attr_accessor :sortable_attributes
+          end
+
+          self.sortable_attributes = []
+
           # @param params [Karafka::Web::Ui::Controllers::Requests::Params] request parameters
           def initialize(params)
             @params = params
@@ -14,10 +21,10 @@ module Karafka
 
           private
 
-          # Builds the respond data object with assigned attributes based on instance variables.
+          # Builds the render data object with assigned attributes based on instance variables.
           #
-          # @return [Responses::Data] data that should be used to render appropriate view
-          def respond
+          # @return [Responses::Render] data that should be used to render appropriate view
+          def render
             attributes = {}
 
             scope = self.class.to_s.split('::').last.gsub(/(.)([A-Z])/, '\1_\2').downcase
@@ -30,7 +37,7 @@ module Karafka
               attributes[iv.to_s.delete('@').to_sym] = instance_variable_get(iv)
             end
 
-            Responses::Data.new(
+            Responses::Render.new(
               "#{scope}/#{action}",
               attributes
             )
@@ -43,6 +50,29 @@ module Karafka
           # @return [Responses::Redirect] redirect result
           def redirect(path = :back, flashes = {})
             Responses::Redirect.new(path, flashes)
+          end
+
+          # Builds a file response object that will be used as a base to dispatch the file
+          #
+          # @param content [String] Payload we want to dispatch as a file
+          # @param file_name [String] name under which the browser is suppose to save the file
+          # @return [Responses::File] file response result
+          def file(content, file_name)
+            Responses::File.new(content, file_name)
+          end
+
+          # Builds a halt 403 response
+          def deny
+            Responses::Deny.new
+          end
+
+          # @param resources [Hash, Array, Lib::HashProxy] object for sorting
+          # @return [Hash, Array, Lib::HashProxy] sorted results
+          def refine(resources)
+            Lib::Sorter.new(
+              @params.sort,
+              allowed_attributes: self.class.sortable_attributes
+            ).call(resources)
           end
 
           # Initializes the expected pagination engine and assigns expected arguments

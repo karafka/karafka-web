@@ -17,6 +17,9 @@
     <code>#<%= job.type %></code>
   </td>
   <td>
+    <%= job.messages %>
+  </td>
+  <td>
     <%== offset_with_label job.topic, job.partition, job.first_offset, explore: true %>
   </td>
   <td>
@@ -26,6 +29,6 @@
     <%== offset_with_label job.topic, job.partition, job.committed_offset, explore: true %>
   </td>
   <td>
-    <%== relative_time job.started_at %>
+    <%== relative_time job.updated_at %>
   </td>
 </tr>

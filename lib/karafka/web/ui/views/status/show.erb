@@ -7,7 +7,7 @@
         partial(
           "status/#{@status.enabled.to_s}",
           locals: {
-            title: 'Web-UI setup in karafka.rb',
+            title: 'Web UI setup in karafka.rb',
             description: partial(
               "status/#{@status.enabled.partial_namespace}/enabled",
               locals: {
@@ -37,7 +37,7 @@
         partial(
           "status/#{@status.topics.to_s}",
           locals: {
-            title: 'Topics presence',
+            title: 'Web UI topics presence',
             description: partial(
               'status/failures/topics',
               locals: {
@@ -160,6 +160,21 @@
             title: 'Consumers reports schema compatibility',
             description: partial(
               'status/failures/consumers_reports_schema_state'
+            )
+          }
+        )
+      %>
+
+      <%==
+        partial(
+          "status/#{@status.routing_topics_presence.to_s}",
+          locals: {
+            title: 'Routing topics presence',
+            description: partial(
+              'status/warnings/routing_topics_presence',
+              locals: {
+                details: @status.routing_topics_presence.details
+              }
             )
           }
         )
