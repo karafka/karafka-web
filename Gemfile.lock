@@ -3,7 +3,7 @@ PATH
   specs:
     karafka-web (0.8.0)
       erubi (~> 1.4)
-      karafka (>= 2.2.13, < 3.0.0)
+      karafka (>= 2.2.14, < 3.0.0)
       karafka-core (>= 2.2.4, < 3.0.0)
       roda (~> 3.68, >= 3.69)
       tilt (~> 2.0)
@@ -36,7 +36,7 @@ GEM
     ffi (1.16.3)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
-    karafka (2.2.13)
+    karafka (2.2.14)
       karafka-core (>= 2.2.7, < 2.3.0)
       waterdrop (>= 2.6.11, < 3.0.0)
       zeitwerk (~> 2.3)
