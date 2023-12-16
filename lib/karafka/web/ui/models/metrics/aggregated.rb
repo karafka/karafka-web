@@ -4,7 +4,6 @@ module Karafka
   module Web
     module Ui
       module Models
-        # Namespace for metrics related models
         module Metrics
           # Materializes the aggregated data and computes the expected diffs out of the snapshots
           # We do some pre-processing to make sure, we do not have bigger gaps and to compensate

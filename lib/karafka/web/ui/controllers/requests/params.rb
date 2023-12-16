@@ -4,7 +4,6 @@ module Karafka
   module Web
     module Ui
       module Controllers
-        # Namespace for request related components
         module Requests
           # Internal representation of params with sane sanitization
           class Params

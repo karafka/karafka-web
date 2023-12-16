@@ -4,7 +4,6 @@ module Karafka
   module Web
     module Ui
       module Lib
-        # Namespace for all the types of pagination engines we want to support
         module Paginations
           # Abstraction on top of pagination, so we can alter pagination key and other things
           # for non-standard pagination views (non page based, etc)

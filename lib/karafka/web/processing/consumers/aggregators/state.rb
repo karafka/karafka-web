@@ -3,7 +3,6 @@
 module Karafka
   module Web
     module Processing
-      # Namespace for consumer sub-components
       module Consumers
         module Aggregators
           # Aggregator that tracks consumers processes states, aggregates the metrics and converts

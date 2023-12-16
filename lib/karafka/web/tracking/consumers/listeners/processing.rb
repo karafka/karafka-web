@@ -21,6 +21,7 @@ module Karafka
               consume
               revoked
               shutdown
+              tick
             ].each do |action|
               # Tracks the job that is going to be scheduled so we can also display pending jobs
               class_eval <<~RUBY, __FILE__, __LINE__ + 1
@@ -69,6 +70,8 @@ module Karafka
                          'revoked'
                        when 'consumer.shutdown.error'
                          'shutdown'
+                       when 'consumer.tick.error'
+                         'tick'
                        # This is not a user facing execution flow, but internal system one
                        # that is why it will not be reported as a separate job for the UI
                        when 'consumer.idle.error'
@@ -95,6 +98,31 @@ module Karafka
             def on_consumer_consumed(event)
               consumer = event.payload[:caller]
               jid = job_id(consumer, 'consume')
+
+              track do |sampler|
+                sampler.jobs.delete(jid)
+              end
+            end
+
+            # Stores this job details
+            #
+            # @param event [Karafka::Core::Monitoring::Event]
+            def on_consumer_tick(event)
+              consumer = event.payload[:caller]
+              jid = job_id(consumer, 'tick')
+              job_details = job_details(consumer, 'tick')
+
+              track do |sampler|
+                sampler.jobs[jid] = job_details
+              end
+            end
+
+            # Removes the job from running jobs
+            #
+            # @param event [Karafka::Core::Monitoring::Event]
+            def on_consumer_ticked(event)
+              consumer = event.payload[:caller]
+              jid = job_id(consumer, 'tick')
 
               track do |sampler|
                 sampler.jobs.delete(jid)

@@ -4,7 +4,6 @@ module Karafka
   module Web
     module Tracking
       module Consumers
-        # Consumer tracking related contracts
         module Contracts
           # Expected data for each consumer group
           # It's mostly about subscription groups details

@@ -4,7 +4,6 @@
 module Karafka
   module Web
     module Ui
-      # Namespace for helpers used by the Web UI
       module Helpers
         # Main application helper
         module ApplicationHelper
