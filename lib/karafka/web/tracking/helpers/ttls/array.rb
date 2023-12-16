@@ -4,7 +4,6 @@ module Karafka
   module Web
     module Tracking
       module Helpers
-        # Namespace for time sensitive related buffers and operators
         module Ttls
           # Array that allows us to store data points that expire over time automatically.
           class Array

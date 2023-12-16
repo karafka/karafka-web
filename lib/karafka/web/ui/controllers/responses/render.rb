@@ -4,7 +4,6 @@ module Karafka
   module Web
     module Ui
       module Controllers
-        # Response related components
         module Responses
           # Response render data object. It is used to transfer attributes assigned in controllers
           # into views

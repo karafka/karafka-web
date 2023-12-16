@@ -2,8 +2,6 @@
 
 module Karafka
   module Web
-    # Namespace for all cross-context management operations that are needed to make sure everything
-    # operate as expected.
     module Management
       # Migrator used to run migrations on the states topics
       # There are cases during upgrades, where extra fields may be added and other data, so in

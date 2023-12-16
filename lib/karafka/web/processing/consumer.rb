@@ -2,8 +2,6 @@
 
 module Karafka
   module Web
-    # Namespace used to encapsulate all the components needed to process the states data and
-    # store it back in Kafka
     module Processing
       # Consumer used to squash and process statistics coming from particular processes, so this
       # data can be read and used. We consume this info overwriting the data we previously had

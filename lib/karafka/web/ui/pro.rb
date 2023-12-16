@@ -14,13 +14,8 @@
 module Karafka
   module Web
     module Ui
+      # Pro Web UI components
       module Pro
-        module Controllers
-          # Cluster controller
-          class Cluster < Ui::Controllers::Cluster
-            self.sortable_attributes = Ui::Controllers::Cluster.sortable_attributes
-          end
-        end
       end
     end
   end
