@@ -2,6 +2,8 @@
 
 module Karafka
   module Web
+    # Namespace used to encapsulate all components needed to track and report states of particular
+    # processes
     module Tracking
       # Class used to run shell command that also returns previous result in case of a failure
       # This is used because children can get signals when performing stat fetches and then

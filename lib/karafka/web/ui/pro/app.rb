@@ -14,6 +14,7 @@
 module Karafka
   module Web
     module Ui
+      # Pro Web UI components
       module Pro
         # Main Roda Web App that servers all the metrics and stats
         class App < Ui::Base

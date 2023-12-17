@@ -2,6 +2,7 @@
 
 module Karafka
   module Web
+    # Namespace for contracts across the web
     module Contracts
       # Base for all the contracts
       class Base < ::Karafka::Core::Contractable::Contract

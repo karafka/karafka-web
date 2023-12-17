@@ -4,6 +4,7 @@ module Karafka
   module Web
     module Tracking
       module Consumers
+        # Consumer monitoring related listeners
         module Listeners
           # Base consumers processes related listener
           class Base

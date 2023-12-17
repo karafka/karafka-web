@@ -3,6 +3,7 @@
 module Karafka
   module Web
     module Ui
+      # Namespace for controller related components in the Web UI app.
       module Controllers
         # Base controller from which all the controllers should inherit.
         class Base

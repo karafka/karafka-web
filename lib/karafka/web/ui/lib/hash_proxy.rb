@@ -3,6 +3,7 @@
 module Karafka
   module Web
     module Ui
+      # Non info related extra components used in the UI
       module Lib
         # Proxy for hashes we use across UI.
         # Often we have nested values we want to extract or just values we want to reference and
