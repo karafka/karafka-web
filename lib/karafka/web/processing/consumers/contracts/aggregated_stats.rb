@@ -4,6 +4,7 @@ module Karafka
   module Web
     module Processing
       module Consumers
+        # Consumer tracking related contracts
         module Contracts
           # Contract used to validate the stats that are both present in state and metrics
           class AggregatedStats < Web::Contracts::Base

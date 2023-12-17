@@ -5,6 +5,7 @@ module Karafka
     module Ui
       module Models
         module Metrics
+          # Namespace for models related to presentation of charts
           module Charts
             # Model for formatting aggregated metrics data for charts
             class Aggregated < Lib::HashProxy

@@ -3,6 +3,7 @@
 module Karafka
   module Web
     module Tracking
+      # Namespace for all the things related to tracking consumers and consuming processes
       module Consumers
         # Samples for fetching and storing metrics samples about the consumer process
         class Sampler < Tracking::Sampler

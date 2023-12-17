@@ -2,6 +2,7 @@
 
 module Karafka
   module Web
+    # Web UI namespace
     module Ui
       # Main Roda Web App that servers all the metrics and stats
       class App < Base

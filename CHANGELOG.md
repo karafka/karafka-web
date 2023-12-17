@@ -23,7 +23,6 @@
 - [Enhancement] Promote "Utilization" chart to OSS.
 - [Fix] Fix times precisions that could be incorrectly reported by 1 second in few places.
 - [Fix] Fix random order in Consumers groups Health view.
-- [Fix] Use explicit file modules declarations to avoid potential loading errors.
 - [Change] Rename "Busy" to "Running" to align with "Running Jobs".
 - [Change] Rename "Active subscriptions" to "Subscriptions" as process subscriptions are always active.
 - [Maintenance] Introduce granular subscription group contracts.

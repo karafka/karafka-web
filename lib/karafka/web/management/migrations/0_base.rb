@@ -3,6 +3,7 @@
 module Karafka
   module Web
     module Management
+      # Namespace for storing migrations of our Web UI topics data
       module Migrations
         # Base for all our migrations
         #

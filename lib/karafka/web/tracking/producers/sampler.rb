@@ -3,6 +3,7 @@
 module Karafka
   module Web
     module Tracking
+      # Namespace for all the things related to tracking producers
       module Producers
         # Samples for collecting producers related data we're interested in
         class Sampler < Tracking::Sampler
