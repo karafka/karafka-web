@@ -8,6 +8,7 @@
 - **[Feature]** Introduce "Data transfers" chart with data received and data sent to the cluster.
 - **[Feature]** Introduce ability to download raw payloads.
 - **[Feature]** Introduce ability to download deserialized message payload as JSON.
+- [Enhancement] Support multiplexed subscription groups.
 - [Enhancement] Split cluster info into two tabs, one for brokers and one for topics with partitions.
 - [Enhancement] Track pending jobs. Pending jobs are jobs that are not yet scheduled for execution by advanced schedulers.
 - [Enhancement] Rename "Enqueued" to "Pending" to support jobs that are not yet enqueued but within a scheduler.
