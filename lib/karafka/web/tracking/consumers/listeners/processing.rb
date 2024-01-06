@@ -21,6 +21,7 @@ module Karafka
               consume
               revoked
               shutdown
+              tick
             ].each do |action|
               # Tracks the job that is going to be scheduled so we can also display pending jobs
               class_eval <<~RUBY, __FILE__, __LINE__ + 1
@@ -46,7 +47,6 @@ module Karafka
               messages_count = consumer.messages.size
               jid = job_id(consumer, 'consume')
               job_details = job_details(consumer, 'consume')
-              job_details[:status] = 'running'
 
               track do |sampler|
                 # We count batches and messages prior to the execution, so they are tracked even
@@ -54,6 +54,19 @@ module Karafka
                 sampler.counters[:batches] += 1
                 sampler.counters[:messages] += messages_count
                 sampler.jobs[jid] = job_details
+              end
+            end
+
+            # Collect info about consumption event that occurred and its metrics
+            # Removes the job from running jobs
+            #
+            # @param event [Karafka::Core::Monitoring::Event]
+            def on_consumer_consumed(event)
+              consumer = event.payload[:caller]
+              jid = job_id(consumer, 'consume')
+
+              track do |sampler|
+                sampler.jobs.delete(jid)
               end
             end
 
@@ -69,6 +82,8 @@ module Karafka
                          'revoked'
                        when 'consumer.shutdown.error'
                          'shutdown'
+                       when 'consumer.tick.error'
+                         'tick'
                        # This is not a user facing execution flow, but internal system one
                        # that is why it will not be reported as a separate job for the UI
                        when 'consumer.idle.error'
@@ -88,67 +103,39 @@ module Karafka
               end
             end
 
-            # Collect info about consumption event that occurred and its metrics
-            # Removes the job from running jobs
-            #
-            # @param event [Karafka::Core::Monitoring::Event]
-            def on_consumer_consumed(event)
-              consumer = event.payload[:caller]
-              jid = job_id(consumer, 'consume')
+            # Consume has a bit different reporting flow than other jobs because it bumps certain
+            # counters that other jobs do not. This is why it is defined above separately
+            [
+              [:revoke, :revoked, 'revoked'],
+              [:shutting_down, :shutdown, 'shutdown'],
+              [:tick, :ticked, 'tick']
+            ].each do |pre, post, action|
+              class_eval <<~METHOD, __FILE__, __LINE__ + 1
+                # Stores this job details
+                #
+                # @param event [Karafka::Core::Monitoring::Event]
+                def on_consumer_#{pre}(event)
+                  consumer = event.payload[:caller]
+                  jid = job_id(consumer, '#{action}')
+                  job_details = job_details(consumer, '#{action}')
 
-              track do |sampler|
-                sampler.jobs.delete(jid)
-              end
-            end
+                  track do |sampler|
+                    sampler.jobs[jid] = job_details
+                  end
+                end
 
-            # Stores this job details
-            #
-            # @param event [Karafka::Core::Monitoring::Event]
-            def on_consumer_revoke(event)
-              consumer = event.payload[:caller]
-              jid = job_id(consumer, 'revoked')
-              job_details = job_details(consumer, 'revoked')
+                # Removes the job from running jobs
+                #
+                # @param event [Karafka::Core::Monitoring::Event]
+                def on_consumer_#{post}(event)
+                  consumer = event.payload[:caller]
+                  jid = job_id(consumer, '#{action}')
 
-              track do |sampler|
-                sampler.jobs[jid] = job_details
-              end
-            end
-
-            # Removes the job from running jobs
-            #
-            # @param event [Karafka::Core::Monitoring::Event]
-            def on_consumer_revoked(event)
-              consumer = event.payload[:caller]
-              jid = job_id(consumer, 'revoked')
-
-              track do |sampler|
-                sampler.jobs.delete(jid)
-              end
-            end
-
-            # Stores this job details
-            #
-            # @param event [Karafka::Core::Monitoring::Event]
-            def on_consumer_shutting_down(event)
-              consumer = event.payload[:caller]
-              jid = job_id(consumer, 'shutdown')
-              job_details = job_details(consumer, 'shutdown')
-
-              track do |sampler|
-                sampler.jobs[jid] = job_details
-              end
-            end
-
-            # Removes the job from running jobs
-            #
-            # @param event [Karafka::Core::Monitoring::Event]
-            def on_consumer_shutdown(event)
-              consumer = event.payload[:caller]
-              jid = job_id(consumer, 'shutdown')
-
-              track do |sampler|
-                sampler.jobs.delete(jid)
-              end
+                  track do |sampler|
+                    sampler.jobs.delete(jid)
+                  end
+                end
+              METHOD
             end
 
             private
@@ -177,7 +164,9 @@ module Karafka
                 last_offset: consumer.messages.metadata.last_offset,
                 processing_lag: consumer.messages.metadata.processing_lag,
                 consumption_lag: consumer.messages.metadata.consumption_lag,
-                committed_offset: consumer.coordinator.seek_offset - 1,
+                # Committed offset may be -1 when there is no committed offset. This can happen in
+                # case of ticking that started before any consumption job happened
+                committed_offset: consumer.coordinator.seek_offset.to_i - 1,
                 # In theory this is redundant because we have first and last offset, but it is
                 # needed because VPs do not have linear count. For VPs first and last offset
                 # will be further away than the total messages count for a particular VP
@@ -185,7 +174,8 @@ module Karafka
                 consumer: consumer.class.to_s,
                 consumer_group: consumer.topic.consumer_group.id,
                 type: type,
-                tags: consumer.tags
+                tags: consumer.tags,
+                status: 'running'
               }
             end
           end
