@@ -174,6 +174,10 @@ RSpec.describe_current do
         end
       end
     end
+
+    context 'when we visit shutdown, revoked and tick jobs' do
+      pending
+    end
   end
 
   describe '#pending' do
