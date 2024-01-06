@@ -174,6 +174,60 @@ RSpec.describe_current do
         end
       end
     end
+
+    context 'when we visit tick jobs' do
+      before do
+        topics_config.consumers.states = states_topic
+        topics_config.consumers.reports = reports_topic
+
+        data = Fixtures.json('consumers_state', symbolize_names: false)
+        report = Fixtures.json('consumer_report', symbolize_names: false)
+        report['jobs'][0]['type'] = 'tick'
+
+        produce(reports_topic, report.to_json)
+        produce(states_topic, data.to_json)
+
+        get 'jobs/running'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('2023-08-01T09:47:51')
+        expect(body).to include('ActiveJob::Consumer')
+        expect(body).not_to include(support_message)
+        expect(body).to include(breadcrumbs)
+        expect(body).to include('#tick')
+        expect(body).not_to include('#consume')
+        expect(body).not_to include(pagination)
+      end
+    end
+
+    context 'when we visit shutdown jobs' do
+      before do
+        topics_config.consumers.states = states_topic
+        topics_config.consumers.reports = reports_topic
+
+        data = Fixtures.json('consumers_state', symbolize_names: false)
+        report = Fixtures.json('consumer_report', symbolize_names: false)
+        report['jobs'][0]['type'] = 'shutdown'
+
+        produce(reports_topic, report.to_json)
+        produce(states_topic, data.to_json)
+
+        get 'jobs/running'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('2023-08-01T09:47:51')
+        expect(body).to include('ActiveJob::Consumer')
+        expect(body).not_to include(support_message)
+        expect(body).to include(breadcrumbs)
+        expect(body).to include('#shutdown')
+        expect(body).not_to include('#consume')
+        expect(body).not_to include(pagination)
+      end
+    end
   end
 
   describe '#pending' do
