@@ -23,6 +23,8 @@ module Karafka
         end
 
         nested(:tracking) do
+          # If set to nil, it is up to us to initialize
+          required(:active) { |val| [true, false, nil].include?(val) }
           # Do not report more often then every second, this could overload the system
           required(:interval) { |val| val.is_a?(Integer) && val >= 1_000 }
 

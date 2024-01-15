@@ -20,7 +20,7 @@ module Karafka
             # Current schema version
             # This can be used in the future for detecting incompatible changes and writing
             # migrations
-            SCHEMA_VERSION = '1.2.1'
+            SCHEMA_VERSION = '1.2.2'
 
             # @param schema_manager [Karafka::Web::Processing::Consumers::SchemaManager] schema
             #   manager that tracks the compatibility of schemas.
@@ -126,7 +126,7 @@ module Karafka
               stats[:workers] = 0
               stats[:processes] = 0
               stats[:rss] = 0
-              stats[:listeners] = 0
+              stats[:listeners] = { active: 0, standby: 0 }
               stats[:lag] = 0
               stats[:lag_stored] = 0
               stats[:bytes_received] = 0
@@ -153,7 +153,8 @@ module Karafka
                   stats[:workers] += report_process[:workers] || 0
                   stats[:bytes_received] += report_process[:bytes_received] || 0
                   stats[:bytes_sent] += report_process[:bytes_sent] || 0
-                  stats[:listeners] += report_process[:listeners] || 0
+                  stats[:listeners][:active] += report_process[:listeners][:active]
+                  stats[:listeners][:standby] += report_process[:listeners][:standby]
                   stats[:processes] += 1
                   stats[:rss] += report_process[:memory_usage]
                   stats[:lag] += lags.compact.reject(&:negative?).sum

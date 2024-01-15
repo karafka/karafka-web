@@ -9,6 +9,15 @@
     <span class="badge bg-secondary">
       <%= topic.patterns.type %>
     </span>
+
+    <% if subscription_group.multiplexing? %>
+      <span class="badge bg-secondary">
+        multiplexing
+        <%= subscription_group.multiplexing.min %>
+        -
+        <%= subscription_group.multiplexing.max %>
+      </span>
+    <% end %>
   </td>
   <td>
     <span class="badge bg-<%= topic.active? ? 'success' : 'warning text-dark' %>">

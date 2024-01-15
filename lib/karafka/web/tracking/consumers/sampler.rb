@@ -15,7 +15,7 @@ module Karafka
           # Current schema version
           # This is used for detecting incompatible changes and not using outdated data during
           # upgrades
-          SCHEMA_VERSION = '1.2.8'
+          SCHEMA_VERSION = '1.2.9'
 
           # Counters that count events occurrences during the given window
           COUNTERS_BASE = {
@@ -38,7 +38,12 @@ module Karafka
 
             @windows = Helpers::Ttls::Windows.new
             @counters = COUNTERS_BASE.dup
-            @consumer_groups = {}
+            @consumer_groups = Hash.new do |h, cg_id|
+              h[cg_id] = {
+                id: cg_id,
+                subscription_groups: {}
+              }
+            end
             @subscription_groups = {}
             @errors = []
             @started_at = float_now
@@ -140,10 +145,16 @@ module Karafka
             totals.sum / 1_000 / workers / timefactor * 100
           end
 
-          # @return [Integer] number of listeners
+          # @return [Hash] number of active and standby listeners
           def listeners
-            # This can be zero before the server starts
-            Karafka::Server.listeners&.count.to_i
+            if Karafka::Server.listeners
+              active = Karafka::Server.listeners.count(&:active?)
+              total = Karafka::Server.listeners.count.to_i
+
+              { active: active, standby: total - active }
+            else
+              { active: 0, standby: 0 }
+            end
           end
 
           # @return [Integer] memory used by this process in kilobytes
