@@ -19,7 +19,10 @@ RSpec.describe_current do
         workers: 5,
         processes: 2,
         rss: 512.45,
-        listeners: 3,
+        listeners: {
+          active: 3,
+          standby: 0
+        },
         utilization: 70.2,
         lag_stored: 50,
         lag: 10

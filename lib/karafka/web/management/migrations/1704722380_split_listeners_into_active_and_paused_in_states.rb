@@ -12,7 +12,13 @@ module Karafka
 
           # @param state [Hash]
           def migrate(state)
-            listeners = state[:stats][:listeners].to_i
+            listeners = if state[:stats].key?(:listeners)
+                             state[:stats][:listeners].to_i
+                           elsif state[:stats].key?(:listeners_count)
+                             state[:stats][:listeners_count].to_i
+                           else
+                             0
+                           end
 
             state[:stats][:listeners] = {
               active: listeners,

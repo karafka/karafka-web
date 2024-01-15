@@ -60,6 +60,8 @@ RSpec.describe_current do
       produce(states_topic, Fixtures.file('consumers_state.json'), type: :transactional)
       produce(reports_topic, Fixtures.file('consumer_report.json'), type: :transactional)
 
+      ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
+
       get 'consumers'
     end
 
@@ -99,6 +101,8 @@ RSpec.describe_current do
       end
 
       produce(states_topic, data.to_json)
+
+      ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
     end
 
     context 'when we visit first page' do

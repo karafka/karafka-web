@@ -45,7 +45,7 @@ RSpec.describe_current do
       expect(topic_data[0][:process][:process][:concurrency]).to eq(2)
       expect(topic_data[0][:process][:process][:cpus]).to eq(8)
       expect(topic_data[0][:process][:process][:cpu_usage]).to eq([1.33, 1.1, 1.1])
-      expect(topic_data[0][:process][:process][:listeners]).to eq(2)
+      expect(topic_data[0][:process][:process][:listeners]).to eq(active: 2, standby: 0)
       expect(topic_data[0][:process][:process][:memory_size]).to eq(32_763_220)
       expect(topic_data[0][:process][:process][:name]).to eq('shinra:1:1')
       expect(topic_data[0][:process][:process][:started_at]).to eq(2_690_818_651.82_293)

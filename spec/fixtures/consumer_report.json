@@ -6,7 +6,10 @@
     "started_at": 2690818651.8229299,
     "name": "shinra:1:1",
     "status": "running",
-    "listeners": 2,
+    "listeners": {
+      "active": 2,
+      "standby": 0
+    },
     "concurrency": 2,
     "threads": 2,
     "workers": 5,
