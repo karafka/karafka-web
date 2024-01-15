@@ -65,4 +65,34 @@ RSpec.describe_current do
       end
     end
   end
+
+  # The most current versions of fixtures should not diverge from migrated. If it does, fixtures
+  # alias to current needs to point to the migrated state
+  describe 'fixtures current versions' do
+    context 'when checking consumers metrics current' do
+      let(:current) { Fixtures.consumers_metrics_json }
+      let(:migrated) { Karafka::Admin.read_topic(metrics_topic, 0, 1).first.payload }
+
+      before do
+        topics_config.consumers.metrics = metrics_topic
+        produce(metrics_topic, current.to_json)
+        migrate
+      end
+
+      it { expect(current.to_json).to eq(migrated.to_json) }
+    end
+
+    context 'when checking consumers states current' do
+      let(:current) { Fixtures.consumers_states_json }
+      let(:migrated) { Karafka::Admin.read_topic(states_topic, 0, 1).first.payload }
+
+      before do
+        topics_config.consumers.states = states_topic
+        produce(states_topic, current.to_json)
+        migrate
+      end
+
+      it { expect(current.to_json).to eq(migrated.to_json) }
+    end
+  end
 end

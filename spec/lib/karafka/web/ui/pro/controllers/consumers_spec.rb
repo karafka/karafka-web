@@ -67,8 +67,6 @@ RSpec.describe_current do
         produce(states_topic, Fixtures.consumers_states_file, type: :transactional)
         produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)
 
-        ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
-
         get 'consumers'
       end
 
@@ -108,8 +106,6 @@ RSpec.describe_current do
         end
 
         produce(states_topic, data.to_json)
-
-        ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
       end
 
       context 'when we visit first page' do
@@ -176,8 +172,6 @@ RSpec.describe_current do
         produce(states_topic, Fixtures.consumers_states_file, type: :transactional)
         produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)
 
-        ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
-
         get 'consumers/1/details'
       end
 
@@ -222,8 +216,6 @@ RSpec.describe_current do
         produce(states_topic, Fixtures.consumers_states_file)
         produce(reports_topic, report.to_json)
 
-        ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
-
         get 'consumers/1/jobs/running'
       end
 
@@ -254,8 +246,6 @@ RSpec.describe_current do
 
         produce(states_topic, Fixtures.consumers_states_file, type: :transactional)
         produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)
-
-        ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
 
         get 'consumers/1/jobs/running'
       end
@@ -310,8 +300,6 @@ RSpec.describe_current do
         produce(states_topic, Fixtures.consumers_states_file)
         produce(reports_topic, report.to_json)
 
-        ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
-
         get 'consumers/1/jobs/pending'
       end
 
@@ -335,8 +323,6 @@ RSpec.describe_current do
         produce(states_topic, Fixtures.consumers_states_file)
         produce(reports_topic, report.to_json)
 
-        ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
-
         get 'consumers/1/jobs/pending'
       end
 
@@ -359,8 +345,6 @@ RSpec.describe_current do
         produce(states_topic, Fixtures.consumers_states_file, type: :transactional)
         produce(reports_topic, report.to_json, type: :transactional)
 
-        ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
-
         get 'consumers/1/jobs/pending'
       end
 
@@ -380,8 +364,6 @@ RSpec.describe_current do
         report['jobs'] = []
 
         produce(reports_topic, report.to_json)
-
-        ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
 
         get 'consumers/1/jobs/pending'
       end
@@ -425,8 +407,6 @@ RSpec.describe_current do
         produce(states_topic, Fixtures.consumers_states_file, type: :transactional)
         produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)
 
-        ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
-
         get 'consumers/1/subscriptions'
       end
 
@@ -447,8 +427,6 @@ RSpec.describe_current do
         report['consumer_groups'] = {}
 
         produce(reports_topic, report.to_json)
-
-        ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
 
         get 'consumers/1/subscriptions'
       end
