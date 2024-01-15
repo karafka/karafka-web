@@ -5,7 +5,7 @@ RSpec.describe_current do
 
   let(:errors_topic) { create_topic }
   let(:no_errors) { 'There are no errors in this errors topic partition' }
-  let(:error_report) { Fixtures.file('error.json') }
+  let(:error_report) { Fixtures.errors_file }
 
   before { topics_config.errors = errors_topic }
 

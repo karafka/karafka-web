@@ -5,7 +5,7 @@ RSpec.describe Karafka::Web::Management::Migrations::RemoveProcessingFromConsume
   it { expect(described_class.type).to eq(:consumers_metrics) }
 
   context 'when migrating from 1.0.0' do
-    let(:state) { Fixtures.json('consumers_metrics_v1.0.0') }
+    let(:state) { Fixtures.consumers_metrics_json('v1.0.0') }
     let(:times) { %i[days hours minutes seconds] }
 
     before { described_class.new.migrate(state) }

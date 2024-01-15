@@ -2,7 +2,7 @@
 
 RSpec.describe_current do
   let(:states_topic) { Karafka::Web.config.topics.consumers.states = create_topic }
-  let(:fixture) { Fixtures.file('consumers_state.json') }
+  let(:fixture) { Fixtures.consumers_states_file }
 
   describe '#current!' do
     subject(:state) { described_class.current! }

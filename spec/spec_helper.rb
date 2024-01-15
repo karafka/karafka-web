@@ -118,9 +118,9 @@ Karafka::Web.setup do |config|
   config.topics.errors = TOPICS[3]
 end
 
-produce(TOPICS[0], Fixtures.file('consumers_state.json'))
-produce(TOPICS[1], Fixtures.file('consumers_metrics.json'))
-produce(TOPICS[2], Fixtures.file('consumer_report.json'))
+produce(TOPICS[0], Fixtures.consumers_states_file)
+produce(TOPICS[1], Fixtures.consumers_metrics_file)
+produce(TOPICS[2], Fixtures.consumers_reports_file)
 
 # Run the migrations so even if we use older fixtures, the data in Kafka is aligned
 ::Karafka::Web::Management::Actions::MigrateStatesData.new.call

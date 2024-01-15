@@ -10,7 +10,7 @@ RSpec.describe_current do
   end
 
   context 'when there is existing data' do
-    let(:metrics) { Fixtures.json('consumers_metrics') }
+    let(:metrics) { Fixtures.consumers_metrics_json }
     let(:existing) { metrics.fetch(:aggregated) }
 
     it { expect(tracker.to_h[:days]).to eq(existing[:days]) }

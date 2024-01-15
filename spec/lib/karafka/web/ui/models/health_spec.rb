@@ -3,8 +3,8 @@
 RSpec.describe_current do
   subject(:stats) { described_class.current(state) }
 
-  let(:state) { Fixtures.json('consumers_state') }
-  let(:report) { Fixtures.json('consumer_report') }
+  let(:state) { Fixtures.consumers_states_json }
+  let(:report) { Fixtures.consumers_reports_json }
   let(:reports_topic) { create_topic }
 
   before { Karafka::Web.config.topics.consumers.reports = reports_topic }
