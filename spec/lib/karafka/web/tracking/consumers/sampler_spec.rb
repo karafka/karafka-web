@@ -16,7 +16,7 @@ RSpec.describe_current do
     it { expect(process[:started_at]).not_to be_nil }
     it { expect(process[:name]).to include(Socket.gethostname) }
     it { expect(process[:status]).to eq('initialized') }
-    it { expect(process[:listeners]).to eq(0) }
+    it { expect(process[:listeners]).to eq(active: 0, standby: 0) }
     it { expect(process[:workers]).to eq(5) }
     it { expect(process[:memory_usage]).to eq(0) }
     it { expect(process[:memory_total_usage]).to eq(0) }

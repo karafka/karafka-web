@@ -7,7 +7,7 @@ RSpec.describe(
   it { expect(described_class.type).to eq(:consumers_state) }
 
   context 'when migrating from 1.1.0' do
-    let(:state) { Fixtures.json('consumers_state_v1.1.0') }
+    let(:state) { Fixtures.consumers_states_json('v1.1.0') }
 
     before { described_class.new.migrate(state) }
 

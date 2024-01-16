@@ -16,18 +16,23 @@
     "dead": 0,
     "busy": 0,
     "enqueued": 0,
-    "processing": 0,
+    "waiting": 0,
     "threads": 4,
     "processes": 2,
     "rss": 252744,
-    "listeners": 4,
+    "listeners": {
+      "active": 4,
+      "standby": 0
+    },
     "workers": 5,
     "utilization": 4.991228965553596,
     "lag_stored": 0,
     "errors": 0,
-    "lag": 20
+    "lag": 20,
+    "bytes_sent": 0,
+    "bytes_received": 0
   },
-  "schema_version": "1.1.0",
-  "dispatched_at": 2690818670.7824733,
+  "schema_version": "1.2.2",
+  "dispatched_at": 2690818670.782473,
   "schema_state": "compatible"
 }

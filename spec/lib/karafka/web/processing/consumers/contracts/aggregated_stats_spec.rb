@@ -15,7 +15,7 @@ RSpec.describe_current do
       workers: 5,
       processes: 2,
       rss: 512.45,
-      listeners: 3,
+      listeners: { active: 3, standby: 0 },
       utilization: 70.2,
       lag_stored: 50,
       lag: 10
@@ -29,7 +29,7 @@ RSpec.describe_current do
   end
 
   %i[
-    batches messages retries dead errors busy enqueued workers processes listeners
+    batches messages retries dead errors busy enqueued workers processes
   ].each do |key|
     context "when #{key} is negative" do
       before { stats[key] = -1 }
@@ -73,6 +73,20 @@ RSpec.describe_current do
   ].each do |key|
     context "when #{key} is not a number" do
       before { stats[key] = 'test' }
+
+      it { expect(contract.call(stats)).not_to be_success }
+    end
+  end
+
+  context 'when checking listeners' do
+    context 'when active below 0' do
+      before { stats[:listeners][:active] = -1 }
+
+      it { expect(contract.call(stats)).not_to be_success }
+    end
+
+    context 'when standby below 0' do
+      before { stats[:listeners][:standby] = -1 }
 
       it { expect(contract.call(stats)).not_to be_success }
     end

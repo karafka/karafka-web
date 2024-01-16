@@ -19,6 +19,18 @@
               )
             %>
           <% end %>
+
+          <% flat_hash(@topic.subscription_group.multiplexing.to_h).each do |k, v| %>
+            <%==
+              partial(
+                'routing/detail',
+                locals: {
+                  k: "multiplexing.#{k}",
+                  v: v
+                }
+              )
+            %>
+          <% end %>
         </tbody>
       </table>
     </div>

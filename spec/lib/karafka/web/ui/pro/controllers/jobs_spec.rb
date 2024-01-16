@@ -52,8 +52,8 @@ RSpec.describe_current do
         topics_config.consumers.states = states_topic
         topics_config.consumers.reports = reports_topic
 
-        data = Fixtures.json('consumers_state', symbolize_names: false)
-        report = Fixtures.json('consumer_report', symbolize_names: false)
+        data = Fixtures.consumers_states_json(symbolize_names: false)
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
         report['jobs'][0]['status'] = 'pending'
 
         produce(reports_topic, report.to_json)
@@ -77,8 +77,8 @@ RSpec.describe_current do
         topics_config.consumers.states = states_topic
         topics_config.consumers.reports = reports_topic
 
-        data = Fixtures.json('consumers_state', symbolize_names: false)
-        base_report = Fixtures.json('consumer_report', symbolize_names: false)
+        data = Fixtures.consumers_states_json(symbolize_names: false)
+        base_report = Fixtures.consumers_reports_json(symbolize_names: false)
 
         100.times do |i|
           name = "shinra:#{i}:#{i}"
@@ -126,8 +126,8 @@ RSpec.describe_current do
           topics_config.consumers.states = states_topic
           topics_config.consumers.reports = reports_topic
 
-          produce(states_topic, Fixtures.file('consumers_state.json'), type: :transactional)
-          produce(reports_topic, Fixtures.file('consumer_report.json'), type: :transactional)
+          produce(states_topic, Fixtures.consumers_states_file, type: :transactional)
+          produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)
 
           get 'jobs/running'
         end
@@ -180,8 +180,8 @@ RSpec.describe_current do
         topics_config.consumers.states = states_topic
         topics_config.consumers.reports = reports_topic
 
-        data = Fixtures.json('consumers_state', symbolize_names: false)
-        report = Fixtures.json('consumer_report', symbolize_names: false)
+        data = Fixtures.consumers_states_json(symbolize_names: false)
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
         report['jobs'][0]['type'] = 'tick'
 
         produce(reports_topic, report.to_json)
@@ -207,8 +207,8 @@ RSpec.describe_current do
         topics_config.consumers.states = states_topic
         topics_config.consumers.reports = reports_topic
 
-        data = Fixtures.json('consumers_state', symbolize_names: false)
-        report = Fixtures.json('consumer_report', symbolize_names: false)
+        data = Fixtures.consumers_states_json(symbolize_names: false)
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
         report['jobs'][0]['type'] = 'shutdown'
 
         produce(reports_topic, report.to_json)
@@ -252,8 +252,8 @@ RSpec.describe_current do
         topics_config.consumers.states = states_topic
         topics_config.consumers.reports = reports_topic
 
-        data = Fixtures.json('consumers_state', symbolize_names: false)
-        report = Fixtures.json('consumer_report', symbolize_names: false)
+        data = Fixtures.consumers_states_json(symbolize_names: false)
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
         report['jobs'][0]['status'] = 'pending'
 
         produce(reports_topic, report.to_json)
@@ -277,8 +277,8 @@ RSpec.describe_current do
         topics_config.consumers.states = states_topic
         topics_config.consumers.reports = reports_topic
 
-        data = Fixtures.json('consumers_state', symbolize_names: false)
-        report = Fixtures.json('consumer_report', symbolize_names: false)
+        data = Fixtures.consumers_states_json(symbolize_names: false)
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
         report['jobs'][0]['status'] = 'running'
 
         produce(reports_topic, report.to_json)
@@ -302,8 +302,8 @@ RSpec.describe_current do
         topics_config.consumers.states = states_topic
         topics_config.consumers.reports = reports_topic
 
-        data = Fixtures.json('consumers_state', symbolize_names: false)
-        base_report = Fixtures.json('consumer_report', symbolize_names: false)
+        data = Fixtures.consumers_states_json(symbolize_names: false)
+        base_report = Fixtures.consumers_reports_json(symbolize_names: false)
 
         base_report['jobs'].first['status'] = 'pending'
 
@@ -347,8 +347,8 @@ RSpec.describe_current do
           topics_config.consumers.states = states_topic
           topics_config.consumers.reports = reports_topic
 
-          produce(states_topic, Fixtures.file('consumers_state.json'), type: :transactional)
-          produce(reports_topic, Fixtures.file('consumer_report.json'), type: :transactional)
+          produce(states_topic, Fixtures.consumers_states_file, type: :transactional)
+          produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)
 
           get 'jobs/pending'
         end

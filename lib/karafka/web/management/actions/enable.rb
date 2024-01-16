@@ -11,11 +11,23 @@ module Karafka
           # Enables routing consumer group and subscribes Web-UI listeners
           def call
             extend_routing
+            setup_tracking_activity
+
+            # Do not subscribe monitors or do anything else if tracking is disabled
+            return unless ::Karafka::Web.config.tracking.active
+
             subscribe_to_monitor
             subscribe_to_close_web_producer
           end
 
           private
+
+          # Enables tracking if it was not explicitly disabled by the user
+          def setup_tracking_activity
+            return unless ::Karafka::Web.config.tracking.active.nil?
+
+            ::Karafka::Web.config.tracking.active = true
+          end
 
           # Enables all the needed routes
           def extend_routing

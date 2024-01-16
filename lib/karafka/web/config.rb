@@ -47,6 +47,11 @@ module Karafka
         # 5 seconds should be enough
         setting :interval, default: 5_000
 
+        # Should we be tracking anything at all. If this is set to false, no reporting will happen
+        # even if Web-UI is configured. When set to `nil` (default) it will be switched to true
+        # during the Web UI initialization.
+        setting :active, default: nil
+
         # Main Web UI reporting scheduler that runs a background thread and reports periodically
         # from the consumer reporter and producer reporter
         setting :scheduler, default: Tracking::Scheduler.new

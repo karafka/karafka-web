@@ -4,8 +4,8 @@ RSpec.describe_current do
   subject(:job) { process.jobs.first }
 
   let(:process) { Karafka::Web::Ui::Models::Process.find(state, '1') }
-  let(:state) { Fixtures.json('consumers_state') }
-  let(:report) { Fixtures.json('consumer_report') }
+  let(:state) { Fixtures.consumers_states_json }
+  let(:report) { Fixtures.consumers_reports_json }
   let(:reports_topic) { create_topic }
 
   before do

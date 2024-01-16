@@ -41,27 +41,58 @@ RSpec.describe_current do
     end
 
     it 'expect to migrate consumers states to 1.2.1 with all needed details' do
-      expect(states_state[:schema_version]).to eq('1.2.1')
+      expect(states_state[:schema_version]).to eq('1.2.2')
       expect(states_state[:schema_state]).to eq('accepted')
       expect(states_state[:processes]).to eq({})
       expect(states_state[:dispatched_at]).to be < Time.now.to_f
+      expect(states_state[:stats][:listeners]).to eq(active: 0, standby: 0)
 
       %i[
-        batches messages retries dead busy enqueued waiting workers processes rss listeners
+        batches messages retries dead busy enqueued waiting workers processes rss
         utilization errors lag_stored lag bytes_sent bytes_received
       ].each do |stats_key|
         expect(states_state[:stats][stats_key]).to eq(0)
       end
     end
 
-    it 'expect to migrate consumers metrics to 1.1.1 with all needed details' do
-      expect(metrics_state[:schema_version]).to eq('1.1.1')
+    it 'expect to migrate consumers metrics to 1.1.2 with all needed details' do
+      expect(metrics_state[:schema_version]).to eq('1.1.2')
       expect(states_state[:dispatched_at]).to be < Time.now.to_f
 
       %i[days hours minutes seconds].each do |stats_key|
         expect(metrics_state[:aggregated][stats_key]).to eq([])
         expect(metrics_state[:consumer_groups][stats_key]).to eq([])
       end
+    end
+  end
+
+  # The most current versions of fixtures should not diverge from migrated. If it does, fixtures
+  # alias to current needs to point to the migrated state
+  describe 'fixtures current versions' do
+    context 'when checking consumers metrics current' do
+      let(:current) { Fixtures.consumers_metrics_json }
+      let(:migrated) { Karafka::Admin.read_topic(metrics_topic, 0, 1).first.payload }
+
+      before do
+        topics_config.consumers.metrics = metrics_topic
+        produce(metrics_topic, current.to_json)
+        migrate
+      end
+
+      it { expect(current.to_json).to eq(migrated.to_json) }
+    end
+
+    context 'when checking consumers states current' do
+      let(:current) { Fixtures.consumers_states_json }
+      let(:migrated) { Karafka::Admin.read_topic(states_topic, 0, 1).first.payload }
+
+      before do
+        topics_config.consumers.states = states_topic
+        produce(states_topic, current.to_json)
+        migrate
+      end
+
+      it { expect(current.to_json).to eq(migrated.to_json) }
     end
   end
 end
