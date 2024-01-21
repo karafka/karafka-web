@@ -1,10 +1,10 @@
 PATH
   remote: .
   specs:
-    karafka-web (0.8.0)
+    karafka-web (0.8.0.rc1)
       erubi (~> 1.4)
-      karafka (>= 2.3.0.alpha1, < 2.4.0)
-      karafka-core (>= 2.3.0.alpha1, < 2.4.0)
+      karafka (>= 2.3.0.rc1, < 2.4.0)
+      karafka-core (>= 2.3.0.rc1, < 2.4.0)
       roda (~> 3.68, >= 3.69)
       tilt (~> 2.0)
 
@@ -36,11 +36,11 @@ GEM
     ffi (1.16.3)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
-    karafka (2.3.0.alpha2)
-      karafka-core (>= 2.3.0.alpha1, < 2.4.0)
+    karafka (2.3.0.rc1)
+      karafka-core (>= 2.3.0.rc1, < 2.4.0)
       waterdrop (>= 2.6.12, < 3.0.0)
       zeitwerk (~> 2.3)
-    karafka-core (2.3.0.alpha1)
+    karafka-core (2.3.0.rc1)
       karafka-rdkafka (>= 0.14.7, < 0.15.0)
     karafka-rdkafka (0.14.7)
       ffi (~> 1.15)
