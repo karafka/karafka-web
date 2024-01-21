@@ -4,8 +4,8 @@ RSpec.describe_current do
   subject(:state) { described_class }
 
   let(:states_topic) { create_topic }
-  let(:fixture) { Fixtures.file('consumers_state.json') }
-  let(:fixture_hash) { Fixtures.json('consumers_state') }
+  let(:fixture) { Fixtures.consumers_states_file }
+  let(:fixture_hash) { Fixtures.consumers_states_json }
 
   before { Karafka::Web.config.topics.consumers.states = states_topic }
 
@@ -20,7 +20,7 @@ RSpec.describe_current do
     before do
       allow(status.class).to receive(:new).and_return(status)
       allow(status).to receive(:enabled).and_return(OpenStruct.new(success?: false))
-      produce(states_topic, Fixtures.file('consumers_state.json'))
+      produce(states_topic, Fixtures.consumers_states_file)
     end
 
     it { expect(state.current).to eq(false) }
@@ -36,10 +36,10 @@ RSpec.describe_current do
   end
 
   context 'when there are more states and karafka-web is enabled' do
-    let(:fixture1) { Fixtures.file('consumers_state.json') }
-    let(:fixture2) { Fixtures.file('consumers_state.json') }
-    let(:fixture_hash1) { Fixtures.json('consumers_state') }
-    let(:fixture_hash2) { Fixtures.json('consumers_state') }
+    let(:fixture1) { Fixtures.consumers_states_file }
+    let(:fixture2) { Fixtures.consumers_states_file }
+    let(:fixture_hash1) { Fixtures.consumers_states_json }
+    let(:fixture_hash2) { Fixtures.consumers_states_json }
 
     before do
       fixture_hash2[:dispatched_at] = 1

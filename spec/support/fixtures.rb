@@ -25,5 +25,20 @@ class Fixtures
         symbolize_names: symbolize_names
       )
     end
+
+    %i[
+      consumers_reports
+      consumers_metrics
+      consumers_states
+      errors
+    ].each do |type|
+      define_method :"#{type}_file" do |name = 'current.json'|
+        file("#{type}/#{name}")
+      end
+
+      define_method :"#{type}_json" do |name = 'current', symbolize_names: true|
+        json("#{type}/#{name}", symbolize_names: symbolize_names)
+      end
+    end
   end
 end

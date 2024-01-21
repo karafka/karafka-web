@@ -53,11 +53,6 @@ module Karafka
                   end
                 end
 
-                sampler.consumer_groups[cg_id] ||= {
-                  id: cg_id,
-                  subscription_groups: {}
-                }
-
                 sampler.consumer_groups[cg_id][:subscription_groups][sg_id] = sg_details
               end
             end

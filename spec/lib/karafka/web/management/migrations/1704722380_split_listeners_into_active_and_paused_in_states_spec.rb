@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe Karafka::Web::Management::Migrations::RemoveProcessingFromConsumersState do
-  it { expect(described_class.versions_until).to eq('1.2.1') }
+RSpec.describe Karafka::Web::Management::Migrations::SplitListenersIntoActiveAndPausedInStates do
+  it { expect(described_class.versions_until).to eq('1.2.2') }
   it { expect(described_class.type).to eq(:consumers_state) }
 
   context 'when migrating from 1.1.0' do
@@ -9,6 +9,6 @@ RSpec.describe Karafka::Web::Management::Migrations::RemoveProcessingFromConsume
 
     before { described_class.new.migrate(state) }
 
-    it { expect(state[:stats].key?(:processing)).to eq(false) }
+    it { expect(state[:stats][:listeners]).to eq(active: 4, standby: 0) }
   end
 end

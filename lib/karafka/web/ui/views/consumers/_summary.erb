@@ -36,10 +36,10 @@
         <div class="card-body">
           <p class="card-text">
             <div class="stat mb-1">
-              <%= @counters.listeners %>
+              <%= @counters.listeners.fetch(:active) %>
             </div>
             <div class="desc">
-              Listeners
+              Active Listeners
             </div>
           </p>
         </div>

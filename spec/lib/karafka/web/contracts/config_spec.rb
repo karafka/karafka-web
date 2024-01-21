@@ -15,6 +15,7 @@ RSpec.describe_current do
         }
       },
       tracking: {
+        active: true,
         interval: 2_000,
         consumers: {
           reporter: Object.new,

@@ -43,6 +43,20 @@ module Karafka
                   .to_json
               end
 
+              # @return [Array<Array<Symbol, Integer>>] active listeners statistics
+              def active_listeners
+                listeners.map do |listener|
+                  [listener[0], listener[1].fetch(:active)]
+                end
+              end
+
+              # @return [Array<Array<Symbol, Integer>>] standby listeners statistics
+              def standby_listeners
+                listeners.map do |listener|
+                  [listener[0], listener[1].fetch(:standby)]
+                end
+              end
+
               # @param method_name [String]
               # @param include_private [Boolean]
               def respond_to_missing?(method_name, include_private = false)

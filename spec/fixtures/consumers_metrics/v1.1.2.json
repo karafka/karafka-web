@@ -10,17 +10,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 106608,
-          "listeners": 2,
-          "utilization": 0.0,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 0,
           "lag_stored": 0,
           "errors": 0,
           "lag": 0,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -32,17 +35,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 136704,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.230708671634096,
           "lag_stored": 1,
           "errors": 0,
           "lag": 3,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ]
     ],
@@ -56,17 +62,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 106608,
-          "listeners": 2,
-          "utilization": 0.0,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 0,
           "lag_stored": 0,
           "errors": 0,
           "lag": 0,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -78,17 +87,20 @@
           "dead": 0,
           "busy": 1,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 128036,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 6.22332662625086,
           "lag_stored": 3,
           "errors": 0,
           "lag": 3,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -100,17 +112,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 128992,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 0.1293035317265113,
           "lag_stored": 0,
           "errors": 0,
           "lag": 0,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -122,17 +137,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 130868,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.829202666726227,
           "lag_stored": 3,
           "errors": 0,
           "lag": 3,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -144,17 +162,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 129584,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 8.077714671310822,
           "lag_stored": 2,
           "errors": 0,
           "lag": 5,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -166,17 +187,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 133356,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.365092632266175,
           "lag_stored": 1,
           "errors": 0,
           "lag": 2,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -188,17 +212,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 136704,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.230708671634096,
           "lag_stored": 1,
           "errors": 0,
           "lag": 3,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ]
     ],
@@ -212,17 +239,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 142620,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 8.307049022381875,
           "lag_stored": 3,
           "errors": 0,
           "lag": 3,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -234,17 +264,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 143296,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 8.874620013732384,
           "lag_stored": 0,
           "errors": 0,
           "lag": 3,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -256,17 +289,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 128844,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 8.632191782915024,
           "lag_stored": 3,
           "errors": 0,
           "lag": 3,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -278,17 +314,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 129584,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 8.077714671310822,
           "lag_stored": 2,
           "errors": 0,
           "lag": 5,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -300,17 +339,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 130884,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 8.757563006324427,
           "lag_stored": 1,
           "errors": 0,
           "lag": 7,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -322,17 +364,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 132160,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 1.2937300744320683,
           "lag_stored": 1,
           "errors": 0,
           "lag": 1,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -344,17 +389,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 132312,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 3.8182326331915935,
           "lag_stored": 3,
           "errors": 0,
           "lag": 5,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -366,17 +414,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 134472,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 10.940327007794458,
           "lag_stored": 1,
           "errors": 0,
           "lag": 6,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -388,17 +439,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 135464,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 11.177056335280055,
           "lag_stored": 3,
           "errors": 0,
           "lag": 6,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -410,17 +464,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 131920,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 11.91885297911821,
           "lag_stored": 4,
           "errors": 0,
           "lag": 4,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -432,17 +489,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 131088,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 11.230664450228382,
           "lag_stored": 3,
           "errors": 0,
           "lag": 4,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -454,17 +514,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 131800,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 10.707963078760153,
           "lag_stored": 1,
           "errors": 0,
           "lag": 6,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -476,17 +539,20 @@
           "dead": 0,
           "busy": 1,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 131824,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 11.264203816172529,
           "lag_stored": 5,
           "errors": 0,
           "lag": 7,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -498,17 +564,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 133244,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 9.56375481796055,
           "lag_stored": 0,
           "errors": 0,
           "lag": 0,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -520,17 +589,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 134212,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.542142388900352,
           "lag_stored": 1,
           "errors": 0,
           "lag": 5,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -542,17 +614,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 136040,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.917343297720043,
           "lag_stored": 2,
           "errors": 0,
           "lag": 3,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -564,17 +639,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 130288,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.736853252691941,
           "lag_stored": 3,
           "errors": 0,
           "lag": 6,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -586,17 +664,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 129232,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.795536747543914,
           "lag_stored": 2,
           "errors": 0,
           "lag": 4,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -608,17 +689,20 @@
           "dead": 0,
           "busy": 1,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 129916,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 6.203800891592627,
           "lag_stored": 1,
           "errors": 0,
           "lag": 3,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -630,17 +714,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 130752,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.835235642937069,
           "lag_stored": 5,
           "errors": 0,
           "lag": 5,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -652,17 +739,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 131336,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.69909264857549,
           "lag_stored": 2,
           "errors": 0,
           "lag": 4,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -674,17 +764,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 131900,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.292309618463469,
           "lag_stored": 0,
           "errors": 0,
           "lag": 2,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -696,17 +789,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 133264,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.705861206655125,
           "lag_stored": 3,
           "errors": 0,
           "lag": 5,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -718,17 +814,20 @@
           "dead": 0,
           "busy": 1,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 135056,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.424542254306267,
           "lag_stored": 2,
           "errors": 0,
           "lag": 3,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -740,17 +839,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 135728,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.318373795712356,
           "lag_stored": 2,
           "errors": 0,
           "lag": 4,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -762,17 +864,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 136900,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.202809571663594,
           "lag_stored": 2,
           "errors": 0,
           "lag": 2,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -784,17 +889,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 138268,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.449599370524767,
           "lag_stored": 2,
           "errors": 0,
           "lag": 3,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -806,17 +914,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 134616,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.819965873015538,
           "lag_stored": 0,
           "errors": 0,
           "lag": 0,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -828,17 +939,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 129320,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.629021581147499,
           "lag_stored": 0,
           "errors": 0,
           "lag": 2,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -850,17 +964,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 129828,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.751722739568708,
           "lag_stored": 1,
           "errors": 0,
           "lag": 4,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -872,17 +989,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 130640,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.467318302114236,
           "lag_stored": 0,
           "errors": 0,
           "lag": 5,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -894,17 +1014,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 131348,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.291599948910901,
           "lag_stored": 1,
           "errors": 0,
           "lag": 5,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -916,17 +1039,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 131908,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.212669717754177,
           "lag_stored": 2,
           "errors": 0,
           "lag": 3,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -938,17 +1064,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 133356,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.365092632266175,
           "lag_stored": 1,
           "errors": 0,
           "lag": 2,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -960,17 +1089,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 134308,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.5193326705512025,
           "lag_stored": 2,
           "errors": 0,
           "lag": 4,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -982,17 +1114,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 135288,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 6.220256811228807,
           "lag_stored": 1,
           "errors": 0,
           "lag": 4,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1004,17 +1139,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 136232,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.688301062053892,
           "lag_stored": 1,
           "errors": 0,
           "lag": 4,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1026,17 +1164,20 @@
           "dead": 0,
           "busy": 1,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 138012,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.795025576377986,
           "lag_stored": 1,
           "errors": 0,
           "lag": 2,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1048,17 +1189,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 139292,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.370078375350395,
           "lag_stored": 1,
           "errors": 0,
           "lag": 3,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1070,17 +1214,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 130948,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.421234423194897,
           "lag_stored": 0,
           "errors": 0,
           "lag": 4,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1092,17 +1239,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 130536,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.501402294548758,
           "lag_stored": 1,
           "errors": 0,
           "lag": 2,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1114,17 +1264,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 129632,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.215093284170894,
           "lag_stored": 2,
           "errors": 0,
           "lag": 3,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1136,17 +1289,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 130940,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.450604240111509,
           "lag_stored": 1,
           "errors": 0,
           "lag": 2,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1158,17 +1314,20 @@
           "dead": 0,
           "busy": 1,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 131528,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.750694073021733,
           "lag_stored": 0,
           "errors": 0,
           "lag": 2,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1180,17 +1339,20 @@
           "dead": 0,
           "busy": 1,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 132680,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.66366745667295,
           "lag_stored": 0,
           "errors": 0,
           "lag": 2,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1202,17 +1364,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 133432,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 6.1242681358097615,
           "lag_stored": 1,
           "errors": 0,
           "lag": 1,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1224,17 +1389,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 134680,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.908255265902802,
           "lag_stored": 1,
           "errors": 0,
           "lag": 3,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1246,17 +1414,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 135500,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.5812165806127645,
           "lag_stored": 1,
           "errors": 0,
           "lag": 2,
-          "bytes_received": 11250,
-          "bytes_sent": 2986
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1268,15 +1439,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 136668,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.880194739318311,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1288,15 +1464,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 138000,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.623361286638467,
           "lag_stored": 4,
           "errors": 0,
-          "lag": 5
+          "lag": 5,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1308,15 +1489,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 139780,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.711887540393872,
           "lag_stored": 5,
           "errors": 0,
-          "lag": 8
+          "lag": 8,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1328,15 +1514,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 133344,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.274036079789187,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 5
+          "lag": 5,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1348,15 +1539,20 @@
           "dead": 0,
           "busy": 1,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 132300,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.725051727516788,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1368,15 +1564,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 131024,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.500081770261861,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1388,15 +1589,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 130728,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.674869326898639,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 1
+          "lag": 1,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1408,15 +1614,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 131824,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.573774833732918,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 5
+          "lag": 5,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1428,15 +1639,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 132356,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.513044687857951,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1448,15 +1664,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 134372,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.5055144287858635,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1468,15 +1689,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 134792,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 6.2200642595989475,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1488,15 +1714,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 136284,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.606104229361367,
           "lag_stored": 4,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1508,15 +1739,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 136704,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.230708671634096,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ]
     ],
@@ -1530,15 +1766,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 131184,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.9522243226380676,
           "lag_stored": 3,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1550,15 +1791,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 131460,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.914458983008776,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1570,15 +1816,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 131572,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.6848592149556945,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1590,15 +1841,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 131640,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.763242028218303,
           "lag_stored": 3,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1610,15 +1866,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 131964,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.747110442837426,
           "lag_stored": 3,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1630,15 +1891,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 131824,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.573774833732918,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 5
+          "lag": 5,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1650,15 +1916,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 131940,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.486784615492982,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1670,15 +1941,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 132216,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.565904270341919,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1690,15 +1966,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 132332,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.624146336409043,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1710,15 +1991,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 132196,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.653061084984438,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1730,15 +2016,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 131740,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.532661643269991,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1750,15 +2041,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 132000,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.466386961411688,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1770,15 +2066,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 131920,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.482250110739824,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1790,15 +2091,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 132168,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.411703127946623,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1810,15 +2116,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 132180,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.328979536052132,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 1
+          "lag": 1,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1830,15 +2141,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 132224,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.26044193106572,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1850,15 +2166,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 132364,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.525360249902464,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1870,15 +2191,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 132356,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.513044687857951,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1890,15 +2216,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 132480,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.586518356451467,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1910,15 +2241,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 132520,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.700594840779074,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1930,15 +2266,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 133140,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.651049609502602,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1950,15 +2291,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 132872,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.504570575736743,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 5
+          "lag": 5,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1970,15 +2316,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 133156,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.49013486557101,
           "lag_stored": 3,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -1990,15 +2341,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 133248,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.585702684677923,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2010,15 +2366,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 133252,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.5816821063378965,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2030,15 +2391,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 133000,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.66064700326836,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2050,15 +2416,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 133372,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.763375196910495,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2070,15 +2441,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 133660,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.811194831306321,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2090,15 +2466,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 133784,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.580654610309093,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2110,15 +2491,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 134372,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.5055144287858635,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2130,15 +2516,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 133860,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.477365420603122,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2150,15 +2541,20 @@
           "dead": 0,
           "busy": 1,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 133780,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.377441659766913,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 6
+          "lag": 6,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2170,15 +2566,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 134188,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.618856754461273,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2190,15 +2591,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 134048,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.7271108120174254,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2210,15 +2616,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 134472,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.717667846589416,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2230,15 +2641,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 134620,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.750862182038937,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2250,15 +2666,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 134320,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.89638772505234,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2270,15 +2691,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 134808,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.957192564965789,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2290,15 +2716,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 135036,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.955421824663936,
           "lag_stored": 3,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2310,15 +2741,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 134752,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.971725587665576,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2330,15 +2766,20 @@
           "dead": 0,
           "busy": 1,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 134652,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 6.174848072569287,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 6
+          "lag": 6,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2350,15 +2791,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 134792,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 6.2200642595989475,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2370,15 +2816,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 134880,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 6.047013889204417,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 5
+          "lag": 5,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2390,15 +2841,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 134848,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 6.076709920118853,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2410,15 +2866,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 135256,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 6.167165162590899,
           "lag_stored": 4,
           "errors": 0,
-          "lag": 7
+          "lag": 7,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2430,15 +2891,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 135348,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 6.219851248932533,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2450,15 +2916,20 @@
           "dead": 0,
           "busy": 1,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 135288,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 6.2025824286629945,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2470,15 +2941,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 135580,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 6.294475964012612,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2490,15 +2966,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 135700,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 6.048716464106394,
           "lag_stored": 3,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2510,15 +2991,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 135704,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.834659967319817,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2530,15 +3016,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 136020,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.65736562543061,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2550,15 +3041,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 135920,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.606677877232698,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2570,15 +3066,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 136088,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.480671198738459,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2590,15 +3091,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 136284,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.606104229361367,
           "lag_stored": 4,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2610,15 +3116,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 136476,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.552668288855204,
           "lag_stored": 3,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2630,15 +3141,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 136344,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.410818595256551,
           "lag_stored": 2,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2650,15 +3166,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 136460,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.419874281278194,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 4
+          "lag": 4,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2670,15 +3191,20 @@
           "dead": 0,
           "busy": 1,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 136352,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.2886113285545555,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2690,15 +3216,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 136400,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.263352519658567,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 2
+          "lag": 2,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2710,15 +3241,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 136276,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.220774716346839,
           "lag_stored": 0,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ],
       [
@@ -2730,15 +3266,20 @@
           "dead": 0,
           "busy": 0,
           "enqueued": 0,
-          "processing": 0,
           "workers": 2,
           "processes": 1,
           "rss": 136704,
-          "listeners": 2,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
           "utilization": 5.230708671634096,
           "lag_stored": 1,
           "errors": 0,
-          "lag": 3
+          "lag": 3,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
         }
       ]
     ]
@@ -2747,8 +3288,7 @@
     "days": [
       [
         1690806938,
-        {
-        }
+        {}
       ],
       [
         1690817196,
@@ -2778,8 +3318,7 @@
     "hours": [
       [
         1690806938,
-        {
-        }
+        {}
       ],
       [
         1690808401,
@@ -5859,6 +6398,6 @@
       ]
     ]
   },
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.2",
   "dispatched_at": 1690817198.082236
 }

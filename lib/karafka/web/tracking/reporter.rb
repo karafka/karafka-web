@@ -16,6 +16,7 @@ module Karafka
         def active?
           return false unless ::Karafka::Web.producer
           return false unless ::Karafka::Web.producer.status.active?
+          return false unless ::Karafka::Web.config.tracking.active
 
           true
         end

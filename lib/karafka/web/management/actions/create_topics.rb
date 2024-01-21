@@ -36,6 +36,7 @@ module Karafka
                 replication_factor,
                 # Remove really old errors (older than 3 months just to preserve space)
                 {
+                  'cleanup.policy': 'delete',
                   'retention.ms': 3 * 31 * 24 * 60 * 60 * 1_000 # 3 months
                 }
               )
@@ -60,6 +61,7 @@ module Karafka
                 # In case its not consumed because no processes are running, it also usually means
                 # there's no data to consume because no karafka servers report
                 {
+                  'cleanup.policy': 'delete',
                   'retention.ms': 24 * 60 * 60 * 1_000 # 1 day
                 }
               )

@@ -37,7 +37,7 @@ RSpec.describe_current do
       started_at: 1_687_439_150.1767561,
       name: 'shinra:3548178:324ae2b47a12',
       status: 'running',
-      listeners: 2,
+      listeners: { active: 2, standby: 0 },
       workers: 2,
       threads: 10,
       memory_usage: 103_364,
@@ -296,14 +296,14 @@ RSpec.describe_current do
     it { expect(contract.call(report)).not_to be_success }
   end
 
-  context 'when process.listeners is not an integer' do
-    before { report[:process][:listeners] = 'not_an_integer' }
+  context 'when process.listeners have non integer values' do
+    before { report[:process][:listeners] = { active: 2, standby: 'test' } }
 
     it { expect(contract.call(report)).not_to be_success }
   end
 
   context 'when process.listeners is negative' do
-    before { report[:process][:listeners] = -1 }
+    before { report[:process][:listeners] = { active: -2, standby: 2 } }
 
     it { expect(contract.call(report)).not_to be_success }
   end

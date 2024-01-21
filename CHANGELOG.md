@@ -8,6 +8,7 @@
 - **[Feature]** Introduce "Data transfers" chart with data received and data sent to the cluster.
 - **[Feature]** Introduce ability to download raw payloads.
 - **[Feature]** Introduce ability to download deserialized message payload as JSON.
+- [Enhancement] Support reporting of standby and active listeners for connection multiplexed subscription groups.
 - [Enhancement] Support Periodic Jobs reporting.
 - [Enhancement] Support multiplexed subscription groups.
 - [Enhancement] Split cluster info into two tabs, one for brokers and one for topics with partitions.
@@ -23,6 +24,8 @@
 - [Enhancement] Display number of jobs in a particular process jobs view.
 - [Enhancement] Promote "Batches" chart to OSS.
 - [Enhancement] Promote "Utilization" chart to OSS.
+- [Enhancement] Allow for explicit disabling of the Web UI tracking.
+- [Fix] Web UI will keep reporting status even when not activated as long as required and in routes.
 - [Fix] Fix times precisions that could be incorrectly reported by 1 second in few places.
 - [Fix] Fix random order in Consumers groups Health view.
 - [Change] Rename "Busy" to "Running" to align with "Running Jobs".

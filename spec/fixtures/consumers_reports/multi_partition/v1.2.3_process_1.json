@@ -6,7 +6,10 @@
     "started_at": 1695802487.537935,
     "name": "shinra:1817527:7ad1ed4ce83a",
     "status": "running",
-    "listeners": 2,
+    "listeners": {
+      "active": 2,
+      "standby": 0
+    },
     "workers": 2,
     "memory_usage": 142036,
     "memory_total_usage": 25765592,

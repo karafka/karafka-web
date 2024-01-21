@@ -56,7 +56,7 @@ RSpec.describe_current do
     context 'when data is present but written in a transactional fashion' do
       before do
         topics_config.consumers.reports = reports_topic
-        produce(reports_topic, Fixtures.file('consumer_report.json'), type: :transactional)
+        produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)
 
         get 'health/overview'
       end
@@ -109,7 +109,7 @@ RSpec.describe_current do
     context 'when data is present but reported in a transactional fashion' do
       before do
         topics_config.consumers.reports = reports_topic
-        produce(reports_topic, Fixtures.file('consumer_report.json'), type: :transactional)
+        produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)
 
         get 'health/offsets'
       end
@@ -130,7 +130,7 @@ RSpec.describe_current do
       before do
         topics_config.consumers.reports = reports_topic
 
-        report = Fixtures.json('consumer_report', symbolize_names: false)
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
 
         partition_data = report.dig(*partition_scope)
 
@@ -160,7 +160,7 @@ RSpec.describe_current do
       before do
         topics_config.consumers.reports = reports_topic
 
-        report = Fixtures.json('consumer_report', symbolize_names: false)
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
 
         partition_data = report.dig(*partition_scope)
 
@@ -223,7 +223,7 @@ RSpec.describe_current do
     context 'when data is present but reported in a transactional fashion' do
       before do
         topics_config.consumers.reports = reports_topic
-        produce(reports_topic, Fixtures.file('consumer_report.json'), type: :transactional)
+        produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)
 
         get 'health/changes'
       end
@@ -242,7 +242,7 @@ RSpec.describe_current do
       before do
         topics_config.consumers.reports = reports_topic
 
-        report = Fixtures.json('consumer_report', symbolize_names: false)
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
 
         partition_data = report.dig(*partition_scope)
 
