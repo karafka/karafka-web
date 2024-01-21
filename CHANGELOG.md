@@ -29,6 +29,28 @@
 - [Change] Rename "Active subscriptions" to "Subscriptions" as process subscriptions are always active.
 - [Maintenance] Introduce granular subscription group contracts.
 
+### Upgrade Notes
+
+This is a **major** release that brings many things to the table.
+
+#### Configuration
+
+**No** configuration changes are needed.
+
+#### Deployment
+
+Because of the reporting schema update, it is recommended to:
+
+0. Make sure you have upgraded to `0.7.10` before and that it was fully deployed.
+1. Test the upgrade on a staging or dev environment.
+2. Starting from `0.7.0` Karafka Web UI supports rolling deploys, so there is no need to "stop the world".
+3. The Web UI interface may throw 500 errors during the upgrade because of schema incompatibility (until Puma is deployed). This will have no long-term effects and can be ignored.
+4. `Karafka::Web::Errors::Processing::IncompatibleSchemaError` **is expected**. It is part of the Karafka Web UI zero-downtime deployment strategy. This error allows the Web UI materialization consumer to back off and wait for it to be replaced with a new one.
+5. Perform a rolling deployment (or a regular one) and replace all consumer processes.
+6. Update the Web UI Puma.
+7. **No** CLI command execution is required. Starting from this release (`0.8.0`), the Karafka Web UI contains an automatic schema migrator that allows it to automatically adjust internal topic data formats.
+8. Enjoy.
+
 ## 0.7.10 (2023-10-31)
 - [Fix] Max LSO chart does not work as expected (#201)
 
