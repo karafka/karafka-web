@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-## 0.8.0 (Unreleased)
+## 0.8.0 (2024-01-26)
 - **[Feature]** Provide ability to sort table data for part of the views (note: not all attributes can be sorted due to technical limitations of sub-components fetching from Kafka).
 - **[Feature]** Track and report pause timeouts via "Changes" view in Health.
 - **[Feature]** Introduce pending jobs visibility alongside of running jobs both in total and per process.
