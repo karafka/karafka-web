@@ -18,6 +18,18 @@ module Karafka
                 metric.last.delete(:lag)
               end
             end
+
+            state[:consumer_groups].each_value do |metrics|
+              metrics.each do |metric_group|
+                metric_group.last.each_value do |metric|
+                  metric.each_value do |sample|
+                    sample[:lag_total] = sample[:lag_stored]
+                    sample.delete(:lag_stored)
+                    sample.delete(:lag)
+                  end
+                end
+              end
+            end
           end
         end
       end

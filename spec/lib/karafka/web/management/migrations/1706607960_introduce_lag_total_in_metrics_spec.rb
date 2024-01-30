@@ -10,12 +10,28 @@ RSpec.describe Karafka::Web::Management::Migrations::IntroduceLagTotalInMetrics 
 
     before { described_class.new.migrate(state) }
 
-    it 'expect to introduce lag_total based on lag_stored and remove other lags' do
+    it 'expect to introduce lag_total based on lag_stored and remove other lags from aggregated' do
       times.each do |key_name|
         state[:aggregated][key_name].each do |sample|
           expect(sample.last[:lag_total]).to be_between(0, 5)
           expect(sample.last.key?(:lag)).to eq(false)
           expect(sample.last.key?(:lag_stored)).to eq(false)
+        end
+      end
+    end
+
+    it 'expect to introduce lag_total based on lag_stored and remove other lags from topics' do
+      times.each do |key_name|
+        state[:consumer_groups][key_name].each do |metrics|
+          metric_group = metrics.last
+
+          metric_group.each_value do |samples|
+            samples.each_value do |sample|
+              expect(sample[:lag_total]).to be_between(0, 5)
+              expect(sample.key?(:lag)).to eq(false)
+              expect(sample.key?(:lag_stored)).to eq(false)
+            end
+          end
         end
       end
     end
@@ -33,6 +49,22 @@ RSpec.describe Karafka::Web::Management::Migrations::IntroduceLagTotalInMetrics 
           expect(sample.last[:lag_total]).to be_between(0, 5)
           expect(sample.last.key?(:lag)).to eq(false)
           expect(sample.last.key?(:lag_stored)).to eq(false)
+        end
+      end
+    end
+
+    it 'expect to introduce lag_total based on lag_stored and remove other lags from topics' do
+      times.each do |key_name|
+        state[:consumer_groups][key_name].each do |metrics|
+          metric_group = metrics.last
+
+          metric_group.each_value do |samples|
+            samples.each_value do |sample|
+              expect(sample[:lag_total]).to be_between(0, 5)
+              expect(sample.key?(:lag)).to eq(false)
+              expect(sample.key?(:lag_stored)).to eq(false)
+            end
+          end
         end
       end
     end
