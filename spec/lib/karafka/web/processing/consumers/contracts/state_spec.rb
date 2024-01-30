@@ -24,7 +24,7 @@ RSpec.describe_current do
           standby: 0
         },
         utilization: 70.2,
-        lag_stored: 50,
+        lag_hybrid: 50,
         lag: 10
       },
       processes: {}

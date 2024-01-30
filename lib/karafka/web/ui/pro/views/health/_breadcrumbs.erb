@@ -4,6 +4,14 @@
   </a>
 </li>
 
+<% if current_path.include?('/lags') %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('health', 'lags') %>">
+      Lags
+    </a>
+  </li>
+<% end %>
+
 <% if current_path.include?('/overview') %>
   <li class="breadcrumb-item">
     <a href="<%= root_path('health', 'overview') %>">

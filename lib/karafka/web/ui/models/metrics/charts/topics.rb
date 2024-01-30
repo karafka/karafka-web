@@ -16,17 +16,17 @@ module Karafka
 
               # @return [String] JSON with lags of each of the topics + total lag of all the topics
               #   from all the consumer groups.
-              def lags_stored
+              def lags_hybrid
                 total = Hash.new { |h, v| h[v] = 0 }
 
                 @data.to_h.each_value do |metrics|
                   metrics.each do |metric|
                     time = metric.first
-                    lag_stored = metric.last[:lag_stored]
+                    lag_hybrid = metric.last[:lag_hybrid]
 
-                    if lag_stored
+                    if lag_hybrid
                       total[time] ||= 0
-                      total[time] += lag_stored
+                      total[time] += lag_hybrid
                     else
                       next if total.key?(time)
 
@@ -37,7 +37,7 @@ module Karafka
 
                 # Extract the lag stored only from all the data
                 per_topic = @data.to_h.map do |topic, metrics|
-                  extracted = metrics.map { |metric| [metric.first, metric.last[:lag_stored]] }
+                  extracted = metrics.map { |metric| [metric.first, metric.last[:lag_hybrid]] }
 
                   [topic, extracted]
                 end.to_h

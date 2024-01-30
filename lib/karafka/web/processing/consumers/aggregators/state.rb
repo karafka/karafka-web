@@ -20,7 +20,7 @@ module Karafka
             # Current schema version
             # This can be used in the future for detecting incompatible changes and writing
             # migrations
-            SCHEMA_VERSION = '1.2.2'
+            SCHEMA_VERSION = '1.3.1'
 
             # @param schema_manager [Karafka::Web::Processing::Consumers::SchemaManager] schema
             #   manager that tracks the compatibility of schemas.
@@ -127,8 +127,7 @@ module Karafka
               stats[:processes] = 0
               stats[:rss] = 0
               stats[:listeners] = { active: 0, standby: 0 }
-              stats[:lag] = 0
-              stats[:lag_stored] = 0
+              stats[:lag_hybrid] = 0
               stats[:bytes_received] = 0
               stats[:bytes_sent] = 0
               utilization = 0
@@ -140,12 +139,13 @@ module Karafka
                   report_stats = report[:stats]
                   report_process = report[:process]
 
-                  lags = []
-                  lags_stored = []
+                  lags_hybrid = []
 
                   iterate_partitions(report) do |partition_stats|
-                    lags << partition_stats[:lag]
-                    lags_stored << partition_stats[:lag_stored]
+                    lag_stored = partition_stats[:lag_stored]
+                    lag = partition_stats[:lag]
+
+                    lags_hybrid << (lag_stored.negative? ? lag : lag_stored)
                   end
 
                   stats[:busy] += report_stats[:busy]
@@ -157,8 +157,7 @@ module Karafka
                   stats[:listeners][:standby] += report_process[:listeners][:standby]
                   stats[:processes] += 1
                   stats[:rss] += report_process[:memory_usage]
-                  stats[:lag] += lags.compact.reject(&:negative?).sum
-                  stats[:lag_stored] += lags_stored.compact.reject(&:negative?).sum
+                  stats[:lag_hybrid] += lags_hybrid.compact.reject(&:negative?).sum
                   utilization += report_stats[:utilization]
                 end
 

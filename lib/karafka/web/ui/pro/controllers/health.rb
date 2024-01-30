@@ -20,8 +20,12 @@ module Karafka
           class Health < Ui::Controllers::Base
             self.sortable_attributes = %w[
               id
+              lag
+              lag_d
               lag_stored
               lag_stored_d
+              lag_hybrid
+              lag_hybrid_d
               committed_offset
               committed_offset_fd
               stored_offset
@@ -46,6 +50,14 @@ module Karafka
               @stats.each_value do |cg_details|
                 cg_details.each_value { |topic_details| refine(topic_details) }
               end
+
+              render
+            end
+
+            # Displays details about lags and their progression/statuses
+            def lags
+              # Same data as overview but presented differently
+              overview
 
               render
             end

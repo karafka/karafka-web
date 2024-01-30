@@ -1,0 +1,5885 @@
+{
+  "aggregated": {
+    "days": [
+      [
+        1690806938,
+        {
+          "batches": 0,
+          "messages": 0,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 106608,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 0,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817196,
+        {
+          "batches": 13527,
+          "messages": 31435,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 136704,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.230708671634096,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ]
+    ],
+    "hours": [
+      [
+        1690806938,
+        {
+          "batches": 0,
+          "messages": 0,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 106608,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 0,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690808401,
+        {
+          "batches": 2794,
+          "messages": 6038,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 128036,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 6.22332662625086,
+          "lag_total": 3,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690810202,
+        {
+          "batches": 3905,
+          "messages": 8149,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 128992,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 0.1293035317265113,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690812003,
+        {
+          "batches": 5229,
+          "messages": 10747,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 130868,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.829202666726227,
+          "lag_total": 3,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690813803,
+        {
+          "batches": 7286,
+          "messages": 15813,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 129584,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 8.077714671310822,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690815603,
+        {
+          "batches": 10470,
+          "messages": 24807,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 133356,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.365092632266175,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817196,
+        {
+          "batches": 13527,
+          "messages": 31435,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 136704,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.230708671634096,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ]
+    ],
+    "minutes": [
+      [
+        1690813622,
+        {
+          "batches": 6951,
+          "messages": 14691,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 142620,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 8.307049022381875,
+          "lag_total": 3,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690813682,
+        {
+          "batches": 7062,
+          "messages": 15069,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 143296,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 8.874620013732384,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690813743,
+        {
+          "batches": 7174,
+          "messages": 15453,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 128844,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 8.632191782915024,
+          "lag_total": 3,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690813803,
+        {
+          "batches": 7286,
+          "messages": 15813,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 129584,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 8.077714671310822,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690813863,
+        {
+          "batches": 7398,
+          "messages": 16194,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 130884,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 8.757563006324427,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690813924,
+        {
+          "batches": 7425,
+          "messages": 16261,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 132160,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 1.2937300744320683,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690813984,
+        {
+          "batches": 7473,
+          "messages": 16435,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 132312,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 3.8182326331915935,
+          "lag_total": 3,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690814044,
+        {
+          "batches": 7569,
+          "messages": 16905,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 134472,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 10.940327007794458,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690814100,
+        {
+          "batches": 7666,
+          "messages": 17348,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 135464,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 11.177056335280055,
+          "lag_total": 3,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690814160,
+        {
+          "batches": 7770,
+          "messages": 17855,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 131920,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 11.91885297911821,
+          "lag_total": 4,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690814220,
+        {
+          "batches": 7876,
+          "messages": 18331,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 131088,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 11.230664450228382,
+          "lag_total": 3,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690814281,
+        {
+          "batches": 7983,
+          "messages": 18831,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 131800,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 10.707963078760153,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690814341,
+        {
+          "batches": 8088,
+          "messages": 19328,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 131824,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 11.264203816172529,
+          "lag_total": 5,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690814401,
+        {
+          "batches": 8187,
+          "messages": 19756,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 133244,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 9.56375481796055,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690814462,
+        {
+          "batches": 8304,
+          "messages": 19991,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 134212,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.542142388900352,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690814522,
+        {
+          "batches": 8417,
+          "messages": 20262,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 136040,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.917343297720043,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690814582,
+        {
+          "batches": 8528,
+          "messages": 20525,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 130288,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.736853252691941,
+          "lag_total": 3,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690814642,
+        {
+          "batches": 8645,
+          "messages": 20785,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 129232,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.795536747543914,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690814703,
+        {
+          "batches": 8759,
+          "messages": 21052,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 129916,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 6.203800891592627,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690814763,
+        {
+          "batches": 8875,
+          "messages": 21313,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 130752,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.835235642937069,
+          "lag_total": 5,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690814823,
+        {
+          "batches": 8988,
+          "messages": 21569,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 131336,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.69909264857549,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690814884,
+        {
+          "batches": 9100,
+          "messages": 21810,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 131900,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.292309618463469,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690814944,
+        {
+          "batches": 9215,
+          "messages": 22061,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 133264,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.705861206655125,
+          "lag_total": 3,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690815004,
+        {
+          "batches": 9333,
+          "messages": 22312,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 135056,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.424542254306267,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690815060,
+        {
+          "batches": 9438,
+          "messages": 22538,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 135728,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.318373795712356,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690815120,
+        {
+          "batches": 9552,
+          "messages": 22781,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 136900,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.202809571663594,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690815180,
+        {
+          "batches": 9670,
+          "messages": 23037,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 138268,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.449599370524767,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690815241,
+        {
+          "batches": 9783,
+          "messages": 23292,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 134616,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.819965873015538,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690815301,
+        {
+          "batches": 9894,
+          "messages": 23541,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 129320,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.629021581147499,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690815361,
+        {
+          "batches": 10007,
+          "messages": 23790,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 129828,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.751722739568708,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690815422,
+        {
+          "batches": 10121,
+          "messages": 24044,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 130640,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.467318302114236,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690815482,
+        {
+          "batches": 10235,
+          "messages": 24298,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 131348,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.291599948910901,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690815542,
+        {
+          "batches": 10353,
+          "messages": 24562,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 131908,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.212669717754177,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690815603,
+        {
+          "batches": 10470,
+          "messages": 24807,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 133356,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.365092632266175,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690815663,
+        {
+          "batches": 10586,
+          "messages": 25058,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 134308,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.5193326705512025,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690815723,
+        {
+          "batches": 10701,
+          "messages": 25321,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 135288,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 6.220256811228807,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690815784,
+        {
+          "batches": 10817,
+          "messages": 25582,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 136232,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.688301062053892,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690815844,
+        {
+          "batches": 10930,
+          "messages": 25840,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 138012,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.795025576377986,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690815904,
+        {
+          "batches": 11043,
+          "messages": 26088,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 139292,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.370078375350395,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690815960,
+        {
+          "batches": 11151,
+          "messages": 26307,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 130948,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.421234423194897,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816020,
+        {
+          "batches": 11269,
+          "messages": 26558,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 130536,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.501402294548758,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816080,
+        {
+          "batches": 11385,
+          "messages": 26789,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 129632,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.215093284170894,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816141,
+        {
+          "batches": 11502,
+          "messages": 27032,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 130940,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.450604240111509,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816201,
+        {
+          "batches": 11618,
+          "messages": 27289,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 131528,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.750694073021733,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816261,
+        {
+          "batches": 11733,
+          "messages": 27536,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 132680,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.66366745667295,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816322,
+        {
+          "batches": 11845,
+          "messages": 27801,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 133432,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 6.1242681358097615,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816382,
+        {
+          "batches": 11963,
+          "messages": 28060,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 134680,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.908255265902802,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816442,
+        {
+          "batches": 12077,
+          "messages": 28305,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 135500,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.5812165806127645,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_received": 0,
+          "bytes_sent": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816503,
+        {
+          "batches": 12193,
+          "messages": 28573,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 136668,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.880194739318311,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816563,
+        {
+          "batches": 12310,
+          "messages": 28819,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 138000,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.623361286638467,
+          "lag_total": 4,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816623,
+        {
+          "batches": 12428,
+          "messages": 29073,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 139780,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.711887540393872,
+          "lag_total": 5,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816684,
+        {
+          "batches": 12544,
+          "messages": 29319,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 133344,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.274036079789187,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816744,
+        {
+          "batches": 12662,
+          "messages": 29565,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 132300,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.725051727516788,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816804,
+        {
+          "batches": 12780,
+          "messages": 29822,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 131024,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.500081770261861,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816860,
+        {
+          "batches": 12887,
+          "messages": 30051,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 130728,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.674869326898639,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816920,
+        {
+          "batches": 13003,
+          "messages": 30305,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 131824,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.573774833732918,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816980,
+        {
+          "batches": 13119,
+          "messages": 30551,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 132356,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.513044687857951,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817041,
+        {
+          "batches": 13234,
+          "messages": 30797,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 134372,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.5055144287858635,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817101,
+        {
+          "batches": 13348,
+          "messages": 31045,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 134792,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 6.2200642595989475,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817161,
+        {
+          "batches": 13461,
+          "messages": 31293,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 136284,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.606104229361367,
+          "lag_total": 4,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817196,
+        {
+          "batches": 13527,
+          "messages": 31435,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 136704,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.230708671634096,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ]
+    ],
+    "seconds": [
+      [
+        1690816895,
+        {
+          "batches": 12955,
+          "messages": 30202,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 131184,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.9522243226380676,
+          "lag_total": 3,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816900,
+        {
+          "batches": 12964,
+          "messages": 30223,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 131460,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.914458983008776,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816905,
+        {
+          "batches": 12974,
+          "messages": 30242,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 131572,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.6848592149556945,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816910,
+        {
+          "batches": 12983,
+          "messages": 30262,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 131640,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.763242028218303,
+          "lag_total": 3,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816915,
+        {
+          "batches": 12993,
+          "messages": 30284,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 131964,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.747110442837426,
+          "lag_total": 3,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816920,
+        {
+          "batches": 13003,
+          "messages": 30305,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 131824,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.573774833732918,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816925,
+        {
+          "batches": 13013,
+          "messages": 30327,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 131940,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.486784615492982,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816930,
+        {
+          "batches": 13023,
+          "messages": 30348,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 132216,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.565904270341919,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816935,
+        {
+          "batches": 13033,
+          "messages": 30369,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 132332,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.624146336409043,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816940,
+        {
+          "batches": 13042,
+          "messages": 30392,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 132196,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.653061084984438,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816945,
+        {
+          "batches": 13051,
+          "messages": 30410,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 131740,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.532661643269991,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816950,
+        {
+          "batches": 13061,
+          "messages": 30429,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 132000,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.466386961411688,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816955,
+        {
+          "batches": 13071,
+          "messages": 30450,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 131920,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.482250110739824,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816960,
+        {
+          "batches": 13081,
+          "messages": 30466,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 132168,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.411703127946623,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816965,
+        {
+          "batches": 13091,
+          "messages": 30484,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 132180,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.328979536052132,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816970,
+        {
+          "batches": 13100,
+          "messages": 30505,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 132224,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.26044193106572,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816975,
+        {
+          "batches": 13110,
+          "messages": 30531,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 132364,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.525360249902464,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816980,
+        {
+          "batches": 13119,
+          "messages": 30551,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 132356,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.513044687857951,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816985,
+        {
+          "batches": 13129,
+          "messages": 30576,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 132480,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.586518356451467,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816990,
+        {
+          "batches": 13139,
+          "messages": 30600,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 132520,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.700594840779074,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690816995,
+        {
+          "batches": 13149,
+          "messages": 30618,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 133140,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.651049609502602,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817000,
+        {
+          "batches": 13159,
+          "messages": 30637,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 132872,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.504570575736743,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817005,
+        {
+          "batches": 13168,
+          "messages": 30657,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 133156,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.49013486557101,
+          "lag_total": 3,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817010,
+        {
+          "batches": 13176,
+          "messages": 30676,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 133248,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.585702684677923,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817015,
+        {
+          "batches": 13186,
+          "messages": 30696,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 133252,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.5816821063378965,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817020,
+        {
+          "batches": 13196,
+          "messages": 30717,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 133000,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.66064700326836,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817025,
+        {
+          "batches": 13205,
+          "messages": 30736,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 133372,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.763375196910495,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817031,
+        {
+          "batches": 13215,
+          "messages": 30758,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 133660,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.811194831306321,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817036,
+        {
+          "batches": 13224,
+          "messages": 30775,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 133784,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.580654610309093,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817041,
+        {
+          "batches": 13234,
+          "messages": 30797,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 134372,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.5055144287858635,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817046,
+        {
+          "batches": 13243,
+          "messages": 30821,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 133860,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.477365420603122,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817051,
+        {
+          "batches": 13252,
+          "messages": 30844,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 133780,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.377441659766913,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817056,
+        {
+          "batches": 13261,
+          "messages": 30863,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 134188,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.618856754461273,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817061,
+        {
+          "batches": 13271,
+          "messages": 30882,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 134048,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.7271108120174254,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817066,
+        {
+          "batches": 13280,
+          "messages": 30898,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 134472,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.717667846589416,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817071,
+        {
+          "batches": 13290,
+          "messages": 30918,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 134620,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.750862182038937,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817076,
+        {
+          "batches": 13299,
+          "messages": 30939,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 134320,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.89638772505234,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817081,
+        {
+          "batches": 13309,
+          "messages": 30960,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 134808,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.957192564965789,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817086,
+        {
+          "batches": 13319,
+          "messages": 30978,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 135036,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.955421824663936,
+          "lag_total": 3,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817091,
+        {
+          "batches": 13329,
+          "messages": 30998,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 134752,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.971725587665576,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817096,
+        {
+          "batches": 13339,
+          "messages": 31025,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 134652,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 6.174848072569287,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817101,
+        {
+          "batches": 13348,
+          "messages": 31045,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 134792,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 6.2200642595989475,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817106,
+        {
+          "batches": 13357,
+          "messages": 31063,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 134880,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 6.047013889204417,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817111,
+        {
+          "batches": 13366,
+          "messages": 31083,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 134848,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 6.076709920118853,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817116,
+        {
+          "batches": 13375,
+          "messages": 31107,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 135256,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 6.167165162590899,
+          "lag_total": 4,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817121,
+        {
+          "batches": 13385,
+          "messages": 31131,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 135348,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 6.219851248932533,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817126,
+        {
+          "batches": 13394,
+          "messages": 31154,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 135288,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 6.2025824286629945,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817131,
+        {
+          "batches": 13403,
+          "messages": 31174,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 135580,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 6.294475964012612,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817136,
+        {
+          "batches": 13412,
+          "messages": 31191,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 135700,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 6.048716464106394,
+          "lag_total": 3,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817141,
+        {
+          "batches": 13422,
+          "messages": 31209,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 135704,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.834659967319817,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817146,
+        {
+          "batches": 13432,
+          "messages": 31227,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 136020,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.65736562543061,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817151,
+        {
+          "batches": 13441,
+          "messages": 31247,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 135920,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.606677877232698,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817156,
+        {
+          "batches": 13451,
+          "messages": 31271,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 136088,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.480671198738459,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817161,
+        {
+          "batches": 13461,
+          "messages": 31293,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 136284,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.606104229361367,
+          "lag_total": 4,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817166,
+        {
+          "batches": 13470,
+          "messages": 31309,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 136476,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.552668288855204,
+          "lag_total": 3,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817171,
+        {
+          "batches": 13480,
+          "messages": 31334,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 136344,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.410818595256551,
+          "lag_total": 2,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817176,
+        {
+          "batches": 13489,
+          "messages": 31356,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 136460,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.419874281278194,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817181,
+        {
+          "batches": 13499,
+          "messages": 31378,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 136352,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.2886113285545555,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817186,
+        {
+          "batches": 13508,
+          "messages": 31397,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 136400,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.263352519658567,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817191,
+        {
+          "batches": 13517,
+          "messages": 31415,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 136276,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.220774716346839,
+          "lag_total": 0,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ],
+      [
+        1690817196,
+        {
+          "batches": 13527,
+          "messages": 31435,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 136704,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 5.230708671634096,
+          "lag_total": 1,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0
+        }
+      ]
+    ]
+  },
+  "consumer_groups": {
+    "days": [
+      [
+        1690806938,
+        {}
+      ],
+      [
+        1690817196,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 63569
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2046
+            }
+          }
+        }
+      ]
+    ],
+    "hours": [
+      [
+        1690806938,
+        {}
+      ],
+      [
+        1690808401,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 3,
+              "pace": 39949
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 6
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 291
+            }
+          }
+        }
+      ],
+      [
+        1690810202,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 41711
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 6
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 649
+            }
+          }
+        }
+      ],
+      [
+        1690812003,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 43925
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 10
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 1,
+              "pace": 1013
+            }
+          }
+        }
+      ],
+      [
+        1690813803,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 48616
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 17
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1371
+            }
+          }
+        }
+      ],
+      [
+        1690815603,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 57254
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1729
+            }
+          }
+        }
+      ],
+      [
+        1690817196,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 63569
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2046
+            }
+          }
+        }
+      ]
+    ],
+    "minutes": [
+      [
+        1690813622,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 3,
+              "pace": 47536
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 17
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1335
+            }
+          }
+        }
+      ],
+      [
+        1690813682,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 47895
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 17
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1347
+            }
+          }
+        }
+      ],
+      [
+        1690813743,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 3,
+              "pace": 48270
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 17
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1359
+            }
+          }
+        }
+      ],
+      [
+        1690813803,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 48616
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 17
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1371
+            }
+          }
+        }
+      ],
+      [
+        1690813863,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 48986
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 17
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1383
+            }
+          }
+        }
+      ],
+      [
+        1690813924,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 49065
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 17
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 1,
+              "pace": 1395
+            }
+          }
+        }
+      ],
+      [
+        1690813984,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 3,
+              "pace": 49226
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 21
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1407
+            }
+          }
+        }
+      ],
+      [
+        1690814044,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 49675
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 25
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1419
+            }
+          }
+        }
+      ],
+      [
+        1690814100,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 3,
+              "pace": 50105
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 25
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1430
+            }
+          }
+        }
+      ],
+      [
+        1690814160,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 4,
+              "pace": 50598
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 25
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1442
+            }
+          }
+        }
+      ],
+      [
+        1690814220,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 3,
+              "pace": 51059
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 25
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1454
+            }
+          }
+        }
+      ],
+      [
+        1690814281,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 51543
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 25
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1466
+            }
+          }
+        }
+      ],
+      [
+        1690814341,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 5,
+              "pace": 52019
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 25
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1478
+            }
+          }
+        }
+      ],
+      [
+        1690814401,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 52457
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 25
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1490
+            }
+          }
+        }
+      ],
+      [
+        1690814462,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 52669
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1502
+            }
+          }
+        }
+      ],
+      [
+        1690814522,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 52925
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1514
+            }
+          }
+        }
+      ],
+      [
+        1690814582,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 3,
+              "pace": 53178
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1526
+            }
+          }
+        }
+      ],
+      [
+        1690814642,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 53420
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1538
+            }
+          }
+        }
+      ],
+      [
+        1690814703,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 53665
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 1,
+              "pace": 1550
+            }
+          }
+        }
+      ],
+      [
+        1690814763,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 4,
+              "pace": 53923
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 1,
+              "pace": 1562
+            }
+          }
+        }
+      ],
+      [
+        1690814823,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 54163
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 1,
+              "pace": 1574
+            }
+          }
+        }
+      ],
+      [
+        1690814884,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 54413
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1586
+            }
+          }
+        }
+      ],
+      [
+        1690814944,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 3,
+              "pace": 54651
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1598
+            }
+          }
+        }
+      ],
+      [
+        1690815004,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 54888
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1610
+            }
+          }
+        }
+      ],
+      [
+        1690815060,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 55102
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1621
+            }
+          }
+        }
+      ],
+      [
+        1690815120,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 55333
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1633
+            }
+          }
+        }
+      ],
+      [
+        1690815180,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 55573
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1645
+            }
+          }
+        }
+      ],
+      [
+        1690815241,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 55815
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1657
+            }
+          }
+        }
+      ],
+      [
+        1690815301,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 56055
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1669
+            }
+          }
+        }
+      ],
+      [
+        1690815361,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 56289
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1681
+            }
+          }
+        }
+      ],
+      [
+        1690815422,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 56532
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1693
+            }
+          }
+        }
+      ],
+      [
+        1690815482,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 56772
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1705
+            }
+          }
+        }
+      ],
+      [
+        1690815542,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 57022
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1717
+            }
+          }
+        }
+      ],
+      [
+        1690815603,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 57254
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1729
+            }
+          }
+        }
+      ],
+      [
+        1690815663,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 57494
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1741
+            }
+          }
+        }
+      ],
+      [
+        1690815723,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 57739
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 1,
+              "pace": 1753
+            }
+          }
+        }
+      ],
+      [
+        1690815784,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 58007
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1765
+            }
+          }
+        }
+      ],
+      [
+        1690815844,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 58249
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1777
+            }
+          }
+        }
+      ],
+      [
+        1690815904,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 58487
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1789
+            }
+          }
+        }
+      ],
+      [
+        1690815960,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 58694
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1800
+            }
+          }
+        }
+      ],
+      [
+        1690816020,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 58932
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1812
+            }
+          }
+        }
+      ],
+      [
+        1690816080,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 59149
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1824
+            }
+          }
+        }
+      ],
+      [
+        1690816141,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 59377
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1836
+            }
+          }
+        }
+      ],
+      [
+        1690816201,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 59618
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1848
+            }
+          }
+        }
+      ],
+      [
+        1690816261,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 59855
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1860
+            }
+          }
+        }
+      ],
+      [
+        1690816322,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 60104
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1872
+            }
+          }
+        }
+      ],
+      [
+        1690816382,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 60353
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1884
+            }
+          }
+        }
+      ],
+      [
+        1690816442,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 60585
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1896
+            }
+          }
+        }
+      ],
+      [
+        1690816503,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 60832
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 1,
+              "pace": 1908
+            }
+          }
+        }
+      ],
+      [
+        1690816563,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 3,
+              "pace": 61071
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 1,
+              "pace": 1920
+            }
+          }
+        }
+      ],
+      [
+        1690816623,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 4,
+              "pace": 61307
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 1,
+              "pace": 1932
+            }
+          }
+        }
+      ],
+      [
+        1690816684,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 61550
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 1,
+              "pace": 1944
+            }
+          }
+        }
+      ],
+      [
+        1690816744,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 61796
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1956
+            }
+          }
+        }
+      ],
+      [
+        1690816804,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 62043
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1968
+            }
+          }
+        }
+      ],
+      [
+        1690816860,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 62258
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1979
+            }
+          }
+        }
+      ],
+      [
+        1690816920,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 62501
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1991
+            }
+          }
+        }
+      ],
+      [
+        1690816980,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 62732
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2003
+            }
+          }
+        }
+      ],
+      [
+        1690817041,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 62965
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2015
+            }
+          }
+        }
+      ],
+      [
+        1690817101,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 63198
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2027
+            }
+          }
+        }
+      ],
+      [
+        1690817161,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 4,
+              "pace": 63437
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2039
+            }
+          }
+        }
+      ],
+      [
+        1690817196,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 63569
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2046
+            }
+          }
+        }
+      ]
+    ],
+    "seconds": [
+      [
+        1690816895,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 3,
+              "pace": 62401
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1986
+            }
+          }
+        }
+      ],
+      [
+        1690816900,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 62422
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1987
+            }
+          }
+        }
+      ],
+      [
+        1690816905,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 62441
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1988
+            }
+          }
+        }
+      ],
+      [
+        1690816910,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 3,
+              "pace": 62458
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1989
+            }
+          }
+        }
+      ],
+      [
+        1690816915,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 3,
+              "pace": 62480
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1990
+            }
+          }
+        }
+      ],
+      [
+        1690816920,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 62501
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1991
+            }
+          }
+        }
+      ],
+      [
+        1690816925,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 62522
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1992
+            }
+          }
+        }
+      ],
+      [
+        1690816930,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 62541
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1993
+            }
+          }
+        }
+      ],
+      [
+        1690816935,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 62561
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1994
+            }
+          }
+        }
+      ],
+      [
+        1690816940,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 62581
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1995
+            }
+          }
+        }
+      ],
+      [
+        1690816945,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 62601
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1996
+            }
+          }
+        }
+      ],
+      [
+        1690816950,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 62619
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1997
+            }
+          }
+        }
+      ],
+      [
+        1690816955,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 62636
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1998
+            }
+          }
+        }
+      ],
+      [
+        1690816960,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 62652
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 1999
+            }
+          }
+        }
+      ],
+      [
+        1690816965,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 62668
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2000
+            }
+          }
+        }
+      ],
+      [
+        1690816970,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 62686
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2001
+            }
+          }
+        }
+      ],
+      [
+        1690816975,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 62711
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2002
+            }
+          }
+        }
+      ],
+      [
+        1690816980,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 62732
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2003
+            }
+          }
+        }
+      ],
+      [
+        1690816985,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 62756
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2004
+            }
+          }
+        }
+      ],
+      [
+        1690816990,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 62777
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2005
+            }
+          }
+        }
+      ],
+      [
+        1690816995,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 62797
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2006
+            }
+          }
+        }
+      ],
+      [
+        1690817000,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 62815
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2007
+            }
+          }
+        }
+      ],
+      [
+        1690817005,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 3,
+              "pace": 62834
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2008
+            }
+          }
+        }
+      ],
+      [
+        1690817010,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 62853
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2009
+            }
+          }
+        }
+      ],
+      [
+        1690817015,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 62870
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2010
+            }
+          }
+        }
+      ],
+      [
+        1690817020,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 62888
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2011
+            }
+          }
+        }
+      ],
+      [
+        1690817025,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 62908
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2012
+            }
+          }
+        }
+      ],
+      [
+        1690817031,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 62926
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2013
+            }
+          }
+        }
+      ],
+      [
+        1690817036,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 62945
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2014
+            }
+          }
+        }
+      ],
+      [
+        1690817041,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 62965
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2015
+            }
+          }
+        }
+      ],
+      [
+        1690817046,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 62984
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2016
+            }
+          }
+        }
+      ],
+      [
+        1690817051,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 63007
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2017
+            }
+          }
+        }
+      ],
+      [
+        1690817056,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 63029
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2018
+            }
+          }
+        }
+      ],
+      [
+        1690817061,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 63048
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2019
+            }
+          }
+        }
+      ],
+      [
+        1690817066,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 63062
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2020
+            }
+          }
+        }
+      ],
+      [
+        1690817071,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 63081
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2021
+            }
+          }
+        }
+      ],
+      [
+        1690817076,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 63100
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2022
+            }
+          }
+        }
+      ],
+      [
+        1690817081,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 63118
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2023
+            }
+          }
+        }
+      ],
+      [
+        1690817086,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 3,
+              "pace": 63138
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2024
+            }
+          }
+        }
+      ],
+      [
+        1690817091,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 63154
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2025
+            }
+          }
+        }
+      ],
+      [
+        1690817096,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 63178
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2026
+            }
+          }
+        }
+      ],
+      [
+        1690817101,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 63198
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2027
+            }
+          }
+        }
+      ],
+      [
+        1690817106,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 63217
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2028
+            }
+          }
+        }
+      ],
+      [
+        1690817111,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 63235
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2029
+            }
+          }
+        }
+      ],
+      [
+        1690817116,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 4,
+              "pace": 63259
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2030
+            }
+          }
+        }
+      ],
+      [
+        1690817121,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 63276
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2031
+            }
+          }
+        }
+      ],
+      [
+        1690817126,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 63300
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2032
+            }
+          }
+        }
+      ],
+      [
+        1690817131,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 63322
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2033
+            }
+          }
+        }
+      ],
+      [
+        1690817136,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 3,
+              "pace": 63340
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2034
+            }
+          }
+        }
+      ],
+      [
+        1690817141,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 63355
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2035
+            }
+          }
+        }
+      ],
+      [
+        1690817146,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 63371
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2036
+            }
+          }
+        }
+      ],
+      [
+        1690817151,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 63392
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2037
+            }
+          }
+        }
+      ],
+      [
+        1690817156,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 63412
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2038
+            }
+          }
+        }
+      ],
+      [
+        1690817161,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 4,
+              "pace": 63437
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2039
+            }
+          }
+        }
+      ],
+      [
+        1690817166,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 3,
+              "pace": 63452
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2040
+            }
+          }
+        }
+      ],
+      [
+        1690817171,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 2,
+              "pace": 63472
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2041
+            }
+          }
+        }
+      ],
+      [
+        1690817176,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 63494
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2042
+            }
+          }
+        }
+      ],
+      [
+        1690817181,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 63513
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2043
+            }
+          }
+        }
+      ],
+      [
+        1690817186,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 63534
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2044
+            }
+          }
+        }
+      ],
+      [
+        1690817191,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 0,
+              "pace": 63553
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2045
+            }
+          }
+        }
+      ],
+      [
+        1690817196,
+        {
+          "example_app6_app": {
+            "default": {
+              "lag_total": 1,
+              "pace": 63569
+            },
+            "visits": {
+              "lag_total": 0,
+              "pace": 27
+            }
+          },
+          "example_app6_karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_total": 0,
+              "pace": 2046
+            }
+          }
+        }
+      ]
+    ]
+  },
+  "schema_version": "1.2.0",
+  "dispatched_at": 1690817198.082236
+}

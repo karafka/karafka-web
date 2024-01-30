@@ -6,6 +6,28 @@ module Karafka
       module Models
         # Single topic partition data representation model
         class Partition < Lib::HashProxy
+          # @param args [Object] anything hash proxy accepts
+          def initialize(*args)
+            super
+
+            # We initialize those here because we want to have them stored in the internal has
+            # for sorting
+            lag_hybrid
+            lag_hybrid_d
+          end
+
+          # Because `lag_stored` is not available until first marking, we fallback to the lag
+          #   value that may be behind but is always available until stored lag is available.
+          # @return [Integer] hybrid log value
+          def lag_hybrid
+            self[:lag_hybrid] ||= lag_stored.negative? ? lag : lag_stored
+          end
+
+          # @return [Integer] hybrid log delta
+          def lag_hybrid_d
+            self[:lag_hybrid_d] ||= lag_stored.negative? ? lag_d : lag_stored_d
+          end
+
           # @return [Symbol] one of three states in which LSO can be in the correlation to given
           #   partition in the context of a consumer group.
           #

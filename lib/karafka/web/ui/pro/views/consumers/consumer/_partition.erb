@@ -3,11 +3,11 @@
     <%= partition.id %>
   </td>
   <td>
-    <%== lag_with_label partition.lag_stored %>
+    <%== lag_with_label partition.lag_hybrid %>
   </td>
   <td>
-    <span class="badge <%= lag_trend_bg(partition.lag_stored_d) %>">
-      <%= partition.lag_stored_d %>
+    <span class="badge <%= lag_trend_bg(partition.lag_hybrid_d) %>">
+      <%= partition.lag_hybrid_d %>
     </span>
   </td>
   <td>

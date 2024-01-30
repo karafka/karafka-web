@@ -3,15 +3,7 @@
     <%= partition_id %>
   </td>
   <td>
-    <%== lag_with_label details.lag_stored %>
-  </td>
-  <td>
-    <span class="badge <%= lag_trend_bg(details.lag_stored_d) %>">
-      <%= details.lag_stored_d %>
-    </span>
-  </td>
-  <td>
-    <%== offset_with_label topic_name, partition_id, details.committed_offset %>
+    <%== lag_with_label details.lag_hybrid %>
   </td>
   <td>
     <%== offset_with_label topic_name, partition_id, details.stored_offset %>

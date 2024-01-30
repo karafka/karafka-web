@@ -5,8 +5,7 @@ RSpec.describe_current do
 
   let(:topic_stats) do
     {
-      lag_stored: 10,
-      lag: 5,
+      lag_hybrid: 5,
       pace: 3,
       ls_offset_fd: 2
     }
@@ -18,26 +17,14 @@ RSpec.describe_current do
     end
   end
 
-  context 'when lag_stored is not a number' do
-    before { topic_stats[:lag_stored] = 'test' }
+  context 'when lag_hybrid is not a number' do
+    before { topic_stats[:lag_hybrid] = 'test' }
 
     it { expect(contract.call(topic_stats)).not_to be_success }
   end
 
-  context 'when lag_stored is missing' do
-    before { topic_stats.delete(:lag_stored) }
-
-    it { expect(contract.call(topic_stats)).not_to be_success }
-  end
-
-  context 'when lag is not a number' do
-    before { topic_stats[:lag] = 'test' }
-
-    it { expect(contract.call(topic_stats)).not_to be_success }
-  end
-
-  context 'when lag is missing' do
-    before { topic_stats.delete(:lag) }
+  context 'when lag_hybrid is missing' do
+    before { topic_stats.delete(:lag_hybrid) }
 
     it { expect(contract.call(topic_stats)).not_to be_success }
   end

@@ -14,7 +14,10 @@ RSpec.describe_current do
       let(:topic_data) do
         {
           partitions: {
-            '0': {}
+            '0': {
+              lag_stored: 0,
+              lag_stored_d: 2
+            }
           }
         }
       end

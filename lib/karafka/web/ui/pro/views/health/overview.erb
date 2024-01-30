@@ -8,20 +8,7 @@
 
 <% @stats.each_with_index do |(cg_name, details), index| %>
   <div class="container mb-5">
-    <div class="row mb-4">
-      <div class="col-sm-8">
-        <h4 class="mb-4"><%= cg_name %></h4>
-      </div>
-
-      <div class="col-sm-4">
-        <span class="float-end">
-          Last rebalance:
-          <span class="badge bg-secondary">
-            <%== relative_time(details[:rebalanced_at]) %>
-          </span>
-        </span>
-      </div>
-    </div>
+    <%== partial 'health/consumer_group_header', locals: { cg_name: cg_name, details: details } %>
 
     <div class="row mb-3">
       <div class="col-sm-12">
@@ -36,9 +23,7 @@
               </tr>
               <tr class="align-middle">
                 <th><%== sort_link('Partition', :id) %></th>
-                <th><%== sort_link(:lag_stored) %></th>
-                <th><%== sort_link('Lag stored trend', :lag_stored_d) %></th>
-                <th><%== sort_link(:committed_offset) %></th>
+                <th><%== sort_link('Lag', :lag_hybrid) %></th>
                 <th><%== sort_link(:stored_offset) %></th>
                 <th><%== sort_link(:fetch_state) %></th>
                 <th><%== sort_link(:poll_state) %></th>

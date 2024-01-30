@@ -33,6 +33,9 @@ RSpec.describe_current do
       expect(topic_data[0][:lag]).to eq(13)
       expect(topic_data[0][:lag_d]).to eq(2)
       expect(topic_data[0][:lag_stored]).to eq(1)
+      expect(topic_data[0][:lag_stored_d]).to eq(-3)
+      expect(topic_data[0][:lag_hybrid]).to eq(1)
+      expect(topic_data[0][:lag_hybrid_d]).to eq(-3)
       expect(topic_data[0][:committed_offset]).to eq(327_343)
       expect(topic_data[0][:stored_offset]).to eq(327_355)
       expect(topic_data[0][:fetch_state]).to eq('active')
@@ -90,7 +93,7 @@ RSpec.describe_current do
       keys = %i[
         lag lag_d lag_stored lag_stored_d committed_offset stored_offset fetch_state hi_offset id
         poll_state process hi_offset_fd stored_offset_fd lo_offset ls_offset ls_offset_fd
-        eof_offset committed_offset_fd poll_state_ch partition_id
+        eof_offset committed_offset_fd poll_state_ch partition_id lag_hybrid lag_hybrid_d
       ].sort
       expect(sg[:topics][:default][:partitions]['0'.to_sym].keys.sort).to eq(keys)
     end

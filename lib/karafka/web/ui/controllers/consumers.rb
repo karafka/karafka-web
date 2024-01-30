@@ -9,7 +9,7 @@ module Karafka
           self.sortable_attributes = %w[
             name
             started_at
-            lag_stored
+            lag_hybrid
           ].freeze
 
           # List page with consumers

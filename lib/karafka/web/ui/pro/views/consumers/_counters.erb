@@ -19,9 +19,9 @@
               </li>
               <li class="col-sm">
                 <div class="count mb-1">
-                  <%= number_with_delimiter @counters.lag_stored, ' ' %>
+                  <%= number_with_delimiter @counters.lag_hybrid, ' ' %>
                 </div>
-                <div class="desc">Lag stored</div>
+                <div class="desc">Total lag</div>
               </li>
               <li class="col-sm">
                 <a href="<%= root_path('jobs/running') %>">

@@ -21,9 +21,13 @@ module Karafka
             self.sortable_attributes = %w[
               name
               started_at
+              lag
+              lag_d
               lag_stored
-              id
               lag_stored_d
+              lag_hybrid
+              lag_hybrid_d
+              id
               committed_offset
               stored_offset
               fetch_state
@@ -93,7 +97,13 @@ module Karafka
 
               # We want to have sorting but on a per subscription group basis and not to sort
               # everything
-              @process.consumer_groups.each { |subscription_group| refine(subscription_group) }
+              @process.consumer_groups.each do |consumer_group|
+                # We need to initialize the whole structure so dynamic fields are also built into
+                # the underlying hashes for sorting
+                consumer_group.subscription_groups.flat_map(&:topics).flat_map(&:partitions)
+
+                refine(consumer_group)
+              end
 
               render
             end
