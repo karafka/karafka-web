@@ -9,8 +9,7 @@ module Karafka
           class TopicStats < Web::Contracts::Base
             configure
 
-            required(:lag_stored) { |val| val.is_a?(Integer) }
-            required(:lag) { |val| val.is_a?(Integer) }
+            required(:lag_hybrid) { |val| val.is_a?(Integer) }
             required(:pace) { |val| val.is_a?(Integer) }
             required(:ls_offset_fd) { |val| val.is_a?(Integer) && val >= 0 }
           end

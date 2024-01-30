@@ -13,7 +13,7 @@
         <ul class="nav nav-tabs" id="graphs1" role="tablist">
           <%== partial 'shared/tab_nav', locals: { title: 'Messages', id: 'messages', active: true } %>
           <%== partial 'shared/tab_nav', locals: { title: 'Batches', id: 'batches' } %>
-          <%== partial 'shared/tab_nav', locals: { title: 'Lags stored', id: 'lags-stored' } %>
+          <%== partial 'shared/tab_nav', locals: { title: 'Topics lags', id: 'topics-lags' } %>
           <%== partial 'shared/tab_nav', locals: { title: 'Topics pace', id: 'topics-pace' } %>
           <%== partial 'shared/tab_nav', locals: { title: 'Max LSO time', id: 'max-lso-time' } %>
         </ul>
@@ -29,8 +29,8 @@
             <%== partial 'shared/chart', locals: { data: data, id: 'batches' } %>
           </div>
 
-          <div class="tab-pane" id="lags-stored" role="tabpanel">
-            <%== partial 'shared/chart', locals: { data: @topics_charts.lags_stored, id: 'lags-stored' } %>
+          <div class="tab-pane" id="topics-lags" role="tabpanel">
+            <%== partial 'shared/chart', locals: { data: @topics_charts.lags_hybrid, id: 'topics-lags' } %>
           </div>
 
           <div class="tab-pane" id="topics-pace" role="tabpanel">

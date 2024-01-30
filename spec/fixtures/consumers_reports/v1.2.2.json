@@ -72,7 +72,7 @@
                 "0": {
                   "lag": 13,
                   "lag_d": 2,
-                  "lag_stored": 1,
+                  "lag_stored": 213731273,
                   "lag_stored_d": -3,
                   "committed_offset": 327343,
                   "committed_offset_fd": 5000,

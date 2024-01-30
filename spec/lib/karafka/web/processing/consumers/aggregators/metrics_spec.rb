@@ -34,7 +34,7 @@ RSpec.describe_current do
 
       expect(hashed[:aggregated]).to eq(days: [], hours: [], minutes: [], seconds: [])
       expect(hashed[:consumer_groups]).to eq(days: [], hours: [], minutes: [], seconds: [])
-      expect(hashed[:schema_version]).to eq('1.1.2')
+      expect(hashed[:schema_version]).to eq('1.2.1')
       expect(hashed.key?(:dispatched_at)).to eq(true)
     end
   end
@@ -67,18 +67,15 @@ RSpec.describe_current do
       topics1 = metrics_aggregator.to_h[:consumer_groups][:seconds][0][1][:example_app_app]
       topics2 = metrics_aggregator.to_h[:consumer_groups][:seconds][0][1][:example_app_karafka_web]
 
-      expect(topics1[:visits][:lag_stored]).to eq(5)
-      expect(topics1[:visits][:lag]).to eq(5)
+      expect(topics1[:visits][:lag_hybrid]).to eq(5)
       expect(topics1[:visits][:pace]).to eq(271_066)
       expect(topics1[:visits][:ls_offset_fd]).to eq(0)
 
-      expect(topics1[:default][:lag_stored]).to eq(0)
-      expect(topics1[:default][:lag]).to eq(15)
+      expect(topics1[:default][:lag_hybrid]).to eq(0)
       expect(topics1[:default][:pace]).to eq(813_204)
       expect(topics1[:default][:ls_offset_fd]).to eq(0)
 
-      expect(topics2[:karafka_consumers_reports][:lag_stored]).to eq(0)
-      expect(topics2[:karafka_consumers_reports][:lag]).to eq(0)
+      expect(topics2[:karafka_consumers_reports][:lag_hybrid]).to eq(0)
       expect(topics2[:karafka_consumers_reports][:pace]).to eq(28_972)
       expect(topics2[:karafka_consumers_reports][:ls_offset_fd]).to eq(0)
     end

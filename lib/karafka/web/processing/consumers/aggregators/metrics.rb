@@ -11,7 +11,7 @@ module Karafka
           class Metrics < Base
             # Current schema version
             # This is used for detecting incompatible changes and writing migrations
-            SCHEMA_VERSION = '1.1.2'
+            SCHEMA_VERSION = '1.2.1'
 
             def initialize
               super
@@ -92,12 +92,11 @@ module Karafka
               cgs = {}
 
               iterate_partitions_data do |group_name, topic_name, partitions_data|
-                lags = partitions_data
-                       .map { |p_details| p_details.fetch(:lag, -1) }
-                       .reject(&:negative?)
-
-                lags_stored = partitions_data
-                              .map { |p_details| p_details.fetch(:lag_stored, -1) }
+                lags_hybrid = partitions_data
+                              .map do |p_details|
+                                lag_stored = p_details.fetch(:lag_stored, -1)
+                                lag_stored.negative? ? p_details.fetch(:lag, -1) : lag_stored
+                              end
                               .reject(&:negative?)
 
                 offsets_hi = partitions_data
@@ -121,8 +120,7 @@ module Karafka
 
                 cgs[group_name] ||= {}
                 cgs[group_name][topic_name] = {
-                  lag_stored: lags_stored.sum,
-                  lag: lags.sum,
+                  lag_hybrid: lags_hybrid.sum,
                   pace: offsets_hi.sum,
                   # Take max last stable offset duration without any change. This can
                   # indicate a hanging transaction, because the offset will not move forward

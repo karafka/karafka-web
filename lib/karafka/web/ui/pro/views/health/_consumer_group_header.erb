@@ -1,0 +1,14 @@
+<div class="row mb-4">
+  <div class="col-sm-8">
+    <h4 class="mb-4"><%= cg_name %></h4>
+  </div>
+
+  <div class="col-sm-4">
+    <span class="float-end">
+      Last rebalance:
+      <span class="badge bg-secondary">
+        <%== relative_time(details[:rebalanced_at]) %>
+      </span>
+    </span>
+  </div>
+</div>

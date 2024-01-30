@@ -7,14 +7,34 @@ RSpec.describe_current do
   let(:ls_offset) { 100 }
   let(:ls_offset_fd) { 100 }
   let(:committed_offset) { 100 }
+  let(:lag_stored) { -1 }
+  let(:lag) { 100 }
 
   let(:data) do
     {
       hi_offset: hi_offset,
       ls_offset: ls_offset,
       ls_offset_fd: ls_offset_fd,
-      committed_offset: committed_offset
+      committed_offset: committed_offset,
+      lag_stored: lag_stored,
+      lag_stored_d: 0,
+      lag: lag,
+      lag_d: 2
     }
+  end
+
+  describe '#lag_hybrid and #lag_hybrid_d' do
+    context 'when lag stored is negative' do
+      it { expect(partition.lag_hybrid).to eq(100) }
+      it { expect(partition.lag_hybrid_d).to eq(2) }
+    end
+
+    context 'when lag stored is positive' do
+      let(:lag_stored) { 20 }
+
+      it { expect(partition.lag_hybrid).to eq(20) }
+      it { expect(partition.lag_hybrid_d).to eq(0) }
+    end
   end
 
   describe '#lso_risk_state' do

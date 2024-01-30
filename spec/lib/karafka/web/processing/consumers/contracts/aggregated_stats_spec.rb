@@ -17,8 +17,7 @@ RSpec.describe_current do
       rss: 512.45,
       listeners: { active: 3, standby: 0 },
       utilization: 70.2,
-      lag_stored: 50,
-      lag: 10
+      lag_hybrid: 50
     }
   end
 
@@ -67,15 +66,10 @@ RSpec.describe_current do
     end
   end
 
-  %i[
-    lag_stored
-    lag
-  ].each do |key|
-    context "when #{key} is not a number" do
-      before { stats[key] = 'test' }
+  context 'when lag_hybrid is not a number' do
+    before { stats[:lag_hybrid] = 'test' }
 
-      it { expect(contract.call(stats)).not_to be_success }
-    end
+    it { expect(contract.call(stats)).not_to be_success }
   end
 
   context 'when checking listeners' do

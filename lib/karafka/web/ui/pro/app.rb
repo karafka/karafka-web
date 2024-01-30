@@ -163,6 +163,10 @@ module Karafka
             r.on 'health' do
               controller = Controllers::Health.new(params)
 
+              r.get 'lags' do
+                controller.lags
+              end
+
               r.get 'offsets' do
                 controller.offsets
               end

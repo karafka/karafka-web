@@ -21,8 +21,7 @@ module Karafka
             required(:processes) { |val| val.is_a?(Integer) && val >= 0 }
             required(:rss) { |val| val.is_a?(Numeric) && val >= 0 }
             required(:utilization) { |val| val.is_a?(Numeric) && val >= 0 }
-            required(:lag_stored) { |val| val.is_a?(Integer) }
-            required(:lag) { |val| val.is_a?(Integer) }
+            required(:lag_hybrid) { |val| val.is_a?(Integer) }
 
             nested(:listeners) do
               required(:active) { |val| val.is_a?(Integer) && val >= 0 }

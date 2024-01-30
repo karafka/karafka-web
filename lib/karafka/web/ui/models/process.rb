@@ -41,24 +41,13 @@ module Karafka
               .then { |jobs| Jobs.new(jobs) }
           end
 
-          # @return [Integer] collective stored lag on this process
-          def lag_stored
+          # @return [Integer] collective hybrid lag on this process
+          def lag_hybrid
             consumer_groups
               .flat_map(&:subscription_groups)
               .flat_map(&:topics)
               .flat_map(&:partitions)
-              .map(&:lag_stored)
-              .delete_if(&:negative?)
-              .sum
-          end
-
-          # @return [Integer] collective lag on this process
-          def lag
-            consumer_groups
-              .flat_map(&:subscription_groups)
-              .flat_map(&:topics)
-              .flat_map(&:partitions)
-              .map(&:lag)
+              .map(&:lag_hybrid)
               .delete_if(&:negative?)
               .sum
           end
