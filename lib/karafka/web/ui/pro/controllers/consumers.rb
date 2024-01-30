@@ -19,15 +19,11 @@ module Karafka
           # Controller for displaying consumers states and details about them
           class Consumers < Ui::Controllers::Base
             self.sortable_attributes = %w[
+              id
               name
               started_at
-              lag
-              lag_d
-              lag_stored
-              lag_stored_d
               lag_hybrid
               lag_hybrid_d
-              id
               committed_offset
               stored_offset
               fetch_state
