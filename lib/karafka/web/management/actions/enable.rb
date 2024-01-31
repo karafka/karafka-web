@@ -10,6 +10,11 @@ module Karafka
         class Enable < Base
           # Enables routing consumer group and subscribes Web-UI listeners
           def call
+            # Prevent double enabling
+            return if ::Karafka::Web.config.enabled
+
+            ::Karafka::Web.config.enabled = true
+
             extend_routing
             setup_tracking_activity
 

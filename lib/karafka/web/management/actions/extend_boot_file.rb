@@ -22,7 +22,9 @@ module Karafka
 
           # Adds needed code
           def call
-            if File.read(Karafka.boot_file).include?(ENABLER_CODE)
+            # We detect this that way so in case our template or user has enabled as a comment
+            # it still adds the template and runs install
+            if File.readlines(Karafka.boot_file).any? { |line| line.start_with?(ENABLER_CODE) }
               puts "Web UI #{already} installed."
             else
               puts 'Updating the Karafka boot file...'

@@ -10,6 +10,7 @@ module Karafka
         # Use the same regexp as Karafka for topics validation
         TOPIC_REGEXP = ::Karafka::Contracts::TOPIC_REGEXP
 
+        required(:enabled) { |val| [true, false, nil].include?(val) }
         required(:ttl) { |val| val.is_a?(Numeric) && val.positive? }
 
         nested(:topics) do
