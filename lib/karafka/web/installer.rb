@@ -15,16 +15,17 @@ module Karafka
         puts
         puts 'Installing Karafka Web UI...'
         puts
+        Management::Actions::ExtendBootFile.new.call
+        puts
         puts 'Creating necessary topics and populating state data...'
         puts
         Management::Actions::CreateTopics.new.call(replication_factor)
         wait_for_topics
+        enable!
         Management::Actions::CreateInitialStates.new.call
         puts
         puts 'Running data migrations...'
         Management::Actions::MigrateStatesData.new.call
-        puts
-        Management::Actions::ExtendBootFile.new.call
         puts
         puts("Installation #{green('completed')}. Have fun!")
         puts

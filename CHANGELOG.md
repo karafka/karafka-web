@@ -6,6 +6,7 @@
 - [Enhancement] Report lag on consumers that did not yet marked offsets.
 - [Enhancement] Use more accurate lag reporting that compensates for lack of stored lag.
 - [Fix] When first message after process start is crashed without DLQ lag is not reported.
+- [Fix] Wrong order of enabled injection causes fresh install to crash.
 
 ## 0.8.0 (2024-01-26)
 - **[Feature]** Provide ability to sort table data for part of the views (note: not all attributes can be sorted due to technical limitations of sub-components fetching from Kafka).

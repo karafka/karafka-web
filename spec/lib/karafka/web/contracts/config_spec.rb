@@ -5,6 +5,7 @@ RSpec.describe_current do
 
   let(:params) do
     {
+      enabled: true,
       ttl: 5000,
       topics: {
         errors: 'errors-topic',
@@ -52,6 +53,12 @@ RSpec.describe_current do
     it 'is valid' do
       expect(contract.call(params)).to be_success
     end
+  end
+
+  context 'when enabled is not boolean' do
+    before { params[:enabled] = 'string_value' }
+
+    it { expect(contract.call(params)).not_to be_success }
   end
 
   context 'when ttl is not numeric' do

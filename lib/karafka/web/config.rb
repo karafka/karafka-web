@@ -6,6 +6,10 @@ module Karafka
     class Config
       include ::Karafka::Core::Configurable
 
+      # Is the Web UI enabled and things were configured.
+      # Automatically set to true in case things got enabled.
+      setting :enabled, default: false
+
       # How long do we consider the process alive without receiving status info about it
       # For this long we also display dead processes (shutdown) in the UI
       # This is used both in the processing for eviction and in the UI
