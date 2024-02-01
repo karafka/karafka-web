@@ -12,6 +12,7 @@ module Karafka
       #
       # @param replication_factor [Integer] replication factor we want to use (1 by default)
       def install(replication_factor: 1)
+        enable!
         puts
         puts 'Installing Karafka Web UI...'
         puts
@@ -21,7 +22,6 @@ module Karafka
         puts
         Management::Actions::CreateTopics.new.call(replication_factor)
         wait_for_topics
-        enable!
         Management::Actions::CreateInitialStates.new.call
         puts
         puts 'Running data migrations...'
@@ -36,6 +36,7 @@ module Karafka
       #
       # @param replication_factor [Integer] replication factor we want to use (1 by default)
       def migrate(replication_factor: 1)
+        enable!
         puts
         puts 'Creating necessary topics and populating state data...'
         puts
@@ -53,6 +54,7 @@ module Karafka
       # Removes all the Karafka topics and creates them again with the same replication factor
       # @param replication_factor [Integer] replication factor we want to use (1 by default)
       def reset(replication_factor: 1)
+        enable!
         puts
         puts 'Resetting Karafka Web UI...'
         puts
@@ -71,6 +73,7 @@ module Karafka
 
       # Removes all the Karafka Web topics and cleans after itself.
       def uninstall
+        enable!
         puts
         puts 'Uninstalling Karafka Web UI...'
         puts
