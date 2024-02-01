@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-## 0.8.1 (Unreleased)
+## 0.8.1 (2024-02-01)
 - [Enhancement] Introduce "Lags" health view.
 - [Enhancement] Remove "Stored Lag" and "Committed Offset" from Health Overview due to Lags Tab.
 - [Enhancement] Report lag on consumers that did not yet marked offsets.
