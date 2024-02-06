@@ -388,6 +388,18 @@ RSpec.describe_current do
 
   describe '#subscriptions' do
     context 'when subscriptions exist' do
+      before { get 'consumers/1/subscriptions' }
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('Rebalance count:')
+        expect(body).to include('This process does not consume any')
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
+
+    context 'when subscription has an unknown rebalance reason' do
       before do
         topics_config.consumers.reports = reports_topic
 
@@ -400,18 +412,6 @@ RSpec.describe_current do
 
         get 'consumers/1/subscriptions'
       end
-
-      it do
-        expect(response).to be_ok
-        expect(body).to include('Rebalance count:')
-        expect(body).to include('This process does not consume any')
-        expect(body).not_to include(pagination)
-        expect(body).not_to include(support_message)
-      end
-    end
-
-    context 'when subscription has an unknown rebalance reason' do
-      before { get 'consumers/1/subscriptions' }
 
       it do
         expect(response).to be_ok
