@@ -76,7 +76,13 @@
 
   <span class="text-end mt-3">
     <small>
-      Last rebalance reason: <%= subscription_group.rebalance_reason %>
+      Last rebalance reason:
+
+      <% if subscription_group.rebalance_reason.empty? %>
+        Unknown
+      <% else %>
+        <%= subscription_group.rebalance_reason %>
+      <% end %>
     </small>
   </span>
 </div>
