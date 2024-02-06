@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    karafka-web (0.8.1)
+    karafka-web (0.8.2)
       erubi (~> 1.4)
       karafka (>= 2.3.0, < 2.4.0)
       karafka-core (>= 2.3.0, < 2.4.0)
