@@ -69,6 +69,7 @@ module Karafka
 
           # Listeners needed for the Web UI to track consumer related changes
           setting :listeners, default: [
+            Tracking::Consumers::Listeners::Booting.new,
             Tracking::Consumers::Listeners::Status.new,
             Tracking::Consumers::Listeners::Errors.new,
             Tracking::Consumers::Listeners::Connections.new,
@@ -88,6 +89,7 @@ module Karafka
 
           # Listeners needed for the Web UI to track producers related stuff
           setting :listeners, default: [
+            Tracking::Producers::Listeners::Booting.new,
             Tracking::Producers::Listeners::Errors.new
           ]
         end
