@@ -11,11 +11,6 @@ module Karafka
       class Scheduler
         include ::Karafka::Helpers::Async
 
-        # Creates the scheduler and runs its internal reporting
-        def initialize
-          async_call
-        end
-
         private
 
         # Reports the process state once in a while

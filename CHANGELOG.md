@@ -1,5 +1,8 @@
 # Karafka Web changelog
 
+## 0.8.2 (Unreleased)
+- [Enhancement] Defer scheduler background thread creation until needed allowing for forks.
+
 ## 0.8.1 (2024-02-01)
 - [Enhancement] Introduce "Lags" health view.
 - [Enhancement] Remove "Stored Lag" and "Committed Offset" from Health Overview due to Lags Tab.
