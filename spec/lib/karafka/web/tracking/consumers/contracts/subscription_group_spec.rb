@@ -86,10 +86,27 @@ RSpec.describe_current do
     it { expect(contract.call(subscription_group)).not_to be_success }
   end
 
+  context 'when rebalance_reason in state is missing' do
+    before { subscription_group[:state].delete(:rebalance_reason) }
+
+    it { expect(contract.call(subscription_group)).not_to be_success }
+  end
+
+  context 'when rebalance_reason is not a string' do
+    before { subscription_group[:state][:rebalance_reason] = rand }
+
+    it { expect(contract.call(subscription_group)).not_to be_success }
+  end
+
+  context 'when rebalance_reason is empty' do
+    before { subscription_group[:state][:rebalance_reason] = '' }
+
+    it { expect(contract.call(subscription_group)).to be_success }
+  end
+
   %i[
     state
     join_state
-    rebalance_reason
   ].each do |key|
     context "when #{key} in state is missing" do
       before { subscription_group[:state].delete(key) }

@@ -399,6 +399,30 @@ RSpec.describe_current do
       end
     end
 
+    context 'when subscription has an unknown rebalance reason' do
+      before do
+        topics_config.consumers.reports = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: true)
+
+        sg = report[:consumer_groups][:example_app6_app][:subscription_groups][:c4ca4238a0b9_0]
+        sg[:state][:rebalance_reason] = ''
+
+        produce(reports_topic, report.to_json)
+
+        get 'consumers/1/subscriptions'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('Rebalance count:')
+        expect(body).to include('Unknown')
+        expect(body).to include('This process does not consume any')
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
+
     context 'when subscriptions exist and was reported in a transactional fashion' do
       before do
         topics_config.consumers.states = states_topic

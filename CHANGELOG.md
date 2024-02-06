@@ -2,6 +2,7 @@
 
 ## 0.8.2 (Unreleased)
 - [Enhancement] Defer scheduler background thread creation until needed allowing for forks.
+- [Fix] Rebalance reason can be empty on a SG when no network.
 
 ## 0.8.1 (2024-02-01)
 - [Enhancement] Introduce "Lags" health view.
