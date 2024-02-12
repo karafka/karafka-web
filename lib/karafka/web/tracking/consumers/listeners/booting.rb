@@ -16,6 +16,16 @@ module Karafka
             def on_app_running(_event)
               ::Karafka::Web.config.tracking.scheduler.async_call
             end
+
+            # Updates the web producer after fork if needed and adds ppid to nodes
+            # @param _event [Karafka::Core::Monitoring::Event]
+            def on_swarm_node_after_fork(_event)
+              ::Karafka::Process.tags.add(:node_ppid, "ppid:#{::Process.ppid}")
+
+              return if Karafka::Web.config.producer == Karafka::App.config.producer
+
+              Web.config.producer = Karafka::App.config.producer
+            end
           end
         end
       end

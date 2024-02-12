@@ -15,8 +15,9 @@ module Karafka
     class << self
       # @return [WaterDrop::Producer, nil] waterdrop messages producer or nil if not yet fully
       #   initialized. It may not be fully initialized until the configuration is done
+      # @note Do NOT memoize producer as it may be updated after forking
       def producer
-        @producer ||= Web.config.producer
+        Web.config.producer
       end
 
       # @return [String] root path of this gem

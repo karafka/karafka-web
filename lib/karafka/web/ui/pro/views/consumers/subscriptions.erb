@@ -8,16 +8,16 @@
 
 <%== partial 'consumers/consumer/tabs' %>
 
-<% if @process.consumer_groups.empty? %>
+<% if @process.subscribed? %>
+  <div class="container">
+    <%==
+      render_each(
+        @process.consumer_groups,
+        'consumers/consumer/_consumer_group',
+        local: :consumer_group
+      )
+    %>
+  </div>
+<% else %>
   <%== partial 'consumers/consumer/no_subscriptions' %>
 <% end %>
-
-<div class="container">
-  <%==
-    render_each(
-      @process.consumer_groups,
-      'consumers/consumer/_consumer_group',
-      local: :consumer_group
-    )
-  %>
-</div>

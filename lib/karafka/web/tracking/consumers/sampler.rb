@@ -46,7 +46,6 @@ module Karafka
             end
             @subscription_groups = {}
             @errors = []
-            @started_at = float_now
             @pauses = {}
             @jobs = {}
             @shell = MemoizedShell.new
@@ -71,7 +70,7 @@ module Karafka
               dispatched_at: float_now,
 
               process: {
-                started_at: @started_at,
+                started_at: started_at,
                 name: process_name,
                 status: ::Karafka::App.config.internal.status.to_s,
                 listeners: listeners,
@@ -128,6 +127,13 @@ module Karafka
           end
 
           private
+
+          # @return [Float] time of start of this process
+          # @note We memoize it on first run as forks should have their creation time matching the
+          #   fork time.
+          def started_at
+            @started_at ||= float_now
+          end
 
           # @return [Numeric] % utilization of all the threads. 100% means all the threads are
           #   utilized all the time within the given time window. 0% means, nothing is happening

@@ -52,6 +52,15 @@ module Karafka
               .sum
           end
 
+          # @return [Boolean] true if there are any active subscriptions, otherwise false.
+          def subscribed?
+            return false if consumer_groups.empty?
+
+            consumer_groups.any? do |cg|
+              !cg.subscription_groups.empty?
+            end
+          end
+
           # @return [Integer] number of partitions to which we are currently subscribed
           def subscribed_partitions_count
             consumer_groups
