@@ -41,11 +41,13 @@ module Karafka
           def status_bg(status)
             case status
             when 'initialized' then 'bg-success'
+            when 'supervising' then 'bg-success'
             when 'running' then 'bg-success'
             when 'quieting' then 'bg-warning'
             when 'quiet' then 'bg-warning text-dark'
             when 'stopping' then 'bg-warning text-dark'
             when 'stopped' then 'bg-danger'
+            when 'terminated' then 'bg-danger'
             else
               raise ::Karafka::Errors::UnsupportedCaseError, status
             end

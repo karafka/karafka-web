@@ -39,6 +39,7 @@ RSpec.describe_current do
       expect(process.lag_stored).to eq(213_731_273)
       expect(process.lag).to eq(13)
       expect(process.subscribed_partitions_count).to eq(3)
+      expect(process.subscribed?).to eq(true)
     end
   end
 end

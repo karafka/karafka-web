@@ -1,9 +1,9 @@
 <%== view_title('Consumers groups overview') %>
 
+<%== partial 'health/tabs' %>
+
 <% if @stats.empty? %>
   <%== partial 'health/no_data' %>
-<% else %>
-  <%== partial 'health/tabs' %>
 <% end %>
 
 <% @stats.each_with_index do |(cg_name, details), index| %>
