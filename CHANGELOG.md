@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-## 0.8.2 (Unreleased)
+## 0.8.2 (2024-02-16)
 - [Enhancement] Defer scheduler background thread creation until needed allowing for forks.
 - [Enhancement] Tag forks with fork indication + ppid reference when operating in swarm.
 - [Fix] Fix issue where Health tabs would not be visible when no data reported.
