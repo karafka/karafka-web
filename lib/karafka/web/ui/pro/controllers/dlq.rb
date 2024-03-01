@@ -22,17 +22,17 @@ module Karafka
             def index
               topics = Karafka::App.consumer_groups.flat_map(&:topics).flat_map(&:to_a)
 
-              dlq_topic_matches = topics
-                                  .map { |source_topic| source_topic.dead_letter_queue.topic }
-                                  .uniq
-                                  .compact
-                                  .select(&:itself)
+              dlq_topic_patterns = topics
+                                   .map { |source_topic| source_topic.dead_letter_queue.topic }
+                                   .uniq
+                                   .compact
+                                   .select(&:itself)
 
-              dlq_topic_matches += Web.config.ui.dlq_matchers
+              dlq_topic_patterns += Web.config.ui.dlq_patterns
 
               @dlq_topics = Models::ClusterInfo
                             .topics
-                            .select { |topic| dlq?(dlq_topic_matches, topic[:topic_name]) }
+                            .select { |topic| dlq?(dlq_topic_patterns, topic[:topic_name]) }
                             .sort_by { |topic| topic[:topic_name] }
 
               render

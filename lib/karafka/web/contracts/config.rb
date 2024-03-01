@@ -58,6 +58,11 @@ module Karafka
           required(:cache) { |val| !val.nil? }
           required(:per_page) { |val| val.is_a?(Integer) && val >= 1 && val <= 100 }
 
+          required(:dlq_patterns) do |val|
+            val.is_a?(Array) &&
+              val.all? { |attr| attr.is_a?(String) || attr.is_a?(Regexp) }
+          end
+
           nested(:visibility) do
             required(:filter) { |val| !val.nil? }
             required(:internal_topics) { |val| [true, false].include?(val) }

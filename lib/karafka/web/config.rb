@@ -157,7 +157,7 @@ module Karafka
         # Web UI uses auto DLQ discovery based on routing but this may not be fully operable when
         # using a multi-app setup. This config allows to add extra topics if needed without having
         # to explicitly define routing
-        setting :dlq_matchers, default: [/(dlq)|(dead_letter)/i]
+        setting :dlq_patterns, default: [/(dlq)|(dead_letter)/i]
 
         # Specific kafka settings that are tuned to operate within the Web UI interface.
         #
