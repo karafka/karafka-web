@@ -1,5 +1,8 @@
 # Karafka Web changelog
 
+## 0.8.3 (Unreleased)
+- [Enhancement] Auto-qualify topics with dlq/dead_letter case insensitive name components to DLQ view
+
 ## 0.8.2 (2024-02-16)
 - [Enhancement] Defer scheduler background thread creation until needed allowing for forks.
 - [Enhancement] Tag forks with fork indication + ppid reference when operating in swarm.

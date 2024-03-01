@@ -44,7 +44,8 @@ RSpec.describe_current do
           internal_topics: true
         },
         cache: Object.new,
-        per_page: 50
+        per_page: 50,
+        dlq_patterns: []
       }
     }
   end
@@ -188,6 +189,18 @@ RSpec.describe_current do
 
     context 'when internal_topics is not boolean' do
       before { params[:ui][:visibility][:internal_topics] = '1' }
+
+      it { expect(contract.call(params)).not_to be_success }
+    end
+
+    context 'when dlq_patterns is not an array' do
+      before { params[:ui][:dlq_patterns] = '1' }
+
+      it { expect(contract.call(params)).not_to be_success }
+    end
+
+    context 'when dlq_patterns is array with things other than string or regexp' do
+      before { params[:ui][:dlq_patterns] = [1, 2, 3] }
 
       it { expect(contract.call(params)).not_to be_success }
     end

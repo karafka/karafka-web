@@ -153,6 +153,12 @@ module Karafka
         # are dealing with
         setting :visibility_filter, default: Ui::Models::VisibilityFilter.new
 
+        # Consider any topic matching those names as a DLQ topic for the DLQ view
+        # Web UI uses auto DLQ discovery based on routing but this may not be fully operable when
+        # using a multi-app setup. This config allows to add extra topics if needed without having
+        # to explicitly define routing
+        setting :dlq_patterns, default: [/(dlq)|(dead_letter)/i]
+
         # Specific kafka settings that are tuned to operate within the Web UI interface.
         #
         # Please do not change them unless you know what you are doing as their misconfiguration
