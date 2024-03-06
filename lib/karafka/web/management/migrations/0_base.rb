@@ -47,7 +47,7 @@ module Karafka
             def sorted_descendants
               ObjectSpace
                 .each_object(Class)
-                .select { |klass| klass < self }
+                .select { |klass| klass != self && klass.ancestors.include?(self) }
                 .sort_by(&:index)
             end
           end
