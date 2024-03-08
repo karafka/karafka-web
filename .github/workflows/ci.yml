@@ -44,7 +44,6 @@ jobs:
           ruby-version: ${{matrix.ruby}}
           bundler-cache: true
           bundler: 'latest'
-          cache-version: 2
 
       - name: Install latest bundler
         run: |
@@ -82,7 +81,6 @@ jobs:
         with:
           ruby-version: 3.3
           bundler-cache: true
-          cache-version: 2
 
       - name: Install Diffend plugin
         run: bundle plugin install diffend
