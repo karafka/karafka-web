@@ -24,6 +24,8 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'rackup', '~> 0.2'
 
+  spec.required_ruby_version = '>= 3.0.0'
+
   if $PROGRAM_NAME.end_with?('gem')
     spec.signing_key = File.expand_path('~/.ssh/gem-private_key.pem')
   end
