@@ -82,6 +82,7 @@ jobs:
         with:
           ruby-version: 3.3
           bundler-cache: true
+          cache-version: 2
 
       - name: Install Diffend plugin
         run: bundle plugin install diffend
