@@ -1,6 +1,7 @@
 # Karafka Web changelog
 
 ## 0.9.0 (Unreleased)
+- **[Breaking]** Drop Ruby `2.7` support.
 - [Enhancement] Auto-qualify topics with dlq/dead_letter case insensitive name components to DLQ view
 
 ## 0.8.2 (2024-02-16)
