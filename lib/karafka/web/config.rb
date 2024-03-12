@@ -138,6 +138,11 @@ module Karafka
           # Should we display internal topics of Kafka. The once starting with `__`
           # By default we do not display them as they are not usable from regular users perspective
           setting :internal_topics, default: false
+
+          # Should we display cluster lags only for active topics
+          # Useful for multi-app setups where the web-ui routing does not match the routing setup
+          # of micro-services and topics are not active but lags reporting should be in use
+          setting :active_topics_cluster_lags_only, default: true
         end
 
         # How many elements should we display on pages that support pagination

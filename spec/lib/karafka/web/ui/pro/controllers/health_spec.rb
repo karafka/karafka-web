@@ -124,6 +124,37 @@ RSpec.describe_current do
     end
   end
 
+  describe '#cluster_lags' do
+    context 'when no report data' do
+      before do
+        allow(Karafka::Admin).to receive(:read_lags).and_return({})
+        get 'health/cluster_lags'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(breadcrumbs)
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+        expect(body).to include('No health data is available')
+        expect(body).not_to include('bg-warning')
+        expect(body).not_to include('bg-danger')
+      end
+    end
+
+    context 'when we have groups and data but topics never consumed' do
+      before { get 'health/lags' }
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(breadcrumbs)
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+        expect(body).to include('-1')
+      end
+    end
+  end
+
   describe '#offsets' do
     context 'when no report data' do
       before do

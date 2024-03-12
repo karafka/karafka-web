@@ -41,7 +41,8 @@ RSpec.describe_current do
         },
         visibility: {
           filter: Object.new,
-          internal_topics: true
+          internal_topics: true,
+          active_topics_cluster_lags_only: true
         },
         cache: Object.new,
         per_page: 50,
@@ -189,6 +190,18 @@ RSpec.describe_current do
 
     context 'when internal_topics is not boolean' do
       before { params[:ui][:visibility][:internal_topics] = '1' }
+
+      it { expect(contract.call(params)).not_to be_success }
+    end
+
+    context 'when active_topics_cluster_lags_only is nil' do
+      before { params[:ui][:visibility][:active_topics_cluster_lags_only] = nil }
+
+      it { expect(contract.call(params)).not_to be_success }
+    end
+
+    context 'when active_topics_cluster_lags_only is not boolean' do
+      before { params[:ui][:visibility][:active_topics_cluster_lags_only] = '1' }
 
       it { expect(contract.call(params)).not_to be_success }
     end
