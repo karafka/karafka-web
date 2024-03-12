@@ -167,6 +167,10 @@ module Karafka
                 controller.lags
               end
 
+              r.get 'cluster_lags' do
+                controller.cluster_lags
+              end
+
               r.get 'offsets' do
                 controller.offsets
               end

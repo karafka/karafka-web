@@ -1,3 +1,12 @@
+GIT
+  remote: https://github.com/karafka/karafka
+  revision: db2439c78c67124bc9581f9fea7303fb1092a4a2
+  specs:
+    karafka (2.3.4)
+      karafka-core (>= 2.3.0, < 2.4.0)
+      waterdrop (>= 2.6.12, < 3.0.0)
+      zeitwerk (~> 2.3)
+
 PATH
   remote: .
   specs:
@@ -35,10 +44,6 @@ GEM
     ffi (1.16.3)
     i18n (1.14.4)
       concurrent-ruby (~> 1.0)
-    karafka (2.3.3)
-      karafka-core (>= 2.3.0, < 2.4.0)
-      waterdrop (>= 2.6.12, < 3.0.0)
-      zeitwerk (~> 2.3)
     karafka-core (2.3.0)
       karafka-rdkafka (>= 0.14.8, < 0.15.0)
     karafka-rdkafka (0.14.10)
@@ -92,6 +97,7 @@ PLATFORMS
 DEPENDENCIES
   byebug
   factory_bot
+  karafka!
   karafka-web!
   rack-test
   rackup (~> 0.2)

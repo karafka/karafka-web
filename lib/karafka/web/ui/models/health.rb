@@ -8,7 +8,7 @@ module Karafka
         class Health
           class << self
             # @param state [State] current system state
-            # @return [Hash] has with aggregated statistics
+            # @return [Hash] hash with aggregated statistics
             def current(state)
               stats = {}
 
@@ -16,6 +16,31 @@ module Karafka
               fetch_rebalance_ages(state, stats)
 
               sort_structure(stats)
+            end
+
+            # @return [Hash] hash with cluster lag data
+            def cluster_lags
+              # We need to remap raw results so they comply with our sorting flows
+              mapped_lags = {}
+
+              ::Karafka::Admin.read_lags(
+                active_topics_only: Web.config.ui.visibility.active_topics_cluster_lags_only
+              ).each do |consumer_group, topics|
+                mapped_lags[consumer_group] ||= {}
+
+                topics.each do |topic_name, partitions_details|
+                  mapped_lags[consumer_group][topic_name] ||= []
+
+                  partitions_details.each do |partition_id, lag|
+                    mapped_lags[consumer_group][topic_name] << {
+                      id: partition_id,
+                      lag: lag
+                    }
+                  end
+                end
+              end
+
+              mapped_lags
             end
 
             private

@@ -35,3 +35,11 @@
     </a>
   </li>
 <% end %>
+
+<% if current_path.include?('/cluster_lags') %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('health', 'cluster_lags') %>">
+      Cluster Lags
+    </a>
+  </li>
+<% end %>

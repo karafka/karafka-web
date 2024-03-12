@@ -18,10 +18,12 @@
                 <div class="desc">Batches</div>
               </li>
               <li class="col-sm">
-                <div class="count mb-1">
-                  <%= number_with_delimiter @counters.lag_hybrid, ' ' %>
-                </div>
-                <div class="desc">Total lag</div>
+                <a href="<%= root_path('health/lags') %>">
+                  <div class="count mb-1">
+                    <%= number_with_delimiter @counters.lag_hybrid, ' ' %>
+                  </div>
+                  <div class="desc">Total lag</div>
+                </a>
               </li>
               <li class="col-sm">
                 <a href="<%= root_path('jobs/running') %>">

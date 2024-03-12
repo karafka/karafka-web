@@ -2,7 +2,11 @@
 
 ## 0.9.0 (Unreleased)
 - **[Breaking]** Drop Ruby `2.7` support.
-- [Enhancement] Auto-qualify topics with dlq/dead_letter case insensitive name components to DLQ view
+- **[Feature]** Provide cluster lags in Health (Pro).
+- [Enhancement] Auto-qualify topics with dlq/dead_letter case insensitive name components to DLQ view.
+- [Fix] Improve responsiveness of summary in the consumers view for lower resolutions.
+- [Fix] Align pages titles format.
+- [Fix] Fix missing link from lag counter to Health.
 
 ## 0.8.2 (2024-02-16)
 - [Enhancement] Defer scheduler background thread creation until needed allowing for forks.
