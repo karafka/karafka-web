@@ -3,10 +3,13 @@
 ## 0.9.0 (Unreleased)
 - **[Breaking]** Drop Ruby `2.7` support.
 - **[Feature]** Provide cluster lags in Health (Pro).
+- [Enhancement] Improve responsiveness on big screens by increasing max width.
 - [Enhancement] Auto-qualify topics with dlq/dead_letter case insensitive name components to DLQ view.
 - [Fix] Improve responsiveness of summary in the consumers view for lower resolutions.
 - [Fix] Align pages titles format.
 - [Fix] Fix missing link from lag counter to Health.
+- [Fix] Fix a case where on mobile charts would not load correctly.
+- [Fix] Fix cases where long consumer names would break UI.
 
 ## 0.8.2 (2024-02-16)
 - [Enhancement] Defer scheduler background thread creation until needed allowing for forks.

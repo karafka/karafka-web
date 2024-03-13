@@ -7,7 +7,7 @@
 
   <li class="breadcrumb-item">
     <a href="<%= root_path('consumers', @process.id, 'subscriptions') %>">
-      <%= @process.name %>
+      <%== truncate(@process.name, strategy: :middle) %>
     </a>
   </li>
 
