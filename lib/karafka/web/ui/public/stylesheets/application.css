@@ -11,10 +11,6 @@ body {
   display: none;
 }
 
-.container {
-  max-width: 1170px;
-}
-
 .navbar {
   background-color: #4051b5;
 }

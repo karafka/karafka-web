@@ -284,6 +284,35 @@ module Karafka
 
             "<a class=\"sort\" href=\"#{path}\">#{full_name}</a>"
           end
+
+          # Truncates given text if it is too long and wraps it with a title with full text.
+          # Can use a middle-based strategy that keeps beginning and ending of a string instead of
+          # keeping just the beginning.
+          #
+          # The `:middle` strategy is useful when we have strings such as really long process names
+          # that have important beginning and end but middle can be removed without risk of not
+          # allowing user to recognize the content.
+          #
+          # @param string [String] string we want to truncate
+          # @param length [Integer] max length of the final string that we accept before truncating
+          # @param omission [String] truncation omission
+          # @param strategy [Symbol] `:default` or `:middle` how should we truncate
+          # @return [String] HTML span tag with truncated content and full content title
+          def truncate(string, length: 50, omission: '...', strategy: :default)
+            return string if string.length <= length
+
+            case strategy
+            when :default
+              truncated = string[0...(length - omission.length)] + omission
+            when :middle
+              part_length = (length - omission.length) / 2
+              truncated = string[0...part_length] + omission + string[-part_length..]
+            else
+              raise Karafka::Errors::UnsupportedCaseError, "Unknown strategy: #{strategy}"
+            end
+
+            %(<span title="#{string}">#{truncated}</span>)
+          end
         end
       end
     end

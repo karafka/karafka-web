@@ -9,27 +9,29 @@
       <% elsif @processes.empty? %>
         <%== partial 'shared/no_paginated_data' %>
       <% else %>
-        <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
-          <thead>
-            <tr class="align-middle">
-              <th><%== sort_link(:name) %></th>
-              <th class="col-sm-2"><%== sort_link('Started', :started_at, rev: true) %></th>
-              <th class="col-sm-1">Memory</th>
-              <th class="col-sm-1">Performance</th>
-              <th class="col-sm-1">Load</th>
-              <th class="col-sm-1"><%== sort_link('Lag', :lag_hybrid) %></th>
-            </tr>
-          </thead>
-          <tbody>
-            <%==
-              render_each(
-                @processes,
-                'consumers/_consumer',
-                local: :process
-              )
-            %>
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+            <thead>
+              <tr class="align-middle">
+                <th><%== sort_link(:name) %></th>
+                <th class="col-sm-2"><%== sort_link('Started', :started_at, rev: true) %></th>
+                <th class="col-sm-1">Memory</th>
+                <th class="col-sm-1">Performance</th>
+                <th class="col-sm-1">Load</th>
+                <th class="col-sm-1"><%== sort_link('Lag', :lag_hybrid) %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <%==
+                render_each(
+                  @processes,
+                  'consumers/_consumer',
+                  local: :process
+                )
+              %>
+            </tbody>
+          </table>
+        </div>
       <% end %>
     </div>
   </div>
