@@ -18,6 +18,8 @@ module Karafka
         module Controllers
           # Controller for displaying consumers states and details about them
           class Consumers < Ui::Controllers::Base
+            include Ui::Lib::Paginations
+
             self.sortable_attributes = %w[
               id
               name
@@ -43,7 +45,7 @@ module Karafka
               @current_state = Models::ConsumersState.current!
               @counters = Models::Counters.new(@current_state)
 
-              @processes, last_page = Lib::Paginations::Paginators::Arrays.call(
+              @processes, last_page = Paginators::Arrays.call(
                 refine(Models::Processes.active(@current_state)),
                 @params.current_page
               )
