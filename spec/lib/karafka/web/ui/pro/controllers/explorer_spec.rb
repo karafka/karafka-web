@@ -428,6 +428,35 @@ RSpec.describe_current do
       end
     end
 
+    context 'when requested message exists, can be deserialized and comes from a pattern' do
+      before do
+        topic_name = topic
+
+        Karafka::App.routes.draw do
+          pattern(/#{topic_name}/) do
+            active(false)
+            deserializer(->(_message) { '16d6d5c5-d8a8-45fc-ae1d-34e134772b98' })
+          end
+        end
+
+        produce(topic, { test: 'me' }.to_json)
+        get "explorer/#{topic}/0/0"
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(breadcrumbs)
+        expect(body).to include('<code class="wrapped json')
+        expect(body).to include('Metadata')
+        expect(body).to include('Export as JSON')
+        expect(body).to include('Download raw')
+        expect(body).to include('16d6d5c5-d8a8-45fc-ae1d-34e134772b98')
+        expect(body).not_to include(cannot_deserialize)
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
+
     context 'when requested message exists, can be deserialized and raw download is off' do
       before do
         allow(::Karafka::Web.config.ui.visibility.filter)

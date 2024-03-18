@@ -108,6 +108,33 @@ RSpec.describe_current do
       end
     end
 
+    context 'when message exists on a dynamic topic with custom deserializer' do
+      let(:payload) { rand.to_s }
+      let(:expected_file_name) { "#{topic}_0_0_payload.json" }
+      let(:expected_disposition) { "attachment; filename=\"#{expected_file_name}\"" }
+
+      before do
+        topic_name = topic
+
+        Karafka::App.routes.draw do
+          pattern(/#{topic_name}/) do
+            active(false)
+            deserializer(->(_message) { '1' })
+          end
+        end
+
+        produce(topic, payload)
+        get "messages/#{topic}/0/0/export"
+      end
+
+      it 'expect to use custom deserializer' do
+        expect(response).to be_ok
+        expect(response.headers['content-disposition']).to eq(expected_disposition)
+        expect(response.headers['content-type']).to eq('application/octet-stream')
+        expect(response.body).to eq('"1"')
+      end
+    end
+
     context 'when message exists but exports are off' do
       let(:payload) { rand.to_s }
 

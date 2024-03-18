@@ -51,25 +51,9 @@ module Karafka
 
             private
 
-            # Checks list of topics and tries to match them against the available patterns
-            # Uses the Pro detector to expand routes in the Web-UI so we include topics that are
-            # or will be matched using our regular expressions
+            # Detect routes defined as patterns
             def detect_patterns_routes
-              detector = ::Karafka::Pro::Routing::Features::Patterns::Detector.new
-              topics_names = Models::ClusterInfo.topics.map(&:topic_name)
-
-              Karafka::App
-                .routes
-                .flat_map(&:subscription_groups)
-                .each do |subscription_group|
-                  sg_topics = subscription_group.topics
-
-                  # Reject topics that are already part of routing for given subscription groups
-                  # and then for remaining try to apply patterns and expand routes
-                  topics_names
-                    .reject { |t_name| sg_topics.any? { |rtopic| rtopic.name == t_name } }
-                    .each { |t_name| detector.expand(sg_topics, t_name) }
-                end
+              Lib::PatternsDetector.new.call
             end
           end
         end

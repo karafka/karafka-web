@@ -68,6 +68,8 @@ module Karafka
             # @param partition_id [Integer]
             # @param offset [Integer] offset of the message we want to export
             def export(topic_id, partition_id, offset)
+              Lib::PatternsDetector.new.call
+
               message = Ui::Models::Message.find(topic_id, partition_id, offset)
 
               # Check if exports are allowed

@@ -94,6 +94,8 @@ module Karafka
             # @param offset [Integer] offset of the message we want to display
             # @param paginate [Boolean] do we want to have pagination
             def show(topic_id, partition_id, offset, paginate: true)
+              Lib::PatternsDetector.new.call
+
               @visibility_filter = ::Karafka::Web.config.ui.visibility.filter
               @topic_id = topic_id
               @partition_id = partition_id
