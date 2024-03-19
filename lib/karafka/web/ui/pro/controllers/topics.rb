@@ -26,6 +26,10 @@ module Karafka
               read_only?
               synonym?
               sensitive?
+              partition_id
+              leader
+              replica_count
+              in_sync_replica_brokers
             ].freeze
 
             # Lists available topics in the cluster
