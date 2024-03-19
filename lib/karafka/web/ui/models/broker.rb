@@ -9,7 +9,8 @@ module Karafka
           class << self
             # @return [Array<Broker>] all brokers in the cluster
             def all
-              ClusterInfo.fetch.brokers.map do |broker|
+              # We do not cache here because we want the most recent state of brokers possible
+              ClusterInfo.fetch(cached: false).brokers.map do |broker|
                 new(broker)
               end
             end
