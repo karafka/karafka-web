@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="row mb-5">
+    <div class="col-sm-12">
+
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a
+            class="nav-link <%= nav_class(include: 'configs') %>"
+            href="<%= root_path('topics', 'configs', @topic.topic_name) %>"
+          >
+            Configurations
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link <%= nav_class(include: 'partitions') %>"
+            href="<%= root_path('topics', 'partitions', @topic.topic_name) %>"
+          >
+            Partitions
+          </a>
+        </li>
+
+      </ul>
+
+    </div>
+  </div>
+</div>

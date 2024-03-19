@@ -151,7 +151,7 @@ module Karafka
                 break if recent
               end
 
-              recent || raise(::Karafka::Web::Errors::Ui::NotFoundError)
+              recent || not_found!
 
               show(topic_id, recent.partition, recent.offset, paginate: false)
             end
@@ -166,8 +166,8 @@ module Karafka
             def surrounding(topic_id, partition_id, offset)
               watermark_offsets = Ui::Models::WatermarkOffsets.find(topic_id, partition_id)
 
-              raise ::Karafka::Web::Errors::Ui::NotFoundError if offset < watermark_offsets.low
-              raise ::Karafka::Web::Errors::Ui::NotFoundError if offset >= watermark_offsets.high
+              not_found! if offset < watermark_offsets.low
+              not_found! if offset >= watermark_offsets.high
 
               # Assume we start from this offset
               shift = 0

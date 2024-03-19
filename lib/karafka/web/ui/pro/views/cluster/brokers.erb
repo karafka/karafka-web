@@ -1,4 +1,4 @@
-<%== view_title('Cluster Informations', hr: true) %>
+<%== view_title('Cluster Informations') %>
 
 <%== partial 'cluster/tabs' %>
 
@@ -8,9 +8,9 @@
         <table class="processes bg-white table table-hover table-bordered table-striped">
           <thead>
             <tr class="align-middle">
-              <th><%== sort_link(:id) %></th>
-              <th><%== sort_link(:name) %></th>
-              <th><%== sort_link(:port) %></th>
+              <th><%== sort_link('Id', :broker_id) %></th>
+              <th><%== sort_link('Name', :broker_name) %></th>
+              <th><%== sort_link('Port', :broker_port) %></th>
             </tr>
           </thead>
           <tbody>

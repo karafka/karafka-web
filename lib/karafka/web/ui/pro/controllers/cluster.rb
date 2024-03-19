@@ -17,9 +17,35 @@ module Karafka
       module Pro
         # Namespace for Pro controllers
         module Controllers
-          # Cluster controller
-          class Cluster < Ui::Controllers::Cluster
-            self.sortable_attributes = Ui::Controllers::Cluster.sortable_attributes
+          # Cluster details controller
+          class Cluster < Ui::Controllers::Base
+            self.sortable_attributes = %w[
+              id
+              name
+              default?
+              read_only?
+              synonym?
+              sensitive?
+              port
+            ].freeze
+
+            # Lists available brokers in the cluster
+            def index
+              @brokers = refine(Models::Broker.all)
+
+              render
+            end
+
+            # Displays selected broker configuration
+            #
+            # @param broker_id [String] id of the broker
+            def show(broker_id)
+              @broker = Models::Broker.find(broker_id)
+
+              @configs = refine(@broker.configs)
+
+              render
+            end
           end
         end
       end

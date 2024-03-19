@@ -1,0 +1,16 @@
+<tr>
+  <td>
+    <a href="<%= explorer_path(@topic[:topic_name], partition[:partition_id]) %>">
+      <%= partition[:partition_id] %>
+    </a>
+  </td>
+  <td>
+    <%= partition[:leader] %>
+  </td>
+  <td>
+    <%= partition[:replica_count] %>
+  </td>
+  <td>
+    <%= partition[:in_sync_replica_brokers] %>
+  </td>
+</tr>

@@ -1,0 +1,19 @@
+<li class="breadcrumb-item">
+  <a href="<%= root_path('cluster') %>">
+    Cluster informations
+  </a>
+</li>
+
+<li class="breadcrumb-item">
+  <a href="<%= root_path('cluster') %>">
+    Brokers
+  </a>
+</li>
+
+<% if @broker %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('cluster', @broker.id) %>">
+      <%= @broker.full_name %>
+    </a>
+  </li>
+<% end %>

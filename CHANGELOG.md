@@ -3,8 +3,11 @@
 ## 0.9.0 (Unreleased)
 - **[Breaking]** Drop Ruby `2.7` support.
 - **[Feature]** Provide cluster lags in Health (Pro).
+- **[Feature]** Provide ability to inspect cluster nodes configuration (Pro).
+- **[Feature]** Provide ability to inspect cluster topics configuration (Pro).
 - [Enhancement] Improve responsiveness on big screens by increasing max width.
 - [Enhancement] Auto-qualify topics with dlq/dead_letter case insensitive name components to DLQ view.
+- [Change] Rename Cluster => Topics to Cluster => Replication to better align with what is shows.
 - [Fix] Improve responsiveness of summary in the consumers view for lower resolutions.
 - [Fix] Align pages titles format.
 - [Fix] Fix missing link from lag counter to Health.

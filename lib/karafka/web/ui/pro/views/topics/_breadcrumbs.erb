@@ -1,0 +1,21 @@
+<li class="breadcrumb-item">
+  <a href="<%= root_path('topics') %>">
+    Topics informations
+  </a>
+</li>
+
+<% if @topic %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('topics', 'configs', @topic.topic_name) %>">
+      <%= @topic.topic_name %>
+    </a>
+  </li>
+<% end %>
+
+<% if @configs %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('topics', 'configs', @topic.topic_name) %>">
+      Configurations
+    </a>
+  </li>
+<% end %>
