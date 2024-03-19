@@ -25,8 +25,8 @@ RSpec.describe_current do
     end
   end
 
-  describe '#topics' do
-    before { get 'cluster/topics' }
+  describe '#replication' do
+    before { get 'cluster/replication' }
 
     it do
       expect(response).to be_ok
@@ -38,7 +38,7 @@ RSpec.describe_current do
       before { 30.times { create_topic } }
 
       context 'when we visit existing page' do
-        before { get 'cluster/topics?page=2' }
+        before { get 'cluster/replication?page=2' }
 
         it do
           expect(response).to be_ok
@@ -49,7 +49,7 @@ RSpec.describe_current do
       end
 
       context 'when we visit a non-existing page' do
-        before { get 'cluster/topics?page=100000000' }
+        before { get 'cluster/replication?page=100000000' }
 
         it do
           expect(response).to be_ok
