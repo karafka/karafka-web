@@ -17,7 +17,7 @@ module Karafka
       module Pro
         module Controllers
           # Topics management controller
-          # Allows for exploration of settings and partitions details
+          # Allows for exploration of settings and replication details
           class Topics < Ui::Controllers::Base
             self.sortable_attributes = %w[
               name
@@ -54,10 +54,10 @@ module Karafka
               render
             end
 
-            # Displays requested topic partitions details
+            # Displays requested topic replication details
             #
             # @param topic_name [String] topic we're interested in
-            def partitions(topic_name)
+            def replication(topic_name)
               @topic = Models::Topic.find(topic_name)
 
               @partitions = refine(@topic[:partitions])

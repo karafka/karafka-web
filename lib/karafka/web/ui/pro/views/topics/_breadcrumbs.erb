@@ -19,3 +19,11 @@
     </a>
   </li>
 <% end %>
+
+<% if @partitions %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('topics', 'replication', @topic.topic_name) %>">
+      Replication
+    </a>
+  </li>
+<% end %>

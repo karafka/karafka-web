@@ -213,8 +213,8 @@ module Karafka
                 controller.configs(topic_name)
               end
 
-              r.get 'partitions', String do |topic_name|
-                controller.partitions(topic_name)
+              r.get 'replication', String do |topic_name|
+                controller.replication(topic_name)
               end
 
               r.get do

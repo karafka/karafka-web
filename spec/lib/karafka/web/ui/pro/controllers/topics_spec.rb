@@ -90,9 +90,9 @@ RSpec.describe_current do
     end
   end
 
-  describe '#partitions' do
+  describe '#replication' do
     context 'when trying to read configs of a non-existing topic' do
-      before { get "topics/partitions/#{SecureRandom.uuid}" }
+      before { get "topics/replication/#{SecureRandom.uuid}" }
 
       it do
         expect(response).not_to be_ok
@@ -100,8 +100,8 @@ RSpec.describe_current do
       end
     end
 
-    context 'when getting partitions of an existing topic' do
-      before { get "topics/partitions/#{topic}" }
+    context 'when getting replication of an existing topic' do
+      before { get "topics/replication/#{topic}" }
 
       it do
         expect(response).to be_ok

@@ -17,3 +17,11 @@
     </a>
   </li>
 <% end %>
+
+<% if @partitions %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('cluster', 'replication') %>">
+      Replication
+    </a>
+  </li>
+<% end %>
