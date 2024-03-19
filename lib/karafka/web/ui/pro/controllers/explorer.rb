@@ -94,6 +94,8 @@ module Karafka
             # @param offset [Integer] offset of the message we want to display
             # @param paginate [Boolean] do we want to have pagination
             def show(topic_id, partition_id, offset, paginate: true)
+              Lib::PatternsDetector.new.call
+
               @visibility_filter = ::Karafka::Web.config.ui.visibility.filter
               @topic_id = topic_id
               @partition_id = partition_id
@@ -195,7 +197,7 @@ module Karafka
             # @param partition_id [Integer]
             # @param time [Time] time of the message
             def closest(topic_id, partition_id, time)
-              target = Lib::Admin.read_topic(topic_id, partition_id, 1, time).first
+              target = Ui::Lib::Admin.read_topic(topic_id, partition_id, 1, time).first
 
               partition_path = "explorer/#{topic_id}/#{partition_id}"
               partition_path += "?offset=#{target.offset}" if target

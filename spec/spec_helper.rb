@@ -52,6 +52,12 @@ RSpec.configure do |config|
   end
 
   config.before do
+    # Prepare clean routing setup for each spec
+    # We do this because some of the specs extend routing and we do not want them to interfere
+    # with each other.
+    ::Karafka::App.routes.clear
+    ::Karafka::Web::Management::Actions::Enable.new.send(:extend_routing)
+
     ::Karafka::Web.config.tracking.consumers.sampler.clear
     ::Karafka::Web.config.tracking.producers.sampler.clear
     ::Karafka::Web.config.ui.cache.clear

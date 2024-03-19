@@ -10,6 +10,7 @@
 - [Fix] Fix missing link from lag counter to Health.
 - [Fix] Fix a case where on mobile charts would not load correctly.
 - [Fix] Fix cases where long consumer names would break UI.
+- [Fix] Explorer deserializer wrongly selected for pattern matched topics.
 
 ## 0.8.2 (2024-02-16)
 - [Enhancement] Defer scheduler background thread creation until needed allowing for forks.
