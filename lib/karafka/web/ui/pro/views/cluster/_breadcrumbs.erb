@@ -4,11 +4,13 @@
   </a>
 </li>
 
-<li class="breadcrumb-item">
-  <a href="<%= root_path('cluster') %>">
-    Brokers
-  </a>
-</li>
+<% unless @partitions %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('cluster') %>">
+      Brokers
+    </a>
+  </li>
+<% end %>
 
 <% if @broker %>
   <li class="breadcrumb-item">
