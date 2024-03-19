@@ -64,9 +64,9 @@ RSpec.describe_current do
     end
   end
 
-  describe '#configs' do
+  describe '#config' do
     context 'when trying to read configs of a non-existing topic' do
-      before { get "topics/configs/#{SecureRandom.uuid}" }
+      before { get "topics/config/#{SecureRandom.uuid}" }
 
       it do
         expect(response).not_to be_ok
@@ -75,7 +75,7 @@ RSpec.describe_current do
     end
 
     context 'when getting configs of an existing topic' do
-      before { get "topics/configs/#{topic}" }
+      before { get "topics/config/#{topic}" }
 
       it do
         expect(response).to be_ok

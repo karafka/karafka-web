@@ -6,7 +6,7 @@
 
 <% if @topic %>
   <li class="breadcrumb-item">
-    <a href="<%= root_path('topics', 'configs', @topic.topic_name) %>">
+    <a href="<%= root_path('topics', 'config', @topic.topic_name) %>">
       <%= @topic.topic_name %>
     </a>
   </li>
@@ -14,8 +14,8 @@
 
 <% if @configs %>
   <li class="breadcrumb-item">
-    <a href="<%= root_path('topics', 'configs', @topic.topic_name) %>">
-      Configurations
+    <a href="<%= root_path('topics', 'config', @topic.topic_name) %>">
+      Configuration
     </a>
   </li>
 <% end %>

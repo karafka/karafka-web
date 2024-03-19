@@ -46,7 +46,7 @@ module Karafka
             # Displays requested topic config details
             #
             # @param topic_name [String] topic we're interested in
-            def configs(topic_name)
+            def config(topic_name)
               @topic = Models::Topic.find(topic_name)
 
               @configs = refine(@topic.configs)

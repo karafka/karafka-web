@@ -209,8 +209,8 @@ module Karafka
             r.on 'topics' do
               controller = Controllers::Topics.new(params)
 
-              r.get 'configs', String do |topic_name|
-                controller.configs(topic_name)
+              r.get 'config', String do |topic_name|
+                controller.config(topic_name)
               end
 
               r.get 'replication', String do |topic_name|
