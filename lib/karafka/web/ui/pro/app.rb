@@ -191,15 +191,35 @@ module Karafka
             r.on 'cluster' do
               controller = Controllers::Cluster.new(params)
 
-              r.get 'brokers' do
-                controller.brokers
+              r.get 'replication' do
+                # We use the non-pro controller here because this action is the same
+                controller = Ui::Controllers::Cluster.new(params)
+                controller.replication
               end
 
-              r.get 'topics' do
-                controller.topics
+              r.get String do |broker_id|
+                controller.show(broker_id)
               end
 
-              r.redirect root_path('cluster/brokers')
+              r.get do
+                controller.index
+              end
+            end
+
+            r.on 'topics' do
+              controller = Controllers::Topics.new(params)
+
+              r.get 'config', String do |topic_name|
+                controller.config(topic_name)
+              end
+
+              r.get 'replication', String do |topic_name|
+                controller.replication(topic_name)
+              end
+
+              r.get do
+                controller.index
+              end
             end
 
             r.on 'errors' do

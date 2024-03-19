@@ -9,11 +9,13 @@
         Dashboard
       </a>
     </li>
+
     <li class="nav-item ms-3">
       <a class="nav-link <%= nav_class(start_with: '/consumers') %>" href="<%= root_path('consumers') %>">
         Consumers
       </a>
     </li>
+
     <li class="nav-item ms-3">
       <a class="nav-link <%= nav_class(start_with: '/jobs') %>" href="<%= root_path('jobs/running') %>">
         Jobs
@@ -21,35 +23,47 @@
     </li>
 
     <li class="nav-item ms-3">
-      <a class="nav-link text-muted <%= nav_class(start_with: '/health') %>" href="<%= root_path('health') %>" title="Pro feature">
+      <a class="nav-link text-muted" href="<%= root_path('health') %>" title="Pro feature">
         Health
       </a>
     </li>
+
     <li class="nav-item ms-3">
       <a class="nav-link <%= nav_class(start_with: '/routing') %>" href="<%= root_path('routing') %>">
         Routing
       </a>
     </li>
+
     <li class="nav-item ms-3">
-      <a class="nav-link text-muted <%= nav_class(start_with: '/explorer') %>" href="<%= root_path('explorer') %>" title="Pro feature">
+      <a class="nav-link text-muted" href="<%= root_path('explorer') %>" title="Pro feature">
         Explorer
       </a>
     </li>
+
     <li class="nav-item ms-3">
       <a class="nav-link <%= nav_class(start_with: '/errors') %>" href="<%= root_path('errors') %>">
         Errors
       </a>
     </li>
+
     <li class="nav-item ms-3">
-      <a class="nav-link text-muted <%= nav_class(start_with: '/dlq') %>" href="<%= root_path('dlq') %>" title="Pro feature">
+      <a class="nav-link text-muted" href="<%= root_path('dlq') %>" title="Pro feature">
         Dead
       </a>
     </li>
+
     <li class="nav-item ms-3">
       <a class="nav-link <%= nav_class(start_with: '/cluster') %>" href="<%= root_path('cluster') %>">
         Cluster
       </a>
     </li>
+
+    <li class="nav-item ms-3">
+      <a class="nav-link text-muted" href="<%= root_path('topics') %>" title="Pro feature">
+        Topics
+      </a>
+    </li>
+
     <li class="nav-item ms-3">
       <a class="nav-link <%= nav_class(start_with: '/status') %>" href="<%= root_path('status') %>">
         Status

@@ -1,25 +1,26 @@
 <div class="container">
-  <div class="row mb-4">
+  <div class="row mb-5">
     <div class="col-sm-12">
 
       <ul class="nav nav-tabs">
         <li class="nav-item">
           <a
-            class="nav-link <%= nav_class(include: 'brokers') %>"
-            href="<%= root_path('cluster', 'brokers') %>"
+            class="nav-link <%= nav_class(include: 'config') %>"
+            href="<%= root_path('topics', 'config', @topic.topic_name) %>"
           >
-            Brokers
+            Configuration
           </a>
         </li>
 
         <li class="nav-item">
           <a
             class="nav-link <%= nav_class(include: 'replication') %>"
-            href="<%= root_path('cluster', 'replication') %>"
+            href="<%= root_path('topics', 'replication', @topic.topic_name) %>"
           >
             Replication
           </a>
         </li>
+
       </ul>
 
     </div>

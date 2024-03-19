@@ -28,7 +28,7 @@ module Karafka
           def show(topic_id)
             @topic = Karafka::Routing::Router.find_by(id: topic_id)
 
-            @topic || raise(::Karafka::Web::Errors::Ui::NotFoundError, topic_id)
+            @topic || not_found!(topic_id)
 
             render
           end

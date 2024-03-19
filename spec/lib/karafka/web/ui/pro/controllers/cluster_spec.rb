@@ -3,19 +3,8 @@
 RSpec.describe_current do
   subject(:app) { Karafka::Web::Ui::Pro::App }
 
-  describe 'cluster/ path redirect' do
-    context 'when visiting the cluster/ path without type indicator' do
-      before { get 'cluster' }
-
-      it 'expect to redirect to brokers page' do
-        expect(response.status).to eq(302)
-        expect(response.headers['location']).to include('cluster/brokers')
-      end
-    end
-  end
-
-  describe '#brokers' do
-    before { get 'cluster/brokers' }
+  describe '#index' do
+    before { get 'cluster' }
 
     it do
       expect(response).to be_ok
@@ -25,8 +14,33 @@ RSpec.describe_current do
     end
   end
 
-  describe '#topics' do
-    before { get 'cluster/topics' }
+  describe '#show' do
+    context 'when broker with given id does not exist' do
+      before { get 'cluster/123' }
+
+      it do
+        expect(response).not_to be_ok
+        expect(status).to eq(404)
+      end
+    end
+
+    context 'when broker with given id exists' do
+      before { get 'cluster/1' }
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(breadcrumbs)
+        expect(body).not_to include(support_message)
+        expect(body).to include('advertised.listeners')
+        expect(body).to include('controller.quota.window.num')
+        expect(body).to include('log.flush.interval.ms')
+        expect(body).to include('9223372036854775807')
+      end
+    end
+  end
+
+  describe '#replication' do
+    before { get 'cluster/replication' }
 
     it do
       expect(response).to be_ok
@@ -38,7 +52,7 @@ RSpec.describe_current do
       before { 30.times { create_topic } }
 
       context 'when we visit existing page' do
-        before { get 'cluster/topics?page=2' }
+        before { get 'cluster/replication?page=2' }
 
         it do
           expect(response).to be_ok
@@ -49,7 +63,7 @@ RSpec.describe_current do
       end
 
       context 'when we visit a non-existing page' do
-        before { get 'cluster/topics?page=100000000' }
+        before { get 'cluster/replication?page=100000000' }
 
         it do
           expect(response).to be_ok

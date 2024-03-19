@@ -81,11 +81,15 @@ module Karafka
               controller.brokers
             end
 
-            r.get 'topics' do
-              controller.topics
+            r.get 'replication' do
+              controller.replication
             end
 
             r.redirect root_path('cluster/brokers')
+          end
+
+          r.on 'topics' do
+            raise Errors::Ui::ProOnlyError
           end
 
           r.on 'errors' do

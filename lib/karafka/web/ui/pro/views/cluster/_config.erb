@@ -1,0 +1,13 @@
+<tr>
+  <td class="wrap-text">
+    <% all_names = ([config.name] + config.synonyms.map(&:name)).uniq %>
+    <% all_names.each do |name| %>
+      <%= name %>
+      <br/>
+    <% end %>
+  </td>
+  <td class="wrap-text"><%= config.value %></td>
+  <td><%= config.default? %></td>
+  <td><%= config.sensitive? %></td>
+  <td><%= config.read_only? %></td>
+</tr>

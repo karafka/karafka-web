@@ -4,15 +4,23 @@
   </a>
 </li>
 
-<% if current_path.include?('/brokers') %>
+<% unless @partitions %>
   <li class="breadcrumb-item">
-    <a href="<%= root_path('cluster', 'brokers') %>">
+    <a href="<%= root_path('cluster') %>">
       Brokers
     </a>
   </li>
 <% end %>
 
-<% if current_path.include?('/replication') %>
+<% if @broker %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('cluster', @broker.id) %>">
+      <%= @broker.full_name %>
+    </a>
+  </li>
+<% end %>
+
+<% if @partitions %>
   <li class="breadcrumb-item">
     <a href="<%= root_path('cluster', 'replication') %>">
       Replication

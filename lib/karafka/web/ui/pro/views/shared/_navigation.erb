@@ -9,11 +9,13 @@
         Dashboard
       </a>
     </li>
+
     <li class="nav-item ms-3">
       <a class="nav-link <%= nav_class(start_with: '/consumers') %>" href="<%= root_path('consumers') %>">
         Consumers
       </a>
     </li>
+
     <li class="nav-item ms-3">
       <a class="nav-link <%= nav_class(start_with: '/jobs') %>" href="<%= root_path('jobs/running') %>">
         Jobs
@@ -25,31 +27,43 @@
         Health
       </a>
     </li>
+
     <li class="nav-item ms-3">
       <a class="nav-link <%= nav_class(start_with: '/routing') %>" href="<%= root_path('routing') %>">
         Routing
       </a>
     </li>
+
     <li class="nav-item ms-3">
       <a class="nav-link <%= nav_class(start_with: '/explorer') %>" href="<%= root_path('explorer') %>">
         Explorer
       </a>
     </li>
+
     <li class="nav-item ms-3">
       <a class="nav-link <%= nav_class(start_with: '/errors') %>" href="<%= root_path('errors') %>">
         Errors
       </a>
     </li>
+
     <li class="nav-item ms-3">
       <a class="nav-link <%= nav_class(start_with: '/dlq') %>" href="<%= root_path('dlq') %>">
         Dead
       </a>
     </li>
+
     <li class="nav-item ms-3">
       <a class="nav-link <%= nav_class(start_with: '/cluster') %>" href="<%= root_path('cluster') %>">
         Cluster
       </a>
     </li>
+
+    <li class="nav-item ms-3">
+      <a class="nav-link <%= nav_class(start_with: '/topics') %>" href="<%= root_path('topics') %>">
+        Topics
+      </a>
+    </li>
+
     <li class="nav-item ms-3">
       <a class="nav-link <%= nav_class(start_with: '/status') %>" href="<%= root_path('status') %>">
         Status

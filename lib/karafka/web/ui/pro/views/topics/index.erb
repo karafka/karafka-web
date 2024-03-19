@@ -1,4 +1,4 @@
-<%== view_title('Explorer', hr: true) %>
+<%== view_title('Topics', hr: true) %>
 
 <div class="container">
   <% if @topics.empty? %>
@@ -8,7 +8,7 @@
       <%==
         each_partial(
           @topics,
-          'explorer/topic'
+          'topics/topic'
         )
       %>
     </div>

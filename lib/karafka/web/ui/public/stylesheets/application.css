@@ -123,3 +123,8 @@ main {
 a.sort {
   color: inherit;
 }
+
+.wrap-text {
+  word-wrap: break-word;
+  word-break: break-word;
+}

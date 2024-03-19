@@ -91,6 +91,14 @@ module Karafka
 
             @pagination = engine.new(*args)
           end
+
+          # Raises the not found error
+          #
+          # @param resource_id [String] resource id that was not found
+          # @raise [::Karafka::Web::Errors::Ui::NotFoundError]
+          def not_found!(resource_id = '')
+            raise(::Karafka::Web::Errors::Ui::NotFoundError, resource_id)
+          end
         end
       end
     end

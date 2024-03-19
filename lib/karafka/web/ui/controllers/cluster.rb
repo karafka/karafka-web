@@ -24,8 +24,8 @@ module Karafka
             render
           end
 
-          # List topics and partitions with details
-          def topics
+          # List partitions replication details
+          def replication
             partitions_total = []
 
             displayable_topics(cluster_info).each do |topic|
