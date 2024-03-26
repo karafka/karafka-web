@@ -127,7 +127,7 @@ RSpec.describe_current do
   describe '#cluster_lags' do
     context 'when no report data' do
       before do
-        allow(Karafka::Admin).to receive(:read_lags).and_return({})
+        allow(Karafka::Admin).to receive(:read_lags_with_offsets).and_return({})
         get 'health/cluster_lags'
       end
 

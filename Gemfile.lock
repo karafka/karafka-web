@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/karafka/karafka
-  revision: 4cf6a5d016c9840c4002d700f387423f0a020afa
+  revision: d6cddb870bac8a2ddc496db0c02a762071aa8ca0
   specs:
     karafka (2.3.4)
       karafka-core (>= 2.4.0.alpha1, < 2.5.0)
@@ -44,9 +44,9 @@ GEM
     ffi (1.16.3)
     i18n (1.14.4)
       concurrent-ruby (~> 1.0)
-    karafka-core (2.4.0.alpha1)
-      karafka-rdkafka (>= 0.15.0.alpha1, < 0.16.0)
-    karafka-rdkafka (0.15.0.alpha1)
+    karafka-core (2.4.0.beta2)
+      karafka-rdkafka (>= 0.15.0.beta3, < 0.16.0)
+    karafka-rdkafka (0.15.0.beta3)
       ffi (~> 1.15)
       mini_portile2 (~> 2.6)
       rake (> 12)

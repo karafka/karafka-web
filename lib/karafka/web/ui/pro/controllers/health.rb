@@ -66,7 +66,7 @@ module Karafka
             # the metrics reported. This is useful when we don't have any consumers running but
             # still want to check lags because it shows what Kafka sees
             def cluster_lags
-              @stats = Models::Health.cluster_lags
+              @stats = Models::Health.cluster_lags_with_offsets
 
               @stats.each_value do |cg_details|
                 cg_details.each_value { |topic_details| refine(topic_details) }

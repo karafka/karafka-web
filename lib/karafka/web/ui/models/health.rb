@@ -19,11 +19,11 @@ module Karafka
             end
 
             # @return [Hash] hash with cluster lag data
-            def cluster_lags
+            def cluster_lags_with_offsets
               # We need to remap raw results so they comply with our sorting flows
               mapped_lags = {}
 
-              ::Karafka::Admin.read_lags(
+              ::Karafka::Admin.read_lags_with_offsets(
                 active_topics_only: Web.config.ui.visibility.active_topics_cluster_lags_only
               ).each do |consumer_group, topics|
                 mapped_lags[consumer_group] ||= {}
@@ -31,10 +31,11 @@ module Karafka
                 topics.each do |topic_name, partitions_details|
                   mapped_lags[consumer_group][topic_name] ||= []
 
-                  partitions_details.each do |partition_id, lag|
+                  partitions_details.each do |partition_id, lags_with_offsets|
                     mapped_lags[consumer_group][topic_name] << {
                       id: partition_id,
-                      lag: lag
+                      lag: lags_with_offsets.fetch(:lag),
+                      stored_offset: lags_with_offsets.fetch(:offset)
                     }
                   end
                 end
