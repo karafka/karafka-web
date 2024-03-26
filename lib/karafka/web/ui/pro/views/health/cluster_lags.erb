@@ -26,7 +26,8 @@
               </tr>
               <tr class="align-middle">
                 <th><%== sort_link('Partition', :id) %></th>
-                <th><%== sort_link('Lag', :lag) %></th>
+                <th><%== sort_link(:lag) %></th>
+                <th><%== sort_link(:stored_offset) %></th>
               </tr>
             </thead>
             <tbody>
@@ -37,6 +38,9 @@
                     </td>
                     <td>
                       <%== details[:lag] %>
+                    </td>
+                    <td>
+                      <%== details[:stored_offset] %>
                     </td>
                   </tr>
 
