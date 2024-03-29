@@ -14,6 +14,7 @@
 - [Fix] Fix a case where on mobile charts would not load correctly.
 - [Fix] Fix cases where long consumer names would break UI.
 - [Fix] Explorer deserializer wrongly selected for pattern matched topics.
+- [Fix] Fix 404 error page invalid recommendation of `install` instead of `migrate`.
 
 ## 0.8.2 (2024-02-16)
 - [Enhancement] Defer scheduler background thread creation until needed allowing for forks.
