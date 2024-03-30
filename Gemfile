@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 plugin 'diffend'
 
 # Needed for now until 2.4.0 release
-gem 'karafka', git: 'https://github.com/karafka/karafka'
+gem 'karafka', path: '/mnt/software/Karafka/karafka'
 
 gemspec
 

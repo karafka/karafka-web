@@ -86,9 +86,16 @@ module Karafka
     setup do |config|
       config.kafka = { 'bootstrap.servers': '127.0.0.1:9092' }
       config.client_id = rand.to_s
-      # We set it here because we fake Web-UI topics and without this the faked once would have
-      # the default deserializer instead of the Web one
-      config.deserializer = Karafka::Web::Deserializer.new
+    end
+
+    routes.draw do
+      defaults do
+        # We set it here because we fake Web-UI topics and without this the faked once would have
+        # the default deserializer instead of the Web one
+        deserializers(
+          payload: Karafka::Web::Deserializer.new
+        )
+      end
     end
   end
 end
