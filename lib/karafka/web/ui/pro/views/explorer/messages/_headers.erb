@@ -1,5 +1,5 @@
 <% visible = @visibility_filter.headers?(message) %>
-<% message.metadata.to_h.fetch(:headers).each do |k, v| %>
+<% message.metadata.headers.each do |k, v| %>
   <tr>
     <td>
       <%= "headers.#{k}" %>

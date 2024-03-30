@@ -56,6 +56,7 @@ RSpec.configure do |config|
     # We do this because some of the specs extend routing and we do not want them to interfere
     # with each other.
     ::Karafka::App.routes.clear
+    draw_defaults
     ::Karafka::Web::Management::Actions::Enable.new.send(:extend_routing)
 
     ::Karafka::Web.config.tracking.consumers.sampler.clear
@@ -80,15 +81,27 @@ end
 RSpec.extend RSpecLocator.new(__FILE__)
 include TopicsManagerHelper
 
+# We set it here because we fake Web-UI topics and without this the faked once would have
+# the default deserializer instead of the Web one. Since we reset routes with each spec and
+# dynamically "replace" certain web ui topics in particular specs, we need to have the web
+# deserializer set always for each spec to simplify things. Otherwise we would have to re-draw
+# defaults in each spec after any of the web-ui topics alterations.
+def draw_defaults
+  ::Karafka::App.routes.draw do
+    defaults do
+      deserializers(
+        payload: Karafka::Web::Deserializer.new
+      )
+    end
+  end
+end
+
 module Karafka
   # Configuration for test env
   class App
     setup do |config|
       config.kafka = { 'bootstrap.servers': '127.0.0.1:9092' }
       config.client_id = rand.to_s
-      # We set it here because we fake Web-UI topics and without this the faked once would have
-      # the default deserializer instead of the Web one
-      config.deserializer = Karafka::Web::Deserializer.new
     end
   end
 end
@@ -123,6 +136,8 @@ Karafka::Web.setup do |config|
   config.topics.consumers.reports = TOPICS[2]
   config.topics.errors = TOPICS[3]
 end
+
+draw_defaults
 
 produce(TOPICS[0], Fixtures.consumers_states_file)
 produce(TOPICS[1], Fixtures.consumers_metrics_file)

@@ -15,7 +15,7 @@ FactoryBot.define do
           size: 10,
           first_offset: 0,
           last_offset: 1,
-          deserializer: nil,
+          deserializers: nil,
           partition: 1,
           topic: coordinator.topic.name,
           created_at: Time.now,
