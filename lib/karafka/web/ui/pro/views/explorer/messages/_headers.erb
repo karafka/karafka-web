@@ -1,15 +1,33 @@
-<% visible = @visibility_filter.headers?(message) %>
-<% message.metadata.headers.each do |k, v| %>
-  <tr>
-    <td>
-      <%= "headers.#{k}" %>
-    </td>
-    <td>
-      <% if visible %>
-        <%= object_value_to_s(v) %>
-      <% else %>
-        <span class="text-muted">[Filtered]</span>
-      <% end %>
-    </td>
-  </tr>
+<% if @safe_headers.success? %>
+  <% visible = @visibility_filter.headers?(message) %>
+  <% message.metadata.headers.each do |k, v| %>
+    <tr>
+      <td>
+        <%= "headers.#{k}" %>
+      </td>
+      <td>
+        <% if visible %>
+          <%= object_value_to_s(v) %>
+        <% else %>
+          <span class="text-muted">[Filtered]</span>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+<% else %>
+  <% visible = @visibility_filter.headers?(message) %>
+  <% message.metadata[:raw_headers].each do |k, v| %>
+    <tr>
+      <td>
+        <%= "raw_headers.#{k}" %>
+      </td>
+      <td>
+        <% if visible %>
+          <%= object_value_to_s(v) %>
+        <% else %>
+          <span class="text-muted">[Filtered]</span>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
 <% end %>

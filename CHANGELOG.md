@@ -5,6 +5,8 @@
 - **[Feature]** Provide cluster lags in Health (Pro).
 - **[Feature]** Provide ability to inspect cluster nodes configuration (Pro).
 - **[Feature]** Provide ability to inspect cluster topics configuration (Pro).
+- [Enhancement] Support failover for custom deserialization of headers and key in the explorer (Pro).
+- [Enhancement] Limit length of `key` presented in the list view of the explorer.
 - [Enhancement] Improve responsiveness on big screens by increasing max width.
 - [Enhancement] Auto-qualify topics with dlq/dead_letter case insensitive name components to DLQ view.
 - [Change] Rename Cluster => Topics to Cluster => Replication to better align with what is shows.

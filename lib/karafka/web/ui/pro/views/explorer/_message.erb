@@ -23,7 +23,7 @@
     </td>
     <td>
       <% if @visibility_filter.key?(message) %>
-        <%= message.key %>
+        <%= message.raw_key %>
       <% else %>
         <span class="text-muted">[Filtered]</span>
       <% end %>

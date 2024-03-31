@@ -93,6 +93,30 @@ RSpec.describe_current do
       end
     end
 
+    context 'when we view topic with one message with broken key' do
+      before do
+        topic_name = topic
+        draw_routes do
+          topic topic_name do
+            active(false)
+            # This will crash key deserialization, since it requires json
+            deserializers(key: ::Karafka::Web::Deserializer.new)
+          end
+        end
+
+        produce_many(topic, [nil], key: '{')
+        get "explorer/#{topic}"
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('total: 1')
+        expect(body).to include(breadcrumbs)
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
+
     context 'when we view first page from a topic with one partition with data' do
       before do
         produce_many(topic, Array.new(30, '1'))
@@ -389,7 +413,7 @@ RSpec.describe_current do
   end
 
   describe '#show' do
-    let(:cannot_deserialize) { 'We could not deserialize the data due' }
+    let(:cannot_deserialize) { 'We could not deserialize the payload due' }
 
     context 'when requested offset does not exist' do
       before { get "explorer/#{topic}/0/0" }
@@ -431,8 +455,7 @@ RSpec.describe_current do
     context 'when requested message exists, can be deserialized and comes from a pattern' do
       before do
         topic_name = topic
-
-        Karafka::App.routes.draw do
+        draw_routes do
           pattern(/#{topic_name}/) do
             active(false)
             deserializer(->(_message) { '16d6d5c5-d8a8-45fc-ae1d-34e134772b98' })
@@ -534,6 +557,35 @@ RSpec.describe_current do
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
         expect(body).not_to include('Export as JSON')
+      end
+    end
+
+    context 'when key exists but cannot be deserialized' do
+      let(:cannot_deserialize) { 'We could not deserialize the key due' }
+
+      before do
+        topic_name = topic
+        draw_routes do
+          topic topic_name do
+            active(false)
+            # This will crash key deserialization, since it requires json
+            deserializers(key: ::Karafka::Web::Deserializer.new)
+          end
+        end
+
+        produce(topic, '{}', key: '{')
+        get "explorer/#{topic}/0/0"
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(breadcrumbs)
+        expect(body).to include('Metadata')
+        expect(body).to include('<code class="wrapped json')
+        expect(body).to include('')
+        expect(body).to include('Export as JSON')
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
       end
     end
 

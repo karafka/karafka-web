@@ -101,12 +101,17 @@ module Karafka
               @partition_id = partition_id
               @offset = offset
               @message = Ui::Models::Message.find(@topic_id, @partition_id, @offset)
-              @payload_error = false
 
-              begin
-                @pretty_payload = JSON.pretty_generate(@message.payload)
-              rescue StandardError => e
-                @payload_error = e
+              @safe_payload = Web::Ui::Lib::SafeRunner.new do
+                JSON.pretty_generate(@message.payload)
+              end
+
+              @safe_key = Web::Ui::Lib::SafeRunner.new do
+                @message.key
+              end
+
+              @safe_headers = Web::Ui::Lib::SafeRunner.new do
+                @message.headers
               end
 
               # This may be off for certain views like recent view where we are interested only

@@ -36,4 +36,10 @@ module TopicsManagerHelper
 
     PRODUCERS.public_send(type).produce_many_sync(messages)
   end
+
+  # Draws expected routes
+  # @param block [Proc] routes code we want to draw
+  def draw_routes(&block)
+    Karafka::App.routes.draw(&block)
+  end
 end
