@@ -1,8 +1,39 @@
+<% if @safe_key.failure? %>
+  <%==
+    partial(
+      'explorer/failed_deserialization',
+      locals: {
+        attribute: 'key',
+        error: @safe_key.error
+      }
+    )
+  %>
+<% end %>
+
+<% if @safe_headers.failure? %>
+  <%==
+    partial(
+      'explorer/failed_deserialization',
+      locals: {
+        attribute: 'headers',
+        error: @safe_headers.error
+      }
+    )
+  %>
+<% end %>
+
 <div class="row mb-5">
   <div class="col-sm-12">
     <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
       <tbody>
-        <% @message.metadata.to_h.except(:received_at, :key, :headers).each do |k, v| %>
+        <%==
+          partial(
+            'explorer/messages/key',
+            locals: { message: @message }
+          )
+        %>
+
+        <% @message.metadata.to_h.except(:received_at, :raw_key, :raw_headers, :message).each do |k, v| %>
           <%==
             partial(
               'explorer/messages/detail',
@@ -21,13 +52,6 @@
               k: 'bytesize',
               v: format_memory(((@message.raw_payload&.bytesize || 0) / 1024.to_f).round(4))
             }
-          )
-        %>
-
-        <%==
-          partial(
-            'explorer/messages/key',
-            locals: { message: @message }
           )
         %>
 

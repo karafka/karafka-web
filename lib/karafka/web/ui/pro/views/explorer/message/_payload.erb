@@ -1,16 +1,16 @@
 <% if @visibility_filter.payload?(@message) %>
   <div class="row">
     <div class="col-sm-12 mb-4">
-      <% if @payload_error %>
-        <%== partial 'explorer/failed_deserialization' %>
+      <% if @safe_payload.failure? %>
+        <%== partial 'explorer/failed_deserialization', locals: { attribute: 'payload', error: @safe_payload.error } %>
       <% end %>
 
       <div class="card">
         <div class="card-body">
-          <% if @payload_error %>
+          <% if @safe_payload.failure? %>
             <pre class="m-0 p-0"><code class="wrapped json p-0 m-0"><%= @message.raw_payload %></code></pre>
           <% else %>
-            <pre class="m-0 p-0"><code class="wrapped json p-0 m-0"><%= @pretty_payload %></code></pre>
+            <pre class="m-0 p-0"><code class="wrapped json p-0 m-0"><%= @safe_payload.result %></code></pre>
           <% end %>
         </div>
       </div>

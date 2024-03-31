@@ -8,7 +8,7 @@
     </a>
   <% end %>
 
-  <% if @visibility_filter.export?(@message) && !@payload_error %>
+  <% if @visibility_filter.export?(@message) && @safe_payload.success? %>
     <a
       href="<%= root_path('messages', @message.topic, @message.partition, @message.offset, 'export') %>"
       class="btn btn-secondary btn-sm"
