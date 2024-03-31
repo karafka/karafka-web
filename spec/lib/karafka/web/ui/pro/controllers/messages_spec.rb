@@ -116,7 +116,7 @@ RSpec.describe_current do
       before do
         topic_name = topic
 
-        Karafka::App.routes.draw do
+        draw_routes do
           pattern(/#{topic_name}/) do
             active(false)
             deserializer(->(_message) { '1' })

@@ -39,7 +39,7 @@ RSpec.describe_current do
 
     context 'when there are saml details' do
       before do
-        Karafka::App.routes.draw do
+        draw_routes do
           topic SecureRandom.uuid do
             consumer Karafka::BaseConsumer
             kafka(
@@ -64,7 +64,7 @@ RSpec.describe_current do
 
     context 'when there are ssl details' do
       before do
-        Karafka::App.routes.draw do
+        draw_routes do
           topic SecureRandom.uuid do
             consumer Karafka::BaseConsumer
             kafka('ssl.key.password': 'password')

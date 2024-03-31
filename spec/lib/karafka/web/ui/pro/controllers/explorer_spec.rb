@@ -94,7 +94,7 @@ RSpec.describe_current do
     end
 
     context 'when we view topic with one message with broken key' do
-      let(:key_deserializer) { ->(headers) { raise } }
+      let(:key_deserializer) { ->(_headers) { raise } }
 
       before do
         topic_name = topic
