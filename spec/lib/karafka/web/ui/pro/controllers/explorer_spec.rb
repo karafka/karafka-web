@@ -94,13 +94,17 @@ RSpec.describe_current do
     end
 
     context 'when we view topic with one message with broken key' do
+      let(:key_deserializer) { ->(headers) { raise } }
+
       before do
         topic_name = topic
+        deserializer = key_deserializer
+
         draw_routes do
           topic topic_name do
             active(false)
             # This will crash key deserialization, since it requires json
-            deserializers(key: ::Karafka::Web::Deserializer.new)
+            deserializers(key: deserializer)
           end
         end
 
@@ -112,6 +116,7 @@ RSpec.describe_current do
         expect(response).to be_ok
         expect(body).to include('total: 1')
         expect(body).to include(breadcrumbs)
+        expect(body).to include('[Deserialization Failed]')
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
       end
