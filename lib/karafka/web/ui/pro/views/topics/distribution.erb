@@ -1,0 +1,50 @@
+<%== view_title(@topic.topic_name, hr: false) %>
+
+<%== partial 'topics/tabs' %>
+
+<div class="container mb-5">
+  <div class="row">
+    <div class="col-lg-12">
+      <% if @limited %>
+        <div class="mb-4">
+          <%==
+            alert_info(
+              '
+                Due to the number of partitions, distribution results are computed based only on
+                data from partitions visible on this page.
+              '
+            )
+          %>
+        </div>
+      <% end %>
+
+      <p class="text-end">
+        <span class="badge bg-primary">Total messages: <%= @aggregated.sum.round %></span>
+        <span class="badge bg-primary">Std dev: <%= @aggregated.std_dev %></span>
+        <span class="badge bg-primary">Std dev relative: <%= @aggregated.std_dev_rel %>%</span>
+      </p>
+
+      <table class="bg-white table table-hover table-bordered table-striped">
+        <thead>
+          <tr class="align-middle">
+            <th><%== sort_link('Partition', :partition_id) %></th>
+            <th><%== sort_link('Estimated count', :count) %></th>
+            <th><%== sort_link('Total share', :share) %></th>
+            <th><%== sort_link('Diff', :diff) %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @distribution.each do |distribution| %>
+            <tr>
+              <td><%= distribution.partition_id %></td>
+              <td><%= distribution.count %></td>
+              <td><%= distribution.share %>%</td>
+              <td><%= distribution.diff.round(2) %>%</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>
