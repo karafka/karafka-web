@@ -5,13 +5,13 @@
 <div class="container">
   <div class="row">
     <div class="col-lg-12">
-      <% if @aggregated.sum.zero? %>
-        <%== partial 'topics/distribution/empty_topic' %>
-      <% else %>
-        <% if @limited %>
-          <%== partial 'topics/distribution/limited' %>
-        <% end %>
+      <% if @limited %>
+        <%== partial 'topics/distribution/limited' %>
+      <% end %>
 
+      <% if @aggregated.sum.zero? %>
+        <%== partial 'topics/distribution/empty_partitions' %>
+      <% else %>
         <% if @active_partitions.size >= 2 %>
           <%== partial 'topics/distribution/chart' %>
         <% end %>
