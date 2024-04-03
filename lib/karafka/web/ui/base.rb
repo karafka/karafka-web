@@ -7,6 +7,7 @@ module Karafka
       class Base < Roda
         include Helpers::PathsHelper
         include Helpers::ApplicationHelper
+        include Helpers::AlertsHelper
 
         # Details that need to be evaluated in the context of OSS or Pro web UI.
         # If those would be evaluated in the base, they would not be initialized as expected

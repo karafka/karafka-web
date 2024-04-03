@@ -1,0 +1,7 @@
+<p class="text-end">
+  <span class="badge bg-primary">Total messages: <%= number_with_delimiter @aggregated.sum.round, ' ' %></span>
+  <span class="badge bg-primary">Std dev: <%= @aggregated.std_dev %></span>
+  <span class="badge bg-primary">Std dev relative: <%= @aggregated.std_dev_rel %>%</span>
+  <% partitions_range = [@active_partitions.first, @active_partitions.last].uniq.join(' to ') %>
+  <span class="badge bg-secondary">Partitions: <%= partitions_range %></span>
+</p>

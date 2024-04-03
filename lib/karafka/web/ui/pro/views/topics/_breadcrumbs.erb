@@ -27,3 +27,11 @@
     </a>
   </li>
 <% end %>
+
+<% if @distribution %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('topics', 'distribution', @topic.topic_name) %>">
+      Distribution
+    </a>
+  </li>
+<% end %>

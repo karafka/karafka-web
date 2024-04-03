@@ -217,6 +217,10 @@ module Karafka
                 controller.replication(topic_name)
               end
 
+              r.get 'distribution', String do |topic_name|
+                controller.distribution(topic_name)
+              end
+
               r.get do
                 controller.index
               end

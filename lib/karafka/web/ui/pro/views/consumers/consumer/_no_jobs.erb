@@ -1,9 +1,7 @@
 <div class="container mb-4">
   <div class="row">
     <div class="col-lg-12">
-      <div class="alert alert-info" role="alert">
-        This process has no <%= type %> jobs at the moment.
-      </div>
+      <%== alert_info("This process has no #{type} jobs at the moment.") %>
     </div>
   </div>
 </div>
