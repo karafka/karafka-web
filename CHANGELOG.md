@@ -12,6 +12,7 @@
 - [Enhancement] Auto-qualify topics with dlq/dead_letter case insensitive name components to DLQ view.
 - [Change] Rename Cluster => Topics to Cluster => Replication to better align with what is shows.
 - [Refactor] Extract alerts into a common component.
+- [Refactor] Generalize charts generation.
 - [Fix] Improve responsiveness of summary in the consumers view for lower resolutions.
 - [Fix] Align pages titles format.
 - [Fix] Fix missing link from lag counter to Health.
@@ -19,6 +20,7 @@
 - [Fix] Fix cases where long consumer names would break UI.
 - [Fix] Explorer deserializer wrongly selected for pattern matched topics.
 - [Fix] Fix 404 error page invalid recommendation of `install` instead of `migrate`.
+- [Fix] Fix dangling `console.log`.
 
 ## 0.8.2 (2024-02-16)
 - [Enhancement] Defer scheduler background thread creation until needed allowing for forks.

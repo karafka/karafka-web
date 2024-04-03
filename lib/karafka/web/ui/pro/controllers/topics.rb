@@ -80,7 +80,7 @@ module Karafka
             def distribution(topic_name)
               @topic = Models::Topic.find(topic_name)
 
-              @active_partitions, materialized_page, @limited = Paginators::Partitions.call(
+              @active_partitions, _materialized_page, @limited = Paginators::Partitions.call(
                 @topic.partition_count, @params.current_page
               )
 

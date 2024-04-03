@@ -1,0 +1,2 @@
+<% data = { 'Estimated count': @distribution.map { [_1.partition_id, _1.count] } }.to_json %>
+<%== partial 'shared/charts/bar', locals: { data: data, id: 'distribution' } %>
