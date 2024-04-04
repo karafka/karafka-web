@@ -1,0 +1,24 @@
+<% process.consumer_groups.each do |consumer_group| %>
+  <% sg_topics = Hash.new { |h, k| h[k] = [] } %>
+
+  <% consumer_group.subscription_groups.each do |subscription_group| %>
+    <% subscription_group.topics.each do |topic| %>
+      <% sg_topics[topic.name] += topic.partitions.map(&:id) %>
+    <% end %>
+  <% end %>
+
+  <% sg_topics.each do |topic_name, partitions| %>
+    <% partitions_list = partitions.join(', ') %>
+    <span
+      class="badge bg-secondary badge-topic"
+      title="Consumer group: <%= consumer_group.id %>, partitions: <%= partitions_list%>"
+    >
+      <%= topic_name %>:
+      <% if partitions.size > 10 %>
+        <%= "#{partitions.sort.first(10).join(',')}..." %>
+      <% else %>
+        <%= partitions.sort.join(',') %>
+      <% end %>
+    </span>
+  <% end %>
+<% end %>
