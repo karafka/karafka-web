@@ -17,6 +17,7 @@ module Karafka
       module Ui
         # Namespace for Pro controllers
         module Controllers
+          # Base Pro controller
           class BaseController < Web::Ui::Controllers::BaseController
           end
         end
