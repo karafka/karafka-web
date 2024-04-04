@@ -5,12 +5,15 @@
 - **[Feature]** Provide cluster lags in Health (Pro).
 - **[Feature]** Provide ability to inspect cluster nodes configuration (Pro).
 - **[Feature]** Provide ability to inspect cluster topics configuration (Pro).
+- **[Feature]** Provide messages distribution graph statistics for topics (Pro).
 - [Enhancement] Support failover for custom deserialization of headers and key in the explorer (Pro).
 - [Enhancement] Limit length of `key` presented in the list view of the explorer.
 - [Enhancement] Improve responsiveness on big screens by increasing max width.
 - [Enhancement] Auto-qualify topics with dlq/dead_letter case insensitive name components to DLQ view.
 - [Change] Rename Cluster => Topics to Cluster => Replication to better align with what is shows.
 - [Refactor] Create one `pro/` namespace for all Web related sub-modules.
+- [Refactor] Extract alerts into a common component.
+- [Refactor] Generalize charts generation.
 - [Fix] Improve responsiveness of summary in the consumers view for lower resolutions.
 - [Fix] Align pages titles format.
 - [Fix] Fix missing link from lag counter to Health.
@@ -18,6 +21,7 @@
 - [Fix] Fix cases where long consumer names would break UI.
 - [Fix] Explorer deserializer wrongly selected for pattern matched topics.
 - [Fix] Fix 404 error page invalid recommendation of `install` instead of `migrate`.
+- [Fix] Fix dangling `console.log`.
 
 ## 0.8.2 (2024-02-16)
 - [Enhancement] Defer scheduler background thread creation until needed allowing for forks.
