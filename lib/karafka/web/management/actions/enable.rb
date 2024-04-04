@@ -37,7 +37,7 @@ module Karafka
           # Enables all the needed routes
           def extend_routing
             ::Karafka::App.routes.draw do
-              web_deserializer = ::Karafka::Web::Deserializer.new
+              payload_deserializer = ::Karafka::Web::Deserializer.new
 
               consumer_group ::Karafka::Web.config.processing.consumer_group do
                 # Topic we listen on to materialize the states
@@ -52,7 +52,7 @@ module Karafka
                   # This needs to be true in order not to reload the consumer in dev. This consumer
                   # should not be affected by the end user development process
                   consumer_persistence true
-                  deserializers(payload: web_deserializer)
+                  deserializers(payload: payload_deserializer)
                   manual_offset_management true
                   # Start from the most recent data, do not materialize historical states
                   # This prevents us from dealing with cases, where client id would be changed and
@@ -66,19 +66,19 @@ module Karafka
                 topic ::Karafka::Web.config.topics.consumers.states do
                   config(active: false)
                   active false
-                  deserializers(payload: web_deserializer)
+                  deserializers(payload: payload_deserializer)
                 end
 
                 topic ::Karafka::Web.config.topics.consumers.metrics do
                   config(active: false)
                   active false
-                  deserializers(payload: web_deserializer)
+                  deserializers(payload: payload_deserializer)
                 end
 
                 topic ::Karafka::Web.config.topics.errors do
                   config(active: false)
                   active false
-                  deserializers(payload: web_deserializer)
+                  deserializers(payload: payload_deserializer)
                 end
               end
             end

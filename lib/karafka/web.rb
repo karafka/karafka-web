@@ -59,7 +59,7 @@ require_relative 'web/inflector'
 loader = Zeitwerk::Loader.new
 
 # Make sure pro is not loaded unless Pro
-loader.ignore(Karafka::Web.gem_root.join('lib/karafka/web/ui/pro'))
+loader.ignore(Karafka::Web.gem_root.join('lib/karafka/web/pro'))
 
 # If license is detected, we can use loader without limitations
 Karafka::Licenser.detect do

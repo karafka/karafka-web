@@ -11,6 +11,7 @@
 - [Enhancement] Improve responsiveness on big screens by increasing max width.
 - [Enhancement] Auto-qualify topics with dlq/dead_letter case insensitive name components to DLQ view.
 - [Change] Rename Cluster => Topics to Cluster => Replication to better align with what is shows.
+- [Refactor] Create one `pro/` namespace for all Web related sub-modules.
 - [Refactor] Extract alerts into a common component.
 - [Refactor] Generalize charts generation.
 - [Fix] Improve responsiveness of summary in the consumers view for lower resolutions.
