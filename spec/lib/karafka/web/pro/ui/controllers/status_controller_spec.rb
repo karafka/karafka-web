@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe_current do
-  subject(:app) { Karafka::Web::Ui::Pro::App }
+  subject(:app) { Karafka::Web::Pro::Ui::App }
 
   describe '#show' do
     context 'when all that is needed is there' do

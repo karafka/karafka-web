@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe_current do
-  subject(:app) { Karafka::Web::Ui::Pro::App }
+  subject(:app) { Karafka::Web::Pro::Ui::App }
 
   let(:no_processes) { 'There are no Karafka consumer processes' }
   let(:states_topic) { create_topic }
