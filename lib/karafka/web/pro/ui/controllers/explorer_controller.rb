@@ -69,8 +69,8 @@ module Karafka
               @visibility_filter = ::Karafka::Web.config.ui.visibility.filter
               @topic_id = topic_id
               @partition_id = partition_id
-              @watermark_offsets = Ui::WatermarkOffsets.find(topic_id, partition_id)
-              @partitions_count = ClusterInfo.partitions_count(topic_id)
+              @watermark_offsets = Models::WatermarkOffsets.find(topic_id, partition_id)
+              @partitions_count = Models::ClusterInfo.partitions_count(topic_id)
 
               previous_offset, @messages, next_offset = current_partition_data
 
@@ -98,7 +98,7 @@ module Karafka
               @topic_id = topic_id
               @partition_id = partition_id
               @offset = offset
-              @message = Ui::Message.find(@topic_id, @partition_id, @offset)
+              @message = Models::Message.find(@topic_id, @partition_id, @offset)
 
               @safe_payload = Web::Ui::Lib::SafeRunner.new do
                 JSON.pretty_generate(@message.payload)
@@ -200,7 +200,7 @@ module Karafka
             # @param partition_id [Integer]
             # @param time [Time] time of the message
             def closest(topic_id, partition_id, time)
-              target = Ui::Lib::Admin.read_topic(topic_id, partition_id, 1, time).first
+              target = Web::Ui::Lib::Admin.read_topic(topic_id, partition_id, 1, time).first
 
               partition_path = "explorer/#{topic_id}/#{partition_id}"
               partition_path += "?offset=#{target.offset}" if target
