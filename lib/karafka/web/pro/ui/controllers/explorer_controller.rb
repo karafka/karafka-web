@@ -13,13 +13,11 @@
 
 module Karafka
   module Web
-    module Ui
-      module Pro
+    module Pro
+      module Ui
         module Controllers
           # Data explorer controller
-          class Explorer < Ui::Controllers::Base
-            include Ui::Lib::Paginations
-
+          class ExplorerController < BaseController
             # Lists all the topics we can explore
             def index
               @topics = Models::ClusterInfo
@@ -71,8 +69,8 @@ module Karafka
               @visibility_filter = ::Karafka::Web.config.ui.visibility.filter
               @topic_id = topic_id
               @partition_id = partition_id
-              @watermark_offsets = Ui::Models::WatermarkOffsets.find(topic_id, partition_id)
-              @partitions_count = Models::ClusterInfo.partitions_count(topic_id)
+              @watermark_offsets = Ui::WatermarkOffsets.find(topic_id, partition_id)
+              @partitions_count = ClusterInfo.partitions_count(topic_id)
 
               previous_offset, @messages, next_offset = current_partition_data
 
@@ -100,7 +98,7 @@ module Karafka
               @topic_id = topic_id
               @partition_id = partition_id
               @offset = offset
-              @message = Ui::Models::Message.find(@topic_id, @partition_id, @offset)
+              @message = Ui::Message.find(@topic_id, @partition_id, @offset)
 
               @safe_payload = Web::Ui::Lib::SafeRunner.new do
                 JSON.pretty_generate(@message.payload)
@@ -119,7 +117,7 @@ module Karafka
               # there
               if paginate
                 # We need watermark offsets to decide if we can paginate left and right
-                watermark_offsets = Ui::Models::WatermarkOffsets.find(topic_id, partition_id)
+                watermark_offsets = Models::WatermarkOffsets.find(topic_id, partition_id)
                 paginate(offset, watermark_offsets.low, watermark_offsets.high)
               end
 
@@ -169,7 +167,7 @@ module Karafka
             # @param partition_id [Integer]
             # @param offset [Integer] offset of the message we want to display
             def surrounding(topic_id, partition_id, offset)
-              watermark_offsets = Ui::Models::WatermarkOffsets.find(topic_id, partition_id)
+              watermark_offsets = Models::WatermarkOffsets.find(topic_id, partition_id)
 
               not_found! if offset < watermark_offsets.low
               not_found! if offset >= watermark_offsets.high
@@ -215,7 +213,7 @@ module Karafka
             # Fetches current page data
             # @return [Array] fetched data with pagination information for the requested partition
             def current_partition_data
-              Ui::Models::Message.offset_page(
+              Models::Message.offset_page(
                 @topic_id,
                 @partition_id,
                 @params.current_offset,

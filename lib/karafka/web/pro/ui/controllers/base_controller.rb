@@ -13,22 +13,11 @@
 
 module Karafka
   module Web
-    module Ui
-      module Pro
+    module Pro
+      module Ui
+        # Namespace for Pro controllers
         module Controllers
-          # Displays list of active jobs
-          class Jobs < Ui::Controllers::Jobs
-            self.sortable_attributes = %w[
-              name
-              topic
-              consumer
-              type
-              messages
-              first_offset
-              last_offset
-              committed_offset
-              updated_at
-            ].freeze
+          class BaseController < Web::Ui::Controllers::BaseController
           end
         end
       end

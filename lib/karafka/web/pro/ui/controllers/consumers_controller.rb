@@ -13,12 +13,12 @@
 
 module Karafka
   module Web
-    module Ui
-      module Pro
+    module Pro
+      module Ui
         module Controllers
           # Controller for displaying consumers states and details about them
-          class Consumers < Ui::Controllers::Base
-            include Ui::Lib::Paginations
+          class ConsumersController < BaseController
+            include Web::Ui::Lib::Paginations
 
             self.sortable_attributes = %w[
               id

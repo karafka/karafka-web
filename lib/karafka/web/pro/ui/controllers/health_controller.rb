@@ -13,11 +13,11 @@
 
 module Karafka
   module Web
-    module Ui
-      module Pro
+    module Pro
+      module Ui
         module Controllers
           # Health state controller
-          class Health < Ui::Controllers::Base
+          class HealthController < BaseController
             self.sortable_attributes = %w[
               id
               lag

@@ -13,38 +13,47 @@
 
 module Karafka
   module Web
-    module Ui
-      module Pro
-        # Namespace for Pro controllers
+    module Pro
+      module Ui
         module Controllers
-          # Cluster details controller
-          class Cluster < Ui::Controllers::Base
+          # Routing details - same as in OSS
+          class RoutingController < BaseController
             self.sortable_attributes = %w[
-              id
               name
-              default?
-              read_only?
-              synonym?
-              sensitive?
-              port
+              active?
             ].freeze
 
-            # Lists available brokers in the cluster
+            # Routing list
             def index
-              @brokers = refine(Models::Broker.all)
+              detect_patterns_routes
+
+              @routes = Karafka::App.routes
+
+              @routes.each do |consumer_group|
+                refine(consumer_group.topics)
+              end
 
               render
             end
 
-            # Displays selected broker configuration
+            # Given route details
             #
-            # @param broker_id [String] id of the broker
-            def show(broker_id)
-              @broker = Models::Broker.find(broker_id)
+            # @param topic_id [String] topic id
+            def show(topic_id)
+              detect_patterns_routes
 
-              @configs = refine(@broker.configs)
+              @topic = Karafka::Routing::Router.find_by(id: topic_id)
+
+              @topic || not_found!(topic_id)
 
               render
+            end
+
+            private
+
+            # Detect routes defined as patterns
+            def detect_patterns_routes
+              Lib::PatternsDetector.new.call
             end
           end
         end

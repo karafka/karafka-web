@@ -6,7 +6,12 @@ module Karafka
       # Namespace for controller related components in the Web UI app.
       module Controllers
         # Base controller from which all the controllers should inherit.
-        class Base
+        class BaseController
+          include Web::Ui::Lib::Paginations
+
+          # Alias for easier referencing
+          Models = Web::Ui::Models
+
           class << self
             # Attributes on which we can sort in a given controller
             attr_accessor :sortable_attributes
@@ -27,7 +32,7 @@ module Karafka
           def render
             attributes = {}
 
-            scope = self.class.to_s.split('::').last.gsub(/(.)([A-Z])/, '\1_\2').downcase
+            scope = self.class.to_s.split('::').last.gsub(/(.)([A-Z])/, '\1_\2').downcase.gsub('_controller', '')
             action = caller_locations(1, 1)[0].label
 
             instance_variables.each do |iv|

@@ -5,7 +5,7 @@ module Karafka
     module Ui
       module Controllers
         # Selects cluster info and topics basic info
-        class Cluster < Base
+        class ClusterController < BaseController
           self.sortable_attributes = %w[
             broker_id
             broker_name
@@ -38,7 +38,7 @@ module Karafka
               end
             end
 
-            @partitions, last_page = Ui::Lib::Paginations::Paginators::Arrays.call(
+            @partitions, last_page = Paginators::Arrays.call(
               refine(partitions_total),
               @params.current_page
             )

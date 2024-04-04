@@ -7,10 +7,10 @@ module Karafka
         # Errors displaying controller
         # It supports only scenarios with a single partition for errors
         # If you have high load of errors, consider going Pro
-        class Errors < Base
+        class ErrorsController < BaseController
           # Lists first page of the errors
           def index
-            @watermark_offsets = Ui::Models::WatermarkOffsets.find(errors_topic, 0)
+            @watermark_offsets = Models::WatermarkOffsets.find(errors_topic, 0)
             previous_offset, @error_messages, next_offset, = current_page_data
 
             paginate(

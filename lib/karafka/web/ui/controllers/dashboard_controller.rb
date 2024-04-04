@@ -5,7 +5,7 @@ module Karafka
     module Ui
       module Controllers
         # Main Karafka Pro Web-Ui dashboard controller
-        class Dashboard < Ui::Controllers::Base
+        class DashboardController < Ui::Controllers::BaseController
           # View with statistics dashboard details
           def index
             @current_state = Models::ConsumersState.current!

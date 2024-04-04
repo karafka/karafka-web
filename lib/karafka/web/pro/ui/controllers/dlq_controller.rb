@@ -13,11 +13,11 @@
 
 module Karafka
   module Web
-    module Ui
-      module Pro
+    module Pro
+      module Ui
         module Controllers
           # DLQ topics overview
-          class Dlq < Ui::Controllers::Base
+          class DlqController < BaseController
             # Lists DLQ topics
             def index
               topics = Karafka::App.consumer_groups.flat_map(&:topics).flat_map(&:to_a)

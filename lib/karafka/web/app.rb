@@ -13,7 +13,7 @@ module Karafka
 
         # @return [Class] regular or pro Web engine
         def engine
-          ::Karafka.pro? ? Ui::Pro::App : Ui::App
+          ::Karafka.pro? ? Pro::Ui::App : Ui::App
         end
       end
     end

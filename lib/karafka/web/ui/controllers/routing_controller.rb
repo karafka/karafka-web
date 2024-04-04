@@ -5,7 +5,7 @@ module Karafka
     module Ui
       module Controllers
         # Routing presentation controller
-        class Routing < Base
+        class RoutingController < BaseController
           self.sortable_attributes = %w[
             name
             active?

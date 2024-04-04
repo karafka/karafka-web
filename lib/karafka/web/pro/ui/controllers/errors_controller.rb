@@ -13,13 +13,11 @@
 
 module Karafka
   module Web
-    module Ui
-      module Pro
+    module Pro
+      module Ui
         module Controllers
           # Errors details controller
-          class Errors < Ui::Controllers::Base
-            include Ui::Lib::Paginations
-
+          class ErrorsController < BaseController
             # Lists all the errors from all the partitions
             def index
               @topic_id = errors_topic
@@ -41,10 +39,10 @@ module Karafka
             # @param partition_id [Integer] id of the partition of errors we are interested in
             def partition(partition_id)
               @partition_id = partition_id
-              @watermark_offsets = Ui::Models::WatermarkOffsets.find(errors_topic, @partition_id)
+              @watermark_offsets = Models::WatermarkOffsets.find(errors_topic, @partition_id)
               @partitions_count = Models::ClusterInfo.partitions_count(errors_topic)
 
-              previous_offset, @error_messages, next_offset = Models::Message.offset_page(
+              previous_offset, @error_messages, next_offset = Message.offset_page(
                 errors_topic,
                 @partition_id,
                 @params.current_offset,
@@ -74,7 +72,7 @@ module Karafka
                 @offset
               )
 
-              watermark_offsets = Ui::Models::WatermarkOffsets.find(errors_topic, partition_id)
+              watermark_offsets = Models::WatermarkOffsets.find(errors_topic, partition_id)
               paginate(offset, watermark_offsets.low, watermark_offsets.high)
 
               render

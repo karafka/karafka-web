@@ -13,11 +13,11 @@
 
 module Karafka
   module Web
-    module Ui
-      module Pro
+    module Pro
+      module Ui
         module Controllers
           # Status details - same as in OSS
-          class Status < Ui::Controllers::Status
+          class StatusController < Web::Ui::Controllers::StatusController
           end
         end
       end

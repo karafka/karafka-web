@@ -1,9 +1,20 @@
 # frozen_string_literal: true
 
+# This Karafka component is a Pro component under a commercial license.
+# This Karafka component is NOT licensed under LGPL.
+#
+# All of the commercial components are present in the lib/karafka/pro directory of this
+# repository and their usage requires commercial license agreement.
+#
+# Karafka has also commercial-friendly license, commercial support and commercial components.
+#
+# By sending a pull request to the pro components, you are agreeing to transfer the copyright of
+# your code to Maciej Mensfeld.
+
 module Karafka
   module Web
-    module Ui
-      module Pro
+    module Pro
+      module Ui
         # Namespace for extra libs used by the Pro UI components
         module Lib
           # Checks list of topics and tries to match them against the available patterns
@@ -16,7 +27,7 @@ module Karafka
             # Run the detection
             def call
               detector = ::Karafka::Pro::Routing::Features::Patterns::Detector.new
-              topics_names = Models::ClusterInfo.topics.map(&:topic_name)
+              topics_names = Web::Ui::Models::ClusterInfo.topics.map(&:topic_name)
 
               Karafka::App
                 .routes

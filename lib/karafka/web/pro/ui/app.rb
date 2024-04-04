@@ -13,17 +13,17 @@
 
 module Karafka
   module Web
-    module Ui
-      # Pro Web UI components
-      module Pro
+    # Pro Web UI components
+    module Pro
+      module Ui
         # Main Roda Web App that servers all the metrics and stats
-        class App < Ui::Base
-          opts[:root] = Karafka::Web.gem_root.join('lib/karafka/web/ui/pro')
+        class App < Web::Ui::Base
+          opts[:root] = Karafka::Web.gem_root.join('lib/karafka/web/pro/ui')
 
           instance_exec(&CONTEXT_DETAILS)
 
           plugin :render, escape: true, engine: 'erb', allowed_paths: [
-            Karafka::Web.gem_root.join('lib/karafka/web/ui/pro/views'),
+            Karafka::Web.gem_root.join('lib/karafka/web/pro/ui/views'),
             Karafka::Web.gem_root.join('lib/karafka/web/ui/views')
           ]
 
@@ -42,12 +42,12 @@ module Karafka
 
             r.get 'dashboard' do
               @breadcrumbs = false
-              controller = Controllers::Dashboard.new(params)
+              controller = Controllers::DashboardController.new(params)
               controller.index
             end
 
             r.on 'consumers' do
-              controller = Controllers::Consumers.new(params)
+              controller = Controllers::ConsumersController.new(params)
 
               r.on String, 'jobs' do |process_id|
                 r.get 'running' do
@@ -76,7 +76,7 @@ module Karafka
             end
 
             r.on 'jobs' do
-              controller = Controllers::Jobs.new(params)
+              controller = Controllers::JobsController.new(params)
 
               r.get 'running' do
                 controller.running
@@ -90,7 +90,7 @@ module Karafka
             end
 
             r.on 'routing' do
-              controller = Controllers::Routing.new(params)
+              controller = Controllers::RoutingController.new(params)
 
               r.get String do |topic_id|
                 controller.show(topic_id)
@@ -102,7 +102,7 @@ module Karafka
             end
 
             r.on 'explorer' do
-              controller = Controllers::Explorer.new(params)
+              controller = Controllers::ExplorerController.new(params)
 
               r.get String, Integer, 'recent' do |topic_id, partition_id|
                 controller.recent(topic_id, partition_id)
@@ -145,7 +145,7 @@ module Karafka
             end
 
             r.on 'messages' do
-              controller = Controllers::Messages.new(params)
+              controller = Controllers::MessagesController.new(params)
 
               r.post String, Integer, Integer, 'republish' do |topic_id, partition_id, offset|
                 controller.republish(topic_id, partition_id, offset)
@@ -161,7 +161,7 @@ module Karafka
             end
 
             r.on 'health' do
-              controller = Controllers::Health.new(params)
+              controller = Controllers::HealthController.new(params)
 
               r.get 'lags' do
                 controller.lags
@@ -189,11 +189,11 @@ module Karafka
             end
 
             r.on 'cluster' do
-              controller = Controllers::Cluster.new(params)
+              controller = Controllers::ClusterController.new(params)
 
               r.get 'replication' do
                 # We use the non-pro controller here because this action is the same
-                controller = Ui::Controllers::Cluster.new(params)
+                controller = Ui::Controllers::ClusterController.new(params)
                 controller.replication
               end
 
@@ -207,7 +207,7 @@ module Karafka
             end
 
             r.on 'topics' do
-              controller = Controllers::Topics.new(params)
+              controller = Controllers::TopicsController.new(params)
 
               r.get 'config', String do |topic_name|
                 controller.config(topic_name)
@@ -223,7 +223,7 @@ module Karafka
             end
 
             r.on 'errors' do
-              controller = Controllers::Errors.new(params)
+              controller = Controllers::ErrorsController.new(params)
 
               r.get Integer, Integer do |partition_id, offset|
                 if params.current_offset != -1
@@ -243,12 +243,12 @@ module Karafka
             end
 
             r.get 'dlq' do
-              controller = Controllers::Dlq.new(params)
+              controller = Controllers::DlqController.new(params)
               controller.index
             end
 
             r.get 'status' do
-              controller = Controllers::Status.new(params)
+              controller = Controllers::StatusController.new(params)
               controller.show
             end
           end

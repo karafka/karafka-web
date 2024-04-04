@@ -13,20 +13,20 @@
 
 module Karafka
   module Web
-    module Ui
-      module Pro
+    module Pro
+      module Ui
         module Controllers
           # Controller for working with messages
           # While part of messages operations is done via explorer (exploring), this controller
           # handles other cases not related to viewing data
-          class Messages < Ui::Controllers::Base
+          class MessagesController < BaseController
             # Takes a requested message content and republishes it again
             #
             # @param topic_id [String]
             # @param partition_id [Integer]
             # @param offset [Integer] offset of the message we want to republish
             def republish(topic_id, partition_id, offset)
-              message = Ui::Models::Message.find(topic_id, partition_id, offset)
+              message = Models::Message.find(topic_id, partition_id, offset)
 
               delivery = ::Karafka::Web.producer.produce_sync(
                 topic: topic_id,
@@ -48,7 +48,7 @@ module Karafka
             # @param partition_id [Integer]
             # @param offset [Integer] offset of the message we want to download
             def download(topic_id, partition_id, offset)
-              message = Ui::Models::Message.find(topic_id, partition_id, offset)
+              message = Models::Message.find(topic_id, partition_id, offset)
 
               # Check if downloads are allowed
               return deny unless visibility_filter.download?(message)
@@ -70,7 +70,7 @@ module Karafka
             def export(topic_id, partition_id, offset)
               Lib::PatternsDetector.new.call
 
-              message = Ui::Models::Message.find(topic_id, partition_id, offset)
+              message = Models::Message.find(topic_id, partition_id, offset)
 
               # Check if exports are allowed
               return deny unless visibility_filter.export?(message)

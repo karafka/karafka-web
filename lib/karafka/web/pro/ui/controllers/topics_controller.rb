@@ -13,12 +13,12 @@
 
 module Karafka
   module Web
-    module Ui
-      module Pro
+    module Pro
+      module Ui
         module Controllers
           # Topics management controller
           # Allows for exploration of settings and replication details
-          class Topics < Ui::Controllers::Base
+          class TopicsController < BaseController
             self.sortable_attributes = %w[
               name
               value

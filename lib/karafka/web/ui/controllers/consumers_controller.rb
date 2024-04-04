@@ -5,7 +5,7 @@ module Karafka
     module Ui
       module Controllers
         # Consumers (consuming processes - `karafka server`) processes display consumer
-        class Consumers < Base
+        class ConsumersController < BaseController
           self.sortable_attributes = %w[
             name
             started_at
@@ -17,7 +17,7 @@ module Karafka
           def index
             @current_state = Models::ConsumersState.current!
             @counters = Models::Counters.new(@current_state)
-            @processes, last_page = Ui::Lib::Paginations::Paginators::Arrays.call(
+            @processes, last_page = Paginators::Arrays.call(
               refine(Models::Processes.active(@current_state)),
               @params.current_page
             )

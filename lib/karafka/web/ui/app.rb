@@ -22,7 +22,7 @@ module Karafka
 
           r.get 'dashboard' do
             @breadcrumbs = false
-            controller = Controllers::Dashboard.new(params)
+            controller = Controllers::DashboardController.new(params)
             controller.index
           end
 
@@ -33,7 +33,7 @@ module Karafka
 
             r.get do
               @breadcrumbs = false
-              controller = Controllers::Consumers.new(params)
+              controller = Controllers::ConsumersController.new(params)
               controller.index
             end
           end
@@ -49,7 +49,7 @@ module Karafka
           end
 
           r.on 'jobs' do
-            controller = Controllers::Jobs.new(params)
+            controller = Controllers::JobsController.new(params)
 
             r.get 'running' do
               controller.running
@@ -63,7 +63,7 @@ module Karafka
           end
 
           r.on 'routing' do
-            controller = Controllers::Routing.new(params)
+            controller = Controllers::RoutingController.new(params)
 
             r.get String do |topic_id|
               controller.show(topic_id)
@@ -75,7 +75,7 @@ module Karafka
           end
 
           r.on 'cluster' do
-            controller = Controllers::Cluster.new(params)
+            controller = Controllers::ClusterController.new(params)
 
             r.get 'brokers' do
               controller.brokers
@@ -93,7 +93,7 @@ module Karafka
           end
 
           r.on 'errors' do
-            controller = Controllers::Errors.new(params)
+            controller = Controllers::ErrorsController.new(params)
 
             r.get Integer do |offset|
               controller.show(offset)
@@ -105,7 +105,7 @@ module Karafka
           end
 
           r.get 'status' do
-            controller = Controllers::Status.new(params)
+            controller = Controllers::StatusController.new(params)
             controller.show
           end
         end

@@ -5,7 +5,7 @@ module Karafka
     module Ui
       module Controllers
         # Active jobs (work) reporting controller
-        class Jobs < Base
+        class JobsController < BaseController
           self.sortable_attributes = %w[
             name
             topic
@@ -29,7 +29,7 @@ module Karafka
               end
             end
 
-            @jobs, last_page = Ui::Lib::Paginations::Paginators::Arrays.call(
+            @jobs, last_page = Paginators::Arrays.call(
               refine(jobs_total),
               @params.current_page
             )
@@ -54,7 +54,7 @@ module Karafka
               end
             end
 
-            @jobs, last_page = Ui::Lib::Paginations::Paginators::Arrays.call(
+            @jobs, last_page = Paginators::Arrays.call(
               refine(jobs_total),
               @params.current_page
             )
@@ -66,7 +66,7 @@ module Karafka
 
           private
 
-          # @param processes [Array<Models::Process>]
+          # @param processes [Array<Process>]
           # @return [Lib::HashProxy] particular type jobs count
           def count_jobs_types(processes)
             counts = { running: 0, pending: 0 }

@@ -5,7 +5,7 @@ module Karafka
     module Ui
       module Controllers
         # Pro message reporting info controller
-        class BecomePro < Base
+        class BecomeProController < BaseController
           # Display a message, that a given feature is available only in Pro
           def show
             render
