@@ -9,20 +9,7 @@
     </a>
 
     <p class="mt-0 mb-1">
-      <% process.consumer_groups.each do |consumer_group| %>
-        <% consumer_group.subscription_groups.each do |subscription_group| %>
-          <% subscription_group.topics.each do |topic| %>
-            <span class="badge bg-secondary badge-topic" title="Consumer group: <%= consumer_group.id %>">
-              <%= topic.name %>:
-              <% if topic.partitions.size > 10 %>
-                <%= "#{topic.partitions.first(10).map(&:id).join(',')}..." %>
-              <% else %>
-                <%= topic.partitions.map(&:id).join(',') %>
-              <% end %>
-            </span>
-          <% end %>
-        <% end %>
-      <% end %>
+      <%== partial 'consumers/assignments_badges', locals: { process: process } %>
     </p>
 
     <p class="mt-0 mb-1">

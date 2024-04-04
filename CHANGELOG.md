@@ -22,6 +22,7 @@
 - [Fix] Explorer deserializer wrongly selected for pattern matched topics.
 - [Fix] Fix 404 error page invalid recommendation of `install` instead of `migrate`.
 - [Fix] Fix dangling `console.log`.
+- [Fix] Fix a case where consumer assignments would not be truncated on the consumers view.
 
 ## 0.8.2 (2024-02-16)
 - [Enhancement] Defer scheduler background thread creation until needed allowing for forks.
