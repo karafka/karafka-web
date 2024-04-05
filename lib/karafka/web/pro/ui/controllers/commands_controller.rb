@@ -16,23 +16,32 @@ module Karafka
     module Pro
       module Ui
         module Controllers
+          # Controller for viewing details of dispatched commands and their results
           class CommandsController < BaseController
+            # Lists commands from the consumers commands topic
             def index
               @watermark_offsets = Models::WatermarkOffsets.find(commands_topic, 0)
 
               previous_offset, @command_messages, next_offset = current_partition_data
 
+              # If message is an array, it means it's a compacted dummy offset representation
+              mapped_messages = @command_messages.map do |message|
+                message.is_a?(Array) ? message.last : message.offset
+              end
+
               paginate(
                 previous_offset,
                 @params.current_offset,
                 next_offset,
-                # If message is an array, it means it's a compacted dummy offset representation
-                @command_messages.map { |message| message.is_a?(Array) ? message.last : message.offset }
+                mapped_messages
               )
 
               render
             end
 
+            # Shows details about given command / result
+            #
+            # @param offset [Integer] offset of the command message we're interested in
             def show(offset)
               @command_message = Models::Message.find(
                 commands_topic,
@@ -43,6 +52,7 @@ module Karafka
               render
             end
 
+            # Displays the most recent available command message details
             def recent
               @watermark_offsets = Models::WatermarkOffsets.find(commands_topic, 0)
 
@@ -62,6 +72,7 @@ module Karafka
               )
             end
 
+            # @return [String] consumers commands topic name
             def commands_topic
               ::Karafka::Web.config.topics.consumers.commands
             end

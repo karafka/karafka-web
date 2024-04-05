@@ -282,7 +282,7 @@ module Karafka
           def sort_link(name, attribute = nil, rev: false)
             unless attribute
               attribute = name
-              name =  SORT_NAMES[attribute] || attribute.to_s.tr('_', ' ').tr('?', '').capitalize
+              name = SORT_NAMES[attribute] || attribute.to_s.tr('_', ' ').tr('?', '').capitalize
             end
 
             arrow_both = '&#x21D5;'

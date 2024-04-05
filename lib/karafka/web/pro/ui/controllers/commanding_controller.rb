@@ -103,7 +103,7 @@ module Karafka
             end
 
             # Generates a nice flash message about dispatch of multi-process command
-            # @param [Symbol]
+            # @param command [Symbol]
             # @return [String] flash message that command has been dispatched
             def dispatched_to_all(command)
               command_name = command.to_s.capitalize
