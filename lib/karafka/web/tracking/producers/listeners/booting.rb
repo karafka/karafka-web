@@ -14,7 +14,9 @@ module Karafka
             #
             # @param _event [Karafka::Core::Monitoring::Event]
             def on_producer_connected(_event)
-              ::Karafka::Web.config.tracking.scheduler.async_call
+              ::Karafka::Web.config.tracking.scheduler.async_call(
+                'karafka.web.tracking.scheduler'
+              )
             end
           end
         end

@@ -10,7 +10,7 @@ module Karafka
             include Tracking::Helpers::ErrorInfo
 
             # Schema used by consumers error reporting
-            SCHEMA_VERSION = '1.0.0'
+            SCHEMA_VERSION = '1.1.0'
 
             private_constant :SCHEMA_VERSION
 
@@ -37,7 +37,7 @@ module Karafka
                   backtrace: backtrace,
                   details: details,
                   occurred_at: float_now,
-                  process: sampler.to_report[:process].slice(:name, :tags)
+                  process: sampler.to_report[:process].slice(:id, :tags)
                 }
 
                 sampler.counters[:errors] += 1

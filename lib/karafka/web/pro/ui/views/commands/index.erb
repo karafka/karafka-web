@@ -1,0 +1,17 @@
+<%== view_title('Consumers Commands and Responses') %>
+
+<%== partial 'consumers/tabs' %>
+
+<div class="container">
+  <div class="row mb-5">
+    <div class="col-sm-12">
+      <%== partial('commands/details') %>
+
+      <% if @command_messages.empty? && params.current_page == 1 %>
+        <%== partial 'commands/empty' %>
+      <% else %>
+        <%== partial 'commands/table' %>
+      <% end %>
+    </div>
+  </div>
+</div>

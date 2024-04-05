@@ -20,6 +20,7 @@ module Karafka
             consumers_states_topic = ::Karafka::Web.config.topics.consumers.states
             consumers_metrics_topic = ::Karafka::Web.config.topics.consumers.metrics
             consumers_reports_topic = ::Karafka::Web.config.topics.consumers.reports
+            consumers_commands_topic = ::Karafka::Web.config.topics.consumers.commands
             errors_topic = ::Karafka::Web.config.topics.errors
 
             if existing_topics_names.include?(errors_topic)
@@ -86,6 +87,26 @@ module Karafka
                 }
               )
               created(consumers_metrics_topic)
+            end
+
+            if existing_topics_names.include?(consumers_commands_topic)
+              exists(consumers_commands_topic)
+            else
+              creating(consumers_commands_topic)
+              # Commands are suppose to live short and be used for controlling processes and some
+              # debug. Their data can be removed safely fast.
+              ::Karafka::Admin.create_topic(
+                consumers_commands_topic,
+                1,
+                replication_factor,
+                {
+                  'cleanup.policy': 'delete',
+                  'retention.ms': 24 * 60 * 60 * 1_000, # 24h
+                  'segment.ms': 12 * 60 * 60 * 1_000, # 12h
+                  'segment.bytes': 104_857_600 # 100MB
+                }
+              )
+              created(consumers_commands_topic)
             end
 
             # Create only if needed

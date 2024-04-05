@@ -2,16 +2,19 @@
   <td>
     <%= partition_id %>
   </td>
+
   <td>
     <%== lag_with_label details.lag %>
   </td>
+
+  <td>
+    <%== lag_with_label details.lag_stored %>
+  </td>
+
   <td>
     <span class="badge <%= lag_trend_bg(details.lag_d) %>">
       <%= details.lag_d %>
     </span>
-  </td>
-  <td>
-    <%== lag_with_label details.lag_stored %>
   </td>
   <td>
     <span class="badge <%= lag_trend_bg(details.lag_stored_d) %>">

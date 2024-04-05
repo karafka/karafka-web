@@ -107,16 +107,21 @@
                   <%= topic.name %>
                 </h5>
               </th>
-            <tr class="align-middle">
             </tr>
-              <th><%== sort_link('Partition', :id) %></th>
-              <th><%== sort_link('Lag', :lag_hybrid) %></th>
-              <th><%== sort_link('Lag trend', :lag_hybrid_d) %></th>
+            <tr class="align-middle">
+              <th rowspan="2"><%== sort_link('Partition', :id) %></th>
+              <th colspan="2" class="text-center">Lag</th>
+              <th colspan="2" class="text-center">Offsets</th>
+              <th colspan="10" class="text-center">States</th>
+            </tr>
+            <tr class="align-middle">
+              <th><%== sort_link(:lag_hybrid) %></th>
+              <th><%== sort_link('Trend', :lag_hybrid_d) %></th>
               <th><%== sort_link(:committed_offset) %></th>
               <th><%== sort_link(:stored_offset) %></th>
               <th><%== sort_link(:fetch_state) %></th>
               <th><%== sort_link(:poll_state) %></th>
-              <th><%== sort_link('LSO state', :lso_risk_state) %></th>
+              <th><%== sort_link(:lso_risk_state) %></th>
             </tr>
           </thead>
           <tbody>

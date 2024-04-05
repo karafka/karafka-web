@@ -42,13 +42,12 @@ module Karafka
             #   not consider it as a first page and we allow to "reset" to -1 via the first page
             #   button
             def first_offset?
-              @current_offset != -1
+              @current_offset != -1 && @previous_offset != false
             end
 
-            # @return [Boolean] first page offset is always nothing because we use the default -1
-            #   for the offset.
+            # @return [Integer] -1 because it will then select the highest offsets
             def first_offset
-              false
+              -1
             end
 
             # @return [Boolean] Active previous page link when it is not the first page

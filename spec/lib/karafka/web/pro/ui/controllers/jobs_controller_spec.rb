@@ -81,17 +81,17 @@ RSpec.describe_current do
         base_report = Fixtures.consumers_reports_json(symbolize_names: false)
 
         100.times do |i|
-          name = "shinra:#{i}:#{i}"
+          id = "shinra:#{i}:#{i}"
 
-          data['processes'][name] = {
+          data['processes'][id] = {
             dispatched_at: 2_690_818_669.526_218,
             offset: i
           }
 
           report = base_report.dup
-          report['process']['name'] = name
+          report['process']['id'] = id
 
-          produce(reports_topic, report.to_json, key: name)
+          produce(reports_topic, report.to_json, key: id)
         end
 
         produce(states_topic, data.to_json)
@@ -308,17 +308,17 @@ RSpec.describe_current do
         base_report['jobs'].first['status'] = 'pending'
 
         100.times do |i|
-          name = "shinra:#{i}:#{i}"
+          id = "shinra:#{i}:#{i}"
 
-          data['processes'][name] = {
+          data['processes'][id] = {
             dispatched_at: 2_690_818_669.526_218,
             offset: i
           }
 
           report = base_report.dup
-          report['process']['name'] = name
+          report['process']['id'] = id
 
-          produce(reports_topic, report.to_json, key: name)
+          produce(reports_topic, report.to_json, key: id)
         end
 
         produce(states_topic, data.to_json)

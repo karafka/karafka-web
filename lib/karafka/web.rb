@@ -28,7 +28,13 @@ module Karafka
       # Sets up the whole configuration
       # @param [Block] block configuration block
       def setup(&block)
+        Pro::Loader.pre_setup_all(config) if Karafka.pro?
+
         Config.configure(&block)
+
+        Pro::Loader.post_setup_all(config) if Karafka.pro?
+
+        @configured = true
       end
 
       # @return [Karafka::Web::Config] config instance
@@ -39,6 +45,9 @@ module Karafka
       # Activates all the needed routing and sets up listener, etc
       # This needs to run **after** the optional configuration of the web component
       def enable!
+        # Run the setup to initialize components if user did not run it prior himself
+        setup unless @configured
+
         # Make sure config is as expected
         # It should be configured before enabling the Web UI
         Contracts::Config.new.validate!(config.to_h)
@@ -61,9 +70,12 @@ loader = Zeitwerk::Loader.new
 # Make sure pro is not loaded unless Pro
 loader.ignore(Karafka::Web.gem_root.join('lib/karafka/web/pro'))
 
+pro_loader = false
+
 # If license is detected, we can use loader without limitations
 Karafka::Licenser.detect do
   loader = Zeitwerk::Loader.new
+  pro_loader = true
 end
 
 loader.tag = 'karafka-web'

@@ -14,7 +14,7 @@ RSpec.describe_current do
     it { expect(sampler.to_report[:jobs]).to be_empty }
     it { expect(sampler.to_report[:consumer_groups]).to be_empty }
     it { expect(process[:started_at]).not_to be_nil }
-    it { expect(process[:name]).to include(Socket.gethostname) }
+    it { expect(process[:id]).to include(Socket.gethostname) }
     it { expect(process[:status]).to eq('initialized') }
     it { expect(process[:listeners]).to eq(active: 0, standby: 0) }
     it { expect(process[:workers]).to eq(5) }

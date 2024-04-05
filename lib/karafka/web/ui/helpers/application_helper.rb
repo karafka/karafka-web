@@ -8,6 +8,28 @@ module Karafka
       module Helpers
         # Main application helper
         module ApplicationHelper
+          # Default attribute names mapped from the attributes themselves
+          # It makes it easier as we do not have to declare those all the time
+          SORT_NAMES = {
+            partition_id: 'Partition',
+            memory_usage: 'RSS',
+            started_at: 'Started',
+            committed_offset: 'Committed',
+            last_offset: 'Last',
+            first_offset: 'First',
+            lo_offset: 'Low',
+            hi_offset: 'High',
+            ls_offset: 'LSO',
+            lag_hybrid: 'Lag',
+            lag_stored: 'Stored',
+            stored_offset: 'Stored',
+            fetch_state: 'Fetch',
+            poll_state: 'Poll',
+            lso_risk_state: 'LSO'
+          }.freeze
+
+          private_constant :SORT_NAMES
+
           # Adds active class to the current location in the nav if needed
           # @param location [Hash]
           def nav_class(location)
@@ -260,7 +282,7 @@ module Karafka
           def sort_link(name, attribute = nil, rev: false)
             unless attribute
               attribute = name
-              name = attribute.to_s.tr('_', ' ').capitalize
+              name =  SORT_NAMES[attribute] || attribute.to_s.tr('_', ' ').tr('?', '').capitalize
             end
 
             arrow_both = '&#x21D5;'

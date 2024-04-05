@@ -22,13 +22,27 @@
                 </th>
               </tr>
               <tr class="align-middle">
-                <th><%== sort_link('Partition', :id) %></th>
-                <th><%== sort_link('Lag', :lag_hybrid) %></th>
-                <th><%== sort_link(:stored_offset) %></th>
+                <th colspan="1" rowspan="2">
+                  <%== sort_link('Partition', :id) %>
+                </th>
+                <th colspan="1" rowspan="2">
+                  <%== sort_link(:lag_hybrid) %>
+                </th>
+                <th colspan="1" rowspan="2">
+                  <%== sort_link(:stored_offset) %>
+                </th>
+                <th colspan="3" rowspan="1" class="text-center">
+                  States
+                </th>
+
+                <th colspan="1" rowspan="2">
+                 <%== sort_link('Process name', :name) %>
+                </th>
+              </tr>
+              <tr class="align-middle">
                 <th><%== sort_link(:fetch_state) %></th>
                 <th><%== sort_link(:poll_state) %></th>
-                <th><%== sort_link('LSO state', :lso_risk_state) %></th>
-                <th><%== sort_link('Process name', :name) %></th>
+                <th><%== sort_link(:lso_risk_state) %></th>
               </tr>
             </thead>
             <tbody>

@@ -14,7 +14,7 @@ module Karafka
           # Current schema version
           # This can be used in the future for detecting incompatible changes and writing
           # migrations
-          SCHEMA_VERSION = '1.0.0'
+          SCHEMA_VERSION = '1.1.0'
 
           def initialize
             super

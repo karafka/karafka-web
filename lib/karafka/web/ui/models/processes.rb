@@ -79,11 +79,11 @@ module Karafka
               end
             end
 
-            # Ensures that we always return processes sorted by their name
+            # Ensures that we always return processes sorted by their id
             # @param processes [Array<Hash>]
             # @return [Array<Hash>] sorted processes data
             def sort_processes(processes)
-              processes.sort_by { |consumer| consumer[:process][:name] }
+              processes.sort_by { |consumer| consumer[:process][:id] }
             end
           end
         end

@@ -1,0 +1,13 @@
+<li class="breadcrumb-item">
+  <a href="<%= root_path('consumers/overview') %>">
+    Consumers
+  </a>
+</li>
+
+<% if current_path.include?('/commands') %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('commands') %>">
+      Commands
+    </a>
+  </li>
+<% end %>

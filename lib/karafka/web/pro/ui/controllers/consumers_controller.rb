@@ -22,6 +22,7 @@ module Karafka
 
             self.sortable_attributes = %w[
               id
+              process_id
               name
               started_at
               lag_hybrid
@@ -38,6 +39,15 @@ module Karafka
               first_offset
               last_offset
               updated_at
+              memory_usage
+              threads
+              utilization
+              busy
+              workers
+              active
+              standby
+              running_jobs_count
+              pending_jobs_count
             ].freeze
 
             # Consumers list
@@ -51,6 +61,20 @@ module Karafka
               )
 
               paginate(@params.current_page, !last_page)
+
+              render
+            end
+
+            # Displays per-process performance details
+            def performance
+              index
+
+              render
+            end
+
+            # Displays processes with details + ability to manage
+            def controls
+              index
 
               render
             end

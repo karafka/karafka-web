@@ -22,12 +22,18 @@
                 </th>
               </tr>
               <tr class="align-middle">
-                <th><%== sort_link('Partition', :id) %></th>
-                <th><%== sort_link('Lag', :lag) %></th>
-                <th><%== sort_link('Lag trend', :lag_d) %></th>
-                <th><%== sort_link('Lag stored', :lag_stored) %></th>
-                <th><%== sort_link('Lag stored trend', :lag_stored_d) %></th>
-                <th><%== sort_link(:poll_state) %></th>
+                <th rowspan="2"><%== sort_link('Partition', :id) %></th>
+                <th colspan="2" class="text-center">Lags</th>
+                <th colspan="2" class="text-center">Trends</th>
+                <th colspan="12" rowspan="2">
+                  <%== sort_link(:poll_state) %>
+                </th>
+              </tr>
+              <tr class="align-middle">
+                <th><%== sort_link(:lag) %></th>
+                <th><%== sort_link(:lag_stored) %></th>
+                <th><%== sort_link('Lag', :lag_d) %></th>
+                <th><%== sort_link('Lag stored', :lag_stored_d) %></th>
               </tr>
             </thead>
             <tbody>

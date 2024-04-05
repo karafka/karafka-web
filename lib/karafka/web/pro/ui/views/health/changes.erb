@@ -22,12 +22,17 @@
                 </th>
               </tr>
               <tr class="align-middle">
-                <th><%== sort_link('Partition', :id) %></th>
-                <th><%== sort_link('Committed offset change', :committed_offset_fd) %></th>
-                <th><%== sort_link('Stored offset change', :stored_offset_fd) %></th>
-                <th><%== sort_link('High offset change', :hi_offset_fd) %></th>
-                <th><%== sort_link('Last stable offset state', :lso_risk_state) %></th>
-                <th><%== sort_link('Pause state change', :poll_state_ch) %></th>
+                <th rowspan="2"><%== sort_link('Partition', :id) %></th>
+                <th colspan="4" class="text-center">Offsets changes</th>
+                <th rowspan="2">
+                  <%== sort_link('Pause state change', :poll_state_ch) %>
+                </th>
+              </tr>
+              <tr class="align-middle">
+                <th><%== sort_link('Committed', :committed_offset_fd) %></th>
+                <th><%== sort_link('Stored', :stored_offset_fd) %></th>
+                <th><%== sort_link('High', :hi_offset_fd) %></th>
+                <th><%== sort_link('Last stable', :lso_risk_state) %></th>
               </tr>
             </thead>
             <tbody>

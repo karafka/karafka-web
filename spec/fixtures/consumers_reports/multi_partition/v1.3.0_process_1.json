@@ -1,0 +1,184 @@
+{
+  "schema_version": "1.2.3",
+  "type": "consumer",
+  "dispatched_at": 1695813057.892911,
+  "process": {
+    "started_at": 1695802487.537935,
+    "id": "shinra:1817527:7ad1ed4ce83a",
+    "status": "running",
+    "listeners": {
+      "active": 2,
+      "standby": 0
+    },
+    "workers": 2,
+    "memory_usage": 142036,
+    "memory_total_usage": 25765592,
+    "memory_size": 32763212,
+    "cpus": 8,
+    "threads": 25,
+    "cpu_usage": [
+      1.6,
+      1.57,
+      1.75
+    ],
+    "tags": [
+      "#b2e822e"
+    ],
+    "bytes_received": 12450,
+    "bytes_sent": 3866
+  },
+  "versions": {
+    "ruby": "ruby 3.2.2-53 e51014",
+    "karafka": "2.2.6",
+    "karafka_core": "2.2.2",
+    "karafka_web": "0.7.4",
+    "waterdrop": "2.6.7",
+    "rdkafka": "0.13.5",
+    "librdkafka": "2.2.0"
+  },
+  "stats": {
+    "busy": 0,
+    "enqueued": 0,
+    "utilization": 1.9147967048486074,
+    "total": {
+      "batches": 16,
+      "messages": 50,
+      "errors": 1,
+      "retries": 1,
+      "dead": 0
+    }
+  },
+  "consumer_groups": {
+    "example_app_app": {
+      "id": "example_app_app",
+      "subscription_groups": {
+        "c4ca4238a0b9_0": {
+          "id": "c4ca4238a0b9_0",
+          "state": {
+            "state": "up",
+            "join_state": "steady",
+            "stateage": 10565686,
+            "rebalance_age": 10563021,
+            "rebalance_cnt": 1,
+            "rebalance_reason": "Metadata for subscribed topic(s) has changed",
+            "poll_age": 123
+          },
+          "topics": {
+            "default": {
+              "name": "default",
+              "partitions": {
+                "0": {
+                  "lag": 3,
+                  "lag_d": 3,
+                  "lag_stored": 0,
+                  "lag_stored_d": 0,
+                  "committed_offset": 162517,
+                  "committed_offset_fd": 0,
+                  "stored_offset": 162520,
+                  "stored_offset_fd": 0,
+                  "fetch_state": "active",
+                  "hi_offset": 162520,
+                  "hi_offset_fd": 0,
+                  "lo_offset": 0,
+                  "eof_offset": 162520,
+                  "ls_offset": 162520,
+                  "ls_offset_d": 9,
+                  "ls_offset_fd": 0,
+                  "id": 0,
+                  "poll_state": "active"
+                },
+                "1": {
+                  "lag": 6,
+                  "lag_d": 3,
+                  "lag_stored": 0,
+                  "lag_stored_d": 0,
+                  "committed_offset": 162936,
+                  "committed_offset_fd": 0,
+                  "stored_offset": 162942,
+                  "stored_offset_fd": 0,
+                  "fetch_state": "active",
+                  "hi_offset": 162942,
+                  "hi_offset_fd": 0,
+                  "lo_offset": 0,
+                  "eof_offset": 162939,
+                  "ls_offset": 162942,
+                  "ls_offset_d": 18,
+                  "ls_offset_fd": 0,
+                  "id": 1,
+                  "poll_state": "active"
+                },
+                "2": {
+                  "lag": 0,
+                  "lag_d": 0,
+                  "lag_stored": 0,
+                  "lag_stored_d": 0,
+                  "committed_offset": 162310,
+                  "committed_offset_fd": 0,
+                  "stored_offset": 162310,
+                  "stored_offset_fd": 0,
+                  "fetch_state": "active",
+                  "hi_offset": 162310,
+                  "hi_offset_fd": 0,
+                  "lo_offset": 0,
+                  "eof_offset": 162310,
+                  "ls_offset": 162310,
+                  "ls_offset_d": 6,
+                  "ls_offset_fd": 0,
+                  "id": 2,
+                  "poll_state": "active"
+                }
+              }
+            },
+            "visits": {
+              "name": "visits",
+              "partitions": {
+                "0": {
+                  "lag": 3,
+                  "lag_d": -4,
+                  "lag_stored": 3,
+                  "lag_stored_d": -4,
+                  "committed_offset": 135642,
+                  "committed_offset_fd": 0,
+                  "stored_offset": 135642,
+                  "stored_offset_fd": 0,
+                  "fetch_state": "active",
+                  "hi_offset": 135645,
+                  "hi_offset_fd": 0,
+                  "lo_offset": 0,
+                  "eof_offset": -1001,
+                  "ls_offset": 135645,
+                  "ls_offset_d": 7,
+                  "ls_offset_fd": 5000,
+                  "id": 0,
+                  "poll_state": "paused"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "example_app_karafka_web": {
+      "id": "example_app_karafka_web",
+      "subscription_groups": {
+        "c81e728d9d4c_1": {
+          "id": "c81e728d9d4c_1",
+          "state": {
+            "state": "up",
+            "join_state": "steady",
+            "stateage": 10565218,
+            "rebalance_age": 10562553,
+            "rebalance_cnt": 1,
+            "rebalance_reason": "Metadata for subscribed topic(s) has changed",
+            "poll_age": 123
+          },
+          "topics": {
+          }
+        }
+      }
+    }
+  },
+  "jobs": [
+
+  ]
+}

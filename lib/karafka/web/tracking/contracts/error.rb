@@ -20,7 +20,7 @@ module Karafka
           required(:occurred_at) { |val| val.is_a?(Float) }
 
           nested(:process) do
-            required(:name) { |val| val.is_a?(String) && !val.empty? }
+            required(:id) { |val| val.is_a?(String) && !val.empty? }
             # Tags may not be present for producers because they may operate from outside of
             # karafka taggable process
             optional(:tags) { |val| val.is_a?(Karafka::Core::Taggable::Tags) }

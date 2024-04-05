@@ -65,14 +65,14 @@ module Karafka
 
               @report_contract.validate!(report)
 
-              process_name = report[:process][:name]
+              process_id = report[:process][:id]
 
               # Report consumers statuses
               messages = [
                 {
                   topic: ::Karafka::Web.config.topics.consumers.reports,
                   payload: Zlib::Deflate.deflate(report.to_json),
-                  key: process_name,
+                  key: process_id,
                   partition: 0,
                   headers: { 'zlib' => 'true' }
                 }
@@ -86,7 +86,7 @@ module Karafka
                   topic: Karafka::Web.config.topics.errors,
                   payload: Zlib::Deflate.deflate(error.to_json),
                   # Always dispatch errors from the same process to the same partition
-                  key: process_name,
+                  key: process_id,
                   headers: { 'zlib' => 'true' }
                 }
               end

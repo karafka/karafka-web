@@ -18,11 +18,6 @@ module Karafka
             end
           end
 
-          # @return [String] process id without the name and ip
-          def id
-            @id ||= name.split(':').last
-          end
-
           # @return [Array<ConsumerGroup>] consumer groups to which this process is subscribed in
           #   an alphabetical order
           def consumer_groups
@@ -39,6 +34,16 @@ module Karafka
               .map { |job| Job.new(job) }
               .sort_by(&:updated_at)
               .then { |jobs| Jobs.new(jobs) }
+          end
+
+          # @return [Integer] number of running jobs on a process
+          def running_jobs_count
+            jobs.running.count
+          end
+
+          # @return [Integer] number of pending jobs on a process
+          def pending_jobs_count
+            jobs.pending.count
           end
 
           # @return [Integer] collective hybrid lag on this process

@@ -7,7 +7,7 @@ module Karafka
         # Active jobs (work) reporting controller
         class JobsController < BaseController
           self.sortable_attributes = %w[
-            name
+            id
             topic
             consumer
             type

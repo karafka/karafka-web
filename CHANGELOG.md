@@ -6,14 +6,18 @@
 - **[Feature]** Provide ability to inspect cluster nodes configuration (Pro).
 - **[Feature]** Provide ability to inspect cluster topics configuration (Pro).
 - **[Feature]** Provide messages distribution graph statistics for topics (Pro).
+- [Enhancement] Provide first offset in the OSS jobs tab.
+- [Enhancement] Support failover for custom deserialization of headers and key in the explorer (Pro).
 - [Enhancement] Support failover for custom deserialization of headers and key in the explorer (Pro).
 - [Enhancement] Limit length of `key` presented in the list view of the explorer.
 - [Enhancement] Improve responsiveness on big screens by increasing max width.
 - [Enhancement] Auto-qualify topics with dlq/dead_letter case insensitive name components to DLQ view.
 - [Change] Rename Cluster => Topics to Cluster => Replication to better align with what is shows.
+- [Refactor] Normalize what is process name and process id.
 - [Refactor] Create one `pro/` namespace for all Web related sub-modules.
 - [Refactor] Extract alerts into a common component.
 - [Refactor] Generalize charts generation.
+- [Fix] Fix invalid return when paginating with offsets.
 - [Fix] Improve responsiveness of summary in the consumers view for lower resolutions.
 - [Fix] Align pages titles format.
 - [Fix] Fix missing link from lag counter to Health.

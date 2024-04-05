@@ -1,4 +1,9 @@
-<%== view_title(@process.name) %>
+<div class="container mb-5">
+  <div class="row">
+    <%== partial 'consumers/consumer/title' %>
+    <%== partial 'consumers/consumer/commands', locals: { process: @process } %>
+  </div>
+</div>
 
 <% if @process.status == 'stopped' %>
   <%== partial 'consumers/consumer/stopped' %>

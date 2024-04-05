@@ -12,7 +12,7 @@ RSpec.describe_current do
       before do
         topics_config.consumers.states = states_topic
 
-        get 'consumers'
+        get 'consumers/overview'
       end
 
       it do
@@ -25,7 +25,7 @@ RSpec.describe_current do
       before do
         topics_config.consumers.reports = states_topic
 
-        get 'consumers'
+        get 'consumers/overview'
       end
 
       it do
@@ -38,7 +38,7 @@ RSpec.describe_current do
     end
 
     context 'when there are active consumers' do
-      before { get 'consumers' }
+      before { get 'consumers/overview' }
 
       it do
         expect(response).to be_ok
@@ -48,12 +48,12 @@ RSpec.describe_current do
         expect(body).not_to include(pagination)
         expect(body).to include('246 MB')
         expect(body).to include('shinra:1:1')
-        expect(body).to include('/consumers/1/subscriptions')
+        expect(body).to include('/consumers/shinra:1:1/subscriptions')
         expect(body).to include('2690818651.82293')
       end
 
       context 'when sorting' do
-        before { get 'consumers?sort=name+desc' }
+        before { get 'consumers/overview?sort=id+desc' }
 
         it { expect(response).to be_ok }
       end
@@ -73,7 +73,7 @@ RSpec.describe_current do
         produce(states_topic, Fixtures.consumers_states_file)
         produce(reports_topic, report.to_json)
 
-        get 'consumers'
+        get 'consumers/overview'
       end
 
       it do
@@ -86,7 +86,7 @@ RSpec.describe_current do
         expect(body).not_to include(pagination)
         expect(body).to include('246 MB')
         expect(body).to include('shinra:1:1')
-        expect(body).to include('/consumers/1/subscriptions')
+        expect(body).to include('/consumers/shinra:1:1/subscriptions')
         expect(body).to include('2690818651.82293')
       end
     end
@@ -99,7 +99,7 @@ RSpec.describe_current do
         produce(states_topic, Fixtures.consumers_states_file, type: :transactional)
         produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)
 
-        get 'consumers'
+        get 'consumers/overview'
       end
 
       it do
@@ -110,7 +110,7 @@ RSpec.describe_current do
         expect(body).not_to include(pagination)
         expect(body).to include('246 MB')
         expect(body).to include('shinra:1:1')
-        expect(body).to include('/consumers/1/subscriptions')
+        expect(body).to include('/consumers/shinra:1:1/subscriptions')
         expect(body).to include('2690818651.82293')
       end
     end
@@ -124,24 +124,24 @@ RSpec.describe_current do
         base_report = Fixtures.consumers_reports_json(symbolize_names: false)
 
         100.times do |i|
-          name = "shinra:#{i}:#{i}"
+          id = "shinra:#{i}:#{i}"
 
-          data['processes'][name] = {
+          data['processes'][id] = {
             dispatched_at: 2_690_818_669.526_218,
             offset: i
           }
 
           report = base_report.dup
-          report['process']['name'] = name
+          report['process']['id'] = id
 
-          produce(reports_topic, report.to_json, key: name)
+          produce(reports_topic, report.to_json, key: id)
         end
 
         produce(states_topic, data.to_json)
       end
 
       context 'when we visit first page' do
-        before { get 'consumers' }
+        before { get 'consumers/overview' }
 
         it do
           expect(response).to be_ok
@@ -150,13 +150,13 @@ RSpec.describe_current do
           expect(body).to include('shinra:1:1')
           expect(body).to include('shinra:11:11')
           expect(body).to include('shinra:12:12')
-          expect(body.scan('shinra:').size).to eq(25)
+          expect(body.scan('shinra:').size).to eq(50)
           expect(body).not_to include(support_message)
         end
       end
 
       context 'when we visit second page' do
-        before { get 'consumers?page=2' }
+        before { get 'consumers/overview?page=2' }
 
         it do
           expect(response).to be_ok
@@ -165,13 +165,13 @@ RSpec.describe_current do
           expect(body).to include('shinra:34:34')
           expect(body).to include('shinra:35:35')
           expect(body).to include('shinra:35:35')
-          expect(body.scan('shinra:').size).to eq(25)
+          expect(body.scan('shinra:').size).to eq(50)
           expect(body).not_to include(support_message)
         end
       end
 
       context 'when we go beyond available pages' do
-        before { get 'consumers?page=100' }
+        before { get 'consumers/overview?page=100' }
 
         it do
           expect(response).to be_ok
@@ -186,7 +186,7 @@ RSpec.describe_current do
 
   describe '#details' do
     context 'when details exist' do
-      before { get 'consumers/1/details' }
+      before { get 'consumers/shinra:1:1/details' }
 
       it do
         expect(response).to be_ok
@@ -204,7 +204,7 @@ RSpec.describe_current do
         produce(states_topic, Fixtures.consumers_states_file, type: :transactional)
         produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)
 
-        get 'consumers/1/details'
+        get 'consumers/shinra:1:1/details'
       end
 
       it do
@@ -227,11 +227,11 @@ RSpec.describe_current do
 
   describe 'jobs/ path redirect' do
     context 'when visiting the jobs/ path without type indicator' do
-      before { get 'consumers/1/jobs' }
+      before { get 'consumers/shinra:1:1/jobs' }
 
       it 'expect to redirect to running jobs page' do
         expect(response.status).to eq(302)
-        expect(response.headers['location']).to include('consumers/1/jobs/running')
+        expect(response.headers['location']).to include('consumers/shinra:1:1/jobs/running')
       end
     end
   end
@@ -248,7 +248,7 @@ RSpec.describe_current do
         produce(states_topic, Fixtures.consumers_states_file)
         produce(reports_topic, report.to_json)
 
-        get 'consumers/1/jobs/running'
+        get 'consumers/shinra:1:1/jobs/running'
       end
 
       it do
@@ -261,7 +261,7 @@ RSpec.describe_current do
     end
 
     context 'when process has running jobs' do
-      before { get 'consumers/1/jobs/running' }
+      before { get 'consumers/shinra:1:1/jobs/running' }
 
       it do
         expect(response).to be_ok
@@ -279,7 +279,7 @@ RSpec.describe_current do
         produce(states_topic, Fixtures.consumers_states_file, type: :transactional)
         produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)
 
-        get 'consumers/1/jobs/running'
+        get 'consumers/shinra:1:1/jobs/running'
       end
 
       it do
@@ -299,7 +299,7 @@ RSpec.describe_current do
 
         produce(reports_topic, report.to_json)
 
-        get 'consumers/1/jobs/running'
+        get 'consumers/shinra:1:1/jobs/running'
       end
 
       it do
@@ -332,7 +332,7 @@ RSpec.describe_current do
         produce(states_topic, Fixtures.consumers_states_file)
         produce(reports_topic, report.to_json)
 
-        get 'consumers/1/jobs/pending'
+        get 'consumers/shinra:1:1/jobs/pending'
       end
 
       it do
@@ -355,7 +355,7 @@ RSpec.describe_current do
         produce(states_topic, Fixtures.consumers_states_file)
         produce(reports_topic, report.to_json)
 
-        get 'consumers/1/jobs/pending'
+        get 'consumers/shinra:1:1/jobs/pending'
       end
 
       it do
@@ -377,7 +377,7 @@ RSpec.describe_current do
         produce(states_topic, Fixtures.consumers_states_file, type: :transactional)
         produce(reports_topic, report.to_json, type: :transactional)
 
-        get 'consumers/1/jobs/pending'
+        get 'consumers/shinra:1:1/jobs/pending'
       end
 
       it do
@@ -397,7 +397,7 @@ RSpec.describe_current do
 
         produce(reports_topic, report.to_json)
 
-        get 'consumers/1/jobs/pending'
+        get 'consumers/shinra:1:1/jobs/pending'
       end
 
       it do
@@ -420,7 +420,7 @@ RSpec.describe_current do
 
   describe '#subscriptions' do
     context 'when subscriptions exist' do
-      before { get 'consumers/1/subscriptions' }
+      before { get 'consumers/shinra:1:1/subscriptions' }
 
       it do
         expect(response).to be_ok
@@ -442,7 +442,7 @@ RSpec.describe_current do
 
         produce(reports_topic, report.to_json)
 
-        get 'consumers/1/subscriptions'
+        get 'consumers/shinra:1:1/subscriptions'
       end
 
       it do
@@ -463,7 +463,7 @@ RSpec.describe_current do
         produce(states_topic, Fixtures.consumers_states_file, type: :transactional)
         produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)
 
-        get 'consumers/1/subscriptions'
+        get 'consumers/shinra:1:1/subscriptions'
       end
 
       it do
@@ -484,7 +484,7 @@ RSpec.describe_current do
 
         produce(reports_topic, report.to_json)
 
-        get 'consumers/1/subscriptions'
+        get 'consumers/shinra:1:1/subscriptions'
       end
 
       it do

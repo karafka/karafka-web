@@ -14,7 +14,9 @@ module Karafka
             #
             # @param _event [Karafka::Core::Monitoring::Event]
             def on_app_running(_event)
-              ::Karafka::Web.config.tracking.scheduler.async_call
+              ::Karafka::Web.config.tracking.scheduler.async_call(
+                'karafka.web.tracking.scheduler'
+              )
             end
 
             # Updates the web producer after fork if needed and adds ppid to nodes

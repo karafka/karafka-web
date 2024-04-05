@@ -7,7 +7,7 @@ module Karafka
         # Consumers (consuming processes - `karafka server`) processes display consumer
         class ConsumersController < BaseController
           self.sortable_attributes = %w[
-            name
+            id
             started_at
             lag_hybrid
           ].freeze

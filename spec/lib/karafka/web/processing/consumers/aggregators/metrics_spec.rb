@@ -41,13 +41,13 @@ RSpec.describe_current do
 
   context 'when we have data from a multi-topic, multi-partition setup' do
     let(:process1_report) do
-      data = Fixtures.consumers_reports_json('multi_partition/v1.2.3_process_1')
+      data = Fixtures.consumers_reports_json('multi_partition/v1.3.0_process_1')
       data[:dispatched_at] = Time.now.to_f
       data
     end
 
     let(:process2_report) do
-      data = Fixtures.consumers_reports_json('multi_partition/v1.2.3_process_2')
+      data = Fixtures.consumers_reports_json('multi_partition/v1.3.0_process_2')
       data[:dispatched_at] = Time.now.to_f
       data
     end

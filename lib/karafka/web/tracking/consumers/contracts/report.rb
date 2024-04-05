@@ -20,7 +20,7 @@ module Karafka
 
             nested(:process) do
               required(:started_at) { |val| val.is_a?(Numeric) && val.positive? }
-              required(:name) { |val| val.is_a?(String) && val.count(':') >= 2 }
+              required(:id) { |val| val.is_a?(String) && val.count(':') >= 2 }
               required(:cpus) { |val| val.is_a?(Integer) && val >= 1 }
               required(:memory_usage) { |val| val.is_a?(Integer) && val >= 0 }
               required(:memory_total_usage) { |val| val.is_a?(Integer) && val >= 0 }

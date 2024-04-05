@@ -1,0 +1,98 @@
+<%== view_title("#{@command_message.payload[:command][:name]} #{@command_message.payload[:type]} #{@command_message.key}") %>
+
+<%== partial 'consumers/tabs' %>
+
+<div class="container">
+  <div class="row mb-4">
+    <div class="col-sm-12">
+      <h4 class="mb-2">
+        Metadata
+      </h4>
+      <hr/>
+    </div>
+  </div>
+
+  <div class="row mb-5">
+    <div class="col-sm-12 table-responsive">
+      <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+        <tbody>
+          <tr>
+            <td>Type</td>
+            <td><%== @command_message.payload[:type] %></td>
+          </tr>
+
+          <tr>
+            <td>Name</td>
+            <td><%== @command_message.payload[:command][:name] %></td>
+          </tr>
+
+          <tr>
+            <td>Dispatched</td>
+            <td><%== relative_time @command_message.payload[:dispatched_at] %></td>
+          </tr>
+          <tr>
+            <td>Process</td>
+            <td>
+              <% command = @command_message.payload %>
+              <% if command[:process][:id] == '*' %>
+                  <%= command[:process][:id] %>
+              <% else %>
+                <a href="<%= root_path('consumers', command[:process][:id], 'subscriptions') %>">
+                  <%= command[:process][:id] %>
+                </a>
+              <% end %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row mb-4">
+    <div class="col-sm-12">
+      <h4 class="mb-2">
+        Backtraces / Details
+      </h4>
+      <hr/>
+    </div>
+  </div>
+</div>
+
+<% if @command_message.payload[:type] == 'command' %>
+    <div class="container">
+      <div class="row mb-5">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <pre class="m-0 p-0"><code class="wrapped json p-0 m-0"><%= JSON.pretty_generate @command_message.payload %></code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+<% else %>
+  <% @command_message.payload[:result].each do |thread, backtrace| %>
+    <div class="container">
+      <div class="row mb-4">
+        <div class="col-sm-12">
+          <h5 class="mb-2">
+            <%= backtrace[:label] %>
+          </h5>
+          <hr/>
+        </div>
+      </div>
+
+      <div class="row mb-5">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <pre class="m-0 p-0"><code class="wrapped json p-0 m-0"><%= backtrace[:backtrace] %></code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>
