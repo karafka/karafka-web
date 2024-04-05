@@ -58,6 +58,9 @@ module Karafka
 
           private
 
+          # Main iterator code.
+          # This iterator listens to the commands topic and when it detects messages targeting
+          # current process, performs the requested command.
           def call
             c_config = ::Karafka::Web.config.commanding
             t_config = Karafka::Web.config.topics
@@ -75,15 +78,15 @@ module Karafka
               next unless message
               next unless matches?(message)
 
-              control(message)
-            rescue => e
+              control(message.payload[:command][:name])
+            rescue StandardError => e
               report_error(e)
 
               sleep(c_config.pause_timeout)
 
               next
             end
-          rescue => e
+          rescue StandardError => e
             return if done?
 
             report_error(e)
@@ -93,8 +96,11 @@ module Karafka
             retry
           end
 
-          def control(message)
-            case message.payload[:command][:name]
+          # Runs the expected command
+          #
+          # @param command [String] command expected to run
+          def control(command)
+            case command
             when 'probe'
               probe
             when 'stop'
@@ -104,33 +110,35 @@ module Karafka
             end
           end
 
+          # Collects all backtraces from the available Ruby threads and publishes their details
+          #   back to Kafka for debug.
           def probe
             threads = {}
 
             Thread.list.each do |thread|
               tid = (thread.object_id ^ ::Process.pid).to_s(36)
-
-              t = threads[tid] = {}
-
-              t[:label] = "Thread TID-#{tid} #{thread.name}"
-
-              if thread.backtrace
-                t[:backtrace] = thread.backtrace.join("\n")
-              else
-                t[:backtrace] = '<no backtrace available>'
-              end
+              t_d = threads[tid] = {}
+              t_d[:label] = "Thread TID-#{tid} #{thread.name}"
+              t_d[:backtrace] = (thread.backtrace || ['<no backtrace available>']).join("\n")
             end
 
             Dispatcher.result(threads, process_id, 'probe')
           end
 
+          # @param message [Karafka::Messages::Message] message with command
+          # @return [Boolean] is this message dedicated to current process and is actionable
           def matches?(message)
-            return false unless message.payload[:type] == 'command'
-            return true if message.key == '*'
-            return true if message.key == process_id
-            return false unless message.payload[:schema_version] == '0.0.1'
+            matches = true
 
-            false
+            # We want to work only with commands that target all processes or our current
+            matches = false unless message.key == '*' || message.key == process_id
+            # We operate only on commands. Result messages should be ignored
+            matches = false unless message.payload[:type] == 'command'
+            # Ignore messages that have different schema. This can happen in the middle of
+            # upgrades of the framework. We ignore this not to risk compatibility issues
+            matches = false unless message.payload[:schema_version] == Dispatcher::SCHEMA_VERSION
+
+            matches
           end
 
           # Reports any error that occurred in the manager
