@@ -79,7 +79,7 @@ RSpec.describe_current do
       expect(body).not_to include(pagination)
       expect(body).to include('246 MB')
       expect(body).to include('shinra:1:1')
-      expect(body).to include('/consumers/1/subscriptions')
+      expect(body).to include('/consumers/shinra:1:1/subscriptions')
       expect(body).to include('2690818651.82293')
     end
   end
