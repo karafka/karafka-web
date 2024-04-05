@@ -1,56 +1,60 @@
 <% if command_message.is_a?(Array) %>
-  <tr>
-    <td colspan="5" class="text-center text-muted">
-      This offset does not contain error data. The message may have been compacted or is a system entry.
-    </td>
-  </tr>
+  <%== partial 'shared/not_a_message' %>
 <% else %>
   <% command = command_message.payload %>
 
-  <tr>
-    <td>
-      <% color = command[:type] == 'result' ? 'success' : 'primary' %>
-      <span class="badge bg-<%= color %> badge-topic">
-        <%= command[:type] %>
-      </span>
-    </td>
+  <% if command[:schema_version] == @schema_version %>
+    <tr>
+      <td>
+        <% color = command[:type] == 'result' ? 'success' : 'primary' %>
+        <span class="badge bg-<%= color %> badge-topic">
+          <%= command[:type] %>
+        </span>
+      </td>
 
-    <td>
-      <%
-        color = case command[:command][:name]
-                when 'probe'
-                  'secondary'
-                when 'quiet'
-                  'warning'
-                when 'stop'
-                  'danger'
-                else
-                  'secondary'
-                end
-      %>
-      <span class="badge bg-<%= color %> badge-topic">
-        <%= command[:command][:name] %>
-      </span>
-    </td>
+      <td>
+        <%
+          color = case command[:command][:name]
+                  when 'probe'
+                    'secondary'
+                  when 'quiet'
+                    'warning'
+                  when 'stop'
+                    'danger'
+                  else
+                    'secondary'
+                  end
+        %>
+        <span class="badge bg-<%= color %> badge-topic">
+          <%= command[:command][:name] %>
+        </span>
+      </td>
 
-    <td>
-      <% if command[:process][:id] == '*' %>
-        *
-      <% else %>
-        <a href="<%= root_path('consumers', command[:process][:id], 'subscriptions') %>">
-          <%= truncate(command[:process][:id], strategy: :middle) %>
+      <td>
+        <% if command[:process][:id] == '*' %>
+          *
+        <% else %>
+          <a href="<%= root_path('consumers', command[:process][:id], 'subscriptions') %>">
+            <%= truncate(command[:process][:id], strategy: :middle) %>
+          </a>
+        <% end %>
+      </td>
+
+      <td>
+        <%== relative_time command[:dispatched_at] %>
+      </td>
+
+      <td class="text-center">
+        <a href="<%= root_path('commands', command_message.offset) %>" class="btn btn-sm btn-secondary text-white">
+          Details
         </a>
-      <% end %>
-    </td>
-
-    <td>
-      <%== relative_time command[:dispatched_at] %>
-    </td>
-
-    <td class="text-center">
-      <a href="<%= root_path('commands', command_message.offset) %>" class="btn btn-sm btn-secondary text-white">
-        Details
-      </a>
-    </td>
-  </tr>
+      </td>
+    </tr>
+  <% else %>
+    <tr>
+      <td colspan="100" class="text-center text-muted">
+       Incompatible command schema. This command message schema does not match the Karafka Web UI schema.
+      </td>
+    </tr>
+  <% end %>
 <% end %>

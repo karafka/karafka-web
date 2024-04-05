@@ -73,25 +73,27 @@ module Karafka
             )
 
             iterator.each do |message|
-              iterator.stop if @stop
-              next if @stop
-              next unless message
-              next unless matches?(message)
+              begin
+                iterator.stop if @stop
+                next if @stop
+                next unless message
+                next unless matches?(message)
 
-              control(message.payload[:command][:name])
-            rescue StandardError => e
-              report_error(e)
+                control(message.payload[:command][:name])
+              rescue StandardError => e
+                report_error(e)
 
-              sleep(c_config.pause_timeout)
+                sleep(c_config.pause_timeout / 1_000)
 
-              next
+                next
+              end
             end
           rescue StandardError => e
             return if done?
 
             report_error(e)
 
-            sleep(c_config.pause_timeout)
+            sleep(c_config.pause_timeout / 1_000)
 
             retry
           end

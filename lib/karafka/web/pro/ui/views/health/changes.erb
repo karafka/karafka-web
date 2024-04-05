@@ -11,7 +11,7 @@
     <%== partial 'health/consumer_group_header', locals: { cg_name: cg_name, details: details } %>
 
     <div class="row mb-3">
-      <div class="col-sm-12">
+      <div class="col-sm-12 table-responsive">
         <% topics = details[:topics] %>
         <% topics.each_with_index do |(topic_name, partitions), index| %>
           <table class="processes bg-white table table-hover table-bordered table-striped align-middle <%= (index+1 < topics.size) ? 'mb-5' : 'mb-3' %>">

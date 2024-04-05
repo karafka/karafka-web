@@ -1,21 +1,23 @@
-<table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
-  <thead>
-    <tr class="align-middle">
-      <th>Type</th>
-      <th>Name</th>
-      <th>Process name</th>
-      <th>Dispatched</th>
-      <th></th>
-    </tr>
-  </thead>
+<div class="table-responsive">
+  <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+    <thead>
+      <tr class="align-middle">
+        <th>Type</th>
+        <th>Name</th>
+        <th>ID</th>
+        <th>Dispatched</th>
+        <th></th>
+      </tr>
+    </thead>
 
-  <tbody>
-    <%==
-      each_partial(
-        @command_messages,
-        'commands/command',
-        local: :command_message
-      )
-    %>
-  </tbody>
-</table>
+    <tbody>
+      <%==
+        each_partial(
+          @command_messages,
+          'commands/command',
+          local: :command_message
+        )
+      %>
+    </tbody>
+  </table>
+</div>

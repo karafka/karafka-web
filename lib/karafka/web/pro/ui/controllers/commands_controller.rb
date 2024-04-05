@@ -20,6 +20,7 @@ module Karafka
           class CommandsController < BaseController
             # Lists commands from the consumers commands topic
             def index
+              @schema_version = Commanding::Dispatcher::SCHEMA_VERSION
               @watermark_offsets = Models::WatermarkOffsets.find(commands_topic, 0)
 
               previous_offset, @command_messages, next_offset = current_partition_data
@@ -43,6 +44,7 @@ module Karafka
             #
             # @param offset [Integer] offset of the command message we're interested in
             def show(offset)
+              @schema_version = Commanding::Dispatcher::SCHEMA_VERSION
               @command_message = Models::Message.find(
                 commands_topic,
                 0,

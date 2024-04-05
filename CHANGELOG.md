@@ -12,6 +12,7 @@
 - [Enhancement] Limit length of `key` presented in the list view of the explorer.
 - [Enhancement] Improve responsiveness on big screens by increasing max width.
 - [Enhancement] Auto-qualify topics with dlq/dead_letter case insensitive name components to DLQ view.
+- [Enhancement] Make tabels responsive.
 - [Change] Rename Cluster => Topics to Cluster => Replication to better align with what is shows.
 - [Refactor] Normalize what is process name and process id.
 - [Refactor] Create one `pro/` namespace for all Web related sub-modules.

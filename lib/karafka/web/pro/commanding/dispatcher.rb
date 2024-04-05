@@ -24,8 +24,6 @@ module Karafka
           # What schema do we have in current Karafka version for commands dispatches
           SCHEMA_VERSION = '1.0.0'
 
-          private_constant :SCHEMA_VERSION
-
           class << self
             # Dispatches the command request
             #

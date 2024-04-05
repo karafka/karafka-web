@@ -24,6 +24,7 @@ module Karafka
               id
               process_id
               name
+              status
               started_at
               lag_hybrid
               lag_hybrid_d

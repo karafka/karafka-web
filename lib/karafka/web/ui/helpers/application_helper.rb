@@ -11,6 +11,7 @@ module Karafka
           # Default attribute names mapped from the attributes themselves
           # It makes it easier as we do not have to declare those all the time
           SORT_NAMES = {
+            id: 'ID',
             partition_id: 'Partition',
             memory_usage: 'RSS',
             started_at: 'Started',

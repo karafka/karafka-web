@@ -15,7 +15,7 @@
     </div>
 
     <div class="row mb-3">
-      <div class="col-sm-12">
+      <div class="col-sm-12 table-responsive">
         <% details.each_with_index do |(topic_name, partitions), index| %>
           <table class="processes bg-white table table-hover table-bordered table-striped align-middle <%= (index+1 < details.size) ? 'mb-5' : 'mb-3' %>">
             <thead>

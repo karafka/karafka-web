@@ -11,3 +11,11 @@
     </a>
   </li>
 <% end %>
+
+<% if @command_message %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('commands', @command_message.offset) %>">
+      <%= @command_message.offset %>
+    </a>
+  </li>
+<% end %>

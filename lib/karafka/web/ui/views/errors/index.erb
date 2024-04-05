@@ -20,26 +20,28 @@
       <% elsif @watermark_offsets.cleaned? %>
         <%== partial 'errors/cleaned' %>
       <% else %>
-        <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
-          <thead>
-            <tr class="align-middle">
-              <th>Origin</th>
-              <th>Process name</th>
-              <th>Error</th>
-              <th>Occurred</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <%==
-              each_partial(
-                @error_messages,
-                'errors/error',
-                local: :error_msg
-              )
-            %>
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+            <thead>
+              <tr class="align-middle">
+                <th>Origin</th>
+                <th>ID</th>
+                <th>Error</th>
+                <th>Occurred</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <%==
+                each_partial(
+                  @error_messages,
+                  'errors/error',
+                  local: :error_msg
+                )
+              %>
+            </tbody>
+          </table>
+        </div>
       <% end %>
     </div>
   </div>
