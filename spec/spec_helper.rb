@@ -69,7 +69,8 @@ RSpec.configure do |config|
     ::Karafka::Web.config.topics.consumers.states = TOPICS[0]
     ::Karafka::Web.config.topics.consumers.metrics = TOPICS[1]
     ::Karafka::Web.config.topics.consumers.reports = TOPICS[2]
-    ::Karafka::Web.config.topics.errors = TOPICS[3]
+    ::Karafka::Web.config.topics.consumers.commands = TOPICS[3]
+    ::Karafka::Web.config.topics.errors = TOPICS[4]
   end
 
   config.after(:suite) do
@@ -118,7 +119,7 @@ PRODUCERS = OpenStruct.new(
 )
 
 # Topics that we will use for all the tests as the primary karafka-web topics for valid cases
-TOPICS = Array.new(4) { create_topic }
+TOPICS = Array.new(5) { create_topic }
 
 RSpec.configure do |config|
   # Set existing topics
@@ -126,7 +127,8 @@ RSpec.configure do |config|
     ::Karafka::Web.config.topics.consumers.states = TOPICS[0]
     ::Karafka::Web.config.topics.consumers.metrics = TOPICS[1]
     ::Karafka::Web.config.topics.consumers.reports = TOPICS[2]
-    ::Karafka::Web.config.topics.errors = TOPICS[3]
+    ::Karafka::Web.config.topics.consumers.commands = TOPICS[3]
+    ::Karafka::Web.config.topics.errors = TOPICS[4]
   end
 end
 
@@ -134,7 +136,8 @@ Karafka::Web.setup do |config|
   config.topics.consumers.states = TOPICS[0]
   config.topics.consumers.metrics = TOPICS[1]
   config.topics.consumers.reports = TOPICS[2]
-  config.topics.errors = TOPICS[3]
+  config.topics.consumers.commands = TOPICS[3]
+  config.topics.errors = TOPICS[4]
 end
 
 draw_defaults

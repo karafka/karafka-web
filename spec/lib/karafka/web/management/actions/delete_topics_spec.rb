@@ -10,12 +10,14 @@ RSpec.describe_current do
   let(:consumers_states_topic) { SecureRandom.uuid }
   let(:consumers_metrics_topic) { SecureRandom.uuid }
   let(:consumers_reports_topic) { SecureRandom.uuid }
+  let(:consumers_commands_topic) { SecureRandom.uuid }
   let(:errors_topic) { SecureRandom.uuid }
 
   before do
     Karafka::Web.config.topics.consumers.states = consumers_states_topic
     Karafka::Web.config.topics.consumers.metrics = consumers_metrics_topic
     Karafka::Web.config.topics.consumers.reports = consumers_reports_topic
+    Karafka::Web.config.topics.consumers.commands = consumers_commands_topic
     Karafka::Web.config.topics.errors = errors_topic
   end
 
