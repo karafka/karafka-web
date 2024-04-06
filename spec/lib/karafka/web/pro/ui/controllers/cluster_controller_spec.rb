@@ -8,7 +8,7 @@ RSpec.describe_current do
 
     it do
       expect(response).to be_ok
-      expect(body).to include('Id')
+      expect(body).to include('ID')
       expect(body).to include(breadcrumbs)
       expect(body).not_to include(support_message)
     end
