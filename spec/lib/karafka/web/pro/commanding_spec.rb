@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Karafka::Web::Pro::Commanding do
+RSpec.describe_current do
   describe '#post_setup' do
     let(:config) { ::Karafka::Web.config }
 
