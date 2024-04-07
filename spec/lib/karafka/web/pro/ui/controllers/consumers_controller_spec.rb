@@ -46,6 +46,34 @@ RSpec.describe_current do
       end
     end
 
+    context 'when commanding is disabled' do
+      before do
+        Karafka::Web.config.commanding.active = false
+
+        get 'consumers/overview'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).not_to include('Controls')
+        expect(body).not_to include('Commands')
+      end
+    end
+
+    context 'when commanding is enabled' do
+      before do
+        Karafka::Web.config.commanding.active = true
+
+        get 'consumers/overview'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('Controls')
+        expect(body).to include('Commands')
+      end
+    end
+
     context 'when there are active consumers' do
       before { get 'consumers/overview' }
 
@@ -202,6 +230,36 @@ RSpec.describe_current do
         expect(body).to include('code class="wrapped json p-0 m-0"')
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
+      end
+    end
+
+    context 'when commanding is enabled' do
+      before do
+        Karafka::Web.config.commanding.active = true
+
+        get 'consumers/shinra:1:1/details'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('Probe')
+        expect(body).to include('Quiet')
+        expect(body).to include('Stop')
+      end
+    end
+
+    context 'when commanding is disabled' do
+      before do
+        Karafka::Web.config.commanding.active = false
+
+        get 'consumers/shinra:1:1/details'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).not_to include('Probe')
+        expect(body).not_to include('Quiet')
+        expect(body).not_to include('Stop')
       end
     end
 

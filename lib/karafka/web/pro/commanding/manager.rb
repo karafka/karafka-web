@@ -34,7 +34,7 @@ module Karafka
           include ::Karafka::Helpers::Async
           include Singleton
 
-          # When app starts to run, we start to manage for commands
+          # When app starts to run, we start to listen for commands
           #
           # @param _event [Karafka::Core::Monitoring::Event]
           def on_app_running(_event)
@@ -107,6 +107,10 @@ module Karafka
               ::Process.kill('QUIT', ::Process.pid)
             when 'quiet'
               ::Process.kill('TSTP', ::Process.pid)
+            else
+              # We raise it and will be rescued, reported and ignored. We raise it as this should
+              # not happen unless there are version conflicts
+              raise ::Karafka::Errors::UnsupportedCaseError, command
             end
           end
 
