@@ -26,7 +26,7 @@ RSpec.describe_current do
 
       it do
         expect(response.status).to eq(302)
-        # Taken fro referer and referer is nil in specs
+        # Taken from referer and referer is nil in specs
         expect(response.location).to eq(nil)
         expect(republished.raw_payload).to eq(payload)
       end
