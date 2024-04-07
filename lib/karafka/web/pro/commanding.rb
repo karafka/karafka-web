@@ -27,6 +27,8 @@ module Karafka
             # We do not use manager if commanding is not suppose to work at all
             return unless config.commanding.active
 
+            Commanding::Contracts::Config.new.validate!(config.to_h)
+
             ::Karafka.monitor.subscribe(
               Commanding::Manager.instance
             )

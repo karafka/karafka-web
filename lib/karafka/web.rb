@@ -70,12 +70,9 @@ loader = Zeitwerk::Loader.new
 # Make sure pro is not loaded unless Pro
 loader.ignore(Karafka::Web.gem_root.join('lib/karafka/web/pro'))
 
-pro_loader = false
-
 # If license is detected, we can use loader without limitations
 Karafka::Licenser.detect do
   loader = Zeitwerk::Loader.new
-  pro_loader = true
 end
 
 loader.tag = 'karafka-web'

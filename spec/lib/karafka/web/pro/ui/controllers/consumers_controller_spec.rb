@@ -8,6 +8,15 @@ RSpec.describe_current do
   let(:reports_topic) { create_topic }
 
   describe '#index' do
+    context 'when we open a consumers root' do
+      before { get 'consumers' }
+
+      it 'expect to redirect to overview page' do
+        expect(response.status).to eq(302)
+        expect(response.headers['location']).to include('consumers/overview')
+      end
+    end
+
     context 'when the state data is missing' do
       before do
         topics_config.consumers.states = states_topic

@@ -1,0 +1,10 @@
+en:
+  validations:
+    config:
+      missing: needs to be present
+
+      commanding.active_format: needs to be either true or false
+      commanding.consumer_group_format: 'needs to be a string with a Kafka accepted format'
+      commanding.max_wait_time_format: needs to be an integer bigger than 0
+      commanding.pause_timeout_format: needs to be an integer bigger than 0
+      key_must_be_a_symbol: All keys under the kafka settings scope need to be symbols

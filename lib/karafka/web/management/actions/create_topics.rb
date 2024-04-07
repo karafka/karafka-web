@@ -101,8 +101,8 @@ module Karafka
                 replication_factor,
                 {
                   'cleanup.policy': 'delete',
-                  'retention.ms': 24 * 60 * 60 * 1_000, # 24h
-                  'segment.ms': 12 * 60 * 60 * 1_000, # 12h
+                  'retention.ms': 7 * 24 * 60 * 60 * 1_000, # 7 days
+                  'segment.ms': 12 * 60 * 60 * 1_000, # 24h
                   'segment.bytes': 104_857_600 # 100MB
                 }
               )

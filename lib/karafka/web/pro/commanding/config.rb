@@ -36,6 +36,10 @@ module Karafka
           # API, we can just back-off and not care since we can always re-create the consumer on
           # issues. We always want to prevent a case where we would create new in a loop and
           # fail without backoff as this could overload the process.
+          #
+          # This should not happen often so waiting that long should not pose significant risks
+          # and should not cause issues with the user-experience, since this is only commanding
+          # connection
           setting :pause_timeout, default: 10_000
 
           # The underlying iterator requires specific settings, do not change this unless you know
