@@ -30,6 +30,7 @@ class Fixtures
       consumers_reports
       consumers_metrics
       consumers_states
+      consumers_commands
       errors
     ].each do |type|
       define_method :"#{type}_file" do |name = 'current.json'|
