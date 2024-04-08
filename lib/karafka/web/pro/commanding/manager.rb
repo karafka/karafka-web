@@ -34,6 +34,11 @@ module Karafka
           include ::Karafka::Helpers::Async
           include Singleton
 
+          def initialize
+            @listener = Listener.new
+            @matcher = Matcher.new
+          end
+
           # When app starts to run, we start to listen for commands
           #
           # @param _event [Karafka::Core::Monitoring::Event]
@@ -45,7 +50,7 @@ module Karafka
           #
           # @param _event [Karafka::Core::Monitoring::Event]
           def on_app_stopping(_event)
-            @stop = true
+            @listener.stop
           end
 
           # This ensures that in case of super fast shutdown, we wait on this in case it would be
@@ -62,38 +67,11 @@ module Karafka
           # This iterator listens to the commands topic and when it detects messages targeting
           # current process, performs the requested command.
           def call
-            c_config = ::Karafka::Web.config.commanding
-            t_config = Karafka::Web.config.topics
-
-            iterator = Karafka::Pro::Iterator.new(
-              { t_config.consumers.commands => true },
-              settings: c_config.kafka.merge('group.id' => c_config.consumer_group),
-              yield_nil: true,
-              max_wait_time: c_config.max_wait_time
-            )
-
-            iterator.each do |message|
-              iterator.stop if @stop
-              next if @stop
-              next unless message
-              next unless matches?(message)
+            @listener.each do |message|
+              next unless @matcher.matches?(message)
 
               control(message.payload[:command][:name])
-            rescue StandardError => e
-              report_error(e)
-
-              sleep(c_config.pause_timeout / 1_000)
-
-              next
             end
-          rescue StandardError => e
-            return if done?
-
-            report_error(e)
-
-            sleep(c_config.pause_timeout / 1_000)
-
-            retry
           end
 
           # Runs the expected command
@@ -102,68 +80,16 @@ module Karafka
           def control(command)
             case command
             when 'probe'
-              probe
+              Commands::Probe.new.call
             when 'stop'
-              ::Process.kill('QUIT', ::Process.pid)
+              Commands::Stop.new.call
             when 'quiet'
-              ::Process.kill('TSTP', ::Process.pid)
+              Commands::Quiet.new.call
             else
               # We raise it and will be rescued, reported and ignored. We raise it as this should
               # not happen unless there are version conflicts
               raise ::Karafka::Errors::UnsupportedCaseError, command
             end
-          end
-
-          # Collects all backtraces from the available Ruby threads and publishes their details
-          #   back to Kafka for debug.
-          def probe
-            threads = {}
-
-            Thread.list.each do |thread|
-              tid = (thread.object_id ^ ::Process.pid).to_s(36)
-              t_d = threads[tid] = {}
-              t_d[:label] = "Thread TID-#{tid} #{thread.name}"
-              t_d[:backtrace] = (thread.backtrace || ['<no backtrace available>']).join("\n")
-            end
-
-            Dispatcher.result(threads, process_id, 'probe')
-          end
-
-          # @param message [Karafka::Messages::Message] message with command
-          # @return [Boolean] is this message dedicated to current process and is actionable
-          def matches?(message)
-            matches = true
-
-            # We want to work only with commands that target all processes or our current
-            matches = false unless message.key == '*' || message.key == process_id
-            # We operate only on commands. Result messages should be ignored
-            matches = false unless message.payload[:type] == 'command'
-            # Ignore messages that have different schema. This can happen in the middle of
-            # upgrades of the framework. We ignore this not to risk compatibility issues
-            matches = false unless message.payload[:schema_version] == Dispatcher::SCHEMA_VERSION
-
-            matches
-          end
-
-          # Reports any error that occurred in the manager
-          #
-          # Since we have an iterator based Kafka connection here, we do not have standard Karafka
-          # error handling and retries. This means, that we have to handle errors ourselves and
-          # report them to the instrumentation pipeline.
-          #
-          # @param error [StandardError] any error that occurred in the manager
-          def report_error(error)
-            ::Karafka.monitor.instrument(
-              'error.occurred',
-              error: error,
-              caller: self,
-              type: 'web.controlling.controller.error'
-            )
-          end
-
-          # @return [String] current process id
-          def process_id
-            @process_id ||= ::Karafka::Web.config.tracking.consumers.sampler.process_id
           end
         end
       end
