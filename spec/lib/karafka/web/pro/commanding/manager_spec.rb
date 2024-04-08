@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-RSpec.describe Karafka::Web::Pro::Commanding::Manager do
-  subject(:manager) { described_class.instance }
-
-  before { allow(manager).to receive(:async_call) }
+RSpec.describe_current do
+  subject(:manager) { described_class.send(:new) }
 
   describe '#on_app_running' do
+    before { allow(manager).to receive(:async_call) }
+
     it 'expect to start listening for commands asynchronously' do
       manager.on_app_running(nil)
 
@@ -14,10 +14,16 @@ RSpec.describe Karafka::Web::Pro::Commanding::Manager do
   end
 
   describe '#on_app_stopping' do
-    it 'expect to set stop flag to true' do
-      manager.on_app_stopping(nil)
+    let(:listener) { Karafka::Web::Pro::Commanding::Listener.new }
 
-      expect(manager.instance_variable_get(:@stop)).to be true
+    before do
+      allow(listener.class).to receive(:new).and_return(listener)
+      allow(listener).to receive(:stop)
+    end
+
+    it 'expect to stop the listener' do
+      manager.on_app_stopping(nil)
+      expect(listener).to have_received(:stop)
     end
   end
 
