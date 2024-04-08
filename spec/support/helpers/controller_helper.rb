@@ -19,7 +19,7 @@ module ControllerHelper
 
   # @return [String] Part of support message string to match against its presence
   def support_message
-    'Please help us'
+    '<div id="help-us">'
   end
 
   # @return [String]

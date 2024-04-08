@@ -14,6 +14,7 @@
 - [Enhancement] Auto-qualify topics with dlq/dead_letter case insensitive name components to DLQ view.
 - [Enhancement] Make tables responsive.
 - [Change] Rename Cluster => Topics to Cluster => Replication to better align with what is shows.
+- [Change] Make support messages more entertaining.
 - [Refactor] Normalize what is process name and process id.
 - [Refactor] Create one `pro/` namespace for all Web related sub-modules.
 - [Refactor] Extract alerts into a common component.

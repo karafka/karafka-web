@@ -59,6 +59,13 @@ module Karafka
         # custom values provided by our user
         App.engine.plugin(:sessions, **config.ui.sessions.to_h)
       end
+
+      # @return [Array<String>] Web UI slogans we use to encourage people to support Karafka
+      def slogans
+        @slogans ||= YAML.load_file(
+          gem_root.join('config', 'locales', 'slogans.yml')
+        ).dig('en', 'slogans')
+      end
     end
   end
 end
