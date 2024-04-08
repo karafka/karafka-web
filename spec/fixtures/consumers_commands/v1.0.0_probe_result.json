@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "type": "result",
+  "command": {
+    "name": "probe"
+  },
+  "result": {
+    "8l51": {
+      "label": "Thread TID-8l51 ",
+      "backtrace": "\u003cinternal:thread_sync\u003e:18:in `pop'\n/mnt/software/Karafka/karafka/lib/karafka/connection/conductor.rb:19:in `wait'\n/mnt/software/Karafka/karafka/lib/karafka/runner.rb:36:in `call'\n/mnt/software/Karafka/karafka/lib/karafka/server.rb:65:in `start'\n/mnt/software/Karafka/karafka/lib/karafka/server.rb:45:in `run'\n/mnt/software/Karafka/karafka/lib/karafka/cli/server.rb:92:in `call'\n/mnt/software/Karafka/karafka/lib/karafka/cli.rb:23:in `start'\n/mnt/software/Karafka/karafka/bin/karafka:10:in `\u003ctop (required)\u003e'\n/home/mencio/.rbenv/versions/3.3.0/lib/ruby/gems/3.3.0/bin/karafka:25:in `load'\n/home/mencio/.rbenv/versions/3.3.0/lib/ruby/gems/3.3.0/bin/karafka:25:in `\u003ctop (required)\u003e'\n/home/mencio/.rbenv/versions/3.3.0/lib/ruby/gems/3.3.0/gems/bundler-2.5.5/lib/bundler/cli/exec.rb:58:in `load'\n/home/mencio/.rbenv/versions/3.3.0/lib/ruby/gems/3.3.0/gems/bundler-2.5.5/lib/bundler/cli/exec.rb:58:in `kernel_load'\n/home/mencio/.rbenv/versions/3.3.0/lib/ruby/gems/3.3.0/gems/bundler-2.5.5/lib/bundler/cli/exec.rb:23:in `run'\n/home/mencio/.rbenv/versions/3.3.0/lib/ruby/gems/3.3.0/gems/bundler-2.5.5/lib/bundler/cli.rb:451:in `exec'\n/home/mencio/.rbenv/versions/3.3.0/lib/ruby/gems/3.3.0/gems/bundler-2.5.5/lib/bundler/vendor/thor/lib/thor/command.rb:28:in `run'\n/home/mencio/.rbenv/versions/3.3.0/lib/ruby/gems/3.3.0/gems/bundler-2.5.5/lib/bundler/vendor/thor/lib/thor/invocation.rb:127:in `invoke_command'\n/home/mencio/.rbenv/versions/3.3.0/lib/ruby/gems/3.3.0/gems/bundler-2.5.5/lib/bundler/vendor/thor/lib/thor.rb:527:in `dispatch'\n/home/mencio/.rbenv/versions/3.3.0/lib/ruby/gems/3.3.0/gems/bundler-2.5.5/lib/bundler/cli.rb:34:in `dispatch'\n/home/mencio/.rbenv/versions/3.3.0/lib/ruby/gems/3.3.0/gems/bundler-2.5.5/lib/bundler/vendor/thor/lib/thor/base.rb:584:in `start'\n/home/mencio/.rbenv/versions/3.3.0/lib/ruby/gems/3.3.0/gems/bundler-2.5.5/lib/bundler/cli.rb:28:in `start'\n/home/mencio/.rbenv/versions/3.3.0/lib/ruby/gems/3.3.0/gems/bundler-2.5.5/exe/bundle:28:in `block in \u003ctop (required)\u003e'\n/home/mencio/.rbenv/versions/3.3.0/lib/ruby/gems/3.3.0/gems/bundler-2.5.5/lib/bundler/friendly_errors.rb:117:in `with_friendly_errors'\n/home/mencio/.rbenv/versions/3.3.0/lib/ruby/gems/3.3.0/gems/bundler-2.5.5/exe/bundle:20:in `\u003ctop (required)\u003e'\n/home/mencio/.rbenv/versions/3.3.0/bin/bundle:25:in `load'\n/home/mencio/.rbenv/versions/3.3.0/bin/bundle:25:in `\u003cmain\u003e'"
+    },
+    "8lzh": {
+      "label": "Thread TID-8lzh FFI Callback Dispatcher",
+      "backtrace": ""
+    },
+    "8ly9": {
+      "label": "Thread TID-8ly9 karafka.web.pro.commanding.manager",
+      "backtrace": "/mnt/software/Karafka/karafka-web/lib/karafka/web/pro/commanding/manager.rb:126:in `backtrace'\n/mnt/software/Karafka/karafka-web/lib/karafka/web/pro/commanding/manager.rb:126:in `block in probe'\n/mnt/software/Karafka/karafka-web/lib/karafka/web/pro/commanding/manager.rb:122:in `each'\n/mnt/software/Karafka/karafka-web/lib/karafka/web/pro/commanding/manager.rb:122:in `probe'\n/mnt/software/Karafka/karafka-web/lib/karafka/web/pro/commanding/manager.rb:105:in `control'\n/mnt/software/Karafka/karafka-web/lib/karafka/web/pro/commanding/manager.rb:81:in `block in call'\n/mnt/software/Karafka/karafka/lib/karafka/pro/iterator.rb:91:in `block in each'\n/mnt/software/Karafka/karafka/lib/karafka/admin.rb:395:in `with_consumer'\n/mnt/software/Karafka/karafka/lib/karafka/pro/iterator.rb:73:in `each'\n/mnt/software/Karafka/karafka-web/lib/karafka/web/pro/commanding/manager.rb:75:in `call'\n/mnt/software/Karafka/karafka/lib/karafka/helpers/async.rb:40:in `block (2 levels) in async_call'"
+    },
+    "8lyt": {
+      "label": "Thread TID-8lyt karafka.web.tracking.scheduler",
+      "backtrace": "/mnt/software/Karafka/karafka-web/lib/karafka/web/tracking/scheduler.rb:27:in `sleep'\n/mnt/software/Karafka/karafka-web/lib/karafka/web/tracking/scheduler.rb:27:in `block in call'\n\u003cinternal:kernel\u003e:187:in `loop'\n/mnt/software/Karafka/karafka-web/lib/karafka/web/tracking/scheduler.rb:22:in `call'\n/mnt/software/Karafka/karafka/lib/karafka/helpers/async.rb:40:in `block (2 levels) in async_call'"
+    },
+    "8lxl": {
+      "label": "Thread TID-8lxl karafka.listener#app_c4ca4238a0b9_0",
+      "backtrace": "/mnt/software/Karafka/karafka-rdkafka/lib/rdkafka/consumer.rb:539:in `rd_kafka_consumer_poll'\n/mnt/software/Karafka/karafka-rdkafka/lib/rdkafka/consumer.rb:539:in `block in poll'\n/mnt/software/Karafka/karafka-rdkafka/lib/rdkafka/native_kafka.rb:76:in `with_inner'\n/mnt/software/Karafka/karafka-rdkafka/lib/rdkafka/consumer.rb:538:in `poll'\n/mnt/software/Karafka/karafka/lib/karafka/connection/client.rb:516:in `poll'\n/mnt/software/Karafka/karafka/lib/karafka/connection/client.rb:92:in `block in batch_poll'\n\u003cinternal:kernel\u003e:187:in `loop'\n/mnt/software/Karafka/karafka/lib/karafka/connection/client.rb:83:in `batch_poll'\n/mnt/software/Karafka/karafka/lib/karafka/connection/listener.rb:273:in `poll_and_remap_messages'\n/mnt/software/Karafka/karafka/lib/karafka/connection/listener.rb:180:in `block in fetch_loop'\n/home/mencio/.rbenv/versions/3.3.0/lib/ruby/gems/3.3.0/gems/karafka-core-2.4.0.beta2/lib/karafka/core/monitoring/notifications.rb:122:in `measure_time_taken'\n/home/mencio/.rbenv/versions/3.3.0/lib/ruby/gems/3.3.0/gems/karafka-core-2.4.0.beta2/lib/karafka/core/monitoring/notifications.rb:98:in `instrument'\n/home/mencio/.rbenv/versions/3.3.0/lib/ruby/gems/3.3.0/gems/karafka-core-2.4.0.beta2/lib/karafka/core/monitoring/monitor.rb:34:in `instrument'\n/mnt/software/Karafka/karafka/lib/karafka/connection/listener.rb:170:in `fetch_loop'\n/mnt/software/Karafka/karafka/lib/karafka/connection/listener.rb:75:in `call'\n/mnt/software/Karafka/karafka/lib/karafka/helpers/async.rb:40:in `block (2 levels) in async_call'"
+    },
+    "8ly5": {
+      "label": "Thread TID-8ly5 karafka.listener#karafka_web_c81e728d9d4c_1",
+      "backtrace": "/mnt/software/Karafka/karafka-rdkafka/lib/rdkafka/consumer.rb:539:in `rd_kafka_consumer_poll'\n/mnt/software/Karafka/karafka-rdkafka/lib/rdkafka/consumer.rb:539:in `block in poll'\n/mnt/software/Karafka/karafka-rdkafka/lib/rdkafka/native_kafka.rb:76:in `with_inner'\n/mnt/software/Karafka/karafka-rdkafka/lib/rdkafka/consumer.rb:538:in `poll'\n/mnt/software/Karafka/karafka/lib/karafka/connection/client.rb:516:in `poll'\n/mnt/software/Karafka/karafka/lib/karafka/connection/client.rb:92:in `block in batch_poll'\n\u003cinternal:kernel\u003e:187:in `loop'\n/mnt/software/Karafka/karafka/lib/karafka/connection/client.rb:83:in `batch_poll'\n/mnt/software/Karafka/karafka/lib/karafka/connection/listener.rb:273:in `poll_and_remap_messages'\n/mnt/software/Karafka/karafka/lib/karafka/connection/listener.rb:180:in `block in fetch_loop'\n/home/mencio/.rbenv/versions/3.3.0/lib/ruby/gems/3.3.0/gems/karafka-core-2.4.0.beta2/lib/karafka/core/monitoring/notifications.rb:122:in `measure_time_taken'\n/home/mencio/.rbenv/versions/3.3.0/lib/ruby/gems/3.3.0/gems/karafka-core-2.4.0.beta2/lib/karafka/core/monitoring/notifications.rb:98:in `instrument'\n/home/mencio/.rbenv/versions/3.3.0/lib/ruby/gems/3.3.0/gems/karafka-core-2.4.0.beta2/lib/karafka/core/monitoring/monitor.rb:34:in `instrument'\n/mnt/software/Karafka/karafka/lib/karafka/connection/listener.rb:170:in `fetch_loop'\n/mnt/software/Karafka/karafka/lib/karafka/connection/listener.rb:75:in `call'\n/mnt/software/Karafka/karafka/lib/karafka/helpers/async.rb:40:in `block (2 levels) in async_call'"
+    },
+    "8lwx": {
+      "label": "Thread TID-8lwx karafka.worker#0",
+      "backtrace": "\u003cinternal:thread_sync\u003e:18:in `pop'\n/mnt/software/Karafka/karafka/lib/karafka/processing/jobs_queue.rb:89:in `pop'\n/mnt/software/Karafka/karafka/lib/karafka/processing/worker.rb:47:in `process'\n/mnt/software/Karafka/karafka/lib/karafka/processing/worker.rb:37:in `block in call'\n\u003cinternal:kernel\u003e:187:in `loop'\n/mnt/software/Karafka/karafka/lib/karafka/processing/worker.rb:37:in `call'\n/mnt/software/Karafka/karafka/lib/karafka/helpers/async.rb:40:in `block (2 levels) in async_call'"
+    },
+    "8lvp": {
+      "label": "Thread TID-8lvp karafka.worker#1",
+      "backtrace": "\u003cinternal:thread_sync\u003e:18:in `pop'\n/mnt/software/Karafka/karafka/lib/karafka/processing/jobs_queue.rb:89:in `pop'\n/mnt/software/Karafka/karafka/lib/karafka/processing/worker.rb:47:in `process'\n/mnt/software/Karafka/karafka/lib/karafka/processing/worker.rb:37:in `block in call'\n\u003cinternal:kernel\u003e:187:in `loop'\n/mnt/software/Karafka/karafka/lib/karafka/processing/worker.rb:37:in `call'\n/mnt/software/Karafka/karafka/lib/karafka/helpers/async.rb:40:in `block (2 levels) in async_call'"
+    },
+    "8lw9": {
+      "label": "Thread TID-8lw9 ",
+      "backtrace": "/mnt/software/Karafka/karafka-rdkafka/lib/rdkafka/native_kafka.rb:53:in `rd_kafka_poll'\n/mnt/software/Karafka/karafka-rdkafka/lib/rdkafka/native_kafka.rb:53:in `block (4 levels) in start'\n/mnt/software/Karafka/karafka-rdkafka/lib/rdkafka/native_kafka.rb:52:in `synchronize'\n/mnt/software/Karafka/karafka-rdkafka/lib/rdkafka/native_kafka.rb:52:in `block (3 levels) in start'\n\u003cinternal:kernel\u003e:187:in `loop'\n/mnt/software/Karafka/karafka-rdkafka/lib/rdkafka/native_kafka.rb:51:in `block (2 levels) in start'"
+    }
+  },
+  "dispatched_at": 1712561497.7076235,
+  "process": {
+    "id": "shinra:397793:6fa3f39acf46"
+  }
+}

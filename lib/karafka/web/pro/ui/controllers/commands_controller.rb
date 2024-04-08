@@ -56,9 +56,19 @@ module Karafka
 
             # Displays the most recent available command message details
             def recent
-              @watermark_offsets = Models::WatermarkOffsets.find(commands_topic, 0)
+              # We read 25 just in case there would be a lot of transactional noise
+              messages = ::Karafka::Admin.read_topic(commands_topic, 0, 25)
 
-              show(@watermark_offsets.high - 1)
+              # We find the most recent (last since they are shipped in reverse order)
+              recent = messages.reverse.find { |message| !message.is_a?(Array) }
+
+              return show(recent.offset) if recent
+
+              # If nothing found, lets redirect user back to the commands list
+              redirect(
+                'commands',
+                warning: 'No recent commands available.'
+              )
             end
 
             private
