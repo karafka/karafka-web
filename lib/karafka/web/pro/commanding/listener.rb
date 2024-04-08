@@ -62,29 +62,29 @@ module Karafka
 
             retry
           end
-        end
 
-        # Triggers stop of the listener. Does **not** stop the listener but requests it to stop.
-        def stop
-          @stop = true
-        end
+          # Triggers stop of the listener. Does **not** stop the listener but requests it to stop.
+          def stop
+            @stop = true
+          end
 
-        private
+          private
 
-        # Reports any error that occurred in the manager
-        #
-        # Since we have an iterator based Kafka connection here, we do not have standard Karafka
-        # error handling and retries. This means, that we have to handle errors ourselves and
-        # report them to the instrumentation pipeline.
-        #
-        # @param error [StandardError] any error that occurred in the manager
-        def report_error(error)
-          ::Karafka.monitor.instrument(
-            'error.occurred',
-            error: error,
-            caller: self,
-            type: 'web.controlling.controller.error'
-          )
+          # Reports any error that occurred in the manager
+          #
+          # Since we have an iterator based Kafka connection here, we do not have standard Karafka
+          # error handling and retries. This means, that we have to handle errors ourselves and
+          # report them to the instrumentation pipeline.
+          #
+          # @param error [StandardError] any error that occurred in the manager
+          def report_error(error)
+            ::Karafka.monitor.instrument(
+              'error.occurred',
+              error: error,
+              caller: self,
+              type: 'web.controlling.controller.error'
+            )
+          end
         end
       end
     end

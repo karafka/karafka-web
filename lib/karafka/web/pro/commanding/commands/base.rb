@@ -19,6 +19,12 @@ module Karafka
         module Commands
           # Base for all the commands
           class Base
+            private
+
+            # @return [String] current process id
+            def process_id
+              @process_id ||= ::Karafka::Web.config.tracking.consumers.sampler.process_id
+            end
           end
         end
       end
