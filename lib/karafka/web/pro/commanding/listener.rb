@@ -54,9 +54,9 @@ module Karafka
               next
             end
           rescue StandardError => e
-            return if done?
-
             report_error(e)
+
+            return if done?
 
             sleep(c_config.pause_timeout / 1_000)
 
@@ -69,6 +69,11 @@ module Karafka
           end
 
           private
+
+          # @return [Boolean] true if we should stop
+          def done?
+            @stop
+          end
 
           # Reports any error that occurred in the manager
           #
