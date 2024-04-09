@@ -96,8 +96,8 @@ code.wrapped {
   white-space: pre-wrap;
 }
 
-#counters a {
-  color: inherit;
+.counters a {
+  color: inherit !important;
 }
 
 #content .error-message {

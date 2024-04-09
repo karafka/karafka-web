@@ -1,5 +1,9 @@
 <tr>
-  <td><%= partition.partition_id %></td>
+  <td>
+    <a href="<%= explorer_path(@topic.topic_name, partition.partition_id) %>">
+      <%= partition.partition_id %>
+    </a>
+  </td>
   <td><%= partition.count %></td>
   <td><%= partition.share %>%</td>
   <td><%= partition.diff.round(2) %>%</td>

@@ -35,7 +35,8 @@ RSpec.describe_current do
       expect(body).to include('There needs to be more data to draw meaningful graphs')
       expect(body).to include(support_message)
       expect(body).not_to include(breadcrumbs)
-      expect(body).to include('id="counters"')
+      expect(body).to include('id="refreshable"')
+      expect(body).to include('<div id="refreshable" class="container mb-5 counters">')
     end
   end
 
@@ -56,7 +57,8 @@ RSpec.describe_current do
       expect(body).to include('There needs to be more data to draw meaningful graphs')
       expect(body).to include(support_message)
       expect(body).not_to include(breadcrumbs)
-      expect(body).to include('id="counters"')
+      expect(body).to include('id="refreshable"')
+      expect(body).to include('<div id="refreshable" class="container mb-5 counters">')
     end
   end
 
@@ -76,7 +78,8 @@ RSpec.describe_current do
       expect(body).to include('RSS')
       expect(body).to include('Concurrency')
       expect(body).to include('Data transfers')
-      expect(body).to include('id="counters"')
+      expect(body).to include('id="refreshable"')
+      expect(body).to include('<div id="refreshable" class="container mb-5 counters">')
     end
   end
 
@@ -106,7 +109,8 @@ RSpec.describe_current do
       expect(body).to include('RSS')
       expect(body).to include('Concurrency')
       expect(body).to include('Data transfers')
-      expect(body).to include('id="counters"')
+      expect(body).to include('id="refreshable"')
+      expect(body).to include('<div id="refreshable" class="container mb-5 counters">')
     end
   end
 end
