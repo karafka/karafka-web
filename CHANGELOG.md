@@ -13,6 +13,7 @@
 - [Enhancement] Improve responsiveness on big screens by increasing max width.
 - [Enhancement] Auto-qualify topics with dlq/dead_letter case insensitive name components to DLQ view.
 - [Enhancement] Make tables responsive.
+- [Enhancement] Provide page titles for ease of navigation.
 - [Change] Rename Cluster => Topics to Cluster => Replication to better align with what is shows.
 - [Change] Make support messages more entertaining.
 - [Refactor] Normalize what is process name and process id.
