@@ -70,7 +70,7 @@ module Karafka
             def evict_expired_processes
               max_ttl = @aggregated_from - ::Karafka::Web.config.ttl / 1_000
 
-              @active_reports.delete_if do |_name, report|
+              @active_reports.delete_if do |_id, report|
                 report[:dispatched_at] < max_ttl || report[:process][:status] == 'stopped'
               end
             end

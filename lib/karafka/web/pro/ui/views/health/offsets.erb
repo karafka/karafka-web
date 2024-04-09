@@ -11,7 +11,7 @@
     <%== partial 'health/consumer_group_header', locals: { cg_name: cg_name, details: details } %>
 
     <div class="row mb-3">
-      <div class="col-sm-12">
+      <div class="col-sm-12 table-responsive">
         <% topics = details[:topics] %>
         <% topics.each_with_index do |(topic_name, partitions), index| %>
           <table class="processes bg-white table table-hover table-bordered table-striped align-middle <%= (index+1 < topics.size) ? 'mb-5' : 'mb-3' %>">
@@ -22,18 +22,21 @@
                 </th>
               </tr>
               <tr class="align-middle">
-                <th><%== sort_link('Partition', :id) %></th>
-                <th><%== sort_link('Lag', :lag_hybrid) %></th>
+                <th rowspan="2"><%== sort_link('Partition', :id) %></th>
+                <th rowspan="2"><%== sort_link(:lag_hybrid) %></th>
+                <th colspan="10" class="text-center">Offsets</th>
+              </tr>
+              <tr class="align-middle">
                 <th><%== sort_link(:committed_offset) %></th>
-                <th><%== sort_link('Committed offset change', :committed_offset_fd) %></th>
+                <th><%== sort_link('Committed change', :committed_offset_fd) %></th>
                 <th><%== sort_link(:stored_offset) %></th>
-                <th><%== sort_link('Stored offset change', :stored_offset_fd) %></th>
-                <th><%== sort_link('Low offset', :lo_offset) %></th>
-                <th><%== sort_link('High offset', :hi_offset) %></th>
-                <th><%== sort_link('High offset change', :hi_offset_fd) %></th>
-                <th><%== sort_link('Last stable offset', :ls_offset) %></th>
-                <th><%== sort_link('Last stable offset change', :ls_offset_fd) %></th>
-                <th><%== sort_link('Last stable offset state', :lso_risk_state) %></th>
+                <th><%== sort_link('Stored change', :stored_offset_fd) %></th>
+                <th><%== sort_link(:lo_offset) %></th>
+                <th><%== sort_link(:hi_offset) %></th>
+                <th><%== sort_link('High change', :hi_offset_fd) %></th>
+                <th><%== sort_link(:ls_offset) %></th>
+                <th><%== sort_link('LSO change', :ls_offset_fd) %></th>
+                <th><%== sort_link('LSO state', :lso_risk_state) %></th>
               </tr>
             </thead>
             <tbody>

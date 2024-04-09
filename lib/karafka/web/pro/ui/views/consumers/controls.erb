@@ -1,0 +1,67 @@
+<%== view_title('Consumers Controls') %>
+
+<%== partial 'consumers/tabs' %>
+
+<% unless @processes.empty? %>
+  <div class="container">
+    <div class="row mb-4">
+      <div class="col-sm-12">
+        <div class="d-flex flex-nowrap float-end">
+          <%
+            quiet_all_path = root_path('commanding', 'quiet_all')
+          %>
+          <form action="<%= quiet_all_path %>" method="post" class="d-inline-flex align-items-center mx-1">
+            <%== csrf_tag(quiet_all_path) %>
+            <input type="submit" value="&#x23F8; Quiet All" class="btn btn-warning btn-sm"/>
+          </form>
+
+          <%
+            stop_all_path = root_path('commanding', 'stop_all')
+          %>
+          <form action="<%= stop_all_path %>" method="post" class="d-inline-flex align-items-center mx-1">
+            <%== csrf_tag(stop_all_path) %>
+            <input type="submit" value="&#x25A0; Stop All" class="btn btn-danger btn-sm"/>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <% if @processes.empty? && params.current_page <= 1 %>
+        <%== partial 'consumers/no_consumers' %>
+      <% elsif @processes.empty? %>
+        <%== partial 'shared/no_paginated_data' %>
+      <% else %>
+        <div class="table-responsive">
+          <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+            <thead>
+              <tr class="align-middle">
+                <th><%== sort_link(:id) %></th>
+                <th><%== sort_link(:status) %></th>
+                <th>Subscriptions</th>
+                <th><%== sort_link(:started_at, rev: true) %></th>
+                <th><%== sort_link(:memory_usage) %></th>
+                <th>Performance</th>
+                <th><%== sort_link(:lag_hybrid) %></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <%==
+                render_each(
+                  @processes,
+                  'consumers/_consumer_controls',
+                  local: :process
+                )
+              %>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

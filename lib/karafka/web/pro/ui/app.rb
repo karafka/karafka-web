@@ -50,6 +50,19 @@ module Karafka
             r.on 'consumers' do
               controller = Controllers::ConsumersController.new(params)
 
+              r.get 'overview' do
+                @breadcrumbs = false
+                controller.index
+              end
+
+              r.get 'performance' do
+                controller.performance
+              end
+
+              r.get 'controls' do
+                controller.controls
+              end
+
               r.on String, 'jobs' do |process_id|
                 r.get 'running' do
                   controller.running_jobs(process_id)
@@ -70,9 +83,48 @@ module Karafka
                 controller.details(process_id)
               end
 
+              r.redirect root_path('consumers/overview')
+            end
+
+            r.on 'commands' do
+              controller = Controllers::CommandsController.new(params)
+
+              r.on Integer do |offset_id|
+                controller.show(offset_id)
+              end
+
+              r.get 'recent' do
+                controller.recent
+              end
+
               r.get do
-                @breadcrumbs = false
                 controller.index
+              end
+            end
+
+            r.on 'commanding' do
+              controller = Controllers::CommandingController.new(params)
+
+              r.post 'quiet_all' do
+                controller.quiet_all
+              end
+
+              r.post 'stop_all' do
+                controller.stop_all
+              end
+
+              r.on String do |process_id|
+                r.post 'probe' do
+                  controller.probe(process_id)
+                end
+
+                r.post 'quiet' do
+                  controller.quiet(process_id)
+                end
+
+                r.post 'stop' do
+                  controller.stop(process_id)
+                end
               end
             end
 

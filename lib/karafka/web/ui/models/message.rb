@@ -100,10 +100,16 @@ module Karafka
 
                 previous_offset = start_offset + count
 
+                if previous_offset >= high_offset
+                  previous_offset = false
+                elsif previous_offset + (per_page - 1) > high_offset
+                  previous_offset = high_offset - per_page
+                else
+                  previous_offset
+                end
+
                 return [
-                  # If there is a potential previous page with more recent data, compute its
-                  # offset
-                  previous_offset >= high_offset ? false : previous_offset,
+                  previous_offset,
                   fill_compacted(messages, partition_id, context_offset, context_count, high_offset).reverse,
                   next_offset
                 ]

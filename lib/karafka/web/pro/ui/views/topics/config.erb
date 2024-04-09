@@ -4,26 +4,26 @@
 
 <div class="container mb-5">
   <div class="row">
-    <div class="col-lg-12">
-        <table class="processes bg-white table table-hover table-bordered table-striped">
-          <thead>
-            <tr class="align-middle">
-              <th><%== sort_link(:name) %></th>
-              <th><%== sort_link(:value) %></th>
-              <th><%== sort_link('Default', :default?) %></th>
-              <th><%== sort_link('Sensitive', :sensitive?) %></th>
-              <th><%== sort_link('Readonly', :read_only?) %></th>
-            </tr>
-          </thead>
-          <tbody>
-            <%==
-              each_partial(
-                @configs,
-                'cluster/config'
-              )
-            %>
-          </tbody>
-        </table>
+    <div class="col-lg-12 table-responsive">
+      <table class="processes bg-white table table-hover table-bordered table-striped">
+        <thead>
+          <tr class="align-middle">
+            <th><%== sort_link(:name) %></th>
+            <th><%== sort_link(:value) %></th>
+            <th><%== sort_link(:default?) %></th>
+            <th><%== sort_link(:sensitive?) %></th>
+            <th><%== sort_link(:read_only?) %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <%==
+            each_partial(
+              @configs,
+              'cluster/config'
+            )
+          %>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

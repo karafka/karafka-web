@@ -20,17 +20,17 @@ RSpec.describe_current do
     end
 
     context 'when process exists' do
-      let(:process_id) { '1' }
+      let(:process_id) { 'shinra:1:1' }
 
       it { expect(lookup).to be_a(described_class) }
     end
   end
 
   describe 'process attributes' do
-    subject(:process) { described_class.find(state, '1') }
+    subject(:process) { described_class.find(state, 'shinra:1:1') }
 
     it 'expect to have valid attributes configured' do
-      expect(process.id).to eq('1')
+      expect(process.id).to eq('shinra:1:1')
       expect(process.consumer_groups.size).to eq(2)
       cgs = %w[example_app6_app example_app6_karafka_web]
       expect(process.consumer_groups.map(&:id)).to eq(cgs)

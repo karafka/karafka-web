@@ -1,13 +1,29 @@
-<% if @process %>
+<li class="breadcrumb-item">
+  <a href="<%= root_path('consumers/overview') %>">
+    Consumers
+  </a>
+</li>
+
+<% if current_path.include?('/performance') %>
   <li class="breadcrumb-item">
-    <a href="<%= root_path('consumers') %>">
-      Consumers
+    <a href="<%= root_path('consumers', 'performance') %>">
+      Performance
     </a>
   </li>
+<% end %>
 
+<% if current_path.include?('/controls') %>
+  <li class="breadcrumb-item">
+    <a href="<%= root_path('consumers', 'controls') %>">
+      Controls
+    </a>
+  </li>
+<% end %>
+
+<% if @process %>
   <li class="breadcrumb-item">
     <a href="<%= root_path('consumers', @process.id, 'subscriptions') %>">
-      <%== truncate(@process.name, strategy: :middle) %>
+      <%== truncate(@process.id, strategy: :middle) %>
     </a>
   </li>
 

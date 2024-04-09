@@ -10,5 +10,5 @@ RSpec.describe_current do
   it { expect(sampler.rdkafka_version).to start_with('0.1') }
   it { expect(sampler.librdkafka_version).to start_with('2.3') }
   it { expect(sampler.waterdrop_version).to start_with('2.') }
-  it { expect(sampler.process_name).not_to be_empty }
+  it { expect(sampler.process_id).not_to be_empty }
 end

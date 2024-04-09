@@ -19,24 +19,26 @@
         <div id="counters" class="mt-4">
           <%== partial 'topics/distribution/badges' %>
 
-          <table class="bg-white table table-hover table-bordered table-striped mt-4 mb-4">
-            <thead>
-              <tr class="align-middle">
-                <th><%== sort_link('Partition', :partition_id) %></th>
-                <th><%== sort_link('Estimated count', :count) %></th>
-                <th><%== sort_link('Total share', :share) %></th>
-                <th><%== sort_link('Diff', :diff) %></th>
-              </tr>
-            </thead>
-            <tbody>
-              <%==
-                each_partial(
-                  @distribution,
-                  'topics/distribution/partition'
-                )
-              %>
-            </tbody>
-          </table>
+          <div class="table-responsive">
+            <table class="bg-white table table-hover table-bordered table-striped mt-4 mb-4">
+              <thead>
+                <tr class="align-middle">
+                  <th><%== sort_link(:partition_id) %></th>
+                  <th><%== sort_link('Estimated count', :count) %></th>
+                  <th><%== sort_link('Total share', :share) %></th>
+                  <th><%== sort_link(:diff) %></th>
+                </tr>
+              </thead>
+              <tbody>
+                <%==
+                  each_partial(
+                    @distribution,
+                    'topics/distribution/partition'
+                  )
+                %>
+              </tbody>
+            </table>
+          </div>
         </div>
       <% end %>
 

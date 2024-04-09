@@ -1,5 +1,6 @@
 <%== partial 'consumers/counters' %>
 <%== partial 'consumers/summary' %>
+<%== partial 'consumers/tabs' %>
 
 <div class="container">
   <div class="row">
@@ -13,12 +14,12 @@
           <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
             <thead>
               <tr class="align-middle">
-                <th><%== sort_link(:name) %></th>
-                <th class="col-sm-2"><%== sort_link('Started', :started_at, rev: true) %></th>
+                <th><%== sort_link(:id) %></th>
+                <th class="col-sm-2"><%== sort_link(:started_at, rev: true) %></th>
                 <th class="col-sm-1">Memory</th>
                 <th class="col-sm-1">Performance</th>
                 <th class="col-sm-1">Load</th>
-                <th class="col-sm-1"><%== sort_link('Lag', :lag_hybrid) %></th>
+                <th class="col-sm-1"><%== sort_link(:lag_hybrid) %></th>
               </tr>
             </thead>
             <tbody>

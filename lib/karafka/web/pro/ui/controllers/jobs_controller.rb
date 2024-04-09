@@ -19,7 +19,7 @@ module Karafka
           # Displays list of active jobs
           class JobsController < Web::Ui::Controllers::JobsController
             self.sortable_attributes = %w[
-              name
+              id
               topic
               consumer
               type

@@ -36,7 +36,7 @@ module Karafka
             # Updates the report for given process in memory
             # @param report [Hash]
             def memoize_process_report(report)
-              @active_reports[report[:process][:name]] = report
+              @active_reports[report[:process][:id]] = report
             end
 
             # Updates the time of the aggregation

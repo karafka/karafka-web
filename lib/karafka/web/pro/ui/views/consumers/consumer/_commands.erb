@@ -1,0 +1,32 @@
+<% if Karafka::Web.config.commanding.active %>
+  <div class="col-md-12 col-lg-4 text-end">
+    <div class="d-flex flex-nowrap float-end">
+      <%
+        probe_path = root_path('commanding', process.id, 'probe')
+        disabled_class = process.status != 'stopped' ? '' : 'disabled'
+      %>
+      <form action="<%= probe_path %>" method="post" class="d-inline-flex align-items-center mx-1">
+        <%== csrf_tag(probe_path) %>
+        <input type="submit" value="&#x2699; Probe" class="btn btn-secondary btn-sm <%= disabled_class %>"/>
+      </form>
+
+      <%
+        quiet_path = root_path('commanding', process.id, 'quiet')
+        disabled_class = process.status == 'running' ? '' : 'disabled'
+      %>
+      <form action="<%= quiet_path %>" method="post" class="d-inline-flex align-items-center mx-1">
+        <%== csrf_tag(quiet_path) %>
+        <input type="submit" value="&#x23F8; Quiet" class="btn btn-warning btn-sm <%= disabled_class %>"/>
+      </form>
+
+      <%
+        stop_path = root_path('commanding', process.id, 'stop')
+        disabled_class = process.status != 'stopping' && process.status != 'stopped' ? '' : 'disabled'
+      %>
+      <form action="<%= stop_path %>" method="post" class="d-inline-flex align-items-center mx-1">
+        <%== csrf_tag(stop_path) %>
+        <input type="submit" value="&#x25A0; Stop" class="btn btn-danger btn-sm <%= disabled_class %>"/>
+      </form>
+    </div>
+  </div>
+<% end %>

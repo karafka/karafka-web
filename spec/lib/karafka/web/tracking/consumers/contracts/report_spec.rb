@@ -35,7 +35,7 @@ RSpec.describe_current do
   let(:process) do
     {
       started_at: 1_687_439_150.1767561,
-      name: 'shinra:3548178:324ae2b47a12',
+      id: 'shinra:3548178:324ae2b47a12',
       status: 'running',
       listeners: { active: 2, standby: 0 },
       workers: 2,
@@ -142,7 +142,7 @@ RSpec.describe_current do
   end
 
   %i[
-    started_at name memory_usage memory_total_usage memory_size status listeners workers tags
+    started_at id memory_usage memory_total_usage memory_size status listeners workers tags
     cpu_usage threads cpus
   ].each do |attr|
     context "when process.#{attr} is missing" do
@@ -200,20 +200,20 @@ RSpec.describe_current do
     it { expect(contract.call(report)).not_to be_success }
   end
 
-  context 'when process.name is missing' do
-    before { report[:process].delete(:name) }
+  context 'when process.id is missing' do
+    before { report[:process].delete(:id) }
 
     it { expect(contract.call(report)).not_to be_success }
   end
 
-  context 'when process.name is not a string' do
-    before { report[:process][:name] = 123 }
+  context 'when process.id is not a string' do
+    before { report[:process][:id] = 123 }
 
     it { expect(contract.call(report)).not_to be_success }
   end
 
-  context 'when process.name does not contain at least two colons' do
-    before { report[:process][:name] = 'name_without_colons' }
+  context 'when process.id does not contain at least two colons' do
+    before { report[:process][:id] = 'id_without_colons' }
 
     it { expect(contract.call(report)).not_to be_success }
   end

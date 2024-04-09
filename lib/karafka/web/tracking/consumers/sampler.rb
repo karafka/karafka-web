@@ -15,7 +15,7 @@ module Karafka
           # Current schema version
           # This is used for detecting incompatible changes and not using outdated data during
           # upgrades
-          SCHEMA_VERSION = '1.2.9'
+          SCHEMA_VERSION = '1.3.0'
 
           # Counters that count events occurrences during the given window
           COUNTERS_BASE = {
@@ -70,8 +70,8 @@ module Karafka
               dispatched_at: float_now,
 
               process: {
+                id: process_id,
                 started_at: started_at,
-                name: process_name,
                 status: ::Karafka::App.config.internal.status.to_s,
                 listeners: listeners,
                 workers: workers,

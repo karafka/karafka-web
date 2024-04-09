@@ -1,0 +1,59 @@
+<tr class="status-row-<%= process.status %>">
+  <td>
+    <a href="<%= root_path('consumers', process.id, 'subscriptions') %>">
+      <%== truncate(process.id, strategy: :middle) %>
+    </a>
+
+    <p class="mt-0 mb-1">
+      <%== tags(process.tags) %>
+    </p>
+  </td>
+
+   <td>
+    <%= format_memory process.memory_usage %>
+  </td>
+
+  <td>
+    <%= process.utilization.round(1) %>%
+  </td>
+
+  <td>
+    <%= process.threads %>
+  </td>
+
+  <td>
+    <%= process.cpu_usage[0].to_f %>
+  </td>
+
+  <td>
+    <%= process.cpu_usage[1].to_f %>
+  </td>
+
+  <td>
+    <%= process.cpu_usage[2].to_f %>
+  </td>
+
+  <td>
+    <%= process.workers %>
+  </td>
+
+  <td>
+    <%= process.busy %>
+  </td>
+
+  <td>
+    <%= process.listeners.fetch(:active) %>
+  </td>
+
+  <td>
+    <%= process.listeners.fetch(:standby) %>
+  </td>
+
+  <td>
+    <%= process.jobs.running.count %>
+  </td>
+
+  <td>
+    <%= process.jobs.pending.count %>
+  </td>
+</tr>

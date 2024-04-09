@@ -43,7 +43,7 @@ module Karafka
                   topic: Karafka::Web.config.topics.errors,
                   payload: error.to_json,
                   # Always dispatch errors from the same process to the same partition
-                  key: error[:process][:name]
+                  key: error[:process][:id]
                 }
               end
 

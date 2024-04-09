@@ -1,0 +1,50 @@
+<%
+  process_id = command[:process][:id]
+%>
+
+<div class="container">
+  <div class="row mb-4">
+    <div class="col-sm-12">
+      <h4 class="mb-2">
+        Metadata
+      </h4>
+      <hr/>
+    </div>
+  </div>
+
+  <div class="row mb-5">
+    <div class="col-sm-12 table-responsive">
+      <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+        <tbody>
+          <tr>
+            <td>Type</td>
+            <td><%== command[:type] %></td>
+          </tr>
+
+          <tr>
+            <td>Name</td>
+            <td><%== command[:command][:name] %></td>
+          </tr>
+
+          <tr>
+            <td>Dispatched</td>
+            <td><%== relative_time command[:dispatched_at] %></td>
+          </tr>
+          <tr>
+            <td>Process</td>
+            <td>
+              <% command = command %>
+              <% if process_id == '*' %>
+                  <%= process_id %>
+              <% else %>
+                <a href="<%= root_path('consumers', process_id, 'subscriptions') %>">
+                  <%= process_id %>
+                </a>
+              <% end %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

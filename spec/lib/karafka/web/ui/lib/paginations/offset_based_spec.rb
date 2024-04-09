@@ -50,7 +50,7 @@ RSpec.describe_current do
 
   describe '#first_offset' do
     it 'returns false' do
-      expect(pagination.first_offset).to be false
+      expect(pagination.first_offset).to eq(-1)
     end
   end
 

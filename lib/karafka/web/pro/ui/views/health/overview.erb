@@ -11,7 +11,7 @@
     <%== partial 'health/consumer_group_header', locals: { cg_name: cg_name, details: details } %>
 
     <div class="row mb-3">
-      <div class="col-sm-12">
+      <div class="col-sm-12 table-responsive">
         <% topics = details[:topics] %>
         <% topics.each_with_index do |(topic_name, partitions), index| %>
           <table class="processes bg-white table table-hover table-bordered table-striped align-middle <%= (index+1 < topics.size) ? 'mb-5' : 'mb-3' %>">
@@ -22,13 +22,27 @@
                 </th>
               </tr>
               <tr class="align-middle">
-                <th><%== sort_link('Partition', :id) %></th>
-                <th><%== sort_link('Lag', :lag_hybrid) %></th>
-                <th><%== sort_link(:stored_offset) %></th>
+                <th colspan="1" rowspan="2">
+                  <%== sort_link('Partition', :id) %>
+                </th>
+                <th colspan="1" rowspan="2">
+                  <%== sort_link(:lag_hybrid) %>
+                </th>
+                <th colspan="1" rowspan="2">
+                  <%== sort_link(:stored_offset) %>
+                </th>
+                <th colspan="3" rowspan="1" class="text-center">
+                  States
+                </th>
+
+                <th colspan="1" rowspan="2">
+                 <%== sort_link(:id) %>
+                </th>
+              </tr>
+              <tr class="align-middle">
                 <th><%== sort_link(:fetch_state) %></th>
                 <th><%== sort_link(:poll_state) %></th>
-                <th><%== sort_link('LSO state', :lso_risk_state) %></th>
-                <th><%== sort_link('Process name', :name) %></th>
+                <th><%== sort_link(:lso_risk_state) %></th>
               </tr>
             </thead>
             <tbody>

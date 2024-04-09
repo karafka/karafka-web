@@ -3,7 +3,7 @@
 RSpec.describe_current do
   subject(:jobs) { process.jobs }
 
-  let(:process) { Karafka::Web::Ui::Models::Process.find(state, '1') }
+  let(:process) { Karafka::Web::Ui::Models::Process.find(state, 'shinra:1:1') }
   let(:state) { Fixtures.consumers_states_json }
   let(:report) { Fixtures.consumers_reports_json }
   let(:reports_topic) { create_topic }

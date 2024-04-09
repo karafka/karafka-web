@@ -12,6 +12,7 @@ module Karafka
               ::Karafka::Web.config.topics.consumers.states,
               ::Karafka::Web.config.topics.consumers.reports,
               ::Karafka::Web.config.topics.consumers.metrics,
+              ::Karafka::Web.config.topics.consumers.commands,
               ::Karafka::Web.config.topics.errors
             ].each do |topic_name|
               if existing_topics_names.include?(topic_name.to_s)

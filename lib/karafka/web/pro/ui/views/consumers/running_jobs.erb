@@ -1,4 +1,9 @@
-<%== view_title(@process.name) %>
+<div class="container mb-5">
+  <div class="row">
+    <%== partial 'consumers/consumer/title' %>
+    <%== partial 'consumers/consumer/commands', locals: { process: @process } %>
+  </div>
+</div>
 
 <% if @process.status == 'stopped' %>
   <%== partial 'consumers/consumer/stopped' %>
@@ -13,18 +18,21 @@
 <% else %>
   <div class="container">
     <div class="row mb-5">
-      <div class="col-sm-12">
+      <div class="col-sm-12 table-responsive">
         <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
           <thead>
             <tr class="align-middle">
-              <th><%== sort_link(:topic) %></th>
-              <th><%== sort_link(:consumer) %></th>
-              <th><%== sort_link(:type) %></th>
-              <th><%== sort_link(:messages) %></th>
+              <th rowspan="2"><%== sort_link(:topic) %></th>
+              <th rowspan="2"><%== sort_link(:consumer) %></th>
+              <th rowspan="2"><%== sort_link(:type) %></th>
+              <th rowspan="2"><%== sort_link(:messages) %></th>
+              <th colspan="3" class="text-center">Offsets</th>
+              <th rowspan="2"><%== sort_link('Started', :updated_at, rev: true) %></th>
+            </tr>
+            <tr class="align-middle">
               <th><%== sort_link(:first_offset) %></th>
               <th><%== sort_link(:last_offset) %></th>
               <th><%== sort_link(:committed_offset) %></th>
-              <th><%== sort_link('Started at', :updated_at, rev: true) %></th>
             </tr>
           </thead>
           <tbody>

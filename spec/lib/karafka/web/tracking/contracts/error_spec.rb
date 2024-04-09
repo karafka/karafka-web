@@ -13,7 +13,7 @@ RSpec.describe_current do
       details: {},
       occurred_at: Time.now.to_f,
       process: {
-        name: 'my-process',
+        id: 'my-process',
         tags: Karafka::Core::Taggable::Tags.new
       }
     }
@@ -167,21 +167,21 @@ RSpec.describe_current do
     end
   end
 
-  context 'when validating process name' do
+  context 'when validating process id' do
     context 'when missing' do
-      before { error[:process].delete(:name) }
+      before { error[:process].delete(:id) }
 
       it { expect(contract.call(error)).not_to be_success }
     end
 
     context 'when not a string' do
-      before { error[:process][:name] = 1 }
+      before { error[:process][:id] = 1 }
 
       it { expect(contract.call(error)).not_to be_success }
     end
 
     context 'when empty' do
-      before { error[:process][:name] = '' }
+      before { error[:process][:id] = '' }
 
       it { expect(contract.call(error)).not_to be_success }
     end

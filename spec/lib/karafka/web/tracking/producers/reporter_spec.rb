@@ -15,7 +15,7 @@ RSpec.describe_current do
       backtrace: 'lib/file.rb',
       details: {},
       occurred_at: Time.now.to_f,
-      process: { name: 'my-process' }
+      process: { id: 'my-process' }
     }
   end
 

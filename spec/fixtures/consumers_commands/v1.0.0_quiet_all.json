@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0.0",
+  "type": "command",
+  "command": {
+    "name": "quiet"
+  },
+  "dispatched_at": 1712518283.748216,
+  "process": {
+    "id": "*"
+  }
+}

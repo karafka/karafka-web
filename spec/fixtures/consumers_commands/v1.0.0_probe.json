@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0.0",
+  "type": "command",
+  "command": {
+    "name": "probe"
+  },
+  "dispatched_at": 1712518179.6275373,
+  "process": {
+    "id": "shinra:1404842:f66b40c75f92"
+  }
+}

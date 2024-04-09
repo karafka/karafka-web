@@ -41,6 +41,12 @@ module Karafka
 
           # Topic for storing consumers historical metrics info
           setting :metrics, default: 'karafka_consumers_metrics'
+
+          # Topic for storing commands and their results
+          # This is used only in Pro, however we do setup it in OSS in case of upgrade so the
+          # transition from one to another is smooth. Otherwise upgrade would require changes
+          # to topics (migration) which may be more complex
+          setting :commands, default: 'karafka_consumers_commands'
         end
       end
 

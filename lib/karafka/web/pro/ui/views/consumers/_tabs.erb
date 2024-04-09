@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="row mb-4">
+    <div class="col-sm-12 mb-4">
+
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link <%= nav_class(include: 'overview') %>" href="<%= root_path('consumers', 'overview') %>">
+            Overview
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link <%= nav_class(include: 'performance') %>" href="<%= root_path('consumers', 'performance') %>">
+            Performance
+          </a>
+        </li>
+
+        <% if Karafka::Web.config.commanding.active %>
+          <li class="nav-item">
+            <a class="nav-link <%= nav_class(include: 'controls') %>" href="<%= root_path('consumers', 'controls') %>">
+              Controls
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link <%= nav_class(include: 'commands') %>" href="<%= root_path('commands') %>">
+              Commands
+            </a>
+          </li>
+        <% end %>
+      </ul>
+
+    </div>
+  </div>
+</div>

@@ -75,6 +75,12 @@ module Karafka
                   deserializers(payload: payload_deserializer)
                 end
 
+                topic ::Karafka::Web.config.topics.consumers.commands do
+                  config(active: false)
+                  active false
+                  deserializers(payload: payload_deserializer)
+                end
+
                 topic ::Karafka::Web.config.topics.errors do
                   config(active: false)
                   active false

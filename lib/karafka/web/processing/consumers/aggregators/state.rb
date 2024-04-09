@@ -89,9 +89,9 @@ module Karafka
             # @param report [Hash]
             # @param offset [Integer]
             def update_process_state(report, offset)
-              process_name = report[:process][:name]
+              process_id = report[:process][:id]
 
-              state[:processes][process_name] = {
+              state[:processes][process_id] = {
                 dispatched_at: report[:dispatched_at],
                 offset: offset
               }
@@ -105,11 +105,11 @@ module Karafka
             def evict_expired_processes
               max_ttl = @aggregated_from - ::Karafka::Web.config.ttl / 1_000
 
-              state[:processes].delete_if do |_name, details|
+              state[:processes].delete_if do |_id, details|
                 details[:dispatched_at] < max_ttl
               end
 
-              @active_reports.delete_if do |_name, details|
+              @active_reports.delete_if do |_id, details|
                 details[:dispatched_at] < max_ttl
               end
             end

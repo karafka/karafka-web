@@ -1,9 +1,5 @@
 <% if error_msg.is_a?(Array) %>
-  <tr>
-    <td colspan="5" class="text-center text-muted">
-      This offset does not contain error data. The message may have been compacted or is a system entry.
-    </td>
-  </tr>
+  <%== partial 'shared/not_a_message' %>
 <% else %>
   <% error = error_msg.payload %>
 
@@ -18,7 +14,7 @@
       </span>
     </td>
     <td>
-      <%== error[:process][:name] %>
+      <%== error[:process][:id] %>
     </td>
     <td>
       <%= error[:error_class] %>:

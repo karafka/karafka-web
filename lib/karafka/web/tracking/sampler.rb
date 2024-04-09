@@ -7,9 +7,9 @@ module Karafka
       # This sampler should store **only** collectors that can be used for producers, consumers and
       # the Web-UI itself. All specific to a given aspect of operations should be moved out.
       class Sampler
-        # @return [String] Unique process name
-        def process_name
-          @process_name ||= "#{Socket.gethostname}:#{::Process.pid}:#{SecureRandom.hex(6)}"
+        # @return [String] Unique process identifier
+        def process_id
+          @process_id ||= "#{Socket.gethostname}:#{::Process.pid}:#{SecureRandom.hex(6)}"
         end
 
         # @return [String] currently used ruby version with details

@@ -10,7 +10,7 @@ module Karafka
             include Tracking::Helpers::ErrorInfo
 
             # Schema used by producers error reporting
-            SCHEMA_VERSION = '1.0.0'
+            SCHEMA_VERSION = '1.1.0'
 
             private_constant :SCHEMA_VERSION
 
@@ -42,7 +42,7 @@ module Karafka
                 details: build_details(type, event.payload),
                 occurred_at: float_now,
                 process: {
-                  name: sampler.process_name
+                  id: sampler.process_id
                 }
               }
             end

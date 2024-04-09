@@ -1,0 +1,20 @@
+<div class="container">
+  <div class="row mb-4">
+    <div class="col-sm-12">
+      <h5 class="mb-2">
+        <%= backtrace[:label] %>
+      </h5>
+      <hr/>
+    </div>
+  </div>
+
+  <div class="row mb-5">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-body">
+          <pre class="m-0 p-0"><code class="wrapped json p-0 m-0"><%= backtrace[:backtrace] %></code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
