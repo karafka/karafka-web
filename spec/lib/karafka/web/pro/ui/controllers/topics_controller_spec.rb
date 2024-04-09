@@ -238,7 +238,7 @@ RSpec.describe_current do
         expect(body).to include('chartjs-bar')
         expect(body).to include(topic)
         expect(body).to include('4.0%')
-        expect(body).to include('<td>25</td>')
+        expect(body).to include('/25">')
         expect(body).not_to include(no_data_msg)
         expect(body).to include(many_partitions_msg)
       end
