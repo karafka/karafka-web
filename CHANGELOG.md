@@ -33,6 +33,12 @@
 - [Fix] Fix dangling `console.log`.
 - [Fix] Fix a case where consumer assignments would not be truncated on the consumers view.
 
+### Upgrade Notes
+
+This is a **major** release that brings many things to the table.
+
+This version of the Karafka Web UI should be upgraded together with Karafka. All upgrade documentation for Karafka and Web UI `0.9` can be found (https://karafka.io/docs/Upgrades-2.4/)[here].
+
 ## 0.8.2 (2024-02-16)
 - [Enhancement] Defer scheduler background thread creation until needed allowing for forks.
 - [Enhancement] Tag forks with fork indication + ppid reference when operating in swarm.
