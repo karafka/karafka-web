@@ -45,8 +45,8 @@
     <%= process.lag_hybrid %>
   </td>
 
-  <td class="text-center">
-    <div class="d-flex flex-nowrap">
+  <td>
+    <div class="d-flex flex-nowrap justify-content-end">
       <%
         probe_path = root_path('commanding', process.id, 'probe')
         disabled_class = process.status != 'stopped' ? '' : 'disabled'
