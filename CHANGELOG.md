@@ -2,6 +2,8 @@
 
 ## 0.9.0 (Unreleased)
 - **[Breaking]** Drop Ruby `2.7` support.
+- **[Feature]** Provide ability to stop and quiet running consumers (Pro).
+- **[Feature]** Provide ability to probe (get backtraces) of any running consumer (Pro).
 - **[Feature]** Provide cluster lags in Health (Pro).
 - **[Feature]** Provide ability to inspect cluster nodes configuration (Pro).
 - **[Feature]** Provide ability to inspect cluster topics configuration (Pro).
