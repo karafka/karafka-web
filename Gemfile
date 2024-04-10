@@ -4,9 +4,6 @@ source 'https://rubygems.org'
 
 plugin 'diffend'
 
-# Needed for now until 2.4.0 release
-gem 'karafka', git: 'https://github.com/karafka/karafka'
-
 gemspec
 
 group :test do
