@@ -18,7 +18,7 @@
 - [Enhancement] Provide page titles for ease of navigation.
 - [Change] Rename Cluster => Topics to Cluster => Replication to better align with what is shows.
 - [Change] Make support messages more entertaining.
-- [Change] Rename `processing.consumer_group` to `admin.group_id`  for consistency with Karafka.
+- [Change] Rename `processing.consumer_group` to `admin.group_id` for consistency with Karafka.
 - [Refactor] Normalize what is process name and process id.
 - [Refactor] Create one `pro/` namespace for all Web related sub-modules.
 - [Refactor] Extract alerts into a common component.
