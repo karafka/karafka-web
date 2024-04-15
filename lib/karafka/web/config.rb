@@ -26,6 +26,12 @@ module Karafka
         lazy: true
       )
 
+      # What should be the consumer group name for web UI consumer
+      # Karafka Web UI uses the Admin API for many operations, but there are few
+      # (like states materialization) where a distinct consumer group is needed. In cases like that
+      # this group id will be used
+      setting :group_id, default: 'karafka_web'
+
       # Topics naming - used for processing and UI
       setting :topics do
         # All the errors encountered will be dispatched to this topic for inspection
@@ -107,9 +113,6 @@ module Karafka
         # This can be disabled in case of using a multi-tenant approach where only one of the
         # apps should materialize the state
         setting :active, default: true
-
-        # What should be the consumer group name for web consumer
-        setting :consumer_group, default: 'karafka_web'
 
         # How often should we report the aggregated state and metrics
         # By default we flush the states twice as often as the data reporting.

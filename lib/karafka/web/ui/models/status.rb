@@ -44,7 +44,7 @@ module Karafka
           # aware of the deserializer, etc
           def enabled
             enabled = ::Karafka::App.routes.map(&:name).include?(
-              ::Karafka::Web.config.processing.consumer_group
+              ::Karafka::Web.config.group_id
             )
 
             Step.new(

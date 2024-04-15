@@ -39,7 +39,7 @@ module Karafka
             ::Karafka::App.routes.draw do
               payload_deserializer = ::Karafka::Web::Deserializer.new
 
-              consumer_group ::Karafka::Web.config.processing.consumer_group do
+              consumer_group ::Karafka::Web.config.group_id do
                 # Topic we listen on to materialize the states
                 topic ::Karafka::Web.config.topics.consumers.reports do
                   config(active: false)

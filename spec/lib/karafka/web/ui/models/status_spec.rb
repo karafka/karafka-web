@@ -34,7 +34,7 @@ RSpec.describe_current do
     it { expect(result.partial_namespace).to eq('successes') }
 
     context 'when routing does not include the web processing group' do
-      before { allow(::Karafka::Web.config.processing).to receive(:consumer_group).and_return([]) }
+      before { allow(::Karafka::Web.config).to receive(:group_id).and_return([]) }
 
       it { expect(result.success?).to eq(false) }
       it { expect(result.to_s).to eq('failure') }
@@ -47,7 +47,7 @@ RSpec.describe_current do
     subject(:result) { status.connection }
 
     context 'when routing is not enabled' do
-      before { allow(::Karafka::Web.config.processing).to receive(:consumer_group).and_return([]) }
+      before { allow(::Karafka::Web.config).to receive(:group_id).and_return([]) }
 
       it { expect(result.success?).to eq(false) }
       it { expect(result.to_s).to eq('halted') }
