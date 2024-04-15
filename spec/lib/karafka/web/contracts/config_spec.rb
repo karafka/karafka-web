@@ -7,6 +7,7 @@ RSpec.describe_current do
     {
       enabled: true,
       ttl: 5000,
+      group_id: 'consumer-group-topic',
       topics: {
         errors: 'errors-topic',
         consumers: {
@@ -31,7 +32,6 @@ RSpec.describe_current do
       },
       processing: {
         active: true,
-        consumer_group: 'consumer-group-topic',
         interval: 3_000
       },
       ui: {
@@ -130,8 +130,8 @@ RSpec.describe_current do
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when consumer_group does not match the regexp' do
-      before { params[:processing][:consumer_group] = 'invalid topic!' }
+    context 'when group_id does not match the regexp' do
+      before { params[:group_id] = 'invalid topic!' }
 
       it { expect(contract.call(params)).not_to be_success }
     end

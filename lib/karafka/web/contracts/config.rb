@@ -12,6 +12,7 @@ module Karafka
 
         required(:enabled) { |val| [true, false, nil].include?(val) }
         required(:ttl) { |val| val.is_a?(Numeric) && val.positive? }
+        required(:group_id) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
 
         nested(:topics) do
           required(:errors) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
@@ -44,7 +45,6 @@ module Karafka
 
         nested(:processing) do
           required(:active) { |val| [true, false].include?(val) }
-          required(:consumer_group) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
           # Do not update data more often not to overload and not to generate too much data
           required(:interval) { |val| val.is_a?(Integer) && val >= 1_000 }
         end

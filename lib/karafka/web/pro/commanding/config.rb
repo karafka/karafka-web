@@ -22,12 +22,6 @@ module Karafka
           # Management of processes is enabled by default
           setting :active, default: true
 
-          # What consumer group to use for the commanding subscription.
-          # In general this CG is irrelevant. Required but irrelevant unless you're using ACLs
-          # as in that case you will have to grant it permissions. This CG never stores any
-          # offsets as the underlying assignment is via assign API and not subscribe one.
-          setting :consumer_group, default: 'karafka_web'
-
           # How long should we wait on command arrival before yielding. Having it too short will
           # cause unnecessary CPU cycles. Too long will make shutdown slower.
           setting :max_wait_time, default: 2_000

@@ -32,10 +32,6 @@ module Karafka
               required(:pause_timeout) { |val| val.is_a?(Integer) && val.positive? }
               required(:max_wait_time) { |val| val.is_a?(Integer) && val.positive? }
               required(:kafka) { |val| val.is_a?(Hash) }
-
-              required(:consumer_group) do |val|
-                val.is_a?(String) && Karafka::Web::Contracts::Config::TOPIC_REGEXP.match?(val)
-              end
             end
 
             # Ensure all commanding kafka keys are symbols

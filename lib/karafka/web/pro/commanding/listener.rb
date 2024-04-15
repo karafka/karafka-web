@@ -35,7 +35,7 @@ module Karafka
 
             iterator = Karafka::Pro::Iterator.new(
               { t_config.consumers.commands => true },
-              settings: c_config.kafka.merge('group.id' => c_config.consumer_group),
+              settings: c_config.kafka,
               yield_nil: true,
               max_wait_time: c_config.max_wait_time
             )
