@@ -111,7 +111,7 @@ RSpec.describe_current do
           expect(body).to include('shinra:1:1')
           expect(body).to include('shinra:11:11')
           expect(body).to include('shinra:12:12')
-          expect(body.scan('shinra:').size).to eq(25)
+          expect(body.scan('shinra:').size).to eq(50)
         end
 
         context 'when sorted' do
@@ -143,7 +143,7 @@ RSpec.describe_current do
           expect(body).to include('shinra:1:1')
           expect(body).to include('shinra:11:11')
           expect(body).to include('shinra:12:12')
-          expect(body.scan('shinra:').size).to eq(25)
+          expect(body.scan('shinra:').size).to eq(50)
         end
       end
 
@@ -158,7 +158,7 @@ RSpec.describe_current do
           expect(body).to include('shinra:34:34')
           expect(body).to include('shinra:35:35')
           expect(body).to include('shinra:35:35')
-          expect(body.scan('shinra:').size).to eq(25)
+          expect(body.scan('shinra:').size).to eq(50)
         end
       end
 
@@ -338,7 +338,7 @@ RSpec.describe_current do
           expect(body).to include('shinra:1:1')
           expect(body).to include('shinra:11:11')
           expect(body).to include('shinra:12:12')
-          expect(body.scan('shinra:').size).to eq(25)
+          expect(body.scan('shinra:').size).to eq(50)
         end
       end
 
@@ -364,7 +364,7 @@ RSpec.describe_current do
           expect(body).to include('shinra:1:1')
           expect(body).to include('shinra:11:11')
           expect(body).to include('shinra:12:12')
-          expect(body.scan('shinra:').size).to eq(25)
+          expect(body.scan('shinra:').size).to eq(50)
         end
       end
 
@@ -379,7 +379,7 @@ RSpec.describe_current do
           expect(body).to include('shinra:34:34')
           expect(body).to include('shinra:35:35')
           expect(body).to include('shinra:35:35')
-          expect(body.scan('shinra:').size).to eq(25)
+          expect(body.scan('shinra:').size).to eq(50)
         end
       end
 
