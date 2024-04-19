@@ -45,7 +45,7 @@ GEM
       ffi (~> 1.15)
       mini_portile2 (~> 2.6)
       rake (> 12)
-    mini_portile2 (2.8.5)
+    mini_portile2 (2.8.6)
     minitest (5.22.3)
     mutex_m (0.2.0)
     rack (3.0.10)
@@ -54,8 +54,8 @@ GEM
     rackup (0.2.3)
       rack (>= 3.0.0.beta1)
       webrick
-    rake (13.1.0)
-    roda (3.78.0)
+    rake (13.2.1)
+    roda (3.79.0)
       rack
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
@@ -99,4 +99,4 @@ DEPENDENCIES
   simplecov
 
 BUNDLED WITH
-   2.5.7
+   2.5.9
