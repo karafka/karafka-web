@@ -6,7 +6,7 @@
 
 <% if @topic %>
   <li class="breadcrumb-item">
-    <a href="<%= root_path('topics', 'config', @topic.topic_name) %>">
+    <a href="<%= root_path('topics', @topic.topic_name, 'config') %>">
       <%= @topic.topic_name %>
     </a>
   </li>
@@ -14,7 +14,7 @@
 
 <% if @configs %>
   <li class="breadcrumb-item">
-    <a href="<%= root_path('topics', 'config', @topic.topic_name) %>">
+    <a href="<%= root_path('topics', @topic.topic_name, 'config') %>">
       Configuration
     </a>
   </li>
@@ -22,7 +22,7 @@
 
 <% if @partitions %>
   <li class="breadcrumb-item">
-    <a href="<%= root_path('topics', 'replication', @topic.topic_name) %>">
+    <a href="<%= root_path('topics', @topic.topic_name, 'replication') %>">
       Replication
     </a>
   </li>
@@ -30,7 +30,7 @@
 
 <% if @distribution %>
   <li class="breadcrumb-item">
-    <a href="<%= root_path('topics', 'distribution', @topic.topic_name) %>">
+    <a href="<%= root_path('topics', @topic.topic_name, 'distribution') %>">
       Distribution
     </a>
   </li>

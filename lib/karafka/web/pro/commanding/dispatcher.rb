@@ -31,11 +31,9 @@ module Karafka
             # @param process_id [String] id of the process. We use name instead of id only
             #   because in the web ui we work with the full name and it is easier. Since
             def command(name, process_id)
-              producer.produce_async(
-                topic: commands_topic,
-                key: process_id,
-                partition: 0,
-                payload: {
+              produce(
+                process_id,
+                {
                   schema_version: SCHEMA_VERSION,
                   type: 'command',
                   command: {
@@ -45,7 +43,7 @@ module Karafka
                   process: {
                     id: process_id
                   }
-                }.to_json
+                }
               )
             end
 
@@ -55,11 +53,9 @@ module Karafka
             # @param process_id [String] related process id
             # @param command_name [String, Symbol] command that triggered this result
             def result(result, process_id, command_name)
-              producer.produce_async(
-                topic: commands_topic,
-                key: process_id,
-                partition: 0,
-                payload: {
+              produce(
+                process_id,
+                {
                   schema_version: SCHEMA_VERSION,
                   type: 'result',
                   command: {
@@ -70,7 +66,7 @@ module Karafka
                   process: {
                     id: process_id
                   }
-                }.to_json
+                }
               )
             end
 
@@ -84,6 +80,20 @@ module Karafka
             # @return [String] consumers commands topic
             def commands_topic
               ::Karafka::Web.config.topics.consumers.commands
+            end
+
+            # Converts payload to json, compresses it and dispatches to Kafka
+            #
+            # @param payload [Hash] hash with payload
+            # @param process_id [String]
+            def produce(process_id, payload)
+              producer.produce_async(
+                topic: commands_topic,
+                key: process_id,
+                partition: 0,
+                payload: ::Zlib::Deflate.deflate(payload.to_json),
+                headers: { 'zlib' => 'true' }
+              )
             end
           end
         end
