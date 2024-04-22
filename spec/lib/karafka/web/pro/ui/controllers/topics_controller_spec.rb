@@ -66,7 +66,7 @@ RSpec.describe_current do
 
   describe '#config' do
     context 'when trying to read configs of a non-existing topic' do
-      before { get "topics/config/#{SecureRandom.uuid}" }
+      before { get "topics/#{SecureRandom.uuid}/config" }
 
       it do
         expect(response).not_to be_ok
@@ -75,7 +75,7 @@ RSpec.describe_current do
     end
 
     context 'when getting configs of an existing topic' do
-      before { get "topics/config/#{topic}" }
+      before { get "topics/#{topic}/config" }
 
       it do
         expect(response).to be_ok
@@ -92,7 +92,7 @@ RSpec.describe_current do
 
   describe '#replication' do
     context 'when trying to read configs of a non-existing topic' do
-      before { get "topics/replication/#{SecureRandom.uuid}" }
+      before { get "topics/#{SecureRandom.uuid}/replication" }
 
       it do
         expect(response).not_to be_ok
@@ -101,7 +101,7 @@ RSpec.describe_current do
     end
 
     context 'when getting replication of an existing topic' do
-      before { get "topics/replication/#{topic}" }
+      before { get "topics/#{topic}/replication" }
 
       it do
         expect(response).to be_ok
@@ -120,7 +120,7 @@ RSpec.describe_current do
     let(:many_partitions_msg) { 'distribution results are computed based only' }
 
     context 'when trying to read distribution of a non-existing topic' do
-      before { get "topics/distribution/#{SecureRandom.uuid}" }
+      before { get "topics/#{SecureRandom.uuid}/distribution" }
 
       it do
         expect(response).not_to be_ok
@@ -129,7 +129,7 @@ RSpec.describe_current do
     end
 
     context 'when getting distribution of an existing empty topic' do
-      before { get "topics/distribution/#{topic}" }
+      before { get "topics/#{topic}/distribution" }
 
       it do
         expect(response).to be_ok
@@ -145,7 +145,7 @@ RSpec.describe_current do
     context 'when getting distribution of an existing empty topic with multiple partitions' do
       let(:partitions) { 100 }
 
-      before { get "topics/distribution/#{topic}" }
+      before { get "topics/#{topic}/distribution" }
 
       it do
         expect(response).to be_ok
@@ -162,7 +162,7 @@ RSpec.describe_current do
     context 'when getting distribution of an existing topic with one partition and data' do
       before do
         produce_many(topic, Array.new(100, ''))
-        get "topics/distribution/#{topic}"
+        get "topics/#{topic}/distribution"
       end
 
       it do
@@ -183,7 +183,7 @@ RSpec.describe_current do
       before do
         5.times { |i| produce_many(topic, Array.new(100, ''), partition: i) }
 
-        get "topics/distribution/#{topic}"
+        get "topics/#{topic}/distribution"
       end
 
       it do
@@ -205,7 +205,7 @@ RSpec.describe_current do
       before do
         100.times { |i| produce_many(topic, Array.new(10, ''), partition: i) }
 
-        get "topics/distribution/#{topic}"
+        get "topics/#{topic}/distribution"
       end
 
       it do
@@ -227,7 +227,7 @@ RSpec.describe_current do
       before do
         100.times { |i| produce_many(topic, Array.new(10, ''), partition: i) }
 
-        get "topics/distribution/#{topic}?page=2"
+        get "topics/#{topic}/distribution?page=2"
       end
 
       it do

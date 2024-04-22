@@ -5,8 +5,8 @@
       <ul class="nav nav-tabs">
         <li class="nav-item">
           <a
-            class="nav-link <%= nav_class(include: 'config') %>"
-            href="<%= root_path('topics', 'config', @topic.topic_name) %>"
+            class="nav-link <%= nav_class(end_with: 'config') %>"
+            href="<%= root_path('topics', @topic.topic_name, 'config') %>"
           >
             Configuration
           </a>
@@ -14,8 +14,8 @@
 
         <li class="nav-item">
           <a
-            class="nav-link <%= nav_class(include: 'replication') %>"
-            href="<%= root_path('topics', 'replication', @topic.topic_name) %>"
+            class="nav-link <%= nav_class(end_with: 'replication') %>"
+            href="<%= root_path('topics', @topic.topic_name, 'replication') %>"
           >
             Replication
           </a>
@@ -23,8 +23,8 @@
 
         <li class="nav-item">
           <a
-            class="nav-link <%= nav_class(include: 'distribution') %>"
-            href="<%= root_path('topics', 'distribution', @topic.topic_name) %>"
+            class="nav-link <%= nav_class(end_with: 'distribution') %>"
+            href="<%= root_path('topics', @topic.topic_name, 'distribution') %>"
           >
             Distribution
           </a>
