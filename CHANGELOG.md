@@ -1,6 +1,6 @@
 # Karafka Web changelog
 
-## 0.9.0 (Unreleased)
+## 0.9.0 (2024-04-26)
 - **[Breaking]** Drop Ruby `2.7` support.
 - **[Feature]** Provide ability to stop and quiet running consumers (Pro).
 - **[Feature]** Provide ability to probe (get backtraces) of any running consumer (Pro).
