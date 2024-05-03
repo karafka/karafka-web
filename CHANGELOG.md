@@ -1,5 +1,8 @@
 # Karafka Web changelog
 
+## 0.9.1 (2024-05-03)
+- [Fix] OSS `lag_stored` for not-subscribed consumers causes Web UI to crash.
+
 ## 0.9.0 (2024-04-26)
 - **[Breaking]** Drop Ruby `2.7` support.
 - **[Feature]** Provide ability to stop and quiet running consumers (Pro).
