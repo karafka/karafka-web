@@ -1,5 +1,8 @@
 # Karafka Web changelog
 
+## 0.8.3 (2024-05-03)
+- [Fix] OSS `lag_stored` for not-subscribed consumers causes Web UI to crash.
+
 ## 0.8.2 (2024-02-16)
 - [Enhancement] Defer scheduler background thread creation until needed allowing for forks.
 - [Enhancement] Tag forks with fork indication + ppid reference when operating in swarm.
@@ -98,7 +101,7 @@ Because of the reporting schema update, it is recommended to:
 - [Fix] Make sure, that most recent per partition data for Health is never overwritten by an old state from a previous partition owner.
 - [Fix] Cache assets for 1 year instead of 7 days.
 - [Fix] Remove source maps pointing to non-existing locations.
-- [Maintenance] Include license and copyrights notice for `timeago.js` that was missing in the JS min file. 
+- [Maintenance] Include license and copyrights notice for `timeago.js` that was missing in the JS min file.
 - [Refactor] Rename `ui.show_internal_topics` to `ui.visibility.internal_topics_display`
 
 ### Upgrade Notes
@@ -116,7 +119,7 @@ Because of the reporting schema update, it is recommended to:
 ## 0.7.3 (2023-09-18)
 - [Improvement] Mitigate a case where a race-condition during upgrade would crash data.
 
-## 0.7.2 (2023-09-18) 
+## 0.7.2 (2023-09-18)
 - [Improvement] Display hidden by accident errors for OSS metrics.
 - [Improvement] Use a five second cache for non-production environments to improve dev experience.
 - [Improvement] Limit number of partitions listed on the Consumers view if they exceed 10 to improve readability and indicate, that there are more in OSS similar to Pro.
