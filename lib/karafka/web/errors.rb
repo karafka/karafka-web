@@ -11,6 +11,15 @@ module Karafka
       # This should never happen and if you see this, please open an issue.
       ContractError = Class.new(BaseError)
 
+      # Raised when you try to configure Web UI but Karafka was not yet configured and is not in
+      # a state to accept Web UI integration.
+      #
+      # If you are seeing this error, it means you tried to configure and setup the Web UI before
+      # you configured Karafka. In case of a "split-setup" where you divided your `karafka.rb`
+      # into separate files, likely you are requiring the web-ui component prior to the one that
+      # configures Karafka
+      KarafkaNotInitializedError = Class.new(BaseError)
+
       # Errors specific to management
       module Management
         # Similar to processing error with the same name, it is raised when a critical

@@ -1,5 +1,8 @@
 # Karafka Web changelog
 
+## 0.9.2 (Unreleased)
+- [Enhancement] Prevent karafka-web from being configured before karafka is configured.
+
 ## 0.9.1 (2024-05-03)
 - [Fix] OSS `lag_stored` for not-subscribed consumers causes Web UI to crash.
 
