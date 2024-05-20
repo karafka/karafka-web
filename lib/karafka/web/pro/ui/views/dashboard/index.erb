@@ -25,7 +25,7 @@
           </div>
 
           <div class="tab-pane" id="batches" role="tabpanel">
-            <% data = @aggregated_charts.with(:batches, :errors, :dead, :retries) %>
+            <% data = @aggregated_charts.with(:batches, :jobs, :errors, :dead, :retries) %>
             <%== partial 'shared/charts/line', locals: { data: data, id: 'batches' } %>
           </div>
 
