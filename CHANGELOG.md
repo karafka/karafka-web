@@ -1,5 +1,8 @@
 # Karafka Web changelog
 
+## 0.9.1 (Unreleased)
+- [Refactor] Namespace migrations so migrations related to each topic data are in an independent directory.
+
 ## 0.9.0 (2024-04-26)
 - **[Breaking]** Drop Ruby `2.7` support.
 - **[Feature]** Provide ability to stop and quiet running consumers (Pro).
