@@ -1,8 +1,9 @@
 # Karafka Web changelog
 
 ## 0.9.2 (Unreleased)
-- [Refactor] Namespace migrations so migrations related to each topic data are in an independent directory.
+- [Enhancement] Improve how charts with many topics work.
 - [Enhancement] Prevent karafka-web from being configured before karafka is configured.
+- [Refactor] Namespace migrations so migrations related to each topic data are in an independent directory.
 
 ## 0.9.1 (2024-05-03)
 - [Fix] OSS `lag_stored` for not-subscribed consumers causes Web UI to crash.
