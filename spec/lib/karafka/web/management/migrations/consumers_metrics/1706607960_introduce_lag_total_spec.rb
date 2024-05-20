@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe Karafka::Web::Management::Migrations::IntroduceLagTotalInMetrics do
+RSpec.describe(
+  Karafka::Web::Management::Migrations::ConsumersMetrics::IntroduceLagTotal
+) do
   it { expect(described_class.versions_until).to eq('1.2.0') }
   it { expect(described_class.type).to eq(:consumers_metrics) }
 

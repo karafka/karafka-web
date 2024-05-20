@@ -52,7 +52,7 @@ module Karafka
         # any states we manage. We can only move forward, so attempt to migrate for example from
         # 1.0.0 to 0.9.0 should be considered and error.
         def ensure_migrable!
-          if consumers_state[:schema_version] > State::SCHEMA_VERSION
+          if consumers_states[:schema_version] > State::SCHEMA_VERSION
             raise(
               Errors::Management::IncompatibleSchemaError,
               'consumers state newer than supported'
@@ -90,21 +90,21 @@ module Karafka
 
         # Publishes all the states migrated records
         def publish
-          consumers_state[:schema_version] = State::SCHEMA_VERSION
+          consumers_states[:schema_version] = State::SCHEMA_VERSION
           consumers_metrics[:schema_version] = Metrics::SCHEMA_VERSION
 
           # Migrator may run in the context of the processing consumer prior to any states
           # fetching related to processing. We use sync to make sure, that the following
           # processing related states fetched fetch the new states
           Processing::Publisher.publish!(
-            consumers_state,
+            consumers_states,
             consumers_metrics
           )
         end
 
         # @return [Hash] current consumers states most recent state
-        def consumers_state
-          @consumers_state ||= Processing::Consumers::State.current!
+        def consumers_states
+          @consumers_states ||= Processing::Consumers::State.current!
         end
 
         # @return [Hash] current consumers metrics most recent state

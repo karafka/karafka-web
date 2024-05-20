@@ -1,6 +1,7 @@
 # Karafka Web changelog
 
 ## 0.9.2 (Unreleased)
+- [Refactor] Namespace migrations so migrations related to each topic data are in an independent directory.
 - [Enhancement] Prevent karafka-web from being configured before karafka is configured.
 
 ## 0.9.1 (2024-05-03)
