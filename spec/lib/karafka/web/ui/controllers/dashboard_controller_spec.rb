@@ -46,7 +46,7 @@ RSpec.describe_current do
       topics_config.consumers.metrics = metrics_topic
 
       ::Karafka::Web::Management::Actions::CreateInitialStates.new.call
-      produce(metrics_topic, Fixtures.consumers_metrics_file('v1.0.0_single.json'))
+      produce(metrics_topic, Fixtures.consumers_metrics_file('v1.3.0_single.json'))
       ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
 
       get 'dashboard'
@@ -72,6 +72,7 @@ RSpec.describe_current do
       expect(body).to include(only_pro_feature)
       expect(body).to include('Topics pace')
       expect(body).to include('Batches')
+      expect(body).to include('Jobs')
       expect(body).to include('Messages')
       expect(body).to include('Max LSO time')
       expect(body).to include('Utilization')
@@ -103,6 +104,7 @@ RSpec.describe_current do
       expect(body).to include(only_pro_feature)
       expect(body).to include('Topics pace')
       expect(body).to include('Batches')
+      expect(body).to include('Jobs')
       expect(body).to include('Messages')
       expect(body).to include('Max LSO time')
       expect(body).to include('Utilization')

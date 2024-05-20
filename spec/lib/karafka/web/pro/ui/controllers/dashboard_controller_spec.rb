@@ -69,6 +69,7 @@ RSpec.describe_current do
       expect(response).to be_ok
       expect(body).to include('Topics pace')
       expect(body).to include('Batches')
+      expect(body).to include('Jobs')
       expect(body).to include('Messages')
       expect(body).to include('Max LSO time')
       expect(body).to include('Utilization')
@@ -100,6 +101,7 @@ RSpec.describe_current do
       expect(response).to be_ok
       expect(body).to include('Topics pace')
       expect(body).to include('Batches')
+      expect(body).to include('Jobs')
       expect(body).to include('Messages')
       expect(body).to include('Max LSO time')
       expect(body).to include('Utilization')

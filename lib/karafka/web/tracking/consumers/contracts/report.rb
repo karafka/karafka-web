@@ -60,6 +60,11 @@ module Karafka
               required(:utilization) { |val| val.is_a?(Numeric) && val >= 0 }
 
               nested(:total) do
+                # There can be jobs that run without new data batches like revocation, periodic,
+                # shutdown, etc. We want to track them. This is needed because in case of a
+                # setup where those are significant, user may have a false sense that nothing
+                # is happening in the system when no new messages are coming
+                required(:jobs) { |val| val.is_a?(Integer) && val >= 0 }
                 required(:batches) { |val| val.is_a?(Integer) && val >= 0 }
                 required(:messages) { |val| val.is_a?(Integer) && val >= 0 }
                 required(:errors) { |val| val.is_a?(Integer) && val >= 0 }

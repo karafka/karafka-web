@@ -11,6 +11,7 @@ RSpec.describe_current do
       stats: {
         batches: 10,
         messages: 100,
+        jobs: 11,
         retries: 5,
         dead: 2,
         errors: 3,

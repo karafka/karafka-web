@@ -42,7 +42,7 @@ RSpec.describe_current do
       expect(topic_data[0][:hi_offset]).to eq(327_356)
       expect(topic_data[0][:id]).to eq(0)
       expect(topic_data[0][:poll_state]).to eq('active')
-      expect(topic_data[0][:process][:schema_version]).to eq('1.2.2')
+      expect(topic_data[0][:process][:schema_version]).to eq('1.4.0')
       expect(topic_data[0][:process][:type]).to eq('consumer')
       expect(topic_data[0][:process][:dispatched_at]).to eq(2_690_883_271.575_513)
       expect(topic_data[0][:process][:process][:concurrency]).to eq(2)

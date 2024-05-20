@@ -51,6 +51,7 @@ module Karafka
               track do |sampler|
                 # We count batches and messages prior to the execution, so they are tracked even
                 # if error occurs, etc.
+                sampler.counters[:jobs] += 1
                 sampler.counters[:batches] += 1
                 sampler.counters[:messages] += messages_count
                 sampler.jobs[jid] = job_details
@@ -120,6 +121,7 @@ module Karafka
                   job_details = job_details(consumer, '#{action}')
 
                   track do |sampler|
+                    sampler.counters[:jobs] += 1
                     sampler.jobs[jid] = job_details
                   end
                 end

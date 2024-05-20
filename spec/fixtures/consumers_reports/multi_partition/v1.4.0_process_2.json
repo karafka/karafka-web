@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.3.0",
+  "schema_version": "1.4.0",
   "type": "consumer",
   "dispatched_at": 1695813054.4401045,
   "process": {
@@ -45,7 +45,8 @@
       "messages": 38,
       "errors": 1,
       "retries": 1,
-      "dead": 0
+      "dead": 0,
+      "jobs": 18
     }
   },
   "consumer_groups": {

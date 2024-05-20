@@ -11,18 +11,30 @@
                 </div>
                 <div class="desc">Messages</div>
               </li>
+
               <li class="col-sm">
                 <div class="count mb-1">
                   <%= number_with_delimiter @counters.batches, ' ' %>
                 </div>
                 <div class="desc">Batches</div>
               </li>
+
+              <li class="col-sm">
+                <a href="<%= root_path('jobs/running') %>">
+                  <div class="count mb-1">
+                    <%= number_with_delimiter @counters.jobs, ' ' %>
+                  </div>
+                  <div class="desc">Jobs</div>
+                </a>
+              </li>
+
               <li class="col-sm">
                 <div class="count mb-1">
                   <%= number_with_delimiter @counters.lag_hybrid, ' ' %>
                 </div>
                 <div class="desc">Total lag</div>
               </li>
+
               <li class="col-sm">
                 <a href="<%= root_path('jobs/running') %>">
                   <div class="count mb-1">
@@ -31,6 +43,7 @@
                   <div class="desc">Running</div>
                 </a>
               </li>
+
               <li class="col-sm">
                 <a href="<%= root_path('jobs/pending') %>">
                   <div class="count mb-1">
@@ -39,6 +52,7 @@
                   <div class="desc">Pending</div>
                 </a>
               </li>
+
               <li class="col-sm">
                 <a href="<%= root_path('errors') %>">
                   <div class="count mb-1">
@@ -47,6 +61,7 @@
                   <div class="desc">Errors</div>
                 </a>
               </li>
+
               <li class="col-sm">
                 <div class="count mb-1">
                   <%= number_with_delimiter @counters.retries, ' ' %>
