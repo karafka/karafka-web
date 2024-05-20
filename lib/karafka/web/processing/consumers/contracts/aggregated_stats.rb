@@ -11,6 +11,7 @@ module Karafka
             configure
 
             required(:batches) { |val| val.is_a?(Integer) && val >= 0 }
+            required(:jobs) { |val| val.is_a?(Integer) && val >= 0 }
             required(:messages) { |val| val.is_a?(Integer) && val >= 0 }
             required(:retries) { |val| val.is_a?(Integer) && val >= 0 }
             required(:dead) { |val| val.is_a?(Integer) && val >= 0 }

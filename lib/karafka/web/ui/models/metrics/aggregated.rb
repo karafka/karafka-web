@@ -24,6 +24,7 @@ module Karafka
             #
             # If at least two elements do not exist for given delta range, we keep it empty
             DELTA_KEYS = %i[
+              jobs
               batches
               messages
               errors

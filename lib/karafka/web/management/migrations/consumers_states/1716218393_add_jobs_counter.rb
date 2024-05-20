@@ -5,6 +5,7 @@ module Karafka
     module Management
       module Migrations
         module ConsumersStates
+          # Adds the jobs counter matching batches
           class AddJobsCounter < Base
             self.versions_until = '1.4.0'
             self.type = :consumers_states
