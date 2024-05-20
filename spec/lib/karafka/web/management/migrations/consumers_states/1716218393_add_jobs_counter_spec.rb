@@ -11,7 +11,7 @@ RSpec.describe(
 
     before { described_class.new.migrate(state) }
 
-    it { expect(state[:stats][:jobs]).to eq(16351) }
+    it { expect(state[:stats][:jobs]).to eq(16_351) }
     it { expect(state[:stats].key?(:jobs)).to eq(true) }
   end
 end
