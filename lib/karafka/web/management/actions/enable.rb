@@ -10,6 +10,8 @@ module Karafka
         class Enable < Base
           # Enables routing consumer group and subscribes Web-UI listeners
           def call
+            ensure_karafka_initialized!
+
             # Prevent double enabling
             return if ::Karafka::Web.config.enabled
 
@@ -26,6 +28,15 @@ module Karafka
           end
 
           private
+
+          # We should not allow for enabling of Karafka Web when Karafka is not configured.
+          # Karafka needs to be loaded and configured before Web can be configured because Web is
+          # using Karafka configuration
+          def ensure_karafka_initialized!
+            return unless Karafka::App.config.internal.status.initializing?
+
+            raise Web::Errors::KarafkaNotInitializedError, 'Please initialize Karafka first'
+          end
 
           # Enables tracking if it was not explicitly disabled by the user
           def setup_tracking_activity

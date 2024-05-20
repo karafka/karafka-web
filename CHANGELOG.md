@@ -1,7 +1,11 @@
 # Karafka Web changelog
 
-## 0.9.1 (Unreleased)
+## 0.9.2 (Unreleased)
 - [Refactor] Namespace migrations so migrations related to each topic data are in an independent directory.
+- [Enhancement] Prevent karafka-web from being configured before karafka is configured.
+
+## 0.9.1 (2024-05-03)
+- [Fix] OSS `lag_stored` for not-subscribed consumers causes Web UI to crash.
 
 ## 0.9.0 (2024-04-26)
 - **[Breaking]** Drop Ruby `2.7` support.
