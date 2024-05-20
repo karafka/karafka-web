@@ -24,6 +24,7 @@ RSpec.describe_current do
       waiting: 0,
       total: {
         batches: 1,
+        jobs: 1,
         messages: 1,
         errors: 0,
         retries: 0,
@@ -168,7 +169,7 @@ RSpec.describe_current do
     end
   end
 
-  %i[batches messages errors retries dead].each do |attr|
+  %i[batches jobs messages errors retries dead].each do |attr|
     context "when stats.total.#{attr} is missing" do
       before { report[:stats][:total].delete(attr) }
 

@@ -6,6 +6,7 @@ RSpec.describe_current do
   let(:stats) do
     {
       batches: 10,
+      jobs: 1,
       messages: 100,
       retries: 5,
       dead: 2,
@@ -28,7 +29,7 @@ RSpec.describe_current do
   end
 
   %i[
-    batches messages retries dead errors busy enqueued workers processes
+    batches jobs messages retries dead errors busy enqueued workers processes
   ].each do |key|
     context "when #{key} is negative" do
       before { stats[key] = -1 }

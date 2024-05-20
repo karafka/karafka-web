@@ -34,20 +34,20 @@ RSpec.describe_current do
 
       expect(hashed[:aggregated]).to eq(days: [], hours: [], minutes: [], seconds: [])
       expect(hashed[:consumer_groups]).to eq(days: [], hours: [], minutes: [], seconds: [])
-      expect(hashed[:schema_version]).to eq('1.2.1')
+      expect(hashed[:schema_version]).to eq('1.3.0')
       expect(hashed.key?(:dispatched_at)).to eq(true)
     end
   end
 
   context 'when we have data from a multi-topic, multi-partition setup' do
     let(:process1_report) do
-      data = Fixtures.consumers_reports_json('multi_partition/v1.3.0_process_1')
+      data = Fixtures.consumers_reports_json('multi_partition/v1.4.0_process_1')
       data[:dispatched_at] = Time.now.to_f
       data
     end
 
     let(:process2_report) do
-      data = Fixtures.consumers_reports_json('multi_partition/v1.3.0_process_2')
+      data = Fixtures.consumers_reports_json('multi_partition/v1.4.0_process_2')
       data[:dispatched_at] = Time.now.to_f
       data
     end
@@ -83,7 +83,7 @@ RSpec.describe_current do
     context 'when lso != ho' do
       # Alter LSO to be less than HO
       let(:process1_report) do
-        data = Fixtures.consumers_reports_json('multi_partition/v1.2.3_process_1')
+        data = Fixtures.consumers_reports_json('multi_partition/v1.4.0_process_1')
         data[:dispatched_at] = Time.now.to_f
 
         sg = data[:consumer_groups][:example_app_app][:subscription_groups][:c4ca4238a0b9_0]

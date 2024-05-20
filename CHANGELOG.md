@@ -2,9 +2,8 @@
 
 ## 0.9.2 (Unreleased)
 - [Enhancement] Improve how charts with many topics work.
-- [Enhancement] Count and present executed jobs independently from processed batches.
+- [Enhancement] Count and display executed jobs independently from processed batches.
 - [Enhancement] Prevent karafka-web from being configured before karafka is configured.
-- [Refactor] Namespace migrations so migrations related to each topic data are in an independent directory.
 - [Refactor] Namespace migrations so migrations related to each topic data are in an independent directory.
 
 ## 0.9.1 (2024-05-03)

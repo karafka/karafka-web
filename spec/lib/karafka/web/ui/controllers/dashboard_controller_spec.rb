@@ -46,7 +46,7 @@ RSpec.describe_current do
       topics_config.consumers.metrics = metrics_topic
 
       ::Karafka::Web::Management::Actions::CreateInitialStates.new.call
-      produce(metrics_topic, Fixtures.consumers_metrics_file('v1.0.0_single.json'))
+      produce(metrics_topic, Fixtures.consumers_metrics_file('v1.3.0_single.json'))
       ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
 
       get 'dashboard'
