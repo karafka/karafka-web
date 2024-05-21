@@ -43,6 +43,11 @@
       <%= Rails.gem_version %>
     </span>
   <% end %>
+
+  <span class="badge bg-secondary">
+    memsize
+    <%= ObjectSpace.respond_to?(:memsize_of) %>
+  </span>
 </p>
 
 <hr/>

@@ -578,6 +578,25 @@ RSpec.describe_current do
       end
     end
 
+    context 'when memsize_of is not available' do
+      before do
+        allow(ObjectSpace).to receive(:respond_to?).with(:memsize_of).and_return(false)
+
+        produce(topic, '1')
+        get "explorer/#{topic}/0/0"
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(breadcrumbs)
+        expect(body).to include('<code class="wrapped json')
+        expect(body).to include('Metadata')
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+        expect(body).to include('Not Available')
+      end
+    end
+
     context 'when message exists but cannot be deserialized' do
       before do
         produce(topic, '{1=')

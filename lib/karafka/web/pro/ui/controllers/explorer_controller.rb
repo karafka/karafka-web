@@ -112,8 +112,7 @@ module Karafka
                 @message.headers
               end
 
-              memsize_base = @safe_payload.failure? ? @message.raw_payload : @safe_payload.result
-              @displayable_payload_size = ObjectSpace.memsize_of(memsize_base)
+              @memsize_available, @displayable_payload_size = compute_payload_memsize_details
 
               # This may be off for certain views like recent view where we are interested only
               # in the most recent all the time. It does not make any sense to display pagination
@@ -222,6 +221,24 @@ module Karafka
                 @params.current_offset,
                 @watermark_offsets
               )
+            end
+
+            # Memsize may not be available or desired by some of the users when they run in
+            # production. This is why we do not explicitly load `objspace`. If user loads it and
+            # wants it, we will detect and display data accordingly. Otherwise we will use the
+            # raw payload bytesize for figuring out if payload can be displayed and we will alter
+            # the memsize metadata message
+            def compute_payload_memsize_details
+              available = ObjectSpace.respond_to?(:memsize_of)
+
+              if available
+                memsize_base = @safe_payload.failure? ? @message.raw_payload : @safe_payload.result
+                memsize = ObjectSpace.memsize_of(memsize_base)
+              else
+                memsize = @message.raw_payload.bytesize
+              end
+
+              [available, memsize]
             end
           end
         end
