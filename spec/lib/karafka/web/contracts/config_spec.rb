@@ -46,7 +46,8 @@ RSpec.describe_current do
         },
         cache: Object.new,
         per_page: 50,
-        dlq_patterns: []
+        dlq_patterns: [],
+        max_visible_payload_size: 100
       }
     }
   end
@@ -202,6 +203,18 @@ RSpec.describe_current do
 
     context 'when active_topics_cluster_lags_only is not boolean' do
       before { params[:ui][:visibility][:active_topics_cluster_lags_only] = '1' }
+
+      it { expect(contract.call(params)).not_to be_success }
+    end
+
+    context 'when max_visible_payload_size is not an integer' do
+      before { params[:ui][:max_visible_payload_size] = '1' }
+
+      it { expect(contract.call(params)).not_to be_success }
+    end
+
+    context 'when max_visible_payload_size is less than 1' do
+      before { params[:ui][:max_visible_payload_size] = 0 }
 
       it { expect(contract.call(params)).not_to be_success }
     end
