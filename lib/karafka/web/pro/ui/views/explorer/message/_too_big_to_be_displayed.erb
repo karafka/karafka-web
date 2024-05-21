@@ -1,0 +1,9 @@
+<div class="alert alert-warning" role="alert">
+  Message payloads larger than
+  <strong>
+  <%=
+    format_memory((Karafka::Web.config.ui.max_visible_payload_size / 1024.to_f).round(4))
+  %>
+  </strong>
+  are not displayed to prevent browser performance issues. This limit ensures a smooth and responsive user experience. If you need to view larger payloads, please download the message and inspect it using an appropriate tool.
+</div>

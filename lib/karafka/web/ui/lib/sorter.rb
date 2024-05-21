@@ -33,7 +33,7 @@ module Karafka
             @field = '' unless allowed_attributes.include?(@field)
 
             # Things we have already seen and sorted. Prevents crashing on the circular
-            # dependencies sorting when same resources are present in different parts of the three
+            # dependencies sorting when same resources are present in different parts of the tree
             @seen = {}
           end
 

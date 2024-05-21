@@ -55,6 +55,19 @@
           )
         %>
 
+        <tr>
+          <td>
+            memsize
+          </td>
+          <td>
+            <% if @memsize_available %>
+              <%= format_memory((@displayable_payload_size / 1024.to_f).round(4)) %>
+            <% else %>
+              Not Available
+            <% end %>
+          </td>
+        </tr>
+
         <%==
           partial(
             'explorer/messages/headers',
