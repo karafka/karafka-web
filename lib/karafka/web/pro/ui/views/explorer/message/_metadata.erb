@@ -55,6 +55,18 @@
           )
         %>
 
+        <% unless @safe_payload.failure? %>
+          <%==
+            partial(
+              'explorer/messages/detail',
+              locals: {
+                k: 'memsize',
+                v: format_memory((@displayable_payload_size / 1024.to_f).round(4))
+              }
+            )
+          %>
+        <% end %>
+
         <%==
           partial(
             'explorer/messages/headers',

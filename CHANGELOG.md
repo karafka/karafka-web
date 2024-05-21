@@ -1,6 +1,8 @@
 # Karafka Web changelog
 
 ## 0.9.2 (Unreleased)
+- [Enhancement] Prevent explorer from displaying too big payloads (bigger than 1MB by default)
+- [Enhancement] Include memsize based on `ObjectSpace.memsize_of`.
 - [Enhancement] Improve how charts with many topics work.
 - [Enhancement] Count and display executed jobs independently from processed batches.
 - [Enhancement] Prevent karafka-web from being configured before karafka is configured.

@@ -547,6 +547,37 @@ RSpec.describe_current do
       end
     end
 
+    context 'when requested message exists but is too big to be presented' do
+      before do
+        topic_name = topic
+        draw_routes do
+          topic topic_name do
+            active(false)
+            deserializers(payload: ::Karafka::Web::Deserializer.new)
+          end
+        end
+
+        # This will send a compressed message that after unpack will be bigger than what we
+        # decide to fit into memory by default
+        produce(
+          topic,
+          Fixtures.consumers_metrics_file('compressed/v1.4.0_large.msg'),
+          headers: { 'zlib' => '1' }
+        )
+        get "explorer/#{topic}/0/0"
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(breadcrumbs)
+        expect(body).not_to include('<code class="wrapped json')
+        expect(body).to include('Metadata')
+        expect(body).to include('Message payloads larger than')
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
+
     context 'when message exists but cannot be deserialized' do
       before do
         produce(topic, '{1=')

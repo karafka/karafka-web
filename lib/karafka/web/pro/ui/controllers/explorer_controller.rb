@@ -112,6 +112,9 @@ module Karafka
                 @message.headers
               end
 
+              memsize_base = @safe_payload.failure? ? @message.raw_payload : @safe_payload.result
+              @displayable_payload_size = ObjectSpace.memsize_of(memsize_base)
+
               # This may be off for certain views like recent view where we are interested only
               # in the most recent all the time. It does not make any sense to display pagination
               # there
