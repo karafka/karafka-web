@@ -1,0 +1,83 @@
+<%== partial 'search/title' %>
+
+<%== partial 'search/search_criteria' %>
+
+<% unless @search_criteria %>
+  <%== partial 'search/no_search_criteria' %>
+<% end %>
+
+<% if @errors.any? %>
+  <%== partial 'search/fix_errors' %>
+<% elsif @messages %>
+  <div class="container">
+    <div class="row mb-3 collapse collapsed" id="metadataDetails">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-md-12">
+            <table class="table table-bordered metadata-table table-bordered table-striped bg-white table table-hover table-bordered table-striped">
+              <thead class="tabdle-light">
+                <tr>
+                  <th>Summary</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Total Messages Checked</td>
+                  <td id="total-messages"><%= @search_details[:totals][:checked] %></td>
+                </tr>
+                <tr>
+                  <td>Matches</td>
+                  <td id="matches"><%= @search_details[:totals][:matched] %></td>
+                </tr>
+                <tr>
+                  <td>Search Time</td>
+                  <td id="matches"><%= (@search_details[:totals][:time_taken] / 1000).round(1) %> second</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="table-responsive">
+              <table class="table table-bordered metadata-table bg-white table table-hover table-bordered table-striped">
+                <thead class="tadble-light">
+                  <tr>
+                    <th>Partition</th>
+                    <th>Messages Checked</th>
+                    <th>First Offset</th>
+                    <th>Last Offset</th>
+                    <th>Matches</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @search_details.each do |k, v| %>
+                    <% next if k == :totals %>
+                    <tr>
+                      <td>Partition <%= k %></td>
+                      <td id="partition-0-messages"><%= v[:checked] %></td>
+                      <td id="partition-0-messages"><%= v[:first_offset] %></td>
+                      <td id="partition-0-messages"><%= v[:last_offset] %></td>
+                      <td id="partition-0-messages"><%= v[:matched] %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-5">
+      <div class="col-sm-12">
+        <% if @messages.empty? && params.current_page == 1 %>
+          <%== partial 'search/no_results' %>
+        <% elsif @messages.empty? %>
+          <%== partial 'shared/no_paginated_data' %>
+        <% else %>
+          <%== partial('explorer/partition/messages') %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<%== partial 'search/search_modal' %>

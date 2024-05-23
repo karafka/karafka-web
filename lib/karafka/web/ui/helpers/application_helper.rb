@@ -295,12 +295,12 @@ module Karafka
             path = current_path(sort: desc)
             full_name = "#{name}&nbsp;#{arrow_both}"
 
-            if params.sort == desc
+            if params.current_sort == desc
               path = current_path(sort: asc)
               full_name = "#{name}&nbsp;#{rev ? arrow_up : arrow_down}"
             end
 
-            if params.sort == asc
+            if params.current_sort == asc
               path = current_path(sort: desc)
               full_name = "#{name}&nbsp;#{rev ? arrow_down : arrow_up}"
             end

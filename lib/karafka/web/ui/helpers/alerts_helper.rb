@@ -16,6 +16,17 @@ module Karafka
               }
             )
           end
+
+          # @param message [String] alert message
+          # @return [String] html with alert danger
+          def alert_danger(message)
+            partial(
+              'shared/alerts/danger',
+              locals: {
+                message: message
+              }
+            )
+          end
         end
       end
     end

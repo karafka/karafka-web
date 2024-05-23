@@ -1,12 +1,16 @@
 # Karafka Web changelog
 
 ## 0.9.2 (Unreleased)
+- [Enhancement] Display raw numerical timestamp alongside message time.
+- [Enhancement] Support `/topics` root redirect.
 - [Enhancement] Prevent explorer from displaying too big payloads (bigger than 1MB by default)
 - [Enhancement] Include memsize based on `ObjectSpace.memsize_of` if `#memsize_of` is available.
 - [Enhancement] Improve how charts with many topics work.
 - [Enhancement] Count and display executed jobs independently from processed batches.
 - [Enhancement] Prevent karafka-web from being configured before karafka is configured.
 - [Refactor] Namespace migrations so migrations related to each topic data are in an independent directory.
+- [Fix] Fix invalid deserialization metadata display in the per-message Explorer view.
+- [Fix] Fix a case where started page refresh would update content despite limiters being in place.
 
 ## 0.9.1 (2024-05-03)
 - [Fix] OSS `lag_stored` for not-subscribed consumers causes Web UI to crash.

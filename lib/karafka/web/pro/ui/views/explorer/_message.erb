@@ -21,6 +21,9 @@
       <%= message.offset %>
     </td>
     <td>
+      <%== (message.timestamp.to_f * 1_000).to_i %>
+    </td>
+    <td>
       <%== time_with_label(message.timestamp) %>
     </td>
     <td>
