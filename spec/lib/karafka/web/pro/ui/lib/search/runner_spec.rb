@@ -120,6 +120,153 @@ RSpec.describe_current do
 
   # Search is also covered with controller specs
   context 'when runningend to end search integrations' do
-    pending
+    let(:partitions_count) { 1 }
+
+    let(:search_criteria) do
+      {
+        matcher: Karafka::Web::Pro::Ui::Lib::Search::Matchers::RawPayloadIncludes.name,
+        messages: 100,
+        offset: 0,
+        offset_type: 'latest',
+        partitions: %w[0 1],
+        phrase: 'test phrase',
+        timestamp: Time.now.to_i
+      }
+    end
+
+    context 'when requested topic does not exist' do
+      let(:topic) { SecureRandom.uuid }
+
+      it { expect { runner.call }.to raise_error(Rdkafka::RdkafkaError) }
+    end
+
+    context 'when topic exists but we want to search in a higher partition' do
+      let(:topic) { create_topic }
+      let(:partitions_count) { 1 }
+
+      it { expect(runner.call.first).to eq([]) }
+    end
+
+    context 'when we want to search in many partitions and all include some data' do
+      let(:topic) { create_topic(partitions: 2) }
+      let(:partitions_count) { 2 }
+
+      before do
+        produce(topic, '12 test phrase 12', partition: 0)
+        produce(topic, '12 test phrase 12', partition: 1)
+        produce(topic, 'na', partition: 0)
+        produce(topic, 'na', partition: 1)
+      end
+
+      it { expect(runner.call.first.size).to eq(2) }
+    end
+
+    context 'when we want to search in one partition and others have data' do
+      let(:topic) { create_topic(partitions: 2) }
+      let(:partitions_count) { 2 }
+
+      before do
+        produce(topic, '12 test phrase 12', partition: 1)
+        produce(topic, 'na', partition: 0)
+        produce(topic, 'na', partition: 1)
+
+        search_criteria[:partitions][0]
+      end
+
+      it { expect(runner.call.first.size).to eq(1) }
+    end
+
+    context 'when we want to search from beginning but what we want is ahead of our limits' do
+      let(:topic) { create_topic }
+
+      before do
+        20.times { produce(topic, 'na') }
+
+        produce(topic, '12 test phrase 12', partition: 0)
+
+        search_criteria[:messages] = 10
+        search_criteria[:offset_type] = 'offset'
+        search_criteria[:offset] = 0
+      end
+
+      it { expect(runner.call.first.size).to eq(0) }
+    end
+
+    context 'when we want to search from beginning on many and divided does not reach' do
+      let(:topic) { create_topic(partitions: 10) }
+      let(:partitions_count) { 10 }
+
+      before do
+        10.times do |partition|
+          12.times { produce(topic, 'na', partition: partition) }
+          produce(topic, '12 test phrase 12', partition: partition)
+        end
+
+        search_criteria[:messages] = 100
+        search_criteria[:offset_type] = 'offset'
+        search_criteria[:offset] = 0
+        search_criteria[:partitions] = %w[all]
+      end
+
+      it { expect(runner.call.first.size).to eq(0) }
+    end
+
+    context 'when we want to search from beginning on many and divided reaches' do
+      let(:topic) { create_topic(partitions: 10) }
+      let(:partitions_count) { 10 }
+
+      before do
+        10.times do |partition|
+          produce(topic, '12 test phrase 12', partition: partition)
+        end
+
+        search_criteria[:messages] = 100
+        search_criteria[:offset_type] = 'offset'
+        search_criteria[:offset] = 0
+        search_criteria[:partitions] = %w[all]
+      end
+
+      it { expect(runner.call.first.size).to eq(10) }
+    end
+
+    context 'when searching with offset ahead of searched messages' do
+      let(:topic) { create_topic(partitions: 10) }
+      let(:partitions_count) { 10 }
+
+      before do
+        10.times do |partition|
+          produce(topic, '12 test phrase 12', partition: partition)
+        end
+
+        sleep(1)
+
+        search_criteria[:messages] = 100
+        search_criteria[:offset_type] = 'timestamp'
+        search_criteria[:timestamp] = Time.now.to_i
+        search_criteria[:partitions] = %w[all]
+      end
+
+      it { expect(runner.call.first.size).to eq(0) }
+    end
+
+    context 'when searching with offset behind of searched messages' do
+      let(:topic) { create_topic(partitions: 10) }
+      let(:partitions_count) { 10 }
+
+      before do
+        10.times do |partition|
+          produce(topic, '12 test phrase 12', partition: partition)
+        end
+
+        sleep(1)
+
+        search_criteria[:messages] = 100
+        search_criteria[:offset_type] = 'timestamp'
+        search_criteria[:timestamp] = Time.now.to_i - 100
+        search_criteria[:partitions] = %w[all]
+      end
+
+      it { expect(runner.call.first.size).to eq(10) }
+    end
   end
 end
