@@ -162,11 +162,6 @@ module Karafka
         # transaction that will cause given consumer group to halt processing and wait
         setting :lso_threshold, default: 5 * 60 * 1_000
 
-        # Allows to manage visibility of payload, headers and message key in the UI
-        # In some cases you may want to limit what is being displayed due to the type of data you
-        # are dealing with
-        setting :visibility_filter, default: Ui::Models::VisibilityFilter.new
-
         # Consider any topic matching those names as a DLQ topic for the DLQ view
         # Web UI uses auto DLQ discovery based on routing but this may not be fully operable when
         # using a multi-app setup. This config allows to add extra topics if needed without having

@@ -24,6 +24,7 @@ module Karafka
               @request_params = request_params
             end
 
+            # @return [Hash] current search or empty if no search query present
             def current_search
               return @current_search if @current_search
 

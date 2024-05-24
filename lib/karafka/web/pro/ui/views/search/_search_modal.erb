@@ -6,6 +6,7 @@
   offset_type = @current_search[:offset_type]
   offset = @current_search[:offset]
   timestamp = @current_search[:timestamp]
+  matcher = @current_search[:matcher]
 %>
 
 <div class="modal" id="messages-search-modal">
@@ -36,6 +37,23 @@
               </ul>
             </div>
           <% end %>
+
+          <div class="form-row align-items-center">
+            <div class="form-group col-md-12 mb-3 ">
+              <div class="row">
+                <label for="matcher" class="col-sm-4 col-form-label">Matcher</label>
+                <div class="col-sm-8">
+                  <select class="form-control" id="matcher" name="search[matcher]" required>
+                    <% @matchers.each do |available_matcher| %>
+                      <option value="<%= available_matcher.name %>" <%= 'selected' if matcher == available_matcher.name %>>
+                        <%= available_matcher.name %>
+                      </option>
+                    <% end %>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div class="form-row align-items-center">
             <div class="form-group col-md-12 mb-3">
@@ -110,18 +128,6 @@
             </div>
           </div>
 
-          <div class="form-row align-items-center">
-            <div class="form-group col-md-12 mb-3 ">
-              <div class="row">
-                <label for="strategy" class="col-sm-4 col-form-label">Strategy</label>
-                <div class="col-sm-8">
-                  <select class="form-control" id="strategy" name="search[strategy]" required>
-                    <option value="default">Default</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
           <div class="form-row align-items-center">
             <div class="form-group col-md-12 mb-3  text-center d-grid">
               <button type="submit" class="btn btn-primary btn-lockable">Search</button>

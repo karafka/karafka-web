@@ -17,8 +17,7 @@
             <table class="table table-bordered metadata-table table-bordered table-striped bg-white table table-hover table-bordered table-striped">
               <thead class="tabdle-light">
                 <tr>
-                  <th>Summary</th>
-                  <th></th>
+                  <th colspan="2">Summary</th>
                 </tr>
               </thead>
               <tbody>
@@ -48,8 +47,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <% @search_details.each do |k, v| %>
-                    <% next if k == :totals %>
+                  <% @search_details[:partitions].each do |k, v| %>
                     <tr>
                       <td>Partition <%= k %></td>
                       <td id="partition-0-messages"><%= v[:checked] %></td>

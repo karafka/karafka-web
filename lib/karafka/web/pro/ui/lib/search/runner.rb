@@ -6,108 +6,178 @@ module Karafka
       module Ui
         module Lib
           module Search
-            module Runner
-              extend Karafka::Core::Helpers::Time
+            # Search runner that selects proper matcher, sets the parameters and runs the search
+            # We use the Pro Iterator for searching but this runner adds metadata tracking and
+            # some other metrics that are useful in the Web UI
+            class Runner
+              include Karafka::Core::Helpers::Time
 
-              class << self
-                def call(topic, partitions_count, search_criteria)
-                  t = monotonic_now
+              # Metrics we collect during search for each partition + totals
+              METRICS_BASE = {
+                first_offset: -1,
+                last_offset: -1,
+                checked: 0,
+                matched: 0
+              }.freeze
 
-                  lookup_flow = {}
+              # Fields that we use that come from the search query
+              # Those fields are aliased here for cleaner code so we don't have to reference them
+              # from the hash each time they are needed
+              SEARCH_CRITERIA_FIELDS = %i[
+                matcher
+                messages
+                offset
+                offset_type
+                partitions
+                phrase
+                timestamp
+              ].freeze
 
-                  all_partitions = (0...partitions_count).to_a
+              private_constant :METRICS_BASE, :SEARCH_CRITERIA_FIELDS
 
-                  # Filter partitions
-                  if search_criteria[:partitions].include?('all')
-                    partitions = all_partitions
-                  else
-                    partitions = all_partitions & search_criteria[:partitions].map(&:to_i)
-                    partitions = all_partitions if partitions.empty?
+              # @param topic [String] topic in which we want to search
+              # @param partitions_count [Integer] how many partitions this topic has
+              # @param search_criteria [Hash] normalized search criteria
+              def initialize(topic, partitions_count, search_criteria)
+                @topic = topic
+                @partitions_count = partitions_count
+                @search_criteria = search_criteria
+                @partitions_stats = Hash.new { |h, k| h[k] = METRICS_BASE.dup }
+                @totals_stats = METRICS_BASE.dup
+                @matched = []
+              end
+
+              # Runs the search, collects search statistics and returns the results
+              # @return [Array<Array<Karafka::Messages::Message>, Hash>] array with search results
+              #   and metadata
+              # @note Results are sorted based on the time value.
+              def call
+                search_with_stats
+
+                [
+                  # We return most recent results on top
+                  @matched.sort_by(&:timestamp).reverse,
+                  {
+                    totals: @totals_stats,
+                    partitions: @partitions_stats
+                  }.freeze
+                ]
+              end
+
+              private
+
+              SEARCH_CRITERIA_FIELDS.each do |q|
+                class_eval <<~RUBY, __FILE__, __LINE__ + 1
+                  def #{q}
+                    @#{q} ||= @search_criteria.fetch(:#{q})
                   end
+                RUBY
+              end
 
-                  # Establish starting point
-                  case search_criteria[:offset_type]
-                  when 'latest'
-                    start = (search_criteria[:messages] / partitions_count) * -1
-                  when 'offset'
-                    start = search_criteria[:offset]
-                  when 'timestamp'
-                    start = Time.at(search_criteria[:timestamp])
-                  else
-                    raise
-                  end
+              # @return [#call] Finds and builds the lookup matcher
+              # @note We create one instance for all matchings in a single search. That way in case
+              #   someone would want a stateful matcher, this can be done.
+              def current_matcher
+                return @current_matcher if @current_matcher
 
-                  per_partition = (search_criteria[:messages] / partitions_count)
-
-                  per_partition_count = search_criteria[:messages] / partitions_count
-                    Karafka::Pro::Iterator.new(
-                      {
-                        topic => partitions.map { |par| [par, start] }.to_h
-                      }
-                    )
-                  iterator = case search_criteria[:offset_type]
-                  when 'latest'
-                    Karafka::Pro::Iterator.new(
-                      {
-                        topic => partitions.map { |par| [par, start] }.to_h
-                      }
-                    )
-                  when 'offset'
-                    Karafka::Pro::Iterator.new(
-                      {
-                        topic => partitions.map { |par| [par, start] }.to_h
-                      }
-                    )
-                  when 'timestamp'
-                    Karafka::Pro::Iterator.new(
-                      {
-                        topic => partitions.map { |par| [par, start] }.to_h
-                      }
-                    )
-                  else
-                    raise
-                  end
-
-                  partitions = {}
-                  details = Hash.new { |h, k| h[k] = { first_offset: -1, last_offset: -1, checked: 0, matched: 0 } }
-                  details[:totals] = { matched: 0, checked: 0 }
-
-                  found = []
-                  phrase = search_criteria[:phrase]
-
-                  iterator.each do |msg|
-                    details[:totals][:checked] += 1
-                    partitions[msg.partition] ||= 0
-                    partitions[msg.partition] += 1
-
-                    if details[msg.partition][:first_offset] < 0
-                      details[msg.partition][:first_offset] = msg.offset
-                    end
-
-                    details[msg.partition][:last_offset] = msg.offset
-                    details[msg.partition][:checked] += 1
-
-                    if msg.raw_payload.include?(phrase)
-                      found << msg
-                      details[msg.partition][:matched] += 1
-                      details[:totals][:matched] += 1
-                    end
-
-                    msg.clean!
-
-                    if details[:totals][:checked] >= search_criteria[:messages]
-                      iterator.stop
-                    end
-
-                    next if partitions[msg.partition] < per_partition
-
-                    iterator.stop_current_partition
-                  end
-
-                  details[:totals][:time_taken] = monotonic_now - t
-
-                  [found.sort_by(&:timestamp).reverse, details]
+                found_matcher_class = Web.config.ui.search.matchers.find do |matcher_class|
+                  matcher_class.name == matcher
                 end
+
+                # This should never happen. Report if you encounter this
+                found_matcher_class || raise(Karafka::Errors::UnsupportedCaseError, matcher)
+
+                @current_matcher = found_matcher_class.new
+              end
+
+              # @return [Karafka::Pro::Iterator]
+              def iterator
+                return @iterator if @iterator
+
+                # Establish starting point
+                start = case offset_type
+                        when 'latest'
+                          (messages / partitions_to_search.size) * -1
+                        when 'offset'
+                          offset
+                        when 'timestamp'
+                          Time.at(timestamp)
+                        else
+                          # This should never happen. Contact us if you see this.
+                          raise ::Karafka::Errors::UnsupportedCaseError, offset_type
+                        end
+
+                iterator_query = {
+                  @topic => partitions_to_search.map { |par| [par, start] }.to_h
+                }
+
+                @iterator = Karafka::Pro::Iterator.new(iterator_query)
+              end
+
+              # Runs the search, measures its time and collects needed metrics
+              # It uses the selected search matcher.
+              def search_with_stats
+                started_at = monotonic_now
+
+                per_partition = (messages / partitions_to_search.size)
+
+                iterator.each do |message|
+                  @current_partition = message.partition
+
+                  @totals_stats[:checked] += 1
+                  current_stats[:checked] += 1
+                  current_stats[:last_offset] = message.offset
+
+                  if current_stats[:first_offset].negative?
+                    current_stats[:first_offset] = message.offset
+                  end
+
+                  if current_matcher.call(message, phrase)
+                    @matched << message
+
+                    current_stats[:matched] += 1
+                    @totals_stats[:matched] += 1
+                  end
+
+                  message.clean!
+
+                  if @totals_stats[:checked] >= messages
+                    iterator.stop
+                    next
+                  end
+
+                  if current_stats[:checked] >= per_partition
+                    iterator.stop_current_partition
+                    next
+                  end
+                end
+
+                @totals_stats[:time_taken] = monotonic_now - started_at
+              end
+
+              # @return [Hash] statistics of the partition for which message we're currently
+              #   checking.
+              def current_stats
+                @partitions_stats[@current_partition]
+              end
+
+              # @return [Array<Integer>] partitions in which we're supposed to search
+              def partitions_to_search
+                return @partitions_to_search if @partitions_to_search
+
+                # Lets start with assumption that we search in all the partitions
+                @partitions_to_search = (0...@partitions_count).to_a
+
+                # If in the search query there is no "all", we pick only partitions that do exist
+                # in the topic that were part of the requested search scope
+                unless partitions.include?('all')
+                  @partitions_to_search &= partitions.map(&:to_i)
+                  # and just in case someone would provide really weird data, we fallback to
+                  # partition 0
+                  @partitions_to_search = [0] if @partitions_to_search.empty?
+                end
+
+                @partitions_to_search
               end
             end
           end
