@@ -1,6 +1,7 @@
 # Karafka Web changelog
 
-## 0.9.2 (Unreleased)
+## 0.10.0 (Unreleased)
+- **[Feature]** Provide Search capabilities in the Explorer (Pro).
 - [Enhancement] Display raw numerical timestamp alongside message time.
 - [Enhancement] Support `/topics` root redirect.
 - [Enhancement] Prevent explorer from displaying too big payloads (bigger than 1MB by default)

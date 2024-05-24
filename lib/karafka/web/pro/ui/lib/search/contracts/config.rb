@@ -18,6 +18,7 @@ module Karafka
         module Lib
           # Search related contracts
           module Search
+            # Namespace with search related contracts
             module Contracts
               # Makes sure, all the expected UI search config is defined as it should be
               class Config < ::Karafka::Contracts::Base
@@ -59,6 +60,23 @@ module Karafka
                   next if names.uniq.size == names.size
 
                   [[%i[ui search matchers], :must_have_unique_names]]
+                end
+
+                # Make sure that all matchers names are strings and not empty
+                virtual do |data, errors|
+                  next unless errors.empty?
+
+                  detected_errors = []
+
+                  data.dig(:ui, :search, :matchers).map(&:name).each do |name|
+                    next if name.is_a?(String) && !name.empty?
+
+                    detected_errors << [%i[ui search matchers], :name_must_be_valid]
+
+                    break
+                  end
+
+                  detected_errors
                 end
               end
             end
