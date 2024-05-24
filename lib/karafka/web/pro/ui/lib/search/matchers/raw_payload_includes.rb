@@ -16,6 +16,9 @@ module Karafka
                 # @param phrase [String]
                 # @return [Boolean] does message raw payload contain the phrase
                 def call(message, phrase)
+                  # raw payload can be nil for tombstone events
+                  return false unless message.raw_payload
+
                   message.raw_payload.include?(phrase)
                 # String matching on compressed data may fail
                 rescue Encoding::CompatibilityError

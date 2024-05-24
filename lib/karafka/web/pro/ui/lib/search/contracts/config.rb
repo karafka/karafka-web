@@ -40,7 +40,7 @@ module Karafka
                       next false unless val.is_a?(Array)
                       next false if val.empty?
                       next false unless val.all? { |count| count.is_a?(Integer) }
-                      next false unless val.all? { |count| count.positive? }
+                      next false unless val.all?(&:positive?)
 
                       true
                     end

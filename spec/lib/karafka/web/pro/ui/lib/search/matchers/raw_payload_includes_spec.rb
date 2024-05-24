@@ -15,6 +15,14 @@ RSpec.describe_current do
       end
     end
 
+    context 'when the raw payload is nil (tombstone)' do
+      let(:raw_payload) { nil }
+
+      it 'returns false' do
+        expect(matcher.call(message, phrase)).to be false
+      end
+    end
+
     context 'when the raw payload does not include the phrase' do
       let(:raw_payload) { 'This message does not contain the search term.' }
 

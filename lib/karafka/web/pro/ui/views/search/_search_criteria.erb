@@ -13,15 +13,17 @@
           </button>
 
 
-          <button
-            class="btn btn-secondary btn-sm"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#metadataDetails"
-            id="toggleMetadataBtn"
-          >
-            Metadata
-          </button>
+          <% if @search_criteria && @errors.empty? %>
+            <button
+              class="btn btn-secondary btn-sm"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#searchMetadataDetails"
+              id="toggleSearchMetadataBtn"
+            >
+              Metadata
+            </button>
+          <% end %>
         </div>
 
         <div class="col col-md-9 text-end">
