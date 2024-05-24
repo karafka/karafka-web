@@ -20,10 +20,13 @@ module Karafka
 
                 # What are we looking for
                 required(:phrase) { |val| val.is_a?(String) && !val.empty? }
+
                 # How many messages in total should we scan. In case of many partitions, this is
                 # distributed evenly across them. So 100 000 in 5 partitions, means scanning
                 # 20 000 per partition.
-                required(:messages) { |val| val.is_a?(Integer) && val >= 1 && val <= 100_000 }
+                required(:limit) do |val|
+                  Web.config.ui.search.limits.include?(val)
+                end
 
                 # What matcher should we use when matching phrase and message
                 # It allows only matchers that we have declared in search

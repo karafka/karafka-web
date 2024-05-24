@@ -37,6 +37,7 @@ module Karafka
               # Needed when rendering found messages rows. We should always filter the messages
               # details with the visibility filter
               @visibility_filter = ::Karafka::Web.config.ui.visibility.filter
+              @limits = ::Karafka::Web.config.ui.search.limits.sort
 
               # If there is search form filled, we validate it to make sure there are no errors
               @errors = if @search_criteria

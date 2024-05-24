@@ -13,7 +13,13 @@
           </button>
 
 
-          <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#metadataDetails" aria-expanded="false" aria-controls="metadataDetails" id="toggleMetadataBtn">
+          <button
+            class="btn btn-secondary btn-sm"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#metadataDetails"
+            id="toggleMetadataBtn"
+          >
             Metadata
           </button>
         </div>
@@ -21,6 +27,7 @@
         <div class="col col-md-9 text-end">
           <% if @search_criteria && @errors.empty? %>
             Search criteria:
+
             <% params.current_search.each do |key, values| %>
               <span class="badge bg-secondary badge-custom">
                 <%= key.gsub('_', ' ') %>:

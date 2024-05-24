@@ -2,7 +2,7 @@
   # We do not want to use any additional gems. That's why this is done that way
   phrase = @current_search[:phrase]
   partitions = @current_search[:partitions]
-  messages = @current_search[:messages]
+  limit = @current_search[:limit]
   offset_type = @current_search[:offset_type]
   offset = @current_search[:offset]
   timestamp = @current_search[:timestamp]
@@ -45,7 +45,11 @@
                 <div class="col-sm-8">
                   <select class="form-control" id="matcher" name="search[matcher]" required>
                     <% @matchers.each do |available_matcher| %>
-                      <option value="<%= available_matcher.name %>" <%= 'selected' if matcher == available_matcher.name %>>
+                      <option
+                        value="<%= available_matcher.name %>"
+                        <%= 'selected' if matcher == available_matcher.name %>
+                        required
+                      >
                         <%= available_matcher.name %>
                       </option>
                     <% end %>
@@ -81,7 +85,11 @@
                   <select class="form-control" id="partitions" name="search[partitions][]" multiple required>
                     <option value="all" <%= 'selected' if partitions.include?('all') || partitions.empty? %>>All</option>
                     <% @partitions_count.times do |i| %>
-                      <option value="<%= i %>" <%= 'selected' if partitions.include?(i.to_s) %>>Partition <%= i %></option>
+                      <option
+                        value="<%= i %>" <%= 'selected' if partitions.include?(i.to_s) %>
+                      >
+                        Partition <%= i %>
+                      </option>
                     <% end %>
                   </select>
                 </div>
@@ -100,9 +108,25 @@
                   </div>
 
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="search[offset_type]" id="offset-value" value="offset" <%= 'checked' if offset_type == 'offset' %>>
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="search[offset_type]"
+                      id="offset-value"
+                      value="offset" <%= 'checked' if offset_type == 'offset' %>
+                    >
+
                     <label class="form-check-label" for="offset-value">Offset</label>
-                    <input type="number" value="<%= offset %>" class="form-control mt-2" id="offset-input" name="search[offset]" min="0" disabled>
+
+                    <input
+                      type="number"
+                      value="<%= offset %>"
+                      class="form-control mt-2"
+                      id="offset-input"
+                      name="search[offset]"
+                      min="0"
+                      disabled
+                    >
                   </div>
 
                   <div class="form-check">
@@ -116,12 +140,17 @@
 
             <div class="form-group col-md-12 mb-3 ">
               <div class="row">
-                <label for="messages" class="col-sm-4 col-form-label">Messages</label>
+                <label for="limit" class="col-sm-4 col-form-label">Messages</label>
                 <div class="col-sm-8">
-                  <select class="form-control" id="messages" name="search[messages]" required>
-                    <option value="1000"   <%= 'selected' if messages == 1000 %>>1000</option>
-                    <option value="10000"  <%= 'selected' if messages == 10000 %>>10000</option>
-                    <option value="100000" <%= 'selected' if messages == 100000 %>>100000</option>
+                  <select class="form-control" id="limit" name="search[limit]" required>
+                    <% @limits.each do |available_limit| %>
+                      <option
+                        value="<%= available_limit %>"
+                        <%= 'selected' if limit == available_limit %>
+                      >
+                        <%= available_limit %>
+                      </option>
+                    <% end %>
                   </select>
                 </div>
               </div>

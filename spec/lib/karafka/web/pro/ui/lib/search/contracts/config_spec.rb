@@ -9,7 +9,8 @@ RSpec.describe_current do
     {
       ui: {
         search: {
-          matchers: [matcher]
+          matchers: [matcher],
+          limits: [100, 1000, 10_000]
         }
       }
     }
@@ -75,6 +76,30 @@ RSpec.describe_current do
     end
 
     before { params[:ui][:search][:matchers] = [matcher, duplicate_matcher] }
+
+    it { expect(contract.call(params)).not_to be_success }
+  end
+
+  context 'when limits is not an array' do
+    before { params[:ui][:search][:limits] = 'not_an_array' }
+
+    it { expect(contract.call(params)).not_to be_success }
+  end
+
+  context 'when limits is an empty array' do
+    before { params[:ui][:search][:limits] = [] }
+
+    it { expect(contract.call(params)).not_to be_success }
+  end
+
+  context 'when limits contains negative numbers' do
+    before { params[:ui][:search][:limits] = [-100] }
+
+    it { expect(contract.call(params)).not_to be_success }
+  end
+
+  context 'when limits contains non-numbers' do
+    before { params[:ui][:search][:limits] = ['na'] }
 
     it { expect(contract.call(params)).not_to be_success }
   end

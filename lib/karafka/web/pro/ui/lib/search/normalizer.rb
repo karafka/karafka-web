@@ -18,7 +18,7 @@ module Karafka
                 def call(search_query)
                   {
                     phrase: search_query['phrase'].to_s,
-                    messages: search_query['messages'].to_i,
+                    limit: search_query['limit'].to_i,
                     matcher: search_query['matcher'].to_s,
                     partitions: Array(search_query['partitions']).flatten.compact.uniq,
                     offset_type: search_query['offset_type'].to_s,

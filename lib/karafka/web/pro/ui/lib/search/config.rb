@@ -21,10 +21,19 @@ module Karafka
             class Config
               extend ::Karafka::Core::Configurable
 
+              # Matches for messages
               setting :matchers, default: [
                 Matchers::RawPayloadIncludes,
                 Matchers::RawKeyIncludes,
                 Matchers::RawHeaderIncludes
+              ]
+
+              # Search limits as the search runs in Puma
+              # Too big value will make the scan really slow
+              setting :limits, default: [
+                1_000,
+                10_000,
+                100_000
               ]
 
               configure

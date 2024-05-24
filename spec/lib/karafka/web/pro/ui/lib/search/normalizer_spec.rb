@@ -5,7 +5,7 @@ RSpec.describe_current do
     let(:search_query) do
       {
         'phrase' => 'test phrase',
-        'messages' => '10000',
+        'limit' => '10000',
         'matcher' => 'ExampleMatcher',
         'partitions' => ['partition1', 'partition2', nil, 'partition1'],
         'offset_type' => 'latest',
@@ -17,7 +17,7 @@ RSpec.describe_current do
     let(:normalized_query) do
       {
         phrase: 'test phrase',
-        messages: 10_000,
+        limit: 10_000,
         matcher: 'ExampleMatcher',
         partitions: %w[partition1 partition2],
         offset_type: 'latest',
@@ -54,11 +54,11 @@ RSpec.describe_current do
       end
     end
 
-    context 'when messages is a non-numeric string' do
-      before { search_query['messages'] = 'non-numeric' }
+    context 'when limit is a non-numeric string' do
+      before { search_query['limit'] = 'non-numeric' }
 
-      it 'casts non-numeric messages to 0' do
-        expect(described_class.call(search_query)[:messages]).to eq(0)
+      it 'casts non-numeric limit to 0' do
+        expect(described_class.call(search_query)[:limit]).to eq(0)
       end
     end
 

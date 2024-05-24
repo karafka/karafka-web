@@ -33,6 +33,17 @@ module Karafka
                 nested(:ui) do
                   nested(:search) do
                     required(:matchers) { |val| val.is_a?(Array) && !val.empty? }
+
+                    # Users can define their own search limits and we just make sure they do not
+                    # do something weird like negative numbers
+                    required(:limits) do |val|
+                      next false unless val.is_a?(Array)
+                      next false if val.empty?
+                      next false unless val.all? { |count| count.is_a?(Integer) }
+                      next false unless val.all? { |count| count.positive? }
+
+                      true
+                    end
                   end
                 end
 

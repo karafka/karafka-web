@@ -6,7 +6,7 @@ RSpec.describe_current do
   let(:params) do
     {
       phrase: 'search phrase',
-      messages: 10_000,
+      limit: 10_000,
       matcher: 'Raw header includes',
       offset_type: 'latest',
       offset: 0,
@@ -35,21 +35,21 @@ RSpec.describe_current do
     end
   end
 
-  context 'when messages is invalid' do
-    context 'when messages is not an integer' do
-      before { params[:messages] = 'not_an_integer' }
+  context 'when limit is invalid' do
+    context 'when limit is not an integer' do
+      before { params[:limit] = 'not_an_integer' }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when messages is less than 1' do
-      before { params[:messages] = 0 }
+    context 'when limit is less than 1' do
+      before { params[:limit] = 0 }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when messages is greater than 100_000' do
-      before { params[:messages] = 100_001 }
+    context 'when limit is greater than 100_000' do
+      before { params[:limit] = 100_001 }
 
       it { expect(contract.call(params)).not_to be_success }
     end

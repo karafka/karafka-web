@@ -25,7 +25,7 @@ module Karafka
               # from the hash each time they are needed
               SEARCH_CRITERIA_FIELDS = %i[
                 matcher
-                messages
+                limit
                 offset
                 offset_type
                 partitions
@@ -97,7 +97,7 @@ module Karafka
                 # Establish starting point
                 start = case offset_type
                         when 'latest'
-                          (messages / partitions_to_search.size) * -1
+                          (limit / partitions_to_search.size) * -1
                         when 'offset'
                           offset
                         when 'timestamp'
@@ -119,7 +119,7 @@ module Karafka
               def search_with_stats
                 started_at = monotonic_now
 
-                per_partition = (messages / partitions_to_search.size)
+                per_partition = (limit / partitions_to_search.size)
 
                 iterator.each do |message|
                   @current_partition = message.partition
@@ -141,7 +141,7 @@ module Karafka
 
                   message.clean!
 
-                  if @totals_stats[:checked] >= messages
+                  if @totals_stats[:checked] >= limit
                     iterator.stop
                     next
                   end

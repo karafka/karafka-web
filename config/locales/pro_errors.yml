@@ -12,3 +12,4 @@ en:
       ui.search.matchers_must_have_name_and_call: 'must respond to #name and its instance to #call'
       ui.search.matchers_format: must be an array with matchers
       ui.search.matchers_name_must_be_valid: all matchers names must be non-empty strings
+      ui.search.limits_format: all limits need to be integers bigger than 0

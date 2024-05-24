@@ -9,7 +9,7 @@ RSpec.describe_current do
     let(:search_criteria) do
       {
         matcher: Karafka::Web::Pro::Ui::Lib::Search::Matchers::RawPayloadIncludes.name,
-        messages: 10,
+        limit: 10,
         offset: 0,
         offset_type: 'latest',
         partitions: %w[0 1],
@@ -92,8 +92,8 @@ RSpec.describe_current do
         end
       end
 
-      context 'when the total checked messages reach the limit' do
-        let(:search_criteria) { super().merge(messages: 1) }
+      context 'when the total checked limit reach the limit' do
+        let(:search_criteria) { super().merge(limit: 1) }
 
         before { allow(iterator_instance).to receive(:stop) }
 
@@ -104,8 +104,8 @@ RSpec.describe_current do
         end
       end
 
-      context 'when the checked messages for a partition reach the limit' do
-        let(:search_criteria) { super().merge(messages: 2) }
+      context 'when the checked limit for a partition reach the limit' do
+        let(:search_criteria) { super().merge(limit: 2) }
 
         before { allow(iterator_instance).to receive(:stop_current_partition) }
 
@@ -125,7 +125,7 @@ RSpec.describe_current do
     let(:search_criteria) do
       {
         matcher: Karafka::Web::Pro::Ui::Lib::Search::Matchers::RawPayloadIncludes.name,
-        messages: 100,
+        limit: 100,
         offset: 0,
         offset_type: 'latest',
         partitions: %w[0 1],
@@ -184,7 +184,7 @@ RSpec.describe_current do
 
         produce(topic, '12 test phrase 12', partition: 0)
 
-        search_criteria[:messages] = 10
+        search_criteria[:limit] = 10
         search_criteria[:offset_type] = 'offset'
         search_criteria[:offset] = 0
       end
@@ -202,7 +202,7 @@ RSpec.describe_current do
           produce(topic, '12 test phrase 12', partition: partition)
         end
 
-        search_criteria[:messages] = 100
+        search_criteria[:limit] = 100
         search_criteria[:offset_type] = 'offset'
         search_criteria[:offset] = 0
         search_criteria[:partitions] = %w[all]
@@ -220,7 +220,7 @@ RSpec.describe_current do
           produce(topic, '12 test phrase 12', partition: partition)
         end
 
-        search_criteria[:messages] = 100
+        search_criteria[:limit] = 100
         search_criteria[:offset_type] = 'offset'
         search_criteria[:offset] = 0
         search_criteria[:partitions] = %w[all]
@@ -229,7 +229,7 @@ RSpec.describe_current do
       it { expect(runner.call.first.size).to eq(10) }
     end
 
-    context 'when searching with offset ahead of searched messages' do
+    context 'when searching with offset ahead of searched limit' do
       let(:topic) { create_topic(partitions: 10) }
       let(:partitions_count) { 10 }
 
@@ -240,7 +240,7 @@ RSpec.describe_current do
 
         sleep(1)
 
-        search_criteria[:messages] = 100
+        search_criteria[:limit] = 100
         search_criteria[:offset_type] = 'timestamp'
         search_criteria[:timestamp] = Time.now.to_i
         search_criteria[:partitions] = %w[all]
@@ -249,7 +249,7 @@ RSpec.describe_current do
       it { expect(runner.call.first.size).to eq(0) }
     end
 
-    context 'when searching with offset behind of searched messages' do
+    context 'when searching with offset behind of searched limit' do
       let(:topic) { create_topic(partitions: 10) }
       let(:partitions_count) { 10 }
 
@@ -260,7 +260,7 @@ RSpec.describe_current do
 
         sleep(1)
 
-        search_criteria[:messages] = 100
+        search_criteria[:limit] = 100
         search_criteria[:offset_type] = 'timestamp'
         search_criteria[:timestamp] = Time.now.to_i - 100
         search_criteria[:partitions] = %w[all]
