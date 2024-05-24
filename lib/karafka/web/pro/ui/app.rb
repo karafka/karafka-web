@@ -156,7 +156,7 @@ module Karafka
 
             r.on 'explorer' do
               r.get String, 'search' do |topic_id|
-                # Search has it's own controller byt we want to have this in the explorer routing
+                # Search has it's own controller but we want to have this in the explorer routing
                 # namespace because topic search is conceptually part of the explorer
                 controller = Controllers::SearchController.new(params)
                 controller.index(topic_id)
