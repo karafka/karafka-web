@@ -131,7 +131,7 @@
 
                   <div class="form-check">
                     <input class="form-check-input" type="radio" name="search[offset_type]" id="offset-timestamp" value="timestamp" <%= 'checked' if offset_type == 'timestamp' %>>
-                    <label class="form-check-label" for="offset-timestamp">Timestamp</label>
+                    <label class="form-check-label" for="offset-timestamp">Timestamp (in ms)</label>
                     <input type="number" value="<%= timestamp %>" class="form-control mt-2" id="offset-timestamp-input" name="search[timestamp]" min="0" max="<%= ((Time.now.to_f + 60 * 60 * 24 * 31) * 1_000).to_i %>" disabled>
                   </div>
                 </div>

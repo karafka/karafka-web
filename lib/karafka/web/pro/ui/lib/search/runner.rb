@@ -112,7 +112,9 @@ module Karafka
                         when 'offset'
                           offset
                         when 'timestamp'
-                          Time.at(timestamp)
+                          # Kafka timestamp of message is in ms, we need a second precision for
+                          # `Time#at`
+                          Time.at(timestamp / 1_000.to_f)
                         else
                           # This should never happen. Contact us if you see this.
                           raise ::Karafka::Errors::UnsupportedCaseError, offset_type

@@ -14,7 +14,7 @@ RSpec.describe_current do
         offset_type: 'latest',
         partitions: %w[0 1],
         phrase: 'test phrase',
-        timestamp: Time.now.to_i
+        timestamp: (Time.now.to_f * 1_000).to_i
       }
     end
 
@@ -26,7 +26,7 @@ RSpec.describe_current do
         Karafka::Messages::Message,
         partition: 0,
         offset: 0,
-        timestamp: Time.now.to_i,
+        timestamp: (Time.now.to_f * 1_000).to_i,
         clean!: nil,
         raw_payload: ''
       )
@@ -37,7 +37,7 @@ RSpec.describe_current do
         Karafka::Messages::Message,
         partition: 1,
         offset: 1,
-        timestamp: Time.now.to_i,
+        timestamp: (Time.now.to_f * 1_000).to_i,
         clean!: nil,
         raw_payload: ''
       )
@@ -242,7 +242,7 @@ RSpec.describe_current do
 
         search_criteria[:limit] = 100
         search_criteria[:offset_type] = 'timestamp'
-        search_criteria[:timestamp] = Time.now.to_i
+        search_criteria[:timestamp] = (Time.now.to_f * 1_000).to_i
         search_criteria[:partitions] = %w[all]
       end
 
@@ -262,7 +262,7 @@ RSpec.describe_current do
 
         search_criteria[:limit] = 100
         search_criteria[:offset_type] = 'timestamp'
-        search_criteria[:timestamp] = Time.now.to_i - 100
+        search_criteria[:timestamp] = ((Time.now.to_f - 100) * 1_000).to_i
         search_criteria[:partitions] = %w[all]
       end
 

@@ -14,7 +14,7 @@ RSpec.describe_current do
   let(:valid_search) do
     <<~SEARCH.tr("\n", '&')
       search[matcher]=Raw+payload+includes
-      search[phrase]=1
+      search[phrase]=find-me
       search[partitions][]=all
       search[offset_type]=latest
       search[limit]=1000
@@ -117,6 +117,123 @@ RSpec.describe_current do
       expect(body).to include(search_metadata)
       expect(body).to include(nothing_found)
       expect(body).not_to include('Partition 1')
+      expect(body).not_to include(no_search_criteria)
+      expect(body).not_to include(search_modal_errors)
+      expect(body).not_to include('matcher: is invalid')
+      expect(body).not_to include(pagination)
+      expect(body).not_to include(support_message)
+    end
+  end
+
+  context 'when searching a topic that has matches only in the second partition' do
+    let(:partitions) { 2 }
+
+    before do
+      produce_many(topic, %w[message message2 message 3], partition: 0)
+      produce_many(topic, %w[find-me also-find-me find-me-and], partition: 1)
+
+      get "explorer/#{topic}/search?#{valid_search}"
+    end
+
+    it do
+      expect(response).to be_ok
+      expect(body).to include(breadcrumbs)
+      expect(body).to include(search_modal)
+      expect(body).to include('table')
+      expect(body).to include('Raw payload includes')
+      expect(body).to include('Search criteria:')
+      expect(body).to include('Total Messages Checked')
+      expect(body).to include('Partition 0')
+      expect(body).to include('Partition 1')
+      expect(body).to include(metadata_button)
+      expect(body).to include(search_metadata)
+      expect(body).to include('<td>3</td>')
+      expect(body).not_to include(nothing_found)
+      expect(body).not_to include(no_search_criteria)
+      expect(body).not_to include(search_modal_errors)
+      expect(body).not_to include('matcher: is invalid')
+      expect(body).not_to include(pagination)
+      expect(body).not_to include(support_message)
+    end
+  end
+
+  context 'when searching a topic that has results but before the start timestamp' do
+    let(:partitions) { 2 }
+    let(:valid_search) do
+      <<~SEARCH.tr("\n", '&')
+        search[matcher]=Raw+payload+includes
+        search[phrase]=find-me
+        search[partitions][]=all
+        search[offset_type]=timestamp
+        search[timestamp]=#{(Time.now.to_f * 1_000).to_i}
+        search[limit]=1000
+      SEARCH
+    end
+
+    before do
+      produce_many(topic, %w[find-me also-find-me find-me-and], partition: 0)
+      produce_many(topic, %w[find-me also-find-me find-me-and], partition: 1)
+
+      sleep(1)
+
+      get "explorer/#{topic}/search?#{valid_search}"
+    end
+
+    it do
+      expect(response).to be_ok
+      expect(body).to include(breadcrumbs)
+      expect(body).to include(search_modal)
+      expect(body).to include('table')
+      expect(body).to include('Raw payload includes')
+      expect(body).to include('Search criteria:')
+      expect(body).to include('Total Messages Checked')
+      expect(body).to include('Partition 0')
+      expect(body).to include('Partition 1')
+      expect(body).to include(metadata_button)
+      expect(body).to include(search_metadata)
+      expect(body).to include(nothing_found)
+      expect(body).not_to include(no_search_criteria)
+      expect(body).not_to include(search_modal_errors)
+      expect(body).not_to include('matcher: is invalid')
+      expect(body).not_to include(pagination)
+      expect(body).not_to include(support_message)
+    end
+  end
+
+  context 'when searching a topic that has results after the start timestamp' do
+    let(:partitions) { 2 }
+    let(:valid_search) do
+      <<~SEARCH.tr("\n", '&')
+        search[matcher]=Raw+payload+includes
+        search[phrase]=find-me
+        search[partitions][]=all
+        search[offset_type]=timestamp
+        search[timestamp]=#{((Time.now.to_f - 100) * 1_000).to_i}
+        search[limit]=1000
+      SEARCH
+    end
+
+    before do
+      produce_many(topic, %w[find-me also-find-me find-me-and], partition: 0)
+      produce_many(topic, %w[find-me also-find-me find-me-and], partition: 1)
+
+      get "explorer/#{topic}/search?#{valid_search}"
+    end
+
+    it do
+      expect(response).to be_ok
+      expect(body).to include(breadcrumbs)
+      expect(body).to include(search_modal)
+      expect(body).to include('table')
+      expect(body).to include('Raw payload includes')
+      expect(body).to include('Search criteria:')
+      expect(body).to include('Total Messages Checked')
+      expect(body).to include('Partition 0')
+      expect(body).to include('Partition 1')
+      expect(body).to include(metadata_button)
+      expect(body).to include(search_metadata)
+      expect(body).to include('<td>6</td>')
+      expect(body).not_to include(nothing_found)
       expect(body).not_to include(no_search_criteria)
       expect(body).not_to include(search_modal_errors)
       expect(body).not_to include('matcher: is invalid')
