@@ -34,6 +34,8 @@ module Karafka
                   nested(:search) do
                     required(:matchers) { |val| val.is_a?(Array) && !val.empty? }
 
+                    required(:timeout) { |val| val.is_a?(Integer) && val.positive? }
+
                     # Users can define their own search limits and we just make sure they do not
                     # do something weird like negative numbers
                     required(:limits) do |val|

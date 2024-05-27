@@ -128,3 +128,15 @@ a.sort {
   word-wrap: break-word;
   word-break: break-word;
 }
+
+.modal-locked {
+  pointer-events: none;
+}
+
+.modal-locked .modal-dialog {
+  pointer-events: all;
+}
+
+.modal-locked .modal-header .btn-close {
+  display: none;
+}

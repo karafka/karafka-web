@@ -10,7 +10,8 @@ RSpec.describe_current do
       ui: {
         search: {
           matchers: [matcher],
-          limits: [100, 1000, 10_000]
+          limits: [100, 1000, 10_000],
+          timeout: 100
         }
       }
     }
@@ -100,6 +101,18 @@ RSpec.describe_current do
 
   context 'when limits contains non-numbers' do
     before { params[:ui][:search][:limits] = ['na'] }
+
+    it { expect(contract.call(params)).not_to be_success }
+  end
+
+  context 'when timeout is not an integer' do
+    before { params[:ui][:search][:timeout] = [] }
+
+    it { expect(contract.call(params)).not_to be_success }
+  end
+
+  context 'when timeout is not positive' do
+    before { params[:ui][:search][:timeout] = 0 }
 
     it { expect(contract.call(params)).not_to be_success }
   end

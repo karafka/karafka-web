@@ -28,8 +28,15 @@ module Karafka
                 Matchers::RawHeaderIncludes
               ]
 
+              # How long should we at most search before stopping (in ms)
+              # This prevents us from having a search that would basically hang the browser and
+              # never finish
+              setting :timeout, default: 30_000
+
               # Search limits as the search runs in Puma
               # Too big value will make the scan really slow
+              # We do not put a max limit here because those values are used in a select in
+              # the Web UI.
               setting :limits, default: [
                 1_000,
                 10_000,

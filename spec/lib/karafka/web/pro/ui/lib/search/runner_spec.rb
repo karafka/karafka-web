@@ -21,26 +21,17 @@ RSpec.describe_current do
     let(:matcher_instance) { Karafka::Web::Pro::Ui::Lib::Search::Matchers::RawPayloadIncludes.new }
     let(:iterator_instance) { instance_double('Karafka::Pro::Iterator') }
 
-    let(:message1) do
-      instance_double(
-        Karafka::Messages::Message,
-        partition: 0,
-        offset: 0,
-        timestamp: (Time.now.to_f * 1_000).to_i,
-        clean!: nil,
-        raw_payload: ''
-      )
-    end
-
-    let(:message2) do
-      instance_double(
-        Karafka::Messages::Message,
-        partition: 1,
-        offset: 1,
-        timestamp: (Time.now.to_f * 1_000).to_i,
-        clean!: nil,
-        raw_payload: ''
-      )
+    4.times do |i|
+      let(:"message#{i + 1}") do
+        instance_double(
+          Karafka::Messages::Message,
+          partition: i % 2,
+          offset: i,
+          timestamp: Time.now - 10,
+          clean!: nil,
+          raw_payload: ''
+        )
+      end
     end
 
     before do
@@ -55,6 +46,8 @@ RSpec.describe_current do
         .to receive(:each)
         .and_yield(message1)
         .and_yield(message2)
+        .and_yield(message3)
+        .and_yield(message4)
 
       allow(iterator_instance)
         .to receive(:stop)
@@ -76,7 +69,7 @@ RSpec.describe_current do
       it 'collects the correct metrics' do
         runner.call
 
-        expect(runner.instance_variable_get(:@totals_stats)[:checked]).to eq(2)
+        expect(runner.instance_variable_get(:@totals_stats)[:checked]).to eq(4)
         expect(runner.instance_variable_get(:@totals_stats)[:matched]).to eq(0)
       end
 
@@ -88,7 +81,7 @@ RSpec.describe_current do
         it 'adds the message to the matched results' do
           results, = runner.call
 
-          expect(results.size).to eq(2)
+          expect(results.size).to eq(4)
         end
       end
 
@@ -105,14 +98,14 @@ RSpec.describe_current do
       end
 
       context 'when the checked limit for a partition reach the limit' do
-        let(:search_criteria) { super().merge(limit: 2) }
+        let(:search_criteria) { super().merge(limit: 3) }
 
         before { allow(iterator_instance).to receive(:stop_current_partition) }
 
         it 'stops the current partition in the iterator' do
           runner.call
 
-          expect(iterator_instance).to have_received(:stop_current_partition)
+          expect(iterator_instance).to have_received(:stop_current_partition).at_least(:once)
         end
       end
     end

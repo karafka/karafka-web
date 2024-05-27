@@ -60,6 +60,8 @@ module Karafka
                 @search_criteria = search_criteria
                 @partitions_stats = Hash.new { |h, k| h[k] = METRICS_BASE.dup }
                 @totals_stats = METRICS_BASE.dup
+                @timeout = Web.config.ui.search.timeout
+                @stop_reason = nil
                 @matched = []
               end
 
@@ -75,7 +77,8 @@ module Karafka
                   @matched.sort_by(&:timestamp).reverse,
                   {
                     totals: @totals_stats,
-                    partitions: @partitions_stats
+                    partitions: @partitions_stats,
+                    stop_reason: @stop_reason
                   }.freeze
                 ]
               end
@@ -139,12 +142,24 @@ module Karafka
                 started_at_time = Time.now
 
                 per_partition = (limit / partitions_to_search.size)
+                # Ensure that in case we have a limit smaller than number of partitions, we check
+                # at least one message (if any) per partition
+                per_partition = 1 if per_partition.zero?
 
                 iterator.each do |message|
                   @current_partition = message.partition
 
                   # If we reached the total limit of messages we should check per request
-                  if @totals_stats[:checked] > limit
+                  # If we are running search for too long, we should also stop. This prevents
+                  # a case where slow matcher would cause Web UI to hang and never finish
+                  if @totals_stats[:checked] >= limit
+                    @stop_reason = :limit
+                    iterator.stop
+                    next
+                  end
+
+                  if (monotonic_now - started_at) > @timeout
+                    @stop_reason = :timeout
                     iterator.stop
                     next
                   end
@@ -153,8 +168,8 @@ module Karafka
                   # should stop. We do not go beyond the moment if time of the moment when
                   # the lookup started to prevent endless lookups on partitions that have a lot
                   # of messages being written to them in real time
-                  if current_stats[:checked] > per_partition ||
-                     message.timestamp >= started_at_time
+                  if current_stats[:checked] >= per_partition ||
+                     message.timestamp > started_at_time
                     iterator.stop_current_partition
                     next
                   end
@@ -173,6 +188,10 @@ module Karafka
 
                   message.clean!
                 end
+
+                @stop_reason ||= :eof
+
+                iterator.stop
 
                 @totals_stats[:time_taken] = monotonic_now - started_at
               end

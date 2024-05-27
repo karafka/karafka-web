@@ -13,6 +13,7 @@ en:
       ui.search.matchers_format: must be an array with matchers
       ui.search.matchers_name_must_be_valid: all matchers names must be non-empty strings
       ui.search.limits_format: all limits need to be integers bigger than 0
+      ui.search.max_timeout_format: must be at least 1 ms
 
     search_form:
       missing: needs to be present
