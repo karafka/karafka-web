@@ -27,7 +27,19 @@ module Karafka
               # @note This does not validate the raw input from the HTML but one that was slightly
               #   normalized to simplify the flow.
               class Form < Web::Contracts::Base
-                configure
+                configure do |config|
+                  config.error_messages = YAML.safe_load(
+                    File.read(
+                      File.join(Karafka::Web.gem_root, 'config', 'locales', 'pro_errors.yml')
+                    )
+                  ).fetch('en').fetch('validations').fetch('search_form')
+                end
+
+                # Minimum timestamp value when timestamps are used
+                # 2001-09-09. This value selected because it is older than Kafka and it looks nice
+                MIN_TIMESTAMP = 1_000_000_000
+
+                private_constant :MIN_TIMESTAMP
 
                 # What are we looking for
                 required(:phrase) { |val| val.is_a?(String) && !val.empty? }
@@ -71,6 +83,23 @@ module Karafka
                   next false if val.empty?
 
                   val.all? { |ar_val| ar_val.is_a?(String) }
+                end
+
+                # Special validation for timestamp to make sure it is not older than 2010
+                # Since Kafka is not that old, timestamps should never be less than that.
+                # While all the others will use standard "is invalid" because they also have a
+                # frontend HTML5 validation. This one is specific because we want to allow setting
+                # 0 as long as we don't select the timestamp as a value. Then we want to make sure
+                # that user provides the message timestamp which is in ms
+                virtual do |data, errors|
+                  next unless errors.empty?
+                  # Validate only if we decide to go with timestamp. Otherwise this value is
+                  # irrelevant
+                  next unless data[:offset_type] == 'timestamp'
+
+                  next if data[:timestamp] >= MIN_TIMESTAMP
+
+                  [[%i[timestamp], :key_must_be_large_enough]]
                 end
               end
             end

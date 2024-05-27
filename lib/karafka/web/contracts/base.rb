@@ -10,6 +10,8 @@ module Karafka
           # This layer is not for users extensive feedback, thus we can easily use the minimum
           # error messaging there is.
           def configure
+            return super if block_given?
+
             super do |config|
               config.error_messages = YAML.safe_load(
                 File.read(
