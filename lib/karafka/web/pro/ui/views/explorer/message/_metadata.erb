@@ -33,7 +33,28 @@
           )
         %>
 
-        <% @message.metadata.to_h.except(:received_at, :raw_key, :raw_headers, :message).each do |k, v| %>
+        <%==
+          partial(
+            'explorer/messages/detail',
+            locals: {
+              k: 'time',
+              v: @message.timestamp
+            }
+          )
+        %>
+
+        <%==
+          partial(
+            'explorer/messages/detail',
+            locals: {
+              k: 'timestamp',
+              v: (@message.timestamp.to_f * 1_000).to_i
+            }
+          )
+        %>
+
+        <% special = %i[received_at timestamp raw_key raw_headers message deserializers] %>
+        <% @message.metadata.to_h.except(*special).each do |k, v| %>
           <%==
             partial(
               'explorer/messages/detail',
@@ -44,6 +65,36 @@
             )
           %>
         <% end %>
+
+        <%==
+          partial(
+            'explorer/messages/detail',
+            locals: {
+              k: 'deserializers.payload',
+              v: @message.metadata.deserializers.payload
+            }
+          )
+        %>
+
+        <%==
+          partial(
+            'explorer/messages/detail',
+            locals: {
+              k: 'deserializers.headers',
+              v: @message.metadata.deserializers.headers
+            }
+          )
+        %>
+
+        <%==
+          partial(
+            'explorer/messages/detail',
+            locals: {
+              k: 'deserializers.key',
+              v: @message.metadata.deserializers.key
+            }
+          )
+        %>
 
         <%==
           partial(

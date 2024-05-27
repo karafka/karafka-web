@@ -24,9 +24,18 @@ module Karafka
               @request_params = request_params
             end
 
+            # @return [Hash] current search or empty if no search query present
+            def current_search
+              return @current_search if @current_search
+
+              search = @request_params['search']
+
+              @current_search = search.is_a?(Hash) ? search : {}
+            end
+
             # @return [String] sort query value
-            def sort
-              @sort ||= @request_params['sort'].to_s.downcase
+            def current_sort
+              @current_sort ||= @request_params['sort'].to_s.downcase
             end
 
             # @return [Integer] current page for paginated views

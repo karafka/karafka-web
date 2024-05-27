@@ -6,6 +6,30 @@ module Karafka
       module Helpers
         # Helper for web ui paths builders
         module PathsHelper
+          # Helper method to flatten nested hashes and arrays
+          # @param prefix [String] The prefix for nested keys, initially an empty string.
+          # @param hash [Hash, Array] The nested hash or array to be flattened.
+          # @param [Hash] result The hash to store the flattened key-value pairs.
+          # @return [Hash] The flattened hash with keys in bracket notation suitable for URL
+          #   encoding.
+          def flatten_params(prefix, hash, result = {})
+            if hash.is_a?(Hash)
+              hash.each do |k, v|
+                new_prefix = prefix.empty? ? k.to_s : "#{prefix}[#{k}]"
+                flatten_params(new_prefix, v, result)
+              end
+            elsif hash.is_a?(Array)
+              hash.each_with_index do |v, i|
+                new_prefix = "#{prefix}[#{i}]"
+                flatten_params(new_prefix, v, result)
+              end
+            else
+              result[prefix] = hash.to_s
+            end
+
+            result
+          end
+
           # Generates a full path with the root path out of the provided arguments
           #
           # @param args [Array<String, Numeric>] arguments that will make the path

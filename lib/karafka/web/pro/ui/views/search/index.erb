@@ -1,0 +1,33 @@
+<%== partial 'search/title' %>
+
+<%== partial 'search/search_criteria' %>
+
+<% unless @search_criteria %>
+  <%== partial 'search/no_search_criteria' %>
+<% end %>
+
+<% if @messages && @search_details[:stop_reason] == :timeout %>
+  <%== partial 'search/timeout' %>
+<% end %>
+
+<% if @errors.any? %>
+  <%== partial 'search/fix_errors' %>
+<% elsif @messages %>
+  <div class="container">
+    <%== partial 'search/metadata' %>
+
+    <div class="row mb-5">
+      <div class="col-sm-12">
+        <% if @messages.empty? && params.current_page == 1 %>
+          <%== partial 'search/no_results' %>
+        <% elsif @messages.empty? %>
+          <%== partial 'shared/no_paginated_data' %>
+        <% else %>
+          <%== partial('explorer/partition/messages') %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<%== partial 'search/search_modal' %>

@@ -1,0 +1,48 @@
+<div class="container mb-4">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="row">
+        <div class="col col-md-3">
+          <button
+            type="button"
+            class="btn btn-secondary btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#messages-search-modal"
+          >
+            &#x1F50D; Edit
+          </button>
+
+
+          <% if @search_criteria && @errors.empty? %>
+            <button
+              class="btn btn-secondary btn-sm"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#search-metadata-details"
+              id="toggle-search-metadata-btn"
+            >
+              Metadata
+            </button>
+          <% end %>
+        </div>
+
+        <div class="col col-md-9 text-end">
+          <% if @search_criteria && @errors.empty? %>
+            Search criteria:
+
+            <% params.current_search.each do |key, values| %>
+              <span class="badge bg-secondary badge-custom">
+                <%= key.gsub('_', ' ') %>:
+                <% if values.is_a?(Hash) %>
+                  <%= Array(values.values).join(', ') %>
+                <% else %>
+                  <%= Array(values).join(', ') %>
+                <% end %>
+              </span>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

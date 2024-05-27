@@ -25,6 +25,11 @@ module Karafka
             config.instance_eval do
               setting(:commanding, default: Commanding::Config.config)
             end
+
+            # Expand UI config with extra search capabilities settings
+            config.ui.instance_eval do
+              setting(:search, default: Ui::Lib::Search::Config.config)
+            end
           end
 
           # Runs post setup features configuration operations
@@ -32,6 +37,7 @@ module Karafka
           # @param config [Karafka::Core::Configurable::Node]
           def post_setup_all(config)
             Commanding.post_setup(config)
+            Ui::Lib::Search.post_setup(config)
           end
         end
       end

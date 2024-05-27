@@ -7,6 +7,8 @@
   open3
   zlib
   securerandom
+  cgi
+  uri
 ].each { |lib| require lib }
 
 module Karafka

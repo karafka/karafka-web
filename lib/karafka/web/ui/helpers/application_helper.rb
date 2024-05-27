@@ -151,6 +151,27 @@ module Karafka
             %(<span title="#{stamp}">#{time}</span>)
           end
 
+          # Converts raw second count into human readable form like "12.2 minutes". etc based on
+          # number of seconds
+          #
+          # @param seconds [Numeric] number of seconds
+          # @return [String] human readable time
+          def human_readable_time(seconds)
+            case seconds
+            when 0..59
+              "#{seconds.round(2)} seconds"
+            when 60..3_599
+              minutes = seconds / 60.0
+              "#{minutes.round(2)} minutes"
+            when 3_600..86_399
+              hours = seconds / 3_600.0
+              "#{hours.round(2)} hours"
+            else
+              days = seconds / 86_400.0
+              "#{days.round(2)} days"
+            end
+          end
+
           # @param state [String] poll state
           # @param state_ch [Integer] time until next change of the poll state
           #   (from paused to active)
@@ -295,12 +316,12 @@ module Karafka
             path = current_path(sort: desc)
             full_name = "#{name}&nbsp;#{arrow_both}"
 
-            if params.sort == desc
+            if params.current_sort == desc
               path = current_path(sort: asc)
               full_name = "#{name}&nbsp;#{rev ? arrow_up : arrow_down}"
             end
 
-            if params.sort == asc
+            if params.current_sort == asc
               path = current_path(sort: desc)
               full_name = "#{name}&nbsp;#{rev ? arrow_down : arrow_up}"
             end

@@ -7,6 +7,7 @@ RSpec.describe_current do
   let(:partitions) { 1 }
   let(:removed_or_compacted) { 'This offset does not contain any data.' }
   let(:internal_topic) { "__#{SecureRandom.uuid}" }
+  let(:search_button) { 'title="Search in this topic"' }
 
   describe '#index' do
     before do
@@ -75,6 +76,7 @@ RSpec.describe_current do
         expect(body).to include(breadcrumbs)
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
+        expect(body).not_to include(search_button)
       end
     end
 
@@ -88,6 +90,7 @@ RSpec.describe_current do
         expect(response).to be_ok
         expect(body).to include('total: 1')
         expect(body).to include(breadcrumbs)
+        expect(body).to include(search_button)
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
       end
@@ -153,6 +156,7 @@ RSpec.describe_current do
         expect(body).to include("#{topic}/0/6")
         expect(body).to include("#{topic}/0/29")
         expect(body).to include(compacted_or_transactional_offset)
+        expect(body).to include(search_button)
         expect(body).not_to include("#{topic}/0/30")
         expect(body).not_to include("#{topic}/0/4")
         expect(body).not_to include(support_message)
@@ -271,6 +275,7 @@ RSpec.describe_current do
         expect(body).to include('low: 0')
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
+        expect(body).not_to include(search_button)
       end
     end
 
@@ -286,6 +291,7 @@ RSpec.describe_current do
         expect(body).to include('Watermark offsets')
         expect(body).to include('high: 1')
         expect(body).to include('low: 0')
+        expect(body).to include(search_button)
         expect(body).not_to include(no_data)
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)

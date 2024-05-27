@@ -128,15 +128,17 @@ module Karafka
         # the query data. Query data takes priority over request params.
         # @param query_data [Hash] query params we want to add to the current path
         path :current do |query_data = {}|
-          q = query_data
-              .transform_values(&:to_s)
-              .transform_keys(&:to_s)
-              .then { |candidates| request.params.merge(candidates) }
-              .select { |_, v| v }
-              .map { |k, v| "#{k}=#{CGI.escape(v.to_s)}" }
-              .join('&')
+          # Merge existing request parameters with new query data
+          merged_params = request.params.deep_merge(query_data)
 
-          [request.path, q].compact.delete_if(&:empty?).join('?')
+          # Flatten the merged parameters
+          flattened_params = flatten_params('', merged_params)
+
+          # Build the query string from the flattened parameters
+          query_string = URI.encode_www_form(flattened_params)
+
+          # Construct the full path with query string
+          [request.path, query_string].compact.join('?')
         end
 
         # Sets appropriate template variables based on the response object and renders the
