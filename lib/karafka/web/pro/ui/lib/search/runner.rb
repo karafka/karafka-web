@@ -20,13 +20,18 @@ module Karafka
             # Search runner that selects proper matcher, sets the parameters and runs the search
             # We use the Pro Iterator for searching but this runner adds metadata tracking and
             # some other metrics that are useful in the Web UI
+            #
+            # @note When running a search from latest, we stop when message timestamp is higher
+            #   then the time when lookup started. This prevents us from iterating on topics for
+            #   an extended time period when there are less messages than the requested amount but
+            #   new are coming in real time. It acts as a virtual "eof".
             class Runner
               include Karafka::Core::Helpers::Time
 
               # Metrics we collect during search for each partition + totals
               METRICS_BASE = {
-                first_offset: -1,
-                last_offset: -1,
+                first_message: false,
+                last_message: false,
                 checked: 0,
                 matched: 0
               }.freeze
@@ -131,19 +136,33 @@ module Karafka
               # It uses the selected search matcher.
               def search_with_stats
                 started_at = monotonic_now
+                started_at_time = Time.now
 
                 per_partition = (limit / partitions_to_search.size)
 
                 iterator.each do |message|
                   @current_partition = message.partition
 
+                  # If we reached the total limit of messages we should check per request
+                  if @totals_stats[:checked] > limit
+                    iterator.stop
+                    next
+                  end
+
+                  # If we checked enough per this partition or we reached the current time we
+                  # should stop. We do not go beyond the moment if time of the moment when
+                  # the lookup started to prevent endless lookups on partitions that have a lot
+                  # of messages being written to them in real time
+                  if current_stats[:checked] > per_partition ||
+                     message.timestamp >= started_at_time
+                    iterator.stop_current_partition
+                    next
+                  end
+
                   @totals_stats[:checked] += 1
                   current_stats[:checked] += 1
-                  current_stats[:last_offset] = message.offset
-
-                  if current_stats[:first_offset].negative?
-                    current_stats[:first_offset] = message.offset
-                  end
+                  current_stats[:first_message] ||= message
+                  current_stats[:last_message] = message
 
                   if current_matcher.call(message, phrase)
                     @matched << message
@@ -153,16 +172,6 @@ module Karafka
                   end
 
                   message.clean!
-
-                  if @totals_stats[:checked] >= limit
-                    iterator.stop
-                    next
-                  end
-
-                  if current_stats[:checked] >= per_partition
-                    iterator.stop_current_partition
-                    next
-                  end
                 end
 
                 @totals_stats[:time_taken] = monotonic_now - started_at
