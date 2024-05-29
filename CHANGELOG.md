@@ -9,9 +9,11 @@
 - [Enhancement] Improve how charts with many topics work.
 - [Enhancement] Count and display executed jobs independently from processed batches.
 - [Enhancement] Prevent karafka-web from being configured before karafka is configured.
+- [Enhancement] Use `ostruct` from RubyGems in testing.
 - [Refactor] Namespace migrations so migrations related to each topic data are in an independent directory.
 - [Fix] Fix invalid deserialization metadata display in the per-message Explorer view.
 - [Fix] Fix a case where started page refresh would update content despite limiters being in place.
+- [Fix] Ruby 3.4.0 preview1 - No such file or directory.
 
 ## 0.9.1 (2024-05-03)
 - [Fix] OSS `lag_stored` for not-subscribed consumers causes Web UI to crash.

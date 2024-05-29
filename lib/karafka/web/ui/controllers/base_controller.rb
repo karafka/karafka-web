@@ -33,7 +33,7 @@ module Karafka
             attributes = {}
 
             scope = self.class.to_s.split('::').last.gsub(/(.)([A-Z])/, '\1_\2').downcase.gsub('_controller', '')
-            action = caller_locations(1, 1)[0].label
+            action = caller_locations(1, 1)[0].label.split('#').last
 
             instance_variables.each do |iv|
               next if iv.to_s.start_with?('@_')
