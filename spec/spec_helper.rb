@@ -3,6 +3,7 @@
 require 'factory_bot'
 require 'simplecov'
 require 'rack/test'
+require 'ostruct'
 
 # Are we running regular specs or pro specs
 SPECS_TYPE = ENV.fetch('SPECS_TYPE', 'default')
