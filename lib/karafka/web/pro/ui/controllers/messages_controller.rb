@@ -28,6 +28,8 @@ module Karafka
             def republish(topic_id, partition_id, offset)
               message = Models::Message.find(topic_id, partition_id, offset)
 
+              deny! unless visibility_filter.republish?(message)
+
               delivery = ::Karafka::Web.producer.produce_sync(
                 topic: topic_id,
                 partition: partition_id,
@@ -50,8 +52,7 @@ module Karafka
             def download(topic_id, partition_id, offset)
               message = Models::Message.find(topic_id, partition_id, offset)
 
-              # Check if downloads are allowed
-              return deny unless visibility_filter.download?(message)
+              deny! unless visibility_filter.download?(message)
 
               file(
                 message.raw_payload,
@@ -73,7 +74,7 @@ module Karafka
               message = Models::Message.find(topic_id, partition_id, offset)
 
               # Check if exports are allowed
-              return deny unless visibility_filter.export?(message)
+              deny! unless visibility_filter.export?(message)
 
               file(
                 message.payload.to_json,
@@ -96,7 +97,7 @@ module Karafka
 
             # @return [Object] visibility filter. Either default or user-based
             def visibility_filter
-              ::Karafka::Web.config.ui.visibility.filter
+              ::Karafka::Web.config.ui.policies.messages
             end
           end
         end

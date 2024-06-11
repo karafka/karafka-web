@@ -1,7 +1,9 @@
 # Karafka Web changelog
 
 ## 0.10.0 (Unreleased)
+- **[Breaking]** Rename and reorganize visibility filter to policies engine since it is not only about visibility.
 - **[Feature]** Provide Search capabilities in the Explorer (Pro).
+- [Enhancement] Allow disabling ability to republish messages via policies.
 - [Enhancement] Display raw numerical timestamp alongside message time.
 - [Enhancement] Support `/topics` root redirect.
 - [Enhancement] Prevent explorer from displaying too big payloads (bigger than 1MB by default)
@@ -11,6 +13,7 @@
 - [Enhancement] Prevent karafka-web from being configured before karafka is configured.
 - [Enhancement] Use `ostruct` from RubyGems in testing.
 - [Refactor] Namespace migrations so migrations related to each topic data are in an independent directory.
+- [Refactor] Use errors for deny flow so request denials can occur from the inspection layer.
 - [Fix] Fix invalid deserialization metadata display in the per-message Explorer view.
 - [Fix] Fix a case where started page refresh would update content despite limiters being in place.
 - [Fix] Ruby 3.4.0 preview1 - No such file or directory.

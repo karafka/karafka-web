@@ -65,7 +65,6 @@ module Karafka
           end
 
           nested(:visibility) do
-            required(:filter) { |val| !val.nil? }
             required(:internal_topics) { |val| [true, false].include?(val) }
             required(:active_topics_cluster_lags_only) { |val| [true, false].include?(val) }
           end

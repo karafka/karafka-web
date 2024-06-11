@@ -29,6 +29,7 @@ module Karafka
             # Expand UI config with extra search capabilities settings
             config.ui.instance_eval do
               setting(:search, default: Ui::Lib::Search::Config.config)
+              setting(:policies, default: Ui::Lib::Policies::Config.config)
             end
           end
 
@@ -38,6 +39,7 @@ module Karafka
           def post_setup_all(config)
             Commanding.post_setup(config)
             Ui::Lib::Search.post_setup(config)
+            Ui::Lib::Policies.post_setup(config)
           end
         end
       end

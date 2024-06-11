@@ -40,7 +40,6 @@ RSpec.describe_current do
           secret: 'a' * 64
         },
         visibility: {
-          filter: Object.new,
           internal_topics: true,
           active_topics_cluster_lags_only: true
         },
@@ -173,12 +172,6 @@ RSpec.describe_current do
 
     context 'when per_page is less than 1' do
       before { params[:ui][:per_page] = 0 }
-
-      it { expect(contract.call(params)).not_to be_success }
-    end
-
-    context 'when visibility_filter is nil' do
-      before { params[:ui][:visibility][:filter] = nil }
 
       it { expect(contract.call(params)).not_to be_success }
     end
