@@ -31,6 +31,24 @@ RSpec.describe_current do
         expect(republished.raw_payload).to eq(payload)
       end
     end
+
+    context 'when message exists but republishing is off' do
+      let(:payload) { rand.to_s }
+
+      before do
+        allow(::Karafka::Web.config.ui.policies.messages)
+          .to receive(:republish?)
+          .and_return(false)
+
+        produce(topic, payload)
+        post "messages/#{topic}/0/0/republish"
+      end
+
+      it do
+        expect(response).not_to be_ok
+        expect(response.status).to eq(403)
+      end
+    end
   end
 
   describe '#download' do
@@ -65,7 +83,7 @@ RSpec.describe_current do
       let(:payload) { rand.to_s }
 
       before do
-        allow(::Karafka::Web.config.ui.visibility.filter)
+        allow(::Karafka::Web.config.ui.policies.messages)
           .to receive(:download?)
           .and_return(false)
 
@@ -139,7 +157,7 @@ RSpec.describe_current do
       let(:payload) { rand.to_s }
 
       before do
-        allow(::Karafka::Web.config.ui.visibility.filter)
+        allow(::Karafka::Web.config.ui.policies.messages)
           .to receive(:export?)
           .and_return(false)
 

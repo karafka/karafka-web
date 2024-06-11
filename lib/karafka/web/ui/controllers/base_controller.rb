@@ -66,9 +66,11 @@ module Karafka
             Responses::File.new(content, file_name)
           end
 
-          # Builds a halt 403 response
-          def deny
-            Responses::Deny.new
+          # Raises the deny error so we can render a deny block
+          # We handle this that way so we can raise this from any place we want as long as within
+          # the Roda flow and not only from controllers
+          def deny!
+            raise Errors::Ui::ForbiddenError
           end
 
           # @param resources [Hash, Array, Lib::HashProxy] object for sorting

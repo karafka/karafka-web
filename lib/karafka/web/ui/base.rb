@@ -60,12 +60,6 @@ module Karafka
           render_response(result)
         end
 
-        handle_block_result Controllers::Responses::Deny do
-          @error = true
-          response.status = 403
-          view 'shared/exceptions/not_allowed'
-        end
-
         # Redirect either to referer back or to the desired path
         handle_block_result Controllers::Responses::Redirect do |result|
           # Map redirect flashes (if any) to Roda flash messages
@@ -84,13 +78,18 @@ module Karafka
         plugin :error_handler, classes: [
           ::Rdkafka::RdkafkaError,
           Errors::Ui::NotFoundError,
-          Errors::Ui::ProOnlyError
+          Errors::Ui::ProOnlyError,
+          Errors::Ui::ForbiddenError
         ] do |e|
           @error = true
 
-          if e.is_a?(Errors::Ui::ProOnlyError)
+          case e
+          when Errors::Ui::ProOnlyError
             response.status = 402
             view 'shared/exceptions/pro_only'
+          when Errors::Ui::ForbiddenError
+            response.status = 403
+            view 'shared/exceptions/not_allowed'
           else
             response.status = 404
             view 'shared/exceptions/not_found'

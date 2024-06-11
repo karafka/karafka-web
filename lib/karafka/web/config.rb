@@ -139,11 +139,6 @@ module Karafka
         )
 
         setting :visibility do
-          # Allows to manage visibility of payload, headers and message key in the UI
-          # In some cases you may want to limit what is being displayed due to the type of data you
-          # are dealing with
-          setting :filter, default: Ui::Models::VisibilityFilter.new
-
           # Should we display internal topics of Kafka. The once starting with `__`
           # By default we do not display them as they are not usable from regular users perspective
           setting :internal_topics, default: false

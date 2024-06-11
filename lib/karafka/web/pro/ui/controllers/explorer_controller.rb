@@ -43,7 +43,7 @@ module Karafka
             # @note We cannot use offset references here because each of the partitions may have
             #   completely different values
             def topic(topic_id)
-              @visibility_filter = ::Karafka::Web.config.ui.visibility.filter
+              @visibility_filter = ::Karafka::Web.config.ui.policies.messages
 
               @topic_id = topic_id
               @partitions_count = Models::ClusterInfo.partitions_count(topic_id)
@@ -66,7 +66,7 @@ module Karafka
             # @param topic_id [String]
             # @param partition_id [Integer]
             def partition(topic_id, partition_id)
-              @visibility_filter = ::Karafka::Web.config.ui.visibility.filter
+              @visibility_filter = ::Karafka::Web.config.ui.policies.messages
               @topic_id = topic_id
               @partition_id = partition_id
               @watermark_offsets = Models::WatermarkOffsets.find(topic_id, partition_id)
@@ -94,7 +94,7 @@ module Karafka
             def show(topic_id, partition_id, offset, paginate: true)
               Lib::PatternsDetector.new.call
 
-              @visibility_filter = ::Karafka::Web.config.ui.visibility.filter
+              @visibility_filter = ::Karafka::Web.config.ui.policies.messages
               @topic_id = topic_id
               @partition_id = partition_id
               @offset = offset

@@ -71,6 +71,9 @@ module Karafka
 
         # Raised whe a given feature is available for Pro but not pro used
         ProOnlyError = Class.new(BaseError)
+
+        # Raised when we want to stop the flow and render 403
+        ForbiddenError = Class.new(BaseError)
       end
     end
   end

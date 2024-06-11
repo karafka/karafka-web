@@ -10,9 +10,11 @@
       Surrounding
     </a>
 
-    <form action="<%= republish_path %>" method="post" class="confirm-action float-end">
-      <%== csrf_tag(republish_path) %>
-      <input type="submit" value="&#10227; Republish" class="btn btn-primary btn-sm"/>
-    </form>
+    <% if @visibility_filter.republish?(@message) %>
+      <form action="<%= republish_path %>" method="post" class="confirm-action float-end">
+        <%== csrf_tag(republish_path) %>
+        <input type="submit" value="&#10227; Republish" class="btn btn-primary btn-sm"/>
+      </form>
+    <% end %>
   </div>
 </div>
