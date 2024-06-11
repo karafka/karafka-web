@@ -115,4 +115,22 @@ RSpec.describe_current do
       expect(body).not_to include(only_pro_feature)
     end
   end
+
+  # https://github.com/karafka/karafka-web/issues/321
+  context 'when there are gaps in pace' do
+    before do
+      topics_config.consumers.states = states_topic
+      topics_config.consumers.metrics = metrics_topic
+
+      ::Karafka::Web::Management::Actions::CreateInitialStates.new.call
+      produce(metrics_topic, Fixtures.consumers_metrics_file('v1.3.0_pace_gaps.json'))
+      ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
+
+      get 'dashboard'
+    end
+
+    it do
+      expect(response).to be_ok
+    end
+  end
 end
