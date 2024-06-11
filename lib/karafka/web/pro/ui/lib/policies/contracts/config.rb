@@ -33,6 +33,7 @@ module Karafka
                 nested(:ui) do
                   nested(:policies) do
                     required(:messages) { |val| !val.nil? }
+                    required(:requests) { |val| !val.nil? }
                   end
                 end
               end
