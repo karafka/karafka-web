@@ -53,7 +53,7 @@ module Karafka
               # @note There is a case where data reported (sum on a topic) is lower then the
               #   previous value. This can happen around rebalances because consumer may not
               #   have all watermark offsets reported. This may cause consumers not to report some
-              #   of the partitions, effectively lowering the sum. Since highwatermark offsets can
+              #   of the partitions, effectively lowering the sum. Since high-watermark offsets can
               #   only move forward, we compensate this by assuming that a lower value than
               #   previous is an artefact of that type and we replace it with the max value we had
               #   effectively compensating for under-reporting

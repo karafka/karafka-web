@@ -116,7 +116,7 @@ RSpec.describe_current do
     end
   end
 
-  # https://github.com/karafka/karafka-web/issues/321
+  # https://github.com/karafka/karafka-web/issues/356
   context 'when there are gaps in pace' do
     before do
       topics_config.consumers.states = states_topic
