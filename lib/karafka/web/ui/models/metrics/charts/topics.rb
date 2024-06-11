@@ -48,7 +48,15 @@ module Karafka
               end
 
               # @return [String] JSON with producers pace that represents high-watermarks sum for
-              #   each topic
+              #   each topic.
+              #
+              # @note There is a case where data reported (sum on a topic) is lower then the
+              #   previous value. This can happen around rebalances because consumer may not
+              #   have all watermark offsets reported. This may cause consumers not to report some
+              #   of the partitions, effectively lowering the sum. Since high-watermark offsets can
+              #   only move forward, we compensate this by assuming that a lower value than
+              #   previous is an artefact of that type and we replace it with the max value we had
+              #   effectively compensating for under-reporting
               def topics_pace
                 topics = {}
 
@@ -58,8 +66,16 @@ module Karafka
                   # If we've already seen this topic data, we can skip
                   next if topics.include?(topic_without_cg)
 
+                  max_pace = 0
+
                   topics[topic_without_cg] = metrics.map do |current|
-                    [current.first, current.last[:pace]]
+                    # Pace may be empty when for a given moment in time we got no info on
+                    # one of the topics. In such case we can compensate with max or 0
+                    current_pace = current.last[:pace] || 0
+
+                    max_pace = current_pace if current_pace > max_pace
+
+                    [current.first, max_pace]
                   end
                 end
 

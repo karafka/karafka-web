@@ -1,0 +1,5618 @@
+{
+  "schema_version": "1.3.0",
+  "aggregated": {
+    "days": [
+      [
+        1718111203,
+        {
+          "batches": 10,
+          "messages": 10,
+          "retries": 0,
+          "dead": 0,
+          "busy": 5,
+          "enqueued": 45,
+          "workers": 5,
+          "processes": 1,
+          "rss": 177684,
+          "listeners": {
+            "active": 51,
+            "standby": 0
+          },
+          "utilization": 8.302045339021815,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0,
+          "lag_hybrid": 0,
+          "jobs": 10
+        }
+      ],
+      [
+        1718119298,
+        {
+          "batches": 21690,
+          "messages": 48295,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 349152,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 18.503305821112907,
+          "errors": 0,
+          "bytes_sent": 1630,
+          "bytes_received": 2727,
+          "waiting": 0,
+          "lag_hybrid": 9,
+          "jobs": 21812
+        }
+      ]
+    ],
+    "hours": [
+      [
+        1718111203,
+        {
+          "batches": 10,
+          "messages": 10,
+          "retries": 0,
+          "dead": 0,
+          "busy": 5,
+          "enqueued": 45,
+          "workers": 5,
+          "processes": 1,
+          "rss": 177684,
+          "listeners": {
+            "active": 51,
+            "standby": 0
+          },
+          "utilization": 8.302045339021815,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0,
+          "lag_hybrid": 0,
+          "jobs": 10
+        }
+      ],
+      [
+        1718112602,
+        {
+          "batches": 2551,
+          "messages": 16814,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 5,
+          "processes": 1,
+          "rss": 115908,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 16.692567785966357,
+          "errors": 0,
+          "bytes_sent": 1150,
+          "bytes_received": 1738,
+          "waiting": 0,
+          "lag_hybrid": 7,
+          "jobs": 2608
+        }
+      ],
+      [
+        1718116413,
+        {
+          "batches": 2844,
+          "messages": 18404,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 5,
+          "processes": 1,
+          "rss": 91716,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 0,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0,
+          "lag_hybrid": 0,
+          "jobs": 2903
+        }
+      ],
+      [
+        1718118000,
+        {
+          "batches": 12871,
+          "messages": 34686,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 348300,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.925537790879734,
+          "errors": 0,
+          "bytes_sent": 1638,
+          "bytes_received": 2702,
+          "waiting": 0,
+          "lag_hybrid": 7,
+          "jobs": 12955
+        }
+      ],
+      [
+        1718119298,
+        {
+          "batches": 21690,
+          "messages": 48295,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 349152,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 18.503305821112907,
+          "errors": 0,
+          "bytes_sent": 1630,
+          "bytes_received": 2727,
+          "waiting": 0,
+          "lag_hybrid": 9,
+          "jobs": 21812
+        }
+      ]
+    ],
+    "minutes": [
+      [
+        1718112122,
+        {
+          "batches": 1667,
+          "messages": 11943,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 117480,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 41.72943918418038,
+          "errors": 0,
+          "bytes_sent": 1149,
+          "bytes_received": 1740,
+          "waiting": 0,
+          "lag_hybrid": 6,
+          "jobs": 1722
+        }
+      ],
+      [
+        1718112182,
+        {
+          "batches": 1779,
+          "messages": 12553,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 117848,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 41.30935143920631,
+          "errors": 0,
+          "bytes_sent": 1160,
+          "bytes_received": 1760,
+          "waiting": 0,
+          "lag_hybrid": 11,
+          "jobs": 1834
+        }
+      ],
+      [
+        1718112242,
+        {
+          "batches": 1891,
+          "messages": 13164,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 118208,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 41.308515206482454,
+          "errors": 0,
+          "bytes_sent": 1160,
+          "bytes_received": 1755,
+          "waiting": 0,
+          "lag_hybrid": 8,
+          "jobs": 1946
+        }
+      ],
+      [
+        1718112303,
+        {
+          "batches": 2003,
+          "messages": 13774,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 118216,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 41.72882583901568,
+          "errors": 0,
+          "bytes_sent": 1151,
+          "bytes_received": 1747,
+          "waiting": 0,
+          "lag_hybrid": 6,
+          "jobs": 2058
+        }
+      ],
+      [
+        1718112363,
+        {
+          "batches": 2116,
+          "messages": 14391,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 118480,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 41.72605780153732,
+          "errors": 0,
+          "bytes_sent": 1159,
+          "bytes_received": 1756,
+          "waiting": 0,
+          "lag_hybrid": 5,
+          "jobs": 2171
+        }
+      ],
+      [
+        1718112423,
+        {
+          "batches": 2228,
+          "messages": 15002,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 118848,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 41.72406560265413,
+          "errors": 0,
+          "bytes_sent": 1160,
+          "bytes_received": 1757,
+          "waiting": 0,
+          "lag_hybrid": 9,
+          "jobs": 2283
+        }
+      ],
+      [
+        1718112482,
+        {
+          "batches": 2337,
+          "messages": 15594,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 2,
+          "processes": 1,
+          "rss": 119112,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 41.73130287200861,
+          "errors": 0,
+          "bytes_sent": 1152,
+          "bytes_received": 1745,
+          "waiting": 0,
+          "lag_hybrid": 8,
+          "jobs": 2392
+        }
+      ],
+      [
+        1718112541,
+        {
+          "batches": 2438,
+          "messages": 16198,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 5,
+          "processes": 1,
+          "rss": 114412,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 15.76753853127977,
+          "errors": 0,
+          "bytes_sent": 1158,
+          "bytes_received": 1748,
+          "waiting": 0,
+          "lag_hybrid": 8,
+          "jobs": 2495
+        }
+      ],
+      [
+        1718112602,
+        {
+          "batches": 2551,
+          "messages": 16814,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 5,
+          "processes": 1,
+          "rss": 115908,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 16.692567785966357,
+          "errors": 0,
+          "bytes_sent": 1150,
+          "bytes_received": 1738,
+          "waiting": 0,
+          "lag_hybrid": 7,
+          "jobs": 2608
+        }
+      ],
+      [
+        1718112662,
+        {
+          "batches": 2663,
+          "messages": 17425,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 5,
+          "processes": 1,
+          "rss": 116520,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 16.690995616364216,
+          "errors": 0,
+          "bytes_sent": 1164,
+          "bytes_received": 1757,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 2720
+        }
+      ],
+      [
+        1718112722,
+        {
+          "batches": 2775,
+          "messages": 18036,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 5,
+          "processes": 1,
+          "rss": 119980,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 16.691423483746444,
+          "errors": 0,
+          "bytes_sent": 1164,
+          "bytes_received": 1758,
+          "waiting": 0,
+          "lag_hybrid": 8,
+          "jobs": 2832
+        }
+      ],
+      [
+        1718116413,
+        {
+          "batches": 2844,
+          "messages": 18404,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 5,
+          "processes": 1,
+          "rss": 91716,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 0,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0,
+          "lag_hybrid": 0,
+          "jobs": 2903
+        }
+      ],
+      [
+        1718116443,
+        {
+          "batches": 2890,
+          "messages": 18640,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 5,
+          "processes": 1,
+          "rss": 112416,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 12.64781362447986,
+          "errors": 0,
+          "bytes_sent": 1051,
+          "bytes_received": 1571,
+          "waiting": 0,
+          "lag_hybrid": 6,
+          "jobs": 2949
+        }
+      ],
+      [
+        1718116503,
+        {
+          "batches": 3176,
+          "messages": 19241,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 5,
+          "processes": 1,
+          "rss": 116140,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 45.10797437308602,
+          "errors": 0,
+          "bytes_sent": 1891,
+          "bytes_received": 2895,
+          "waiting": 0,
+          "lag_hybrid": 9,
+          "jobs": 3236
+        }
+      ],
+      [
+        1718116564,
+        {
+          "batches": 3571,
+          "messages": 19854,
+          "retries": 0,
+          "dead": 0,
+          "busy": 5,
+          "enqueued": 0,
+          "workers": 5,
+          "processes": 1,
+          "rss": 120592,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 63.82914888426904,
+          "errors": 0,
+          "bytes_sent": 2286,
+          "bytes_received": 3495,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 3631
+        }
+      ],
+      [
+        1718116624,
+        {
+          "batches": 3941,
+          "messages": 20461,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 5,
+          "processes": 1,
+          "rss": 121296,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 60.65118587959117,
+          "errors": 0,
+          "bytes_sent": 2285,
+          "bytes_received": 3487,
+          "waiting": 0,
+          "lag_hybrid": 6,
+          "jobs": 4001
+        }
+      ],
+      [
+        1718116681,
+        {
+          "batches": 4287,
+          "messages": 21025,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 10,
+          "processes": 2,
+          "rss": 213356,
+          "listeners": {
+            "active": 4,
+            "standby": 0
+          },
+          "utilization": 30.247626436465342,
+          "errors": 0,
+          "bytes_sent": 2293,
+          "bytes_received": 3497,
+          "waiting": 0,
+          "lag_hybrid": 7,
+          "jobs": 4347
+        }
+      ],
+      [
+        1718116740,
+        {
+          "batches": 4669,
+          "messages": 21641,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 10,
+          "processes": 2,
+          "rss": 236184,
+          "listeners": {
+            "active": 4,
+            "standby": 0
+          },
+          "utilization": 30.584727440332202,
+          "errors": 0,
+          "bytes_sent": 1797,
+          "bytes_received": 2840,
+          "waiting": 0,
+          "lag_hybrid": 11,
+          "jobs": 4735
+        }
+      ],
+      [
+        1718116800,
+        {
+          "batches": 5067,
+          "messages": 22261,
+          "retries": 0,
+          "dead": 0,
+          "busy": 5,
+          "enqueued": 0,
+          "workers": 10,
+          "processes": 2,
+          "rss": 237468,
+          "listeners": {
+            "active": 4,
+            "standby": 0
+          },
+          "utilization": 30.897210270095368,
+          "errors": 0,
+          "bytes_sent": 1760,
+          "bytes_received": 2792,
+          "waiting": 0,
+          "lag_hybrid": 9,
+          "jobs": 5133
+        }
+      ],
+      [
+        1718116860,
+        {
+          "batches": 5457,
+          "messages": 22885,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 10,
+          "processes": 2,
+          "rss": 240364,
+          "listeners": {
+            "active": 4,
+            "standby": 0
+          },
+          "utilization": 30.312888267574564,
+          "errors": 0,
+          "bytes_sent": 1754,
+          "bytes_received": 2777,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 5523
+        }
+      ],
+      [
+        1718116921,
+        {
+          "batches": 5852,
+          "messages": 23507,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 10,
+          "processes": 2,
+          "rss": 241180,
+          "listeners": {
+            "active": 4,
+            "standby": 0
+          },
+          "utilization": 30.73024154072981,
+          "errors": 0,
+          "bytes_sent": 1747,
+          "bytes_received": 2770,
+          "waiting": 0,
+          "lag_hybrid": 8,
+          "jobs": 5918
+        }
+      ],
+      [
+        1718116981,
+        {
+          "batches": 6249,
+          "messages": 24129,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 10,
+          "processes": 2,
+          "rss": 241976,
+          "listeners": {
+            "active": 4,
+            "standby": 0
+          },
+          "utilization": 31.065793565485293,
+          "errors": 0,
+          "bytes_sent": 1745,
+          "bytes_received": 2778,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 6315
+        }
+      ],
+      [
+        1718117041,
+        {
+          "batches": 6645,
+          "messages": 24759,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 10,
+          "processes": 2,
+          "rss": 241976,
+          "listeners": {
+            "active": 4,
+            "standby": 0
+          },
+          "utilization": 30.8137488653248,
+          "errors": 0,
+          "bytes_sent": 1746,
+          "bytes_received": 2772,
+          "waiting": 0,
+          "lag_hybrid": 13,
+          "jobs": 6711
+        }
+      ],
+      [
+        1718117101,
+        {
+          "batches": 7034,
+          "messages": 25377,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 10,
+          "processes": 2,
+          "rss": 243172,
+          "listeners": {
+            "active": 4,
+            "standby": 0
+          },
+          "utilization": 30.39956954873216,
+          "errors": 0,
+          "bytes_sent": 1760,
+          "bytes_received": 2794,
+          "waiting": 0,
+          "lag_hybrid": 7,
+          "jobs": 7100
+        }
+      ],
+      [
+        1718117162,
+        {
+          "batches": 7424,
+          "messages": 26004,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 10,
+          "processes": 2,
+          "rss": 243188,
+          "listeners": {
+            "active": 4,
+            "standby": 0
+          },
+          "utilization": 30.47442123047274,
+          "errors": 0,
+          "bytes_sent": 1744,
+          "bytes_received": 2756,
+          "waiting": 0,
+          "lag_hybrid": 7,
+          "jobs": 7490
+        }
+      ],
+      [
+        1718117222,
+        {
+          "batches": 7821,
+          "messages": 26626,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 10,
+          "processes": 2,
+          "rss": 243188,
+          "listeners": {
+            "active": 4,
+            "standby": 0
+          },
+          "utilization": 31.31124756219909,
+          "errors": 0,
+          "bytes_sent": 1758,
+          "bytes_received": 2782,
+          "waiting": 0,
+          "lag_hybrid": 11,
+          "jobs": 7887
+        }
+      ],
+      [
+        1718117280,
+        {
+          "batches": 8191,
+          "messages": 27226,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 10,
+          "processes": 2,
+          "rss": 243252,
+          "listeners": {
+            "active": 4,
+            "standby": 0
+          },
+          "utilization": 30.39613817917566,
+          "errors": 0,
+          "bytes_sent": 1759,
+          "bytes_received": 2793,
+          "waiting": 0,
+          "lag_hybrid": 9,
+          "jobs": 8257
+        }
+      ],
+      [
+        1718117340,
+        {
+          "batches": 8595,
+          "messages": 27847,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 10,
+          "processes": 2,
+          "rss": 243516,
+          "listeners": {
+            "active": 4,
+            "standby": 0
+          },
+          "utilization": 31.56745412851427,
+          "errors": 0,
+          "bytes_sent": 1765,
+          "bytes_received": 2811,
+          "waiting": 0,
+          "lag_hybrid": 9,
+          "jobs": 8661
+        }
+      ],
+      [
+        1718117400,
+        {
+          "batches": 8990,
+          "messages": 28466,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 10,
+          "processes": 2,
+          "rss": 243624,
+          "listeners": {
+            "active": 4,
+            "standby": 0
+          },
+          "utilization": 30.90072454175295,
+          "errors": 0,
+          "bytes_sent": 1715,
+          "bytes_received": 2733,
+          "waiting": 0,
+          "lag_hybrid": 8,
+          "jobs": 9056
+        }
+      ],
+      [
+        1718117461,
+        {
+          "batches": 9388,
+          "messages": 29095,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 10,
+          "processes": 2,
+          "rss": 244056,
+          "listeners": {
+            "active": 4,
+            "standby": 0
+          },
+          "utilization": 30.898979919969143,
+          "errors": 0,
+          "bytes_sent": 1744,
+          "bytes_received": 2772,
+          "waiting": 0,
+          "lag_hybrid": 6,
+          "jobs": 9454
+        }
+      ],
+      [
+        1718117521,
+        {
+          "batches": 9782,
+          "messages": 29720,
+          "retries": 0,
+          "dead": 0,
+          "busy": 5,
+          "enqueued": 0,
+          "workers": 10,
+          "processes": 2,
+          "rss": 244248,
+          "listeners": {
+            "active": 4,
+            "standby": 0
+          },
+          "utilization": 30.484181865065093,
+          "errors": 0,
+          "bytes_sent": 1749,
+          "bytes_received": 2778,
+          "waiting": 0,
+          "lag_hybrid": 6,
+          "jobs": 9848
+        }
+      ],
+      [
+        1718117581,
+        {
+          "batches": 10163,
+          "messages": 30340,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 10,
+          "processes": 2,
+          "rss": 244512,
+          "listeners": {
+            "active": 4,
+            "standby": 0
+          },
+          "utilization": 29.814383999227694,
+          "errors": 0,
+          "bytes_sent": 1755,
+          "bytes_received": 2788,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 10229
+        }
+      ],
+      [
+        1718117642,
+        {
+          "batches": 10558,
+          "messages": 30962,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 10,
+          "processes": 2,
+          "rss": 244556,
+          "listeners": {
+            "active": 4,
+            "standby": 0
+          },
+          "utilization": 30.892307745497067,
+          "errors": 0,
+          "bytes_sent": 1750,
+          "bytes_received": 2756,
+          "waiting": 0,
+          "lag_hybrid": 14,
+          "jobs": 10624
+        }
+      ],
+      [
+        1718117700,
+        {
+          "batches": 10935,
+          "messages": 31559,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 10,
+          "processes": 2,
+          "rss": 244632,
+          "listeners": {
+            "active": 4,
+            "standby": 0
+          },
+          "utilization": 30.642528397407997,
+          "errors": 0,
+          "bytes_sent": 1725,
+          "bytes_received": 2741,
+          "waiting": 0,
+          "lag_hybrid": 8,
+          "jobs": 11001
+        }
+      ],
+      [
+        1718117760,
+        {
+          "batches": 11318,
+          "messages": 32188,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 10,
+          "processes": 2,
+          "rss": 244632,
+          "listeners": {
+            "active": 4,
+            "standby": 0
+          },
+          "utilization": 29.81348387200047,
+          "errors": 0,
+          "bytes_sent": 1752,
+          "bytes_received": 2777,
+          "waiting": 0,
+          "lag_hybrid": 7,
+          "jobs": 11384
+        }
+      ],
+      [
+        1718117820,
+        {
+          "batches": 11698,
+          "messages": 32814,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 10,
+          "processes": 2,
+          "rss": 244896,
+          "listeners": {
+            "active": 4,
+            "standby": 0
+          },
+          "utilization": 29.479893644620976,
+          "errors": 0,
+          "bytes_sent": 1754,
+          "bytes_received": 2775,
+          "waiting": 0,
+          "lag_hybrid": 8,
+          "jobs": 11764
+        }
+      ],
+      [
+        1718117881,
+        {
+          "batches": 12084,
+          "messages": 33440,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 10,
+          "processes": 2,
+          "rss": 245148,
+          "listeners": {
+            "active": 4,
+            "standby": 0
+          },
+          "utilization": 30.063168396622434,
+          "errors": 0,
+          "bytes_sent": 1743,
+          "bytes_received": 2763,
+          "waiting": 0,
+          "lag_hybrid": 9,
+          "jobs": 12150
+        }
+      ],
+      [
+        1718117942,
+        {
+          "batches": 12475,
+          "messages": 34078,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 341380,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 24.701063990381442,
+          "errors": 0,
+          "bytes_sent": 1936,
+          "bytes_received": 3348,
+          "waiting": 0,
+          "lag_hybrid": 13,
+          "jobs": 12559
+        }
+      ],
+      [
+        1718118000,
+        {
+          "batches": 12871,
+          "messages": 34686,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 348300,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.925537790879734,
+          "errors": 0,
+          "bytes_sent": 1638,
+          "bytes_received": 2702,
+          "waiting": 0,
+          "lag_hybrid": 7,
+          "jobs": 12955
+        }
+      ],
+      [
+        1718118060,
+        {
+          "batches": 13285,
+          "messages": 35329,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 352616,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.92970080523115,
+          "errors": 0,
+          "bytes_sent": 1671,
+          "bytes_received": 2737,
+          "waiting": 0,
+          "lag_hybrid": 9,
+          "jobs": 13369
+        }
+      ],
+      [
+        1718118120,
+        {
+          "batches": 13702,
+          "messages": 35963,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 354248,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.09347193828907,
+          "errors": 0,
+          "bytes_sent": 1676,
+          "bytes_received": 2755,
+          "waiting": 0,
+          "lag_hybrid": 6,
+          "jobs": 13786
+        }
+      ],
+      [
+        1718118181,
+        {
+          "batches": 14120,
+          "messages": 36598,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 354924,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.09365628554874,
+          "errors": 0,
+          "bytes_sent": 1652,
+          "bytes_received": 2713,
+          "waiting": 0,
+          "lag_hybrid": 9,
+          "jobs": 14204
+        }
+      ],
+      [
+        1718118240,
+        {
+          "batches": 14531,
+          "messages": 37219,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355664,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.537832985037902,
+          "errors": 0,
+          "bytes_sent": 1664,
+          "bytes_received": 2735,
+          "waiting": 0,
+          "lag_hybrid": 12,
+          "jobs": 14615
+        }
+      ],
+      [
+        1718118300,
+        {
+          "batches": 14934,
+          "messages": 37869,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 341420,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.513101133320315,
+          "errors": 0,
+          "bytes_sent": 1794,
+          "bytes_received": 2938,
+          "waiting": 0,
+          "lag_hybrid": 6,
+          "jobs": 15030
+        }
+      ],
+      [
+        1718118360,
+        {
+          "batches": 15358,
+          "messages": 38503,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 350332,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.372446807815212,
+          "errors": 0,
+          "bytes_sent": 1663,
+          "bytes_received": 2735,
+          "waiting": 0,
+          "lag_hybrid": 13,
+          "jobs": 15454
+        }
+      ],
+      [
+        1718118421,
+        {
+          "batches": 15775,
+          "messages": 39144,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 351536,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.036519394735947,
+          "errors": 0,
+          "bytes_sent": 1639,
+          "bytes_received": 2699,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 15871
+        }
+      ],
+      [
+        1718118481,
+        {
+          "batches": 16195,
+          "messages": 39782,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355476,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.810843638827656,
+          "errors": 0,
+          "bytes_sent": 1642,
+          "bytes_received": 2714,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 16291
+        }
+      ],
+      [
+        1718118541,
+        {
+          "batches": 16610,
+          "messages": 40417,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355744,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.643095089751025,
+          "errors": 0,
+          "bytes_sent": 1655,
+          "bytes_received": 2714,
+          "waiting": 0,
+          "lag_hybrid": 13,
+          "jobs": 16706
+        }
+      ],
+      [
+        1718118602,
+        {
+          "batches": 17025,
+          "messages": 41051,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355748,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.698173516146568,
+          "errors": 0,
+          "bytes_sent": 1663,
+          "bytes_received": 2743,
+          "waiting": 0,
+          "lag_hybrid": 13,
+          "jobs": 17121
+        }
+      ],
+      [
+        1718118662,
+        {
+          "batches": 17450,
+          "messages": 41686,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 360032,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.705013647406144,
+          "errors": 0,
+          "bytes_sent": 1654,
+          "bytes_received": 2725,
+          "waiting": 0,
+          "lag_hybrid": 7,
+          "jobs": 17546
+        }
+      ],
+      [
+        1718118722,
+        {
+          "batches": 17875,
+          "messages": 42328,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 360956,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.483375687107156,
+          "errors": 0,
+          "bytes_sent": 1643,
+          "bytes_received": 2711,
+          "waiting": 0,
+          "lag_hybrid": 11,
+          "jobs": 17971
+        }
+      ],
+      [
+        1718118780,
+        {
+          "batches": 18289,
+          "messages": 42948,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 361032,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.59515858009116,
+          "errors": 0,
+          "bytes_sent": 1660,
+          "bytes_received": 2731,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 18385
+        }
+      ],
+      [
+        1718118840,
+        {
+          "batches": 18703,
+          "messages": 43589,
+          "retries": 0,
+          "dead": 0,
+          "busy": 5,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 361052,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.759308123410282,
+          "errors": 0,
+          "bytes_sent": 1644,
+          "bytes_received": 2707,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 18799
+        }
+      ],
+      [
+        1718118902,
+        {
+          "batches": 19110,
+          "messages": 44244,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 343220,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.014501249424328,
+          "errors": 0,
+          "bytes_sent": 1774,
+          "bytes_received": 2930,
+          "waiting": 0,
+          "lag_hybrid": 8,
+          "jobs": 19220
+        }
+      ],
+      [
+        1718118963,
+        {
+          "batches": 19516,
+          "messages": 44883,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 348712,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.087039918826317,
+          "errors": 0,
+          "bytes_sent": 1648,
+          "bytes_received": 2709,
+          "waiting": 0,
+          "lag_hybrid": 11,
+          "jobs": 19626
+        }
+      ],
+      [
+        1718119023,
+        {
+          "batches": 19923,
+          "messages": 45524,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 354108,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.253981096390124,
+          "errors": 0,
+          "bytes_sent": 1660,
+          "bytes_received": 2745,
+          "waiting": 0,
+          "lag_hybrid": 11,
+          "jobs": 20033
+        }
+      ],
+      [
+        1718119083,
+        {
+          "batches": 20328,
+          "messages": 46160,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355024,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.14154550322795,
+          "errors": 0,
+          "bytes_sent": 1649,
+          "bytes_received": 2692,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 20438
+        }
+      ],
+      [
+        1718119140,
+        {
+          "batches": 20714,
+          "messages": 46778,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355332,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.641296141166396,
+          "errors": 0,
+          "bytes_sent": 1638,
+          "bytes_received": 2701,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 20824
+        }
+      ],
+      [
+        1718119200,
+        {
+          "batches": 21116,
+          "messages": 47402,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 357976,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.309674308468043,
+          "errors": 0,
+          "bytes_sent": 1669,
+          "bytes_received": 2744,
+          "waiting": 0,
+          "lag_hybrid": 11,
+          "jobs": 21226
+        }
+      ],
+      [
+        1718119260,
+        {
+          "batches": 21446,
+          "messages": 47924,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 5,
+          "processes": 1,
+          "rss": 123300,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 11.349968882086706,
+          "errors": 0,
+          "bytes_sent": 310,
+          "bytes_received": 416,
+          "waiting": 0,
+          "lag_hybrid": 0,
+          "jobs": 21562
+        }
+      ],
+      [
+        1718119298,
+        {
+          "batches": 21690,
+          "messages": 48295,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 349152,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 18.503305821112907,
+          "errors": 0,
+          "bytes_sent": 1630,
+          "bytes_received": 2727,
+          "waiting": 0,
+          "lag_hybrid": 9,
+          "jobs": 21812
+        }
+      ]
+    ],
+    "seconds": [
+      [
+        1718119003,
+        {
+          "batches": 19785,
+          "messages": 45313,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 350800,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.197814534783667,
+          "errors": 0,
+          "bytes_sent": 1642,
+          "bytes_received": 2716,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 19895
+        }
+      ],
+      [
+        1718119008,
+        {
+          "batches": 19820,
+          "messages": 45364,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 353704,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.031151057182385,
+          "errors": 0,
+          "bytes_sent": 1655,
+          "bytes_received": 2735,
+          "waiting": 0,
+          "lag_hybrid": 11,
+          "jobs": 19930
+        }
+      ],
+      [
+        1718119013,
+        {
+          "batches": 19858,
+          "messages": 45422,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 354092,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.476719635875416,
+          "errors": 0,
+          "bytes_sent": 1656,
+          "bytes_received": 2740,
+          "waiting": 0,
+          "lag_hybrid": 8,
+          "jobs": 19968
+        }
+      ],
+      [
+        1718119018,
+        {
+          "batches": 19889,
+          "messages": 45471,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 354108,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.198651666830795,
+          "errors": 0,
+          "bytes_sent": 1663,
+          "bytes_received": 2749,
+          "waiting": 0,
+          "lag_hybrid": 11,
+          "jobs": 19999
+        }
+      ],
+      [
+        1718119023,
+        {
+          "batches": 19923,
+          "messages": 45524,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 354108,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.253981096390124,
+          "errors": 0,
+          "bytes_sent": 1660,
+          "bytes_received": 2745,
+          "waiting": 0,
+          "lag_hybrid": 11,
+          "jobs": 20033
+        }
+      ],
+      [
+        1718119028,
+        {
+          "batches": 19957,
+          "messages": 45576,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 354380,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.086918998755053,
+          "errors": 0,
+          "bytes_sent": 1648,
+          "bytes_received": 2724,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 20067
+        }
+      ],
+      [
+        1718119033,
+        {
+          "batches": 19988,
+          "messages": 45624,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 354464,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.641556421258738,
+          "errors": 0,
+          "bytes_sent": 1628,
+          "bytes_received": 2692,
+          "waiting": 0,
+          "lag_hybrid": 13,
+          "jobs": 20098
+        }
+      ],
+      [
+        1718119038,
+        {
+          "batches": 20023,
+          "messages": 45679,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 354620,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.919652764665265,
+          "errors": 0,
+          "bytes_sent": 1664,
+          "bytes_received": 2745,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 20133
+        }
+      ],
+      [
+        1718119043,
+        {
+          "batches": 20059,
+          "messages": 45737,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 354620,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.476357747608766,
+          "errors": 0,
+          "bytes_sent": 1660,
+          "bytes_received": 2737,
+          "waiting": 0,
+          "lag_hybrid": 13,
+          "jobs": 20169
+        }
+      ],
+      [
+        1718119048,
+        {
+          "batches": 20093,
+          "messages": 45790,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 354620,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.310282525195785,
+          "errors": 0,
+          "bytes_sent": 1660,
+          "bytes_received": 2718,
+          "waiting": 0,
+          "lag_hybrid": 8,
+          "jobs": 20203
+        }
+      ],
+      [
+        1718119053,
+        {
+          "batches": 20127,
+          "messages": 45843,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 354620,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.476731728062674,
+          "errors": 0,
+          "bytes_sent": 1651,
+          "bytes_received": 2707,
+          "waiting": 0,
+          "lag_hybrid": 11,
+          "jobs": 20237
+        }
+      ],
+      [
+        1718119058,
+        {
+          "batches": 20161,
+          "messages": 45898,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 354744,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.47647343493752,
+          "errors": 0,
+          "bytes_sent": 1670,
+          "bytes_received": 2734,
+          "waiting": 0,
+          "lag_hybrid": 14,
+          "jobs": 20271
+        }
+      ],
+      [
+        1718119063,
+        {
+          "batches": 20193,
+          "messages": 45947,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 354744,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.30922418463838,
+          "errors": 0,
+          "bytes_sent": 1656,
+          "bytes_received": 2710,
+          "waiting": 0,
+          "lag_hybrid": 16,
+          "jobs": 20303
+        }
+      ],
+      [
+        1718119068,
+        {
+          "batches": 20230,
+          "messages": 45999,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355016,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.42024890463356,
+          "errors": 0,
+          "bytes_sent": 1644,
+          "bytes_received": 2689,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 20340
+        }
+      ],
+      [
+        1718119073,
+        {
+          "batches": 20268,
+          "messages": 46057,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355016,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.419908410277433,
+          "errors": 0,
+          "bytes_sent": 1657,
+          "bytes_received": 2706,
+          "waiting": 0,
+          "lag_hybrid": 9,
+          "jobs": 20378
+        }
+      ],
+      [
+        1718119078,
+        {
+          "batches": 20299,
+          "messages": 46115,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355024,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.419648618450065,
+          "errors": 0,
+          "bytes_sent": 1650,
+          "bytes_received": 2694,
+          "waiting": 0,
+          "lag_hybrid": 5,
+          "jobs": 20409
+        }
+      ],
+      [
+        1718119083,
+        {
+          "batches": 20328,
+          "messages": 46160,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355024,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.14154550322795,
+          "errors": 0,
+          "bytes_sent": 1649,
+          "bytes_received": 2692,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 20438
+        }
+      ],
+      [
+        1718119088,
+        {
+          "batches": 20358,
+          "messages": 46210,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355024,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.863708400390422,
+          "errors": 0,
+          "bytes_sent": 1657,
+          "bytes_received": 2701,
+          "waiting": 0,
+          "lag_hybrid": 13,
+          "jobs": 20468
+        }
+      ],
+      [
+        1718119093,
+        {
+          "batches": 20392,
+          "messages": 46267,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355024,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.142044969422685,
+          "errors": 0,
+          "bytes_sent": 1673,
+          "bytes_received": 2725,
+          "waiting": 0,
+          "lag_hybrid": 12,
+          "jobs": 20502
+        }
+      ],
+      [
+        1718119098,
+        {
+          "batches": 20424,
+          "messages": 46314,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355024,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.86408149019519,
+          "errors": 0,
+          "bytes_sent": 1644,
+          "bytes_received": 2683,
+          "waiting": 0,
+          "lag_hybrid": 9,
+          "jobs": 20534
+        }
+      ],
+      [
+        1718119103,
+        {
+          "batches": 20459,
+          "messages": 46374,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355032,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.975455699037923,
+          "errors": 0,
+          "bytes_sent": 1646,
+          "bytes_received": 2702,
+          "waiting": 0,
+          "lag_hybrid": 12,
+          "jobs": 20569
+        }
+      ],
+      [
+        1718119108,
+        {
+          "batches": 20492,
+          "messages": 46422,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355032,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.75240070345179,
+          "errors": 0,
+          "bytes_sent": 1651,
+          "bytes_received": 2708,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 20602
+        }
+      ],
+      [
+        1718119113,
+        {
+          "batches": 20528,
+          "messages": 46483,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355044,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.863855459750408,
+          "errors": 0,
+          "bytes_sent": 1633,
+          "bytes_received": 2677,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 20638
+        }
+      ],
+      [
+        1718119118,
+        {
+          "batches": 20557,
+          "messages": 46529,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355044,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.53022939361519,
+          "errors": 0,
+          "bytes_sent": 1640,
+          "bytes_received": 2692,
+          "waiting": 0,
+          "lag_hybrid": 11,
+          "jobs": 20667
+        }
+      ],
+      [
+        1718119120,
+        {
+          "batches": 20578,
+          "messages": 46565,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355044,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.418646945164813,
+          "errors": 0,
+          "bytes_sent": 1648,
+          "bytes_received": 2704,
+          "waiting": 0,
+          "lag_hybrid": 9,
+          "jobs": 20688
+        }
+      ],
+      [
+        1718119125,
+        {
+          "batches": 20607,
+          "messages": 46616,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355328,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.251818003909367,
+          "errors": 0,
+          "bytes_sent": 1647,
+          "bytes_received": 2711,
+          "waiting": 0,
+          "lag_hybrid": 8,
+          "jobs": 20717
+        }
+      ],
+      [
+        1718119130,
+        {
+          "batches": 20644,
+          "messages": 46671,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355332,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.251876861242767,
+          "errors": 0,
+          "bytes_sent": 1652,
+          "bytes_received": 2718,
+          "waiting": 0,
+          "lag_hybrid": 13,
+          "jobs": 20754
+        }
+      ],
+      [
+        1718119135,
+        {
+          "batches": 20681,
+          "messages": 46723,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355332,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.53030723876604,
+          "errors": 0,
+          "bytes_sent": 1641,
+          "bytes_received": 2700,
+          "waiting": 0,
+          "lag_hybrid": 9,
+          "jobs": 20791
+        }
+      ],
+      [
+        1718119140,
+        {
+          "batches": 20714,
+          "messages": 46778,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355332,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.641296141166396,
+          "errors": 0,
+          "bytes_sent": 1638,
+          "bytes_received": 2701,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 20824
+        }
+      ],
+      [
+        1718119145,
+        {
+          "batches": 20738,
+          "messages": 46814,
+          "retries": 0,
+          "dead": 0,
+          "busy": 5,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355332,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.474463333685197,
+          "errors": 0,
+          "bytes_sent": 1631,
+          "bytes_received": 2692,
+          "waiting": 0,
+          "lag_hybrid": 5,
+          "jobs": 20848
+        }
+      ],
+      [
+        1718119150,
+        {
+          "batches": 20772,
+          "messages": 46876,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355332,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.975501645323014,
+          "errors": 0,
+          "bytes_sent": 1644,
+          "bytes_received": 2706,
+          "waiting": 0,
+          "lag_hybrid": 7,
+          "jobs": 20882
+        }
+      ],
+      [
+        1718119155,
+        {
+          "batches": 20806,
+          "messages": 46926,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355332,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 20.8637943820723,
+          "errors": 0,
+          "bytes_sent": 1645,
+          "bytes_received": 2711,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 20916
+        }
+      ],
+      [
+        1718119160,
+        {
+          "batches": 20844,
+          "messages": 46978,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355332,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.03089559510402,
+          "errors": 0,
+          "bytes_sent": 1658,
+          "bytes_received": 2734,
+          "waiting": 0,
+          "lag_hybrid": 12,
+          "jobs": 20954
+        }
+      ],
+      [
+        1718119165,
+        {
+          "batches": 20876,
+          "messages": 47029,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355332,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.03049839504395,
+          "errors": 0,
+          "bytes_sent": 1631,
+          "bytes_received": 2694,
+          "waiting": 0,
+          "lag_hybrid": 6,
+          "jobs": 20986
+        }
+      ],
+      [
+        1718119170,
+        {
+          "batches": 20910,
+          "messages": 47083,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355332,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.03066008932006,
+          "errors": 0,
+          "bytes_sent": 1650,
+          "bytes_received": 2724,
+          "waiting": 0,
+          "lag_hybrid": 8,
+          "jobs": 21020
+        }
+      ],
+      [
+        1718119175,
+        {
+          "batches": 20943,
+          "messages": 47135,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355332,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.08652415514567,
+          "errors": 0,
+          "bytes_sent": 1645,
+          "bytes_received": 2713,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 21053
+        }
+      ],
+      [
+        1718119180,
+        {
+          "batches": 20976,
+          "messages": 47186,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355332,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.14240408486772,
+          "errors": 0,
+          "bytes_sent": 1640,
+          "bytes_received": 2701,
+          "waiting": 0,
+          "lag_hybrid": 11,
+          "jobs": 21086
+        }
+      ],
+      [
+        1718119185,
+        {
+          "batches": 21013,
+          "messages": 47241,
+          "retries": 0,
+          "dead": 0,
+          "busy": 5,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 355332,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.309473995325167,
+          "errors": 0,
+          "bytes_sent": 1627,
+          "bytes_received": 2684,
+          "waiting": 0,
+          "lag_hybrid": 6,
+          "jobs": 21123
+        }
+      ],
+      [
+        1718119190,
+        {
+          "batches": 21050,
+          "messages": 47304,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 357976,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.531882005753854,
+          "errors": 0,
+          "bytes_sent": 1657,
+          "bytes_received": 2730,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 21160
+        }
+      ],
+      [
+        1718119195,
+        {
+          "batches": 21078,
+          "messages": 47349,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 357976,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.142230651411026,
+          "errors": 0,
+          "bytes_sent": 1664,
+          "bytes_received": 2738,
+          "waiting": 0,
+          "lag_hybrid": 8,
+          "jobs": 21188
+        }
+      ],
+      [
+        1718119200,
+        {
+          "batches": 21116,
+          "messages": 47402,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 357976,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.309674308468043,
+          "errors": 0,
+          "bytes_sent": 1669,
+          "bytes_received": 2744,
+          "waiting": 0,
+          "lag_hybrid": 11,
+          "jobs": 21226
+        }
+      ],
+      [
+        1718119205,
+        {
+          "batches": 21147,
+          "messages": 47455,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 357976,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.365122404800285,
+          "errors": 0,
+          "bytes_sent": 1631,
+          "bytes_received": 2693,
+          "waiting": 0,
+          "lag_hybrid": 8,
+          "jobs": 21257
+        }
+      ],
+      [
+        1718119210,
+        {
+          "batches": 21178,
+          "messages": 47508,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 357976,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.08689339747965,
+          "errors": 0,
+          "bytes_sent": 1655,
+          "bytes_received": 2724,
+          "waiting": 0,
+          "lag_hybrid": 13,
+          "jobs": 21288
+        }
+      ],
+      [
+        1718119215,
+        {
+          "batches": 21220,
+          "messages": 47570,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 357976,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.25316037356402,
+          "errors": 0,
+          "bytes_sent": 1648,
+          "bytes_received": 2718,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 21330
+        }
+      ],
+      [
+        1718119220,
+        {
+          "batches": 21255,
+          "messages": 47623,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 357976,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.19737468168404,
+          "errors": 0,
+          "bytes_sent": 1652,
+          "bytes_received": 2723,
+          "waiting": 0,
+          "lag_hybrid": 6,
+          "jobs": 21365
+        }
+      ],
+      [
+        1718119225,
+        {
+          "batches": 21289,
+          "messages": 47677,
+          "retries": 0,
+          "dead": 0,
+          "busy": 4,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 357976,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.14185038274425,
+          "errors": 0,
+          "bytes_sent": 1652,
+          "bytes_received": 2719,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 21399
+        }
+      ],
+      [
+        1718119230,
+        {
+          "batches": 21323,
+          "messages": 47730,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 357976,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.364384953933794,
+          "errors": 0,
+          "bytes_sent": 1645,
+          "bytes_received": 2719,
+          "waiting": 0,
+          "lag_hybrid": 4,
+          "jobs": 21433
+        }
+      ],
+      [
+        1718119235,
+        {
+          "batches": 21356,
+          "messages": 47781,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 357976,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.308732846709777,
+          "errors": 0,
+          "bytes_sent": 1657,
+          "bytes_received": 2735,
+          "waiting": 0,
+          "lag_hybrid": 6,
+          "jobs": 21466
+        }
+      ],
+      [
+        1718119240,
+        {
+          "batches": 21390,
+          "messages": 47834,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 357976,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.47566962029941,
+          "errors": 0,
+          "bytes_sent": 1659,
+          "bytes_received": 2734,
+          "waiting": 0,
+          "lag_hybrid": 8,
+          "jobs": 21500
+        }
+      ],
+      [
+        1718119245,
+        {
+          "batches": 21424,
+          "messages": 47889,
+          "retries": 0,
+          "dead": 0,
+          "busy": 5,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 358236,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 21.364251459555994,
+          "errors": 0,
+          "bytes_sent": 1657,
+          "bytes_received": 2733,
+          "waiting": 0,
+          "lag_hybrid": 15,
+          "jobs": 21534
+        }
+      ],
+      [
+        1718119250,
+        {
+          "batches": 21439,
+          "messages": 47913,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 0,
+          "processes": 0,
+          "rss": 0,
+          "listeners": {
+            "active": 0,
+            "standby": 0
+          },
+          "utilization": 0,
+          "errors": 0,
+          "bytes_sent": 0,
+          "bytes_received": 0,
+          "waiting": 0,
+          "lag_hybrid": 0,
+          "jobs": 21552
+        }
+      ],
+      [
+        1718119255,
+        {
+          "batches": 21445,
+          "messages": 47923,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 5,
+          "processes": 1,
+          "rss": 123300,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 12.682514283329919,
+          "errors": 0,
+          "bytes_sent": 344,
+          "bytes_received": 449,
+          "waiting": 0,
+          "lag_hybrid": 2,
+          "jobs": 21561
+        }
+      ],
+      [
+        1718119260,
+        {
+          "batches": 21446,
+          "messages": 47924,
+          "retries": 0,
+          "dead": 0,
+          "busy": 0,
+          "enqueued": 0,
+          "workers": 5,
+          "processes": 1,
+          "rss": 123300,
+          "listeners": {
+            "active": 2,
+            "standby": 0
+          },
+          "utilization": 11.349968882086706,
+          "errors": 0,
+          "bytes_sent": 310,
+          "bytes_received": 416,
+          "waiting": 0,
+          "lag_hybrid": 0,
+          "jobs": 21562
+        }
+      ],
+      [
+        1718119265,
+        {
+          "batches": 21468,
+          "messages": 47958,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 308440,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 4.45266916189133,
+          "errors": 0,
+          "bytes_sent": 313,
+          "bytes_received": 436,
+          "waiting": 0,
+          "lag_hybrid": 3,
+          "jobs": 21590
+        }
+      ],
+      [
+        1718119270,
+        {
+          "batches": 21491,
+          "messages": 47995,
+          "retries": 0,
+          "dead": 0,
+          "busy": 5,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 338164,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 8.007709375857424,
+          "errors": 0,
+          "bytes_sent": 464,
+          "bytes_received": 681,
+          "waiting": 0,
+          "lag_hybrid": 4,
+          "jobs": 21613
+        }
+      ],
+      [
+        1718119275,
+        {
+          "batches": 21524,
+          "messages": 48049,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 339604,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 13.349541791001098,
+          "errors": 0,
+          "bytes_sent": 623,
+          "bytes_received": 1295,
+          "waiting": 0,
+          "lag_hybrid": 8,
+          "jobs": 21646
+        }
+      ],
+      [
+        1718119280,
+        {
+          "batches": 21561,
+          "messages": 48103,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 341316,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 15.737886162333663,
+          "errors": 0,
+          "bytes_sent": 1531,
+          "bytes_received": 2547,
+          "waiting": 0,
+          "lag_hybrid": 10,
+          "jobs": 21683
+        }
+      ],
+      [
+        1718119285,
+        {
+          "batches": 21598,
+          "messages": 48153,
+          "retries": 0,
+          "dead": 0,
+          "busy": 2,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 343840,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 17.071584228786133,
+          "errors": 0,
+          "bytes_sent": 1629,
+          "bytes_received": 2714,
+          "waiting": 0,
+          "lag_hybrid": 14,
+          "jobs": 21720
+        }
+      ],
+      [
+        1718119290,
+        {
+          "batches": 21631,
+          "messages": 48205,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 345104,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 17.50751658174185,
+          "errors": 0,
+          "bytes_sent": 1600,
+          "bytes_received": 2677,
+          "waiting": 0,
+          "lag_hybrid": 5,
+          "jobs": 21753
+        }
+      ],
+      [
+        1718119295,
+        {
+          "batches": 21667,
+          "messages": 48264,
+          "retries": 0,
+          "dead": 0,
+          "busy": 1,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 348304,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 18.407273000554518,
+          "errors": 0,
+          "bytes_sent": 1638,
+          "bytes_received": 2738,
+          "waiting": 0,
+          "lag_hybrid": 9,
+          "jobs": 21789
+        }
+      ],
+      [
+        1718119298,
+        {
+          "batches": 21690,
+          "messages": 48295,
+          "retries": 0,
+          "dead": 0,
+          "busy": 3,
+          "enqueued": 0,
+          "workers": 15,
+          "processes": 3,
+          "rss": 349152,
+          "listeners": {
+            "active": 6,
+            "standby": 0
+          },
+          "utilization": 18.503305821112907,
+          "errors": 0,
+          "bytes_sent": 1630,
+          "bytes_received": 2727,
+          "waiting": 0,
+          "lag_hybrid": 9,
+          "jobs": 21812
+        }
+      ]
+    ]
+  },
+  "consumer_groups": {
+    "days": [
+      [
+        1718111203,
+        {}
+      ],
+      [
+        1718119298,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 9,
+              "pace": 50793,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1689,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ]
+    ],
+    "hours": [
+      [
+        1718111203,
+        {}
+      ],
+      [
+        1718112602,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 7,
+              "pace": 20805,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 280,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718116413,
+        {}
+      ],
+      [
+        1718118000,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 908,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 7,
+              "pace": 38030,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119298,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 9,
+              "pace": 50793,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1689,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ]
+    ],
+    "minutes": [
+      [
+        1718112122,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 6,
+              "pace": 16024,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 184,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718112182,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 11,
+              "pace": 16621,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 196,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718112242,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 17217,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 208,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718112303,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 6,
+              "pace": 17814,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 220,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718112363,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 5,
+              "pace": 18411,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 232,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718112423,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 9,
+              "pace": 19008,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 244,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718112482,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 19605,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 256,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718112541,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 20208,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 268,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718112602,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 7,
+              "pace": 20805,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 280,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718112662,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 10,
+              "pace": 21401,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 293,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718112722,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 21998,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 305,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718116413,
+        {}
+      ],
+      [
+        1718116443,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 6,
+              "pace": 22548,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 320,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718116503,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 9,
+              "pace": 23182,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 332,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718116564,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 10,
+              "pace": 23778,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 345,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718116624,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 6,
+              "pace": 24375,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 357,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718116681,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 7,
+              "pace": 24923,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 368,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718116740,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 391,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 11,
+              "pace": 25517,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718116800,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 415,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 9,
+              "pace": 26111,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718116860,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 439,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 10,
+              "pace": 26708,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718116921,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 463,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 27304,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718116981,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 487,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 10,
+              "pace": 27899,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718117041,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 511,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 13,
+              "pace": 28499,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718117101,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 535,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 7,
+              "pace": 29096,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718117162,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 1,
+              "pace": 558,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 6,
+              "pace": 29693,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718117222,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 582,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 11,
+              "pace": 30290,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718117280,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 9,
+              "pace": 30859,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 606,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718117340,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 9,
+              "pace": 31455,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 630,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718117400,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 32040,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 654,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718117461,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 6,
+              "pace": 32644,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 678,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718117521,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 6,
+              "pace": 33275,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 702,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718117581,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 9,
+              "pace": 33871,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 1,
+              "pace": 726,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718117642,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 14,
+              "pace": 34469,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 749,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718117700,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 773,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 35059,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718117760,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 797,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 7,
+              "pace": 35656,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718117820,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 821,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 36257,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718117881,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 845,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 9,
+              "pace": 36855,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718117942,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 13,
+              "pace": 37435,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 872,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718118000,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 908,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 7,
+              "pace": 38030,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718118060,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 944,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 9,
+              "pace": 38653,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718118120,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 980,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 6,
+              "pace": 39249,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718118181,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1016,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 9,
+              "pace": 39841,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718118240,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 12,
+              "pace": 40422,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1052,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718118300,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 6,
+              "pace": 40981,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1087,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718118360,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 13,
+              "pace": 41601,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1123,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718118421,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 10,
+              "pace": 42218,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1159,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718118481,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 7,
+              "pace": 42812,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 3,
+              "pace": 1198,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718118541,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 11,
+              "pace": 43412,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1233,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718118602,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 11,
+              "pace": 44009,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1269,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718118662,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 7,
+              "pace": 44613,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1305,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718118722,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 11,
+              "pace": 45212,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1341,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718118780,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 10,
+              "pace": 45800,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1377,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718118840,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 10,
+              "pace": 46397,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1413,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718118902,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1449,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 6,
+              "pace": 47003,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718118963,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 3,
+              "pace": 1488,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 47596,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119023,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 3,
+              "pace": 1524,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 48216,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119083,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1559,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 48813,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119140,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 49386,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1595,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119200,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 9,
+              "pace": 49976,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1631,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119260,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1667,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 0,
+              "pace": 44033,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119298,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 9,
+              "pace": 50793,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1689,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ]
+    ],
+    "seconds": [
+      [
+        1718119003,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 3,
+              "pace": 1512,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 7,
+              "pace": 48015,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119008,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 3,
+              "pace": 1515,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 48065,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119013,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 3,
+              "pace": 1518,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 5,
+              "pace": 48114,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119018,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 3,
+              "pace": 1521,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 48163,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119023,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 3,
+              "pace": 1524,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 48216,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119028,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 3,
+              "pace": 1527,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 7,
+              "pace": 48267,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119033,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 3,
+              "pace": 1530,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 10,
+              "pace": 48308,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119038,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 3,
+              "pace": 1533,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 7,
+              "pace": 48359,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119043,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 3,
+              "pace": 1536,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 10,
+              "pace": 48414,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119048,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1538,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 6,
+              "pace": 48468,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119053,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1541,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 9,
+              "pace": 48514,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119058,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1544,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 12,
+              "pace": 48569,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119063,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1547,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 14,
+              "pace": 48614,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119068,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1550,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 48659,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119073,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1553,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 7,
+              "pace": 48712,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119078,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1556,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 3,
+              "pace": 48766,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119083,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1559,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 48813,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119088,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1562,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 11,
+              "pace": 48857,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119093,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1565,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 10,
+              "pace": 48914,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119098,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1568,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 7,
+              "pace": 48957,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119103,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1571,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 10,
+              "pace": 49009,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119108,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1574,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 49063,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119113,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1577,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 49109,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119118,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1580,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 9,
+              "pace": 49157,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119120,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 7,
+              "pace": 49191,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1583,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119125,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 6,
+              "pace": 49238,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1586,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119130,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 11,
+              "pace": 49288,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1589,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119135,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 7,
+              "pace": 49335,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1592,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119140,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 49386,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1595,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119145,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 3,
+              "pace": 49421,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1598,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119150,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 5,
+              "pace": 49475,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1601,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119155,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 49526,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1604,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119160,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 10,
+              "pace": 49579,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1607,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119165,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 4,
+              "pace": 49625,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1610,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119170,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 6,
+              "pace": 49675,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1613,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119175,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 49724,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1616,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119180,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 9,
+              "pace": 49771,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1619,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119185,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 4,
+              "pace": 49822,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1622,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119190,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 49875,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1625,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119195,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 6,
+              "pace": 49927,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1628,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119200,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 9,
+              "pace": 49976,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1631,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119205,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 6,
+              "pace": 50014,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1634,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119210,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 11,
+              "pace": 50076,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1637,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119215,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 50135,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1640,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119220,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 6,
+              "pace": 50184,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1643,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119225,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 10,
+              "pace": 50234,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1646,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119230,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 4,
+              "pace": 50283,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1649,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119235,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 6,
+              "pace": 50336,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1652,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119240,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 50380,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1655,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119245,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 15,
+              "pace": 50435,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1658,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119250,
+        {}
+      ],
+      [
+        1718119255,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 2,
+              "pace": 1666,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 0,
+              "pace": 44033,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119260,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1667,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 0,
+              "pace": 44033,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119265,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1668,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 3,
+              "pace": 50483,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119270,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 4,
+              "pace": 11009,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119275,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1674,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 8,
+              "pace": 50554,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119280,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1677,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 10,
+              "pace": 50624,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119285,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1680,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 14,
+              "pace": 50671,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119290,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1683,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 5,
+              "pace": 50717,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119295,
+        {
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1686,
+              "ls_offset_fd": 0
+            }
+          },
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 9,
+              "pace": 50784,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ],
+      [
+        1718119298,
+        {
+          "cg0": {
+            "visits": {
+              "lag_hybrid": 9,
+              "pace": 50793,
+              "ls_offset_fd": 0
+            }
+          },
+          "karafka_web": {
+            "karafka_consumers_reports": {
+              "lag_hybrid": 0,
+              "pace": 1689,
+              "ls_offset_fd": 0
+            }
+          }
+        }
+      ]
+    ]
+  },
+  "dispatched_at": 1718119298.7026358
+}
