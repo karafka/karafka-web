@@ -2,6 +2,7 @@
 
 ## 0.10.0 (Unreleased)
 - **[Breaking]** Rename and reorganize visibility filter to policies engine since it is not only about visibility.
+- **[Feature]** Support per request policies for inspection and operations limitation.
 - **[Feature]** Provide Search capabilities in the Explorer (Pro).
 - [Enhancement] Allow disabling ability to republish messages via policies.
 - [Enhancement] Display raw numerical timestamp alongside message time.
@@ -12,6 +13,7 @@
 - [Enhancement] Count and display executed jobs independently from processed batches.
 - [Enhancement] Prevent karafka-web from being configured before karafka is configured.
 - [Enhancement] Use `ostruct` from RubyGems in testing.
+- [Enhancement] Indicate in the status reporting whether Karafka is OSS or Pro.
 - [Refactor] Namespace migrations so migrations related to each topic data are in an independent directory.
 - [Refactor] Use errors for deny flow so request denials can occur from the inspection layer.
 - [Fix] Fix invalid deserialization metadata display in the per-message Explorer view.

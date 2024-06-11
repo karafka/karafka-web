@@ -7,7 +7,8 @@ RSpec.describe_current do
     {
       ui: {
         policies: {
-          messages: 'This is a policy message'
+          messages: -> {},
+          requests: -> {}
         }
       }
     }
@@ -21,6 +22,12 @@ RSpec.describe_current do
 
   context 'when messages is nil' do
     before { params[:ui][:policies][:messages] = nil }
+
+    it { expect(contract.call(params)).not_to be_success }
+  end
+
+  context 'when requests is nil' do
+    before { params[:ui][:policies][:requests] = nil }
 
     it { expect(contract.call(params)).not_to be_success }
   end

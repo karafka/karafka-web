@@ -32,6 +32,11 @@ module Karafka
             Karafka::Web.gem_root.join('lib/karafka/web/ui/views')
           ]
 
+          before do
+            # Do not allow if given request violates requests policies
+            raise(Errors::Ui::ForbiddenError) unless Web.config.ui.policies.requests.allow?(env)
+          end
+
           route do |r|
             r.root { r.redirect root_path('dashboard') }
 

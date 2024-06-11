@@ -12,6 +12,21 @@ RSpec.describe_current do
       expect(body).to include(breadcrumbs)
       expect(body).not_to include(support_message)
     end
+
+    context 'when requests policy prevents us from visiting this page' do
+      before do
+        allow(::Karafka::Web.config.ui.policies.requests)
+          .to receive(:allow?)
+          .and_return(false)
+
+        get 'cluster'
+      end
+
+      it do
+        expect(response).not_to be_ok
+        expect(response.status).to eq(403)
+      end
+    end
   end
 
   describe '#show' do

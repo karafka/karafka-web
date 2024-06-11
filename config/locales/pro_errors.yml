@@ -15,6 +15,7 @@ en:
       ui.search.limits_format: all limits need to be integers bigger than 0
       ui.search.timeout_format: must be at least 1 ms
       ui.policies.messages_format: cannot be nil
+      ui.policies.requests_format: cannot be nil
 
     search_form:
       missing: needs to be present
