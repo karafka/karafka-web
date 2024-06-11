@@ -4,6 +4,7 @@
 - **[Breaking]** Rename and reorganize visibility filter to policies engine since it is not only about visibility.
 - **[Feature]** Support per request policies for inspection and operations limitation.
 - **[Feature]** Provide Search capabilities in the Explorer (Pro).
+- [Enhancement] Enable live data polling on the first visit so it does not have to be enabled manually.
 - [Enhancement] Allow disabling ability to republish messages via policies.
 - [Enhancement] Display raw numerical timestamp alongside message time.
 - [Enhancement] Support `/topics` root redirect.
@@ -19,6 +20,7 @@
 - [Fix] Fix invalid deserialization metadata display in the per-message Explorer view.
 - [Fix] Fix a case where started page refresh would update content despite limiters being in place.
 - [Fix] Ruby 3.4.0 preview1 - No such file or directory.
+- [Fix] Fix the live poll button state flickering when disabled.
 
 ## 0.9.1 (2024-05-03)
 - [Fix] OSS `lag_stored` for not-subscribed consumers causes Web UI to crash.
