@@ -4,6 +4,9 @@
 - **[Breaking]** Rename and reorganize visibility filter to policies engine since it is not only about visibility.
 - **[Feature]** Support per request policies for inspection and operations limitation.
 - **[Feature]** Provide Search capabilities in the Explorer (Pro).
+- [Enhancement] Introduce produced messages chart (Pro).
+- [Enhancement] Promote topics data pace to OSS.
+- [Enhancement] Rename and normalize dashboard tabs.
 - [Enhancement] Enable live data polling on the first visit so it does not have to be enabled manually.
 - [Enhancement] Allow disabling ability to republish messages via policies.
 - [Enhancement] Display raw numerical timestamp alongside message time.

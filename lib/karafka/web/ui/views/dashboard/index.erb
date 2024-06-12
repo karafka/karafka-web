@@ -21,17 +21,18 @@
         <hr class="mb-4"/>
 
         <ul class="nav nav-tabs" id="graphs1" role="tablist">
-          <%== partial 'shared/tab_nav', locals: { title: 'Messages', id: 'messages', active: true } %>
+          <%== partial 'shared/tab_nav', locals: { title: 'Consumed', id: 'consumed', active: true } %>
           <%== partial 'shared/tab_nav', locals: { title: 'Batches', id: 'batches' } %>
-          <%== partial 'shared/tab_nav', locals: { title: 'Topics Lags', id: 'topics-lags' } %>
-          <%== partial 'shared/tab_nav', locals: { title: 'Topics pace', id: 'topics-pace' } %>
-          <%== partial 'shared/tab_nav', locals: { title: 'Max LSO time', id: 'max-lso-time' } %>
+          <%== partial 'shared/tab_nav', locals: { title: 'Lags', id: 'lags' } %>
+          <%== partial 'shared/tab_nav', locals: { title: 'Max LSO', id: 'max-lso' } %>
+          <%== partial 'shared/tab_nav', locals: { title: 'Pace', id: 'pace' } %>
+          <%== partial 'shared/tab_nav', locals: { title: 'Produced', id: 'produced' } %>
         </ul>
 
         <div class="tab-content">
-          <div class="tab-pane show active" id="messages" role="tabpanel">
+          <div class="tab-pane show active" id="consumed" role="tabpanel">
             <% data = @aggregated_charts.with(:messages, :errors) %>
-            <%== partial 'shared/charts/line', locals: { data: data, id: 'messages' } %>
+            <%== partial 'shared/charts/line', locals: { data: data, id: 'consumed' } %>
           </div>
 
           <div class="tab-pane" id="batches" role="tabpanel">
@@ -39,22 +40,26 @@
             <%== partial 'shared/charts/line', locals: { data: data, id: 'batches' } %>
           </div>
 
-          <div class="tab-pane" id="topics-lags" role="tabpanel">
+          <div class="tab-pane" id="lags" role="tabpanel">
             <%== partial 'dashboard/feature_pro' %>
             <% data = { enqueued: set.call, busy: set.call }.to_json %>
-            <%== partial 'shared/charts/line', locals: { data: data, id: 'topics-lags', blurred: true } %>
+            <%== partial 'shared/charts/line', locals: { data: data, id: 'lags', blurred: true } %>
           </div>
 
-          <div class="tab-pane" id="topics-pace" role="tabpanel">
-            <%== partial 'dashboard/feature_pro' %>
-            <% data = { topic1: set.call(20), topic2: set.call(10), topic3: set.call(100) }.to_json %>
-            <%== partial 'shared/charts/line', locals: { data: data, id: 'topics-pace', blurred: true } %>
-          </div>
-
-          <div class="tab-pane" id="max-lso-time" role="tabpanel">
+          <div class="tab-pane" id="max-lso" role="tabpanel">
             <%== partial 'dashboard/feature_pro' %>
             <% data = { max_lso: set.call(2, 0..5) }.to_json %>
-            <%== partial 'shared/charts/line', locals: { data: data, id: 'max-lso-time', blurred: true } %>
+            <%== partial 'shared/charts/line', locals: { data: data, id: 'max-lso', blurred: true } %>
+          </div>
+
+          <div class="tab-pane" id="pace" role="tabpanel">
+            <%== partial 'shared/charts/line', locals: { data: @topics_charts.pace, id: 'pace' } %>
+          </div>
+
+          <div class="tab-pane" id="produced" role="tabpanel">
+            <%== partial 'dashboard/feature_pro' %>
+            <% data = { max_lso: set.call(2, 0..5) }.to_json %>
+            <%== partial 'shared/charts/line', locals: { data: data, id: 'produced', blurred: true } %>
           </div>
         </div>
       </div>
