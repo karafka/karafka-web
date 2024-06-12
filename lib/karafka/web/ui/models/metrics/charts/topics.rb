@@ -125,7 +125,12 @@ module Karafka
                   previous = nil
 
                   topics[topic_without_cg] = metrics.map do |current|
-                    current_pace = current.last[:pace] || max_pace
+                    current_pace = current.last[:pace]
+
+                    unless current_pace
+                      previous = nil
+                      next [current.first, nil]
+                    end
 
                     unless previous
                       previous = current_pace
