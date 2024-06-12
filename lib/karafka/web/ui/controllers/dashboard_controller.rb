@@ -23,6 +23,14 @@ module Karafka
               @aggregated, @params.current_range
             )
 
+            @topics = Models::Metrics::Topics.new(
+              current_metrics.to_h.fetch(:consumer_groups)
+            )
+
+            @topics_charts = Models::Metrics::Charts::Topics.new(
+              @topics, @params.current_range
+            )
+
             render
           end
         end

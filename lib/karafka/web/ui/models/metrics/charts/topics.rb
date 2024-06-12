@@ -47,6 +47,31 @@ module Karafka
                 per_topic.merge('total sum' => total.to_a).to_json
               end
 
+              # @return [String] JSON with per-topic, highest LSO freeze duration. Useful for
+              #   debugging of issues arising from hanging transactions
+              def max_lso
+                topics = Hash.new { |h, k| h[k] = Hash.new { |h2, k2| h2[k2] = [] } }
+
+                @data.to_h.each do |topic, metrics|
+                  topic_without_cg = topic.split('[').first
+
+                  metrics.each do |current|
+                    ls_offset_fd = current.last[:ls_offset_fd] || 0
+
+                    # We convert this to seconds from milliseconds due to our Web UI precision
+                    # Reporting is in ms for consistency
+                    normalized_fd = (ls_offset_fd / 1_000.0).round
+
+                    topics[topic_without_cg][current.first] << normalized_fd
+                  end
+                end
+
+                topics.each_value(&:compact!)
+                topics.each_value { |metrics| metrics.transform_values!(&:max) }
+                topics.transform_values! { |values| values.to_a.sort_by!(&:first) }
+                topics.to_json
+              end
+
               # @return [String] JSON with producers pace that represents high-watermarks sum for
               #   each topic.
               #
@@ -57,7 +82,7 @@ module Karafka
               #   only move forward, we compensate this by assuming that a lower value than
               #   previous is an artefact of that type and we replace it with the max value we had
               #   effectively compensating for under-reporting
-              def topics_pace
+              def pace
                 topics = {}
 
                 @data.to_h.each do |topic, metrics|
@@ -83,28 +108,39 @@ module Karafka
                 topics.to_json
               end
 
-              # @return [String] JSON with per-topic, highest LSO freeze duration. Useful for
-              #   debugging of issues arising from hanging transactions
-              def max_lso_time
-                topics = Hash.new { |h, k| h[k] = Hash.new { |h2, k2| h2[k2] = [] } }
+              # @return [String] JSON with messages production rate. How fast messages per topic
+              #   are being produced in a time window.
+              #
+              # @note Same data filling gaps approach is used as in the `#pace` chart.
+              def produced
+                topics = {}
 
                 @data.to_h.each do |topic, metrics|
                   topic_without_cg = topic.split('[').first
 
-                  metrics.each do |current|
-                    ls_offset_fd = current.last[:ls_offset_fd] || 0
+                  # If we've already seen this topic data, we can skip
+                  next if topics.include?(topic_without_cg)
 
-                    # We convert this to seconds from milliseconds due to our Web UI precision
-                    # Reporting is in ms for consistency
-                    normalized_fd = (ls_offset_fd / 1_000.0).round
+                  max_pace = 0
+                  previous = nil
 
-                    topics[topic_without_cg][current.first] << normalized_fd
+                  topics[topic_without_cg] = metrics.map do |current|
+                    current_pace = current.last[:pace] || max_pace
+
+                    unless previous
+                      previous = current_pace
+                      next
+                    end
+
+                    max_pace = current_pace if current_pace > max_pace
+
+                    sample = [current.first, max_pace - previous]
+                    previous = max_pace
+                    sample
                   end
                 end
 
                 topics.each_value(&:compact!)
-                topics.each_value { |metrics| metrics.transform_values!(&:max) }
-                topics.transform_values! { |values| values.to_a.sort_by!(&:first) }
                 topics.to_json
               end
             end
