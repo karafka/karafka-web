@@ -67,11 +67,12 @@ RSpec.describe_current do
 
     it do
       expect(response).to be_ok
-      expect(body).to include('Topics pace')
+      expect(body).to include('Pace')
       expect(body).to include('Batches')
       expect(body).to include('Jobs')
-      expect(body).to include('Messages')
-      expect(body).to include('Max LSO time')
+      expect(body).to include('Consumed')
+      expect(body).to include('Produced')
+      expect(body).to include('Max LSO')
       expect(body).to include('Utilization')
       expect(body).to include('RSS')
       expect(body).to include('Concurrency')
@@ -99,11 +100,12 @@ RSpec.describe_current do
 
     it do
       expect(response).to be_ok
-      expect(body).to include('Topics pace')
+      expect(body).to include('Pace')
       expect(body).to include('Batches')
       expect(body).to include('Jobs')
-      expect(body).to include('Messages')
-      expect(body).to include('Max LSO time')
+      expect(body).to include('Consumed')
+      expect(body).to include('Produced')
+      expect(body).to include('Max LSO')
       expect(body).to include('Utilization')
       expect(body).to include('RSS')
       expect(body).to include('Concurrency')
