@@ -209,10 +209,34 @@ module Karafka
             )
           end
 
+          # @return [Status::Step] Is there a significant lag in the reporting of aggregated data
+          #   back to the Kafka. If yes, it means that the results in the Web UI will be delayed
+          #   against the reality. Often it means, that there is over-saturation on the consumer
+          #   that is materializing the states.
+          #
+          # @note Since both states and metrics are reported together, it is enough for us to check
+          #   on one of them.
+          def materializing_lag
+            max_lag = (Web.config.tracking.interval * 2) / 1_000
+            lag = Time.now.to_f - @current_state.dispatched_at
+            lagging = lag > max_lag
+
+            status = if live_reporting.success?
+                       lagging ? :failure : :success
+                     else
+                       :halted
+                     end
+
+            Step.new(
+              status,
+              { lag: lag, max_lag: max_lag }
+            )
+          end
+
           # @return [Status::Step] is there a subscription to our reports topic that is being
           #   consumed actively.
           def state_calculation
-            if live_reporting.success?
+            if materializing_lag.success?
               @subscriptions ||= Models::Health
                                  .current(@current_state)
                                  .values.map { |consumer_group| consumer_group[:topics] }

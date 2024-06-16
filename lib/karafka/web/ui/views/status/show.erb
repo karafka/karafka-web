@@ -1,5 +1,6 @@
 <%== view_title('Web UI Status Details', hr: true) %>
 
+
 <div class="container">
   <div class="row">
     <div class="col-lg-10 offset-md-1">
@@ -132,6 +133,21 @@
               'status/failures/live_reporting',
               locals: {
                 details: @status.live_reporting.details
+              }
+            )
+          }
+        )
+      %>
+
+      <%==
+        partial(
+          "status/#{@status.materializing_lag.to_s}",
+          locals: {
+            title: 'Materializing lag',
+            description: partial(
+              'status/failures/materializing_lag',
+              locals: {
+                details: @status.materializing_lag.details
               }
             )
           }
