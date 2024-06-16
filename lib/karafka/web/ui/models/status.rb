@@ -217,7 +217,7 @@ module Karafka
           # @note Since both states and metrics are reported together, it is enough for us to check
           #   on one of them.
           def materializing_lag
-            details = nil
+            details = { lag: 0, max_lag: 0 }
 
             status = if live_reporting.success?
                        max_lag = (Web.config.tracking.interval * 2) / 1_000

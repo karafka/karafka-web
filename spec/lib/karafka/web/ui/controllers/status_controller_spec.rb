@@ -3,6 +3,10 @@
 RSpec.describe_current do
   subject(:app) { Karafka::Web::Ui::App }
 
+  before do
+    produce(TOPICS[0], Fixtures.consumers_states_file)
+  end
+
   describe '#show' do
     context 'when all that is needed is there' do
       before { get 'status' }
