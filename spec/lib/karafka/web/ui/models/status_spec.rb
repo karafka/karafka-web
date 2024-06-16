@@ -453,6 +453,72 @@ RSpec.describe_current do
     end
   end
 
+  describe '#materializing_lag' do
+    subject(:result) { status.materializing_lag }
+
+    context 'when there is no live reporting' do
+      before do
+        all_topics
+        produce(states_topic, state)
+        produce(metrics_topic, metrics)
+      end
+
+      it 'expect to halt' do
+        expect(result.success?).to eq(false)
+        expect(result.to_s).to eq('halted')
+        expect(result.details).to eq(lag: 0, max_lag: 10)
+        expect(result.partial_namespace).to eq('failures')
+      end
+    end
+
+    context 'when there is live reporting and state calculation' do
+      before do
+        all_topics
+        produce(states_topic, state)
+        produce(metrics_topic, metrics)
+
+        parsed = JSON.parse(report)
+        cg = parsed['consumer_groups']['example_app6_app']['subscription_groups']['c4ca4238a0b9_0']
+        cg['topics'][reports_topic] = cg['topics']['default']
+        cg['topics'][reports_topic]['name'] = reports_topic
+
+        produce(reports_topic, parsed.to_json)
+      end
+
+      it 'expect all to be ok' do
+        expect(result.success?).to eq(true)
+        expect(result.to_s).to eq('success')
+        expect(result.partial_namespace).to eq('successes')
+      end
+    end
+
+    context 'when there is live reporting but state computation is lagging' do
+      before do
+        all_topics
+        produce(states_topic, state)
+        produce(metrics_topic, metrics)
+
+        parsed = JSON.parse(report)
+        cg = parsed['consumer_groups']['example_app6_app']['subscription_groups']['c4ca4238a0b9_0']
+        cg['topics'][reports_topic] = cg['topics']['default']
+        cg['topics'][reports_topic]['name'] = reports_topic
+        produce(reports_topic, parsed.to_json)
+
+        parsed_state = JSON.parse(state)
+        # simulate reporting lag
+        parsed_state['dispatched_at'] = Time.now.to_f - 15
+        produce(states_topic, parsed_state.to_json)
+      end
+
+      it 'expect all to be ok' do
+        expect(result.success?).to eq(false)
+        expect(result.to_s).to eq('failure')
+        expect(result.partial_namespace).to eq('failures')
+        expect(result[:details][:lag]).to be > 10
+      end
+    end
+  end
+
   describe '#state_calculation' do
     subject(:result) { status.state_calculation }
 

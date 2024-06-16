@@ -4,6 +4,7 @@
 - **[Breaking]** Rename and reorganize visibility filter to policies engine since it is not only about visibility.
 - **[Feature]** Support per request policies for inspection and operations limitation.
 - **[Feature]** Provide Search capabilities in the Explorer (Pro).
+- [Enhancement] Validate states materialization lag in the status view.
 - [Enhancement] Introduce produced messages chart (Pro).
 - [Enhancement] Promote topics data pace to OSS.
 - [Enhancement] Rename and normalize dashboard tabs.
