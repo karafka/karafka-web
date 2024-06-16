@@ -466,7 +466,7 @@ RSpec.describe_current do
       it 'expect to halt' do
         expect(result.success?).to eq(false)
         expect(result.to_s).to eq('halted')
-        expect(result.details).to eq(nil)
+        expect(result.details).to eq(lag: 0, max_lag: 10)
         expect(result.partial_namespace).to eq('failures')
       end
     end
