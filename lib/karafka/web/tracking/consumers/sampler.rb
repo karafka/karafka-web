@@ -40,13 +40,21 @@ module Karafka
 
             @windows = Helpers::Ttls::Windows.new
             @counters = COUNTERS_BASE.dup
+
             @consumer_groups = Hash.new do |h, cg_id|
               h[cg_id] = {
                 id: cg_id,
                 subscription_groups: {}
               }
             end
-            @subscription_groups = {}
+
+            @subscription_groups = Hash.new do |h, sg_id|
+              h[sg_id] = {
+                id: sg_id,
+                polled_at: monotonic_now
+              }
+            end
+
             @errors = []
             @pauses = {}
             @jobs = {}
@@ -150,7 +158,7 @@ module Karafka
 
             # We divide by 1_000 to convert from milliseconds
             # We multiply by 100 to have it in % scale
-            totals.sum / 1_000 / workers / timefactor * 100
+            (totals.sum / 1_000 / workers / timefactor * 100).round(2)
           end
 
           # @return [Hash] number of active and standby listeners
@@ -296,12 +304,12 @@ module Karafka
             @consumer_groups.each_value do |cg_details|
               cg_details.each do
                 cg_details.fetch(:subscription_groups, {}).each do |sg_id, sg_details|
-                  # This should be always available, since we subscription group polled at time
+                  # This should be always available, since the subscription group polled at time
                   # is first initialized before we start polling, there should be no case where
                   # we have statistics about a given subscription group but we do not have the
                   # last polling time
                   polled_at = subscription_groups.fetch(sg_id).fetch(:polled_at)
-                  sg_details[:state][:poll_age] = monotonic_now - polled_at
+                  sg_details[:state][:poll_age] = (monotonic_now - polled_at).round(2)
                 end
               end
             end
