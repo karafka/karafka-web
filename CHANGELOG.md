@@ -4,6 +4,8 @@
 - **[Breaking]** Rename and reorganize visibility filter to policies engine since it is not only about visibility.
 - **[Feature]** Support per request policies for inspection and operations limitation.
 - **[Feature]** Provide Search capabilities in the Explorer (Pro).
+- [Enhancement] Round poll age reporting to precision of 2 reducing the payload size.
+- [Enhancement] Round utilization reporting to precision of 2 reducing the payload size.
 - [Enhancement] Validate states materialization lag in the status view.
 - [Enhancement] Introduce produced messages chart (Pro).
 - [Enhancement] Promote topics data pace to OSS.
@@ -19,6 +21,7 @@
 - [Enhancement] Prevent karafka-web from being configured before karafka is configured.
 - [Enhancement] Use `ostruct` from RubyGems in testing.
 - [Enhancement] Indicate in the status reporting whether Karafka is OSS or Pro.
+- [Refactor] Optimize subscription group data tracking flow.
 - [Refactor] Namespace migrations so migrations related to each topic data are in an independent directory.
 - [Refactor] Use errors for deny flow so request denials can occur from the inspection layer.
 - [Fix] Fix invalid deserialization metadata display in the per-message Explorer view.
