@@ -59,8 +59,13 @@
       <%
         quiet_path = root_path('commanding', process.id, 'quiet')
         disabled_class = process.status == 'running' ? '' : 'disabled'
+
+        if process.tags.include?('embedded')
+          disabled_class = 'disabled'
+          title = 'Not supported in embedded consumers'
+        end
       %>
-      <form action="<%= quiet_path %>" method="post" class="d-inline-flex align-items-center mx-1">
+      <form action="<%= quiet_path %>" method="post" class="d-inline-flex align-items-center mx-1" title="<%= title %>">
         <%== csrf_tag(quiet_path) %>
         <input type="submit" value="&#x23F8; Quiet" class="btn btn-warning btn-sm <%= disabled_class %>"/>
       </form>
@@ -68,8 +73,13 @@
       <%
         stop_path = root_path('commanding', process.id, 'stop')
         disabled_class = process.status != 'stopping' && process.status != 'stopped' ? '' : 'disabled'
+
+        if process.tags.include?('embedded')
+          disabled_class = 'disabled'
+          title = 'Not supported in embedded consumers'
+        end
       %>
-      <form action="<%= stop_path %>" method="post" class="d-inline-flex align-items-center mx-1">
+      <form action="<%= stop_path %>" method="post" class="d-inline-flex align-items-center mx-1" title="<%= title %>">
         <%== csrf_tag(stop_path) %>
         <input type="submit" value="&#x25A0; Stop" class="btn btn-danger btn-sm <%= disabled_class %>"/>
       </form>

@@ -18,9 +18,12 @@ module Karafka
         # Namespace for commands the process can react to
         module Commands
           # Sends a signal to stop the process
+          # @note Does not work in an embedded mode because we do not own the Ruby process.
           class Stop < Base
-            # Performs the command
+            # Performs the command if not in embedded mode
             def call
+              return if embedded?
+
               ::Process.kill('QUIT', ::Process.pid)
             end
           end
