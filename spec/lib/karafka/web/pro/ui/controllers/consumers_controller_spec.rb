@@ -458,6 +458,48 @@ RSpec.describe_current do
       end
     end
 
+    context 'when there are active embedded consumers' do
+      before do
+        topics_config.consumers.reports = reports_topic
+
+        base_report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        10.times do |i|
+          id = "shinra:#{i}:#{i}"
+
+          report = base_report.dup
+          report['process']['tags'] = %w[embedded]
+
+          produce(reports_topic, report.to_json, key: id)
+        end
+
+        get 'consumers/controls'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).not_to include(support_message)
+        expect(body).not_to include(no_processes)
+        expect(body).not_to include(pagination)
+        expect(body).to include(breadcrumbs)
+        expect(body).to include('shinra:1:1')
+        expect(body).to include('/consumers/shinra:1:1/subscriptions')
+        expect(body).to include('running')
+        expect(body).to include('ID')
+        expect(body).to include('Performance')
+        expect(body).to include('Quiet All')
+        expect(body).to include('Stop All')
+        expect(body).to include('Probe')
+        expect(body).to include('title="Not supported in embedded consumers"')
+      end
+
+      context 'when sorting' do
+        before { get 'consumers/controls?sort=id+desc' }
+
+        it { expect(response).to be_ok }
+      end
+    end
+
     context 'when there are active consumers reported in a transactional fashion' do
       before do
         topics_config.consumers.states = states_topic

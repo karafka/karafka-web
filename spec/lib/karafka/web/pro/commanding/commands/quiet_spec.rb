@@ -10,4 +10,14 @@ RSpec.describe_current do
 
     expect(Process).to have_received(:kill).with('TSTP', Process.pid)
   end
+
+  context 'when process to which we send request is an embedded one' do
+    before { allow(Karafka::Process).to receive(:tags).and_return(%w[embedded]) }
+
+    it 'expect to ignore quiet command in an embedded one' do
+      quiet_command.call
+
+      expect(Process).not_to have_received(:kill)
+    end
+  end
 end

@@ -25,6 +25,13 @@ module Karafka
             def process_id
               @process_id ||= ::Karafka::Web.config.tracking.consumers.sampler.process_id
             end
+
+            # @return [Boolean] Is given process to which a command was sent operating in an
+            #   embedded mode. We need to know this, because some commands are prohibited from
+            #   being executed in the embedded processes.
+            def embedded?
+              Karafka::Process.tags.to_a.include?('embedded')
+            end
           end
         end
       end

@@ -24,6 +24,7 @@
 - [Refactor] Optimize subscription group data tracking flow.
 - [Refactor] Namespace migrations so migrations related to each topic data are in an independent directory.
 - [Refactor] Use errors for deny flow so request denials can occur from the inspection layer.
+- [Fix] Disallow quiet and stop commands for embedded workers.
 - [Fix] Fix invalid deserialization metadata display in the per-message Explorer view.
 - [Fix] Fix a case where started page refresh would update content despite limiters being in place.
 - [Fix] Ruby 3.4.0 preview1 - No such file or directory.
