@@ -50,13 +50,8 @@
       <%
         probe_path = root_path('commanding', process.id, 'probe')
         disabled_class = process.status != 'stopped' ? '' : 'disabled'
-
-        if process.tags.include?('embedded')
-          disabled_class = 'disabled'
-          title = 'Not supported in embedded consumers'
-        end
       %>
-      <form action="<%= probe_path %>" method="post" class="d-inline-flex align-items-center mx-1" title="<%= title %>">
+      <form action="<%= probe_path %>" method="post" class="d-inline-flex align-items-center mx-1">
         <%== csrf_tag(probe_path) %>
         <input type="submit" value="&#x2699; Probe" class="btn btn-secondary btn-sm <%= disabled_class %>"/>
       </form>
@@ -78,8 +73,13 @@
       <%
         stop_path = root_path('commanding', process.id, 'stop')
         disabled_class = process.status != 'stopping' && process.status != 'stopped' ? '' : 'disabled'
+
+        if process.tags.include?('embedded')
+          disabled_class = 'disabled'
+          title = 'Not supported in embedded consumers'
+        end
       %>
-      <form action="<%= stop_path %>" method="post" class="d-inline-flex align-items-center mx-1">
+      <form action="<%= stop_path %>" method="post" class="d-inline-flex align-items-center mx-1" title="<%= title %>">
         <%== csrf_tag(stop_path) %>
         <input type="submit" value="&#x25A0; Stop" class="btn btn-danger btn-sm <%= disabled_class %>"/>
       </form>
