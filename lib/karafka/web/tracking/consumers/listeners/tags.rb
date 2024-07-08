@@ -47,7 +47,7 @@ module Karafka
               attempt = consumer.coordinator.pause_tracker.attempt
 
               if attempt > 1
-                consumer.tags.add(:attempt, "attempt:#{attempt}")
+                consumer.tags.add(:attempt, "attempt: #{attempt}")
               else
                 consumer.tags.delete(:attempt)
               end
