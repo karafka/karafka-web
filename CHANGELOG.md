@@ -30,6 +30,7 @@
 - [Fix] Ruby 3.4.0 preview1 - No such file or directory.
 - [Fix] Fix the live poll button state flickering when disabled.
 - [Fix] Pace computation does not compensate for partial data reported.
+- [Fix] DLQ parent topics get classified as DLQ in the Web.
 
 ## 0.9.1 (2024-05-03)
 - [Fix] OSS `lag_stored` for not-subscribed consumers causes Web UI to crash.

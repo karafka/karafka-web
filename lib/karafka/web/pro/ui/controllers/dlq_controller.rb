@@ -49,7 +49,7 @@ module Karafka
             # @return [Boolean] is the given topic a DLQ topic
             def dlq?(topics_matches, name)
               topics_matches.any? do |candidate|
-                candidate.match?(name)
+                candidate.is_a?(Regexp) ? candidate.match?(name) : candidate == name
               end
             end
           end
