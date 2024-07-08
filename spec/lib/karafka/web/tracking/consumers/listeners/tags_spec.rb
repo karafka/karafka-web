@@ -30,7 +30,7 @@ RSpec.describe_current do
   end
 
   context 'when it is the first attempt' do
-    it { expect(consumer.tags.to_a).not_to include('attempt:1') }
+    it { expect(consumer.tags.to_a).not_to include('attempt: 1') }
   end
 
   context 'when it is another attempt' do
@@ -39,6 +39,6 @@ RSpec.describe_current do
       listener.on_consumer_consume(event)
     end
 
-    it { expect(consumer.tags.to_a).to include('attempt:2') }
+    it { expect(consumer.tags.to_a).to include('attempt: 2') }
   end
 end
