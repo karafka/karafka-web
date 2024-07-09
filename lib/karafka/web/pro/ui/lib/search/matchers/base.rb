@@ -39,6 +39,15 @@ module Karafka
                     # Convert the first letter to uppercase and the rest to lowercase
                     spaced_string[0].upcase + spaced_string[1..].downcase
                   end
+
+                  # Allows to disable/enable certain matches that may be specific to certain types
+                  # of data per topic. By default matchers are always active
+                  #
+                  # @param _topic_name [String] name of the topic in the explorer
+                  # @return [Boolean] should this matcher be active in the given topic
+                  def active?(_topic_name)
+                    true
+                  end
                 end
               end
             end

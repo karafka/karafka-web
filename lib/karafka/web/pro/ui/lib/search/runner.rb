@@ -100,7 +100,8 @@ module Karafka
                 return @current_matcher if @current_matcher
 
                 found_matcher_class = Web.config.ui.search.matchers.find do |matcher_class|
-                  matcher_class.name == matcher
+                  # Search only in active matchers for the current topic
+                  matcher_class.active?(@topic) && matcher_class.name == matcher
                 end
 
                 # This should never happen. Report if you encounter this

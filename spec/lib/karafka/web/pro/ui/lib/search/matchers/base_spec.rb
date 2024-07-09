@@ -3,6 +3,10 @@
 RSpec.describe_current do
   let(:matcher_class) { described_class }
 
+  describe '.active?' do
+    it { expect(matcher_class.active?(rand.to_s)).to eq(true) }
+  end
+
   describe '.name' do
     it 'returns the name of the matcher based on the class name' do
       expect(matcher_class.name).to eq('Base')

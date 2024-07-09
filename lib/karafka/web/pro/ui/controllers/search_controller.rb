@@ -31,7 +31,8 @@ module Karafka
             def index(topic_id)
               @topic_id = topic_id
               @partitions_count = Models::ClusterInfo.partitions_count(topic_id)
-              @matchers = Web.config.ui.search.matchers
+              # Select only matchers that should be available in the context of the current topic
+              @matchers = Web.config.ui.search.matchers.select { |match| match.active?(@topic_id) }
               @search_criteria = !@params.current_search.empty?
               @current_search = Lib::Search::Normalizer.call(@params.current_search)
               # Needed when rendering found messages rows. We should always filter the messages

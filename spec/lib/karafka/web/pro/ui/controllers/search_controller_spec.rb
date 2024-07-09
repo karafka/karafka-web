@@ -38,6 +38,36 @@ RSpec.describe_current do
       expect(body).to include(breadcrumbs)
       expect(body).to include(no_search_criteria)
       expect(body).to include(search_modal)
+      expect(body).to include(search_modal)
+      expect(body).to include('Raw payload includes')
+      expect(body).to include('Raw key includes')
+      expect(body).to include('Raw header includes')
+      expect(body).not_to include(search_modal_errors)
+      expect(body).not_to include('table')
+      expect(body).not_to include(pagination)
+      expect(body).not_to include(support_message)
+      expect(body).not_to include(metadata_button)
+    end
+  end
+
+  context 'when one of the matchers is not active for this topic' do
+    before do
+      allow(Karafka::Web::Pro::Ui::Lib::Search::Matchers::RawHeaderIncludes)
+        .to receive(:active?)
+        .with(topic)
+        .and_return(false)
+
+      get "explorer/#{topic}/search"
+    end
+
+    it do
+      expect(response).to be_ok
+      expect(body).to include(breadcrumbs)
+      expect(body).to include(no_search_criteria)
+      expect(body).to include(search_modal)
+      expect(body).to include('Raw payload includes')
+      expect(body).to include('Raw key includes')
+      expect(body).not_to include('Raw header includes')
       expect(body).not_to include(search_modal_errors)
       expect(body).not_to include('table')
       expect(body).not_to include(pagination)
