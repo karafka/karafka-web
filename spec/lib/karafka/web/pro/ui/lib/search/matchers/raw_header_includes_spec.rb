@@ -3,6 +3,10 @@
 RSpec.describe Karafka::Web::Pro::Ui::Lib::Search::Matchers::RawHeaderIncludes do
   subject(:matcher) { described_class.new }
 
+  describe '.active?' do
+    it { expect(described_class.active?(rand.to_s)).to eq(true) }
+  end
+
   describe '#call' do
     let(:phrase) { 'test phrase' }
     let(:message) { instance_double(Karafka::Messages::Message, raw_headers: raw_headers) }
