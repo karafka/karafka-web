@@ -1,4 +1,4 @@
-# Karafka Web changelog
+# Karafka Web Changelog
 
 ## 0.10.0 (Unreleased)
 - **[Breaking]** Rename and reorganize visibility filter to policies engine since it is not only about visibility.
