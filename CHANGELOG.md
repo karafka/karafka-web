@@ -32,6 +32,7 @@
 - [Fix] Pace computation does not compensate for partial data reported.
 - [Fix] DLQ parent topics get classified as DLQ in the Web.
 - [Fix] Add missing space in the attempt label.
+- [Fix] Fix lack of highlight of "Consumers" navigation when in the "Commands" tab.
 
 ## 0.9.1 (2024-05-03)
 - [Fix] OSS `lag_stored` for not-subscribed consumers causes Web UI to crash.
