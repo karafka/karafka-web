@@ -1,27 +1,17 @@
-<div class="container">
-  <div class="row mb-4">
-    <div class="col-sm-12">
+<div class="tab-container-wrapper">
+  <div class="tab-container">
+    <a
+      href="<%= root_path('cluster', 'brokers') %>"
+      class="custom-tab <%= nav_class(include: 'brokers') %>"
+    >
+      Brokers
+    </a>
 
-      <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a
-            class="nav-link <%= nav_class(include: 'brokers') %>"
-            href="<%= root_path('cluster', 'brokers') %>"
-          >
-            Brokers
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a
-            class="nav-link <%= nav_class(include: 'replication') %>"
-            href="<%= root_path('cluster', 'replication') %>"
-          >
-            Replication
-          </a>
-        </li>
-      </ul>
-
-    </div>
+    <a
+      href="<%= root_path('cluster', 'replication') %>"
+      class="custom-tab <%= nav_class(include: 'replication') %>"
+    >
+      Replication
+    </a>
   </div>
 </div>

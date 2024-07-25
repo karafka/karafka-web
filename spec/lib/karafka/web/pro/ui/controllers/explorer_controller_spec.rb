@@ -72,8 +72,8 @@ RSpec.describe_current do
       it do
         expect(response).to be_ok
         expect(body).to include('This topic is empty and does not contain any data')
-        expect(body).to include('total: 1')
         expect(body).to include(breadcrumbs)
+        expect(body).not_to include('total: 1')
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
         expect(body).not_to include(search_button)
@@ -270,9 +270,9 @@ RSpec.describe_current do
         expect(response).to be_ok
         expect(body).to include(breadcrumbs)
         expect(body).to include(no_data)
-        expect(body).to include('Watermark offsets')
-        expect(body).to include('high: 0')
-        expect(body).to include('low: 0')
+        expect(body).not_to include('high: 0')
+        expect(body).not_to include('low: 0')
+        expect(body).not_to include('Watermark offsets')
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
         expect(body).not_to include(search_button)
@@ -410,10 +410,10 @@ RSpec.describe_current do
         it do
           expect(response).to be_ok
           expect(body).to include(breadcrumbs)
-          expect(body).to include('Watermark offsets')
-          expect(body).to include('high: 100')
-          expect(body).to include('low: 0')
           expect(body).to include('This page does not contain any data')
+          expect(body).not_to include('Watermark offsets')
+          expect(body).not_to include('high: 100')
+          expect(body).not_to include('low: 0')
           expect(body).not_to include(pagination)
           expect(body).not_to include("/explorer/#{topic}/0/99")
           expect(body).not_to include("/explorer/#{topic}/0/100")
@@ -424,7 +424,7 @@ RSpec.describe_current do
   end
 
   describe '#show' do
-    let(:cannot_deserialize) { 'We could not deserialize the payload due' }
+    let(:cannot_deserialize) { 'We could not deserialize the <strong>payload</strong> due' }
 
     context 'when requested offset does not exist' do
       before { get "explorer/#{topic}/0/0" }
@@ -453,7 +453,7 @@ RSpec.describe_current do
       it do
         expect(response).to be_ok
         expect(body).to include(breadcrumbs)
-        expect(body).to include('<code class="wrapped json')
+        expect(body).to include('<code class="json')
         expect(body).to include('Metadata')
         expect(body).to include('Export as JSON')
         expect(body).to include('Download raw')
@@ -477,7 +477,7 @@ RSpec.describe_current do
       it do
         expect(response).to be_ok
         expect(body).to include(breadcrumbs)
-        expect(body).to include('<code class="wrapped json')
+        expect(body).to include('<code class="json')
         expect(body).to include('Metadata')
         expect(body).to include('Export as JSON')
         expect(body).to include('Download raw')
@@ -505,7 +505,7 @@ RSpec.describe_current do
       it do
         expect(response).to be_ok
         expect(body).to include(breadcrumbs)
-        expect(body).to include('<code class="wrapped json')
+        expect(body).to include('<code class="json')
         expect(body).to include('Metadata')
         expect(body).to include('Export as JSON')
         expect(body).to include('Download raw')
@@ -529,7 +529,7 @@ RSpec.describe_current do
       it do
         expect(response).to be_ok
         expect(body).to include(breadcrumbs)
-        expect(body).to include('<code class="wrapped json')
+        expect(body).to include('<code class="json')
         expect(body).to include('Metadata')
         expect(body).to include('Export as JSON')
         expect(body).not_to include('Download raw')
@@ -552,7 +552,7 @@ RSpec.describe_current do
       it do
         expect(response).to be_ok
         expect(body).to include(breadcrumbs)
-        expect(body).to include('<code class="wrapped json')
+        expect(body).to include('<code class="json')
         expect(body).to include('Metadata')
         expect(body).to include('Download raw')
         expect(body).not_to include('Export as JSON')
@@ -571,7 +571,7 @@ RSpec.describe_current do
       it do
         expect(response).to be_ok
         expect(body).to include(breadcrumbs)
-        expect(body).to include('<code class="wrapped json')
+        expect(body).to include('<code class="json')
         expect(body).to include('Metadata')
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
@@ -601,7 +601,7 @@ RSpec.describe_current do
       it do
         expect(response).to be_ok
         expect(body).to include(breadcrumbs)
-        expect(body).not_to include('<code class="wrapped json')
+        expect(body).not_to include('<code class="json')
         expect(body).to include('Metadata')
         expect(body).to include('Message payloads larger than')
         expect(body).not_to include(pagination)
@@ -620,7 +620,7 @@ RSpec.describe_current do
       it do
         expect(response).to be_ok
         expect(body).to include(breadcrumbs)
-        expect(body).to include('<code class="wrapped json')
+        expect(body).to include('<code class="json')
         expect(body).to include('Metadata')
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
@@ -638,7 +638,7 @@ RSpec.describe_current do
         expect(response).to be_ok
         expect(body).to include(breadcrumbs)
         expect(body).to include('Metadata')
-        expect(body).to include('<code class="wrapped json')
+        expect(body).to include('<code class="json')
         expect(body).to include(cannot_deserialize)
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
@@ -647,7 +647,7 @@ RSpec.describe_current do
     end
 
     context 'when key exists but cannot be deserialized' do
-      let(:cannot_deserialize) { 'We could not deserialize the key due' }
+      let(:cannot_deserialize) { 'We could not deserialize the <strong>key</strong> due' }
 
       before do
         topic_name = topic
@@ -667,7 +667,7 @@ RSpec.describe_current do
         expect(response).to be_ok
         expect(body).to include(breadcrumbs)
         expect(body).to include('Metadata')
-        expect(body).to include('<code class="wrapped json')
+        expect(body).to include('<code class="json')
         expect(body).to include('')
         expect(body).to include('Export as JSON')
         expect(body).not_to include(pagination)
@@ -693,7 +693,7 @@ RSpec.describe_current do
       it do
         expect(response).to be_ok
         expect(body).to include(breadcrumbs)
-        expect(body).to include('<code class="wrapped json')
+        expect(body).to include('<code class="json')
         expect(body).to include('Metadata')
         expect(body).to include('0.001 KB')
         expect(body).not_to include(pagination)
@@ -710,7 +710,7 @@ RSpec.describe_current do
       it do
         expect(response).to be_ok
         expect(body).to include(breadcrumbs)
-        expect(body).to include('<code class="wrapped json')
+        expect(body).to include('<code class="json')
         expect(body).to include('Metadata')
         expect(body).to include('0.0977 KB')
         expect(body).not_to include(pagination)

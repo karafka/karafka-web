@@ -1,145 +1,126 @@
-<div class="container mb-5">
-  <div class="row" id="metrics">
-    <div class="col-lg-12">
-      <div class="card-group">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Process</h5>
-            <p class="card-text">
-            <ul style="list-style: square !important;">
-              <li class="align-items-center d-flex justify-content-between">
-                Status:
-                <span class="badge <%= status_bg @process.status %>">
-                  <%= @process.status %>
-                </span>
-              </li>
-              <li class="align-items-center d-flex justify-content-between">
-                Started:
-                <span class="badge bg-secondary">
-                  <%== relative_time @process.started_at %>
-                </span>
-              </li>
+<div id="metrics" class="w-full">
+  <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+    <div class="card-metric">
+      <h3>Process</h3>
+      <ul>
+        <li>
+          Status:
 
-              <li class="align-items-center d-flex justify-content-between">
-                State from:
-                <span class="badge bg-secondary">
-                  <%== relative_time @process.dispatched_at %>
-                </span>
-              </li>
-            </ul>
-            </p>
+          <span class="badge <%= status_badge @process.status %>">
+            <%= @process.status %>
+          </span>
+        </li>
 
-            <% unless @process.tags.empty? %>
-              <p class="mb-0 text-end">
-                <%== tags(@process.tags) %>
-              </p>
-            <% end %>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Utilization</h5>
-            <p class="card-text">
-            <ul style="list-style: square !important;">
-              <li class="align-items-center d-flex justify-content-between">
-                Workers:
-                <span class="badge bg-primary">
-                  <%= @process.workers %>
-                </span>
-              </li>
-              <li class="align-items-center d-flex justify-content-between">
-                Utilization:
-                <span class="badge bg-primary">
-                  <%= @process.utilization.round(2) %>%
-                </span>
-              </li>
-              <li class="align-items-center d-flex justify-content-between">
-                CPUs:
-                <span class="badge bg-primary">
-                  <%= @process.cpus %>
-                </span>
-              </li>
-              <li class="align-items-center d-flex justify-content-between">
-                CPU usage:
-                <% @process.cpu_usage.each_with_index do |usage, i| %>
-                  <span class="badge bg-primary">
-                    <%= usage %>
-                  </span>
+        <li>
+          Started:
+          <span class="badge badge-secondary">
+            <%== relative_time @process.started_at %>
+          </span>
+        </li>
 
-                  <%= i < 2 ? '/' : '' %>
-                <% end %>
-              </li>
-            </ul>
-            </p>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Memory usage</h5>
-            <p class="card-text">
-            <ul style="list-style: square !important;">
-              <li class="align-items-center d-flex justify-content-between">
-                RSS:
-                <span class="badge bg-primary">
-                  <%= format_memory @process.memory_usage %>
-                </span>
-              </li>
-              <li class="align-items-center d-flex justify-content-between">
-                OS memory used:
-                <span class="badge bg-primary">
-                  <%= format_memory @process.memory_total_usage %>
-                </span>
-              </li>
-              <li class="align-items-center d-flex justify-content-between">
-                OS memory available:
-                <span class="badge bg-primary">
-                  <%= format_memory @process.memory_size %>
-                </span>
-              </li>
-            </ul>
-            </p>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Versions</h5>
-            <p class="card-text text-center">
-              <span class="badge bg-secondary">
-                <%= @process.ruby %>
-              </span>
+        <li>
+          State from:
+          <span class="badge badge-secondary">
+            <%== relative_time @process.dispatched_at %>
+          </span>
+        </li>
+      </ul>
 
-              <span class="badge bg-secondary">
-                karafka
-                <%= @process.karafka %>
-              </span>
+      <% unless @process.tags.empty? %>
+        <p class="mt-4 text-right">
+          <%== tags(@process.tags) %>
+        </p>
+      <% end %>
+    </div>
 
-              <span class="badge bg-secondary">
-                karafka-web
-                <%= @process.karafka_web %>
-              </span>
+    <div class="card-metric">
+      <h3>Utilization</h3>
+      <ul>
+        <li>
+          Workers:
+          <span class="badge badge-primary">
+            <%= @process.workers %>
+          </span>
+        </li>
+        <li>
+          Utilization:
+          <span class="badge badge-primary">
+            <%= @process.utilization.round(2) %>%
+          </span>
+        </li>
+        <li>
+          CPUs:
+          <span class="badge badge-primary">
+            <%= @process.cpus %>
+          </span>
+        </li>
+        <li>
+          CPU usage:
+          <% @process.cpu_usage.each_with_index do |usage, i| %>
+            <span class="badge badge-primary">
+              <%= usage %>
+            </span>
+            <%= i < 2 ? '/' : '' %>
+          <% end %>
+        </li>
+      </ul>
+    </div>
 
-              <span class="badge bg-secondary">
-                karafka-core
-                <%= @process.karafka_core %>
-              </span>
+    <div class="card-metric">
+      <h3>Memory usage</h3>
+      <ul>
+        <li>
+          RSS:
+          <span class="badge badge-primary">
+            <%= format_memory @process.memory_usage %>
+          </span>
+        </li>
+        <li>
+          OS memory used:
+          <span class="badge badge-primary">
+            <%= format_memory @process.memory_total_usage %>
+          </span>
+        </li>
+        <li>
+          OS memory available:
+          <span class="badge badge-primary">
+            <%= format_memory @process.memory_size %>
+          </span>
+        </li>
+      </ul>
+    </div>
 
-              <span class="badge bg-secondary">
-                rdkafka
-                <%= @process.rdkafka %>
-              </span>
+    <div class="card-metric">
+      <h3>Versions</h3>
 
-              <span class="badge bg-secondary">
-                librdkafka
-                <%= @process.librdkafka %>
-              </span>
+      <div class="text-center">
+        <span class="badge badge-secondary">
+          <%= @process.ruby %>
+        </span>
 
-              <span class="badge bg-secondary">
-                waterdrop
-                <%= @process.waterdrop %>
-              </span>
-            </p>
-          </div>
-        </div>
+        <span class="badge badge-secondary">
+          karafka <%= @process.karafka %>
+        </span>
+
+        <span class="badge badge-secondary">
+          karafka-web <%= @process.karafka_web %>
+        </span>
+
+        <span class="badge badge-secondary">
+          karafka-core <%= @process.karafka_core %>
+        </span>
+
+        <span class="badge badge-secondary">
+          rdkafka <%= @process.rdkafka %>
+        </span>
+
+        <span class="badge badge-secondary">
+          librdkafka <%= @process.librdkafka %>
+        </span>
+
+        <span class="badge badge-secondary">
+          waterdrop <%= @process.waterdrop %>
+        </span>
       </div>
     </div>
   </div>

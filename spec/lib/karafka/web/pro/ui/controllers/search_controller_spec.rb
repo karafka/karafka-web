@@ -6,9 +6,9 @@ RSpec.describe_current do
   let(:topic) { create_topic(partitions: partitions) }
   let(:partitions) { 1 }
   let(:no_search_criteria) { 'No search criteria provided.' }
-  let(:metadata_button) { 'id="toggle-search-metadata-btn"' }
+  let(:metadata_button) { 'id="toggle-search-metadata"' }
   let(:search_modal) { 'id="messages-search-form"' }
-  let(:search_modal_errors) { 'id="search-form-errors"' }
+  let(:search_modal_errors) { 'Please fix the following errors' }
   let(:search_metadata) { 'id="search-metadata-details"' }
   let(:nothing_found) { 'No results found. Try aligning your search criteria.' }
   let(:valid_search) do

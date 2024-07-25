@@ -1,4 +1,9 @@
-<div class="alert alert-warning" role="alert">
-  We could not deserialize the <%= attribute %> due to the following error:
-  <code><%= error.class %></code>. Raw <%= attribute %> displayed instead.
+<div class="col-span-12 mb-6">
+  <div class="alert alert-warning">
+    <%== icon :exclamation_triangle %>
+    <span>
+      We could not deserialize the <strong><%= attribute %></strong> due to the following error:
+      <code><%= error.class %></code>. Raw <%= attribute %> displayed instead.
+    </span>
+  </div>
 </div>

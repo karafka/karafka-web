@@ -2,29 +2,45 @@
 <html lang="en">
   <%== partial 'shared/header' %>
 
-  <body>
-    <script>0</script>
-
-    <% if @error %>
+  <% if @error %>
+    <body>
       <%== yield %>
-    <% else %>
-      <nav class="navbar navbar-expand-lg navbar-dark shadow-sm mb-4">
-        <div class="container-fluid">
-          <%== partial 'shared/brand' %>
-          <%== partial 'shared/navigation' %>
-          <%== partial 'shared/live_poll' %>
+    </body>
+  <% else %>
+    <body class="drawer min-h-screen bg-gray-100 lg:drawer-open">
+      <input id="main-drawer" type="checkbox" class="drawer-toggle" />
+
+      <aside class="drawer-side z-10">
+        <label for="main-drawer" class="drawer-overlay"></label>
+
+        <%== partial 'shared/navigation' %>
+      </aside>
+
+      <main class="drawer-content">
+        <div class="turbo-progress-bar"></div>
+
+        <div class="grid-default lg:pb-0">
+          <%== partial 'shared/become_pro' %>
+
+          <%== partial 'shared/breadcrumbs' %>
+
+          <header class="col-span-12 flex items-center gap-2 lg:gap-4 mb-3">
+            <label for="main-drawer" class="btn btn-square btn-ghost drawer-button lg:hidden">
+              <%== icon(:burger) %>
+            </label>
+
+            <%== partial 'shared/title' %>
+
+            <%== partial 'shared/live_poll' %>
+          </header>
+
+          <%== partial 'shared/flashes' %>
         </div>
-      </nav>
 
-      <main>
-        <%== partial 'shared/become_pro' %>
-
-        <%== partial 'shared/flashes' %>
-
-        <%== partial 'shared/content', locals: { content: yield } %>
+        <div class="grid-default pt-5">
+          <%== partial 'shared/content', locals: { content: yield } %>
+        </div>
       </main>
-
-      <%== partial 'shared/footer' %>
-    <% end %>
-  </body>
+    </body>
+  <% end %>
 </html>

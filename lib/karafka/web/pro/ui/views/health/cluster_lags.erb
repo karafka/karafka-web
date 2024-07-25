@@ -1,4 +1,4 @@
-<%== view_title('Consumers Groups Cluster Lags Details') %>
+<% view_title 'Consumers Groups Cluster Lags Details' %>
 
 <%== partial 'health/tabs' %>
 
@@ -7,48 +7,35 @@
 <% end %>
 
 <% @stats.each_with_index do |(cg_name, details), index| %>
-  <div class="container mb-5">
-    <div class="row mb-4">
-      <div class="col-sm-12">
-        <h4 class="mb-4"><%= cg_name %></h4>
-      </div>
-    </div>
+  <div class="col-span-12 mb-3">
+    <h2 class="h2"><%= cg_name %></h2>
 
-    <div class="row mb-3">
-      <div class="col-sm-12 table-responsive">
-        <% details.each_with_index do |(topic_name, partitions), index| %>
-          <table class="processes bg-white table table-hover table-bordered table-striped align-middle <%= (index+1 < details.size) ? 'mb-5' : 'mb-3' %>">
-            <thead>
-              <tr class="align-middle">
-                <th colspan="12">
-                  <h5 class="mb-0"><%= topic_name %></h4>
-                </th>
+    <div class="data-table-wrapper">
+      <% details.each_with_index do |(topic_name, partitions), index| %>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th colspan="12">
+                <%= topic_name %>
+              </th>
+            </tr>
+            <tr>
+              <th><%== sort_link('Partition', :id) %></th>
+              <th><%== sort_link(:lag) %></th>
+              <th><%== sort_link(:stored_offset) %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% partitions.each do |details| %>
+              <tr>
+                <td><%= details[:id] %></td>
+                <td><%== details[:lag] %></td>
+                <td><%== details[:stored_offset] %></td>
               </tr>
-              <tr class="align-middle">
-                <th><%== sort_link('Partition', :id) %></th>
-                <th><%== sort_link(:lag) %></th>
-                <th><%== sort_link(:stored_offset) %></th>
-              </tr>
-            </thead>
-            <tbody>
-                <% partitions.each do |details| %>
-                  <tr class="align-middle">
-                    <td>
-                      <%= details[:id] %>
-                    </td>
-                    <td>
-                      <%== details[:lag] %>
-                    </td>
-                    <td>
-                      <%== details[:stored_offset] %>
-                    </td>
-                  </tr>
-
-                <% end %>
-            </tbody>
-          </table>
-        <% end %>
-      </div>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
     </div>
   </div>
 <% end %>

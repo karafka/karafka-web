@@ -1,48 +1,37 @@
-<div class="container mb-4">
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="row">
-        <div class="col col-md-3">
-          <button
-            type="button"
-            class="btn btn-secondary btn-sm"
-            data-bs-toggle="modal"
-            data-bs-target="#messages-search-modal"
-          >
-            &#x1F50D; Edit
-          </button>
+<div class="col-span-4">
+  <section class="actions">
+    <button class="btn-action" id="show-search-modal">
+      <%== icon(:magnifying_glass) %>
+    </button>
 
+    <% if @search_criteria && @errors.empty? %>
+      <button
+        class="btn-action"
+        type="button"
+        id="toggle-search-metadata"
+        title="Display search metadata details"
+      >
+        <%== icon(:chart_bar) %>
+      </button>
+    <% end %>
+  </section>
+</div>
 
-          <% if @search_criteria && @errors.empty? %>
-            <button
-              class="btn btn-secondary btn-sm"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#search-metadata-details"
-              id="toggle-search-metadata-btn"
-            >
-              Metadata
-            </button>
+<div class="col-span-8">
+  <section class="items-center text-end text-gray-700 text-end mt-1 mb-2">
+    <% if @search_criteria && @errors.empty? %>
+      Search criteria:
+
+      <% params.current_search.each do |key, values| %>
+        <span class="badge badge-secondary">
+          <%= key.gsub('_', ' ') %>:
+          <% if values.is_a?(Hash) %>
+            <%= Array(values.values).join(', ') %>
+          <% else %>
+            <%= Array(values).join(', ') %>
           <% end %>
-        </div>
-
-        <div class="col col-md-9 text-end">
-          <% if @search_criteria && @errors.empty? %>
-            Search criteria:
-
-            <% params.current_search.each do |key, values| %>
-              <span class="badge bg-secondary badge-custom">
-                <%= key.gsub('_', ' ') %>:
-                <% if values.is_a?(Hash) %>
-                  <%= Array(values.values).join(', ') %>
-                <% else %>
-                  <%= Array(values).join(', ') %>
-                <% end %>
-              </span>
-            <% end %>
-          <% end %>
-        </div>
-      </div>
-    </div>
-  </div>
+        </span>
+      <% end %>
+    <% end %>
+  </section>
 </div>

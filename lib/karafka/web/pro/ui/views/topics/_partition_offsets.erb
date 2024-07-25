@@ -1,0 +1,10 @@
+<tr>
+  <td>
+    <a href="<%= explorer_path(@topic[:topic_name], partition_offsets[:partition_id]) %>">
+      <%= partition_offsets[:partition_id] %>
+    </a>
+  </td>
+  <td><%= partition_offsets[:low] %></td>
+  <td><%= partition_offsets[:high] %></td>
+  <td><%= partition_offsets[:diff] %></td>
+</tr>

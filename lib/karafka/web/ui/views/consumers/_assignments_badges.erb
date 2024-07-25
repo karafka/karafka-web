@@ -10,7 +10,7 @@
   <% sg_topics.each do |topic_name, partitions| %>
     <% partitions_list = partitions.join(', ') %>
     <span
-      class="badge bg-secondary badge-topic"
+      class="badge badge-secondary"
       title="Consumer group: <%= consumer_group.id %>, partitions: <%= partitions_list%>"
     >
       <%= topic_name %>:

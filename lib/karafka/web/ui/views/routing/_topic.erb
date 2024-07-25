@@ -6,13 +6,11 @@
     <%= topic.name %>
   </td>
   <td>
-    <span class="badge bg-<%= topic.active? ? 'success' : 'warning text-dark' %>">
+    <span class="badge badge-<%= topic.active? ? 'success' : 'warning text-dark' %>">
     <%= topic.active? %>
     </span>
   </td>
-  <td class="text-center">
-    <a href="<%= root_path('routing', topic.id) %>" class="btn btn-sm btn-secondary text-white">
-      Details
-    </a>
+  <td>
+    <%== link_button_primary_sm 'Details', root_path('routing', topic.id) %>
   </td>
 </tr>

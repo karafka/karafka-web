@@ -1,0 +1,76 @@
+<div id="refreshable" class="col-span-12 mb-10">
+  <div class="card bg-white border border-gray-300 rounded-md">
+    <div class="card-body p-2 text-sm">
+      <div class="w-full">
+        <ul class="list-none grid grid-cols-2 md:grid-cols-3 lg:grid-cols-9 text-center gap-4 mb-0 mt-0">
+          <li class="p-1">
+            <div class="count mb-1 text-md">
+              <%= number_with_delimiter @counters.messages, ' ' %>
+            </div>
+            <div class="desc text-gray-500">Messages</div>
+          </li>
+          <li class="p-1">
+            <div class="count mb-1 text-md">
+              <%= number_with_delimiter @counters.batches, ' ' %>
+            </div>
+            <div class="desc text-gray-500">Batches</div>
+          </li>
+          <li class="p-1">
+            <a href="<%= root_path('jobs/running') %>" class="hover:text-blue-600">
+              <div class="count mb-1 text-md">
+                <%= number_with_delimiter @counters.jobs, ' ' %>
+              </div>
+              <div class="desc text-gray-500">Jobs</div>
+            </a>
+          </li>
+          <li class="p-1">
+            <a href="<%= root_path('health/lags') %>" class="hover:text-blue-600">
+              <div class="count mb-1 text-md">
+                <%= number_with_delimiter @counters.lag_hybrid, ' ' %>
+              </div>
+              <div class="desc text-gray-500">Total lag</div>
+            </a>
+          </li>
+          <li class="p-1">
+            <a href="<%= root_path('jobs/running') %>" class="hover:text-blue-600">
+              <div class="count mb-1 text-md">
+                <%= number_with_delimiter @counters.busy, ' ' %>
+              </div>
+              <div class="desc text-gray-500">Running</div>
+            </a>
+          </li>
+          <li class="p-1">
+            <a href="<%= root_path('jobs/pending') %>" class="hover:text-blue-600">
+              <div class="count mb-1 text-md">
+                <%= number_with_delimiter @counters.pending, ' ' %>
+              </div>
+              <div class="desc text-gray-500">Pending</div>
+            </a>
+          </li>
+          <li class="p-1">
+            <a href="<%= root_path('errors') %>" class="hover:text-blue-600">
+              <div class="count mb-1 text-md">
+                <%= number_with_delimiter @counters.errors, ' ' %>
+              </div>
+              <div class="desc text-gray-500">Errors</div>
+            </a>
+          </li>
+          <li class="p-1">
+            <div class="count mb-1 text-md">
+              <%= number_with_delimiter @counters.retries, ' ' %>
+            </div>
+            <div class="desc text-gray-500">Retries</div>
+          </li>
+          <li class="p-1">
+            <a href="<%= root_path('dlq') %>" class="hover:text-blue-600">
+              <div class="count mb-1 text-md">
+                <%= number_with_delimiter @counters.dead, ' ' %>
+              </div>
+              <div class="desc text-gray-500">Dead</div>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

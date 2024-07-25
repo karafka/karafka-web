@@ -1,57 +1,39 @@
-<%==
+<%
   type = @error_message.payload[:type]
   error_class = @error_message.payload[:error_class]
 
   view_title("#{type}: #{error_class}")
 %>
 
-<div class="container">
-  <div class="row mb-4">
-    <div class="col-sm-12">
-      <h5 class="mb-2">
-        Metadata
-      </h5>
-      <hr/>
-    </div>
-  </div>
+<div class="col-span-12 mb-3">
+  <h2 class="h2">
+    Metadata
+  </h2>
 
-  <div class="row mb-5">
-    <div class="col-sm-12 table-responsive">
-      <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
-        <tbody>
-          <% @error_message.payload.each do |k, v| %>
-            <% next if k == :backtrace %>
-            <%==
-              partial(
-                'errors/detail',
-                locals: {
-                  k: k,
-                  v: v
-                }
-              )
-            %>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
+  <div class="data-table-wrapper">
+    <table class="data-table">
+      <tbody>
+        <% @error_message.payload.each do |k, v| %>
+          <% next if k == :backtrace %>
+          <%==
+            partial(
+              'errors/detail',
+              locals: {
+                k: k,
+                v: v
+              }
+            )
+          %>
+        <% end %>
+      </tbody>
+    </table>
   </div>
+</div>
 
-  <div class="row mb-4">
-    <div class="col-sm-12">
-      <h5 class="mb-2">
-        Backtrace
-      </h5>
-      <hr/>
-    </div>
-  </div>
+<div class="col-span-12 mb-3">
+  <h2 class="h2">
+    Backtrace
+  </h2>
 
-  <div class="row mb-5">
-    <div class="col-sm-12">
-      <div class="card">
-        <div class="card-body">
-          <pre class="m-0 p-0"><code class="wrapped json p-0 m-0"><%= @error_message.payload[:backtrace] %></code></pre>
-        </div>
-      </div>
-    </div>
-  </div>
+  <pre class="mb-5 p-0 border border-gray-300 text-sm"><code class="wrapped json p-0 m-0"><%= @error_message.payload[:backtrace] %></code></pre>
 </div>

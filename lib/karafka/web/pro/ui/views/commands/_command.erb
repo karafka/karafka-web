@@ -7,7 +7,7 @@
     <tr>
       <td>
         <% color = command[:type] == 'result' ? 'success' : 'primary' %>
-        <span class="badge bg-<%= color %> badge-topic">
+        <span class="badge badge-<%= color %>">
           <%= command[:type] %>
         </span>
       </td>
@@ -16,16 +16,16 @@
         <%
           color = case command[:command][:name]
                   when 'probe'
-                    'secondary'
+                    'info'
                   when 'quiet'
                     'warning'
                   when 'stop'
-                    'danger'
+                    'error'
                   else
                     'secondary'
                   end
         %>
-        <span class="badge bg-<%= color %> badge-topic">
+        <span class="badge badge-<%= color %>">
           <%= command[:command][:name] %>
         </span>
       </td>
@@ -44,8 +44,8 @@
         <%== relative_time command[:dispatched_at] %>
       </td>
 
-      <td class="text-center">
-        <a href="<%= root_path('commands', command_message.offset) %>" class="btn btn-sm btn-secondary text-white">
+      <td>
+        <a href="<%= root_path('commands', command_message.offset) %>" class="btn btn-sm btn-primary">
           Details
         </a>
       </td>

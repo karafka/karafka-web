@@ -1,11 +1,11 @@
-<p>
+<p class="mb-2">
   The Web UI consumer is experiencing a significant lag in materializing and refreshing system states.
 </p>
 
-<p>
+<p class="mb-2">
   This usually indicates that the consumer process assigned to handle Web UI data is under heavy load. To prevent such issues, consider moving this consumer into a dedicated process responsible solely for managing the Web UI.
 </p>
 
-<p class="mb-0">
+<p>
   Currently, the reporting is lagging by at least <strong><%= details[:lag].round %></strong> seconds.
 </p>

@@ -1,225 +1,220 @@
-<%== view_title('Web UI Status Details', hr: true) %>
+<% view_title 'Web UI Status Details' %>
 
-
-<div class="container">
-  <div class="row">
-    <div class="col-lg-10 offset-md-1">
-      <%==
-        partial(
-          "status/#{@status.enabled.to_s}",
+<div class="max-w-6xl mx-auto">
+  <%==
+    partial(
+      "status/#{@status.enabled.to_s}",
+      locals: {
+        title: 'Web UI setup in karafka.rb',
+        description: partial(
+          "status/#{@status.enabled.partial_namespace}/enabled",
           locals: {
-            title: 'Web UI setup in karafka.rb',
-            description: partial(
-              "status/#{@status.enabled.partial_namespace}/enabled",
-              locals: {
-                details: @status.enabled.details
-              }
-            )
+            details: @status.enabled.details
           }
         )
-      %>
+      }
+    )
+  %>
 
-      <%==
-        partial(
-          "status/#{@status.connection.to_s}",
+  <%==
+    partial(
+      "status/#{@status.connection.to_s}",
+      locals: {
+        title: 'Connection to Kafka',
+        description: partial(
+          "status/#{@status.connection.partial_namespace}/connection",
           locals: {
-            title: 'Connection to Kafka',
-            description: partial(
-              "status/#{@status.connection.partial_namespace}/connection",
-              locals: {
-                details: @status.connection.details
-              }
-            )
+            details: @status.connection.details
           }
         )
-      %>
+      }
+    )
+  %>
 
-      <%==
-        partial(
-          "status/#{@status.topics.to_s}",
+  <%==
+    partial(
+      "status/#{@status.topics.to_s}",
+      locals: {
+        title: 'Web UI topics presence',
+        description: partial(
+          'status/failures/topics',
           locals: {
-            title: 'Web UI topics presence',
-            description: partial(
-              'status/failures/topics',
-              locals: {
-                details: @status.topics.details
-              }
-            )
+            details: @status.topics.details
           }
         )
-      %>
+      }
+    )
+  %>
 
-      <%==
-        partial(
-          "status/#{@status.partitions.to_s}",
+  <%==
+    partial(
+      "status/#{@status.partitions.to_s}",
+      locals: {
+        title: 'Partitions count',
+        description: partial(
+          'status/failures/partitions',
           locals: {
-            title: 'Partitions count',
-            description: partial(
-              'status/failures/partitions',
-              locals: {
-                details: @status.partitions.details
-              }
-            )
+            details: @status.partitions.details
           }
         )
-      %>
+      }
+    )
+  %>
 
-      <%==
-        partial(
-          "status/#{@status.replication.to_s}",
+  <%==
+    partial(
+      "status/#{@status.replication.to_s}",
+      locals: {
+        title: 'Replication factors',
+        description: partial(
+          'status/warnings/replication',
           locals: {
-            title: 'Replication factors',
-            description: partial(
-              'status/warnings/replication',
-              locals: {
-                details: @status.replication.details
-              }
-            )
+            details: @status.replication.details
           }
         )
-      %>
+      }
+    )
+  %>
 
-      <%==
-        partial(
-          "status/#{@status.initial_consumers_state.to_s}",
+  <%==
+    partial(
+      "status/#{@status.initial_consumers_state.to_s}",
+      locals: {
+        title: 'Initial consumers state',
+        description: partial(
+          'status/failures/initial_consumers_state',
           locals: {
-            title: 'Initial consumers state',
-            description: partial(
-              'status/failures/initial_consumers_state',
-              locals: {
-                details: @status.initial_consumers_state.details
-              }
-            )
+            details: @status.initial_consumers_state.details
           }
         )
-      %>
+      }
+    )
+  %>
 
-      <%==
-        partial(
-          "status/#{@status.initial_consumers_metrics.to_s}",
+  <%==
+    partial(
+      "status/#{@status.initial_consumers_metrics.to_s}",
+      locals: {
+        title: 'Initial consumers metrics',
+        description: partial(
+          'status/failures/initial_consumers_metrics',
           locals: {
-            title: 'Initial consumers metrics',
-            description: partial(
-              'status/failures/initial_consumers_metrics',
-              locals: {
-                details: @status.initial_consumers_metrics.details
-              }
-            )
+            details: @status.initial_consumers_metrics.details
           }
         )
-      %>
+      }
+    )
+  %>
 
-      <%==
-        partial(
-          "status/#{@status.consumers_reports.to_s}",
+  <%==
+    partial(
+      "status/#{@status.consumers_reports.to_s}",
+      locals: {
+        title: 'Consumers reports',
+        description: partial(
+          'status/failures/consumers_reports',
           locals: {
-            title: 'Consumers reports',
-            description: partial(
-              'status/failures/consumers_reports',
-              locals: {
-                details: @status.consumers_reports.details
-              }
-            )
+            details: @status.consumers_reports.details
           }
         )
-      %>
+      }
+    )
+  %>
 
-      <%==
-        partial(
-          "status/#{@status.live_reporting.to_s}",
+  <%==
+    partial(
+      "status/#{@status.live_reporting.to_s}",
+      locals: {
+        title: 'Live reporting',
+        description: partial(
+          'status/failures/live_reporting',
           locals: {
-            title: 'Live reporting',
-            description: partial(
-              'status/failures/live_reporting',
-              locals: {
-                details: @status.live_reporting.details
-              }
-            )
+            details: @status.live_reporting.details
           }
         )
-      %>
+      }
+    )
+  %>
 
-      <%==
-        partial(
-          "status/#{@status.materializing_lag.to_s}",
+  <%==
+    partial(
+      "status/#{@status.materializing_lag.to_s}",
+      locals: {
+        title: 'Materializing lag',
+        description: partial(
+          'status/failures/materializing_lag',
           locals: {
-            title: 'Materializing lag',
-            description: partial(
-              'status/failures/materializing_lag',
-              locals: {
-                details: @status.materializing_lag.details
-              }
-            )
+            details: @status.materializing_lag.details
           }
         )
-      %>
+      }
+    )
+  %>
 
-      <%==
-        partial(
-          "status/#{@status.state_calculation.to_s}",
+  <%==
+    partial(
+      "status/#{@status.state_calculation.to_s}",
+      locals: {
+        title: 'State calculation subscription',
+        description: partial(
+          'status/failures/state_calculation',
           locals: {
-            title: 'State calculation subscription',
-            description: partial(
-              'status/failures/state_calculation',
-              locals: {
-                details: @status.state_calculation.details
-              }
-            )
+            details: @status.state_calculation.details
           }
         )
-      %>
+      }
+    )
+  %>
 
-      <%==
-        partial(
-          "status/#{@status.consumers_reports_schema_state.to_s}",
+  <%==
+    partial(
+      "status/#{@status.consumers_reports_schema_state.to_s}",
+      locals: {
+        title: 'Consumers reports schema compatibility',
+        description: partial(
+          'status/failures/consumers_reports_schema_state'
+        )
+      }
+    )
+  %>
+
+  <%==
+    partial(
+      "status/#{@status.routing_topics_presence.to_s}",
+      locals: {
+        title: 'Routing topics presence',
+        description: partial(
+          'status/warnings/routing_topics_presence',
           locals: {
-            title: 'Consumers reports schema compatibility',
-            description: partial(
-              'status/failures/consumers_reports_schema_state'
-            )
+            details: @status.routing_topics_presence.details
           }
         )
-      %>
+      }
+    )
+  %>
 
-      <%==
-        partial(
-          "status/#{@status.routing_topics_presence.to_s}",
+  <%==
+    partial(
+      "status/#{@status.pro_subscription.to_s}",
+      locals: {
+        title: 'Karafka Pro subscription',
+        description: partial(
+          'status/warnings/pro_subscription',
           locals: {
-            title: 'Routing topics presence',
-            description: partial(
-              'status/warnings/routing_topics_presence',
-              locals: {
-                details: @status.routing_topics_presence.details
-              }
-            )
+            details: @status.pro_subscription.details
           }
         )
-      %>
+      }
+    )
+  %>
 
-      <%==
-        partial(
-          "status/#{@status.pro_subscription.to_s}",
-          locals: {
-            title: 'Karafka Pro subscription',
-            description: partial(
-              'status/warnings/pro_subscription',
-              locals: {
-                details: @status.pro_subscription.details
-              }
-            )
-          }
-        )
-      %>
-
-      <%==
-        partial(
-          'status/info',
-          locals: {
-            title: 'Components info',
-            description: partial('status/info/components')
-          }
-        )
-      %>
-    </div>
-  </div>
+  <%==
+    partial(
+      'status/info',
+      locals: {
+        title: 'Components info',
+        description: partial('status/info/components')
+      }
+    )
+  %>
 </div>

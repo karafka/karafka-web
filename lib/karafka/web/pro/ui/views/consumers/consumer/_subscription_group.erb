@@ -1,145 +1,135 @@
-<div class="row mb-4">
-  <div class="col-sm-12">
-    <h6 class="mb-4">
-      <%= consumer_group.id %> /
-      <%= subscription_group.id %>
-    </h6>
+<h2 class="h2 mb-3">
+  <%= consumer_group.id %> /
+  <%= subscription_group.id %>
+</h2>
 
-    <div class="card-group text-center">
-      <div class="card">
-        <div class="card-body d-flex flex-column align-items-center justify-content-center p-2">
-          State:&nbsp;
-          <span class="badge <%= kafka_state_bg(subscription_group[:state][:state]) %> mt-1 mb-1">
-            <%= subscription_group[:state][:state] %>
-          </span>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-body d-flex flex-column align-items-center justify-content-center p-2">
-          Join state:&nbsp;
-          <span class="badge <%= kafka_state_bg(subscription_group.join_state) %> mt-1 mb-1">
-            <%= subscription_group.join_state %>
-          </span>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-body d-flex flex-column align-items-center justify-content-center p-2">
-          State change:&nbsp;
-          <span class="badge bg-secondary mt-1 mb-1">
-            <%==
-              relative_time(
-                Time.at(@process.dispatched_at) - (subscription_group.stateage / 1_000.0)
-              )
-            %>
-          </span>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-body d-flex flex-column align-items-center justify-content-center p-2">
-          Last Poll:&nbsp;
-          <span class="badge bg-secondary mt-1 mb-1">
-            <%==
-              relative_time(
-                Time.at(@process.dispatched_at) - (subscription_group.poll_age / 1_000.0)
-              )
-            %>
-          </span>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-body d-flex flex-column align-items-center justify-content-center p-2">
-          Last rebalance:&nbsp;
-          <span class="badge bg-secondary mt-1 mb-1">
-            <%==
-              relative_time(
-                Time.at(@process.dispatched_at) - (subscription_group.rebalance_age / 1_000.0)
-              )
-            %>
-          </span>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-body d-flex flex-column align-items-center justify-content-center p-2">
-          Rebalance count:&nbsp;
-          <span class="badge bg-secondary mt-1 mb-1">
-            <%= subscription_group.rebalance_cnt %>
-          </span>
-        </div>
-      </div>
+<div class="card-detail-container">
+  <div class="card-detail">
+    <div class="card-detail-body">
+      State
+      <span class="badge badge-sm <%= kafka_state_badge(subscription_group[:state][:state]) %>">
+        <%= subscription_group[:state][:state] %>
+      </span>
     </div>
   </div>
 
-  <span class="text-end mt-3">
-    <small>
-      Last rebalance reason:
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Join state
 
-      <% if subscription_group.rebalance_reason.empty? %>
-        Unknown
-      <% else %>
-        <%= subscription_group.rebalance_reason %>
-      <% end %>
-    </small>
-  </span>
-</div>
+      <span class="badge badge-sm <%= kafka_state_badge(subscription_group.join_state) %>">
+        <%= subscription_group.join_state %>
+      </span>
+    </div>
+  </div>
 
-<% if subscription_group.topics.empty? %>
-  <div class="row mb-4">
-    <div class="col-lg-12">
+  <div class="card-detail">
+    <div class="card-detail-body">
+      State change
       <%==
-        alert_info('This process does not consume any messages from any topics of this subscription group.')
+        badge_secondary_sm(
+          relative_time(
+            Time.at(@process.dispatched_at) - (subscription_group.stateage / 1_000.0)
+          )
+        )
       %>
     </div>
   </div>
+
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Last Poll
+      <%==
+        badge_secondary_sm(
+          relative_time(
+            Time.at(@process.dispatched_at) - (subscription_group.poll_age / 1_000.0)
+          )
+        )
+      %>
+    </div>
+  </div>
+
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Last rebalance
+      <%==
+        badge_secondary_sm(
+          relative_time(
+            Time.at(@process.dispatched_at) - (subscription_group.rebalance_age / 1_000.0)
+          )
+        )
+      %>
+    </div>
+  </div>
+
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Rebalance count
+      <%== badge_secondary_sm(subscription_group.rebalance_cnt) %>
+    </div>
+  </div>
+</div>
+
+<div class="text-right mt-3 mb-4">
+  <small>
+    Last rebalance reason:
+
+    <% if subscription_group.rebalance_reason.empty? %>
+      Unknown
+    <% else %>
+      <%= subscription_group.rebalance_reason %>
+    <% end %>
+  </small>
+</div>
+
+
+<% if subscription_group.topics.empty? %>
+  <div class="mb-6">
+    <%==
+      alert_info('This process does not consume any messages from any topics of this subscription group.')
+    %>
+  </div>
 <% else %>
   <% subscription_group.topics.each do |topic| %>
-    <div class="row mb-5">
-      <div class="col-sm-12 table-responsive">
-        <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
-          <thead>
-            <tr class="align-middle">
-              <th colspan="10">
-                <h5 class="mb-0">
-                  <%= topic.name %>
-                </h5>
-              </th>
-            </tr>
-            <tr class="align-middle">
-              <th rowspan="2"><%== sort_link('Partition', :id) %></th>
-              <th colspan="2" class="text-center">Lag</th>
-              <th colspan="2" class="text-center">Offsets</th>
-              <th colspan="10" class="text-center">States</th>
-            </tr>
-            <tr class="align-middle">
-              <th><%== sort_link(:lag_hybrid) %></th>
-              <th><%== sort_link('Trend', :lag_hybrid_d) %></th>
-              <th><%== sort_link(:committed_offset) %></th>
-              <th><%== sort_link(:stored_offset) %></th>
-              <th><%== sort_link(:fetch_state) %></th>
-              <th><%== sort_link(:poll_state) %></th>
-              <th><%== sort_link(:lso_risk_state) %></th>
-            </tr>
-          </thead>
-          <tbody>
-              <% topic.partitions.each do |partition| %>
-                <%==
-                  partial(
-                    'consumers/consumer/partition',
-                    locals: {
-                      topic: topic,
-                      partition: partition,
-                      subscription_group: subscription_group
-                    }
-                  )
-                %>
-              <% end %>
-          </tbody>
-        </table>
-      </div>
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th colspan="10">
+              <%= topic.name %>
+            </th>
+          </tr>
+          <tr>
+            <th rowspan="2"><%== sort_link('Partition', :id) %></th>
+            <th colspan="2">Lag</th>
+            <th colspan="2">Offsets</th>
+            <th colspan="10">States</th>
+          </tr>
+          <tr>
+            <th><%== sort_link(:lag_hybrid) %></th>
+            <th><%== sort_link('Trend', :lag_hybrid_d) %></th>
+            <th><%== sort_link(:committed_offset) %></th>
+            <th><%== sort_link(:stored_offset) %></th>
+            <th><%== sort_link(:fetch_state) %></th>
+            <th><%== sort_link(:poll_state) %></th>
+            <th><%== sort_link(:lso_risk_state) %></th>
+          </tr>
+        </thead>
+        <tbody>
+            <% topic.partitions.each do |partition| %>
+              <%==
+                partial(
+                  'consumers/consumer/partition',
+                  locals: {
+                    topic: topic,
+                    partition: partition,
+                    subscription_group: subscription_group
+                  }
+                )
+              %>
+            <% end %>
+        </tbody>
+      </table>
     </div>
   <% end %>
 <% end %>

@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+rm -f lib/karafka/web/ui/public/stylesheets/application.min.*
+rm -f lib/karafka/web/ui/public/javascripts/application.min.*
+
+set -e
+
+npx postcss \
+  lib/karafka/web/ui/public/stylesheets/libs/tailwind.css \
+  -o lib/karafka/web/ui/public/stylesheets/libs/tailwind.min.css
+
+npx gulp
+
+# We remove the intermediate tailwind file because its already bundled with gulp
+rm lib/karafka/web/ui/public/stylesheets/libs/tailwind.min.css
+
+compress_file() {
+  local input_file="$1"
+  local output_dir
+  output_dir=$(dirname "$input_file")
+  local base_name
+  base_name=$(basename "$input_file")
+
+  # Check if input file exists
+  if [ ! -f "$input_file" ]; then
+    echo "Input file not found: $input_file"
+    return 1
+  fi
+
+  # Compress with Brotli
+  brotli -k -q 11 "$input_file" -o "$output_dir/$base_name.br"
+  if [ $? -ne 0 ]; then
+    echo "Brotli compression failed"
+    return 1
+  fi
+
+  # Compress with Gzip
+  gzip -k -9 "$input_file" -c > "$output_dir/$base_name.gz"
+  if [ $? -ne 0 ]; then
+    echo "Gzip compression failed"
+    return 1
+  fi
+}
+
+compress_file "lib/karafka/web/ui/public/stylesheets/application.min.css"
+compress_file "lib/karafka/web/ui/public/javascripts/application.min.js"

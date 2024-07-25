@@ -1,4 +1,4 @@
-<tr class="align-middle <%= lso_risk_state_bg(partition) %>">
+<tr class="<%= lso_risk_state_bg(partition) %>">
   <td>
     <%= partition.id %>
   </td>
@@ -6,7 +6,7 @@
     <%== lag_with_label partition.lag_hybrid %>
   </td>
   <td>
-    <span class="badge <%= lag_trend_bg(partition.lag_hybrid_d) %>">
+    <span class="badge <%= lag_trend_badge(partition.lag_hybrid_d) %>">
       <%= partition.lag_hybrid_d %>
     </span>
   </td>
@@ -21,7 +21,7 @@
     <%== offset_with_label topic.name, partition.id, partition.stored_offset %>
   </td>
   <td>
-    <span class="badge <%= kafka_state_bg(partition.fetch_state) %> mt-1 mb-1">
+    <span class="badge <%= kafka_state_badge(partition.fetch_state) %>">
       <%= partition.fetch_state %>
     </span>
   </td>
@@ -29,7 +29,7 @@
     <%== poll_state_with_change_time_label(partition.poll_state, partition.poll_state_ch) %>
   </td>
   <td>
-    <span class="badge bg-success <%= lso_risk_state_bg(partition) %> bg-opacity-100">
+    <span class="badge badge-success <%= lso_risk_state_badge(partition) %>">
       <%= partition.lso_risk_state %>
     </span>
   </td>

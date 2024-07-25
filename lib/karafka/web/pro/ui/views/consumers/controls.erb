@@ -1,67 +1,63 @@
-<%== view_title('Consumers Controls') %>
+<% view_title 'Consumers Controls' %>
 
 <%== partial 'consumers/tabs' %>
 
 <% unless @processes.empty? %>
-  <div class="container">
-    <div class="row mb-4">
-      <div class="col-sm-12">
-        <div class="d-flex flex-nowrap float-end">
-          <%
-            quiet_all_path = root_path('commanding', 'quiet_all')
-          %>
-          <form action="<%= quiet_all_path %>" method="post" class="d-inline-flex align-items-center mx-1">
-            <%== csrf_tag(quiet_all_path) %>
-            <input type="submit" value="&#x23F8; Quiet All" class="btn btn-warning btn-sm"/>
-          </form>
+  <div class="col-span-12 flex justify-end space-x-2 mb-6">
+    <%
+      quiet_all_path = root_path('commanding', 'quiet_all')
+    %>
+    <form action="<%= quiet_all_path %>" method="post" class="inline-flex items-center">
+      <%== csrf_tag(quiet_all_path) %>
+      <button type="submit" class="btn btn-warning btn-sm">
+        <%== icon(:pause) %>
+        Quiet All
+      </button>
+    </form>
 
-          <%
-            stop_all_path = root_path('commanding', 'stop_all')
-          %>
-          <form action="<%= stop_all_path %>" method="post" class="d-inline-flex align-items-center mx-1">
-            <%== csrf_tag(stop_all_path) %>
-            <input type="submit" value="&#x25A0; Stop All" class="btn btn-danger btn-sm"/>
-          </form>
-        </div>
-      </div>
-    </div>
+    <%
+      stop_all_path = root_path('commanding', 'stop_all')
+    %>
+    <form action="<%= stop_all_path %>" method="post" class="inline-flex items-center">
+      <%== csrf_tag(stop_all_path) %>
+      <button type="submit" class="btn btn-error btn-sm">
+        <%== icon(:stop) %>
+        Stop All
+      </button>
+    </form>
   </div>
 <% end %>
 
-<div class="container">
-  <div class="row">
-    <div class="col-sm-12">
-      <% if @processes.empty? && params.current_page <= 1 %>
-        <%== partial 'consumers/no_consumers' %>
-      <% elsif @processes.empty? %>
-        <%== partial 'shared/no_paginated_data' %>
-      <% else %>
-        <div class="table-responsive">
-          <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
-            <thead>
-              <tr class="align-middle">
-                <th><%== sort_link(:id) %></th>
-                <th><%== sort_link(:status) %></th>
-                <th>Subscriptions</th>
-                <th><%== sort_link(:started_at, rev: true) %></th>
-                <th><%== sort_link(:memory_usage) %></th>
-                <th>Performance</th>
-                <th><%== sort_link(:lag_hybrid) %></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <%==
-                render_each(
-                  @processes,
-                  'consumers/_consumer_controls',
-                  local: :process
-                )
-              %>
-            </tbody>
-          </table>
-        </div>
-      <% end %>
+<div class="col-span-12">
+  <% if @processes.empty? && params.current_page <= 1 %>
+    <%== partial 'consumers/no_consumers' %>
+  <% elsif @processes.empty? %>
+    <%== partial 'shared/no_paginated_data' %>
+  <% else %>
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th><%== sort_link(:id) %></th>
+            <th><%== sort_link(:status) %></th>
+            <th>Subscriptions</th>
+            <th><%== sort_link(:started_at, rev: true) %></th>
+            <th><%== sort_link(:memory_usage) %></th>
+            <th>Performance</th>
+            <th><%== sort_link(:lag_hybrid) %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <%==
+            render_each(
+              @processes,
+              'consumers/_consumer_controls',
+              local: :process
+            )
+          %>
+        </tbody>
+      </table>
     </div>
-  </div>
+  <% end %>
 </div>

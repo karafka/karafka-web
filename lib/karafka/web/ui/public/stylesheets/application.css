@@ -1,111 +1,5 @@
 body {
-  background-color: #f5f6fe;
-  font-size: 95%;
-  color: #393939;
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
-}
-
-#content {
-  display: none;
-}
-
-.navbar {
-  background-color: #4051b5;
-}
-
-.count {
-  font-weight: bold;
-  color: #4550e6;
-}
-
-.badge {
-  font-weight: normal;
-}
-
-.bg-light {
-  color: #393939;
-}
-
-.stat {
-  font-size: 125%;
-}
-
-.status-row-quiet {
-  border-left: rgb(255, 193, 7);
-}
-
-.status-row-quieting {
-  border-left: rgb(255, 193, 7);
-}
-
-.status-row-stopping {
-  border-left: rgb(255, 193, 7);
-}
-
-.status-row-stopped {
-  border-left: rgb(220, 53, 69);
-  opacity: 50%;
-}
-
-.pagination > li > a {
-    background-color: white;
-    color: #4051b5;
-}
-
-.pagination > li > a:focus,
-.pagination > li > a:hover,
-.pagination > li > span:focus,
-.pagination > li > span:hover {
-    color: #5a5a5a;
-    background-color: #eee;
-    border-color: #ddd;
-}
-
-.pagination > .active > a {
-    color: white !important;
-    background-color: #4051b5 !Important;
-    border: solid 1px #4051b5 !Important;
-}
-
-.pagination > .active > a:hover {
-    background-color: #4051b5 !Important;
-    border: solid 1px #4051b5;
-}
-
-#summary .card-group .card ul {
-  padding-left: 0;
-}
-
-.breadcrumb {
-  background-color: #eaecf4;
-  padding: .75rem 1rem;
-}
-
-a {
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-code.wrapped {
-  display: block;
-  white-space: pre-wrap;
-}
-
-.counters a {
-  color: inherit !important;
-}
-
-#content .error-message {
-  max-width: 700px;
-}
-
-#metrics ul {
-  padding-left: 0;
+  background: #f5f6fe !important;
 }
 
 .blurred {
@@ -117,11 +11,11 @@ main {
 }
 
 .chartjs-wrapper {
-  height: 250px;
+  height: 225px;
 }
 
-a.sort {
-  color: inherit;
+.graph-tab-content {
+  min-height: 225px;
 }
 
 .wrap-text {
@@ -129,14 +23,7 @@ a.sort {
   word-break: break-word;
 }
 
-.modal-locked {
-  pointer-events: none;
-}
-
-.modal-locked .modal-dialog {
-  pointer-events: all;
-}
-
-.modal-locked .modal-header .btn-close {
-  display: none;
+canvas {
+  width: 100% !important;
+  height: 100% !important;
 }

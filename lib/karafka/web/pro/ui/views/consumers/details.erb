@@ -1,9 +1,6 @@
-<div class="container mb-5">
-  <div class="row">
-    <%== partial 'consumers/consumer/title' %>
-    <%== partial 'consumers/consumer/commands', locals: { process: @process } %>
-  </div>
-</div>
+<% view_title @process.id %>
+
+<%== partial 'consumers/consumer/commands', locals: { process: @process } %>
 
 <% if @process.status == 'stopped' %>
   <%== partial 'consumers/consumer/stopped' %>
@@ -13,14 +10,4 @@
 
 <%== partial 'consumers/consumer/tabs' %>
 
-<div class="container">
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="card">
-        <div class="card-body">
-          <pre class="m-0 p-0"><code class="wrapped json p-0 m-0"><%= JSON.pretty_generate(@process.to_h) %></code></pre>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<pre class="code"><code class="json p-0 m-0"><%= JSON.pretty_generate(@process.to_h) %></code></pre>

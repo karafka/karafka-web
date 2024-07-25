@@ -1,4 +1,4 @@
-<tr class="align-middle <%= lso_risk_state_bg(details) %> status-row-<%= details.process.status %>">
+<tr class="<%= lso_risk_state_bg(details) %> status-row-<%= details.process.status %>">
   <td>
     <%= partition_id %>
   </td>
@@ -18,13 +18,9 @@
     <% change_in_seconds = details.poll_state_ch / 1_000.0 %>
 
     <% if details.poll_state == 'active' %>
-      <span class="badge bg-secondary">
-        N/A
-      </span>
+      <%== badge_secondary('N/A') %>
     <% elsif change_in_seconds >= 60 * 60 * 31 * 12 %>
-      <span class="badge bg-secondary">
-        Until manual resume
-      </span>
+      <%== badge_secondary('Until manual resume') %>
     <% else %>
       <%== relative_time(Time.now + change_in_seconds) %>
     <% end %>

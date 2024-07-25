@@ -1,11 +1,11 @@
-<li class="breadcrumb-item">
+<li>
   <a href="<%= root_path('routing') %>">
     Routing details
   </a>
 </li>
 
 <% if @topic %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= root_path('routing', @topic.id) %>">
       <%=
         title = [@topic.consumer_group.id, @topic.subscription_group, @topic.name].join(': ')

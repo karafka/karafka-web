@@ -30,7 +30,7 @@ RSpec.describe_current do
     it do
       expect(response).to be_ok
       expect(body).to include(support_message)
-      expect(body).not_to include(breadcrumbs)
+      expect(body).to include(breadcrumbs)
       expect(body).not_to include(pagination)
       expect(body).to include(no_processes)
     end
@@ -42,9 +42,9 @@ RSpec.describe_current do
     it do
       expect(response).to be_ok
       expect(body).to include(support_message)
-      expect(body).not_to include(breadcrumbs)
       expect(body).not_to include(no_processes)
       expect(body).not_to include(pagination)
+      expect(body).to include(breadcrumbs)
       expect(body).to include('246 MB')
       expect(body).to include('shinra:1:1')
       expect(body).to include('/consumers/shinra:1:1/subscriptions')
@@ -71,9 +71,9 @@ RSpec.describe_current do
       expect(response).to be_ok
       expect(body).not_to include('partitions: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9')
       expect(body).to include(support_message)
-      expect(body).not_to include(breadcrumbs)
       expect(body).not_to include(no_processes)
       expect(body).not_to include(pagination)
+      expect(body).to include(breadcrumbs)
       expect(body).to include('246 MB')
       expect(body).to include('shinra:1:1')
       expect(body).to include('/consumers/shinra:1:1/subscriptions')
@@ -103,7 +103,7 @@ RSpec.describe_current do
       expect(body).to include('0,1,2,3,4,5,6,7,8,9...')
       expect(body).to include('partitions: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9')
       expect(body).to include(support_message)
-      expect(body).not_to include(breadcrumbs)
+      expect(body).to include(breadcrumbs)
       expect(body).not_to include(no_processes)
       expect(body).not_to include(pagination)
       expect(body).to include('246 MB')
@@ -127,7 +127,7 @@ RSpec.describe_current do
     it do
       expect(response).to be_ok
       expect(body).to include(support_message)
-      expect(body).not_to include(breadcrumbs)
+      expect(body).to include(breadcrumbs)
       expect(body).not_to include(no_processes)
       expect(body).not_to include(pagination)
       expect(body).to include('246 MB')

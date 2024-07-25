@@ -1,15 +1,15 @@
-<p>
+<p class="mb-2">
   Incompatible consumer reports detected.
 </p>
 
-<p>
+<p class="mb-2">
   It means that the <code>karafka server</code> process responsible for Web-UI state materialization runs under an older version than the one that sends reports. This process stopped processing incoming reports and the Web-UI data will not be refreshed until the problem is resolved.
 </p>
 
-<p>
+<p class="mb-2">
   To fix this, you must ensure that all the <code>karafka server</code> processes run using the same <code>karafka-web</code> version.
 </p>
 
-<p class="mb-0">
+<p>
   Please note that this should not cause any dashboard metrics losses. Once it is resolved, Karafka Web-UI will catch up.
 </p>

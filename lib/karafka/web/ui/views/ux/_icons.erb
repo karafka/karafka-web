@@ -1,0 +1,9 @@
+<div class="flex space-x-2">
+  <% Dir["#{Karafka::Web.gem_root}/lib/karafka/web/ui/views/shared/icons/**"].each do |path| %>
+    <% name = path.split('/').last[1..].split('.').first %>
+    <span title="<%= name %>" class="inline-flex">
+      <%== icon(name) %>
+    </span>
+  <% end %>
+</div>
+<div class="mb-6"></div>

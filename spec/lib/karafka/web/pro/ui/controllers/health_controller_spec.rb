@@ -86,8 +86,8 @@ RSpec.describe_current do
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
         expect(body).to include('No health data is available')
-        expect(body).not_to include('bg-warning')
-        expect(body).not_to include('bg-danger')
+        expect(body).not_to include('badge-warning')
+        expect(body).not_to include('badge-error')
       end
     end
 
@@ -100,7 +100,7 @@ RSpec.describe_current do
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
         expect(body).to include('213731273')
-        expect(body).not_to include('bg-danger')
+        expect(body).not_to include('badge-error')
       end
     end
 
@@ -119,7 +119,7 @@ RSpec.describe_current do
         expect(body).not_to include(support_message)
         expect(body).to include('Not available until first offset')
         expect(body).to include('213731273')
-        expect(body).not_to include('bg-danger')
+        expect(body).not_to include('badge-error')
       end
     end
   end
@@ -137,8 +137,8 @@ RSpec.describe_current do
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
         expect(body).to include('No health data is available')
-        expect(body).not_to include('bg-warning')
-        expect(body).not_to include('bg-danger')
+        expect(body).not_to include('badge-warning')
+        expect(body).not_to include('badge-error')
       end
     end
 
@@ -169,8 +169,8 @@ RSpec.describe_current do
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
         expect(body).to include('No health data is available')
-        expect(body).not_to include('bg-warning')
-        expect(body).not_to include('bg-danger')
+        expect(body).not_to include('badge-warning')
+        expect(body).not_to include('badge-error')
       end
     end
 
@@ -184,8 +184,8 @@ RSpec.describe_current do
         expect(body).not_to include(support_message)
         expect(body).to include('Not available until first offset')
         expect(body).to include('327355')
-        expect(body).not_to include('bg-warning')
-        expect(body).not_to include('bg-danger')
+        expect(body).not_to include('badge-warning')
+        expect(body).not_to include('badge-error')
       end
     end
 
@@ -204,8 +204,8 @@ RSpec.describe_current do
         expect(body).not_to include(support_message)
         expect(body).to include('Not available until first offset')
         expect(body).to include('327355')
-        expect(body).not_to include('bg-warning')
-        expect(body).not_to include('bg-danger')
+        expect(body).not_to include('badge-warning')
+        expect(body).not_to include('badge-error')
       end
     end
 
@@ -232,9 +232,9 @@ RSpec.describe_current do
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
         expect(body).to include('Not available until first offset')
-        expect(body).to include('bg-warning')
+        expect(body).to include('badge-warning')
         expect(body).to include('at_risk')
-        expect(body).not_to include('bg-danger')
+        expect(body).not_to include('badge-error')
         expect(body).not_to include('stopped')
       end
     end
@@ -262,10 +262,10 @@ RSpec.describe_current do
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
         expect(body).to include('Not available until first offset')
-        expect(body).to include('bg-danger')
+        expect(body).to include('badge-error')
         expect(body).to include('stopped')
         expect(body).not_to include('at_risk')
-        expect(body).not_to include('bg-warning')
+        expect(body).not_to include('badge-warning')
       end
     end
   end
@@ -284,8 +284,8 @@ RSpec.describe_current do
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
         expect(body).to include('No health data is available')
-        expect(body).not_to include('bg-warning')
-        expect(body).not_to include('bg-danger')
+        expect(body).not_to include('badge-warning')
+        expect(body).not_to include('badge-error')
       end
     end
 

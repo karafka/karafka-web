@@ -27,12 +27,21 @@ module Karafka
           end
 
           r.on 'consumers' do
+            %w[
+              performance
+              controls
+              commands
+            ].each do |path|
+              r.get path do |_process_id|
+                raise Errors::Ui::ProOnlyError
+              end
+            end
+
             r.get String, 'subscriptions' do |_process_id|
               raise Errors::Ui::ProOnlyError
             end
 
             r.get do
-              @breadcrumbs = false
               controller = Controllers::ConsumersController.new(params)
               controller.index
             end
@@ -106,6 +115,16 @@ module Karafka
 
           r.get 'status' do
             controller = Controllers::StatusController.new(params)
+            controller.show
+          end
+
+          r.get 'ux' do
+            controller = Controllers::UxController.new(params)
+            controller.show
+          end
+
+          r.get 'support' do
+            controller = Controllers::SupportController.new(params)
             controller.show
           end
         end

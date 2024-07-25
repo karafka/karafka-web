@@ -1,11 +1,11 @@
-<li class="breadcrumb-item">
+<li>
   <a href="<%= root_path('explorer') %>">
     Explorer
   </a>
 </li>
 
 <% if @topic_id %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= explorer_path(@topic_id) %>">
       <%= @topic_id %>
     </a>
@@ -13,7 +13,7 @@
 <% end %>
 
 <% if @partition_id %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= explorer_path(@topic_id, @partition_id) %>">
       Partition <%= @partition_id %>
     </a>
@@ -31,7 +31,7 @@
 <% end %>
 
 <% if current_path.include?("#{@topic_id}/search") %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= explorer_path(@topic_id, 'search') %>">
       Search
     </a>

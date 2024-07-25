@@ -1,48 +1,38 @@
-<div class="container mb-4">
-  <div class="row">
-    <div class="col">
-      <h3>
-        Errors
-      </h3>
+<% view_title 'Errors' %>
+
+<div class="col-span-12">
+  <% if @watermark_offsets.empty? %>
+    <%== partial 'errors/no_errors' %>
+  <% elsif @watermark_offsets.cleaned? %>
+    <%== partial 'errors/cleaned' %>
+  <% else %>
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Origin</th>
+            <th>ID</th>
+            <th>Error</th>
+            <th>Occurred</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <%==
+            each_partial(
+              @error_messages,
+              'errors/error',
+              local: :error_msg
+            )
+          %>
+        </tbody>
+      </table>
+
+      <p class="table_metadata">
+        Watermark offsets:
+        <%== badge_secondary "high: #{@watermark_offsets.high}" %>
+        <%== badge_secondary "low: #{@watermark_offsets.low}" %>
+      </p>
     </div>
-  </div>
-
-  <hr>
-</div>
-
-<div class="container">
-  <div class="row mb-5">
-    <div class="col-sm-12">
-      <%== partial('errors/watermark_offsets') %>
-
-      <% if @watermark_offsets.empty? %>
-        <%== partial 'errors/no_errors' %>
-      <% elsif @watermark_offsets.cleaned? %>
-        <%== partial 'errors/cleaned' %>
-      <% else %>
-        <div class="table-responsive">
-          <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
-            <thead>
-              <tr class="align-middle">
-                <th>Origin</th>
-                <th>ID</th>
-                <th>Error</th>
-                <th>Occurred</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <%==
-                each_partial(
-                  @error_messages,
-                  'errors/error',
-                  local: :error_msg
-                )
-              %>
-            </tbody>
-          </table>
-        </div>
-      <% end %>
-    </div>
-  </div>
+  <% end %>
 </div>

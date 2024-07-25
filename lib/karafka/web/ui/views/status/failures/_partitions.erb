@@ -1,8 +1,8 @@
-<p>
+<p class="mb-2">
   Following topics need to be configured with <strong>exactly</strong> one partition:
 </p>
 
-<ul>
+<ul class="list-disc m-5">
   <li>
     <code><%= Karafka::Web.config.topics.consumers.states %></code>
   </li>
@@ -18,7 +18,7 @@
   Your current setup contains the following:
 </p>
 
-<ul class="mb-0">
+<ul class="list-disc m-5 mb-0">
   <% details.each do |name, details| %>
     <li>
       <code><%= name %> </code> with <code><%= details[:partitions] %></code> partitions.

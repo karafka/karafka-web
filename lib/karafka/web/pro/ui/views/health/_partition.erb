@@ -1,4 +1,4 @@
-<tr class="align-middle <%= lso_risk_state_bg(details) %> status-row-<%= details.process.status %>">
+<tr class="<%= lso_risk_state_bg(details) %> status-row-<%= details.process.status %>">
   <td>
     <%= partition_id %>
   </td>
@@ -9,7 +9,7 @@
     <%== offset_with_label topic_name, partition_id, details.stored_offset %>
   </td>
   <td>
-    <span class="badge <%= kafka_state_bg(details.fetch_state) %> mt-1 mb-1">
+    <span class="badge <%= kafka_state_badge(details.fetch_state) %> mt-1 mb-1">
       <%= details.fetch_state %>
     </span>
   </td>
@@ -17,7 +17,7 @@
     <%== poll_state_with_change_time_label(details.poll_state, details.poll_state_ch) %>
   </td>
   <td>
-    <span class="badge bg-success <%= lso_risk_state_bg(details) %> bg-opacity-100">
+    <span class="badge badge-success <%= lso_risk_state_badge(details) %>">
       <%= details.lso_risk_state %>
     </span>
   </td>

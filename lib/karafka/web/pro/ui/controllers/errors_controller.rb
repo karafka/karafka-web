@@ -38,6 +38,7 @@ module Karafka
 
             # @param partition_id [Integer] id of the partition of errors we are interested in
             def partition(partition_id)
+              @topic_id = errors_topic
               @partition_id = partition_id
               @watermark_offsets = Models::WatermarkOffsets.find(errors_topic, @partition_id)
               @partitions_count = Models::ClusterInfo.partitions_count(errors_topic)

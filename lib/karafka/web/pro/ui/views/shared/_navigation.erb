@@ -1,73 +1,125 @@
-<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-  <span class="navbar-toggler-icon"></span>
-</button>
+<nav class="sidebar-nav">
+  <%== partial 'shared/brand' %>
 
-<div class="collapse navbar-collapse" id="navbarNav">
-  <ul class="navbar-nav">
-    <li class="nav-item ms-3">
-      <a class="nav-link <%= nav_class(start_with: '/dashboard') %>" href="<%= root_path('dashboard') %>">
+  <ul class="menu">
+    <li>
+      <a
+        class="sidebar-nav-item <%= nav_class(start_with: '/dashboard') %>"
+        href="<%= root_path('dashboard') %>"
+      >
+        <%== icon(:home) %>
         Dashboard
       </a>
     </li>
 
-    <li class="nav-item ms-3">
-      <a class="nav-link <%= nav_class(match: /\A\/(consumers|commands)/) %>" href="<%= root_path('consumers') %>">
+    <li>
+      <a
+        class="sidebar-nav-item <%= nav_class(match: /\A\/(consumers|commands)/) %>"
+        href="<%= root_path('consumers') %>"
+      >
+        <%== icon(:cpu) %>
         Consumers
       </a>
     </li>
 
-    <li class="nav-item ms-3">
-      <a class="nav-link <%= nav_class(start_with: '/jobs') %>" href="<%= root_path('jobs/running') %>">
+    <li>
+      <a
+        class="sidebar-nav-item <%= nav_class(start_with: '/jobs') %>"
+        href="<%= root_path('jobs/running') %>"
+      >
+        <%== icon(:arrow_on_squares) %>
         Jobs
       </a>
     </li>
 
-    <li class="nav-item ms-3">
-      <a class="nav-link <%= nav_class(start_with: '/health') %>" href="<%= root_path('health/overview') %>">
+    <li>
+      <a
+        class="sidebar-nav-item <%= nav_class(start_with: '/health') %>"
+        href="<%= root_path('health/overview') %>"
+      >
+        <%== icon(:heart) %>
         Health
       </a>
     </li>
 
-    <li class="nav-item ms-3">
-      <a class="nav-link <%= nav_class(start_with: '/routing') %>" href="<%= root_path('routing') %>">
+    <li>
+      <a
+        class="sidebar-nav-item <%= nav_class(start_with: '/routing') %>"
+        href="<%= root_path('routing') %>"
+      >
+        <%== icon(:queue_list) %>
         Routing
       </a>
     </li>
 
-    <li class="nav-item ms-3">
-      <a class="nav-link <%= nav_class(start_with: '/explorer') %>" href="<%= root_path('explorer') %>">
+    <li>
+      <a
+        class="sidebar-nav-item <%= nav_class(start_with: '/explorer') %>"
+        href="<%= root_path('explorer') %>"
+      >
+        <%== icon(:document_glass) %>
         Explorer
       </a>
     </li>
 
-    <li class="nav-item ms-3">
-      <a class="nav-link <%= nav_class(start_with: '/errors') %>" href="<%= root_path('errors') %>">
+    <li>
+      <a
+        class="sidebar-nav-item <%= nav_class(start_with: '/errors') %>"
+        href="<%= root_path('errors') %>"
+      >
+        <%== icon(:bug) %>
         Errors
       </a>
     </li>
 
-    <li class="nav-item ms-3">
-      <a class="nav-link <%= nav_class(start_with: '/dlq') %>" href="<%= root_path('dlq') %>">
+    <li>
+      <a
+        class="sidebar-nav-item <%= nav_class(start_with: '/dlq') %>"
+        href="<%= root_path('dlq') %>"
+      >
+        <%== icon(:x_circle) %>
         Dead
       </a>
     </li>
 
-    <li class="nav-item ms-3">
-      <a class="nav-link <%= nav_class(start_with: '/cluster') %>" href="<%= root_path('cluster') %>">
+    <li>
+      <a
+        class="sidebar-nav-item <%= nav_class(start_with: '/cluster') %>"
+        href="<%= root_path('cluster') %>"
+      >
+        <%== icon(:blocks) %>
         Cluster
       </a>
     </li>
 
-    <li class="nav-item ms-3">
-      <a class="nav-link <%= nav_class(start_with: '/topics') %>" href="<%= root_path('topics') %>">
+    <li>
+      <a
+        class="sidebar-nav-item <%= nav_class(start_with: '/topics') %>"
+        href="<%= root_path('topics') %>"
+      >
+        <%== icon(:list_bullets) %>
         Topics
       </a>
     </li>
 
-    <li class="nav-item ms-3">
-      <a class="nav-link <%= nav_class(start_with: '/status') %>" href="<%= root_path('status') %>">
+    <li>
+      <a
+        class="sidebar-nav-item <%= nav_class(start_with: '/status') %>"
+        href="<%= root_path('status') %>"
+      >
+        <%== icon(:check_badge) %>
         Status
       </a>
     </li>
+
+    <li>
+      <a
+        class="sidebar-nav-item <%= nav_class(start_with: '/support') %>"
+        href="<%= root_path('support') %>"
+      >
+        <%== icon(:lifebuoy) %>
+        Support
+      </a>
+    </li>
   </ul>
-</div>
+</nav>

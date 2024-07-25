@@ -1,37 +1,31 @@
-<div class="container">
-  <div class="row mb-5">
-    <div class="col-sm-12">
+<div class="tab-container-wrapper">
+  <div class="tab-container">
+    <a
+      href="<%= root_path('topics', @topic.topic_name, 'config') %>"
+      class="custom-tab <%= nav_class(end_with: 'config') %>"
+    >
+      Configuration
+    </a>
 
-      <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a
-            class="nav-link <%= nav_class(end_with: 'config') %>"
-            href="<%= root_path('topics', @topic.topic_name, 'config') %>"
-          >
-            Configuration
-          </a>
-        </li>
+    <a
+      href="<%= root_path('topics', @topic.topic_name, 'replication') %>"
+      class="custom-tab <%= nav_class(end_with: 'replication') %>"
+    >
+      Replication
+    </a>
 
-        <li class="nav-item">
-          <a
-            class="nav-link <%= nav_class(end_with: 'replication') %>"
-            href="<%= root_path('topics', @topic.topic_name, 'replication') %>"
-          >
-            Replication
-          </a>
-        </li>
+    <a
+      href="<%= root_path('topics', @topic.topic_name, 'distribution') %>"
+      class="custom-tab <%= nav_class(end_with: 'distribution') %>"
+    >
+      Distribution
+    </a>
 
-        <li class="nav-item">
-          <a
-            class="nav-link <%= nav_class(end_with: 'distribution') %>"
-            href="<%= root_path('topics', @topic.topic_name, 'distribution') %>"
-          >
-            Distribution
-          </a>
-        </li>
-
-      </ul>
-
-    </div>
+    <a
+      href="<%= root_path('topics', @topic.topic_name, 'offsets') %>"
+      class="custom-tab <%= nav_class(end_with: 'offsets') %>"
+    >
+      Offsets
+    </a>
   </div>
 </div>

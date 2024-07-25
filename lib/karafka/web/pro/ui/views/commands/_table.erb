@@ -1,7 +1,7 @@
-<div class="table-responsive">
-  <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+<div class="data-table-wrapper">
+  <table class="data-table">
     <thead>
-      <tr class="align-middle">
+      <tr>
         <th>Type</th>
         <th>Name</th>
         <th>ID</th>
@@ -20,4 +20,10 @@
       %>
     </tbody>
   </table>
+
+  <p class="table_metadata">
+    Watermark offsets:
+    <%== badge_secondary "high: #{@watermark_offsets.high}" %>
+    <%== badge_secondary "low: #{@watermark_offsets.low}" %>
+  </p>
 </div>

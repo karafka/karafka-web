@@ -1,36 +1,31 @@
-<div class="container">
-  <div class="row mb-4">
-    <div class="col-sm-12">
+<div class="tab-container-wrapper">
+  <div class="tab-container">
+    <a
+      href="<%= root_path('consumers', @process.id, 'subscriptions') %>"
+      class="custom-tab <%= nav_class(include: 'subscriptions') %>"
+    >
+      Subscriptions (<%= @process.subscribed_partitions_count %>)
+    </a>
 
-      <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a class="nav-link <%= nav_class(include: 'subscriptions') %>" href="<%= root_path('consumers', @process.id, 'subscriptions') %>">
-            Subscriptions
-            (<%= @process.subscribed_partitions_count %>)
-          </a>
-        </li>
+    <a
+      href="<%= root_path('consumers', @process.id, 'jobs', 'running') %>"
+      class="custom-tab <%= nav_class(include: 'jobs/running') %>"
+    >
+      Running jobs (<%= @process.jobs.running.count %>)
+    </a>
 
-        <li class="nav-item">
-          <a class="nav-link <%= nav_class(include: 'jobs/running') %>" href="<%= root_path('consumers', @process.id, 'jobs', 'running') %>">
-            Running jobs
-            (<%= @process.jobs.running.count %>)
-          </a>
-        </li>
+    <a
+      href="<%= root_path('consumers', @process.id, 'jobs', 'pending') %>"
+      class="custom-tab <%= nav_class(include: 'jobs/pending') %>"
+    >
+      Pending jobs (<%= @process.jobs.pending.count %>)
+    </a>
 
-        <li class="nav-item">
-          <a class="nav-link <%= nav_class(include: 'jobs/pending') %>" href="<%= root_path('consumers', @process.id, 'jobs', 'pending') %>">
-            Pending jobs
-            (<%= @process.jobs.pending.count %>)
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link <%= nav_class(include: 'details') %>" href="<%= root_path('consumers', @process.id, 'details') %>">
-            Details
-          </a>
-        </li>
-      </ul>
-
-    </div>
+    <a
+      href="<%= root_path('consumers', @process.id, 'details') %>"
+      class="custom-tab <%= nav_class(include: 'details') %>"
+    >
+      Details
+    </a>
   </div>
 </div>

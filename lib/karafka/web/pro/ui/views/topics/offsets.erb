@@ -1,0 +1,24 @@
+<% view_title @topic.topic_name %>
+
+<%== partial 'topics/tabs' %>
+
+<div class="data-table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th><%== sort_link(:partition_id) %></th>
+        <th><%== sort_link(:low) %></th>
+        <th><%== sort_link(:high) %></th>
+        <th><%== sort_link('Count', :diff) %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%==
+        each_partial(
+          @offsets,
+          'topics/partition_offsets'
+        )
+      %>
+    </tbody>
+  </table>
+</div>

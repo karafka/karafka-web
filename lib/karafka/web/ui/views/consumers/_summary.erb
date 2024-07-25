@@ -1,81 +1,70 @@
-<div id="summary" class="container text-center mb-5">
-  <div class="row">
-
-    <div class="col-lg-2 offset-lg-1 col-md-4 col-sm-6">
-      <div class="card mb-0">
-        <div class="card-body">
-          <p class="card-text">
-            <div class="stat mb-1">
+<div id="summary" class="col-span-12">
+  <div class="mb-5 px-4 lg:px-10 text-center">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 justify-center mb-10">
+      <div class="card-summary-container">
+        <div class="card-summary">
+          <div class="card-summary-body">
+            <div class="card-summary-value">
               <%= @counters.processes %>
             </div>
-            <div class="desc">
+            <div class="card-summary-title">
               Processes
             </div>
-          </p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="col-lg-2 col-md-4 col-sm-6">
-      <div class="card mb-0">
-        <div class="card-body">
-          <p class="card-text">
-            <div class="stat mb-1">
+      <div class="card-summary-container">
+        <div class="card-summary">
+          <div class="card-summary-body">
+            <div class="card-summary-value">
               <%= @counters.workers %>
             </div>
-            <div class="desc">
+            <div class="card-summary-title">
               Workers
             </div>
-          </p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="col-lg-2 col-md-4 col-sm-6 mt-sm-4 offset-lg-0 mt-lg-0 mt-md-0">
-      <div class="card mb-0">
-        <div class="card-body">
-          <p class="card-text">
-            <div class="stat mb-1">
+      <div class="card-summary-container">
+        <div class="card-summary">
+          <div class="card-summary-body">
+            <div class="card-summary-value">
               <%= @counters.listeners.fetch(:active) %>
             </div>
-            <div class="desc">
+            <div class="card-summary-title">
               Active Listeners
             </div>
-          </p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="col-lg-2 col-md-4 mt-md-4 col-sm-6 offset-md-2 mt-sm-4 offset-lg-0 mt-lg-0 mt-md-0">
-      <div class="card mb-0">
-        <div class="card-body">
-          <p class="card-text">
-            <div class="stat mb-1">
-              <%= @counters.utilization.round(2) %>
-              %
+      <div class="card-summary-container">
+        <div class="card-summary">
+          <div class="card-summary-body">
+            <div class="card-summary-value">
+              <%= @counters.utilization.round(2) %> %
             </div>
-            <div class="desc">
+            <div class="card-summary-title">
               Utilization
             </div>
-          </p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="col-lg-2 col-md-4 mt-md-4 col-sm-6 mt-sm-4 offset-sm-3 offset-lg-0 mt-lg-0 mt-md-0 offset-md-0">
-      <div class="card mb-0">
-        <div class="card-body">
-          <p class="card-text">
-            <div class="stat mb-1">
+      <div class="card-summary-container">
+        <div class="card-summary">
+          <div class="card-summary-body">
+            <div class="card-summary-value">
               <%= format_memory @counters.rss %>
             </div>
-            <div class="desc">
+            <div class="card-summary-title">
               RSS
             </div>
-          </p>
+          </div>
         </div>
       </div>
     </div>
-
   </div>
 </div>

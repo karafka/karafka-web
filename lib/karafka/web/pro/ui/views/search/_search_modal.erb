@@ -9,161 +9,127 @@
   matcher = @current_search[:matcher]
 %>
 
-<div class="modal" id="messages-search-modal">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="messages-search-modalLabel">
-          Edit Search Parameters
-        </h5>
+<dialog id="messages_search_modal" class="modal">
+  <form method="dialog" class="modal-backdrop">
+    <button class="cursor-default"></button>
+  </form>
 
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
+  <div class="modal-box modal-box w-11/12 max-w-3xl">
+    <form method="dialog" class="modal-backdrop">
+      <button class="btn-action btn-ghost absolute right-4 top-4">
+        <%== icon(:x_mark) %>
+      </button>
+    </form>
 
-      <div class="modal-body">
-        <form
-          id="messages-search-form"
-          class="form-horizontal"
-          method="get" action="<%= explorer_path(@topic_id, 'search') %>"
+    <h3 class="text-lg mb-3">Edit Search Parameters</h3>
+
+    <hr />
+
+    <form
+      id="messages-search-form"
+      class="space-y-4 mt-3 w-full"
+      method="get"
+      action="<%= explorer_path(@topic_id, 'search') %>"
+    >
+      <% if @errors.any? %>
+        <% alert_box_error('Please fix the following errors:') do %>
+          <ul class="list-disc list-inside">
+            <% @errors.each do |key, error| %>
+              <li><%= key %>: <%= error %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      <% end %>
+
+      <div class="flex items-center w-full">
+        <label for="input-field" class="w-1/3 text-gray-700">Matcher:</label>
+
+        <select
+          class="w-2/3 block select select-bordered"
+          id="matcher"
+          name="search[matcher]"
+          required
         >
-
-          <% if @errors.any? %>
-            <div class="alert alert-danger" id="search-form-errors">
-              <h4 class="alert-heading h5">Please fix the following errors:</h4>
-              <ul class="m-0">
-                <% @errors.each do |key, error| %>
-                  <li><%= key %>: <%= error %></li>
-                <% end %>
-              </ul>
-            </div>
+          <% @matchers.each do |available_matcher| %>
+            <option value="<%= available_matcher.name %>" <%= 'selected' if matcher == available_matcher.name %>>
+              <%= available_matcher.name %>
+            </option>
           <% end %>
-
-          <div class="form-row align-items-center">
-            <div class="form-group col-md-12 mb-3 ">
-              <div class="row">
-                <label for="matcher" class="col-sm-4 col-form-label">Matcher</label>
-                <div class="col-sm-8">
-                  <select class="form-control" id="matcher" name="search[matcher]" required>
-                    <% @matchers.each do |available_matcher| %>
-                      <option
-                        value="<%= available_matcher.name %>"
-                        <%= 'selected' if matcher == available_matcher.name %>
-                        required
-                      >
-                        <%= available_matcher.name %>
-                      </option>
-                    <% end %>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-row align-items-center">
-            <div class="form-group col-md-12 mb-3">
-              <div class="row">
-                <label for="search-phrase" class="col-sm-4 col-form-label">Phrase</label>
-
-                <div class="col-sm-8">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="phrase"
-                    name="search[phrase]"
-                    value="<%= phrase %>"
-                    placeholder="Enter phrase to search for"
-                    required
-                  >
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group col-md-12 mb-3 ">
-              <div class="row">
-                <label for="partitions" class="col-sm-4 col-form-label">Partitions</label>
-                <div class="col-sm-8">
-                  <select class="form-control" id="partitions" name="search[partitions][]" multiple required>
-                    <option value="all" <%= 'selected' if partitions.include?('all') || partitions.empty? %>>All</option>
-                    <% @partitions_count.times do |i| %>
-                      <option
-                        value="<%= i %>" <%= 'selected' if partitions.include?(i.to_s) %>
-                      >
-                        Partition <%= i %>
-                      </option>
-                    <% end %>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-row align-items-center">
-            <div class="form-group col-md-12 mb-3 ">
-              <div class="row">
-                <label for="starting-offset" class="col-sm-4 col-form-label">Offset</label>
-                <div class="col-sm-8">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="search[offset_type]" id="offset-latest" value="latest" <%= 'checked' if offset_type == 'latest' || offset_type.empty? %>>
-                    <label class="form-check-label" for="offset-latest">Latest</label>
-                  </div>
-
-                  <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="search[offset_type]"
-                      id="offset-value"
-                      value="offset" <%= 'checked' if offset_type == 'offset' %>
-                    >
-
-                    <label class="form-check-label" for="offset-value">Offset</label>
-
-                    <input
-                      type="number"
-                      value="<%= offset %>"
-                      class="form-control mt-2"
-                      id="offset-input"
-                      name="search[offset]"
-                      min="0"
-                      disabled
-                    >
-                  </div>
-
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="search[offset_type]" id="offset-timestamp" value="timestamp" <%= 'checked' if offset_type == 'timestamp' %>>
-                    <label class="form-check-label" for="offset-timestamp">Timestamp (in ms)</label>
-                    <input type="number" value="<%= timestamp %>" class="form-control mt-2" id="offset-timestamp-input" name="search[timestamp]" min="0" max="<%= ((Time.now.to_f + 60 * 60 * 24 * 31) * 1_000).to_i %>" disabled>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group col-md-12 mb-3 ">
-              <div class="row">
-                <label for="limit" class="col-sm-4 col-form-label">Messages</label>
-                <div class="col-sm-8">
-                  <select class="form-control" id="limit" name="search[limit]" required>
-                    <% @limits.each do |available_limit| %>
-                      <option
-                        value="<%= available_limit %>"
-                        <%= 'selected' if limit == available_limit %>
-                      >
-                        <%= available_limit %>
-                      </option>
-                    <% end %>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-row align-items-center">
-            <div class="form-group col-md-12 mb-3  text-center d-grid">
-              <button type="submit" class="btn btn-primary btn-lockable">Search</button>
-            </div>
-          </div>
-        </form>
+        </select>
       </div>
-    </div>
+
+      <div class="flex items-center w-full">
+        <label for="input-field" class="w-1/3 text-gray-700">Phrase:</label>
+
+        <input
+          type="text"
+          class="w-2/3 block input input-bordered"
+          id="phrase"
+          name="search[phrase]"
+          value="<%= phrase %>"
+          placeholder="Enter phrase to search for"
+          required
+        >
+      </div>
+
+      <div class="flex items-center w-full">
+        <label for="input-field" class="w-1/3 text-gray-700">Partitions:</label>
+
+        <select
+          class="w-2/3 block select select-bordered p-4"
+          id="partitions"
+          name="search[partitions][]"
+          multiple
+          required
+        >
+          <option value="all" <%= 'selected' if partitions.include?('all') || partitions.empty? %>>All</option>
+          <% @partitions_count.times do |i| %>
+            <option value="<%= i %>" <%= 'selected' if partitions.include?(i.to_s) %>>
+              Partition <%= i %>
+            </option>
+          <% end %>
+        </select>
+      </div>
+
+      <div class="flex items-center w-full">
+        <label for="input-field" class="w-1/3 text-gray-700">Offset:</label>
+
+        <div class="flex flex-col space-y-2 w-2/3">
+          <label class="flex items-center space-x-2">
+            <input type="radio" class="radio" name="search[offset_type]" id="offset-latest" value="latest" <%= 'checked' if offset_type == 'latest' || offset_type.empty? %>>
+            <span>Latest</span>
+          </label>
+          <label class="flex items-center space-x-2">
+            <input type="radio" class="radio" name="search[offset_type]" id="offset-value" value="offset" <%= 'checked' if offset_type == 'offset' %>>
+            <span>Offset</span>
+          </label>
+          <input type="number" value="<%= offset %>" class="input input-bordered mt-2" id="offset-input" name="search[offset]" min="0" disabled>
+          <label class="flex items-center space-x-2">
+            <input type="radio" class="radio" name="search[offset_type]" id="offset-timestamp" value="timestamp" <%= 'checked' if offset_type == 'timestamp' %>>
+            <span>Timestamp (in ms)</span>
+          </label>
+          <input type="number" value="<%= timestamp %>" class="input input-bordered mt-2" id="offset-timestamp-input" name="search[timestamp]" min="0" max="<%= ((Time.now.to_f + 60 * 60 * 24 * 31) * 1_000).to_i %>" disabled>
+        </div>
+      </div>
+
+      <div class="flex items-center w-full">
+        <label for="input-field" class="w-1/3 text-gray-700">Messages:</label>
+
+        <select class="w-2/3 block select select-bordered" id="limit" name="search[limit]" required>
+          <% @limits.each do |available_limit| %>
+            <option value="<%= available_limit %>" <%= 'selected' if limit == available_limit %>>
+              <%= available_limit %>
+            </option>
+          <% end %>
+        </select>
+      </div>
+
+      <div class="form-control text-center">
+        <button type="submit" class="btn btn-primary">
+          <%== icon(:magnifying_glass) %>
+          Search
+        </button>
+      </div>
+    </form>
   </div>
-</div>
+</dialog>

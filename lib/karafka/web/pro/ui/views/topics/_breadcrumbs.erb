@@ -1,11 +1,11 @@
-<li class="breadcrumb-item">
+<li>
   <a href="<%= root_path('topics') %>">
-    Topics informations
+    Topics
   </a>
 </li>
 
 <% if @topic %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= root_path('topics', @topic.topic_name, 'config') %>">
       <%= @topic.topic_name %>
     </a>
@@ -13,7 +13,7 @@
 <% end %>
 
 <% if @configs %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= root_path('topics', @topic.topic_name, 'config') %>">
       Configuration
     </a>
@@ -21,7 +21,7 @@
 <% end %>
 
 <% if @partitions %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= root_path('topics', @topic.topic_name, 'replication') %>">
       Replication
     </a>
@@ -29,9 +29,17 @@
 <% end %>
 
 <% if @distribution %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= root_path('topics', @topic.topic_name, 'distribution') %>">
       Distribution
+    </a>
+  </li>
+<% end %>
+
+<% if @offsets %>
+  <li>
+    <a href="<%= root_path('topics', @topic.topic_name, 'offsets') %>">
+      Offsets
     </a>
   </li>
 <% end %>

@@ -1,67 +1,67 @@
-<%== view_title('Consumers Groups Overview') %>
+<% view_title 'Consumers Groups Overview' %>
 
 <%== partial 'health/tabs' %>
 
-<% if @stats.empty? %>
-  <%== partial 'health/no_data' %>
-<% end %>
+<div class="col-span-12">
+  <% if @stats.empty? %>
+    <%== partial 'health/no_data' %>
+  <% end %>
 
-<% @stats.each_with_index do |(cg_name, details), index| %>
-  <div class="container mb-5">
-    <%== partial 'health/consumer_group_header', locals: { cg_name: cg_name, details: details } %>
+  <% @stats.each_with_index do |(cg_name, details), index| %>
+    <h2 class="h2"><%= cg_name %></h2>
 
-    <div class="row mb-3">
-      <div class="col-sm-12 table-responsive">
-        <% topics = details[:topics] %>
-        <% topics.each_with_index do |(topic_name, partitions), index| %>
-          <table class="processes bg-white table table-hover table-bordered table-striped align-middle <%= (index+1 < topics.size) ? 'mb-5' : 'mb-3' %>">
-            <thead>
-              <tr class="align-middle">
-                <th colspan="100">
-                  <h5 class="mb-0"><%= topic_name %></h4>
-                </th>
-              </tr>
-              <tr class="align-middle">
-                <th colspan="1" rowspan="2">
-                  <%== sort_link('Partition', :id) %>
-                </th>
-                <th colspan="1" rowspan="2">
-                  <%== sort_link(:lag_hybrid) %>
-                </th>
-                <th colspan="1" rowspan="2">
-                  <%== sort_link(:stored_offset) %>
-                </th>
-                <th colspan="3" rowspan="1" class="text-center">
-                  States
-                </th>
+    <% topics = details[:topics] %>
+    <% topics.each_with_index do |(topic_name, partitions), index| %>
+      <div class="data-table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th colspan="100">
+                <%= topic_name %>
+              </th>
+            </tr>
+            <tr>
+              <th colspan="1" rowspan="2">
+                <%== sort_link('Partition', :id) %>
+              </th>
+              <th colspan="1" rowspan="2">
+                <%== sort_link(:lag_hybrid) %>
+              </th>
+              <th colspan="1" rowspan="2">
+                <%== sort_link(:stored_offset) %>
+              </th>
+              <th colspan="3" rowspan="1" class="text-center">
+                States
+              </th>
 
-                <th colspan="1" rowspan="2">
-                 <%== sort_link(:id) %>
-                </th>
-              </tr>
-              <tr class="align-middle">
-                <th><%== sort_link(:fetch_state) %></th>
-                <th><%== sort_link(:poll_state) %></th>
-                <th><%== sort_link(:lso_risk_state) %></th>
-              </tr>
-            </thead>
-            <tbody>
-                <% partitions.each do |partition_id, details| %>
-                  <%==
-                    partial(
-                      'health/partition',
-                      locals: {
-                        topic_name: topic_name,
-                        partition_id: partition_id,
-                        details: details
-                      }
-                    )
-                  %>
-                <% end %>
-            </tbody>
-          </table>
-        <% end %>
+              <th colspan="1" rowspan="2">
+               <%== sort_link(:id) %>
+              </th>
+            </tr>
+            <tr>
+              <th><%== sort_link(:fetch_state) %></th>
+              <th><%== sort_link(:poll_state) %></th>
+              <th><%== sort_link(:lso_risk_state) %></th>
+            </tr>
+          </thead>
+          <tbody>
+              <% partitions.each do |partition_id, details| %>
+                <%==
+                  partial(
+                    'health/partition',
+                    locals: {
+                      topic_name: topic_name,
+                      partition_id: partition_id,
+                      details: details
+                    }
+                  )
+                %>
+              <% end %>
+          </tbody>
+        </table>
+
+        <%== partial 'health/table_metadata', locals: { details: details } %>
       </div>
-    </div>
-  </div>
-<% end %>
+    <% end %>
+  <% end %>
+</div>

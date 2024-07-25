@@ -1,17 +1,12 @@
-<div class="row mb-4">
-  <div class="col-sm-12">
-    <h4 class="mb-2">
-      <%= consumer_group.id %>
-    </h4>
-    <hr/>
-  </div>
-</div>
+<div class="col-span-12 mb-3">
+  <h2 class="h2">
+    <%= consumer_group.id %>
+  </h2>
 
-<div class="row mb-5">
-  <div class="col-sm-12 table-responsive">
-    <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+  <div class="data-table-wrapper">
+    <table class="data-table">
       <thead>
-        <tr class="align-middle">
+        <tr>
           <th>Subscription group</th>
           <th><%== sort_link('Topic', :name) %></th>
           <th><%== sort_link(:active?) %></th>

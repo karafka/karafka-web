@@ -5,7 +5,7 @@
 
   <tr>
     <td>
-      <span class="badge bg-secondary badge-topic">
+      <span class="badge badge-secondary">
         <% if error[:details].key?(:topic) %>
           <%= error[:details][:topic] %>: <%= error[:details][:partition] %>
         <% else %>
@@ -23,10 +23,8 @@
     <td>
       <%== relative_time error[:occurred_at] %>
     </td>
-    <td class="text-center">
-      <a href="<%= root_path('errors', error_msg.offset) %>" class="btn btn-sm btn-secondary text-white">
-        Details
-      </a>
+    <td>
+      <%== link_button_primary_sm 'Details', root_path('errors', error_msg.offset) %>
     </td>
   </tr>
 <% end %>
