@@ -42,6 +42,7 @@
 - [Fix] Fix not working page reporting in breadcrumbs.
 - [Fix] Fix invalid redirect when trying to view particular errors partition time location.
 - [Fix] Fix several UI inconsistencies.
+- [Fix] License identifier `LGPL-3.0` is deprecated for SPDX (#2177).
 
 ## 0.9.1 (2024-05-03)
 - [Fix] OSS `lag_stored` for not-subscribed consumers causes Web UI to crash.
