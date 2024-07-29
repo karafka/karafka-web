@@ -1,11 +1,11 @@
-<li class="breadcrumb-item">
+<li>
   <a href="<%= root_path('consumers/overview') %>">
     Consumers
   </a>
 </li>
 
 <% if current_path.include?('/commands') %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= root_path('commands') %>">
       Commands
     </a>
@@ -13,7 +13,7 @@
 <% end %>
 
 <% if @command_message %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= root_path('commands', @command_message.offset) %>">
       <%= @command_message.offset %>
     </a>

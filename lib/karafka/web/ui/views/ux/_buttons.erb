@@ -1,0 +1,20 @@
+<div>
+  <span class="btn">.btn</span>
+
+  <% tailwind_types.each do |type| %>
+    <span class="btn btn-<%= type %>">.btn btn-<%= type %></span>
+  <% end %>
+</div>
+<div class="mb-6"></div>
+
+<div>
+  <%== link_button '#link_button', '#' %>
+
+  <% tailwind_types.each do |type| %>
+    <%==
+      name = :"link_button_#{type}"
+      public_send name, "##{name}", '#'
+    %>
+  <% end %>
+</div>
+<div class="mb-6"></div>

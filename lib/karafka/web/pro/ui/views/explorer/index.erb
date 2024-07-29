@@ -1,16 +1,14 @@
-<%== view_title('Explorer', hr: true) %>
+<% view_title 'Explorer' %>
 
-<div class="container">
-  <% if @topics.empty? %>
-    <%== partial 'explorer/no_topics' %>
-  <% else %>
-    <div class="row mb-5 row-cols-1 row-cols-md-4 g-4">
-      <%==
-        each_partial(
-          @topics,
-          'explorer/topic'
-        )
-      %>
-    </div>
-  <% end %>
-</div>
+<% if @topics.empty? %>
+  <%== partial 'explorer/no_topics' %>
+<% else %>
+  <div class="topic-tiles">
+    <%==
+      each_partial(
+        @topics,
+        'explorer/topic'
+      )
+    %>
+  </div>
+<% end %>

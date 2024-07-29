@@ -8,7 +8,7 @@
     <td class="text-muted">
       <%= message[1] %>
     </td>
-    <td colspan="3" class="text-center text-muted">
+    <td colspan="4" class="text-center text-muted">
       This offset does not contain any data. The message may have been compacted or is a system entry.
     </td>
   </tr>
@@ -37,10 +37,13 @@
         <span class="text-muted">[Filtered]</span>
       <% end %>
     </td>
-    <td class="text-center">
-      <a href="<%= explorer_path(message.topic, message.partition, message.offset) %>" class="btn btn-sm btn-secondary">
-        Details
-      </a>
+    <td>
+      <%==
+        link_button_primary_sm(
+          'Details',
+          explorer_path(message.topic, message.partition, message.offset)
+        )
+      %>
     </td>
   </tr>
 <% end %>

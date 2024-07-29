@@ -1,40 +1,35 @@
-<main>
-  <div id="content">
-    <div class="d-flex align-items-center justify-content-center vh-100">
-      <div class="error-message text-center">
-        <h1 class="display-1 fw-bold">404</h1>
+<main class="flex items-center justify-center min-h-screen">
+  <div id="content" class="max-w-2xl w-full mx-auto">
+    <div class="flex items-center justify-center vh-100">
+      <div class="text-center">
+        <h1 class="text-8xl font-bold">404</h1>
 
-        <p class="fs-3 md-5">
-          <span class="text-danger">
-            Oops!
-          </span>
-          Page not found.
+        <p class="text-3xl mt-5">
+          <span class="text-red-500">Oops!</span> Page not found.
         </p>
 
-        <div class="lead">
-          <p class="mb-5">
+        <div class="mt-5">
+          <p class="mb-10 text-lg font-light">
             The page you're looking for doesn't exist.
           </p>
 
-          <p>
-            Please make sure, that:
-          </p>
+          <p class="text-lg font-light mb-5">Please make sure, that:</p>
 
-          <ul class="mb-5 text-start">
-            <li>You have visited the <a href="<%= root_path('status') %>">Status</a> page to troubleshoot any potential issues</li>
+          <ul class="list-disc text-left text-lg mb-10 pl-5 font-light">
+            <li>You have visited the <a href="<%= root_path('status') %>" class="text-blue-500 underline">Status</a> page to troubleshoot any potential issues</li>
             <li>All the topics required by Karafka Web exist</li>
-            <li>You have used <code>bundle exec karafka-web migrate</code> to initialize the Web UI</li>
+            <li>You have used <code class="bg-gray-100 px-1 py-0.5 rounded">bundle exec karafka-web migrate</code> to initialize the Web UI</li>
             <li>You have a working connection with your Kafka cluster</li>
             <li>The resource you requested exists</li>
           </ul>
 
-          <p class="mb-5">
+          <p class="mb-10 text-lg font-light">
             If you were looking for a given process or other real-time information, the state might have changed, and the information you are looking for no longer exists.
           </p>
 
           <p>
-            <a href="<%= root_path %>" class="btn btn-primary">Go Home</a>
-            <a href="<%= root_path('status') %>" class="btn btn-success">Status page</a>
+            <a href="<%= root_path %>" class="btn btn-primary mr-2 rounded-md py-1">Go Home</a>
+            <a href="<%= root_path('status') %>" class="btn btn-success text-white rounded-md">Status page</a>
           </p>
         </div>
       </div>

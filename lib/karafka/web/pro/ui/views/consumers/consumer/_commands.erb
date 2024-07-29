@@ -1,32 +1,39 @@
-<% if Karafka::Web.config.commanding.active %>
-  <div class="col-md-12 col-lg-4 text-end">
-    <div class="d-flex flex-nowrap float-end">
-      <%
-        probe_path = root_path('commanding', process.id, 'probe')
-        disabled_class = process.status != 'stopped' ? '' : 'disabled'
-      %>
-      <form action="<%= probe_path %>" method="post" class="d-inline-flex align-items-center mx-1">
-        <%== csrf_tag(probe_path) %>
-        <input type="submit" value="&#x2699; Probe" class="btn btn-secondary btn-sm <%= disabled_class %>"/>
-      </form>
+<% if Karafka::Web.config.commanding.active && !process.tags.include?('embedded') %>
+  <div class="col-span-12 flex justify-end space-x-2 mb-6">
+    <%
+      probe_path = root_path('commanding', process.id, 'probe')
+      disabled_class = process.status != 'stopped' ? '' : 'btn-disabled'
+    %>
+    <form action="<%= probe_path %>" method="post" class="inline-flex items-center">
+      <%== csrf_tag(probe_path) %>
+      <button type="submit" class="btn btn-info btn-sm <%= disabled_class %>">
+        <%== icon(:gear) %>
+        Probe
+      </button>
+    </form>
 
-      <%
-        quiet_path = root_path('commanding', process.id, 'quiet')
-        disabled_class = process.status == 'running' ? '' : 'disabled'
-      %>
-      <form action="<%= quiet_path %>" method="post" class="d-inline-flex align-items-center mx-1">
-        <%== csrf_tag(quiet_path) %>
-        <input type="submit" value="&#x23F8; Quiet" class="btn btn-warning btn-sm <%= disabled_class %>"/>
-      </form>
+    <%
+      quiet_path = root_path('commanding', process.id, 'quiet')
+      disabled_class = process.status == 'running' ? '' : 'btn-disabled'
+    %>
+    <form action="<%= quiet_path %>" method="post" class="inline-flex items-center">
+      <%== csrf_tag(quiet_path) %>
+      <button type="submit" class="btn btn-warning btn-sm <%= disabled_class %>">
+        <%== icon(:pause) %>
+        Quiet
+      </button>
+    </form>
 
-      <%
-        stop_path = root_path('commanding', process.id, 'stop')
-        disabled_class = process.status != 'stopping' && process.status != 'stopped' ? '' : 'disabled'
-      %>
-      <form action="<%= stop_path %>" method="post" class="d-inline-flex align-items-center mx-1">
-        <%== csrf_tag(stop_path) %>
-        <input type="submit" value="&#x25A0; Stop" class="btn btn-danger btn-sm <%= disabled_class %>"/>
-      </form>
-    </div>
+    <%
+      stop_path = root_path('commanding', process.id, 'stop')
+      disabled_class = process.status != 'stopping' && process.status != 'stopped' ? '' : 'btn-disabled'
+    %>
+    <form action="<%= stop_path %>" method="post" class="inline-flex items-center">
+      <%== csrf_tag(stop_path) %>
+      <button type="submit" class="btn btn-error btn-sm <%= disabled_class %>">
+        <%== icon(:stop) %>
+        Stop
+      </button>
+    </form>
   </div>
 <% end %>

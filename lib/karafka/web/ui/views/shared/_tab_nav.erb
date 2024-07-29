@@ -1,7 +1,6 @@
 <% active ||= false %>
+<% disabled ||= false %>
 
-<li class="nav-item" role="presentation">
-  <button class="nav-link <%= 'active' if active %>" id="<%= id %>-tab" data-bs-toggle="tab" data-bs-target="#<%= id %>" type="button" role="tab">
-    <%= title %>
-  </button>
-</li>
+<span class="custom-tab <%= 'active' if active %> <%= 'disabled' if disabled %>" id="<%= id %>-tab" data-target="<%= id %>">
+  <%= title %>
+</span>

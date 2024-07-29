@@ -1,18 +1,16 @@
 <tr class="status-row-<%= process.status %>">
   <td>
-    <div class="badge badge-topic <%= status_bg(process.status) %> float-end">
-      <%= process.status %>
-    </div>
+    <p>
+      <a href="<%= root_path('consumers', process.id, 'subscriptions') %>">
+        <%== truncate(process.id, strategy: :middle) %>
+      </a>
+    </p>
 
-    <a href="<%= root_path('consumers', process.id, 'subscriptions') %>">
-      <%== truncate(process.id, strategy: :middle) %>
-    </a>
-
-    <p class="mt-0 mb-1">
+    <p class="mt-1">
       <%== partial 'consumers/assignments_badges', locals: { process: process } %>
     </p>
 
-    <p class="mt-0 mb-1">
+    <p>
       <%== tags(process.tags) %>
     </p>
   </td>
@@ -22,22 +20,16 @@
   </td>
 
   <td>
-    <span class="badge bg-primary badge-topic">
-      <%= format_memory process.memory_usage %>
-    </span>
-    <span class="badge bg-primary badge-topic">
-      <%= format_memory process.memory_total_usage %>
-    </span>
-    <span class="badge bg-primary badge-topic">
-      <%= format_memory process.memory_size %>
-    </span>
+    <%== badge_primary_sm format_memory process.memory_usage %>
+    <%== badge_primary_sm format_memory process.memory_total_usage %>
+    <%== badge_primary_sm format_memory process.memory_size %>
   </td>
 
   <td>
-    <span class="badge bg-primary badge-topic">
+    <span class="badge badge-primary">
       <%= process.utilization.round(1) %>%
     </span>
-    <span class="badge bg-primary badge-topic">
+    <span class="badge badge-primary">
       <%= process.workers %> /
       <%= process.busy %>
     </span>
@@ -45,9 +37,7 @@
 
   <td>
     <% process.cpu_usage.each do |metric| %>
-      <span class="badge bg-primary badge-topic">
-        <%= metric %>
-      </span>
+      <%== badge_primary_sm metric %>
     <% end %>
   </td>
 

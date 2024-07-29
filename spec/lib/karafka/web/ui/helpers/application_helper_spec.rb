@@ -3,8 +3,8 @@
 RSpec.describe_current do
   include described_class
 
-  describe '#status_bg' do
-    subject(:result) { status_bg(status) }
+  describe '#status_badge' do
+    subject(:result) { status_badge(status) }
 
     context 'when status is initialized, supervising, or running' do
       %w[
@@ -14,8 +14,8 @@ RSpec.describe_current do
       ].each do |valid_status|
         let(:status) { valid_status }
 
-        it 'returns bg-success' do
-          expect(result).to eq('bg-success')
+        it 'returns badge-success' do
+          expect(result).to eq('badge-success')
         end
       end
     end
@@ -23,8 +23,8 @@ RSpec.describe_current do
     context 'when status is quieting' do
       let(:status) { 'quieting' }
 
-      it 'returns bg-warning' do
-        expect(result).to eq('bg-warning')
+      it 'returns badge-warning' do
+        expect(result).to eq('badge-warning')
       end
     end
 
@@ -35,8 +35,8 @@ RSpec.describe_current do
       ].each do |warning_status|
         let(:status) { warning_status }
 
-        it 'returns bg-warning text-dark' do
-          expect(result).to eq('bg-warning text-dark')
+        it 'returns badge-warning' do
+          expect(result).to eq('badge-warning')
         end
       end
     end
@@ -48,8 +48,8 @@ RSpec.describe_current do
       ].each do |danger_status|
         let(:status) { danger_status }
 
-        it 'returns bg-danger' do
-          expect(result).to eq('bg-danger')
+        it 'returns badge-error' do
+          expect(result).to eq('badge-error')
         end
       end
     end
@@ -63,36 +63,36 @@ RSpec.describe_current do
     end
   end
 
-  describe '#lag_trend_bg' do
-    subject(:result) { lag_trend_bg(trend) }
+  describe '#lag_trend_badge' do
+    subject(:result) { lag_trend_badge(trend) }
 
     context 'when trend is negative' do
       let(:trend) { -1 }
 
-      it 'returns bg-success' do
-        expect(result).to eq('bg-success')
+      it 'returns badge-success' do
+        expect(result).to eq('badge-success')
       end
     end
 
     context 'when trend is positive' do
       let(:trend) { 1 }
 
-      it 'returns bg-warning text-dark' do
-        expect(result).to eq('bg-warning text-dark')
+      it 'returns badge-warning' do
+        expect(result).to eq('badge-warning')
       end
     end
 
     context 'when trend is zero' do
       let(:trend) { 0 }
 
-      it 'returns bg-secondary' do
-        expect(result).to eq('bg-secondary')
+      it 'returns badge-secondary' do
+        expect(result).to eq('badge-secondary')
       end
     end
   end
 
-  describe '#kafka_state_bg' do
-    subject(:result) { kafka_state_bg(state) }
+  describe '#kafka_state_badge' do
+    subject(:result) { kafka_state_badge(state) }
 
     context 'when state is up, active, or steady' do
       %w[
@@ -102,8 +102,8 @@ RSpec.describe_current do
       ].each do |positive_state|
         let(:state) { positive_state }
 
-        it 'returns bg-success text-white' do
-          expect(result).to eq('bg-success text-white')
+        it 'returns badge-success' do
+          expect(result).to eq('badge-success')
         end
       end
     end
@@ -111,8 +111,8 @@ RSpec.describe_current do
     context 'when state is any other value' do
       let(:state) { 'down' }
 
-      it 'returns bg-warning text-dark' do
-        expect(result).to eq('bg-warning text-dark')
+      it 'returns badge-warning' do
+        expect(result).to eq('badge-warning')
       end
     end
   end

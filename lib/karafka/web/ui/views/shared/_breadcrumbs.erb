@@ -1,0 +1,23 @@
+<% if @breadcrumbs != false %>
+  <div class="breadcrumbs-wrapper">
+    <div class="breadcrumbs">
+      <ul>
+        <li>
+          <a href="<%= root_path %>">
+            Home
+          </a>
+        </li>
+
+        <%== render_breadcrumbs %>
+
+        <% if params.current_page && params.current_page > 1 %>
+          <li>
+            <a href="<%= current_path(page: params.current_page) %>">
+              Page <%= params.current_page %>
+            </a>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+<% end %>

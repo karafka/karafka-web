@@ -1,27 +1,25 @@
-<%== view_title('Cluster Informations', hr: true) %>
+<% view_title 'Cluster Informations' %>
 
 <%== partial 'cluster/tabs' %>
 
-<div class="container mb-5">
-  <div class="row">
-    <div class="col-lg-12 table-responsive">
-      <table class="processes bg-white table table-hover table-bordered table-striped">
-        <thead>
-          <tr class="align-middle">
-            <th><%== sort_link(:id) %></th>
-            <th><%== sort_link(:name) %></th>
-            <th><%== sort_link(:port) %></th>
-          </tr>
-        </thead>
-        <tbody>
-          <%==
-            each_partial(
-              @brokers,
-              'cluster/broker'
-            )
-          %>
-        </tbody>
-      </table>
-    </div>
+<div class="col-span-12 mb-3">
+  <div class="data-table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th><%== sort_link(:id) %></th>
+          <th><%== sort_link(:name) %></th>
+          <th><%== sort_link(:port) %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <%==
+          each_partial(
+            @brokers,
+            'cluster/broker'
+          )
+        %>
+      </tbody>
+    </table>
   </div>
 </div>

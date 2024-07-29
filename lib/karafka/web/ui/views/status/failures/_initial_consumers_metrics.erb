@@ -1,25 +1,25 @@
 <% if details[:issue_type] == :deserialization %>
-  <p>
+  <p class="mb-2">
     The initial state of the consumers metrics appears to be corrupted.
   </p>
 
-  <p>
+  <p class="mb-2">
     This issue typically arises when invalid messages have been sent to the Karafka consumers' metrics topic or when the topic has been populated with data from a newer Karafka Web UI without updating it.
   </p>
 
-  <p class="mb-0">
+  <p>
     To resolve this, please first attempt to upgrade the Karafka Web UI. If the problem persists, execute <code>bundle exec karafka-web reset</code> to reset the Web UI.
   </p>
 <% else %>
-  <p>
+  <p class="mb-2">
     The initial consumers metrics for the Web UI were not created.
   </p>
 
-  <p>
+  <p class="mb-2">
     It means that the <code>bundle exec karafka-web migrate</code> was not executed or failed.
   </p>
 
-  <p class="mb-0">
+  <p>
     To fix this, you need to ensure that the <code>bundle exec karafka-web migrate</code> runs successfully.
   </p>
 <% end %>

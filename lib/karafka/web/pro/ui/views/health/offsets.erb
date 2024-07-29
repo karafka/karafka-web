@@ -1,61 +1,61 @@
-<%== view_title('Consumers Groups Offsets Details') %>
+<% view_title 'Consumers Groups Offsets Details' %>
 
 <%== partial 'health/tabs' %>
 
-<% if @stats.empty? %>
-  <%== partial 'health/no_data' %>
-<% end %>
+<div class="col-span-12">
+  <% if @stats.empty? %>
+    <%== partial 'health/no_data' %>
+  <% end %>
 
-<% @stats.each_with_index do |(cg_name, details), index| %>
-  <div class="container mb-5">
-    <%== partial 'health/consumer_group_header', locals: { cg_name: cg_name, details: details } %>
+  <% @stats.each_with_index do |(cg_name, details), index| %>
+    <h2 class="h2"><%= cg_name %></h2>
 
-    <div class="row mb-3">
-      <div class="col-sm-12 table-responsive">
-        <% topics = details[:topics] %>
-        <% topics.each_with_index do |(topic_name, partitions), index| %>
-          <table class="processes bg-white table table-hover table-bordered table-striped align-middle <%= (index+1 < topics.size) ? 'mb-5' : 'mb-3' %>">
-            <thead>
-              <tr class="align-middle">
-                <th colspan="12">
-                  <h5 class="mb-0"><%= topic_name %></h4>
-                </th>
-              </tr>
-              <tr class="align-middle">
-                <th rowspan="2"><%== sort_link('Partition', :id) %></th>
-                <th rowspan="2"><%== sort_link(:lag_hybrid) %></th>
-                <th colspan="10" class="text-center">Offsets</th>
-              </tr>
-              <tr class="align-middle">
-                <th><%== sort_link(:committed_offset) %></th>
-                <th><%== sort_link('Committed change', :committed_offset_fd) %></th>
-                <th><%== sort_link(:stored_offset) %></th>
-                <th><%== sort_link('Stored change', :stored_offset_fd) %></th>
-                <th><%== sort_link(:lo_offset) %></th>
-                <th><%== sort_link(:hi_offset) %></th>
-                <th><%== sort_link('High change', :hi_offset_fd) %></th>
-                <th><%== sort_link(:ls_offset) %></th>
-                <th><%== sort_link('LSO change', :ls_offset_fd) %></th>
-                <th><%== sort_link('LSO state', :lso_risk_state) %></th>
-              </tr>
-            </thead>
-            <tbody>
-                <% partitions.each do |partition_id, details| %>
-                  <%==
-                    partial(
-                      'health/partition_offset',
-                      locals: {
-                        topic_name: topic_name,
-                        partition_id: partition_id,
-                        details: details
-                      }
-                    )
-                  %>
-                <% end %>
-            </tbody>
-          </table>
-        <% end %>
+    <% topics = details[:topics] %>
+    <% topics.each_with_index do |(topic_name, partitions), index| %>
+      <div class="data-table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th colspan="12">
+                <%= topic_name %>
+              </th>
+            </tr>
+            <tr>
+              <th rowspan="2"><%== sort_link('Partition', :id) %></th>
+              <th rowspan="2"><%== sort_link(:lag_hybrid) %></th>
+              <th colspan="10" class="text-center">Offsets</th>
+            </tr>
+            <tr>
+              <th><%== sort_link(:committed_offset) %></th>
+              <th><%== sort_link('Committed change', :committed_offset_fd) %></th>
+              <th><%== sort_link(:stored_offset) %></th>
+              <th><%== sort_link('Stored change', :stored_offset_fd) %></th>
+              <th><%== sort_link(:lo_offset) %></th>
+              <th><%== sort_link(:hi_offset) %></th>
+              <th><%== sort_link('High change', :hi_offset_fd) %></th>
+              <th><%== sort_link(:ls_offset) %></th>
+              <th><%== sort_link('LSO change', :ls_offset_fd) %></th>
+              <th><%== sort_link('LSO state', :lso_risk_state) %></th>
+            </tr>
+          </thead>
+          <tbody>
+              <% partitions.each do |partition_id, details| %>
+                <%==
+                  partial(
+                    'health/partition_offset',
+                    locals: {
+                      topic_name: topic_name,
+                      partition_id: partition_id,
+                      details: details
+                    }
+                  )
+                %>
+              <% end %>
+          </tbody>
+        </table>
+
+        <%== partial 'health/table_metadata', locals: { details: details } %>
       </div>
-    </div>
-  </div>
-<% end %>
+    <% end %>
+  <% end %>
+</div>

@@ -1,23 +1,23 @@
 <% if @pagination && @pagination.paginate? %>
-  <div id="pagination" class="container mb-4">
+  <div id="pagination" class="col-span-12 my-3 mb-10 mt-0">
     <div class="row">
-      <nav>
-        <ul class="pagination justify-content-center">
-          <li class="page-item <%= 'disabled' unless @pagination.first_offset? %>">
-            <a class="page-link" href="<%= current_path(@pagination.offset_key => @pagination.first_offset || 1) %>">
+      <nav class="flex justify-center">
+        <ul class="pagination flex space-x-1">
+          <li class="<%= 'disabled' unless @pagination.first_offset? %>">
+            <a class="btn font-normal <%= 'btn-disabled' unless @pagination.first_offset? %>" href="<%= current_path(@pagination.offset_key => @pagination.first_offset || 1) %>">
               <span>&laquo;</span>
             </a>
           </li>
 
-          <li class="page-item <%= 'disabled' unless @pagination.previous_offset? %>">
-            <a class="page-link" href="<%= current_path(@pagination.offset_key => @pagination.previous_offset) %>">
+          <li class="<%= 'disabled' unless @pagination.previous_offset? %>">
+            <a class="btn font-normal <%= 'btn-disabled' unless @pagination.previous_offset? %>" href="<%= current_path(@pagination.offset_key => @pagination.previous_offset) %>">
               <span>&lsaquo; Prev</span>
             </a>
           </li>
 
           <% if @pagination.current_offset? %>
-            <li class="page-item active disabled">
-              <a class="page-link" href="<%= current_path(@pagination.offset_key => @pagination.current_offset) %>">
+            <li class="active">
+              <a class="btn btn-active font-normal" href="<%= current_path(@pagination.offset_key => @pagination.current_offset) %>">
                 <span>
                   <%= @pagination.current_label %>
                 </span>
@@ -25,8 +25,8 @@
             </li>
           <% end %>
 
-          <li class="page-item <%= 'disabled' unless @pagination.next_offset? %>">
-            <a class="page-link" href="<%= current_path(@pagination.offset_key => @pagination.next_offset) %>">
+          <li class="<%= 'disabled' unless @pagination.next_offset? %>">
+            <a class="btn font-bold font-normal <%= 'btn-disabled' unless @pagination.next_offset? %>" href="<%= current_path(@pagination.offset_key => @pagination.next_offset) %>">
               <span>Next &rsaquo;</span>
             </a>
           </li>

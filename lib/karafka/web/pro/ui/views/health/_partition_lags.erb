@@ -1,4 +1,4 @@
-<tr class="align-middle <%= lso_risk_state_bg(details) %> status-row-<%= details.process.status %>">
+<tr class="<%= lso_risk_state_bg(details) %> status-row-<%= details.process.status %>">
   <td>
     <%= partition_id %>
   </td>
@@ -12,12 +12,12 @@
   </td>
 
   <td>
-    <span class="badge <%= lag_trend_bg(details.lag_d) %>">
+    <span class="badge <%= lag_trend_badge(details.lag_d) %>">
       <%= details.lag_d %>
     </span>
   </td>
   <td>
-    <span class="badge <%= lag_trend_bg(details.lag_stored_d) %>">
+    <span class="badge <%= lag_trend_badge(details.lag_stored_d) %>">
       <%= details.lag_stored_d %>
     </span>
   </td>

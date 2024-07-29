@@ -33,6 +33,8 @@ module Karafka
               count
               share
               diff
+              low
+              high
             ].freeze
 
             # Lists available topics in the cluster
@@ -85,6 +87,35 @@ module Karafka
               @aggregated, distribution = @topic.distribution(@active_partitions)
 
               @distribution = refine(distribution)
+
+              next_page = @active_partitions.last < @topic.partition_count - 1
+              paginate(@params.current_page, next_page)
+
+              render
+            end
+
+            # Displays high and low offsets for given topic
+            #
+            # @param topic_name [String] topic we're interested in
+            def offsets(topic_name)
+              @topic = Models::Topic.find(topic_name)
+
+              @active_partitions, _materialized_page, @limited = Paginators::Partitions.call(
+                @topic.partition_count, @params.current_page
+              )
+
+              offsets = @active_partitions.map do |partition_id|
+                part_offsets = Admin.read_watermark_offsets(topic_name, partition_id)
+
+                {
+                  partition_id: partition_id,
+                  low: part_offsets.first,
+                  high: part_offsets.last,
+                  diff: part_offsets.last - part_offsets.first
+                }
+              end
+
+              @offsets = refine(offsets)
 
               next_page = @active_partitions.last < @topic.partition_count - 1
               paginate(@params.current_page, next_page)

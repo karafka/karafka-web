@@ -1,31 +1,5 @@
-<div id="content">
-  <div class="mb-4">
-    <% if @breadcrumbs != false %>
-      <div class="container mb-5">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-              <a href="<%= root_path %>">
-                Home
-              </a>
-            </li>
-
-            <%== render_breadcrumbs %>
-
-            <% if @current_page && @current_page > 1 %>
-              <li class="breadcrumb-item">
-                <a href="<%= current_path(page: @current_page) %>">
-                  Page <%= @current_page %>
-                </a>
-              </li>
-            <% end %>
-          </ol>
-        </nav>
-      </div>
-    <% end %>
-
-    <%== content %>
-  </div>
+<div id="content" class="col-span-12 mb-3">
+  <%== content %>
 
   <%== partial 'shared/pagination' %>
 </div>

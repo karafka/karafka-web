@@ -1,39 +1,36 @@
-<%== partial 'consumers/counters' %>
+<% view_title 'Consumers' %>
+
 <%== partial 'consumers/summary' %>
 <%== partial 'consumers/tabs' %>
 
-<div class="container">
-  <div class="row">
-    <div class="col-sm-12">
-      <% if @processes.empty? && params.current_page <= 1 %>
-        <%== partial 'consumers/no_consumers' %>
-      <% elsif @processes.empty? %>
-        <%== partial 'shared/no_paginated_data' %>
-      <% else %>
-        <div class="table-responsive">
-          <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
-            <thead>
-              <tr class="align-middle">
-                <th><%== sort_link(:id) %></th>
-                <th class="col-sm-2"><%== sort_link(:started_at, rev: true) %></th>
-                <th class="col-sm-1">Memory</th>
-                <th class="col-sm-1">Performance</th>
-                <th class="col-sm-1">Load</th>
-                <th class="col-sm-1"><%== sort_link(:lag_hybrid) %></th>
-              </tr>
-            </thead>
-            <tbody>
-              <%==
-                render_each(
-                  @processes,
-                  'consumers/_consumer',
-                  local: :process
-                )
-              %>
-            </tbody>
-          </table>
-        </div>
-      <% end %>
+<div class="col-span-12">
+  <% if @processes.empty? && params.current_page <= 1 %>
+    <%== partial 'consumers/no_consumers' %>
+  <% elsif @processes.empty? %>
+    <%== partial 'shared/no_paginated_data' %>
+  <% else %>
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th><%== sort_link(:id) %></th>
+            <th class="col-sm-2"><%== sort_link(:started_at, rev: true) %></th>
+            <th class="col-sm-1">Memory</th>
+            <th class="col-sm-1">Performance</th>
+            <th class="col-sm-1">Load</th>
+            <th class="col-sm-1"><%== sort_link(:lag_hybrid) %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <%==
+            render_each(
+              @processes,
+              'consumers/_consumer',
+              local: :process
+            )
+          %>
+        </tbody>
+      </table>
     </div>
-  </div>
+  <% end %>
 </div>

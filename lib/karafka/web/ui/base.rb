@@ -7,7 +7,7 @@ module Karafka
       class Base < Roda
         include Helpers::PathsHelper
         include Helpers::ApplicationHelper
-        include Helpers::AlertsHelper
+        include Helpers::TailwindHelper
 
         # Details that need to be evaluated in the context of OSS or Pro web UI.
         # If those would be evaluated in the base, they would not be initialized as expected
@@ -17,7 +17,9 @@ module Karafka
             root: Karafka::Web.gem_root.join('lib/karafka/web/ui/public'),
             # Cache all static files for the end user for as long as possible
             # We can do it because we ship per version assets so they invalidate with gem bumps
-            headers: { 'Cache-Control' => 'max-age=31536000, immutable' }
+            headers: { 'Cache-Control' => 'max-age=31536000, immutable' },
+            gzip: true,
+            brotli: true
           )
           plugin :render_each
           plugin :partials
@@ -35,6 +37,9 @@ module Karafka
         plugin :hooks
         plugin :flash
         plugin :path
+        plugin :capture_erb
+        plugin :content_for
+        plugin :inject_erb
 
         # Based on
         # https://github.com/sidekiq/sidekiq/blob/ae6ca119/lib/sidekiq/web/application.rb#L8

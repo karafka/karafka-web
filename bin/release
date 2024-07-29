@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# Compiles assets in the release mode and creates the web gem
+
+KARAFKA_RELEASE=true ./bin/build_assets
+gem build karafka-web.gemspec

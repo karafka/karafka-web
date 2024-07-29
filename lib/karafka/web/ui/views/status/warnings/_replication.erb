@@ -1,4 +1,4 @@
-<p>
+<p class="mb-2">
   It is recommended to have a replication factor greater than <code>1</code> for all the Karafka Web UI topics in a production environment.
 </p>
 
@@ -6,7 +6,7 @@
   Current replication factors for Karafka Web UI topics:
 </p>
 
-<ul>
+<ul class="list-disc m-5">
   <% details.each do |name, details| %>
     <li>
       <code><%= name %></code>: <code><%= details[:replication] %></code>

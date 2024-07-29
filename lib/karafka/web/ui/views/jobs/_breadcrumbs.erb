@@ -1,11 +1,11 @@
-<li class="breadcrumb-item">
+<li>
   <a href="<%= root_path('jobs') %>">
     Jobs
   </a>
 </li>
 
 <% if current_path.include?('/running') %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= root_path('jobs/running') %>">
       Running
     </a>
@@ -13,7 +13,7 @@
 <% end %>
 
 <% if current_path.include?('/pending') %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= root_path('jobs/pending') %>">
       Pending
     </a>

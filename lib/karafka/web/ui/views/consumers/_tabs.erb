@@ -1,0 +1,35 @@
+<div class="tab-container-wrapper">
+  <div class="tab-container">
+    <a
+      href="<%= root_path('consumers', 'overview') %>"
+      class="custom-tab <%= nav_class(include: 'overview') %>"
+      title="Pro Feature"
+    >
+      Overview
+    </a>
+
+    <a
+      href="<%= root_path('consumers', 'performance') %>"
+      class="custom-tab disabled <%= nav_class(include: 'performance') %>"
+      title="Pro Feature"
+    >
+      Performance
+    </a>
+
+    <a
+      href="<%= root_path('consumers', 'controls') %>"
+      class="custom-tab disabled <%= nav_class(include: 'controls') %>"
+      title="Pro Feature"
+    >
+      Controls
+    </a>
+
+    <a
+      href="<%= root_path('commands') %>"
+      class="custom-tab disabled <%= nav_class(include: 'commands') %>"
+      title="Pro Feature"
+    >
+      Commands
+    </a>
+  </div>
+</div>

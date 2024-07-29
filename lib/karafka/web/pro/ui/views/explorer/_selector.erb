@@ -1,0 +1,12 @@
+<p class="w-full">
+  <label class="text-gray-700">Partition:</label>
+  <select class="select select-bordered w-full max-w-xs select-sm ml-1" id="current-partition">
+    <%==
+      each_partial(
+        [nil] + @partitions_count.times.to_a,
+        'explorer/partition_option',
+        local: :partition
+      )
+    %>
+  </select>
+</p>

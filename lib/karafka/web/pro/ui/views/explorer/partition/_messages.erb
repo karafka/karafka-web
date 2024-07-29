@@ -1,7 +1,7 @@
-<div class="table-responsive">
-  <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+<div class="data-table-wrapper">
+  <table class="data-table">
     <thead>
-      <tr class="align-middle">
+      <tr>
         <th>Partition</th>
         <th>Offset</th>
         <th>Timestamp</th>
@@ -19,4 +19,6 @@
       %>
     </tbody>
   </table>
+
+  <%== content_for :table_metadata %>
 </div>

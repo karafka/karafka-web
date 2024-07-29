@@ -2,8 +2,12 @@
 
 ## 0.10.0 (Unreleased)
 - **[Breaking]** Rename and reorganize visibility filter to policies engine since it is not only about visibility.
+- **[Feature]** Replace Bootstrap with with tailwind + DaisyUI.
+- **[Feature]** Redesign the UI and move navigation to the left to make space for future features.
 - **[Feature]** Support per request policies for inspection and operations limitation.
 - **[Feature]** Provide Search capabilities in the Explorer (Pro).
+- [Enhancement] Provide topics watermarks inspection page (Pro).
+- [Enhancement] Use Turbo to improve usability.
 - [Enhancement] Round poll age reporting to precision of 2 reducing the payload size.
 - [Enhancement] Round utilization reporting to precision of 2 reducing the payload size.
 - [Enhancement] Validate states materialization lag in the status view.
@@ -21,6 +25,8 @@
 - [Enhancement] Prevent karafka-web from being configured before karafka is configured.
 - [Enhancement] Use `ostruct` from RubyGems in testing.
 - [Enhancement] Indicate in the status reporting whether Karafka is OSS or Pro.
+- [Enhancement] Ship JS and CSS assets using Brotli and Gzip when possible.
+- [Enhancement] Introduce a `/ux` page to ease with styling improvements and components management.
 - [Refactor] Optimize subscription group data tracking flow.
 - [Refactor] Namespace migrations so migrations related to each topic data are in an independent directory.
 - [Refactor] Use errors for deny flow so request denials can occur from the inspection layer.
@@ -33,6 +39,9 @@
 - [Fix] DLQ parent topics get classified as DLQ in the Web.
 - [Fix] Add missing space in the attempt label.
 - [Fix] Fix lack of highlight of "Consumers" navigation when in the "Commands" tab.
+- [Fix] Fix not working page reporting in breadcrumbs.
+- [Fix] Fix invalid redirect when trying to view particular errors partition time location.
+- [Fix] Fix several UI inconsistencies.
 
 ## 0.9.1 (2024-05-03)
 - [Fix] OSS `lag_stored` for not-subscribed consumers causes Web UI to crash.

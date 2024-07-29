@@ -56,7 +56,6 @@ module Karafka
               controller = Controllers::ConsumersController.new(params)
 
               r.get 'overview' do
-                @breadcrumbs = false
                 controller.index
               end
 
@@ -286,6 +285,10 @@ module Karafka
                 controller.distribution(topic_id)
               end
 
+              r.get String, 'offsets' do |topic_id|
+                controller.offsets(topic_id)
+              end
+
               r.get String do |topic_id|
                 r.redirect root_path('topics', topic_id, 'config')
               end
@@ -322,6 +325,16 @@ module Karafka
 
             r.get 'status' do
               controller = Controllers::StatusController.new(params)
+              controller.show
+            end
+
+            r.get 'ux' do
+              controller = Controllers::UxController.new(params)
+              controller.show
+            end
+
+            r.get 'support' do
+              controller = Controllers::SupportController.new(params)
               controller.show
             end
           end

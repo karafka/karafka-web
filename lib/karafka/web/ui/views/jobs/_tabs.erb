@@ -1,27 +1,17 @@
-<div class="container">
-  <div class="row mb-5">
-    <div class="col-sm-12">
+<div class="tab-container-wrapper">
+  <div class="tab-container">
+    <a
+      href="<%= root_path('jobs', 'running') %>"
+      class="custom-tab <%= nav_class(include: 'running') %>"
+    >
+      Running (<%= @jobs_counters.running %>)
+    </a>
 
-      <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a
-            class="nav-link <%= nav_class(include: 'running') %>"
-            href="<%= root_path('jobs', 'running') %>"
-          >
-            Running (<%= @jobs_counters.running %>)
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a
-            class="nav-link <%= nav_class(include: 'pending') %>"
-            href="<%= root_path('jobs', 'pending') %>"
-          >
-            Pending (<%= @jobs_counters.pending %>)
-          </a>
-        </li>
-      </ul>
-
-    </div>
+    <a
+      href="<%= root_path('jobs', 'pending') %>"
+      class="custom-tab <%= nav_class(include: 'pending') %>"
+    >
+      Pending (<%= @jobs_counters.pending %>)
+    </a>
   </div>
 </div>

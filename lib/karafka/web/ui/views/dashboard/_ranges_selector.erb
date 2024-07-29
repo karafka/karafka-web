@@ -1,36 +1,36 @@
-<div class="container">
-  <div class="row">
-    <div class="col-sm-12 text-end">
-      <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+<div class="col-span-12">
+  <div class="container mx-auto">
+    <div class="flex justify-end">
+      <div class="btn-group">
         <%
           path = root_path('dashboard?range=seconds')
-          active = params.current_range == :seconds ? 'active' : false
+          active = params.current_range == :seconds ? 'btn-active' : ''
         %>
-        <a type="button" href="<%= path %>" class="btn btn-outline-primary <%= active %>">
+        <a href="<%= path %>" class="btn btn-outline btn-primary btn-sm <%= active %>">
           5 minutes
         </a>
 
         <%
           path = root_path('dashboard?range=minutes')
-          active = params.current_range == :minutes ? 'active' : false
+          active = params.current_range == :minutes ? 'btn-active' : ''
         %>
-        <a type="button" href="<%= path %>" class="btn btn-outline-primary <%= active %>">
+        <a href="<%= path %>" class="btn btn-outline btn-primary btn-sm <%= active %>">
           1 hour
         </a>
 
         <%
           path = root_path('dashboard?range=hours')
-          active = params.current_range == :hours ? 'active' : false
+          active = params.current_range == :hours ? 'btn-active' : ''
         %>
-        <a type="button" href="<%= path %>" class="btn btn-outline-primary <%= active %>">
+        <a href="<%= path %>" class="btn btn-outline btn-primary btn-sm <%= active %>">
           24 hours
         </a>
 
         <%
           path = root_path('dashboard?range=days')
-          active = params.current_range == :days ? 'active' : false
+          active = params.current_range == :days ? 'btn-active' : ''
         %>
-        <a type="button" href="<%= path %>" class="btn btn-outline-primary <%= active %>">
+        <a href="<%= path %>" class="btn btn-outline btn-primary btn-sm <%= active %>">
           7 days
         </a>
       </div>

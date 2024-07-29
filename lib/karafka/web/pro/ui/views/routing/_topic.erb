@@ -2,16 +2,16 @@
   <td>
     <%= subscription_group %>
   </td>
+
   <td>
     <%= topic.name %>
   </td>
+
   <td>
-    <span class="badge bg-secondary">
-      <%= topic.patterns.type %>
-    </span>
+    <%== badge_secondary topic.patterns.type %>
 
     <% if subscription_group.multiplexing? %>
-      <span class="badge bg-secondary">
+      <span class="badge badge-secondary">
         multiplexing
         <%= subscription_group.multiplexing.min %>
         -
@@ -19,14 +19,16 @@
       </span>
     <% end %>
   </td>
+
   <td>
-    <span class="badge bg-<%= topic.active? ? 'success' : 'warning text-dark' %>">
-    <%= topic.active? %>
-    </span>
+    <% if topic.active? %>
+      <%== badge_success topic.active? %>
+    <% else %>
+      <%== badge_secondary topic.active? %>
+    <% end %>
   </td>
-  <td class="text-center">
-    <a href="<%= root_path('routing', topic.id) %>" class="btn btn-sm btn-secondary text-white">
-      Details
-    </a>
+
+  <td>
+    <%== link_button_primary_sm 'Details', root_path('routing', topic.id) %>
   </td>
 </tr>

@@ -50,7 +50,7 @@ RSpec.describe_current do
         expect(body).not_to include(support_message)
         expect(body).not_to include(no_commands)
         expect(body).not_to include(pagination)
-        expect(body).not_to include('<span class="badge bg-primary badge-topic">')
+        expect(body).not_to include('<span class="badge badge-primary">')
         expect(body).not_to include('/consumers/shinra:1404842:f66b40c75f92/subscriptions')
         expect(body).not_to include('/commands/0')
         expect(body).to include(breadcrumbs)
@@ -67,7 +67,7 @@ RSpec.describe_current do
         expect(body).not_to include(no_commands)
         expect(body).not_to include(pagination)
         expect(body).to include(breadcrumbs)
-        expect(body).to include('<span class="badge bg-primary badge-topic">')
+        expect(body).to include('<span class="badge badge-primary">')
         expect(body).to include('command')
         expect(body).to include('quiet')
         expect(body).to include('/consumers/shinra:1404842:f66b40c75f92/subscriptions')
@@ -170,7 +170,7 @@ RSpec.describe_current do
           expect(body).not_to include(pagination)
           expect(body).not_to include(support_message)
           expect(body).to include('<td>Type</td>')
-          expect(body).to include('<code class="wrapped json p-0 m-0">')
+          expect(body).to include('<code class="json"')
           # quiet_all and stop_all display just stop with a wildcard target
           expect(body).to include("<td>#{command.split('_').first}</td>")
           expect(body).not_to include(incompatible_message)
@@ -192,7 +192,7 @@ RSpec.describe_current do
           expect(body).not_to include(pagination)
           expect(body).not_to include(support_message)
           expect(body).not_to include('<td>Type</td>')
-          expect(body).not_to include('<code class="wrapped json p-0 m-0">')
+          expect(body).not_to include('<code class="json"')
           expect(body).not_to include("<td>#{command}</td>")
           expect(body).to include(incompatible_message)
         end
@@ -273,7 +273,7 @@ RSpec.describe_current do
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
         expect(body).to include('<td>Type</td>')
-        expect(body).to include('<code class="wrapped json p-0 m-0">')
+        expect(body).to include('<code class="json"')
         expect(body).to include('<td>quiet</td>')
       end
     end

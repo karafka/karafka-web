@@ -1,33 +1,70 @@
-<div class="container">
-  <%== partial 'explorer/message/message_actions' %>
+<% view_title "Message with offset #{@message.offset}" %>
 
-  <div class="row mb-4">
-    <div class="col-sm-12">
-      <h5 class="mb-2">
-        Metadata
-      </h5>
-      <hr/>
+<%
+  republish_path = root_path('messages', @message.topic, @message.partition, @message.offset, 'republish')
+  surrounding_path = explorer_path(@message.topic, @message.partition, @message.offset, 'surrounding')
+%>
 
-    </div>
-  </div>
+<div class="col-span-12">
+  <section class="actions">
+    <% if @visibility_filter.republish?(@message) %>
+      <form action="<%= republish_path %>" method="post" class="confirm-action float-end">
+        <%== csrf_tag(republish_path) %>
+        <button
+          type="submit"
+          class="btn-action"
+          title="Republish this message to the same topic partition"
+          data-turbo="false"
+        >
+          <%== icon(:arrow_path_rounded) %>
+        </button>
+      </form>
+    <% end %>
 
-  <%== partial 'explorer/message/metadata' %>
+    <a
+      href="<%= surrounding_path %>"
+      class="btn-action"
+      title="Go to this message surrounding position"
+    >
+      <%== icon(:arrows_right_left) %>
+    </a>
+
+
+    <% if @visibility_filter.download?(@message) %>
+      <a
+        href="<%= root_path('messages', @message.topic, @message.partition, @message.offset, 'download') %>"
+        class="btn-action"
+        title="Download raw payload"
+        data-turbo="false"
+      >
+        <%== icon(:arrow_down_tray) %>
+      </a>
+    <% end %>
+
+    <% if @visibility_filter.export?(@message) && @safe_payload.success? %>
+      <a
+        href="<%= root_path('messages', @message.topic, @message.partition, @message.offset, 'export') %>"
+        class="btn-action"
+        title="Export as JSON"
+        data-turbo="false"
+      >
+        <%== icon(:arrow_down_on_square) %>
+      </a>
+    <% end %>
+
+  </section>
 </div>
 
-<div class="container">
-  <div class="row mb-4">
-    <div class="col-sm-12">
-      <h5 class="mb-2 float-start">
-        Payload
-      </h5>
+<div class="col-span-12 mb-6">
+  <h2 class="h2">
+    Metadata
+  </h2>
 
-      <%== partial 'explorer/message/payload_actions' %>
+  <%== partial 'explorer/message/metadata' %>
 
-      <div class="clearfix"></div>
-
-      <hr/>
-    </div>
-  </div>
+  <h2 class="h2">
+    Payload
+  </h2>
 
   <%== partial 'explorer/message/payload' %>
 </div>

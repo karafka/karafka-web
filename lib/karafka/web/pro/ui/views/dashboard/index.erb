@@ -1,93 +1,84 @@
-<%== partial 'consumers/counters' %>
+<% view_title 'Dashboard' %>
+
+<%== partial 'dashboard/counters' %>
 
 <% if @aggregated.sufficient? %>
   <%== partial 'dashboard/ranges_selector' %>
 
-  <div class="container mb-3 mt-4 mt-md-2 mt-lg-0">
-    <div class="row">
-      <div class="col-sm-12">
-        <h5 class="mb-3">Processing metrics</h5>
+  <h2 class="h2">Processing Metrics</h2>
 
-        <hr class="mb-4"/>
-
-        <ul class="nav nav-tabs" id="graphs1" role="tablist">
-          <%== partial 'shared/tab_nav', locals: { title: 'Consumed', id: 'consumed', active: true } %>
-          <%== partial 'shared/tab_nav', locals: { title: 'Batches', id: 'batches' } %>
-          <%== partial 'shared/tab_nav', locals: { title: 'Lags', id: 'lags' } %>
-          <%== partial 'shared/tab_nav', locals: { title: 'Max LSO', id: 'max-lso' } %>
-          <%== partial 'shared/tab_nav', locals: { title: 'Pace', id: 'pace' } %>
-          <%== partial 'shared/tab_nav', locals: { title: 'Produced', id: 'produced' } %>
-        </ul>
-
-        <div class="tab-content">
-          <div class="tab-pane show active" id="consumed" role="tabpanel">
-            <% data = @aggregated_charts.with(:messages, :errors, :dead, :retries, :batch_size) %>
-            <%== partial 'shared/charts/line', locals: { data: data, id: 'consumed' } %>
-          </div>
-
-          <div class="tab-pane" id="batches" role="tabpanel">
-            <% data = @aggregated_charts.with(:batches, :jobs, :errors, :dead, :retries) %>
-            <%== partial 'shared/charts/line', locals: { data: data, id: 'batches' } %>
-          </div>
-
-          <div class="tab-pane" id="lags" role="tabpanel">
-            <%== partial 'shared/charts/line', locals: { data: @topics_charts.lags_hybrid, id: 'lags' } %>
-          </div>
-
-          <div class="tab-pane" id="max-lso" role="tabpanel">
-            <%== partial 'shared/charts/line', locals: { data: @topics_charts.max_lso, id: 'max-lso' } %>
-          </div>
-
-          <div class="tab-pane" id="pace" role="tabpanel">
-            <%== partial 'shared/charts/line', locals: { data: @topics_charts.pace, id: 'pace' } %>
-          </div>
-
-          <div class="tab-pane" id="produced" role="tabpanel">
-            <%== partial 'shared/charts/line', locals: { data: @topics_charts.produced, id: 'produced' } %>
-          </div>
-        </div>
-      </div>
+  <div class="tab-container-wrapper" id="graphs1">
+    <div class="tab-container inline-tabs">
+      <%== partial 'shared/tab_nav', locals: { title: 'Consumed', id: 'consumed', active: true } %>
+      <%== partial 'shared/tab_nav', locals: { title: 'Batches', id: 'batches' } %>
+      <%== partial 'shared/tab_nav', locals: { title: 'Lags', id: 'lags' } %>
+      <%== partial 'shared/tab_nav', locals: { title: 'Max LSO', id: 'max-lso' } %>
+      <%== partial 'shared/tab_nav', locals: { title: 'Pace', id: 'pace' } %>
+      <%== partial 'shared/tab_nav', locals: { title: 'Produced', id: 'produced' } %>
     </div>
   </div>
 
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-12">
-        <h5 class="mb-3">Utilization metrics</h5>
+  <div class="col-span-12">
+    <div id="consumed" class="hidden">
+      <% data = @aggregated_charts.with(:messages, :errors, :dead, :retries, :batch_size) %>
+      <%== partial 'shared/charts/line', locals: { data: data, id: 'consumed' } %>
+    </div>
 
-        <hr class="mb-4"/>
+    <div id="batches" class="hidden">
+      <% data = @aggregated_charts.with(:batches, :jobs, :errors, :dead, :retries) %>
+      <%== partial 'shared/charts/line', locals: { data: data, id: 'batches' } %>
+    </div>
 
-        <ul class="nav nav-tabs" id="graphs2" role="tablist">
-          <%== partial 'shared/tab_nav', locals: { title: 'Utilization', id: 'utilization', active: true } %>
-          <%== partial 'shared/tab_nav', locals: { title: 'RSS', id: 'rss' } %>
-          <%== partial 'shared/tab_nav', locals: { title: 'Concurrency', id: 'concurrency' } %>
-          <%== partial 'shared/tab_nav', locals: { title: 'Data transfers', id: 'data-transfers' } %>
-        </ul>
+    <div id="lags" class="hidden">
+      <%== partial 'shared/charts/line', locals: { data: @topics_charts.lags_hybrid, id: 'lags' } %>
+    </div>
 
-        <div class="tab-content">
-          <div class="tab-pane show active" id="utilization" role="tabpanel">
-            <% data = @aggregated_charts.with(:utilization) %>
-            <%== partial 'shared/charts/line', locals: { data: data, id: 'utilization', label_type_y: 'percentage' } %>
-          </div>
+    <div id="max-lso" class="hidden">
+      <%== partial 'shared/charts/line', locals: { data: @topics_charts.max_lso, id: 'max-lso' } %>
+    </div>
 
-          <div class="tab-pane show" id="rss" role="tabpanel">
-            <% data = @aggregated_charts.with(:rss, :process_rss) %>
-            <%== partial 'shared/charts/line', locals: { data: data, id: 'rss', label_type_y: 'memory' } %>
-          </div>
+    <div id="pace" class="hidden">
+      <%== partial 'shared/charts/line', locals: { data: @topics_charts.pace, id: 'pace' } %>
+    </div>
 
-          <div class="tab-pane show" id="concurrency" role="tabpanel">
-            <% data = @aggregated_charts.with(:processes, :workers, :active_listeners, :standby_listeners) %>
-            <%== partial 'shared/charts/line', locals: { data: data, id: 'concurrency' } %>
-          </div>
-
-          <div class="tab-pane show" id="data-transfers" role="tabpanel">
-            <% data = @aggregated_charts.data_transfers %>
-            <%== partial 'shared/charts/line', locals: { data: data, id: 'data-transfers', label_type_y: 'memory' } %>
-          </div>
-        </div>
-      </div>
+    <div id="produced"  class="hidden">
+      <%== partial 'shared/charts/line', locals: { data: @topics_charts.produced, id: 'produced' } %>
     </div>
   </div>
+
+  <h2 class="h2">Utilization Metrics</h2>
+
+  <div class="tab-container-wrapper" id="graphs2">
+    <div class="tab-container inline-tabs">
+      <%== partial 'shared/tab_nav', locals: { title: 'Utilization', id: 'utilization', active: true } %>
+      <%== partial 'shared/tab_nav', locals: { title: 'RSS', id: 'rss' } %>
+      <%== partial 'shared/tab_nav', locals: { title: 'Concurrency', id: 'concurrency' } %>
+      <%== partial 'shared/tab_nav', locals: { title: 'Data transfers', id: 'data-transfers' } %>
+    </div>
+  </div>
+
+  <div class="col-span-12">
+    <div id="utilization" class="hidden">
+      <% data = @aggregated_charts.with(:utilization) %>
+      <%== partial 'shared/charts/line', locals: { data: data, id: 'utilization', label_type_y: 'percentage' } %>
+    </div>
+
+    <div id="rss" class="hidden">
+      <% data = @aggregated_charts.with(:rss, :process_rss) %>
+      <%== partial 'shared/charts/line', locals: { data: data, id: 'rss', label_type_y: 'memory' } %>
+    </div>
+
+    <div id="concurrency" class="hidden">
+      <% data = @aggregated_charts.with(:processes, :workers, :active_listeners, :standby_listeners) %>
+      <%== partial 'shared/charts/line', locals: { data: data, id: 'concurrency' } %>
+    </div>
+
+    <div id="data-transfers" class="hidden">
+      <% data = @aggregated_charts.data_transfers %>
+      <%== partial 'shared/charts/line', locals: { data: data, id: 'data-transfers', label_type_y: 'memory' } %>
+    </div>
+  </div>
+
 <% else %>
   <%== partial 'dashboard/not_enough_data' %>
 <% end %>

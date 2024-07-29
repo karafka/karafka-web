@@ -1,4 +1,4 @@
-<tr class="align-middle <%= lso_risk_state_bg(details) %> status-row-<%= details.process.status %>">
+<tr class="<%= lso_risk_state_bg(details) %>">
   <td>
     <%= partition_id %>
   </td>
@@ -33,7 +33,7 @@
     <%== relative_time(Time.now - details.ls_offset_fd / 1_000.0) %>
   </td>
   <td>
-    <span class="badge bg-success <%= lso_risk_state_bg(details) %> bg-opacity-100">
+    <span class="badge badge-success <%= lso_risk_state_badge(details) %> badge-opacity-100">
       <%= details.lso_risk_state %>
     </span>
   </td>

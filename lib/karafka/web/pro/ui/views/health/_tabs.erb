@@ -1,55 +1,38 @@
-<div class="container">
-  <div class="row mb-5">
-    <div class="col-sm-12">
+<div class="col-span-12 mb-9">
+  <div class="tab-container">
+    <a
+      href="<%= root_path('health', 'overview') %>"
+      class="custom-tab <%= nav_class(include: 'overview') %>"
+    >
+      Overview
+    </a>
 
-      <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a
-            class="nav-link <%= nav_class(include: 'overview') %>"
-            href="<%= root_path('health', 'overview') %>"
-          >
-            Overview
-          </a>
-        </li>
+    <a
+      href="<%= root_path('health', 'lags') %>"
+      class="custom-tab <%= nav_class(include: '/lags') %>"
+    >
+      Lags
+    </a>
 
-        <li class="nav-item">
-          <a
-            class="nav-link <%= nav_class(include: '/lags') %>"
-            href="<%= root_path('health', 'lags') %>"
-          >
-            Lags
-          </a>
-        </li>
+    <a
+      href="<%= root_path('health', 'offsets') %>"
+      class="custom-tab <%= nav_class(include: 'offsets') %>"
+    >
+      Offsets
+    </a>
 
-        <li class="nav-item">
-          <a
-            class="nav-link <%= nav_class(include: 'offsets') %>"
-            href="<%= root_path('health', 'offsets') %>"
-          >
-            Offsets
-          </a>
-        </li>
+    <a
+      href="<%= root_path('health', 'changes') %>"
+      class="custom-tab <%= nav_class(include: 'changes') %>"
+    >
+      Changes
+    </a>
 
-        <li class="nav-item">
-          <a
-            class="nav-link <%= nav_class(include: 'changes') %>"
-            href="<%= root_path('health', 'changes') %>"
-          >
-            Changes
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a
-            class="nav-link <%= nav_class(include: 'cluster_lags') %>"
-            href="<%= root_path('health', 'cluster_lags') %>"
-          >
-            Cluster Lags
-          </a>
-        </li>
-
-      </ul>
-
-    </div>
+    <a
+      href="<%= root_path('health', 'cluster_lags') %>"
+      class="custom-tab <%= nav_class(include: 'cluster_lags') %>"
+    >
+      Cluster Lags
+    </a>
   </div>
 </div>

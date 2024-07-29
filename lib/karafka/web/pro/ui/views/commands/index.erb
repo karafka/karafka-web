@@ -1,17 +1,23 @@
-<%== view_title('Consumers Commands and Responses') %>
+<% view_title 'Consumers Commands and Responses' %>
 
 <%== partial 'consumers/tabs' %>
 
-<div class="container">
-  <div class="row mb-5">
-    <div class="col-sm-12">
-      <%== partial('commands/details') %>
+<div class="col-span-12">
+  <% if @command_messages && !@command_messages.empty? %>
+    <section class="actions">
+      <a
+        href="<%= root_path('commands', 'recent') %>"
+        class="btn-action"
+        title="Display the most recent command"
+      >
+        <%== icon(:play_circle) %>
+      </a>
+    </section>
+  <% end %>
 
-      <% if @command_messages.empty? && params.current_page == 1 %>
-        <%== partial 'commands/empty' %>
-      <% else %>
-        <%== partial 'commands/table' %>
-      <% end %>
-    </div>
-  </div>
+  <% if @command_messages.empty? && params.current_page == 1 %>
+    <%== partial 'commands/empty' %>
+  <% else %>
+    <%== partial 'commands/table' %>
+  <% end %>
 </div>

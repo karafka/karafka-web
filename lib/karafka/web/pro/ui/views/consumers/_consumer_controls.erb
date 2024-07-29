@@ -4,21 +4,19 @@
       <%== truncate(process.id, strategy: :middle) %>
     </a>
 
-    <p class="mt-0 mb-1">
+    <p class="mt-1">
       <%== tags(process.tags) %>
     </p>
   </td>
 
   <td>
-    <div class="badge badge-topic <%= status_bg(process.status) %>">
+    <div class="badge <%= status_badge(process.status) %>">
       <%= process.status %>
     </div>
   </td>
 
   <td>
-    <p class="mt-0 mb-1">
-      <%== partial 'consumers/assignments_badges', locals: { process: process } %>
-    </p>
+    <%== partial 'consumers/assignments_badges', locals: { process: process } %>
   </td>
 
   <td>
@@ -26,16 +24,16 @@
   </td>
 
   <td>
-    <span class="badge bg-primary badge-topic">
+    <span class="badge badge-primary">
       <%= format_memory process.memory_usage %>
     </span>
   </td>
 
   <td>
-    <span class="badge bg-primary badge-topic">
+    <span class="badge badge-primary">
       <%= process.utilization.round(1) %>%
     </span>
-    <span class="badge bg-primary badge-topic">
+    <span class="badge badge-primary">
       <%= process.workers %> /
       <%= process.busy %>
     </span>
@@ -46,43 +44,51 @@
   </td>
 
   <td>
-    <div class="d-flex flex-nowrap justify-content-end">
-      <%
-        probe_path = root_path('commanding', process.id, 'probe')
-        disabled_class = process.status != 'stopped' ? '' : 'disabled'
-      %>
-      <form action="<%= probe_path %>" method="post" class="d-inline-flex align-items-center mx-1">
-        <%== csrf_tag(probe_path) %>
-        <input type="submit" value="&#x2699; Probe" class="btn btn-secondary btn-sm <%= disabled_class %>"/>
-      </form>
+    <%
+      probe_path = root_path('commanding', process.id, 'probe')
+      disabled_class = process.status != 'stopped' ? '' : 'btn-disabled'
+    %>
+    <form action="<%= probe_path %>" method="post" class="">
+      <%== csrf_tag(probe_path) %>
 
-      <%
-        quiet_path = root_path('commanding', process.id, 'quiet')
-        disabled_class = process.status == 'running' ? '' : 'disabled'
+      <button type="submit" class="btn btn-info btn-sm w-full max-w-xs mb-1 <%= disabled_class %>">
+        <%== icon(:gear) %>
+        Probe
+      </button>
+    </form>
 
-        if process.tags.include?('embedded')
-          disabled_class = 'disabled'
-          title = 'Not supported in embedded consumers'
-        end
-      %>
-      <form action="<%= quiet_path %>" method="post" class="d-inline-flex align-items-center mx-1" title="<%= title %>">
-        <%== csrf_tag(quiet_path) %>
-        <input type="submit" value="&#x23F8; Quiet" class="btn btn-warning btn-sm <%= disabled_class %>"/>
-      </form>
+    <%
+      quiet_path = root_path('commanding', process.id, 'quiet')
+      disabled_class = process.status == 'running' ? '' : 'btn-disabled'
 
-      <%
-        stop_path = root_path('commanding', process.id, 'stop')
-        disabled_class = process.status != 'stopping' && process.status != 'stopped' ? '' : 'disabled'
+      if process.tags.include?('embedded')
+        disabled_class = 'disabled'
+        title = 'Not supported in embedded consumers'
+      end
+    %>
+    <form action="<%= quiet_path %>" method="post" class="" title="<%= title %>">
+      <%== csrf_tag(quiet_path) %>
+      <button type="submit" class="btn btn-warning btn-sm w-full max-w-xs mb-1 <%= disabled_class %>">
+        <%== icon(:pause) %>
+        Quiet
+      </button>
+    </form>
 
-        if process.tags.include?('embedded')
-          disabled_class = 'disabled'
-          title = 'Not supported in embedded consumers'
-        end
-      %>
-      <form action="<%= stop_path %>" method="post" class="d-inline-flex align-items-center mx-1" title="<%= title %>">
-        <%== csrf_tag(stop_path) %>
-        <input type="submit" value="&#x25A0; Stop" class="btn btn-danger btn-sm <%= disabled_class %>"/>
-      </form>
-    </div>
+    <%
+      stop_path = root_path('commanding', process.id, 'stop')
+      disabled_class = process.status != 'stopping' && process.status != 'stopped' ? '' : 'btn-disabled'
+
+      if process.tags.include?('embedded')
+        disabled_class = 'disabled'
+        title = 'Not supported in embedded consumers'
+      end
+    %>
+    <form action="<%= stop_path %>" method="post" class="" title="<%= title %>">
+      <%== csrf_tag(stop_path) %>
+      <button type="submit" class="btn btn-error btn-sm w-full max-w-xs <%= disabled_class %>">
+        <%== icon(:stop) %>
+        Stop
+      </button>
+    </form>
   </td>
 </tr>

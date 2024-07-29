@@ -1,47 +1,42 @@
-<%== view_title(@topic.topic_name, hr: false) %>
+<% view_title @topic.topic_name %>
 
 <%== partial 'topics/tabs' %>
 
-<div class="container">
-  <div class="row">
-    <div class="col-lg-12">
-      <% if @limited %>
-        <%== partial 'topics/distribution/limited' %>
-      <% end %>
+<% if @limited %>
+  <%== partial 'topics/distribution/limited' %>
+<% end %>
 
-      <% if @aggregated.sum.zero? %>
-        <%== partial 'topics/distribution/empty_partitions' %>
-      <% else %>
-        <% if @active_partitions.size >= 2 %>
-          <%== partial 'topics/distribution/chart' %>
-        <% end %>
+<% if @aggregated.sum.zero? %>
+  <%== partial 'topics/distribution/empty_partitions' %>
+<% else %>
+  <div class="col-span-12 mb-3">
+    <% if @active_partitions.size >= 2 %>
+      <%== partial 'topics/distribution/chart' %>
+    <% end %>
 
-        <div id="refreshable" class="mt-4">
-          <%== partial 'topics/distribution/badges' %>
+    <div id="refreshable" class="mt-4">
+      <%== partial 'topics/distribution/badges' %>
 
-          <div class="table-responsive">
-            <table class="bg-white table table-hover table-bordered table-striped mt-4 mb-4">
-              <thead>
-                <tr class="align-middle">
-                  <th><%== sort_link(:partition_id) %></th>
-                  <th><%== sort_link('Estimated count', :count) %></th>
-                  <th><%== sort_link('Total share', :share) %></th>
-                  <th><%== sort_link(:diff) %></th>
-                </tr>
-              </thead>
-              <tbody>
-                <%==
-                  each_partial(
-                    @distribution,
-                    'topics/distribution/partition'
-                  )
-                %>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      <% end %>
-
+      <div class="data-table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th><%== sort_link(:partition_id) %></th>
+              <th><%== sort_link('Estimated count', :count) %></th>
+              <th><%== sort_link('Total share', :share) %></th>
+              <th><%== sort_link(:diff) %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <%==
+              each_partial(
+                @distribution,
+                'topics/distribution/partition'
+              )
+            %>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
-</div>
+<% end %>

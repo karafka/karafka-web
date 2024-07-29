@@ -1,20 +1,17 @@
-<div class="container mb-5">
-  <div class="row">
-    <%== partial 'consumers/consumer/title' %>
-    <%== partial 'consumers/consumer/commands', locals: { process: @process } %>
-  </div>
-</div>
+<% view_title @process.id %>
 
-<% if @process.status == 'stopped' %>
-  <%== partial 'consumers/consumer/stopped' %>
-<% end %>
+<%== partial 'consumers/consumer/commands', locals: { process: @process } %>
 
-<%== partial 'consumers/consumer/metrics' %>
+<div class="col-span-12">
+  <% if @process.status == 'stopped' %>
+    <%== partial 'consumers/consumer/stopped' %>
+  <% end %>
 
-<%== partial 'consumers/consumer/tabs' %>
+  <%== partial 'consumers/consumer/metrics' %>
 
-<% if @process.subscribed? %>
-  <div class="container">
+  <%== partial 'consumers/consumer/tabs' %>
+
+  <% if @process.subscribed? %>
     <%==
       render_each(
         @process.consumer_groups,
@@ -22,7 +19,7 @@
         local: :consumer_group
       )
     %>
-  </div>
-<% else %>
-  <%== partial 'consumers/consumer/no_subscriptions' %>
-<% end %>
+  <% else %>
+    <%== partial 'consumers/consumer/no_subscriptions' %>
+  <% end %>
+</div>

@@ -1,11 +1,11 @@
-<li class="breadcrumb-item">
+<li>
   <a href="<%= root_path('cluster') %>">
     Cluster informations
   </a>
 </li>
 
 <% unless @partitions %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= root_path('cluster') %>">
       Brokers
     </a>
@@ -13,7 +13,7 @@
 <% end %>
 
 <% if @broker %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= root_path('cluster', @broker.id) %>">
       <%= @broker.full_name %>
     </a>
@@ -21,7 +21,7 @@
 <% end %>
 
 <% if @partitions %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= root_path('cluster', 'replication') %>">
       Replication
     </a>

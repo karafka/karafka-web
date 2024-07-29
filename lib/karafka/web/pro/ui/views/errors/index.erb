@@ -1,19 +1,54 @@
-<%== partial('errors/title_with_select') %>
+<% view_title 'Errors' %>
 
-<div class="container">
-  <div class="row mb-5">
-    <div class="col-sm-12">
-      <%== partial('explorer/topic/details') %>
+<div class="col-span-4">
+  <section class="actions">
+    <% if @error_messages && !@error_messages.empty? %>
+      <a
+        href="<%= explorer_path(@topic_id, 'recent') %>"
+        class="btn-action"
+        title="Display the most recent message for this topic with auto-refresh"
+      >
+        <%== icon(:play_circle) %>
+      </a>
 
-      <% if @limited %>
-        <%== partial('explorer/topic/limited') %>
-      <% end %>
+      <a
+        href="<%= explorer_path(@topic_id, 'search') %>"
+        class="btn-action"
+        title="Search in this topic"
+      >
+        <%== icon(:magnifying_glass) %>
+      </a>
+    <% end %>
+  </section>
+</div>
 
-      <% if @error_messages.empty? && params.current_page == 1 %>
-        <%== partial 'explorer/topic/empty' %>
-      <% else %>
-        <%== partial 'errors/table' %>
-      <% end %>
-    </div>
-  </div>
+<div class="col-span-8 mb-3">
+  <section class="actions">
+    <%== partial 'errors/selector' %>
+  </section>
+</div>
+
+<div class="col-span-12">
+  <% if @limited %>
+    <%== partial('explorer/topic/limited') %>
+  <% end %>
+
+  <% if @error_messages.empty? && params.current_page == 1 %>
+    <%== partial 'explorer/topic/empty' %>
+  <% else %>
+    <% content_for :table_metadata do %>
+      <p class="table_metadata">
+        Partitions:
+        <span class="badge">
+          total: <%= @partitions_count %>
+        </span>
+        <span class="badge">
+          visible:
+          <%= [@active_partitions.first, @active_partitions.last].uniq.join(' to ') %>
+        </span>
+      </p>
+    <% end %>
+
+    <%== partial 'errors/table' %>
+  <% end %>
 </div>

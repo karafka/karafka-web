@@ -47,7 +47,7 @@ RSpec.describe_current do
         expect(body).to include(support_message)
         expect(body).to include(breadcrumbs)
         expect(body).to include('Please ensure all those topics have a replication')
-        expect(body).to include('Warning')
+        expect(body).to include('alert-box-warning')
       end
     end
 

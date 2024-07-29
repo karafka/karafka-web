@@ -19,7 +19,7 @@ module ControllerHelper
 
   # @return [String] Part of support message string to match against its presence
   def support_message
-    '<div id="help-us">'
+    '<div id="help-us"'
   end
 
   # @return [String]
@@ -42,7 +42,7 @@ module ControllerHelper
 
   # @return [String] breadcrumbs string part to match for presence
   def breadcrumbs
-    '<ol class="breadcrumb">'
+    '<div class="breadcrumbs">'
   end
 
   # @return [String] pagination matching string

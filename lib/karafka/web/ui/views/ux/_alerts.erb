@@ -1,0 +1,25 @@
+<div>
+  <% tailwind_types.each do |type| %>
+    <div class="mb-3">
+      <%==
+        name = :"alert_#{type}"
+        public_send name, "##{name}"
+      %>
+    </div>
+  <% end %>
+</div>
+
+<div class="mb-6"></div>
+
+<div>
+  <% tailwind_types.each do |type| %>
+    <div class="mb-3">
+      <%
+        name = :"alert_box_#{type}"
+        public_send name, "##{name}", 'Some internal content'
+      %>
+    </div>
+  <% end %>
+</div>
+
+<div class="mb-6"></div>

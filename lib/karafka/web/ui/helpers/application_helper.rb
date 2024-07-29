@@ -61,16 +61,16 @@ module Karafka
           #
           # @param status [String] status
           # @return [String] background style
-          def status_bg(status)
+          def status_badge(status)
             case status
-            when 'initialized' then 'bg-success'
-            when 'supervising' then 'bg-success'
-            when 'running' then 'bg-success'
-            when 'quieting' then 'bg-warning'
-            when 'quiet' then 'bg-warning text-dark'
-            when 'stopping' then 'bg-warning text-dark'
-            when 'stopped' then 'bg-danger'
-            when 'terminated' then 'bg-danger'
+            when 'initialized' then 'badge-success'
+            when 'supervising' then 'badge-success'
+            when 'running' then 'badge-success'
+            when 'quieting' then 'badge-warning'
+            when 'quiet' then 'badge-warning'
+            when 'stopping' then 'badge-warning'
+            when 'stopped' then 'badge-error'
+            when 'terminated' then 'badge-error'
             else
               raise ::Karafka::Errors::UnsupportedCaseError, status
             end
@@ -80,10 +80,10 @@ module Karafka
           #
           # @param trend [Numeric] lag trend
           # @return [String] bg classes
-          def lag_trend_bg(trend)
-            bg = 'bg-success' if trend.negative?
-            bg ||= 'bg-warning text-dark' if trend.positive?
-            bg ||= 'bg-secondary'
+          def lag_trend_badge(trend)
+            bg = 'badge-success' if trend.negative?
+            bg ||= 'badge-warning' if trend.positive?
+            bg ||= 'badge-secondary'
             bg
           end
 
@@ -93,20 +93,20 @@ module Karafka
           # @return [String] tags badges
           def tags(tags_array)
             tags_array
-              .map { |tag| %(<span class="badge bg-info">#{tag}</span>) }
+              .map { |tag| %(<span class="badge badge-info">#{tag}</span>) }
               .join(' ')
           end
 
           # Takes a kafka report state and recommends background style color
           # @param state [String] state
           # @return [String] background style
-          def kafka_state_bg(state)
+          def kafka_state_badge(state)
             case state
-            when 'up' then 'bg-success text-white'
-            when 'active' then 'bg-success text-white'
-            when 'steady' then 'bg-success text-white'
+            when 'up' then 'badge-success'
+            when 'active' then 'badge-success'
+            when 'steady' then 'badge-success'
             else
-              'bg-warning text-dark'
+              'badge-warning'
             end
           end
 
@@ -183,12 +183,12 @@ module Karafka
             # If state is active, there is no date of change
             if state == 'active'
               %(
-                <span class="badge #{kafka_state_bg(state)} mt-1 mb-1">#{state}</span>
+                <span class="badge #{kafka_state_badge(state)}">#{state}</span>
               )
             elsif state_ch_in_seconds > year_in_seconds
               %(
                 <span
-                  class="badge #{kafka_state_bg(state)} mt-1 mb-1"
+                  class="badge #{kafka_state_badge(state)}"
                   title="until manual resume"
                 >
                   #{state}
@@ -197,7 +197,7 @@ module Karafka
             else
               %(
                 <span
-                  class="badge #{kafka_state_bg(state)} time-title mt-1 mb-1"
+                  class="badge #{kafka_state_badge(state)} time-title"
                   title="#{Time.now + state_ch_in_seconds}"
                 >
                   #{state}
@@ -212,7 +212,7 @@ module Karafka
           def lag_with_label(lag)
             if lag.negative?
               title = 'Not available until first offset commit'
-              %(<span class="badge bg-secondary" title="#{title}">N/A</span>)
+              %(<span class="badge badge-secondary" title="#{title}">N/A</span>)
             else
               lag.to_s
             end
@@ -228,7 +228,7 @@ module Karafka
           def offset_with_label(topic_name, partition_id, offset, explore: false)
             if offset.negative?
               title = 'Not available until first offset commit'
-              %(<span class="badge bg-secondary" title="#{title}">N/A</span>)
+              %(<span class="badge badge-secondary" title="#{title}">N/A</span>)
             elsif explore
               path = explorer_path(topic_name, partition_id, offset)
               %(<a href="#{path}">#{offset}</a>)
@@ -247,29 +247,34 @@ module Karafka
             when :at_risk
               'bg-warning bg-opacity-25'
             when :stopped
-              'bg-danger bg-opacity-25'
+              'bg-error bg-opacity-25'
             else
               raise ::Karafka::Errors::UnsupportedCaseError
             end
           end
 
-          # Returns the view title html code
+          # @param details [::Karafka::Web::Ui::Models::Partition] partition information with
+          #   lso risk state info
+          # @return [String] background classes for row marking
+          def lso_risk_state_badge(details)
+            case details.lso_risk_state
+            when :active
+              ''
+            when :at_risk
+              'badge-warning'
+            when :stopped
+              'badge-error'
+            else
+              raise ::Karafka::Errors::UnsupportedCaseError
+            end
+          end
+
+          # Sets the particular page title
           #
           # @param title [String] page title
-          # @param hr [Boolean] should we add the hr tag at the end
           # @return [String] title html
-          def view_title(title, hr: false)
-            <<-HTML
-              <div class="container mb-5">
-                <div class="row">
-                  <h3>
-                    #{title}
-                  </h3>
-                </div>
-
-                #{hr ? '<hr/>' : ''}
-              </div>
-            HTML
+          def view_title(title)
+            content_for(:title) { title }
           end
 
           # @param hash [Hash] we want to flatten
@@ -356,6 +361,13 @@ module Karafka
             end
 
             %(<span title="#{string}">#{truncated}</span>)
+          end
+
+          # Renders the svg icon out of our icon set
+          # @param name [String, Symbol] name of the icon
+          # @return [String] svg icon
+          def icon(name)
+            render "shared/icons/_#{name}"
           end
         end
       end

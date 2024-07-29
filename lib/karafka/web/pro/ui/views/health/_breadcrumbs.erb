@@ -1,11 +1,11 @@
-<li class="breadcrumb-item">
+<li>
   <a href="<%= root_path('health') %>">
-    Consumers groups health
+    Consumers Groups Health
   </a>
 </li>
 
 <% if current_path.include?('/lags') %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= root_path('health', 'lags') %>">
       Lags
     </a>
@@ -13,7 +13,7 @@
 <% end %>
 
 <% if current_path.include?('/overview') %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= root_path('health', 'overview') %>">
       Overview
     </a>
@@ -21,7 +21,7 @@
 <% end %>
 
 <% if current_path.include?('/offsets') %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= root_path('health', 'offsets') %>">
       Offsets
     </a>
@@ -29,7 +29,7 @@
 <% end %>
 
 <% if current_path.include?('/changes') %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= root_path('health', 'changes') %>">
       Changes
     </a>
@@ -37,7 +37,7 @@
 <% end %>
 
 <% if current_path.include?('/cluster_lags') %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= root_path('health', 'cluster_lags') %>">
       Cluster Lags
     </a>

@@ -1,11 +1,11 @@
-<li class="breadcrumb-item">
+<li>
   <a href="<%= root_path('consumers/overview') %>">
     Consumers
   </a>
 </li>
 
 <% if current_path.include?('/performance') %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= root_path('consumers', 'performance') %>">
       Performance
     </a>
@@ -13,7 +13,7 @@
 <% end %>
 
 <% if current_path.include?('/controls') %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= root_path('consumers', 'controls') %>">
       Controls
     </a>
@@ -21,32 +21,32 @@
 <% end %>
 
 <% if @process %>
-  <li class="breadcrumb-item">
+  <li>
     <a href="<%= root_path('consumers', @process.id, 'subscriptions') %>">
       <%== truncate(@process.id, strategy: :middle) %>
     </a>
   </li>
 
   <% if current_path.include?('/jobs') %>
-    <li class="breadcrumb-item">
+    <li>
       <a href="<%= root_path('consumers', @process.id, 'jobs') %>">
         Jobs
       </a>
     </li>
 
-    <li class="breadcrumb-item">
+    <li>
       <a href="<%= root_path('consumers', @process.id, 'jobs') %>">
         Running
       </a>
     </li>
   <% elsif current_path.include?('/subscriptions') %>
-    <li class="breadcrumb-item">
+    <li>
       <a href="<%= root_path('consumers', @process.id, 'subscriptions') %>">
         Subscriptions
       </a>
     </li>
   <% else %>
-    <li class="breadcrumb-item">
+    <li>
       <a href="<%= root_path('consumers', @process.id, 'details') %>">
         Details
       </a>

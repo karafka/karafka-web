@@ -1,7 +1,7 @@
-<div class="table-responsive">
-  <table class="processes bg-white table table-hover table-bordered table-striped mb-0 align-middle">
+<div class="row-table-wrapper">
+  <table class="row-table">
     <thead>
-      <tr class="align-middle">
+      <tr>
         <th>Origin</th>
         <th>ID</th>
         <th>Error</th>
@@ -9,7 +9,6 @@
         <th></th>
       </tr>
     </thead>
-
     <tbody>
       <%==
         each_partial(
@@ -20,4 +19,6 @@
       %>
     </tbody>
   </table>
+
+  <%== content_for :table_metadata %>
 </div>

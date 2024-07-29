@@ -40,7 +40,7 @@ RSpec.describe_current do
       it do
         expect(response).to be_ok
         expect(body).not_to include(support_message)
-        expect(body).not_to include(breadcrumbs)
+        expect(body).to include(breadcrumbs)
         expect(body).not_to include(pagination)
         expect(body).to include(no_processes)
       end
@@ -80,7 +80,7 @@ RSpec.describe_current do
       it do
         expect(response).to be_ok
         expect(body).not_to include(support_message)
-        expect(body).not_to include(breadcrumbs)
+        expect(body).to include(breadcrumbs)
         expect(body).not_to include(no_processes)
         expect(body).not_to include(pagination)
         expect(body).to include('246 MB')
@@ -118,7 +118,7 @@ RSpec.describe_current do
         expect(body).to include('0,1,2,3,4,5,6,7,8,9...')
         expect(body).to include('partitions: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9')
         expect(body).not_to include(support_message)
-        expect(body).not_to include(breadcrumbs)
+        expect(body).to include(breadcrumbs)
         expect(body).not_to include(no_processes)
         expect(body).not_to include(pagination)
         expect(body).to include('246 MB')
@@ -142,7 +142,7 @@ RSpec.describe_current do
       it do
         expect(response).to be_ok
         expect(body).not_to include(support_message)
-        expect(body).not_to include(breadcrumbs)
+        expect(body).to include(breadcrumbs)
         expect(body).not_to include(no_processes)
         expect(body).not_to include(pagination)
         expect(body).to include('246 MB')
@@ -603,7 +603,7 @@ RSpec.describe_current do
 
       it do
         expect(response).to be_ok
-        expect(body).to include('code class="wrapped json p-0 m-0"')
+        expect(body).to include('<code class="json p-0 m-0"')
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
       end
@@ -652,7 +652,7 @@ RSpec.describe_current do
 
       it do
         expect(response).to be_ok
-        expect(body).to include('code class="wrapped json p-0 m-0"')
+        expect(body).to include('<code class="json p-0 m-0"')
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
       end
@@ -867,7 +867,7 @@ RSpec.describe_current do
 
       it do
         expect(response).to be_ok
-        expect(body).to include('Rebalance count:')
+        expect(body).to include('Rebalance count')
         expect(body).to include('This process does not consume any')
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
@@ -890,7 +890,7 @@ RSpec.describe_current do
 
       it do
         expect(response).to be_ok
-        expect(body).to include('Rebalance count:')
+        expect(body).to include('Rebalance count')
         expect(body).to include('Unknown')
         expect(body).to include('This process does not consume any')
         expect(body).not_to include(pagination)
@@ -911,7 +911,7 @@ RSpec.describe_current do
 
       it do
         expect(response).to be_ok
-        expect(body).to include('Rebalance count:')
+        expect(body).to include('Rebalance count')
         expect(body).to include('This process does not consume any')
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
