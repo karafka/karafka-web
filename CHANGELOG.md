@@ -27,6 +27,7 @@
 - [Enhancement] Indicate in the status reporting whether Karafka is OSS or Pro.
 - [Enhancement] Ship JS and CSS assets using Brotli and Gzip when possible.
 - [Enhancement] Introduce a `/ux` page to ease with styling improvements and components management.
+- [Enhancement] disallow usage of `<script>` blocks to prevent XSS.
 - [Refactor] Optimize subscription group data tracking flow.
 - [Refactor] Namespace migrations so migrations related to each topic data are in an independent directory.
 - [Refactor] Use errors for deny flow so request denials can occur from the inspection layer.
