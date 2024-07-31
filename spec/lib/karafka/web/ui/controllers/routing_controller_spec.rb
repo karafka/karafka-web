@@ -21,7 +21,7 @@ RSpec.describe_current do
   describe '#show' do
     before { get "routing/#{Karafka::App.routes.first.topics.first.id}" }
 
-    it do 'expect to display details, including the injectable once'
+    it 'expect to display details, including the injectable once' do
       expect(response).to be_ok
       expect(body).to include('kafka.topic.metadata.refresh.interval.ms')
       expect(body).to include(breadcrumbs)
