@@ -27,3 +27,11 @@ canvas {
   width: 100% !important;
   height: 100% !important;
 }
+
+.head-icon {
+  white-space: nowrap;
+}
+
+table td.commands {
+  min-width: 120px;
+}
