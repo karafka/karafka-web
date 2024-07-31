@@ -102,3 +102,32 @@ jobs:
           CODITSU_API_KEY: ${{ secrets.CODITSU_API_KEY }}
           CODITSU_API_SECRET: ${{ secrets.CODITSU_API_SECRET }}
         run: \curl -sSL https://api.coditsu.io/run/ci | bash
+
+
+  assets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '17'
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build development assets
+        run: ./bin/build_assets
+
+      - name: Build release assets
+        run: KARAFKA_RELEASE=true ./bin/build_assets
