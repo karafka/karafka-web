@@ -26,7 +26,7 @@ RSpec.describe_current do
       expect(body).to include('kafka.topic.metadata.refresh.interval.ms')
       expect(body).to include(breadcrumbs)
       expect(body).to include('kafka.statistics.interval.ms')
-      expect(body).not_to include(support_message)
+      expect(body).to include(support_message)
     end
 
     context 'when given route is not available' do

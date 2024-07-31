@@ -24,9 +24,9 @@ RSpec.describe_current do
     it do 'expect to display details, including the injectable once'
       expect(response).to be_ok
       expect(body).to include('kafka.topic.metadata.refresh.interval.ms')
-      expect(body).to include(support_message)
       expect(body).to include(breadcrumbs)
       expect(body).to include('kafka.statistics.interval.ms')
+      expect(body).not_to include(support_message)
     end
 
     context 'when given route is not available' do
@@ -35,6 +35,52 @@ RSpec.describe_current do
       it do
         expect(response).not_to be_ok
         expect(status).to eq(404)
+      end
+    end
+
+    context 'when there are saml details' do
+      before do
+        draw_routes do
+          topic SecureRandom.uuid do
+            consumer Karafka::BaseConsumer
+            kafka(
+              'sasl.username': 'username',
+              'sasl.password': 'password',
+              'sasl.mechanisms': 'SCRAM-SHA-512'
+            )
+          end
+        end
+
+        get "routing/#{Karafka::App.routes.last.topics.last.id}"
+      end
+
+      it 'expect to hide them' do
+        expect(response).to be_ok
+        expect(body).to include('kafka.sasl.username')
+        expect(body).to include('***')
+        expect(body).to include(breadcrumbs)
+        expect(body).not_to include(support_message)
+      end
+    end
+
+    context 'when there are ssl details' do
+      before do
+        draw_routes do
+          topic SecureRandom.uuid do
+            consumer Karafka::BaseConsumer
+            kafka('ssl.key.password': 'password')
+          end
+        end
+
+        get "routing/#{Karafka::App.routes.last.topics.last.id}"
+      end
+
+      it 'expect to hide them' do
+        expect(response).to be_ok
+        expect(body).to include('kafka.ssl.key.password')
+        expect(body).to include('***')
+        expect(body).to include(breadcrumbs)
+        expect(body).not_to include(support_message)
       end
     end
   end
