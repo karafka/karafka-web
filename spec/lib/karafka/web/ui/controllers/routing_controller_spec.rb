@@ -21,11 +21,12 @@ RSpec.describe_current do
   describe '#show' do
     before { get "routing/#{Karafka::App.routes.first.topics.first.id}" }
 
-    it do
+    it 'expect to display details, including the injectable once' do
       expect(response).to be_ok
       expect(body).to include('kafka.topic.metadata.refresh.interval.ms')
-      expect(body).to include(support_message)
       expect(body).to include(breadcrumbs)
+      expect(body).to include('kafka.statistics.interval.ms')
+      expect(body).to include(support_message)
     end
 
     context 'when given route is not available' do
