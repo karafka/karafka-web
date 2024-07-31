@@ -231,6 +231,10 @@
     @apply text-end text-gray-500 mb-3 text-sm;
   }
 
+  .table_metadata .badge {
+    @apply badge-sm
+  }
+
   .topic-tiles {
     @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4;
   }

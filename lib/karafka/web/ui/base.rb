@@ -53,7 +53,7 @@ module Karafka
           csp.manifest_src "'self'"
           csp.media_src "'self'"
           csp.object_src "'none'"
-          csp.script_src "'self' https: http: 'unsafe-inline'"
+          csp.script_src "'self' https: http:"
           csp.style_src "'self' https: http: 'unsafe-inline'"
           csp.worker_src "'self'"
           csp.base_uri "'self'"
