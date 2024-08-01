@@ -6,6 +6,7 @@
 - **[Feature]** Redesign the UI and move navigation to the left to make space for future features.
 - **[Feature]** Support per request policies for inspection and operations limitation.
 - **[Feature]** Provide Search capabilities in the Explorer (Pro).
+- **[Feature]** Introduce dark mode.
 - [Enhancement] Provide topics watermarks inspection page (Pro).
 - [Enhancement] Use Turbo to improve usability.
 - [Enhancement] Round poll age reporting to precision of 2 reducing the payload size.
@@ -31,6 +32,7 @@
 - [Refactor] Optimize subscription group data tracking flow.
 - [Refactor] Namespace migrations so migrations related to each topic data are in an independent directory.
 - [Refactor] Use errors for deny flow so request denials can occur from the inspection layer.
+- [Maintenance] Require `karafka` `2.4.7` due to fixes and API changes.
 - [Fix] Disallow quiet and stop commands for embedded workers.
 - [Fix] Fix invalid deserialization metadata display in the per-message Explorer view.
 - [Fix] Fix a case where started page refresh would update content despite limiters being in place.

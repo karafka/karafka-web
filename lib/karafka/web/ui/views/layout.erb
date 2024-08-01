@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="corporate">
   <%== partial 'shared/header' %>
 
   <% if @error %>
@@ -7,7 +7,7 @@
       <%== yield %>
     </body>
   <% else %>
-    <body class="drawer min-h-screen bg-gray-100 lg:drawer-open">
+    <body class="drawer min-h-screen lg:drawer-open bg-base-200">
       <input id="main-drawer" type="checkbox" class="drawer-toggle" />
 
       <aside class="drawer-side z-10">
