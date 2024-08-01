@@ -7,22 +7,6 @@
     @apply rounded-md whitespace-nowrap mb-1;
   }
 
-  .badge-primary {
-    @apply text-white;
-  }
-
-  .badge-info {
-    @apply text-white;
-  }
-
-  .badge-secondary {
-    @apply text-white;
-  }
-
-  .badge-success {
-    @apply text-white;
-  }
-
   .breadcrumbs-wrapper {
     @apply col-span-12 mb-3;
   }
@@ -63,22 +47,6 @@
     @apply rounded-md;
   }
 
-  .alert-info {
-    @apply bg-blue-200 text-blue-900;
-  }
-
-  .alert-success {
-    @apply bg-green-200 text-green-900;
-  }
-
-  .alert-warning {
-    @apply bg-yellow-200 text-yellow-900;
-  }
-
-  .alert-error {
-    @apply bg-red-200 text-red-900;
-  }
-
   .alert-box {
     @apply border rounded-md;
   }
@@ -96,7 +64,7 @@
   }
 
   .alert-box-content {
-    @apply bg-white p-4 rounded-b-lg;
+    @apply p-4 rounded-b-lg bg-base-100;
   }
 
   .alert-box-warning {
@@ -120,7 +88,7 @@
   }
 
   .alert-box-info .alert-box-header {
-    @apply bg-info text-white;
+    @apply bg-info;
   }
 
   .alert-box-error {
@@ -128,7 +96,7 @@
   }
 
   .alert-box-error .alert-box-header {
-    @apply bg-error text-white;
+    @apply bg-error;
   }
 
   .sidebar-nav {
@@ -148,7 +116,7 @@
   }
 
   .data-table {
-    @apply table w-full bg-white border border-gray-300 rounded rounded-md mb-5;
+    @apply table w-full bg-base-100 border border-gray-300 rounded rounded-md mb-5;
   }
 
   .data-table .badge {
@@ -159,7 +127,7 @@
     @apply col-span-12 mb-3 overflow-x-auto;
   }
 
-  .data-table thead {
+  [data-theme="corporate"] .data-table thead {
     @apply bg-gray-100;
   }
 
@@ -172,7 +140,11 @@
   }
 
   .data-table tbody tr {
-    @apply even:bg-gray-50 hover:bg-gray-200;
+    @apply hover:bg-base-200;
+  }
+
+  [data-theme="corporate"] .data-table tbody tr {
+    @apply even:bg-gray-50;
   }
 
   .data-table tbody td {
@@ -184,14 +156,14 @@
   }
 
   .row-table {
-    @apply table w-full bg-white border border-gray-300 rounded-md mb-5;
+    @apply table w-full bg-base-100 border border-gray-300 rounded-md mb-5;
   }
 
   .row-table-wrapper {
     @apply col-span-12 mb-3 overflow-x-auto;
   }
 
-  .row-table thead {
+  [data-theme="corporate"] .row-table thead {
     @apply bg-gray-100;
   }
 
@@ -204,7 +176,7 @@
   }
 
   .row-table tbody tr {
-    @apply even:bg-gray-50 hover:bg-gray-200;
+    @apply even:bg-base-200 hover:bg-base-300;
   }
 
   .row-table tbody td {
@@ -259,6 +231,16 @@
     @apply font-normal;
   }
 
+  [data-theme="corporate"]
+  .btn-info, .btn-primary, .btn-error, .btn-success,
+  .alert-info, .alert-error, .alert-success,
+  .badge-info, .badge-primary, .badge-error, .badge-success, .badge-secondary,
+  .alert-box-info .alert-box-header, .alert-box-primary .alert-box-header,
+  .alert-box-error .alert-box-header, .alert-box-success .alert-box-header,
+  .alert-box-secondary .alert-box-header {
+    @apply text-base-100;
+  }
+
   .actions {
     @apply flex items-center text-end text-gray-700 mb-6;
   }
@@ -272,11 +254,11 @@
   }
 
   .h2 {
-    @apply text-xl text-left text-gray-800 mb-4 lg:font-light
+    @apply text-xl text-left text-base-content mb-4 lg:font-light
   }
 
   .h3 {
-    @apply text-lg text-left text-gray-800 mb-4 lg:font-light
+    @apply text-lg text-left text-base-content mb-4 lg:font-light
   }
 
   .grid-default {
@@ -312,7 +294,7 @@
   }
 
   .card-metric {
-    @apply bg-white p-3 border border-gray-300 rounded-md;
+    @apply bg-base-100 p-3 border border-gray-300 rounded-md;
   }
 
   .card-metric h3 {
@@ -328,7 +310,7 @@
   }
 
   .card-support {
-    @apply bg-white rounded-lg p-6 border border-gray-300;
+    @apply bg-base-100 rounded-lg p-6 border border-gray-300;
   }
 
   .card-support h3 {
@@ -352,7 +334,7 @@
   }
 
   .card-detail {
-    @apply card bg-white border border-gray-300 rounded-md;
+    @apply card bg-base-100 border border-gray-300 rounded-md;
   }
 
   .card-detail-body {
@@ -393,4 +375,8 @@
   .drawer-side > *:not(.drawer-overlay) {
     transition-duration: 0ms;
   }
+}
+
+[data-theme="corporate"] .bg-base-200 {
+  background: #f5f6fe;
 }

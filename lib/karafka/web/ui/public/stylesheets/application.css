@@ -1,7 +1,3 @@
-body {
-  background: #f5f6fe !important;
-}
-
 .blurred {
   filter: blur(4px)
 }
