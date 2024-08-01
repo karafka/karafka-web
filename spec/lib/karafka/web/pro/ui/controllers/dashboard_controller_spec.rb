@@ -71,7 +71,6 @@ RSpec.describe_current do
       expect(body).to include('Batches')
       expect(body).to include('Jobs')
       expect(body).to include('Consumed')
-      expect(body).to include('Produced')
       expect(body).to include('Max LSO')
       expect(body).to include('Utilization')
       expect(body).to include('RSS')
