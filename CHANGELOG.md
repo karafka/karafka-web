@@ -11,7 +11,6 @@
 - [Enhancement] Round poll age reporting to precision of 2 reducing the payload size.
 - [Enhancement] Round utilization reporting to precision of 2 reducing the payload size.
 - [Enhancement] Validate states materialization lag in the status view.
-- [Enhancement] Introduce produced messages chart (Pro).
 - [Enhancement] Promote topics data pace to OSS.
 - [Enhancement] Rename and normalize dashboard tabs.
 - [Enhancement] Enable live data polling on the first visit so it does not have to be enabled manually.

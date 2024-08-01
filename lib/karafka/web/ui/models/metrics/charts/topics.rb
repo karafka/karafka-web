@@ -107,47 +107,6 @@ module Karafka
                 topics.each_value(&:compact!)
                 topics.to_json
               end
-
-              # @return [String] JSON with messages production rate. How fast messages per topic
-              #   are being produced in a time window.
-              #
-              # @note Same data filling gaps approach is used as in the `#pace` chart.
-              def produced
-                topics = {}
-
-                @data.to_h.each do |topic, metrics|
-                  topic_without_cg = topic.split('[').first
-
-                  # If we've already seen this topic data, we can skip
-                  next if topics.include?(topic_without_cg)
-
-                  max_pace = 0
-                  previous = nil
-
-                  topics[topic_without_cg] = metrics.map do |current|
-                    current_pace = current.last[:pace]
-
-                    unless current_pace
-                      previous = nil
-                      next [current.first, nil]
-                    end
-
-                    unless previous
-                      previous = current_pace
-                      next
-                    end
-
-                    max_pace = current_pace if current_pace > max_pace
-
-                    sample = [current.first, max_pace - previous]
-                    previous = max_pace
-                    sample
-                  end
-                end
-
-                topics.each_value(&:compact!)
-                topics.to_json
-              end
             end
           end
         end

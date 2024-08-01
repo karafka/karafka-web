@@ -14,7 +14,6 @@
       <%== partial 'shared/tab_nav', locals: { title: 'Lags', id: 'lags' } %>
       <%== partial 'shared/tab_nav', locals: { title: 'Max LSO', id: 'max-lso' } %>
       <%== partial 'shared/tab_nav', locals: { title: 'Pace', id: 'pace' } %>
-      <%== partial 'shared/tab_nav', locals: { title: 'Produced', id: 'produced' } %>
     </div>
   </div>
 
@@ -39,10 +38,6 @@
 
     <div id="pace" class="hidden">
       <%== partial 'shared/charts/line', locals: { data: @topics_charts.pace, id: 'pace' } %>
-    </div>
-
-    <div id="produced"  class="hidden">
-      <%== partial 'shared/charts/line', locals: { data: @topics_charts.produced, id: 'produced' } %>
     </div>
   </div>
 
