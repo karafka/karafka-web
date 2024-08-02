@@ -33,8 +33,16 @@ module Karafka
           ]
 
           before do
+            assets_path = root_path("assets/#{Karafka::Web::VERSION}/")
+
+            # Always allow assets
+            break true if request.path.start_with?(assets_path)
+            # If policies extension is not loaded, allow as this is the default
+            break true unless Web.config.ui.respond_to?(:policies)
+            break true if Web.config.ui.policies.requests.allow?(env)
+
             # Do not allow if given request violates requests policies
-            raise(Errors::Ui::ForbiddenError) unless Web.config.ui.policies.requests.allow?(env)
+            raise(Errors::Ui::ForbiddenError)
           end
 
           route do |r|
