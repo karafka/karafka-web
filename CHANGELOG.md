@@ -19,6 +19,7 @@
 - [Enhancement] Support `/topics` root redirect.
 - [Enhancement] Prevent explorer from displaying too big payloads (bigger than 1MB by default)
 - [Enhancement] Include memsize based on `ObjectSpace.memsize_of` if `#memsize_of` is available.
+- [Enhancement] Include ratio of how much more memory deserialized message uses vs. serialized.
 - [Enhancement] Improve how charts with many topics work.
 - [Enhancement] Count and display executed jobs independently from processed batches.
 - [Enhancement] Prevent karafka-web from being configured before karafka is configured.
