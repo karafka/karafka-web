@@ -65,62 +65,30 @@
         %>
       <% end %>
 
-      <%==
-        partial(
-          'explorer/messages/detail',
-          locals: {
-            k: 'deserializers.payload',
-            v: @message.metadata.deserializers.payload
-          }
-        )
-      %>
-
-      <%==
-        partial(
-          'explorer/messages/detail',
-          locals: {
-            k: 'deserializers.headers',
-            v: @message.metadata.deserializers.headers
-          }
-        )
-      %>
-
-      <%==
-        partial(
-          'explorer/messages/detail',
-          locals: {
-            k: 'deserializers.key',
-            v: @message.metadata.deserializers.key
-          }
-        )
-      %>
-
-      <% bytesize = @message.raw_payload&.bytesize || 0 %>
-
-      <%==
-        partial(
-          'explorer/messages/detail',
-          locals: {
-            k: 'bytesize',
-            v: format_memory((bytesize / 1024.to_f).round(4))
-          }
-        )
-      %>
+      <tr>
+        <td>
+          deserializers.key
+        </td>
+        <td>
+          <code><%== object_value_to_s @message.metadata.deserializers.key %></code>
+        </td>
+      </tr>
 
       <tr>
         <td>
-          memsize
+          deserializers.headers
         </td>
         <td>
-          <% if @memsize_available %>
-            <%= format_memory((@displayable_payload_size / 1024.to_f).round(4)) %>
+          <code><%== object_value_to_s @message.metadata.deserializers.headers %></code>
+        </td>
+      </tr>
 
-            <% if bytesize.positive? %>
-              (<%== (@displayable_payload_size.to_f / bytesize).round(2) %>x)
-            <% end %>
-          <% else %>
-            Not Available
-          <% end %>
+      <tr>
+        <td>
+          deserializers.payload
+        </td>
+        <td>
+          <code><%== object_value_to_s @message.metadata.deserializers.payload %></code>
         </td>
       </tr>
 

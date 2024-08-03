@@ -100,15 +100,15 @@ module Karafka
               @offset = offset
               @message = Models::Message.find(@topic_id, @partition_id, @offset)
 
-              @safe_payload = Web::Ui::Lib::SafeRunner.new do
+              @safe_payload = Web::Pro::Ui::Lib::SafeRunner.new do
                 JSON.pretty_generate(@message.payload)
               end
 
-              @safe_key = Web::Ui::Lib::SafeRunner.new do
+              @safe_key = Web::Pro::Ui::Lib::SafeRunner.new do
                 @message.key
               end
 
-              @safe_headers = Web::Ui::Lib::SafeRunner.new do
+              @safe_headers = Web::Pro::Ui::Lib::SafeRunner.new do
                 @message.headers
               end
 
