@@ -82,4 +82,30 @@ RSpec.describe_current do
       end
     end
   end
+
+  describe '#current_partition' do
+    context 'when the partition is a valid integer' do
+      let(:request_params) { { 'partition' => '3' } }
+
+      it 'returns the current partition' do
+        expect(params.current_partition).to eq(3)
+      end
+    end
+
+    context 'when the partition is not provided' do
+      let(:request_params) { {} }
+
+      it 'returns -1' do
+        expect(params.current_partition).to eq(-1)
+      end
+    end
+
+    context 'when the partition is not a valid integer' do
+      let(:request_params) { { 'partition' => 'invalid' } }
+
+      it 'returns -1' do
+        expect(params.current_partition).to eq(0)
+      end
+    end
+  end
 end

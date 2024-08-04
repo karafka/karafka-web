@@ -82,6 +82,10 @@
           multiple
           required
         >
+          <%
+            partitions << params.current_partition.to_s unless params.current_partition.negative?
+          %>
+
           <option value="all" <%= 'selected' if partitions.include?('all') || partitions.empty? %>>All</option>
           <% @partitions_count.times do |i| %>
             <option value="<%= i %>" <%= 'selected' if partitions.include?(i.to_s) %>>
