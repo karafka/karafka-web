@@ -22,7 +22,7 @@ module Karafka
           class Quiet < Base
             # Performs the command if not in embedded mode
             def call
-              return if embedded?
+              return unless standalone?
 
               ::Process.kill('TSTP', ::Process.pid)
             end

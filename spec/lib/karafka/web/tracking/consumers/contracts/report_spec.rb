@@ -37,6 +37,7 @@ RSpec.describe_current do
     {
       started_at: 1_687_439_150.1767561,
       id: 'shinra:3548178:324ae2b47a12',
+      execution_mode: 'standalone',
       status: 'running',
       listeners: { active: 2, standby: 0 },
       workers: 2,
@@ -144,7 +145,7 @@ RSpec.describe_current do
 
   %i[
     started_at id memory_usage memory_total_usage memory_size status listeners workers tags
-    cpu_usage threads cpus
+    cpu_usage threads cpus execution_mode
   ].each do |attr|
     context "when process.#{attr} is missing" do
       before { report[:process].delete(attr) }
@@ -197,6 +198,12 @@ RSpec.describe_current do
 
   context 'when process.started_at is negative' do
     before { report[:process][:started_at] = -1 }
+
+    it { expect(contract.call(report)).not_to be_success }
+  end
+
+  context 'when process.execution_mode is not a string' do
+    before { report[:process][:execution_mode] = -1 }
 
     it { expect(contract.call(report)).not_to be_success }
   end
