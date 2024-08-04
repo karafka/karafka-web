@@ -83,6 +83,7 @@ module Karafka
                 id: process_id,
                 started_at: started_at,
                 status: ::Karafka::App.config.internal.status.to_s,
+                execution_mode: ::Karafka::Server.execution_mode.to_s,
                 listeners: listeners,
                 workers: workers,
                 memory_usage: @memory_usage,

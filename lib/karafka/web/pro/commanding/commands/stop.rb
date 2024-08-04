@@ -22,7 +22,7 @@ module Karafka
           class Stop < Base
             # Performs the command if not in embedded mode
             def call
-              return if embedded?
+              return unless standalone?
 
               ::Process.kill('QUIT', ::Process.pid)
             end

@@ -29,6 +29,7 @@ module Karafka
               required(:threads) { |val| val.is_a?(Integer) && val >= 0 }
               required(:workers) { |val| val.is_a?(Integer) && val.positive? }
               required(:tags) { |val| val.is_a?(Karafka::Core::Taggable::Tags) }
+              required(:execution_mode) { |val| val.is_a?(String) && !val.empty? }
 
               nested(:listeners) do
                 required(:active) { |val| val.is_a?(Integer) && val >= 0 }

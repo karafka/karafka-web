@@ -27,10 +27,11 @@ module Karafka
             end
 
             # @return [Boolean] Is given process to which a command was sent operating in an
-            #   embedded mode. We need to know this, because some commands are prohibited from
-            #   being executed in the embedded processes.
-            def embedded?
-              Karafka::Process.tags.to_a.include?('embedded')
+            #   standalone mode. We need to know this, because some commands are prohibited from
+            #   being executed in the embedded or swarm processes since there the signaling is
+            #   handled differently (either via the main process or supervisor).
+            def standalone?
+              Karafka::Server.execution_mode == :standalone
             end
           end
         end

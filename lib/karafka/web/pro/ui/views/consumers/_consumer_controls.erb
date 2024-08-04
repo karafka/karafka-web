@@ -61,9 +61,9 @@
       quiet_path = root_path('commanding', process.id, 'quiet')
       disabled_class = process.status == 'running' ? '' : 'btn-disabled'
 
-      if process.tags.include?('embedded')
-        disabled_class = 'disabled'
-        title = 'Not supported in embedded consumers'
+      unless process.execution_mode == 'standalone'
+        disabled_class = 'btn-disabled'
+        title = 'Supported only in standalone consumer processes'
       end
     %>
     <form action="<%= quiet_path %>" method="post" class="" title="<%= title %>">
@@ -78,9 +78,9 @@
       stop_path = root_path('commanding', process.id, 'stop')
       disabled_class = process.status != 'stopping' && process.status != 'stopped' ? '' : 'btn-disabled'
 
-      if process.tags.include?('embedded')
-        disabled_class = 'disabled'
-        title = 'Not supported in embedded consumers'
+      unless process.execution_mode == 'standalone'
+        disabled_class = 'btn-disabled'
+        title = 'Supported only in standalone consumer processes'
       end
     %>
     <form action="<%= stop_path %>" method="post" class="" title="<%= title %>">
