@@ -237,8 +237,17 @@
   .badge-info, .badge-primary, .badge-error, .badge-success, .badge-secondary,
   .alert-box-info .alert-box-header, .alert-box-primary .alert-box-header,
   .alert-box-error .alert-box-header, .alert-box-success .alert-box-header,
-  .alert-box-secondary .alert-box-header {
+  .alert-box-secondary .alert-box-header,
+  .btn-outline.btn-active.btn-primary, .btn-outline.btn-active.btn-secondary,
+  .btn-outline.btn-active.btn-info, .btn-outline.btn-active.btn-success,
+  .btn-outline.btn-active.btn-error {
     @apply text-base-100;
+  }
+
+  [data-theme="corporate"]
+  .btn-outline.btn-primary, .btn-outline.btn-secondary, .btn-outline.btn-info,
+  .btn-outline.btn-success, .btn-outline.btn-error {
+    @apply hover:text-base-100;
   }
 
   .actions {
