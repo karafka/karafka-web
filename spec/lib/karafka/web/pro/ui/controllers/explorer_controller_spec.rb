@@ -588,11 +588,13 @@ RSpec.describe_current do
           end
         end
 
-        # This will send a compressed message that after unpack will be bigger than what we
-        # decide to fit into memory by default
+        data = Fixtures.consumers_metrics_json('current')
+        # More than 512KB limit but less than 1MB default Kafka topic limit
+        data[:too_much] = 'a' * 1024 * 800
+
         produce(
           topic,
-          Fixtures.consumers_metrics_file('compressed/v1.4.0_large.msg'),
+          data.to_json,
           headers: { 'zlib' => '1' }
         )
         get "explorer/#{topic}/0/0"
@@ -609,9 +611,12 @@ RSpec.describe_current do
       end
     end
 
-    context 'when memsize_of is not available' do
+    context 'when trace_object_allocations_start is not available' do
       before do
-        allow(ObjectSpace).to receive(:respond_to?).with(:memsize_of).and_return(false)
+        allow(ObjectSpace)
+          .to receive(:respond_to?)
+          .with(:trace_object_allocations_start)
+          .and_return(false)
 
         produce(topic, '1')
         get "explorer/#{topic}/0/0"

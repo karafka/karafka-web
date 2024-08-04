@@ -164,8 +164,8 @@ module Karafka
         setting :dlq_patterns, default: [/(dlq)|(dead_letter)/i]
 
         # Maximum in-memory size of payload that we will render. Anything bigger than this by
-        # default will not be displayed not to hang the browser
-        setting :max_visible_payload_size, default: 1_048_576
+        # default will not be displayed not to hang the browser. 512KB of serialized data is a lot.
+        setting :max_visible_payload_size, default: 524_288
 
         # Specific kafka settings that are tuned to operate within the Web UI interface.
         #

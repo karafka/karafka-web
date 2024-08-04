@@ -1,4 +1,4 @@
-<% view_title "Message with offset #{@message.offset}" %>
+<% view_title "Message with offset #{@message.offset} from partition #{@message.partition}" %>
 
 <%
   republish_path = root_path('messages', @message.topic, @message.partition, @message.offset, 'republish')
@@ -52,15 +52,42 @@
       </a>
     <% end %>
 
+    <button
+      class="btn-action btn-toggle"
+      title="Show the message metadata details"
+      id="metadata-button"
+      data-toggle-target="metadata-details"
+    >
+      <%== icon(:circle_stack) %>
+    </button>
+
+    <button
+      class="btn-action btn-toggle"
+      title="Show the message utilization details"
+      id="utilization-button"
+      data-toggle-target="utilization-details"
+    >
+      <%== icon(:cpu) %>
+    </button>
   </section>
 </div>
 
 <div class="col-span-12 mb-6">
-  <h2 class="h2">
-    Metadata
-  </h2>
+  <div id="utilization-details" class="hidden">
+    <h2 class="h2">
+      Utilization
+    </h2>
 
-  <%== partial 'explorer/message/metadata' %>
+    <%== partial 'explorer/message/resources_utilization' %>
+  </div>
+
+  <div id="metadata-details">
+    <h2 class="h2">
+      Metadata
+    </h2>
+
+    <%== partial 'explorer/message/metadata' %>
+  </div>
 
   <h2 class="h2">
     Payload

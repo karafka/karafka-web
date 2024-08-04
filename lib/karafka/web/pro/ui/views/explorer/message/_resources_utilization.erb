@@ -1,0 +1,127 @@
+<div class="data-table-wrapper">
+  <table class="data-table">
+    <tbody>
+      <%==
+        partial(
+          'explorer/messages/detail',
+          locals: {
+            k: 'key.bytesize',
+            v: format_memory((@message.raw_key&.bytesize || 0) / 1024.0)
+          }
+        )
+      %>
+
+      <tr>
+        <td>
+          key.cpu_time
+        </td>
+        <td>
+          <%== @safe_key.cpu_time.round(4) %> ms
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          key.total_time
+        </td>
+        <td>
+          <%== @safe_key.total_time.round(4) %> ms
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          key.allocations
+        </td>
+        <td>
+          <%= @safe_key.allocations || 'Not Available' %>
+        </td>
+      </tr>
+
+      <%
+        bytesize = 0
+
+        @message.raw_headers.each do |h, v|
+          bytesize += h.bytesize
+          bytesize += v.bytesize
+        end
+
+        kbytesize = bytesize / 1024.0
+      %>
+
+      <%==
+        partial(
+          'explorer/messages/detail',
+          locals: {
+            k: 'headers.bytesize',
+            v: format_memory(bytesize)
+          }
+        )
+      %>
+
+      <tr>
+        <td>
+          headers.cpu_time
+        </td>
+        <td>
+          <%== @safe_headers.cpu_time.round(4) %> ms
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          headers.total_time
+        </td>
+        <td>
+          <%== @safe_headers.total_time.round(4) %> ms
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          headers.allocations
+        </td>
+        <td>
+          <%= @safe_headers.allocations || 'Not Available' %>
+        </td>
+      </tr>
+
+      <%==
+        partial(
+          'explorer/messages/detail',
+          locals: {
+            k: 'payload.bytesize',
+            v: format_memory((@message.raw_payload&.bytesize || 0) / 1024.0)
+          }
+        )
+      %>
+
+      <tr>
+        <td>
+          payload.cpu_time
+        </td>
+        <td>
+          <%== @safe_payload.cpu_time.round(4) %> ms
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          payload.total_time
+        </td>
+        <td>
+          <%== @safe_payload.total_time.round(4) %> ms
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          payload.allocations
+        </td>
+        <td>
+          <%= @safe_payload.allocations || 'Not Available' %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
