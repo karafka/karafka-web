@@ -6,6 +6,7 @@
     "started_at": 2690818651.8229299,
     "id": "shinra:1:1",
     "status": "running",
+    "execution_mode": "standalone",
     "listeners": {
       "active": 2,
       "standby": 0

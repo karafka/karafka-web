@@ -5,6 +5,7 @@
   "process": {
     "started_at": 1695802478.2217133,
     "id": "shinra:1817047:0bddec5483b0",
+    "execution_mode": "standalone",
     "status": "running",
     "listeners": {
       "active": 2,
