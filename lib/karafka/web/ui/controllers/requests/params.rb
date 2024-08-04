@@ -64,6 +64,11 @@ module Karafka
                 offset < -1 ? -1 : offset
               end
             end
+
+            # @return [Integer] currently selected partition or -1 if nothing provided
+            def current_partition
+              @current_partition ||= @request_params.fetch('partition', -1).to_i
+            end
           end
         end
       end
