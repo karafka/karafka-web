@@ -18,8 +18,7 @@
 - [Enhancement] Display raw numerical timestamp alongside message time.
 - [Enhancement] Support `/topics` root redirect.
 - [Enhancement] Prevent explorer from displaying too big payloads (bigger than 1MB by default)
-- [Enhancement] Include memsize based on `ObjectSpace.memsize_of` if `#memsize_of` is available.
-- [Enhancement] Include ratio of how much more memory deserialized message uses vs. serialized.
+- [Enhancement] Include deserialization object allocation stats.
 - [Enhancement] Improve how charts with many topics work.
 - [Enhancement] Count and display executed jobs independently from processed batches.
 - [Enhancement] Prevent karafka-web from being configured before karafka is configured.
@@ -46,6 +45,7 @@
 - [Fix] Fix invalid redirect when trying to view particular errors partition time location.
 - [Fix] Fix several UI inconsistencies.
 - [Fix] License identifier `LGPL-3.0` is deprecated for SPDX (#2177).
+- [Fix] Do not include prettifying the payload for visibility in the resource computation cost.
 
 ## 0.9.1 (2024-05-03)
 - [Fix] OSS `lag_stored` for not-subscribed consumers causes Web UI to crash.

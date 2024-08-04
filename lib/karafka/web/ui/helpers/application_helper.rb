@@ -116,7 +116,7 @@ module Karafka
             return '0' if !mem_kb || mem_kb.zero?
 
             if mem_kb < 10_240
-              "#{number_with_delimiter(mem_kb)} KB"
+              "#{number_with_delimiter(mem_kb.round(4))} KB"
             elsif mem_kb < 1_000_000
               "#{number_with_delimiter((mem_kb / 1024.0).to_i)} MB"
             else

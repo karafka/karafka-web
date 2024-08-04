@@ -14,7 +14,7 @@ module Karafka
           class SafeRunner
             include Karafka::Core::Helpers::Time
 
-            attr_reader :error, :result, :cpu_time, :total_time
+            attr_reader :error, :result, :cpu_time, :total_time, :allocations
 
             # @param block [Proc] code we want to safe-guard
             def initialize(&block)
@@ -25,6 +25,7 @@ module Karafka
               @result = nil
               @cpu_time = 0
               @total_time = 0
+              @allocations = false
             end
 
             # @return [Boolean] was the code execution successful or not
@@ -45,10 +46,17 @@ module Karafka
             def call
               return @result if executed?
 
+              @executed = true
+
+              if objspace?
+                ObjectSpace.trace_object_allocations_start
+                before = ObjectSpace.each_object.count
+              end
+
+              # We measure time as close to the process as possible so it is not impacted by the
+              # objects allocations count (if applicable)
               start_time = monotonic_now
               start_cpu = ::Process.times
-
-              @executed = true
               @result = @code.call
               @success = true
 
@@ -64,11 +72,23 @@ module Karafka
                 (end_cpu.utime - start_cpu.utime) + (end_cpu.stime - start_cpu.stime)
               ) * 1_000
               @total_time = (end_time - start_time)
+
+              if objspace?
+                @allocations = ObjectSpace.each_object.count - before
+                ObjectSpace.trace_object_allocations_stop
+              end
             end
 
             # @return [Boolean] was the code executed already or not yet
             def executed?
               @executed
+            end
+
+            private
+
+            # @return [Boolean] true if tracing is available
+            def objspace?
+              ObjectSpace.respond_to?(:trace_object_allocations_start)
             end
           end
         end

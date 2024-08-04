@@ -64,8 +64,8 @@
     <button
       class="btn-action btn-toggle"
       title="Show the message utilization details"
-      id="resources-utilization-button"
-      data-toggle-target="resources-utilization-details"
+      id="utilization-button"
+      data-toggle-target="utilization-details"
     >
       <%== icon(:cpu) %>
     </button>
@@ -73,9 +73,9 @@
 </div>
 
 <div class="col-span-12 mb-6">
-  <div id="resources-utilization-details" class="hidden">
+  <div id="utilization-details" class="hidden">
     <h2 class="h2">
-      Resources Utilization
+      Utilization
     </h2>
 
     <%== partial 'explorer/message/resources_utilization' %>
