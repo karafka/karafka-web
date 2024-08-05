@@ -19,7 +19,8 @@ const jsFiles = [
 
 // Define CSS source files
 const cssFiles = [
-  'lib/karafka/web/ui/public/stylesheets/libs/**/*.min.css',
+  'lib/karafka/web/ui/public/stylesheets/libs/datepicker.min.css',
+  'lib/karafka/web/ui/public/stylesheets/libs/tailwind.min.css',
   'lib/karafka/web/ui/public/stylesheets/application.css'
 ];
 

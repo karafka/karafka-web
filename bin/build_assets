@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-rm -f lib/karafka/web/ui/public/stylesheets/application.min.*
 rm -f lib/karafka/web/ui/public/javascripts/application.min.*
+rm -f lib/karafka/web/ui/public/stylesheets/application.min.*
+rm -f lib/karafka/web/ui/public/stylesheets/libs/highlight_light.min.css.*
+rm -f lib/karafka/web/ui/public/stylesheets/libs/highlight_dark.min.css.*
 
 set -e
 
@@ -44,3 +46,6 @@ compress_file() {
 
 compress_file "lib/karafka/web/ui/public/stylesheets/application.min.css"
 compress_file "lib/karafka/web/ui/public/javascripts/application.min.js"
+
+compress_file "lib/karafka/web/ui/public/stylesheets/libs/highlight_light.min.css"
+compress_file "lib/karafka/web/ui/public/stylesheets/libs/highlight_dark.min.css"
