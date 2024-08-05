@@ -6,6 +6,7 @@
 - **[Feature]** Redesign the UI and move navigation to the left to make space for future features.
 - **[Feature]** Support per request policies for inspection and operations limitation.
 - **[Feature]** Provide Search capabilities in the Explorer (Pro).
+- **[Feature]** Provide dark mode.
 - [Enhancement] Provide topics watermarks inspection page (Pro).
 - [Enhancement] Use Turbo to improve usability.
 - [Enhancement] Round poll age reporting to precision of 2 reducing the payload size.

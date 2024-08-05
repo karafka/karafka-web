@@ -39,8 +39,6 @@ db/*.sqlite3
 /gems
 /specifications
 /node_modules
-application.min.css.*
-application.min.js.*
 rerun.txt
 pickle-email-*.html
 tailwind.min.css
