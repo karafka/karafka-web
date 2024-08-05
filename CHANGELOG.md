@@ -51,6 +51,39 @@
 - [Fix] License identifier `LGPL-3.0` is deprecated for SPDX (#2177).
 - [Fix] Do not include prettifying the payload for visibility in the resource computation cost.
 
+### Upgrade Notes
+
+This is a **major** release that brings many things to the table.
+
+This version of the Karafka Web UI requires Karafka `>= 2.4.7`. You can either upgrade both or upgrade Karafka first and then the Web UI. Karafka `2.4.7` is also compatible with Web UI `0.9.1`; thus, you can upgrade one at a time.
+
+#### Configuration
+
+Visibility Filters have been reorganized into messages policies.
+
+Please read the [Policies API](https://karafka.io/docs/Pro-Web-UI-Policies/) documentation and convert your visibility filters to policies.
+
+Your existing message-related visibility filter policies should now be assigned to a new configuration:
+
+```ruby
+Karafka::Web.setup do |config|
+  config.ui.policies.messages = MyCustomRequestsPolicy.new
+end
+```
+
+#### Deployment
+
+Because of the reporting schema update, it is recommended to:
+
+0. Make sure you have upgraded to `0.9.1` before and that it was fully deployed.
+1. Test the upgrade on a staging or dev environment.
+3. The Web UI interface may throw 500 errors during the upgrade because of schema incompatibility (until Puma is deployed and all consumers redeployed). This will have no long-term effects and can be ignored.
+4. `Karafka::Web::Errors::Processing::IncompatibleSchemaError` **is expected**. It is part of the Karafka Web UI zero-downtime deployment strategy. This error allows the Web UI materialization consumer to back off and wait for it to be replaced with a new one.
+5. Perform a rolling deployment (or a regular one) and replace all consumer processes.
+6. Update the Web UI Puma.
+7. **No** CLI command execution is required.
+8. Enjoy.
+
 ## 0.9.1 (2024-05-03)
 - [Fix] OSS `lag_stored` for not-subscribed consumers causes Web UI to crash.
 
