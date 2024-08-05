@@ -259,7 +259,7 @@
   }
 
   .btn-action.active {
-    @apply text-black;
+    @apply text-base-content;
   }
 
   .h2 {

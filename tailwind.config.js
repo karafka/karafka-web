@@ -5,7 +5,7 @@ module.exports = {
   },
   plugins: [require("daisyui")],
   daisyui: {
-    themes: ["corporate", "synthwave"]
+    themes: ["corporate", "dark"]
   },
   safelist: [
     {
