@@ -30,6 +30,7 @@
 - [Enhancement] disallow usage of `<script>` blocks to prevent XSS.
 - [Enhancement] Display full subscription group information in the Routing view, including injectable defaults.
 - [Enhancement] Report Karafka consumer server execution mode.
+- [Enhancement] Expose `sync_threshold` consumer tracking config to allow aligning of error-intense applications.
 - [Refactor] Optimize subscription group data tracking flow.
 - [Refactor] Namespace migrations so migrations related to each topic data are in an independent directory.
 - [Refactor] Use errors for deny flow so request denials can occur from the inspection layer.

@@ -6,13 +6,6 @@ module Karafka
       module Consumers
         # Reports the collected data about the process and sends it, so we can use it in the UI
         class Reporter < Tracking::Reporter
-          # Minimum number of messages to produce to produce them in sync mode
-          # This acts as a small back-off not to overload the system in case we would have
-          # extremely big number of errors happening
-          PRODUCE_SYNC_THRESHOLD = 25
-
-          private_constant :PRODUCE_SYNC_THRESHOLD
-
           # This mutex is shared between tracker and samplers so there is no case where metrics
           # would be collected same time tracker reports
           MUTEX = Mutex.new
@@ -134,7 +127,7 @@ module Karafka
           #   normal operations we should not have that many messages to dispatch and it should not
           #   slowdown any processing.
           def produce(messages)
-            if messages.count >= PRODUCE_SYNC_THRESHOLD
+            if messages.count >= sync_threshold
               ::Karafka::Web.producer.produce_many_sync(messages)
             else
               ::Karafka::Web.producer.produce_many_async(messages)
@@ -144,6 +137,11 @@ module Karafka
           # and we can just safely ignore this
           rescue WaterDrop::Errors::ProducerClosedError
             nil
+          end
+
+          # @return [Integer] min number of messages when we switch to sync flushing to slow things
+          def sync_threshold
+            @sync_threshold ||= ::Karafka::Web.config.tracking.consumers.sync_threshold
           end
         end
       end
