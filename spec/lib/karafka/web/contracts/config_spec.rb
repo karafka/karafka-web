@@ -21,6 +21,7 @@ RSpec.describe_current do
         interval: 2_000,
         consumers: {
           reporter: Object.new,
+          sync_threshold: 10,
           sampler: Object.new,
           listeners: []
         },
@@ -100,6 +101,18 @@ RSpec.describe_current do
 
     context 'when interval is not an integer' do
       before { params[:tracking][:interval] = 1000.5 }
+
+      it { expect(contract.call(params)).not_to be_success }
+    end
+
+    context 'when consumers sync_threshold is less than 0' do
+      before { params[:tracking][:consumers][:sync_threshold] = -1 }
+
+      it { expect(contract.call(params)).not_to be_success }
+    end
+
+    context 'when consumers sync_threshold is not an integer' do
+      before { params[:tracking][:consumers][:sync_threshold] = 1.1 }
 
       it { expect(contract.call(params)).not_to be_success }
     end
