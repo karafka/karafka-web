@@ -72,6 +72,60 @@ RSpec.describe_current do
       end
     end
 
+    context 'when we have a running job without first and last offsets' do
+      before do
+        topics_config.consumers.states = states_topic
+        topics_config.consumers.reports = reports_topic
+
+        data = Fixtures.consumers_states_json(symbolize_names: false)
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+        report['jobs'] = [report['jobs'][0]]
+        report['jobs'][0]['first_offset'] = -1
+        report['jobs'][0]['last_offset'] = -1
+
+        produce(reports_topic, report.to_json)
+        produce(states_topic, data.to_json)
+
+        get 'jobs/running'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(support_message)
+        expect(body).to include(breadcrumbs)
+        expect(body).to include('N/A')
+        expect(body).not_to include(pagination)
+      end
+    end
+
+    context 'when we have a running eofed job without first and last offsets' do
+      before do
+        topics_config.consumers.states = states_topic
+        topics_config.consumers.reports = reports_topic
+
+        data = Fixtures.consumers_states_json(symbolize_names: false)
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+        report['jobs'] = [report['jobs'][0]]
+        report['jobs'][0]['type'] = 'eofed'
+        report['jobs'][0]['first_offset'] = -1
+        report['jobs'][0]['last_offset'] = -1
+
+        produce(reports_topic, report.to_json)
+        produce(states_topic, data.to_json)
+
+        get 'jobs/running'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('eofed')
+        expect(body).to include(support_message)
+        expect(body).to include(breadcrumbs)
+        expect(body).to include('N/A')
+        expect(body).not_to include(pagination)
+      end
+    end
+
     context 'when there are more jobs than fits on a single page' do
       before do
         topics_config.consumers.states = states_topic
