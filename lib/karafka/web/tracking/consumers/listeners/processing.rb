@@ -22,6 +22,7 @@ module Karafka
               revoked
               shutdown
               tick
+              eofed
             ].each do |action|
               # Tracks the job that is going to be scheduled so we can also display pending jobs
               class_eval <<~RUBY, __FILE__, __LINE__ + 1
@@ -85,6 +86,8 @@ module Karafka
                          'shutdown'
                        when 'consumer.tick.error'
                          'tick'
+                       when 'consumer.eofed.error'
+                         'eofed'
                        # This is not a user facing execution flow, but internal system one
                        # that is why it will not be reported as a separate job for the UI
                        when 'consumer.idle.error'
@@ -109,7 +112,8 @@ module Karafka
             [
               [:revoke, :revoked, 'revoked'],
               [:shutting_down, :shutdown, 'shutdown'],
-              [:tick, :ticked, 'tick']
+              [:tick, :ticked, 'tick'],
+              [:eof, :eofed, 'eofed']
             ].each do |pre, post, action|
               class_eval <<~METHOD, __FILE__, __LINE__ + 1
                 # Stores this job details
