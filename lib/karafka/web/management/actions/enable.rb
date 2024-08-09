@@ -47,6 +47,9 @@ module Karafka
 
           # Enables all the needed routes
           def extend_routing
+            kafka_config = ::Karafka::App.config.kafka.dup
+            kafka_config.merge!(::Karafka::Web.config.processing.kafka)
+
             ::Karafka::App.routes.draw do
               payload_deserializer = ::Karafka::Web::Deserializer.new
 
@@ -70,6 +73,9 @@ module Karafka
                   # consumer group name would be renamed and we would start consuming all
                   # historical
                   initial_offset 'latest'
+                  # We use the defaults + our config alterations that may not align with what
+                  # user wants for his topics.
+                  kafka kafka_config
                 end
 
                 # We define those three here without consumption, so Web understands how to

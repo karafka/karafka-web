@@ -123,6 +123,15 @@ module Karafka
         # By default we flush the states twice as often as the data reporting.
         # This will allow us to have closer to real-time reporting.
         setting :interval, default: 2_500
+
+        # Extra kafka level settings that we merge to the defaults when building the Web consumer
+        # group. User may want different things than we in regard to operations, thus effectively
+        # crippling responsiveness or stability of reporting.
+        setting :kafka, default: {
+          # We do not use at the moment the `#eofed` flag for anything, thus there is no point in
+          # having it set to true if user users it.
+          'enable.partition.eof': false
+        }.freeze
       end
 
       setting :ui do

@@ -7,6 +7,8 @@
 - **[Feature]** Support per request policies for inspection and operations limitation.
 - **[Feature]** Provide Search capabilities in the Explorer (Pro).
 - **[Feature]** Provide dark mode.
+- [Enhancement] Set `enable.partition.eof` to `false` for Web UI consumer group as it is not needed.
+- [Enhancement] Allow for configuration of extra `kafka` scope options for the Web UI consumer group.
 - [Enhancement] Support Karafka `#eofed` consumer action.
 - [Enhancement] Provide topics watermarks inspection page (Pro).
 - [Enhancement] Use Turbo to improve usability.

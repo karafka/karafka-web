@@ -39,7 +39,7 @@ module Karafka
 
           # @return [Array<Karafka::Admin::Configs::Config>] all topic configs
           def configs
-            @configs ||= ::Karafka::Admin::Configs.describe(
+            ::Karafka::Admin::Configs.describe(
               ::Karafka::Admin::Configs::Resource.new(
                 type: :topic,
                 name: topic_name

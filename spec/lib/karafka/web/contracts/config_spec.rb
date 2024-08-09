@@ -33,7 +33,8 @@ RSpec.describe_current do
       },
       processing: {
         active: true,
-        interval: 3_000
+        interval: 3_000,
+        kafka: {}
       },
       ui: {
         sessions: {
@@ -47,7 +48,8 @@ RSpec.describe_current do
         cache: Object.new,
         per_page: 50,
         dlq_patterns: [],
-        max_visible_payload_size: 100
+        max_visible_payload_size: 100,
+        kafka: {}
       }
     }
   end
@@ -154,6 +156,12 @@ RSpec.describe_current do
 
       it { expect(contract.call(params)).not_to be_success }
     end
+
+    context 'when kafka is nil' do
+      before { params[:processing][:kafka] = nil }
+
+      it { expect(contract.call(params)).not_to be_success }
+    end
   end
 
   context 'when validating ui related settings' do
@@ -173,6 +181,12 @@ RSpec.describe_current do
 
     context 'when cache is nil' do
       before { params[:ui][:cache] = nil }
+
+      it { expect(contract.call(params)).not_to be_success }
+    end
+
+    context 'when kafka is nil' do
+      before { params[:ui][:kafka] = nil }
 
       it { expect(contract.call(params)).not_to be_success }
     end
