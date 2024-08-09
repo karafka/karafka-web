@@ -48,6 +48,9 @@ module Karafka
           required(:active) { |val| [true, false].include?(val) }
           # Do not update data more often not to overload and not to generate too much data
           required(:interval) { |val| val.is_a?(Integer) && val >= 1_000 }
+
+          # Extra Kafka setup for our processing consumer
+          required(:kafka) { |val| val.is_a?(Hash) }
         end
 
         nested(:ui) do
@@ -59,6 +62,7 @@ module Karafka
           required(:cache) { |val| !val.nil? }
           required(:per_page) { |val| val.is_a?(Integer) && val >= 1 && val <= 100 }
           required(:max_visible_payload_size) { |val| val.is_a?(Integer) && val >= 1 }
+          required(:kafka) { |val| val.is_a?(Hash) }
 
           required(:dlq_patterns) do |val|
             val.is_a?(Array) &&
