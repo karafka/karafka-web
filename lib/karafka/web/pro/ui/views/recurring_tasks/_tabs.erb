@@ -1,0 +1,17 @@
+<div class="col-span-12 mb-9">
+  <div class="tab-container">
+    <a
+      href="<%= root_path('recurring_tasks', 'schedule') %>"
+      class="custom-tab <%= nav_class(include: 'schedule') %>"
+    >
+      Schedules
+    </a>
+
+    <a
+      href="<%= root_path('recurring_tasks', 'logs') %>"
+      class="custom-tab <%= nav_class(include: '/logs') %>"
+    >
+      Logs
+    </a>
+  </div>
+</div>

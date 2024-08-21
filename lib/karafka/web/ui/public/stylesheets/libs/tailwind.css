@@ -298,6 +298,14 @@
     @apply border-l border-l-error;
   }
 
+  table .status-row-warning td:first-child {
+    @apply border-l border-l-warning;
+  }
+
+  table .status-row-error td:first-child {
+    @apply border-l border-l-error;
+  }
+
   pre.code {
     @apply text-sm border border-gray-300;
   }

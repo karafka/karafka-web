@@ -1,5 +1,9 @@
 # Karafka Web Changelog
 
+## 0.10.1 (Unreleased)
+- **[Feature]** Support Recurring Tasks management (Pro).
+- [Enhancement] Improve tables headers capitalization.
+
 ## 0.10.0 (2024-08-19)
 - **[Breaking]** Rename and reorganize visibility filter to policies engine since it is not only about visibility.
 - **[Feature]** Replace Bootstrap with with tailwind + DaisyUI.

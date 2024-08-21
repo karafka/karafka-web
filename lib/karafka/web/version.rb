@@ -3,6 +3,6 @@
 module Karafka
   module Web
     # Current gem version
-    VERSION = '0.10.0'
+    VERSION = '0.10.1'
   end
 end

@@ -29,5 +29,9 @@ canvas {
 }
 
 table td.commands {
-  min-width: 120px;
+  width: 150px;
+}
+
+table td.commands-inline-3 {
+  width: 180px
 }

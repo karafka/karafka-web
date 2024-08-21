@@ -1,0 +1,26 @@
+<% result = log.task[:result] == 'success' %>
+<tr class="<%= result ? '' : 'status-row-error' %>">
+  <td>
+    <%= log.id %>
+  </td>
+  <td>
+    <% if result %>
+      <%== badge_success 'Success' %>
+    <% else %>
+      <%== badge_error 'Error' %>
+    <% end %>
+  </td>
+  <td>
+    <% if result %>
+      <%== log.task[:time_taken].round(2) %> ms
+    <% else %>
+      N/A
+    <% end %>
+  </td>
+  <td>
+    <%== relative_time log.dispatched_at %>
+  </td>
+  <td>
+    <%= log.schedule_version %>
+  </td>
+</tr>

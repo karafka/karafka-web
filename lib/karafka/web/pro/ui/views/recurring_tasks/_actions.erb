@@ -1,0 +1,58 @@
+<%
+  trigger_path = root_path('recurring_tasks', task.id, 'trigger')
+  disabled_class = task.enabled? ? '' : 'btn-disabled'
+%>
+<form
+  action="<%= trigger_path %>"
+  method="post"
+  class="inline"
+>
+  <%== csrf_tag(trigger_path) %>
+  <button
+    type="submit"
+    class="btn btn-primary btn-sm  "
+    title="Trigger"
+  >
+    <%== icon(:play) %>
+  </button>
+</form>
+
+<%
+  enable_path = root_path('recurring_tasks', task.id, 'enable')
+  disabled_class = task.enabled? ? 'btn-disabled' : ''
+%>
+<form
+  action="<%= enable_path %>"
+  method="post"
+  class="inline"
+  title="Enable"
+>
+  <%== csrf_tag(enable_path) %>
+  <button
+    type="submit"
+    class="btn btn-success btn-sm   <%= disabled_class %>"
+  >
+    <%== icon(:check) %>
+  </button>
+</form>
+
+<%
+  disable_path = root_path('recurring_tasks', task.id, 'disable')
+  disabled_class = task.enabled? ? '' : 'btn-disabled'
+%>
+<form
+  action="<%= disable_path %>"
+  method="post"
+  class="inline"
+  title="Disable"
+
+>
+  <%== csrf_tag(disable_path) %>
+  <button
+    type="submit"
+    class="btn btn-warning btn-sm  <%= disabled_class %>"
+
+  >
+    <%== icon(:pause) %>
+  </button>
+</form>
