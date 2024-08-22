@@ -32,9 +32,15 @@ class Fixtures
       consumers_states
       consumers_commands
       errors
+      recurring_tasks_schedules
+      recurring_tasks_logs
     ].each do |type|
       define_method :"#{type}_file" do |name = 'current.json'|
         file("#{type}/#{name}")
+      end
+
+      define_method :"#{type}_msg" do |name = 'current'|
+        file("#{type}/#{name}.msg")
       end
 
       define_method :"#{type}_json" do |name = 'current', symbolize_names: true|

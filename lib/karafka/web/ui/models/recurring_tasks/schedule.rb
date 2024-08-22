@@ -44,7 +44,7 @@ module Karafka
                 # Out of those messages we pick the most recent persisted schedule
                 candidate = messages
                             .reverse
-                            .find { |message| message.key == 'schedule' }
+                            .find { |message| message.key == 'state:schedule' }
 
                 # If there is a schedule message we use its data to build schedule, if not false
                 candidate ? new(candidate.payload) : false

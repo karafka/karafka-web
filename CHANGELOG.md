@@ -2,10 +2,12 @@
 
 ## 0.10.1 (Unreleased)
 - **[Feature]** Support Recurring Tasks management (Pro).
+- [Enhancement] Optimize command buttons so they occupy less space.
 - [Enhancement] Improve tables headers capitalization.
 - [Fix] Fix partial lack of tables hover in daily mode.
 - [Fix] Fix lack of tables hover in dark mode.
 - [Fix] Normalize various tables types styling.
+- [Fix] Fix ranges selectors position on wide screens.
 
 ## 0.10.0 (2024-08-19)
 - **[Breaking]** Rename and reorganize visibility filter to policies engine since it is not only about visibility.

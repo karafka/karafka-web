@@ -7,11 +7,13 @@
 <% if @schedule %>
   <%== partial 'recurring_tasks/tabs' %>
 
-  <%== partial 'recurring_tasks/batch_actions' %>
+  <% unless @tasks.empty? %>
+    <%== partial 'recurring_tasks/batch_actions' %>
+  <% end %>
 <% end %>
 
 <div class="col-span-12">
-  <% if @schedule %>
+  <% if @schedule && !@tasks.empty? %>
     <div class="data-table-wrapper">
       <table class="data-table">
         <thead>
