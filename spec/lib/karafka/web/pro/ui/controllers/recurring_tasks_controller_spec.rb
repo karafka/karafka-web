@@ -388,4 +388,64 @@ RSpec.describe_current do
       expect(message.payload[:task][:id]).to eq('*')
     end
   end
+
+  describe '#enable' do
+    before { post 'recurring_tasks/task1/enable' }
+
+    it do
+      expect(response.status).to eq(302)
+      # Taken from referer and referer is nil in specs
+      expect(response.location).to eq(nil)
+    end
+
+    it 'expect to create new command' do
+      # Dispatch of commands is async, so we have to wait
+      sleep(1)
+      message = Karafka::Admin.read_topic(schedules_topic, 0, 1, -1).first
+      expect(message.key).to eq('command:enable:task1')
+      expect(message.payload[:type]).to eq('command')
+      expect(message.payload[:command][:name]).to eq('enable')
+      expect(message.payload[:task][:id]).to eq('task1')
+    end
+  end
+
+  describe '#disable' do
+    before { post 'recurring_tasks/task1/disable' }
+
+    it do
+      expect(response.status).to eq(302)
+      # Taken from referer and referer is nil in specs
+      expect(response.location).to eq(nil)
+    end
+
+    it 'expect to create new command' do
+      # Dispatch of commands is async, so we have to wait
+      sleep(1)
+      message = Karafka::Admin.read_topic(schedules_topic, 0, 1, -1).first
+      expect(message.key).to eq('command:disable:task1')
+      expect(message.payload[:type]).to eq('command')
+      expect(message.payload[:command][:name]).to eq('disable')
+      expect(message.payload[:task][:id]).to eq('task1')
+    end
+  end
+
+  describe '#trigger' do
+    before { post 'recurring_tasks/task1/trigger' }
+
+    it do
+      expect(response.status).to eq(302)
+      # Taken from referer and referer is nil in specs
+      expect(response.location).to eq(nil)
+    end
+
+    it 'expect to create new command' do
+      # Dispatch of commands is async, so we have to wait
+      sleep(1)
+      message = Karafka::Admin.read_topic(schedules_topic, 0, 1, -1).first
+      expect(message.key).to eq('command:trigger:task1')
+      expect(message.payload[:type]).to eq('command')
+      expect(message.payload[:command][:name]).to eq('trigger')
+      expect(message.payload[:task][:id]).to eq('task1')
+    end
+  end
 end
