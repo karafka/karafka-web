@@ -311,7 +311,10 @@ module Karafka
               attribute = name
               name = SORT_NAMES[attribute] || attribute.to_s.tr('_', ' ').tr('?', '')
               # Always capitalize the name
-              name = name.split(' ').map(&:capitalize).join(' ')
+              name = name.split(' ').map(&:capitalize)
+              # Remap all ids to ID in name
+              name.map! { |component| component == 'Id' ? 'ID' : component }
+              name = name.join(' ')
             end
 
             arrow_both = '&#x21D5;'
