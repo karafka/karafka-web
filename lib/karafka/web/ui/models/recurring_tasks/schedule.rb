@@ -33,7 +33,7 @@ module Karafka
               #   get it because requested topic/partition does not exist or nothing was present
               def current
                 messages = Karafka::Admin.read_topic(
-                  Karafka::App.config.recurring_tasks.topics.schedules,
+                  config.topics.schedules,
                   0,
                   # We work here with the assumption that users won't click so fast to load
                   # more than 20 commands prior to a state flush. If that happens, this will
@@ -47,12 +47,30 @@ module Karafka
                             .find { |message| message.key == 'state:schedule' }
 
                 # If there is a schedule message we use its data to build schedule, if not false
-                candidate ? new(candidate.payload) : false
+                return false unless candidate
+
+                # If the deserializer is not our dedicated recurring tasks deserializer, it means
+                # that routing for recurring tasks was not loaded, so recurring tasks are not
+                # active
+                #
+                # User might have used recurring tasks previously and disabled them, but still may
+                # navigate to them and then we should not show anything because without the
+                # correct deserializer it will crash anyhow
+                return false unless candidate.metadata.deserializers.payload == config.deserializer
+
+                new(candidate.payload)
               rescue Rdkafka::RdkafkaError => e
                 # If any of "topic missing" is raised, we return false but other errors we re-raise
                 raise(e) unless EXPECTED_RDKAFKA_ERRORS.any? { |code| e.code == code }
 
                 false
+              end
+
+              private
+
+              # @return [Karafka::Core::Configurable::Node]
+              def config
+                Karafka::App.config.recurring_tasks
               end
             end
 

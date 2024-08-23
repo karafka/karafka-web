@@ -5,7 +5,7 @@ RSpec.describe_current do
 
   let(:schedules_topic) { create_topic }
   let(:logs_topic) { create_topic }
-  let(:not_operable) { 'No recurring tasks are defined, appropriate topics do not exist' }
+  let(:not_operable) { 'Recurring Tasks Data Unavailable' }
   let(:no_logs) { 'There are no available logs.' }
 
   before do
