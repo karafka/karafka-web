@@ -4,6 +4,7 @@
 - **[Feature]** Support Recurring Tasks management (Pro).
 - [Enhancement] Optimize command buttons so they occupy less space.
 - [Enhancement] Improve tables headers capitalization.
+- [Enhancement] Prevent live-polling when user hovers over actionable links to mitigate race conditions.
 - [Fix] Fix partial lack of tables hover in daily mode.
 - [Fix] Fix lack of tables hover in dark mode.
 - [Fix] Normalize various tables types styling.
