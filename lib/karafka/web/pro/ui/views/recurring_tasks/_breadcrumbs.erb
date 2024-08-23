@@ -1,0 +1,22 @@
+<li>
+  <a href="<%= root_path('recurring_tasks') %>">
+    Recurring Tasks
+  </a>
+</li>
+
+<% if current_path.include?('/schedule') %>
+  <li>
+    <a href="<%= root_path('recurring_tasks/schedule') %>">
+      Schedule
+      <%= @schedule ? @schedule.schedule_version : '' %>
+    </a>
+  </li>
+<% end %>
+
+<% if current_path.include?('/logs') %>
+  <li>
+    <a href="<%= root_path('recurring_tasks/logs') %>">
+      Logs
+    </a>
+  </li>
+<% end %>

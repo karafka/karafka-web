@@ -1,0 +1,45 @@
+<div class="col-span-12 flex justify-end space-x-2 mb-6">
+  <%
+    trigger_all_path = root_path('recurring_tasks', 'trigger_all')
+    disable_class = @tasks.empty? ? 'btn-disabled' : ''
+  %>
+  <form
+    action="<%= trigger_all_path %>"
+    method="post"
+    class="inline-flex items-center"
+  >
+    <%== csrf_tag(trigger_all_path) %>
+    <button type="submit" class="btn btn-primary btn-sm <%= disable_class %>">
+      <%== icon(:play) %>
+      Trigger All
+    </button>
+  </form>
+
+  <%
+    enable_all_path = root_path('recurring_tasks', 'enable_all')
+    disable_class = @tasks.all?(&:enabled?) ? 'btn-disabled' : ''
+  %>
+  <form
+    action="<%= enable_all_path %>"
+    method="post"
+    class="inline-flex items-center"
+  >
+    <%== csrf_tag(enable_all_path) %>
+    <button type="submit" class="btn btn-success btn-sm <%= disable_class %>">
+      <%== icon(:check) %>
+      Enable All
+    </button>
+  </form>
+
+  <%
+    disable_all_path = root_path('recurring_tasks', 'disable_all')
+    disable_class = @tasks.none?(&:enabled?) ? 'btn-disabled' : ''
+  %>
+  <form action="<%= disable_all_path %>" method="post" class="inline-flex items-center">
+    <%== csrf_tag(disable_all_path) %>
+    <button type="submit" class="btn btn-warning btn-sm <%= disable_class %>">
+      <%== icon(:pause) %>
+      Disable All
+    </button>
+  </form>
+</div>

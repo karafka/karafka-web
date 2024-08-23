@@ -15,18 +15,55 @@
     <%== badge_primary "rails #{Rails.gem_version}" %>
   <% end %>
 
-  <%== badge_primary "memsize #{ObjectSpace.respond_to?(:memsize_of)}" %>
+  <% if Object.const_defined?(:Fugit, false) %>
+    <%== badge_primary "fugit #{Fugit::VERSION}" %>
+  <% end %>
 </p>
 
-<div class="divider"></div>
+<div class="data-table-wrapper">
+  <table class="data-table mb-0 mt-3">
+    <thead>
+      <tr>
+        <th>
+          Data Type
+        </th>
+        <th>
+          Topic Name
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Errors</td>
+        <td><code><%= Karafka::Web.config.topics.errors %></code></td>
+      </tr>
 
-<p>
-  Below you can find information about internal Karafka Web-UI topics:
-</p>
+      <tr>
+        <td>Consumers reports</td>
+        <td><code><%= Karafka::Web.config.topics.consumers.reports %></code></td>
+      </tr>
 
-<ul class="list-disc m-5 mb-0">
-  <li>Errors: <code><%= Karafka::Web.config.topics.errors %></code></li>
-  <li>Consumers reports: <code><%= Karafka::Web.config.topics.consumers.reports %></code></li>
-  <li>Consumers states: <code><%= Karafka::Web.config.topics.consumers.states %></code></li>
-  <li>Consumers metrics: <code><%= Karafka::Web.config.topics.consumers.metrics %></code></li>
-</ul>
+      <tr>
+        <td>Consumers states</td>
+        <td><code><%= Karafka::Web.config.topics.consumers.states %></code></td>
+      </tr>
+
+      <tr>
+        <td>Consumers metrics</td>
+        <td><code><%= Karafka::Web.config.topics.consumers.metrics %></code></td>
+      </tr>
+
+      <% if Karafka.pro? %>
+        <tr>
+          <td>Recurring Tasks schedules</td>
+          <td><code><%= Karafka::App.config.recurring_tasks.topics.schedules %></code></td>
+        </tr>
+
+        <tr>
+          <td>Recurring Tasks logs</td>
+          <td><code><%= Karafka::App.config.recurring_tasks.topics.logs %></code></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

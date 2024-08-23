@@ -43,17 +43,16 @@
     <%= process.lag_hybrid %>
   </td>
 
-  <td class="commands">
+  <td class="commands-inline-3">
     <%
       probe_path = root_path('commanding', process.id, 'probe')
       disabled_class = process.status != 'stopped' ? '' : 'btn-disabled'
     %>
-    <form action="<%= probe_path %>" method="post" class="">
+    <form action="<%= probe_path %>" method="post" class="inline" title="Probe">
       <%== csrf_tag(probe_path) %>
 
-      <button type="submit" class="btn btn-info btn-sm w-full max-w-xs mb-1 <%= disabled_class %>">
+      <button type="submit" class="btn btn-info btn-sm <%= disabled_class %>">
         <%== icon(:gear) %>
-        Probe
       </button>
     </form>
 
@@ -61,16 +60,17 @@
       quiet_path = root_path('commanding', process.id, 'quiet')
       disabled_class = process.status == 'running' ? '' : 'btn-disabled'
 
-      unless process.execution_mode == 'standalone'
+      if process.execution_mode == 'standalone'
+        title = 'Quiet'
+      else
         disabled_class = 'btn-disabled'
         title = 'Supported only in standalone consumer processes'
       end
     %>
-    <form action="<%= quiet_path %>" method="post" class="" title="<%= title %>">
+    <form action="<%= quiet_path %>" method="post" class="inline" title="<%= title %>">
       <%== csrf_tag(quiet_path) %>
-      <button type="submit" class="btn btn-warning btn-sm w-full max-w-xs mb-1 <%= disabled_class %>">
+      <button type="submit" class="btn btn-warning btn-sm <%= disabled_class %>">
         <%== icon(:pause) %>
-        Quiet
       </button>
     </form>
 
@@ -78,16 +78,17 @@
       stop_path = root_path('commanding', process.id, 'stop')
       disabled_class = process.status != 'stopping' && process.status != 'stopped' ? '' : 'btn-disabled'
 
-      unless process.execution_mode == 'standalone'
+      if process.execution_mode == 'standalone'
+        title = 'Stop'
+      else
         disabled_class = 'btn-disabled'
         title = 'Supported only in standalone consumer processes'
       end
     %>
-    <form action="<%= stop_path %>" method="post" class="" title="<%= title %>">
+    <form action="<%= stop_path %>" method="post" class="inline" title="<%= title %>">
       <%== csrf_tag(stop_path) %>
-      <button type="submit" class="btn btn-error btn-sm w-full max-w-xs <%= disabled_class %>">
+      <button type="submit" class="btn btn-error btn-sm <%= disabled_class %>">
         <%== icon(:stop) %>
-        Stop
       </button>
     </form>
   </td>

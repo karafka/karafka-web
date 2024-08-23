@@ -109,8 +109,8 @@ RSpec.describe_current do
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
         expect(body).to include(topic)
-        expect(body).to include('Replica count')
-        expect(body).to include('In sync brokers')
+        expect(body).to include('Replica Count')
+        expect(body).to include('In Sync Brokers')
       end
     end
   end

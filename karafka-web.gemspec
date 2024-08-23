@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.licenses    = %w[LGPL-3.0-only Commercial]
 
   spec.add_dependency 'erubi', '~> 1.4'
-  spec.add_dependency 'karafka', '>= 2.4.7', '< 2.5.0'
+  spec.add_dependency 'karafka', '>= 2.4.9', '< 2.5.0'
   spec.add_dependency 'karafka-core', '>= 2.4.0', '< 2.5.0'
   spec.add_dependency 'roda', '~> 3.68', '>= 3.69'
   spec.add_dependency 'tilt', '~> 2.0'
@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
     spec.signing_key = File.expand_path('~/.ssh/gem-private_key.pem')
   end
 
-  spec.cert_chain    = %w[certs/cert_chain.pem]
+  spec.cert_chain    = %w[certs/cert.pem]
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(spec)/}) }
   spec.executables   = %w[karafka-web]
   spec.require_paths = %w[lib]

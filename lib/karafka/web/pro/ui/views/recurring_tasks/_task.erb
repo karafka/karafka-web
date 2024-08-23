@@ -1,0 +1,46 @@
+<tr class="<%= task.enabled? ? '' : 'status-row-warning text-muted' %>">
+  <td>
+      <%= task.id %>
+  </td>
+
+  <td>
+    <% if task.enabled? %>
+      <%== badge_success('Enabled') %>
+    <% else %>
+      <%== badge_warning('Disabled') %>
+    <% end %>
+  </td>
+
+  <td>
+    <code><%= task.cron %></code>
+  </td>
+
+  <td>
+    <% if task.previous_time.positive? %>
+      <%== relative_time task.previous_time %>
+    <% else %>
+      Never
+    <% end %>
+  </td>
+
+  <td>
+    <% if task.enabled? %>
+      <% if task.next_time < Time.now.to_i %>
+        Right now
+      <% else %>
+        <%== relative_time task.next_time %>
+      <% end %>
+    <% else %>
+      Never
+    <% end %>
+  </td>
+
+  <td class="commands-inline-3">
+    <%==
+      partial(
+        'recurring_tasks/actions',
+        locals: { task: task }
+      )
+    %>
+  </td>
+</tr>

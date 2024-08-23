@@ -1,0 +1,43 @@
+<% if @schedule %>
+  <% view_title "Schedule #{@schedule.schedule_version}" %>
+<% else %>
+  <% view_title 'Schedule' %>
+<% end %>
+
+<% if @schedule %>
+  <%== partial 'recurring_tasks/tabs' %>
+
+  <% unless @tasks.empty? %>
+    <%== partial 'recurring_tasks/batch_actions' %>
+  <% end %>
+<% end %>
+
+<div class="col-span-12">
+  <% if @schedule && !@tasks.empty? %>
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th><%== sort_link('Task ID', :id) %></th>
+            <th><%== sort_link('Status', :enabled) %></th>
+            <th><%== sort_link(:cron) %></th>
+            <th><%== sort_link(:previous_time) %></th>
+            <th><%== sort_link(:next_time) %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <%==
+            render_each(
+              @tasks,
+              'recurring_tasks/_task',
+              local: :task
+            )
+          %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <%== partial 'recurring_tasks/not_active' %>
+  <% end %>
+</div>

@@ -64,6 +64,16 @@
 
     <li>
       <a
+        class="sidebar-nav-item <%= nav_class(start_with: '/recurring_tasks') %>"
+        href="<%= root_path('recurring_tasks') %>"
+      >
+        <%== icon(:arrow_path_rounded) %>
+        Cron
+      </a>
+    </li>
+
+    <li>
+      <a
         class="sidebar-nav-item <%= nav_class(start_with: '/errors') %>"
         href="<%= root_path('errors') %>"
       >

@@ -139,12 +139,12 @@
     @apply align-middle;
   }
 
-  .data-table tbody tr {
-    @apply hover:bg-base-200;
+  [data-theme="corporate"] .data-table tbody tr {
+    @apply even:bg-gray-50 hover:bg-base-200;
   }
 
-  [data-theme="corporate"] .data-table tbody tr {
-    @apply even:bg-gray-50;
+  [data-theme="dark"] .data-table tbody tr {
+    @apply even:bg-base-200 hover:bg-base-300;
   }
 
   .data-table tbody td {
@@ -167,6 +167,10 @@
     @apply bg-gray-100;
   }
 
+  [data-theme="corporate"] .row-table tbody tr {
+    @apply even:bg-gray-50 hover:bg-base-200;
+  }
+
   .row-table thead th {
     @apply border border-gray-300 p-2;
   }
@@ -175,7 +179,7 @@
     @apply align-middle;
   }
 
-  .row-table tbody tr {
+  [data-theme="dark"] .row-table tbody tr {
     @apply even:bg-base-200 hover:bg-base-300;
   }
 
@@ -295,6 +299,14 @@
   }
 
   table .status-row-stopped td:first-child {
+    @apply border-l border-l-error;
+  }
+
+  table .status-row-warning td:first-child {
+    @apply border-l border-l-warning;
+  }
+
+  table .status-row-error td:first-child {
     @apply border-l border-l-error;
   }
 

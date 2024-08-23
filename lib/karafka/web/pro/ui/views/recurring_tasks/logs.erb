@@ -1,0 +1,34 @@
+<% view_title 'Logs' %>
+
+<%== partial 'recurring_tasks/tabs' %>
+
+<div class="col-span-12">
+  <% if @logs.empty? && params.current_page <= 1 %>
+    <%== alert_info('There are no available logs.') %>
+  <% elsif @logs.empty? %>
+    <%== partial 'shared/no_paginated_data' %>
+  <% else %>
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Task ID</th>
+            <th>Result</th>
+            <th>Time Taken</th>
+            <th>Dispatched At</th>
+            <th>Schedule Version</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%==
+            render_each(
+              @logs,
+              'recurring_tasks/_log',
+              local: :log
+            )
+          %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

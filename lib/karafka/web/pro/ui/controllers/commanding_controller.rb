@@ -27,7 +27,7 @@ module Karafka
 
               redirect(
                 :back,
-                success: dispatched_to_one_msg(:probe, process_id)
+                success: dispatched_to_one(:probe, process_id)
               )
             end
 
@@ -39,7 +39,7 @@ module Karafka
 
               redirect(
                 :back,
-                success: dispatched_to_one_msg(:quiet, process_id)
+                success: dispatched_to_one(:quiet, process_id)
               )
             end
 
@@ -51,7 +51,7 @@ module Karafka
 
               redirect(
                 :back,
-                success: dispatched_to_one_msg(:stop, process_id)
+                success: dispatched_to_one(:stop, process_id)
               )
             end
 
@@ -96,7 +96,7 @@ module Karafka
             # @param command [Symbol]
             # @param process_id [String]
             # @return [String] flash message that command has been dispatched to a given process
-            def dispatched_to_one_msg(command, process_id)
+            def dispatched_to_one(command, process_id)
               command_name = command.to_s.capitalize
 
               "The #{command_name} command has been dispatched to the #{process_id} process."
