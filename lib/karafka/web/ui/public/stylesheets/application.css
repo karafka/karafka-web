@@ -35,3 +35,32 @@ table td.commands {
 table td.commands-inline-3 {
   width: 180px
 }
+
+.drawer-side:hover img.sidebar-nav-icon {
+  animation: wiggle .75s linear;
+}
+
+/* Keyframes */
+@keyframes wiggle {
+  0% {
+    transform: rotateZ(0);
+  }
+  15% {
+    transform: rotateZ(-15deg);
+  }
+  30% {
+    transform: rotateZ(10deg);
+  }
+  45% {
+    transform: rotateZ(-10deg);
+  }
+  60% {
+    transform: rotateZ(6deg);
+  }
+  75% {
+    transform: rotateZ(-4deg);
+  }
+  90%, 100% {
+    transform: rotateZ(0);
+  }
+}
