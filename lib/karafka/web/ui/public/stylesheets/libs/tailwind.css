@@ -396,6 +396,26 @@
   .drawer-side > *:not(.drawer-overlay) {
     transition-duration: 0ms;
   }
+
+  .sidebar-nav {
+    @apply lg:w-auto px-2;
+  }
+
+  .sidebar-nav-logo {
+    @apply lg:hidden;
+  }
+
+  .drawer-side:hover .sidebar-nav-logo {
+    @apply lg:block;
+  }
+
+  .sidebar-nav-item-label {
+    @apply lg:hidden;
+  }
+
+  .drawer-side:hover .sidebar-nav-item-label {
+    @apply lg:inline;
+  }
 }
 
 [data-theme="corporate"] .bg-base-200 {
