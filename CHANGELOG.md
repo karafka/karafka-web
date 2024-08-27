@@ -2,6 +2,7 @@
 
 ## 0.10.2 (Unreleased)
 - [Fix] Prevent live-polling on elements wrapped in a button.
+- [Fix] Fix errors extractor failure on first message-less tick / eofed
 
 ## 0.10.1 (2024-08-23)
 - **[Feature]** Support Recurring Tasks management (Pro).

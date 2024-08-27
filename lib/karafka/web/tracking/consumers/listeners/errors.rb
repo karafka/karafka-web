@@ -73,7 +73,9 @@ module Karafka
                 partition: consumer.partition,
                 first_offset: consumer.messages.metadata.first_offset,
                 last_offset: consumer.messages.metadata.last_offset,
-                committed_offset: consumer.coordinator.seek_offset - 1,
+                # We set it to -1000 if non-existent because after subtracting one, we will end up
+                # with -1001, which is "N/A" offset position for all the offsets here
+                committed_offset: (consumer.coordinator.seek_offset || -1_000) - 1,
                 consumer: consumer.class.to_s,
                 tags: consumer.tags
               }
