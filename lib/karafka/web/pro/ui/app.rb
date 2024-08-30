@@ -285,8 +285,8 @@ module Karafka
                 end
               end
 
-              r.on 'messages' do
-                controller = Controllers::ScheduledMessages::MessagesController.new(params)
+              r.on 'explorer' do
+                controller = Controllers::ScheduledMessages::ExplorerController.new(params)
 
                 r.get String do |topic_id|
                   controller.topic(topic_id)
@@ -294,6 +294,11 @@ module Karafka
 
                 r.get String, Integer do |topic_id, partition_id|
                   controller.partition(topic_id, partition_id)
+                end
+
+                # Jumps to offset matching the expected time
+                r.get String, Integer, Time do |topic_id, partition_id, time|
+                  controller.closest(topic_id, partition_id, time)
                 end
               end
 

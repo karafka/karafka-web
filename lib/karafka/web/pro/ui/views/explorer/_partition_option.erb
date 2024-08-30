@@ -1,7 +1,15 @@
+<%
+  path = if @selector_path_method
+           public_send(@selector_path_method, @topic_id, partition)
+         else
+           explorer_path(@topic_id, partition)
+         end
+%>
+
 <% if @partition_id == partition %>
-  <option value="<%= explorer_path(@topic_id, partition) %>" selected=selected>
+  <option value="<%= path %>" selected=selected>
 <% else %>
-  <option value="<%= explorer_path(@topic_id, partition) %>">
+  <option value="<%= path %>">
 <% end %>
   <%= partition || 'All' %>
 </option>

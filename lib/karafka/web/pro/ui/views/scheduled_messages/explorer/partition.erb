@@ -1,5 +1,7 @@
 <% view_title "#{@topic_id} partition #{@partition_id}" %>
 
+<% @selector_path_method = :scheduled_messages_explorer_path %>
+
 <div class="col-span-4">
   <section class="actions">
     <% if @messages && !@messages.empty? %>
@@ -19,7 +21,7 @@
         <%== icon(:magnifying_glass) %>
       </a>
 
-      <% closest_path = explorer_path(@topic_id, @partition_id) %>
+      <% closest_path = scheduled_messages_explorer_path(@topic_id, @partition_id) %>
       <input
         type="image"
         src="<%= asset_path('images/calendar.svg') %>"
@@ -65,6 +67,6 @@
       </p>
     <% end %>
 
-    <%== partial('scheduled_messages/messages/messages') %>
+    <%== partial('scheduled_messages/explorer/messages') %>
   <% end %>
 </div>

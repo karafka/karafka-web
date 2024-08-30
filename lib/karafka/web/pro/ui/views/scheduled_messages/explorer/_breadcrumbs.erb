@@ -4,9 +4,9 @@
   </a>
 </li>
 
-<% if current_path.include?('/messages') %>
+<% if current_path.include?('/explorer') %>
   <li>
-    <a href="<%= root_path("scheduled_messages/messages/#{@topic_id}") %>">
+    <a href="<%= root_path("scheduled_messages/explorer/#{@topic_id}") %>">
       Messages
     </a>
   </li>
@@ -14,7 +14,7 @@
 
 <% if @topic_id %>
   <li>
-    <a href="<%= root_path("scheduled_messages/messages/#{@topic_id}") %>">
+    <a href="<%= root_path("scheduled_messages/explorer/#{@topic_id}") %>">
       <%= @topic_id %>
     </a>
   </li>
@@ -22,7 +22,7 @@
 
 <% if @partition_id %>
   <li>
-    <a href="<%= root_path("scheduled_messages/messages/#{@topic_id}/#{@partition_id}") %>">
+    <a href="<%= root_path("scheduled_messages/explorer/#{@topic_id}/#{@partition_id}") %>">
       Partition
       <%= @partition_id %>
     </a>

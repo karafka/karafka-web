@@ -1,5 +1,7 @@
 <% view_title @topic_id %>
 
+<% @selector_path_method = :scheduled_messages_explorer_path %>
+
 <%== partial 'explorer/topic/actions' %>
 
 <div class="col-span-12">
@@ -26,6 +28,6 @@
       </p>
     <% end %>
 
-    <%== partial('scheduled_messages/messages/messages') %>
+    <%== partial('scheduled_messages/explorer/messages') %>
   <% end %>
 </div>

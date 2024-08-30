@@ -19,12 +19,14 @@ module Karafka
           module ScheduledMessages
             # Allows for exploration of dispatch messages in a less generic form that via the
             # explorer as different details are present
-            class MessagesController < BaseController
+            class ExplorerController < BaseController
               # Displays aggregated messages from (potentially) all partitions of a topic
               #
               # @param topic_id [String]
               def topic(topic_id)
-                response = ExplorerController.new(@params).topic(topic_id)
+                response = Controllers::ExplorerController
+                             .new(@params)
+                             .topic(topic_id)
 
                 render(attributes: response.attributes)
               end
@@ -34,9 +36,25 @@ module Karafka
               # @param topic_id [String]
               # @param partition_id [Integer]
               def partition(topic_id, partition_id)
-                response = ExplorerController.new(@params).partition(topic_id, partition_id)
+                response = Controllers::ExplorerController
+                             .new(@params)
+                             .partition(topic_id, partition_id)
 
                 render(attributes: response.attributes)
+              end
+
+              # Finds the closest offset matching the requested time and redirects to this location
+              # Note, that it redirects to closest but always younger.
+              #
+              # @param topic_id [String]
+              # @param partition_id [Integer]
+              # @param time [Time] time of the message
+              def closest(topic_id, partition_id, time)
+                response = Controllers::ExplorerController
+                             .new(@params)
+                             .closest(topic_id, partition_id, time)
+
+                redirect("scheduled_messages/#{response.path}")
               end
             end
           end
