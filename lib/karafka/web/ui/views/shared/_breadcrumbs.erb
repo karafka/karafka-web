@@ -8,7 +8,7 @@
           </a>
         </li>
 
-        <%== render_breadcrumbs %>
+        <%== render "#{@breadcrums_scope}/_breadcrumbs" %>
 
         <% if params.current_page && params.current_page > 1 %>
           <li>

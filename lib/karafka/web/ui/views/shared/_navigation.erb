@@ -77,6 +77,16 @@
 
     <li>
       <a
+        class="sidebar-nav-item disabled <%= nav_class(start_with: '/scheduled_messages') %>"
+        href="<%= root_path('scheduled_messages') %>"
+      >
+        <%== icon(:calendar) %>
+        Schedules
+      </a>
+    </li>
+
+    <li>
+      <a
         class="sidebar-nav-item <%= nav_class(start_with: '/errors') %>"
         href="<%= root_path('errors') %>"
       >

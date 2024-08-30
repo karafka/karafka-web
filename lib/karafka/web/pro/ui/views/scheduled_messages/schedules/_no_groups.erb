@@ -1,0 +1,11 @@
+<% alert_box_info 'Scheduled Messages Data Not Available' do %>
+  <p class="mb-2">
+    We are unable to display data related to scheduled messages. Please ensure that:
+  </p>
+
+  <ul class="list-disc list-inside">
+    <li>Scheduled Messages are enabled in your routing configuration.</li>
+    <li>The necessary Kafka topics have been created.</li>
+    <li>Your Karafka server, with scheduled messages awareness, is running and has persisted the state.</li>
+  </ul>
+<% end %>

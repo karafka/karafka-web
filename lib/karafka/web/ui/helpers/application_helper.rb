@@ -50,13 +50,6 @@ module Karafka
             object.to_s.include?('#<') ? object.class.to_s : object.to_s
           end
 
-          # Renders per scope breadcrumbs
-          def render_breadcrumbs
-            scope = request.path.delete_prefix(root_path).split('/')[0]
-
-            render "#{scope}/_breadcrumbs"
-          end
-
           # Takes a status and recommends background style color
           #
           # @param status [String] status

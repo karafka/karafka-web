@@ -1,0 +1,31 @@
+<% view_title @topic_id %>
+
+<%== partial 'explorer/topic/actions' %>
+
+<div class="col-span-12">
+  <% if @limited %>
+    <div class="mb-6">
+      <%== partial('explorer/topic/limited') %>
+    </div>
+  <% end %>
+
+  <% if @messages.empty? && params.current_page == 1 %>
+    <%== partial 'explorer/topic/empty' %>
+  <% elsif @messages.empty? %>
+    <%== partial 'shared/no_paginated_data' %>
+  <% else %>
+    <% content_for :table_metadata do %>
+      <p class="table_metadata">
+        Partitions:
+
+        <%== badge("total: #{@partitions_count}") %>
+        <%==
+          range = [@active_partitions.first, @active_partitions.last].uniq.join(' to ')
+          badge("visible: #{range}")
+        %>
+      </p>
+    <% end %>
+
+    <%== partial('scheduled_messages/messages/messages') %>
+  <% end %>
+</div>

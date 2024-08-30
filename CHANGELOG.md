@@ -1,6 +1,8 @@
 # Karafka Web Changelog
 
 ## 0.10.2 (Unreleased)
+- **[Feature]** Support Future Messages management (Pro).
+- [Enhancement] Do not live-reload when form active.
 - [Fix] Prevent live-polling on elements wrapped in a button.
 - [Fix] Fix errors extractor failure on first message-less tick / eofed
 
