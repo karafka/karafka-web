@@ -33,7 +33,7 @@ module Karafka
                              .map(&:to_a)
                              .flatten
                              .select(&:scheduled_messages?)
-                             .select { |topic| topic.name.end_with?('messages') }
+                             .reject { |topic| topic.name.end_with?(states_postfix) }
                              .map(&:name)
                              .sort
 
@@ -46,7 +46,7 @@ module Karafka
               # @param schedule_name [String] name of the schedules messages topic
               def show(schedule_name)
                 @schedule_name = schedule_name
-                @stats_topic_name = "#{schedule_name[0..-9]}states"
+                @stats_topic_name = "#{schedule_name}#{states_postfix}"
 
                 @states = {}
 
@@ -62,6 +62,13 @@ module Karafka
                 end
 
                 render
+              end
+
+              private
+
+              # @return [String] states topic postfix
+              def states_postfix
+                @states_postfix ||= Karafka::App.config.scheduled_messages.states_postfix
               end
             end
           end
