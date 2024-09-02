@@ -60,6 +60,9 @@ module Karafka
                 @states = @states.sort_by { |key, _| key.to_s }.to_h
                 # Sort daily from closest date
                 @states.each_value do |details|
+                  # Skip false predefined values from sorting
+                  next unless details
+
                   details[:daily] = details[:daily].sort_by { |key, _| key.to_s }.to_h
                 end
 

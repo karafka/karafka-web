@@ -102,7 +102,52 @@ RSpec.describe_current do
         expect(body).not_to include(support_message)
       end
     end
+  end
 
-    pending
+  describe '#show' do
+    let(:messages_topic) { create_topic }
+    let(:states_topic) { create_topic(topic_name: "#{messages_topic}_states") }
+    let(:no_states) { 'No state information for this partition is available.' }
+
+    before do
+      states_topic
+      messages_topic_ref = messages_topic
+
+      draw_routes do
+        scheduled_messages(messages_topic_ref)
+      end
+    end
+
+    context 'when there are no states for any of the partitions' do
+      before { get "scheduled_messages/schedules/#{messages_topic}" }
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(messages_topic)
+        expect(body).to include(breadcrumbs)
+        expect(body).to include(no_states)
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
+
+    context 'when there are state reports for partitions' do
+      before do
+        state = Fixtures.scheduled_messages_states_msg('current')
+        produce(states_topic, state)
+
+        get "scheduled_messages/schedules/#{messages_topic}"
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(messages_topic)
+        expect(body).to include(breadcrumbs)
+        expect(body).to include('2024-09-02')
+        expect(body).not_to include(no_states)
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
   end
 end

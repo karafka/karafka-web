@@ -34,6 +34,8 @@ class Fixtures
       errors
       recurring_tasks_schedules
       recurring_tasks_logs
+      scheduled_messages_states
+      scheduled_messages
     ].each do |type|
       define_method :"#{type}_file" do |name = 'current.json'|
         file("#{type}/#{name}")
