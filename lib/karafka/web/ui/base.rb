@@ -133,7 +133,7 @@ module Karafka
         # @param query_data [Hash] query params we want to add to the current path
         path :current do |query_data = {}|
           # Merge existing request parameters with new query data
-          merged_params = request.params.deep_merge(query_data)
+          merged_params = deep_merge(request.params, query_data)
 
           # Flatten the merged parameters
           flattened_params = flatten_params('', merged_params)
@@ -161,6 +161,29 @@ module Karafka
         # @return [Karafka::Web::Ui::Controllers::Requests::Params] curated params
         def params
           Controllers::Requests::Params.new(request.params)
+        end
+
+        private
+
+        # Merges two hashes deeply, combining nested hashes recursively.
+        #
+        # @param hash1 [Hash] The first hash to merge.
+        # @param hash2 [Hash] The second hash to merge.
+        # @return [Hash] A new hash that is the result of a deep merge of the two provided hashes.
+        def deep_merge(hash1, hash2)
+          merged_hash = hash1.dup
+
+          hash2.each_pair do |k, v|
+            tv = merged_hash[k]
+
+            merged_hash[k] = if tv.is_a?(Hash) && v.is_a?(Hash)
+                               deep_merge(tv, v)
+                             else
+                               v
+                             end
+          end
+
+          merged_hash
         end
       end
     end
