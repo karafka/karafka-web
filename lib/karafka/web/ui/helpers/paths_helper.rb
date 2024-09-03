@@ -65,6 +65,24 @@ module Karafka
           def explorer_path(topic_name = nil, partition_id = nil, offset = nil, action = nil)
             root_path(*['explorer', topic_name, partition_id, offset, action].compact)
           end
+
+          # Helps build scheduled messages paths.
+          # Similar to the explorer helper one
+          # @param topic_name [String]
+          # @param partition_id [Integer, nil]
+          # @param offset [Integer, nil]
+          # @param action [String, nil]
+          # @return [String] path to the expected location
+          def scheduled_messages_explorer_path(
+            topic_name = nil,
+            partition_id = nil,
+            offset = nil,
+            action = nil
+          )
+            root_path(
+              *['scheduled_messages', 'explorer', topic_name, partition_id, offset, action].compact
+            )
+          end
         end
       end
     end

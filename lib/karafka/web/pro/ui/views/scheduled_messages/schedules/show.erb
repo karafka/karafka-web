@@ -1,0 +1,48 @@
+<% view_title @schedule_name %>
+
+<% @states.each do |partition, details| %>
+  <h3 class="h3">
+    Partition <%=  partition %>
+  </h3>
+
+  <% if details %>
+    <div class="data-table-wrapper">
+        <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>For Dispatch</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% details[:daily].each do |date, for_dispatch| %>
+            <tr>
+              <td><%= date %></td>
+              <td><%= for_dispatch %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+
+      <p class="table_metadata">
+        Metadata:
+        <span class="badge">
+          Schema version: <%= details[:schema_version] %>
+        </span>
+
+        <span class="badge">
+          Reported at:&nbsp;
+          <%== relative_time(details[:dispatched_at]) %>
+        </span>
+
+        <span class="badge badge-<%= details[:state] == 'loaded' ? 'success' : 'warning' %>">
+          State: <%= details[:state] %>
+        </span>
+      </p>
+    </div>
+  <% else %>
+    <div class="mb-4">
+      <%== alert_warning 'No state information for this partition is available.' %>
+    </div>
+  <% end %>
+<% end %>

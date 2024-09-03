@@ -1,0 +1,38 @@
+<% view_title 'Schedules' %>
+
+<div class="col-span-12">
+  <% if @topics.empty? %>
+    <%== partial 'scheduled_messages/schedules/no_groups' %>
+  <% else %>
+    <% @topics.each do |topic| %>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="card-support">
+          <h3>
+            <%== icon(:calendar) %>
+            <span>
+              <%= topic.topic_name %>
+              /
+              <%= topic.partition_count %>
+            </span>
+          </h3>
+
+          <p class="flex justify-center space-x-2 mb-3">
+            <a
+              href="<%= root_path("scheduled_messages/schedules/#{topic.topic_name}") %>"
+              class="btn btn-primary btn-sm flex-1"
+            >
+              Planned
+            </a>
+
+            <a
+              href="<%= root_path("scheduled_messages/explorer/#{topic.topic_name}") %>"
+              class="btn btn-primary btn-sm flex-1"
+            >
+              Messages
+            </a>
+          </p>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>

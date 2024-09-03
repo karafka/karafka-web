@@ -1,0 +1,72 @@
+<% view_title "#{@topic_id} partition #{@partition_id}" %>
+
+<% @selector_path_method = :scheduled_messages_explorer_path %>
+
+<div class="col-span-4">
+  <section class="actions">
+    <% if @messages && !@messages.empty? %>
+      <a
+        href="<%= explorer_path(@topic_id, @partition_id, 'recent') %>"
+        class="btn-action"
+        title="Display the most recent message for this partition with auto-refresh"
+      >
+        <%== icon(:play_circle) %>
+      </a>
+
+      <a
+        href="<%= explorer_path(@topic_id, 'search', "?partition=#{@partition_id}") %>"
+        class="btn-action"
+        title="Search in this topic"
+      >
+        <%== icon(:magnifying_glass) %>
+      </a>
+
+      <% closest_path = scheduled_messages_explorer_path(@topic_id, @partition_id) %>
+      <input
+        type="image"
+        src="<%= asset_path('images/calendar.svg') %>"
+        width="45"
+        height="32"
+        class="btn-action p-1 opacity-60"
+        id="offset-lookup-datepicker"
+        value=""
+        data-target="<%= closest_path %>"
+      />
+    <% end %>
+  </section>
+</div>
+
+<div class="col-span-8 mb-3">
+  <section class="actions">
+    <%== partial 'explorer/selector' %>
+  </section>
+</div>
+
+<div class="col-span-12">
+  <% if @limited %>
+    <%== partial('explorer/topic/limited') %>
+  <% end %>
+
+  <% if @watermark_offsets.empty? && params.current_page == 1 %>
+    <%== partial 'explorer/partition/empty' %>
+  <% elsif @watermark_offsets.cleaned? && params.current_page == 1 %>
+    <%== partial 'explorer/partition/cleaned' %>
+  <% elsif @messages.empty? %>
+    <%== partial 'shared/no_paginated_data' %>
+  <% else %>
+    <% content_for :table_metadata do %>
+      <p class="table_metadata">
+        Watermark offsets:
+        <span class="badge badge-secondary mt-1 mb-1">
+          high: <%= @watermark_offsets.high %>
+        </span>
+
+        <span class="badge badge-secondary mt-1 mb-1">
+          low: <%= @watermark_offsets.low %>
+        </span>
+      </p>
+    <% end %>
+
+    <%== partial('scheduled_messages/explorer/messages') %>
+  <% end %>
+</div>

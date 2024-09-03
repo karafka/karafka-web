@@ -272,6 +272,41 @@ module Karafka
               end
             end
 
+            r.on 'scheduled_messages' do
+              r.on 'schedules' do
+                controller = Controllers::ScheduledMessages::SchedulesController.new(params)
+
+                r.get String do |topic_id|
+                  controller.show(topic_id)
+                end
+
+                r.get do
+                  controller.index
+                end
+              end
+
+              r.on 'explorer' do
+                controller = Controllers::ScheduledMessages::ExplorerController.new(params)
+
+                r.get String do |topic_id|
+                  controller.topic(topic_id)
+                end
+
+                r.get String, Integer do |topic_id, partition_id|
+                  controller.partition(topic_id, partition_id)
+                end
+
+                # Jumps to offset matching the expected time
+                r.get String, Integer, Time do |topic_id, partition_id, time|
+                  controller.closest(topic_id, partition_id, time)
+                end
+              end
+
+              r.get do
+                r.redirect root_path('scheduled_messages/schedules')
+              end
+            end
+
             r.on 'health' do
               controller = Controllers::HealthController.new(params)
 

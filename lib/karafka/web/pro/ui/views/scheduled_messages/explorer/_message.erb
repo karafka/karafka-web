@@ -1,0 +1,84 @@
+<% safe_key = ::Karafka::Web::Pro::Ui::Lib::SafeRunner.new { message.key } %>
+
+<% if message.is_a?(Array) %>
+  <tr>
+    <td class="text-muted">
+      <%= message[0] %>
+    </td>
+    <td class="text-muted">
+      <%= message[1] %>
+    </td>
+    <td colspan="8" class="text-center text-muted">
+      This offset does not contain any data. The message may have been compacted or is a system entry.
+    </td>
+  </tr>
+<% else %>
+  <% type = message.headers['schedule_source_type'] %>
+  <tr>
+    <td>
+      <%= message.partition %>
+    </td>
+    <td>
+      <%= message.offset %>
+    </td>
+    <td>
+      <% if type == 'tombstone' %>
+        <%== badge_secondary type %>
+      <% end %>
+
+      <% if type == 'cancel' %>
+        <%== badge_warning type %>
+      <% end %>
+
+      <% if type == 'schedule' %>
+        <%== badge_primary type %>
+      <% end %>
+    </td>
+    <td>
+      <%= message.headers['schedule_schema_version'] %>
+    </td>
+
+    <% if type == 'cancel' %>
+      <td colspan="5" class="text-center text-muted">
+        Cancellation messages do not contain those details.
+      </td>
+    <% else %>
+      <td>
+        <%== relative_time(message.timestamp) %>
+      </td>
+      <td>
+        <%== relative_time message.headers['schedule_target_epoch'].to_i %>
+      </td>
+      <td>
+        <% if @visibility_filter.key?(message) %>
+          <% if safe_key.success? %>
+            <%= safe_key.result %>
+          <% else %>
+            <span class="text-muted">[Deserialization Failed]</span>
+          <% end %>
+        <% else %>
+          <span class="text-muted">[Filtered]</span>
+        <% end %>
+      </td>
+      <td>
+        <%= message.headers['schedule_target_topic'] %>
+      </td>
+      <td>
+        <% if @visibility_filter.key?(message) %>
+          <%= message.headers['schedule_target_key'] %>
+        <% else %>
+          <span class="text-muted">[Filtered]</span>
+        <% end %>
+      </td>
+    <% end %>
+
+    <td>
+      <%==
+        link_button_primary_sm(
+          'Details',
+          explorer_path(message.topic, message.partition, message.offset)
+        )
+      %>
+    </td>
+  </tr>
+<% end %>

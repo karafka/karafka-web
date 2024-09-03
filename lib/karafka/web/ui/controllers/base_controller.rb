@@ -28,12 +28,27 @@ module Karafka
 
           # Builds the render data object with assigned attributes based on instance variables.
           #
+          # @param attributes [Hash] attributes coming from the outside (in case of rebind)
           # @return [Responses::Render] data that should be used to render appropriate view
-          def render
-            attributes = {}
+          def render(attributes: {})
+            attributes = attributes.dup
 
-            scope = self.class.to_s.split('::').last.gsub(/(.)([A-Z])/, '\1_\2').downcase.gsub('_controller', '')
+            full_parts = self.class.to_s.split('::')
+            separator = full_parts.index('Controllers')
+            base = full_parts[(separator + 1)..]
+
+            base.map!.with_index do |path_part, index|
+              if index == (base.size - 1)
+                path_part.gsub(/(.)([A-Z])/, '\1_\2').downcase.gsub('_controller', '')
+              else
+                path_part.gsub(/(.)([A-Z])/, '\1_\2').downcase
+              end
+            end
+
+            scope = base.join('/')
             action = caller_locations(1, 1)[0].label.split('#').last
+
+            attributes[:breadcrums_scope] = scope
 
             instance_variables.each do |iv|
               next if iv.to_s.start_with?('@_')
