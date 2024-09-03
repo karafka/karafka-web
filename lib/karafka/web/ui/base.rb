@@ -133,7 +133,7 @@ module Karafka
         # @param query_data [Hash] query params we want to add to the current path
         path :current do |query_data = {}|
           # Merge existing request parameters with new query data
-          merged_params = request.params.deep_merge(query_data)
+          merged_params = deep_merge(request.params, query_data)
 
           # Flatten the merged parameters
           flattened_params = flatten_params('', merged_params)
