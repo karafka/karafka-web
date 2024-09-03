@@ -3,6 +3,7 @@
 ## 0.10.2 (Unreleased)
 - **[Feature]** Support Future Messages management (Pro).
 - [Enhancement] Do not live-reload when form active.
+- [Fix] Undefined method `deep_merge` for an instance of Hash.
 - [Fix] Prevent live-polling on elements wrapped in a button.
 - [Fix] Fix errors extractor failure on first message-less tick / eofed
 
