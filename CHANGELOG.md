@@ -1,6 +1,6 @@
 # Karafka Web Changelog
 
-## 0.10.2 (Unreleased)
+## 0.10.2 (2024-09-03)
 - **[Feature]** Support Future Messages management (Pro).
 - [Enhancement] Do not live-reload when form active.
 - [Fix] Undefined method `deep_merge` for an instance of Hash.
