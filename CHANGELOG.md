@@ -1,6 +1,6 @@
 # Karafka Web Changelog
 
-## 0.10.2 (Unreleased)
+## 0.10.2 (2024-09-03)
 - [Fix] Undefined method `deep_merge` for an instance of Hash.
 - [Fix] Prevent live-polling on elements wrapped in a button.
 - [Fix] Fix errors extractor failure on first message-less tick / eofed
