@@ -342,7 +342,7 @@
     @apply ml-2;
   }
 
-  .card-support a {
+  .card-support a:not(.btn) {
     @apply text-blue-500 hover:underline;
   }
 

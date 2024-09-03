@@ -1,0 +1,21 @@
+<li>
+  <a href="<%= root_path('scheduled_messages') %>">
+    Scheduled Messages
+  </a>
+</li>
+
+<% if current_path.include?('/schedules') %>
+  <li>
+    <a href="<%= root_path('scheduled_messages/schedules') %>">
+      Schedules
+    </a>
+  </li>
+<% end %>
+
+<% if @schedule_name %>
+  <li>
+    <a href="<%= root_path("scheduled_messages/schedules/#{@schedule_name}") %>">
+      <%= @schedule_name %>
+    </a>
+  </li>
+<% end %>
