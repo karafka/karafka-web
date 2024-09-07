@@ -44,3 +44,15 @@ table td.commands-inline-3 {
 .drawer-side.collapsed .btn-toggle-nav-collapsed svg {
   transform: scale(-1, -1);
 }
+
+.drawer-side .btn-toggle-nav-collapsed::after {
+  content: 'Collapse';
+}
+
+.drawer-side.collapsed .btn-toggle-nav-collapsed::after {
+  content: none;
+}
+
+.drawer-side.collapsed:hover .btn-toggle-nav-collapsed::after {
+  content: 'Expand';
+}

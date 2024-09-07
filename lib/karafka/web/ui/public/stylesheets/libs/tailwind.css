@@ -401,7 +401,8 @@
     @apply lg:w-auto px-2;
   }
 
-  .sidebar-nav-logo {
+  .sidebar-nav-logo,
+  .drawer-side.collapsed:hover .sidebar-nav-logo {
     @apply lg:block;
   }
 
@@ -409,7 +410,8 @@
     @apply lg:hidden;
   }
 
-  .sidebar-nav-item-label {
+  .sidebar-nav-item-label,
+  .drawer-side.collapsed:hover .sidebar-nav-item-label {
     @apply lg:inline;
   }
 
