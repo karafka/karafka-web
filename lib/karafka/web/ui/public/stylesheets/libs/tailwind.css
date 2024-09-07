@@ -402,19 +402,23 @@
   }
 
   .sidebar-nav-logo {
-    @apply lg:hidden;
-  }
-
-  .drawer-side:hover .sidebar-nav-logo {
     @apply lg:block;
   }
 
-  .sidebar-nav-item-label {
+  .drawer-side.collapsed .sidebar-nav-logo {
     @apply lg:hidden;
   }
 
-  .drawer-side:hover .sidebar-nav-item-label {
+  .sidebar-nav-item-label {
     @apply lg:inline;
+  }
+
+  .drawer-side.collapsed .sidebar-nav-item-label {
+    @apply lg:hidden;
+  }
+
+  .btn-toggle-nav-collapsed svg {
+    @apply my-2;
   }
 }
 
