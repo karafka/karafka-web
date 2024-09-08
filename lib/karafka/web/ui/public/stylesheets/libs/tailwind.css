@@ -396,6 +396,32 @@
   .drawer-side > *:not(.drawer-overlay) {
     transition-duration: 0ms;
   }
+
+  .sidebar-nav {
+    @apply lg:w-auto px-2;
+  }
+
+  .sidebar-nav-logo,
+  .drawer-side.collapsed:hover .sidebar-nav-logo {
+    @apply lg:block;
+  }
+
+  .drawer-side.collapsed .sidebar-nav-logo {
+    @apply lg:hidden;
+  }
+
+  .sidebar-nav-item-label,
+  .drawer-side.collapsed:hover .sidebar-nav-item-label {
+    @apply lg:inline;
+  }
+
+  .drawer-side.collapsed .sidebar-nav-item-label {
+    @apply lg:hidden;
+  }
+
+  .btn-toggle-nav-collapsed svg {
+    @apply my-2;
+  }
 }
 
 [data-theme="corporate"] .bg-base-200 {
