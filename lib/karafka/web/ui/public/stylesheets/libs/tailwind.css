@@ -100,7 +100,7 @@
   }
 
   .sidebar-nav {
-    @apply flex min-h-screen w-72 flex-col gap-2 overflow-y-auto bg-gray-800 text-white px-6 py-10;
+    @apply flex min-h-screen flex-col gap-2 overflow-y-auto bg-gray-800 text-white px-6 py-10;
   }
 
   .sidebar-nav-item {
@@ -397,8 +397,13 @@
     transition-duration: 0ms;
   }
 
-  .sidebar-nav {
-    @apply lg:w-auto px-2;
+  .sidebar-nav,
+  .drawer-side.collapsed:hover .sidebar-nav {
+    @apply w-72;
+  }
+
+  .drawer-side.collapsed .sidebar-nav {
+    @apply lg:w-auto;
   }
 
   .sidebar-nav-logo,
