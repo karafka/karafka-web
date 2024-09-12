@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe_current do
-  subject(:app) { Karafka::Web::Ui::App }
+  subject(:app) { Karafka::Web::Pro::Ui::App }
 
   describe '#show' do
     before { get 'ux' }
