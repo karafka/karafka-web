@@ -1,0 +1,11 @@
+<% branding_cfg = Karafka::Web.config.ui.branding %>
+<% if branding_cfg.label %>
+  <span class="ml-1">
+    <%==
+      public_send(
+        :"badge_#{branding_cfg.type}",
+        branding_cfg.label
+      )
+    %>
+  </span>
+<% end %>

@@ -1,0 +1,13 @@
+<% branding_cfg = Karafka::Web.config.ui.branding %>
+<% if branding_cfg.notice %>
+  <div id="branding" class="col-span-12">
+    <div class="mb-3">
+      <%==
+        public_send(
+          :"alert_#{branding_cfg.type}",
+          branding_cfg.notice
+        )
+      %>
+    </div>
+  </div>
+<% end %>

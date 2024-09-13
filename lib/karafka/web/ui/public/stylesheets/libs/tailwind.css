@@ -47,6 +47,14 @@
     @apply rounded-md;
   }
 
+  .alert-primary {
+    @apply bg-primary border-primary;
+  }
+
+  .alert-secondary {
+    @apply bg-secondary border-secondary;
+  }
+
   .alert-box {
     @apply border rounded-md;
   }
@@ -97,6 +105,22 @@
 
   .alert-box-error .alert-box-header {
     @apply bg-error;
+  }
+
+  .alert-box-primary {
+    @apply border-primary
+  }
+
+  .alert-box-primary .alert-box-header {
+    @apply bg-primary;
+  }
+
+  .alert-box-secondary {
+    @apply border-secondary;
+  }
+
+  .alert-box-secondary .alert-box-header {
+    @apply bg-secondary;
   }
 
   .sidebar-nav {
@@ -237,7 +261,7 @@
 
   [data-theme="corporate"]
   .btn-info, .btn-primary, .btn-error, .btn-success,
-  .alert-info, .alert-error, .alert-success,
+  .alert-info, .alert-error, .alert-success, .alert-primary, .alert-secondary,
   .badge-info, .badge-primary, .badge-error, .badge-success, .badge-secondary,
   .alert-box-info .alert-box-header, .alert-box-primary .alert-box-header,
   .alert-box-error .alert-box-header, .alert-box-success .alert-box-header,
