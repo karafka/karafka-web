@@ -1,14 +1,14 @@
 <nav class="sidebar-nav">
   <%== partial 'shared/brand' %>
 
-  <ul class="menu">
+  <ul class="menu grow">
     <li>
       <a
         class="sidebar-nav-item <%= nav_class(start_with: '/dashboard') %>"
         href="<%= root_path('dashboard') %>"
       >
         <%== icon(:home) %>
-        Dashboard
+        <span class="sidebar-nav-item-label">Dashboard</span>
       </a>
     </li>
 
@@ -18,7 +18,7 @@
         href="<%= root_path('consumers') %>"
       >
         <%== icon(:cpu) %>
-        Consumers
+        <span class="sidebar-nav-item-label">Consumers</span>
       </a>
     </li>
 
@@ -28,7 +28,7 @@
         href="<%= root_path('jobs/running') %>"
       >
         <%== icon(:arrow_on_squares) %>
-        Jobs
+        <span class="sidebar-nav-item-label">Jobs</span>
       </a>
     </li>
 
@@ -38,7 +38,7 @@
         href="<%= root_path('health/overview') %>"
       >
         <%== icon(:heart) %>
-        Health
+        <span class="sidebar-nav-item-label">Health</span>
       </a>
     </li>
 
@@ -48,7 +48,7 @@
         href="<%= root_path('routing') %>"
       >
         <%== icon(:queue_list) %>
-        Routing
+        <span class="sidebar-nav-item-label">Routing</span>
       </a>
     </li>
 
@@ -58,7 +58,7 @@
         href="<%= root_path('explorer') %>"
       >
         <%== icon(:document_glass) %>
-        Explorer
+        <span class="sidebar-nav-item-label">Explorer</span>
       </a>
     </li>
 
@@ -68,7 +68,7 @@
         href="<%= root_path('recurring_tasks') %>"
       >
         <%== icon(:arrow_path_rounded) %>
-        Cron
+        <span class="sidebar-nav-item-label">Cron</span>
       </a>
     </li>
 
@@ -78,7 +78,7 @@
         href="<%= root_path('scheduled_messages') %>"
       >
         <%== icon(:calendar) %>
-        Schedules
+        <span class="sidebar-nav-item-label">Schedules</span>
       </a>
     </li>
 
@@ -88,7 +88,7 @@
         href="<%= root_path('errors') %>"
       >
         <%== icon(:bug) %>
-        Errors
+        <span class="sidebar-nav-item-label">Errors</span>
       </a>
     </li>
 
@@ -98,7 +98,7 @@
         href="<%= root_path('dlq') %>"
       >
         <%== icon(:x_circle) %>
-        Dead
+        <span class="sidebar-nav-item-label">Dead</span>
       </a>
     </li>
 
@@ -108,7 +108,7 @@
         href="<%= root_path('cluster') %>"
       >
         <%== icon(:blocks) %>
-        Cluster
+        <span class="sidebar-nav-item-label">Cluster</span>
       </a>
     </li>
 
@@ -118,7 +118,7 @@
         href="<%= root_path('topics') %>"
       >
         <%== icon(:list_bullets) %>
-        Topics
+        <span class="sidebar-nav-item-label">Topics</span>
       </a>
     </li>
 
@@ -128,7 +128,7 @@
         href="<%= root_path('status') %>"
       >
         <%== icon(:check_badge) %>
-        Status
+        <span class="sidebar-nav-item-label">Status</span>
       </a>
     </li>
 
@@ -138,8 +138,12 @@
         href="<%= root_path('support') %>"
       >
         <%== icon(:lifebuoy) %>
-        Support
+        <span class="sidebar-nav-item-label">Support</span>
       </a>
     </li>
   </ul>
+
+  <button type="button" class="btn-toggle-nav-collapsed grid gap-2 grid-flow-col items-center justify-start ml-6 text-sm invisible lg:visible" data-toggle-target="drawer-side">
+    <%== icon(:chevron) %>
+  </button>
 </nav>
