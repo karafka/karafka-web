@@ -1,5 +1,9 @@
 # Karafka Web Changelog
 
+## 0.10.3 (Unreleased)
+- **[Feature]** Introduce ability to brand Web UI with environment (Pro).
+- [Fix] Fix not working primary and secondary alert styles.
+
 ## 0.10.2 (2024-09-03)
 - **[Feature]** Support Future Messages management (Pro).
 - [Enhancement] Do not live-reload when form active.

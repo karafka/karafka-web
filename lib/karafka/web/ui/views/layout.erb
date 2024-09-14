@@ -20,8 +20,11 @@
         <div class="turbo-progress-bar"></div>
 
         <div class="grid-default lg:pb-0">
-          <%== partial 'shared/become_pro' %>
+          <% if Karafka.pro? %>
+            <%== partial 'shared/branding/notice' %>
+          <% end %>
 
+          <%== partial 'shared/become_pro' %>
           <%== partial 'shared/breadcrumbs' %>
 
           <header class="col-span-12 flex items-center gap-2 lg:gap-4 mb-3">
