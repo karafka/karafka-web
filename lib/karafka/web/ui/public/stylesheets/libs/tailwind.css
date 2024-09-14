@@ -124,7 +124,7 @@
   }
 
   .sidebar-nav {
-    @apply flex min-h-screen w-72 flex-col gap-2 overflow-y-auto bg-gray-800 text-white px-6 py-10;
+    @apply flex min-h-screen flex-col gap-2 overflow-y-auto bg-gray-800 text-white px-6 py-10;
   }
 
   .sidebar-nav-item {
@@ -419,6 +419,49 @@
   }
   .drawer-side > *:not(.drawer-overlay) {
     transition-duration: 0ms;
+  }
+
+  .sidebar-nav,
+  .drawer-side.collapsed:hover .sidebar-nav {
+    @apply w-72;
+  }
+
+  .drawer-side.collapsed .sidebar-nav {
+    @apply lg:w-auto;
+  }
+
+  .sidebar-nav-logo,
+  .drawer-side.collapsed:hover .sidebar-nav-logo,
+  .branding-label,
+  .drawer-side.collapsed:hover .branding-label {
+    @apply lg:block;
+  }
+
+  .branding-mark,
+  .drawer-side.collapsed:hover .branding-mark {
+    @apply hidden;
+  }
+
+  .drawer-side.collapsed .sidebar-nav-logo,
+  .drawer-side.collapsed .branding-label {
+    @apply lg:hidden;
+  }
+
+  .drawer-side.collapsed .branding-mark {
+    @apply lg:block;
+  }
+
+  .sidebar-nav-item-label,
+  .drawer-side.collapsed:hover .sidebar-nav-item-label {
+    @apply lg:inline;
+  }
+
+  .drawer-side.collapsed .sidebar-nav-item-label {
+    @apply lg:hidden;
+  }
+
+  .btn-toggle-nav-collapsed svg {
+    @apply my-2;
   }
 }
 

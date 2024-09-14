@@ -1,11 +1,20 @@
 <% branding_cfg = Karafka::Web.config.ui.branding %>
 <% if branding_cfg.label %>
-  <span class="ml-1">
+  <div class="branding-label text-left mt-4 ml-6">
     <%==
       public_send(
         :"badge_#{branding_cfg.type}",
         branding_cfg.label
       )
     %>
-  </span>
+  </div>
+
+  <div class="branding-mark text-left mt-4 ml-6">
+    <%==
+      public_send(
+        :"badge_#{branding_cfg.type}",
+        branding_cfg.label[0]
+      )
+    %>
+  </div>
 <% end %>
