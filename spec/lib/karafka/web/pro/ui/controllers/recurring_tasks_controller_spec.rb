@@ -142,7 +142,7 @@ RSpec.describe_current do
         expect(body).to include('*/2 * * *')
         expect(body).to include('Disabled')
         expect(body).to include('status-row-warning text-muted')
-        expect(body).to include('btn btn-warning btn-sm  btn-disabled')
+        expect(body).to include('btn btn-warning btn-sm btn-disabled')
         expect(body).to include('Schedule 1.0.1')
         expect(body).not_to include(not_operable)
         expect(body).not_to include('<time class="ltr" dir="ltr"')
@@ -169,7 +169,7 @@ RSpec.describe_current do
         expect(body).to include('Disabled')
         expect(body).to include('<time class="ltr" dir="ltr"')
         expect(body).to include('status-row-warning text-muted')
-        expect(body).to include('btn btn-warning btn-sm  btn-disabled')
+        expect(body).to include('btn btn-warning btn-sm btn-disabled')
         expect(body).to include('Schedule 1.0.1')
         expect(body).not_to include(not_operable)
       end
