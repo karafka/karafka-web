@@ -1,0 +1,9 @@
+<% if @visibility_filter.key?(message) %>
+  <% if safe_key.success? %>
+    <%= safe_key.result %>
+  <% else %>
+    <span class="text-muted">[Deserialization Failed]</span>
+  <% end %>
+<% else %>
+  <span class="text-muted">[Filtered]</span>
+<% end %>

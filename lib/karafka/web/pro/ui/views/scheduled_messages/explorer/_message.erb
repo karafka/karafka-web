@@ -39,8 +39,22 @@
     </td>
 
     <% if type == 'cancel' %>
-      <td colspan="5" class="text-center text-muted">
-        Cancellation messages do not contain those details.
+      <td>
+        <%== relative_time(message.timestamp) %>
+      </td>
+      <td class="text-center text-muted">
+        N/A
+      </td>
+      <td>
+        <%==
+          partial(
+            'scheduled_messages/explorer/key',
+            locals: { message: message, safe_key: safe_key }
+          )
+        %>
+      </td>
+      <td colspan="2" class="text-center text-muted">
+        N/A
       </td>
     <% else %>
       <td>
@@ -50,15 +64,12 @@
         <%== relative_time message.headers['schedule_target_epoch'].to_i %>
       </td>
       <td>
-        <% if @visibility_filter.key?(message) %>
-          <% if safe_key.success? %>
-            <%= safe_key.result %>
-          <% else %>
-            <span class="text-muted">[Deserialization Failed]</span>
-          <% end %>
-        <% else %>
-          <span class="text-muted">[Filtered]</span>
-        <% end %>
+        <%==
+          partial(
+            'scheduled_messages/explorer/key',
+            locals: { message: message, safe_key: safe_key }
+          )
+        %>
       </td>
       <td>
         <%= message.headers['schedule_target_topic'] %>
@@ -73,10 +84,37 @@
     <% end %>
 
     <td>
+      <% if type == 'schedule' %>
+        <%
+          cancel_path = root_path(
+            "scheduled_messages/messages",
+            message.topic,
+            message.partition,
+            message.offset,
+            'cancel'
+          )
+        %>
+        <form
+          action="<%= cancel_path %>"
+          method="post"
+          class="inline"
+        >
+          <%== csrf_tag(cancel_path) %>
+          <button
+            type="submit"
+            class="btn btn-error btn-sm confirm-action"
+            title="Cancel dispatch of this scheduled message"
+          >
+            <%== icon(:x_circle) %>
+          </button>
+        </form>
+      <% end %>
+
       <%==
         link_button_primary_sm(
-          'Details',
-          explorer_path(message.topic, message.partition, message.offset)
+          icon(:info_circle),
+          explorer_path(message.topic, message.partition, message.offset),
+          title: 'Display details of this message'
         )
       %>
     </td>

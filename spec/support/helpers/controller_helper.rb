@@ -7,6 +7,11 @@ module ControllerHelper
     response.body
   end
 
+  # @return [String, nil] flash message or nil if none
+  def flash
+    last_request.env['rack.session']['_flash']
+  end
+
   # @return [Karafka::Core::Configurable::Node] topics config node
   def topics_config
     ::Karafka::Web.config.topics

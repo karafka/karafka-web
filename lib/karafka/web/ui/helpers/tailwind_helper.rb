@@ -34,9 +34,10 @@ module Karafka
           # @param name [String] button name
           # @param path [String] path to where to go
           # @param classes [String] extra css classes
+          # @param title [String, nil] title (if any)
           # @return [String] button link html
-          def link_button(name, path, classes: '')
-            %(<a href="#{path}" class="btn #{classes}">#{name}</a>)
+          def link_button(name, path, classes: '', title: nil)
+            %(<a href="#{path}" class="btn #{classes}" title="#{title}">#{name}</a>)
           end
 
           # Defines various methods for badges and links that simplify defining them without
@@ -54,8 +55,8 @@ module Karafka
               link_button(name, path, classes: "#{classes} btn-#{type}")
             end
 
-            define_method :"link_button_#{type}_sm" do |name, path, classes: ''|
-              link_button(name, path, classes: "#{classes} btn-#{type} btn-sm")
+            define_method :"link_button_#{type}_sm" do |name, path, classes: '', title: nil|
+              link_button(name, path, classes: "#{classes} btn-#{type} btn-sm", title: title)
             end
 
             # @param message [String] alert message

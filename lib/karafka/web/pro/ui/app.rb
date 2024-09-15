@@ -302,6 +302,16 @@ module Karafka
                 end
               end
 
+              r.on 'messages' do
+                controller = Controllers::ScheduledMessages::MessagesController.new(params)
+
+                r.post(
+                  String, Integer, Integer, 'cancel'
+                ) do |topic_id, partition_id, message_offset|
+                  controller.cancel(topic_id, partition_id, message_offset)
+                end
+              end
+
               r.get do
                 r.redirect root_path('scheduled_messages/schedules')
               end
