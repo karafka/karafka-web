@@ -19,15 +19,15 @@ module Karafka
           # Controller responsible for handling requests that should trigger some action on the
           # consumers.
           class CommandingController < BaseController
-            # Dispatches the probe request to a given process
+            # Dispatches the trace request to a given process
             #
             # @param process_id [String]
-            def probe(process_id)
-              command(:probe, process_id)
+            def trace(process_id)
+              command(:trace, process_id)
 
               redirect(
                 :back,
-                success: dispatched_to_one(:probe, process_id)
+                success: dispatched_to_one(:trace, process_id)
               )
             end
 

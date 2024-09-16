@@ -16,7 +16,7 @@ module Karafka
     module Pro
       # Namespace for things related to consumers commanding (management)
       #
-      # This feature allows for basic of consumers. They can be stopped, moved to quiet or probed
+      # This feature allows for basic of consumers. They can be stopped, moved to quiet or traced
       # via the Web UI
       module Commanding
         # Wrapper around the Pro Iterator that yields messages with commands when needed for

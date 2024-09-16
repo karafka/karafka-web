@@ -1,21 +1,21 @@
 <% if Karafka::Web.config.commanding.active && !process.tags.include?('embedded') %>
   <div class="col-span-12 flex justify-end space-x-2 mb-6">
     <%
-      probe_path = root_path('commanding', process.id, 'probe')
+      trace_path = root_path('commanding', process.id, 'trace')
       disabled_class = process.status != 'stopped' ? '' : 'btn-disabled'
     %>
     <form
-      action="<%= probe_path %>"
+      action="<%= trace_path %>"
       method="post"
       class="inline-flex items-center"
     >
-      <%== csrf_tag(probe_path) %>
+      <%== csrf_tag(trace_path) %>
       <button
         type="submit"
         class="btn btn-info btn-sm <%= disabled_class %>"
       >
         <%== icon(:gear) %>
-        Probe
+        Trace
       </button>
     </form>
 

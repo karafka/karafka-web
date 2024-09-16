@@ -126,8 +126,8 @@ module Karafka
               end
 
               r.on String do |process_id|
-                r.post 'probe' do
-                  controller.probe(process_id)
+                r.post 'trace' do
+                  controller.trace(process_id)
                 end
 
                 r.post 'quiet' do

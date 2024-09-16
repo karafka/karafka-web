@@ -62,18 +62,18 @@ RSpec.describe_current do
       allow(matcher).to receive(:matches?).with(message).and_return(true)
     end
 
-    context 'when command is probe' do
-      let(:probe_command) { Karafka::Web::Pro::Commanding::Commands::Probe.new }
-      let(:command_name) { 'probe' }
+    context 'when command is trace' do
+      let(:trace_command) { Karafka::Web::Pro::Commanding::Commands::Trace.new }
+      let(:command_name) { 'trace' }
 
       before do
-        allow(probe_command.class).to receive(:new).and_return(probe_command)
-        allow(probe_command).to receive(:call)
+        allow(trace_command.class).to receive(:new).and_return(trace_command)
+        allow(trace_command).to receive(:call)
       end
 
-      it 'executes probe command' do
+      it 'executes trace command' do
         manager.send(:call)
-        expect(probe_command).to have_received(:call)
+        expect(trace_command).to have_received(:call)
       end
     end
 
