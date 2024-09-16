@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "type": "command",
   "command": {
-    "name": "probe"
+    "name": "trace"
   },
   "dispatched_at": 1712518179.6275373,
   "process": {

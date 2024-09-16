@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "type": "result",
   "command": {
-    "name": "probe"
+    "name": "trace"
   },
   "result": {
     "8l51": {
@@ -15,7 +15,7 @@
     },
     "8ly9": {
       "label": "Thread TID-8ly9 karafka.web.pro.commanding.manager",
-      "backtrace": "/mnt/software/Karafka/karafka-web/lib/karafka/web/pro/commanding/manager.rb:126:in `backtrace'\n/mnt/software/Karafka/karafka-web/lib/karafka/web/pro/commanding/manager.rb:126:in `block in probe'\n/mnt/software/Karafka/karafka-web/lib/karafka/web/pro/commanding/manager.rb:122:in `each'\n/mnt/software/Karafka/karafka-web/lib/karafka/web/pro/commanding/manager.rb:122:in `probe'\n/mnt/software/Karafka/karafka-web/lib/karafka/web/pro/commanding/manager.rb:105:in `control'\n/mnt/software/Karafka/karafka-web/lib/karafka/web/pro/commanding/manager.rb:81:in `block in call'\n/mnt/software/Karafka/karafka/lib/karafka/pro/iterator.rb:91:in `block in each'\n/mnt/software/Karafka/karafka/lib/karafka/admin.rb:395:in `with_consumer'\n/mnt/software/Karafka/karafka/lib/karafka/pro/iterator.rb:73:in `each'\n/mnt/software/Karafka/karafka-web/lib/karafka/web/pro/commanding/manager.rb:75:in `call'\n/mnt/software/Karafka/karafka/lib/karafka/helpers/async.rb:40:in `block (2 levels) in async_call'"
+      "backtrace": "/mnt/software/Karafka/karafka-web/lib/karafka/web/pro/commanding/manager.rb:126:in `backtrace'\n/mnt/software/Karafka/karafka-web/lib/karafka/web/pro/commanding/manager.rb:126:in `block in trace'\n/mnt/software/Karafka/karafka-web/lib/karafka/web/pro/commanding/manager.rb:122:in `each'\n/mnt/software/Karafka/karafka-web/lib/karafka/web/pro/commanding/manager.rb:122:in `trace'\n/mnt/software/Karafka/karafka-web/lib/karafka/web/pro/commanding/manager.rb:105:in `control'\n/mnt/software/Karafka/karafka-web/lib/karafka/web/pro/commanding/manager.rb:81:in `block in call'\n/mnt/software/Karafka/karafka/lib/karafka/pro/iterator.rb:91:in `block in each'\n/mnt/software/Karafka/karafka/lib/karafka/admin.rb:395:in `with_consumer'\n/mnt/software/Karafka/karafka/lib/karafka/pro/iterator.rb:73:in `each'\n/mnt/software/Karafka/karafka-web/lib/karafka/web/pro/commanding/manager.rb:75:in `call'\n/mnt/software/Karafka/karafka/lib/karafka/helpers/async.rb:40:in `block (2 levels) in async_call'"
     },
     "8lyt": {
       "label": "Thread TID-8lyt karafka.web.tracking.scheduler",

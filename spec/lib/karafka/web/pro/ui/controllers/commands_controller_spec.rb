@@ -81,7 +81,7 @@ RSpec.describe_current do
 
         34.times do
           %w[
-            probe
+            trace
             stop
             quiet
           ].each do |type|
@@ -102,7 +102,7 @@ RSpec.describe_current do
           expect(body).not_to include(support_message)
           expect(body).to include('commands/99')
           expect(body).to include('<a href="/consumers/')
-          expect(body).to include('probe')
+          expect(body).to include('trace')
           expect(body).to include('quiet')
           expect(body).to include('stop')
         end
@@ -118,7 +118,7 @@ RSpec.describe_current do
           expect(body).to include('commands/53')
           expect(body).not_to include('commands/99')
           expect(body).to include('<a href="/consumers/')
-          expect(body).to include('probe')
+          expect(body).to include('trace')
           expect(body).to include('quiet')
           expect(body).to include('stop')
           expect(body).not_to include(support_message)
@@ -151,7 +151,7 @@ RSpec.describe_current do
     end
 
     %w[
-      probe
+      trace
       quiet
       stop
       quiet_all
@@ -199,10 +199,10 @@ RSpec.describe_current do
       end
     end
 
-    context 'when visiting probe result' do
+    context 'when visiting trace result' do
       before do
         topics_config.consumers.commands = commands_topic
-        produce(commands_topic, Fixtures.consumers_commands_file('v1.0.0_probe_result.json'))
+        produce(commands_topic, Fixtures.consumers_commands_file('v1.0.0_trace_result.json'))
         get 'commands/0'
       end
 
@@ -214,15 +214,15 @@ RSpec.describe_current do
         expect(body).not_to include(incompatible_message)
         expect(body).to include('rb:539:in `rd_kafka_consumer_poll')
         expect(body).to include('Metadata')
-        expect(body).to include('probe result')
+        expect(body).to include('trace result')
         expect(body).to include('/consumers/shinra:397793:6fa3f39acf46')
       end
     end
 
-    context 'when visiting probe result that is not with a compatible schema' do
+    context 'when visiting trace result that is not with a compatible schema' do
       before do
         topics_config.consumers.commands = commands_topic
-        data = Fixtures.consumers_commands_json('v1.0.0_probe_result')
+        data = Fixtures.consumers_commands_json('v1.0.0_trace_result')
         data[:schema_version] = '0.0.1'
         produce(commands_topic, data.to_json)
         get 'commands/0'

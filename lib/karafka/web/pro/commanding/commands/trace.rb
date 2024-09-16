@@ -19,8 +19,8 @@ module Karafka
         module Commands
           # Collects all backtraces from the available Ruby threads and publishes their details
           #   back to Kafka for debug.
-          class Probe < Base
-            # Runs probing and publishes result back to Kafka
+          class Trace < Base
+            # Runs tracing and publishes result back to Kafka
             def call
               threads = {}
 
@@ -31,7 +31,7 @@ module Karafka
                 t_d[:backtrace] = (thread.backtrace || ['<no backtrace available>']).join("\n")
               end
 
-              Dispatcher.result(threads, process_id, 'probe')
+              Dispatcher.result(threads, process_id, 'trace')
             end
           end
         end

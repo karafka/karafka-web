@@ -8,8 +8,8 @@ RSpec.describe_current do
 
   before { topics_config.consumers.commands = commands_topic }
 
-  describe '#probe' do
-    before { post "commanding/#{process_id}/probe" }
+  describe '#trace' do
+    before { post "commanding/#{process_id}/trace" }
 
     it do
       expect(response.status).to eq(302)
@@ -25,7 +25,7 @@ RSpec.describe_current do
       expect(message.payload[:schema_version]).to eq('1.0.0')
       expect(message.payload[:type]).to eq('command')
       expect(message.payload[:dispatched_at]).not_to be_nil
-      expect(message.payload[:command]).to eq(name: 'probe')
+      expect(message.payload[:command]).to eq(name: 'trace')
       expect(message.payload[:process]).to eq(id: process_id)
     end
   end

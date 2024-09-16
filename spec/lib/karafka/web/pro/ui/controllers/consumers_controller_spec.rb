@@ -448,7 +448,7 @@ RSpec.describe_current do
         expect(body).to include('Performance')
         expect(body).to include('Quiet All')
         expect(body).to include('Stop All')
-        expect(body).to include('Probe')
+        expect(body).to include('Trace')
       end
 
       context 'when sorting' do
@@ -489,7 +489,7 @@ RSpec.describe_current do
         expect(body).to include('Performance')
         expect(body).to include('Quiet All')
         expect(body).to include('Stop All')
-        expect(body).to include('Probe')
+        expect(body).to include('Trace')
         expect(body).to include('title="Supported only in standalone consumer processes"')
       end
 
@@ -531,7 +531,7 @@ RSpec.describe_current do
         expect(body).to include('Performance')
         expect(body).to include('Quiet All')
         expect(body).to include('Stop All')
-        expect(body).to include('Probe')
+        expect(body).to include('Trace')
         expect(body).to include('title="Supported only in standalone consumer processes"')
       end
 
@@ -566,7 +566,7 @@ RSpec.describe_current do
         expect(body).to include('Performance')
         expect(body).to include('Quiet All')
         expect(body).to include('Stop All')
-        expect(body).to include('Probe')
+        expect(body).to include('Trace')
       end
     end
 
@@ -660,7 +660,7 @@ RSpec.describe_current do
 
       it do
         expect(response).to be_ok
-        expect(body).to include('Probe')
+        expect(body).to include('Trace')
         expect(body).to include('Quiet')
         expect(body).to include('Stop')
       end
@@ -675,7 +675,7 @@ RSpec.describe_current do
 
       it do
         expect(response).to be_ok
-        expect(body).not_to include('Probe')
+        expect(body).not_to include('Trace')
         expect(body).not_to include('Quiet')
         expect(body).not_to include('Stop')
       end

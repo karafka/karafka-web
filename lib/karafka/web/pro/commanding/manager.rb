@@ -79,8 +79,8 @@ module Karafka
           # @param command [String] command expected to run
           def control(command)
             case command
-            when 'probe'
-              Commands::Probe.new.call
+            when 'trace'
+              Commands::Trace.new.call
             when 'stop'
               Commands::Stop.new.call
             when 'quiet'

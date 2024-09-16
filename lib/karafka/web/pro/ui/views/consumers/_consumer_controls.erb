@@ -45,11 +45,11 @@
 
   <td class="commands-inline-3">
     <%
-      probe_path = root_path('commanding', process.id, 'probe')
+      trace_path = root_path('commanding', process.id, 'trace')
       disabled_class = process.status != 'stopped' ? '' : 'btn-disabled'
     %>
-    <form action="<%= probe_path %>" method="post" class="inline" title="Probe">
-      <%== csrf_tag(probe_path) %>
+    <form action="<%= trace_path %>" method="post" class="inline" title="Trace">
+      <%== csrf_tag(trace_path) %>
 
       <button type="submit" class="btn btn-info btn-sm <%= disabled_class %>">
         <%== icon(:gear) %>
