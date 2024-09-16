@@ -10,6 +10,7 @@
           <th>Subscription group</th>
           <th><%== sort_link('Topic', :name) %></th>
           <th>Type</th>
+          <th>Assigned</th>
           <th><%== sort_link(:active?) %></th>
           <th></th>
         </tr>
@@ -21,6 +22,7 @@
               'routing/topic',
               locals: {
                 subscription_group: topic.subscription_group,
+                consumer_group: consumer_group.id,
                 topic: topic
               }
             )

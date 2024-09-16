@@ -21,6 +21,16 @@
   </td>
 
   <td>
+    <% assigned = @assigned[consumer_group].include?(topic.name) %>
+
+    <% if assigned %>
+      <%== badge_success assigned %>
+    <% else %>
+      <%== badge_secondary assigned %>
+    <% end %>
+  </td>
+
+  <td>
     <% if topic.active? %>
       <%== badge_success topic.active? %>
     <% else %>

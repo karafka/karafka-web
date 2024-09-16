@@ -28,9 +28,26 @@ module Karafka
               detect_patterns_routes
 
               @routes = Karafka::App.routes
-
               @routes.each do |consumer_group|
                 refine(consumer_group.topics)
+              end
+
+              current_state = Models::ConsumersState.current
+              @assigned = Hash.new { |h, k| h[k] = Set.new }
+
+              # If there are active processes, we can use their data to mark certain topics as
+              # assigned. This does not cover the full scope as some partitions may be assigned
+              # and some not, but provides general overview
+              if current_state
+                Models::Processes.active(current_state).each do |process|
+                  process.consumer_groups.each do |consumer_group|
+                    consumer_group.subscription_groups.each do |subscription_group|
+                      subscription_group.topics.each do |topic|
+                        @assigned[consumer_group.id.to_s] << topic.name
+                      end
+                    end
+                  end
+                end
               end
 
               render
