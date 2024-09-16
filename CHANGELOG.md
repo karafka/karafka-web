@@ -2,6 +2,7 @@
 
 ## 0.10.3 (Unreleased)
 - **[Feature]** Introduce ability to brand Web UI with environment (Pro).
+- [Enhancement] Provide assignment status in the routing (Pro).
 - [Enhancement] Support schedule cancellation via Web UI.
 - [Enhancement] Rename "probing" to "tracing" to better reflect what this commanding option does.
 - [Fix] Fix not working primary and secondary alert styles.
