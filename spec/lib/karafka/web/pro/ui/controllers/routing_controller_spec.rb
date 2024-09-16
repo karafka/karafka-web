@@ -4,17 +4,38 @@ RSpec.describe_current do
   subject(:app) { Karafka::Web::Pro::Ui::App }
 
   describe '#index' do
-    before { get 'routing' }
+    context 'when running against defaults' do
+      before { get 'routing' }
 
-    it do
-      expect(response).to be_ok
-      expect(body).to include(topics_config.consumers.states)
-      expect(body).to include(topics_config.consumers.metrics)
-      expect(body).to include(topics_config.consumers.reports)
-      expect(body).to include(topics_config.errors)
-      expect(body).to include('karafka_web')
-      expect(body).to include(breadcrumbs)
-      expect(body).not_to include(support_message)
+      it do
+        expect(response).to be_ok
+        expect(body).to include(topics_config.consumers.states)
+        expect(body).to include(topics_config.consumers.metrics)
+        expect(body).to include(topics_config.consumers.reports)
+        expect(body).to include(topics_config.errors)
+        expect(body).to include('karafka_web')
+        expect(body).to include(breadcrumbs)
+        expect(body).not_to include(support_message)
+      end
+    end
+
+    context 'when there is no consumers state' do
+      before do
+        allow(Karafka::Web::Ui::Models::ConsumersState).to receive(:current).and_return(false)
+
+        get 'routing'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(topics_config.consumers.states)
+        expect(body).to include(topics_config.consumers.metrics)
+        expect(body).to include(topics_config.consumers.reports)
+        expect(body).to include(topics_config.errors)
+        expect(body).to include('karafka_web')
+        expect(body).to include(breadcrumbs)
+        expect(body).not_to include(support_message)
+      end
     end
 
     context 'when there are states and reports' do
