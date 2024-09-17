@@ -1,6 +1,6 @@
 # Karafka Web Changelog
 
-## 0.10.3 (Unreleased)
+## 0.10.3 (2024-09-17)
 - **[Feature]** Introduce ability to brand Web UI with environment (Pro).
 - [Enhancement] Provide assignment status in the routing (Pro).
 - [Enhancement] Support schedule cancellation via Web UI.
