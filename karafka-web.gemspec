@@ -31,9 +31,15 @@ Gem::Specification.new do |spec|
   end
 
   spec.cert_chain    = %w[certs/cert.pem]
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(spec)/}) }
   spec.executables   = %w[karafka-web]
   spec.require_paths = %w[lib]
+
+  spec.files = `git ls-files -z`
+               .split("\x0")
+               .reject { |f| f.match(%r{^(spec)/}) }
+               .reject { |f| f.include?('.github')  }
+               .reject { |f| f.start_with?('.')  }
+               .reject { |f| f.end_with?('.map')  }
 
   spec.metadata = {
     'funding_uri' => 'https://karafka.io/#become-pro',
