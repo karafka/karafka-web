@@ -1,5 +1,8 @@
 # Karafka Web Changelog
 
+## 0.10.4 (Unreleased)
+- **[Breaking]** Drop Ruby `3.0` support according to the EOL schedule.
+
 ## 0.10.3 (2024-09-17)
 - **[Feature]** Introduce ability to brand Web UI with environment (Pro).
 - [Enhancement] Provide assignment status in the routing (Pro).
