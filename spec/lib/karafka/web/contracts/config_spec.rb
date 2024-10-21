@@ -28,7 +28,8 @@ RSpec.describe_current do
         producers: {
           reporter: Object.new,
           sampler: Object.new,
-          listeners: []
+          listeners: [],
+          sync_threshold: 10
         }
       },
       processing: {
@@ -115,6 +116,18 @@ RSpec.describe_current do
 
     context 'when consumers sync_threshold is not an integer' do
       before { params[:tracking][:consumers][:sync_threshold] = 1.1 }
+
+      it { expect(contract.call(params)).not_to be_success }
+    end
+
+    context 'when producers sync_threshold is less than 0' do
+      before { params[:tracking][:producers][:sync_threshold] = -1 }
+
+      it { expect(contract.call(params)).not_to be_success }
+    end
+
+    context 'when producers sync_threshold is not an integer' do
+      before { params[:tracking][:producers][:sync_threshold] = 1.1 }
 
       it { expect(contract.call(params)).not_to be_success }
     end
