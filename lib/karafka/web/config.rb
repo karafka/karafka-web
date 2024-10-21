@@ -76,7 +76,7 @@ module Karafka
           # Reports the metrics collected in the consumer sampler
           setting :reporter, default: Tracking::Consumers::Reporter.new
 
-          # Minimum number of messages to produce to produce them in sync mode
+          # Minimum number of messages to produce them in sync mode
           # This acts as a small back-off not to overload the system in case we would have
           # extremely big number of errors and reports happening
           setting :sync_threshold, default: 50
@@ -98,6 +98,11 @@ module Karafka
         end
 
         setting :producers do
+          # Minimum number of messages to produce them in sync mode
+          # This acts as a small back-off not to overload the system in case we would have
+          # extremely big number of errors happening
+          setting :sync_threshold, default: 25
+
           # Reports the metrics collected in the producer sampler
           setting :reporter, default: Tracking::Producers::Reporter.new
 

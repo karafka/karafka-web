@@ -41,6 +41,7 @@ module Karafka
             required(:reporter) { |val| !val.nil? }
             required(:sampler) { |val| !val.nil? }
             required(:listeners) { |val| val.is_a?(Array) }
+            required(:sync_threshold) { |val| val.is_a?(Integer) && val.positive? }
           end
         end
 

@@ -10,13 +10,6 @@ module Karafka
         #   because there is no expectation on immediate status updates for producers and their
         #   dispatch flow is always periodic based.
         class Reporter < Tracking::Reporter
-          # Minimum number of messages to produce to produce them in sync mode
-          # This acts as a small back-off not to overload the system in case we would have
-          # extremely big number of errors happening
-          PRODUCE_SYNC_THRESHOLD = 25
-
-          private_constant :PRODUCE_SYNC_THRESHOLD
-
           # This mutex is shared between tracker and samplers so there is no case where metrics
           # would be collected same time tracker reports
           MUTEX = Mutex.new
@@ -82,7 +75,7 @@ module Karafka
           #   normal operations we should not have that many messages to dispatch and it should not
           #   slowdown any processing.
           def produce(messages)
-            if messages.count >= PRODUCE_SYNC_THRESHOLD
+            if messages.count >= ::Karafka::Web.config.tracking.producers.sync_threshold
               ::Karafka::Web.producer.produce_many_sync(messages)
             else
               ::Karafka::Web.producer.produce_many_async(messages)
