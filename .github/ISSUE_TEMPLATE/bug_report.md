@@ -1,50 +1,43 @@
 ---
 name: Bug Report
-about: Report an issue with Karafka you've discovered.
+about: Report an issue within the Karafka ecosystem you've discovered.
 ---
 
-*Be clear, concise and precise in your description of the problem.
-Open an issue with a descriptive title and a summary in grammatically correct,
-complete sentences.*
+To make this process smoother for everyone involved, please read the following information before filling out the template.
 
-*Use the template below when reporting bugs. Please, make sure that
-you're running the latest stable Karafka and that the problem you're reporting
-hasn't been reported (and potentially fixed) already.*
+Scope of the OSS Support
+===========
 
-*Before filing the ticket you should replace all text above the horizontal
-rule with your own words.*
+We do not provide OSS support for outdated versions of Karafka and its components.
 
---------
+Please ensure that you are using a version that is still actively supported. We cannot assist with any no longer maintained versions unless you support us with our Pro offering (https://karafka.io/docs/Pro-Support/).
 
-## Expected behavior
+We acknowledge that understanding the specifics of your application and its configuration can be essential for resolving certain issues. However, due to the extensive time and resources such analysis can require, this may fall beyond our Open Source Support scope.
 
-Describe here how you expected Karafka to behave in this particular situation.
+If Karafka or its components are critical to your infrastructure, we encourage you to consider our Pro Offering.
 
-## Actual behavior
+By backing us up, you can gain direct assistance and ensure your use case receives the dedicated attention it deserves.
 
-Describe here what actually happened.
 
-## Steps to reproduce the problem
+Important Links to Read
+===========
 
-This is extremely important! Providing us with a reliable way to reproduce
-a problem will expedite its solution.
+Please take a moment to review the following resources before submitting your report:
 
-## Your setup details
+- Issue Reporting Guide: https://karafka.io/docs/Support/#issue-reporting-guide
+- Support Policy: https://karafka.io/docs/Support/
+- Versions, Lifecycle, and EOL: https://karafka.io/docs/Versions-Lifecycle-and-EOL/
 
-Please provide kafka version and the output of `karafka info` or `bundle exec karafka info` if using Bundler.
 
-Here's an example:
+Bug Report Details
+===========
 
-```
-$ [bundle exec] karafka info
-Karafka version: 1.3.0
-Ruby version: 2.6.3
-Ruby-kafka version: 0.7.9
-Application client id: karafka-local
-Backend: inline
-Batch fetching: true
-Batch consuming: true
-Boot file: /app/karafka/karafka.rb
-Environment: development
-Kafka seed brokers: ["kafka://kafka:9092"]
-```
+Please provide all the details per our Issue Reporting Guide: https://karafka.io/docs/Support/#issue-reporting-guide
+
+Failing to provide the required details may result in the issue being closed. Please include all necessary information to help us understand and resolve your issue effectively.
+
+
+Additional Context
+===========
+
+Add any other context about the problem here.
