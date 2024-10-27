@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest new Karafka features or improvements to existing features.
+about: Suggest new WaterDrop features or improvements to existing features.
 ---
 
 ## Is your feature request related to a problem? Please describe.
