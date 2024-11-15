@@ -2,7 +2,8 @@
 
 ## 0.10.4 (Unreleased)
 - **[Breaking]** Drop Ruby `3.0` support according to the EOL schedule.
-- [Enhancement] Extract producers tracking `sync_threshold` into an internal config
+- [Enhancement] Extract producers tracking `sync_threshold` into an internal config.
+- [Enhancement] Support complex Pro license loading strategies (Pro).
 - [Fix] Toggle menu button post-turbo refresh stops working.
 
 ## 0.10.3 (2024-09-17)

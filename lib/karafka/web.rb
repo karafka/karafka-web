@@ -30,7 +30,12 @@ module Karafka
       # Sets up the whole configuration
       # @param [Block] block configuration block
       def setup(&block)
-        Pro::Loader.pre_setup_all(config) if Karafka.pro?
+        if Karafka.pro?
+          require_relative 'web/pro/loader'
+
+          Pro::Loader.load_on_late_setup
+          Pro::Loader.pre_setup_all(config)
+        end
 
         Config.configure(&block)
 

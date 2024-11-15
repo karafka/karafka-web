@@ -17,6 +17,25 @@ module Karafka
       # Loader requires and loads all the pro components only when they are needed
       class Loader
         class << self
+          # This loads the pro components into memory in case someone required karafka-web prior
+          # to the license usage. This can happen for users with complex require flows, where
+          # Karafka license is not part of the standard flow
+          #
+          # In such cases Web may not notice that Karafka should operate in a Pro mode when it is
+          # being required via Zeitwerk. In such cases we load Pro components prior to the setup.
+          def load_on_late_setup
+            return if defined?(Karafka::Web::Pro::Commanding)
+
+            loader = Zeitwerk::Loader.new
+            loader.push_dir(
+              File.join(Karafka::Web.gem_root, 'lib/karafka/web/pro'),
+              namespace: Karafka::Web::Pro
+            )
+
+            loader.setup
+            loader.eager_load
+          end
+
           # Loads all the Web UI pro components and configures them wherever it is expected
           # @param config [Karafka::Core::Configurable::Node] web config that we can alter with pro
           #   components
