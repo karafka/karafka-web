@@ -5,6 +5,9 @@
 - [Enhancement] Extract producers tracking `sync_threshold` into an internal config.
 - [Enhancement] Support complex Pro license loading strategies (Pro).
 - [Enhancement] Change default `retention.ms` for the metrics topic to support Redpanda Cloud defaults (#450).
+- [Enhancement] Include subscription group id in the consumers error tracking metadata.
+- [Enhancement] Collect metadata details of low level client errors when error tracking.
+- [Enhancement] Collect metadata details of low level listener errors when error tracking.
 - [Fix] Toggle menu button post-turbo refresh stops working.
 
 ## 0.10.3 (2024-09-17)
