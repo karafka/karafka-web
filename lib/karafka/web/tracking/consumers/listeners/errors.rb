@@ -18,17 +18,24 @@ module Karafka
             #
             # @param event [Karafka::Core::Monitoring::Event]
             def on_error_occurred(event)
+              caller_ref = event[:caller]
+
+              # Collect extra info if it was a consumer related error.
+              # Those come from user code
+              details = case caller_ref
+                        when Karafka::BaseConsumer
+                          extract_consumer_info(caller_ref)
+                        when Karafka::Connection::Client
+                          extract_client_info(caller_ref)
+                        when Karafka::Connection::Listener
+                          extract_listener_info(caller_ref)
+                        else
+                          {}
+                        end
+
+              error_class, error_message, backtrace = extract_error_info(event[:error])
+
               track do |sampler|
-                # Collect extra info if it was a consumer related error.
-                # Those come from user code
-                details = if event[:caller].is_a?(Karafka::BaseConsumer)
-                            extract_consumer_info(event[:caller])
-                          else
-                            {}
-                          end
-
-                error_class, error_message, backtrace = extract_error_info(event[:error])
-
                 sampler.errors << {
                   schema_version: SCHEMA_VERSION,
                   type: event[:type],
@@ -70,6 +77,7 @@ module Karafka
               {
                 topic: consumer.topic.name,
                 consumer_group: consumer.topic.consumer_group.id,
+                subscription_group: consumer.topic.subscription_group.id,
                 partition: consumer.partition,
                 first_offset: consumer.messages.metadata.first_offset,
                 last_offset: consumer.messages.metadata.last_offset,
@@ -78,6 +86,27 @@ module Karafka
                 committed_offset: (consumer.coordinator.seek_offset || -1_000) - 1,
                 consumer: consumer.class.to_s,
                 tags: consumer.tags
+              }
+            end
+
+            # @param client [::Karafka::Connection::Client]
+            # @return [Hash] hash with client specific info for details of error
+            def extract_client_info(client)
+              {
+                consumer_group: client.subscription_group.consumer_group.id,
+                subscription_group: client.subscription_group.id,
+                name: client.name,
+                id: client.id
+              }
+            end
+
+            # @param listener [::Karafka::Connection::Listener]
+            # @return [Hash] hash with listener specific info for details of error
+            def extract_listener_info(listener)
+              {
+                consumer_group: listener.subscription_group.consumer_group.id,
+                subscription_group: listener.subscription_group.id,
+                id: listener.id
               }
             end
           end
