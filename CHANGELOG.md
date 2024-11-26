@@ -1,6 +1,6 @@
 # Karafka Web Changelog
 
-## 0.10.4 (Unreleased)
+## 0.10.4 (2024-11-26)
 - **[Breaking]** Drop Ruby `3.0` support according to the EOL schedule.
 - [Enhancement] Extract producers tracking `sync_threshold` into an internal config.
 - [Enhancement] Support complex Pro license loading strategies (Pro).
