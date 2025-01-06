@@ -8,8 +8,10 @@ RSpec.describe_current do
   let(:headers) { {} }
 
   before do
-    allow(message).to receive(:raw_payload).and_return(raw_payload)
-    allow(message).to receive(:headers).and_return(headers)
+    allow(message).to receive_messages(
+      raw_payload: raw_payload,
+      headers: headers
+    )
   end
 
   context 'when JSON is parsed successfully' do

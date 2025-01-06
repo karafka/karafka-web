@@ -24,8 +24,10 @@ RSpec.describe_current do
 
     context 'when producer exists but karafka is not initialized' do
       before do
-        allow(Karafka::App).to receive(:initializing?).and_return(false)
-        allow(Karafka::App).to receive(:initialized?).and_return(true)
+        allow(Karafka::App).to receive_messages(
+          initializing?: false,
+          initialized?: true
+        )
       end
 
       it { expect(reporter.active?).to be(false) }
@@ -33,8 +35,10 @@ RSpec.describe_current do
 
     context 'when producer exists and is active and server is running' do
       before do
-        allow(Karafka::App).to receive(:initializing?).and_return(false)
-        allow(Karafka::App).to receive(:initialized?).and_return(false)
+        allow(Karafka::App).to receive_messages(
+          initializing?: false,
+          initialized?: false
+        )
       end
 
       it { expect(reporter.active?).to be(true) }
