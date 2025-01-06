@@ -30,10 +30,10 @@ RSpec.describe_current do
 
       it 'expect to get it with the data inside' do
         expect(state).to be_a(Hash)
-        expect(state.key?(:processes)).to eq(true)
-        expect(state.key?(:stats)).to eq(true)
-        expect(state.key?(:schema_version)).to eq(true)
-        expect(state.key?(:dispatched_at)).to eq(true)
+        expect(state.key?(:processes)).to be(true)
+        expect(state.key?(:stats)).to be(true)
+        expect(state.key?(:schema_version)).to be(true)
+        expect(state.key?(:dispatched_at)).to be(true)
       end
     end
   end

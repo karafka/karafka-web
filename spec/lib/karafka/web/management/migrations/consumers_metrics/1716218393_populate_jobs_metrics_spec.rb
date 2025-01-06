@@ -16,7 +16,7 @@ RSpec.describe(
       times.each do |key_name|
         state[:aggregated][key_name].each do |sample|
           expect(sample.last[:jobs]).to eq(sample.last[:batches])
-          expect(sample.last.key?(:jobs)).to eq(true)
+          expect(sample.last.key?(:jobs)).to be(true)
         end
       end
     end

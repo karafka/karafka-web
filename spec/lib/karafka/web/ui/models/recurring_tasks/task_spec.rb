@@ -9,13 +9,13 @@ RSpec.describe_current do
 
   describe '#enabled?' do
     context 'when enabled' do
-      it { expect(task.enabled?).to eq(true) }
+      it { expect(task.enabled?).to be(true) }
     end
 
     context 'when disabled' do
       let(:attrs) { { enabled: false } }
 
-      it { expect(task.enabled?).to eq(false) }
+      it { expect(task.enabled?).to be(false) }
     end
   end
 end

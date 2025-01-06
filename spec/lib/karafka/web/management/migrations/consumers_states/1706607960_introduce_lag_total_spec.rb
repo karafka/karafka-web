@@ -12,8 +12,8 @@ RSpec.describe(
     before { described_class.new.migrate(state) }
 
     it { expect(state[:stats][:lag_total]).to eq(0) }
-    it { expect(state[:stats].key?(:lag)).to eq(false) }
-    it { expect(state[:stats].key?(:lag_stored)).to eq(false) }
+    it { expect(state[:stats].key?(:lag)).to be(false) }
+    it { expect(state[:stats].key?(:lag_stored)).to be(false) }
   end
 
   context 'when migrating from 1.2.2' do
@@ -22,7 +22,7 @@ RSpec.describe(
     before { described_class.new.migrate(state) }
 
     it { expect(state[:stats][:lag_total]).to eq(0) }
-    it { expect(state[:stats].key?(:lag)).to eq(false) }
-    it { expect(state[:stats].key?(:lag_stored)).to eq(false) }
+    it { expect(state[:stats].key?(:lag)).to be(false) }
+    it { expect(state[:stats].key?(:lag_stored)).to be(false) }
   end
 end

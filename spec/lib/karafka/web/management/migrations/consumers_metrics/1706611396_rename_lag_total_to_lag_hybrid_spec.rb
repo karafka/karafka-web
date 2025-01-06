@@ -16,7 +16,7 @@ RSpec.describe(
       times.each do |key_name|
         state[:aggregated][key_name].each do |sample|
           expect(sample.last[:lag_hybrid]).to be_between(0, 5)
-          expect(sample.last.key?(:lag_total)).to eq(false)
+          expect(sample.last.key?(:lag_total)).to be(false)
         end
       end
     end
@@ -29,7 +29,7 @@ RSpec.describe(
           metric_group.each_value do |samples|
             samples.each_value do |sample|
               expect(sample[:lag_hybrid]).to be_between(0, 5)
-              expect(sample.key?(:lag_total)).to eq(false)
+              expect(sample.key?(:lag_total)).to be(false)
             end
           end
         end

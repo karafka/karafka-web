@@ -68,11 +68,13 @@ RSpec.describe_current do
       let(:caller_ref) { Karafka::BaseConsumer.new }
 
       before do
-        allow(caller_ref).to receive(:topic).and_return(topic)
-        allow(caller_ref).to receive(:partition).and_return(0)
-        allow(caller_ref).to receive(:messages).and_return(messages)
-        allow(caller_ref).to receive(:coordinator).and_return(coordinator)
-        allow(caller_ref).to receive(:tags).and_return(['tag1'])
+        allow(caller_ref).to receive_messages(
+          topic: topic,
+          partition: 0,
+          messages: messages,
+          coordinator: coordinator,
+          tags: %w[tag1]
+        )
       end
 
       it 'expect to include consumer specific details' do
@@ -87,7 +89,7 @@ RSpec.describe_current do
           first_offset: 5,
           last_offset: 10,
           committed_offset: 99,
-          tags: ['tag1']
+          tags: %w[tag1]
         )
       end
 

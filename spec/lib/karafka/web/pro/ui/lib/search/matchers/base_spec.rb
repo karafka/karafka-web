@@ -4,7 +4,7 @@ RSpec.describe_current do
   let(:matcher_class) { described_class }
 
   describe '.active?' do
-    it { expect(matcher_class.active?(rand.to_s)).to eq(true) }
+    it { expect(matcher_class.active?(rand.to_s)).to be(true) }
   end
 
   describe '.name' do

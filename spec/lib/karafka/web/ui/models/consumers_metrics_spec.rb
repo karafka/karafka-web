@@ -10,7 +10,7 @@ RSpec.describe_current do
   before { Karafka::Web.config.topics.consumers.metrics = metrics_topic }
 
   context 'when no metrics' do
-    it { expect(metrics.current).to eq(false) }
+    it { expect(metrics.current).to be(false) }
     it { expect { metrics.current! }.to raise_error(::Karafka::Web::Errors::Ui::NotFoundError) }
   end
 
@@ -23,7 +23,7 @@ RSpec.describe_current do
       produce(metrics_topic, Fixtures.consumers_metrics_file)
     end
 
-    it { expect(metrics.current).to eq(false) }
+    it { expect(metrics.current).to be(false) }
   end
 
   context 'when one metric exists and karafka-web is enabled' do
