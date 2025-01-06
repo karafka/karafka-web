@@ -30,10 +30,10 @@ RSpec.describe_current do
 
       it 'expect to get it with the data inside' do
         expect(metrics).to be_a(Hash)
-        expect(metrics.key?(:aggregated)).to eq(true)
-        expect(metrics.key?(:consumer_groups)).to eq(true)
-        expect(metrics.key?(:schema_version)).to eq(true)
-        expect(metrics.key?(:dispatched_at)).to eq(true)
+        expect(metrics.key?(:aggregated)).to be(true)
+        expect(metrics.key?(:consumer_groups)).to be(true)
+        expect(metrics.key?(:schema_version)).to be(true)
+        expect(metrics.key?(:dispatched_at)).to be(true)
       end
     end
   end

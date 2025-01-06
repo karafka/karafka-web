@@ -16,12 +16,12 @@ RSpec.describe_current do
   it { expect(pagination.offset_key).to eq('offset') }
 
   context 'when there is no data in the partition' do
-    it { expect(pagination.paginate?).to eq(false) }
-    it { expect(pagination.first_offset?).to eq(false) }
-    it { expect(pagination.previous_offset?).to eq(false) }
-    it { expect(pagination.current_offset?).to eq(true) }
+    it { expect(pagination.paginate?).to be(false) }
+    it { expect(pagination.first_offset?).to be(false) }
+    it { expect(pagination.previous_offset?).to be(false) }
+    it { expect(pagination.current_offset?).to be(true) }
     it { expect(pagination.current_label).to eq('0') }
-    it { expect(pagination.next_offset?).to eq(false) }
+    it { expect(pagination.next_offset?).to be(false) }
   end
 
   context 'when we view most recent offset that is also first offset' do
@@ -29,12 +29,12 @@ RSpec.describe_current do
     let(:low_watermark_offset) { 0 }
     let(:high_watermark_offset) { 1 }
 
-    it { expect(pagination.paginate?).to eq(false) }
-    it { expect(pagination.first_offset?).to eq(false) }
-    it { expect(pagination.previous_offset?).to eq(false) }
-    it { expect(pagination.current_offset?).to eq(true) }
+    it { expect(pagination.paginate?).to be(false) }
+    it { expect(pagination.first_offset?).to be(false) }
+    it { expect(pagination.previous_offset?).to be(false) }
+    it { expect(pagination.current_offset?).to be(true) }
     it { expect(pagination.current_label).to eq('0') }
-    it { expect(pagination.next_offset?).to eq(false) }
+    it { expect(pagination.next_offset?).to be(false) }
   end
 
   context 'when we view most recent distant offset' do
@@ -42,12 +42,12 @@ RSpec.describe_current do
     let(:low_watermark_offset) { 0 }
     let(:high_watermark_offset) { 100 }
 
-    it { expect(pagination.paginate?).to eq(true) }
-    it { expect(pagination.first_offset?).to eq(false) }
-    it { expect(pagination.previous_offset?).to eq(false) }
-    it { expect(pagination.current_offset?).to eq(true) }
+    it { expect(pagination.paginate?).to be(true) }
+    it { expect(pagination.first_offset?).to be(false) }
+    it { expect(pagination.previous_offset?).to be(false) }
+    it { expect(pagination.current_offset?).to be(true) }
     it { expect(pagination.current_label).to eq('99') }
-    it { expect(pagination.next_offset?).to eq(true) }
+    it { expect(pagination.next_offset?).to be(true) }
     it { expect(pagination.next_offset).to eq(98) }
   end
 
@@ -56,12 +56,12 @@ RSpec.describe_current do
     let(:low_watermark_offset) { 0 }
     let(:high_watermark_offset) { 100 }
 
-    it { expect(pagination.paginate?).to eq(true) }
-    it { expect(pagination.first_offset?).to eq(true) }
-    it { expect(pagination.previous_offset?).to eq(true) }
-    it { expect(pagination.current_offset?).to eq(true) }
+    it { expect(pagination.paginate?).to be(true) }
+    it { expect(pagination.first_offset?).to be(true) }
+    it { expect(pagination.previous_offset?).to be(true) }
+    it { expect(pagination.current_offset?).to be(true) }
     it { expect(pagination.current_label).to eq('98') }
-    it { expect(pagination.next_offset?).to eq(true) }
+    it { expect(pagination.next_offset?).to be(true) }
     it { expect(pagination.next_offset).to eq(97) }
     it { expect(pagination.previous_offset).to eq(99) }
   end
@@ -71,12 +71,12 @@ RSpec.describe_current do
     let(:low_watermark_offset) { 0 }
     let(:high_watermark_offset) { 100 }
 
-    it { expect(pagination.paginate?).to eq(true) }
-    it { expect(pagination.first_offset?).to eq(true) }
-    it { expect(pagination.previous_offset?).to eq(true) }
-    it { expect(pagination.current_offset?).to eq(true) }
+    it { expect(pagination.paginate?).to be(true) }
+    it { expect(pagination.first_offset?).to be(true) }
+    it { expect(pagination.previous_offset?).to be(true) }
+    it { expect(pagination.current_offset?).to be(true) }
     it { expect(pagination.current_label).to eq('0') }
-    it { expect(pagination.next_offset?).to eq(false) }
+    it { expect(pagination.next_offset?).to be(false) }
     it { expect(pagination.previous_offset).to eq(1) }
   end
 
@@ -85,12 +85,12 @@ RSpec.describe_current do
     let(:low_watermark_offset) { 0 }
     let(:high_watermark_offset) { 100 }
 
-    it { expect(pagination.paginate?).to eq(true) }
-    it { expect(pagination.first_offset?).to eq(true) }
-    it { expect(pagination.previous_offset?).to eq(true) }
-    it { expect(pagination.current_offset?).to eq(true) }
+    it { expect(pagination.paginate?).to be(true) }
+    it { expect(pagination.first_offset?).to be(true) }
+    it { expect(pagination.previous_offset?).to be(true) }
+    it { expect(pagination.current_offset?).to be(true) }
     it { expect(pagination.current_label).to eq('1') }
-    it { expect(pagination.next_offset?).to eq(true) }
+    it { expect(pagination.next_offset?).to be(true) }
     it { expect(pagination.previous_offset).to eq(2) }
     it { expect(pagination.next_offset).to eq(0) }
   end
@@ -100,12 +100,12 @@ RSpec.describe_current do
     let(:low_watermark_offset) { 0 }
     let(:high_watermark_offset) { 100 }
 
-    it { expect(pagination.paginate?).to eq(true) }
-    it { expect(pagination.first_offset?).to eq(true) }
-    it { expect(pagination.previous_offset?).to eq(true) }
-    it { expect(pagination.current_offset?).to eq(true) }
+    it { expect(pagination.paginate?).to be(true) }
+    it { expect(pagination.first_offset?).to be(true) }
+    it { expect(pagination.previous_offset?).to be(true) }
+    it { expect(pagination.current_offset?).to be(true) }
     it { expect(pagination.current_label).to eq('50') }
-    it { expect(pagination.next_offset?).to eq(true) }
+    it { expect(pagination.next_offset?).to be(true) }
     it { expect(pagination.previous_offset).to eq(51) }
     it { expect(pagination.next_offset).to eq(49) }
   end

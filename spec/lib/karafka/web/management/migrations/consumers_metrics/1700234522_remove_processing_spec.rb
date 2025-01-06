@@ -15,7 +15,7 @@ RSpec.describe(
     it 'expect to add waiting to all aggregated' do
       times.each do |key_name|
         state[:aggregated][key_name].each do |sample|
-          expect(sample.last.key?(:processing)).to eq(false)
+          expect(sample.last.key?(:processing)).to be(false)
         end
       end
     end

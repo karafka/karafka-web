@@ -129,9 +129,9 @@ RSpec.describe_current do
       let(:start_offset) { 0 }
 
       it 'expect to return them in order' do
-        expect(page[0]).to eq(false)
+        expect(page[0]).to be(false)
         expect(page[1].map(&:offset)).to eq((0..6).to_a.reverse)
-        expect(page[2]).to eq(false)
+        expect(page[2]).to be(false)
       end
     end
 
@@ -141,7 +141,7 @@ RSpec.describe_current do
       let(:start_offset) { 2 }
 
       it 'expect to return them in order' do
-        expect(page[0]).to eq(false)
+        expect(page[0]).to be(false)
         expect(page[1].map(&:offset)).to eq((2..6).to_a.reverse)
         expect(page[2]).to eq(0)
       end
@@ -153,7 +153,7 @@ RSpec.describe_current do
       let(:start_offset) { 6 }
 
       it 'expect to return them in order' do
-        expect(page[0]).to eq(false)
+        expect(page[0]).to be(false)
         expect(page[1].map(&:offset)).to eq([6])
         expect(page[2]).to eq(0)
       end
@@ -167,7 +167,7 @@ RSpec.describe_current do
       it 'expect to return them in order' do
         expect(page[0]).to eq(25)
         expect(page[1].map(&:offset)).to eq((0..24).to_a.reverse)
-        expect(page[2]).to eq(false)
+        expect(page[2]).to be(false)
       end
     end
 
@@ -177,7 +177,7 @@ RSpec.describe_current do
       let(:start_offset) { 99 }
 
       it 'expect to return them in order' do
-        expect(page[0]).to eq(false)
+        expect(page[0]).to be(false)
         expect(page[1].map(&:offset)).to eq([99])
         expect(page[2]).to eq(74)
       end
@@ -201,7 +201,7 @@ RSpec.describe_current do
       let(:start_offset) { -1 }
 
       it 'expect to return it in order' do
-        expect(page[0]).to eq(false)
+        expect(page[0]).to be(false)
         expect(page[1].map(&:offset)).to eq((75..99).to_a.reverse)
         expect(page[2]).to eq(50)
       end
@@ -230,7 +230,7 @@ RSpec.describe_current do
 
       it 'expect to return this data' do
         expect(result[0].map(&:offset)).to eq([3, 2, 1, 0])
-        expect(result[1]).to eq(false)
+        expect(result[1]).to be(false)
       end
     end
 
@@ -245,7 +245,7 @@ RSpec.describe_current do
       it 'expect to return this data' do
         expect(result[0].map(&:offset)).to eq([0, 0, 0, 0])
         expect(result[0].map(&:partition)).to eq([0, 1, 2, 3])
-        expect(result[1]).to eq(false)
+        expect(result[1]).to be(false)
       end
     end
 
@@ -264,7 +264,7 @@ RSpec.describe_current do
       it 'expect to fetch from partitions we want' do
         expect(result[0].map(&:offset)).to eq([0, 0, 0, 0])
         expect(result[0].map(&:partition)).to eq((25..28).to_a)
-        expect(result[1]).to eq(false)
+        expect(result[1]).to be(false)
       end
     end
   end

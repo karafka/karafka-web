@@ -4,7 +4,7 @@ RSpec.describe_current do
   subject(:matcher) { described_class.new }
 
   describe '.active?' do
-    it { expect(described_class.active?(rand.to_s)).to eq(true) }
+    it { expect(described_class.active?(rand.to_s)).to be(true) }
   end
 
   describe '#call' do

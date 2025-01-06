@@ -3,7 +3,7 @@
 RSpec.describe_current do
   subject(:parsing) { described_class.new.call(message) }
 
-  let(:message) { instance_double('Karafka::Messages::Message') }
+  let(:message) { instance_double(Karafka::Messages::Message) }
   let(:raw_payload) { '{"key":"value"}' }
   let(:headers) { {} }
 

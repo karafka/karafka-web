@@ -56,7 +56,6 @@ module Karafka
           #   aggregated statistics and then the second value is an array with per partition data
           def distribution(partitions)
             sum = 0.0
-            avg = 0.0
 
             counts = partitions.map do |partition_id|
               offsets = Admin.read_watermark_offsets(topic_name, partition_id)

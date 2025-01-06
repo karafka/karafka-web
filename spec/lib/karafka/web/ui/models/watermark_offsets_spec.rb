@@ -24,39 +24,39 @@ RSpec.describe_current do
 
   describe '#empty?' do
     context 'when both watermark offsets are zero' do
-      it { expect(watermarks.empty?).to eq(true) }
+      it { expect(watermarks.empty?).to be(true) }
     end
 
     context 'when when low is not zero' do
       let(:low) { 1 }
 
-      it { expect(watermarks.empty?).to eq(false) }
+      it { expect(watermarks.empty?).to be(false) }
     end
 
     context 'when high is not zero' do
       let(:high) { 1 }
 
-      it { expect(watermarks.empty?).to eq(false) }
+      it { expect(watermarks.empty?).to be(false) }
     end
   end
 
   describe '#cleaned?' do
     context 'when partition is empty' do
-      it { expect(watermarks.cleaned?).to eq(false) }
+      it { expect(watermarks.cleaned?).to be(false) }
     end
 
     context 'when there is some data' do
       let(:high) { 100 }
       let(:low) { 80 }
 
-      it { expect(watermarks.cleaned?).to eq(false) }
+      it { expect(watermarks.cleaned?).to be(false) }
     end
 
     context 'when there was some data but no more' do
       let(:high) { 100 }
       let(:low) { 100 }
 
-      it { expect(watermarks.cleaned?).to eq(true) }
+      it { expect(watermarks.cleaned?).to be(true) }
     end
   end
 
@@ -79,8 +79,8 @@ RSpec.describe_current do
       result = described_class.find(topic, 0)
       expect(result.low).to eq(0)
       expect(result.high).to eq(0)
-      expect(result.empty?).to eq(true)
-      expect(result.cleaned?).to eq(false)
+      expect(result.empty?).to be(true)
+      expect(result.cleaned?).to be(false)
     end
   end
 
@@ -93,8 +93,8 @@ RSpec.describe_current do
       result = described_class.find(topic, 0)
       expect(result.low).to eq(0)
       expect(result.high).to eq(2)
-      expect(result.empty?).to eq(false)
-      expect(result.cleaned?).to eq(false)
+      expect(result.empty?).to be(false)
+      expect(result.cleaned?).to be(false)
     end
   end
 end

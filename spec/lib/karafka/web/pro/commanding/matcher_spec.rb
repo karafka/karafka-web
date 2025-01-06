@@ -7,7 +7,7 @@ RSpec.describe_current do
   let(:schema_version) { '1.0' }
   let(:message) do
     instance_double(
-      'Karafka::Messages::Message',
+      Karafka::Messages::Message,
       key: message_key,
       payload: message_payload
     )
@@ -35,7 +35,7 @@ RSpec.describe_current do
     it { expect(matcher.matches?(message)).to be true }
   end
 
-  context 'when message key does not match current process id or "*" ' do
+  context 'when message key does not match current process id or "*"' do
     let(:message_key) { 'other_process_id' }
     let(:message_payload) { { type: 'command', schema_version: schema_version } }
 

@@ -35,7 +35,7 @@ RSpec.describe_current do
       expect(hashed[:aggregated]).to eq(days: [], hours: [], minutes: [], seconds: [])
       expect(hashed[:consumer_groups]).to eq(days: [], hours: [], minutes: [], seconds: [])
       expect(hashed[:schema_version]).to eq('1.3.0')
-      expect(hashed.key?(:dispatched_at)).to eq(true)
+      expect(hashed.key?(:dispatched_at)).to be(true)
     end
   end
 

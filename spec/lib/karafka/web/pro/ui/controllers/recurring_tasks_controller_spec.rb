@@ -335,7 +335,7 @@ RSpec.describe_current do
     it do
       expect(response.status).to eq(302)
       # Taken from referer and referer is nil in specs
-      expect(response.location).to eq(nil)
+      expect(response.location).to be_nil
     end
 
     it 'expect to create new command' do
@@ -355,7 +355,7 @@ RSpec.describe_current do
     it do
       expect(response.status).to eq(302)
       # Taken from referer and referer is nil in specs
-      expect(response.location).to eq(nil)
+      expect(response.location).to be_nil
     end
 
     it 'expect to create new command' do
@@ -375,7 +375,7 @@ RSpec.describe_current do
     it do
       expect(response.status).to eq(302)
       # Taken from referer and referer is nil in specs
-      expect(response.location).to eq(nil)
+      expect(response.location).to be_nil
     end
 
     it 'expect to create new command' do
@@ -395,7 +395,7 @@ RSpec.describe_current do
     it do
       expect(response.status).to eq(302)
       # Taken from referer and referer is nil in specs
-      expect(response.location).to eq(nil)
+      expect(response.location).to be_nil
     end
 
     it 'expect to create new command' do
@@ -415,7 +415,7 @@ RSpec.describe_current do
     it do
       expect(response.status).to eq(302)
       # Taken from referer and referer is nil in specs
-      expect(response.location).to eq(nil)
+      expect(response.location).to be_nil
     end
 
     it 'expect to create new command' do
@@ -435,7 +435,7 @@ RSpec.describe_current do
     it do
       expect(response.status).to eq(302)
       # Taken from referer and referer is nil in specs
-      expect(response.location).to eq(nil)
+      expect(response.location).to be_nil
     end
 
     it 'expect to create new command' do

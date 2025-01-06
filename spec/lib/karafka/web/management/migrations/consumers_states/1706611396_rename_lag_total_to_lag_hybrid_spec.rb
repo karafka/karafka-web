@@ -12,6 +12,6 @@ RSpec.describe(
     before { described_class.new.migrate(state) }
 
     it { expect(state[:stats][:lag_hybrid]).to eq(0) }
-    it { expect(state[:stats].key?(:lag_total)).to eq(false) }
+    it { expect(state[:stats].key?(:lag_total)).to be(false) }
   end
 end

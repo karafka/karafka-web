@@ -16,8 +16,8 @@ RSpec.describe(
       times.each do |key_name|
         state[:aggregated][key_name].each do |sample|
           expect(sample.last[:lag_total]).to be_between(0, 5)
-          expect(sample.last.key?(:lag)).to eq(false)
-          expect(sample.last.key?(:lag_stored)).to eq(false)
+          expect(sample.last.key?(:lag)).to be(false)
+          expect(sample.last.key?(:lag_stored)).to be(false)
         end
       end
     end
@@ -30,8 +30,8 @@ RSpec.describe(
           metric_group.each_value do |samples|
             samples.each_value do |sample|
               expect(sample[:lag_total]).to be_between(0, 5)
-              expect(sample.key?(:lag)).to eq(false)
-              expect(sample.key?(:lag_stored)).to eq(false)
+              expect(sample.key?(:lag)).to be(false)
+              expect(sample.key?(:lag_stored)).to be(false)
             end
           end
         end
@@ -49,8 +49,8 @@ RSpec.describe(
       times.each do |key_name|
         state[:aggregated][key_name].each do |sample|
           expect(sample.last[:lag_total]).to be_between(0, 5)
-          expect(sample.last.key?(:lag)).to eq(false)
-          expect(sample.last.key?(:lag_stored)).to eq(false)
+          expect(sample.last.key?(:lag)).to be(false)
+          expect(sample.last.key?(:lag_stored)).to be(false)
         end
       end
     end
@@ -63,8 +63,8 @@ RSpec.describe(
           metric_group.each_value do |samples|
             samples.each_value do |sample|
               expect(sample[:lag_total]).to be_between(0, 5)
-              expect(sample.key?(:lag)).to eq(false)
-              expect(sample.key?(:lag_stored)).to eq(false)
+              expect(sample.key?(:lag)).to be(false)
+              expect(sample.key?(:lag_stored)).to be(false)
             end
           end
         end

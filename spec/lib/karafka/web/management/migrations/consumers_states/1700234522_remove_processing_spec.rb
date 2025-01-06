@@ -11,6 +11,6 @@ RSpec.describe(
 
     before { described_class.new.migrate(state) }
 
-    it { expect(state[:stats].key?(:processing)).to eq(false) }
+    it { expect(state[:stats].key?(:processing)).to be(false) }
   end
 end

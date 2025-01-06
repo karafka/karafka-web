@@ -10,7 +10,7 @@ RSpec.describe_current do
   before { Karafka::Web.config.topics.consumers.states = states_topic }
 
   context 'when no state' do
-    it { expect(state.current).to eq(false) }
+    it { expect(state.current).to be(false) }
     it { expect { state.current! }.to raise_error(::Karafka::Web::Errors::Ui::NotFoundError) }
   end
 
@@ -23,7 +23,7 @@ RSpec.describe_current do
       produce(states_topic, Fixtures.consumers_states_file)
     end
 
-    it { expect(state.current).to eq(false) }
+    it { expect(state.current).to be(false) }
   end
 
   context 'when one state exists and karafka-web is enabled' do

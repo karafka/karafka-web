@@ -46,7 +46,7 @@ RSpec.describe_current do
 
     let(:message) do
       instance_double(
-        'Karafka::Messages::Message',
+        Karafka::Messages::Message,
         payload: {
           command: {
             name: command_name

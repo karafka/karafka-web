@@ -19,7 +19,7 @@ RSpec.describe_current do
     end
 
     let(:matcher_instance) { Karafka::Web::Pro::Ui::Lib::Search::Matchers::RawPayloadIncludes.new }
-    let(:iterator_instance) { instance_double('Karafka::Pro::Iterator') }
+    let(:iterator_instance) { instance_double(Karafka::Pro::Iterator) }
 
     4.times do |i|
       let(:"message#{i + 1}") do
