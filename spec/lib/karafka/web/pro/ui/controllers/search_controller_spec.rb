@@ -317,4 +317,47 @@ RSpec.describe_current do
       expect(body).not_to include(support_message)
     end
   end
+
+  context 'when searching a topic that has matches in a zlib compressed payload' do
+    let(:partitions) { 2 }
+
+    before do
+      produce_many(
+        topic,
+        %w[message message2 message 3].map { |msg| Zlib.deflate(msg) },
+        partition: 0,
+        headers: { 'zlib' => 'true' }
+      )
+
+      produce_many(
+        topic,
+        %w[find-me also-find-me find-me-and].map { |msg| Zlib.deflate(msg) },
+        partition: 1,
+        headers: { 'zlib' => 'true' }
+      )
+
+      get "explorer/#{topic}/search?#{valid_search}"
+    end
+
+    it do
+      expect(response).to be_ok
+      expect(body).to include(breadcrumbs)
+      expect(body).to include(search_modal)
+      expect(body).to include('table')
+      expect(body).to include('Raw payload includes')
+      expect(body).to include('Search criteria:')
+      expect(body).to include('Total Messages Checked')
+      expect(body).to include('Partition 0')
+      expect(body).to include('Partition 1')
+      expect(body).to include(metadata_button)
+      expect(body).to include(search_metadata)
+      expect(body).to include('<td>3</td>')
+      expect(body).not_to include(nothing_found)
+      expect(body).not_to include(no_search_criteria)
+      expect(body).not_to include(search_modal_errors)
+      expect(body).not_to include('matcher: is invalid')
+      expect(body).not_to include(pagination)
+      expect(body).not_to include(support_message)
+    end
+  end
 end

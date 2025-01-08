@@ -9,7 +9,15 @@ RSpec.describe_current do
 
   describe '#call' do
     let(:phrase) { 'test phrase' }
-    let(:message) { instance_double(Karafka::Messages::Message, raw_payload: raw_payload) }
+    let(:headers) { {} }
+
+    let(:message) do
+      instance_double(
+        Karafka::Messages::Message,
+        raw_payload: raw_payload,
+        raw_headers: headers
+      )
+    end
 
     context 'when the raw payload includes the phrase' do
       let(:raw_payload) { 'This is a test phrase in the message.' }
@@ -40,6 +48,32 @@ RSpec.describe_current do
       let(:phrase) { 'test phrase-ó'.encode('UTF-8') }
 
       it 'returns false' do
+        expect(matcher.call(message, phrase)).to be false
+      end
+    end
+
+    context 'when message has a zlib header but payload is not zlibed' do
+      let(:raw_payload) { 'This is a test phrase in the message.' }
+      let(:headers) { { 'zlib' => 'true' } }
+
+      it 'returns true on match' do
+        expect(matcher.call(message, phrase)).to be true
+      end
+    end
+
+    context 'when message has a zlib header and payload is zlibed' do
+      let(:raw_payload) { Zlib.deflate('This is a test phrase in the message.') }
+      let(:headers) { { 'zlib' => 'true' } }
+
+      it 'returns true on match' do
+        expect(matcher.call(message, phrase)).to be true
+      end
+    end
+
+    context 'when message has no zlib header and payload is zlibed' do
+      let(:raw_payload) { Zlib.deflate('This is a test phrase in the message.') }
+
+      it 'returns false on match' do
         expect(matcher.call(message, phrase)).to be false
       end
     end
