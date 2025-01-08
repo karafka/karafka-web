@@ -2,6 +2,7 @@
 
 ## 0.10.5 (Unreleased)
 - [Fix] Allow for using default search matchers in Karafka Web UI topics including Errors.
+- [Enhancement] Error out when `#setup` is called after `#enable!`.
 - [Maintenance] Require `karafka-core` `>= 2.4.8` and `karafka` `>= 2.4.16`.
 
 ## 0.10.4 (2024-11-26)
