@@ -13,6 +13,12 @@ RSpec.describe_current do
     specify { expect(error).to be < described_class::BaseError }
   end
 
+  describe 'LateSetupError' do
+    subject(:error) { described_class::LateSetupError }
+
+    specify { expect(error).to be < described_class::BaseError }
+  end
+
   context 'when in Processing namespace' do
     describe 'MissingConsumersStateError' do
       subject(:error) { described_class::Processing::MissingConsumersStateError }
