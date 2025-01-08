@@ -19,8 +19,17 @@ RSpec.describe_current do
       let(:cancelled) { Karafka::Web::Ui::Models::Message.find(topic, 0, 1) }
       let(:payload) { rand.to_s }
 
+      let(:states_topic) { create_topic(topic_name: "#{topic}_states") }
+
       before do
-        produce(topic, payload)
+        states_topic
+        messages_topic_ref = topic
+
+        draw_routes do
+          scheduled_messages(messages_topic_ref)
+        end
+
+        produce(topic, payload, key: rand.to_s)
         post "scheduled_messages/messages/#{topic}/0/0/cancel"
       end
 

@@ -1,5 +1,9 @@
 # Karafka Web Changelog
 
+## 0.10.5 (Unreleased)
+- [Fix] Allow for using default search matchers in Karafka Web UI topics including Errors.
+- [Maintenance] Require `karafka-core` `>= 2.4.8` and `karafka` `>= 2.4.16`.
+
 ## 0.10.4 (2024-11-26)
 - **[Breaking]** Drop Ruby `3.0` support according to the EOL schedule.
 - [Enhancement] Extract producers tracking `sync_threshold` into an internal config.

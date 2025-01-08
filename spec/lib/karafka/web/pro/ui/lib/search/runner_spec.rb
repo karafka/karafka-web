@@ -29,7 +29,8 @@ RSpec.describe_current do
           offset: i,
           timestamp: Time.now - 10,
           clean!: nil,
-          raw_payload: ''
+          raw_payload: '',
+          raw_headers: {}
         )
       end
     end

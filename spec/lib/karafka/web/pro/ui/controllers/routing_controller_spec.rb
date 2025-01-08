@@ -96,7 +96,8 @@ RSpec.describe_current do
             kafka(
               'sasl.username': 'username',
               'sasl.password': 'password',
-              'sasl.mechanisms': 'SCRAM-SHA-512'
+              'sasl.mechanisms': 'SCRAM-SHA-512',
+              'bootstrap.servers': '127.0.0.1:80'
             )
           end
         end
@@ -118,7 +119,10 @@ RSpec.describe_current do
         draw_routes do
           topic SecureRandom.uuid do
             consumer Karafka::BaseConsumer
-            kafka('ssl.key.password': 'password')
+            kafka(
+              'ssl.key.password': 'password',
+              'bootstrap.servers': '127.0.0.1:80'
+            )
           end
         end
 

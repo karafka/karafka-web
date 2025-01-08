@@ -17,8 +17,8 @@ Gem::Specification.new do |spec|
   spec.licenses    = %w[LGPL-3.0-only Commercial]
 
   spec.add_dependency 'erubi', '~> 1.4'
-  spec.add_dependency 'karafka', '>= 2.4.10', '< 2.5.0'
-  spec.add_dependency 'karafka-core', '>= 2.4.0', '< 2.5.0'
+  spec.add_dependency 'karafka', '>= 2.4.15', '< 2.5.0'
+  spec.add_dependency 'karafka-core', '>= 2.4.8', '< 2.5.0'
   spec.add_dependency 'roda', '~> 3.68', '>= 3.69'
   spec.add_dependency 'tilt', '~> 2.0'
 
