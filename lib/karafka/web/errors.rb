@@ -20,6 +20,11 @@ module Karafka
       # configures Karafka
       KarafkaNotInitializedError = Class.new(BaseError)
 
+      # Raised when you try to configure Web UI after it was enabled. It is not allowed because
+      # Karafka Web UI uses the setup values during the enablement and their later change may not
+      # be fully reflected. Always run `#setup` before `#enable!`.
+      LateSetupError = Class.new(BaseError)
+
       # Errors specific to management
       module Management
         # Similar to processing error with the same name, it is raised when a critical
