@@ -14,7 +14,7 @@ module Karafka
               topics
             ].each do |route|
               r.get route, [String, true], [String, true] do
-                raise Errors::Ui::ProOnlyError
+                raise ::Karafka::Web::Errors::Ui::ProOnlyError
               end
             end
           end

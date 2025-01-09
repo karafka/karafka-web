@@ -14,12 +14,12 @@ module Karafka
                 commands
               ].each do |path|
                 r.get path do |_process_id|
-                  raise Errors::Ui::ProOnlyError
+                  raise ::Karafka::Web::Errors::Ui::ProOnlyError
                 end
               end
 
               r.get String, 'subscriptions' do |_process_id|
-                raise Errors::Ui::ProOnlyError
+                raise ::Karafka::Web::Errors::Ui::ProOnlyError
               end
 
               r.get do
