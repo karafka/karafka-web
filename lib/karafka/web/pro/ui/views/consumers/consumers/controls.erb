@@ -1,6 +1,6 @@
 <% view_title 'Consumers Controls' %>
 
-<%== partial 'consumers/tabs' %>
+<%== partial 'consumers/consumers/tabs' %>
 
 <% unless @processes.empty? %>
   <div class="col-span-12 flex justify-end space-x-2 mb-6">
@@ -52,7 +52,7 @@
           <%==
             render_each(
               @processes,
-              'consumers/_consumer_controls',
+              'consumers/consumers/_consumer_controls',
               local: :process
             )
           %>

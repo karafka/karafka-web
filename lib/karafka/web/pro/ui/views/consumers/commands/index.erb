@@ -1,6 +1,6 @@
 <% view_title 'Consumers Commands and Responses' %>
 
-<%== partial 'consumers/tabs' %>
+<%== partial 'consumers/consumers/tabs' %>
 
 <div class="col-span-12">
   <% if @command_messages && !@command_messages.empty? %>
@@ -16,8 +16,8 @@
   <% end %>
 
   <% if @command_messages.empty? && params.current_page == 1 %>
-    <%== partial 'commands/empty' %>
+    <%== partial 'consumers/commands/empty' %>
   <% else %>
-    <%== partial 'commands/table' %>
+    <%== partial 'consumers/commands/table' %>
   <% end %>
 </div>

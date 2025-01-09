@@ -61,7 +61,7 @@ module Karafka
             end
 
             r.on 'consumers' do
-              controller = Controllers::ConsumersController.new(params)
+              controller = Controllers::Consumers::ConsumersController.new(params)
 
               r.get 'overview' do
                 controller.index
@@ -99,7 +99,7 @@ module Karafka
             end
 
             r.on 'commands' do
-              controller = Controllers::CommandsController.new(params)
+              controller = Controllers::Consumers::CommandsController.new(params)
 
               r.on Integer do |offset_id|
                 controller.show(offset_id)
@@ -115,7 +115,7 @@ module Karafka
             end
 
             r.on 'commanding' do
-              controller = Controllers::CommandingController.new(params)
+              controller = Controllers::Consumers::CommandingController.new(params)
 
               r.post 'quiet_all' do
                 controller.quiet_all

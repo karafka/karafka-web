@@ -1,18 +1,18 @@
 <% view_title @process.id %>
 
-<%== partial 'consumers/consumer/commands', locals: { process: @process } %>
+<%== partial 'consumers/consumers/consumer/commands', locals: { process: @process } %>
 
 <div class="col-span-12">
   <% if @process.status == 'stopped' %>
-    <%== partial 'consumers/consumer/stopped' %>
+    <%== partial 'consumers/consumers/consumer/stopped' %>
   <% end %>
 
-  <%== partial 'consumers/consumer/metrics' %>
+  <%== partial 'consumers/consumers/consumer/metrics' %>
 
-  <%== partial 'consumers/consumer/tabs' %>
+  <%== partial 'consumers/consumers/consumer/tabs' %>
 
-  <% if @running_jobs.empty? %>
-    <%== partial 'consumers/consumer/no_jobs', locals: { type: 'running' } %>
+  <% if @pending_jobs.empty? %>
+    <%== partial 'consumers/consumers/consumer/no_jobs', locals: { type: 'pending' } %>
   <% else %>
     <div class="data-table-wrapper">
       <table class="data-table">
@@ -34,8 +34,8 @@
         <tbody>
           <%==
             render_each(
-              @running_jobs,
-              'consumers/consumer/_job',
+              @pending_jobs,
+              'consumers/consumers/consumer/_job',
               local: :job
             )
           %>
