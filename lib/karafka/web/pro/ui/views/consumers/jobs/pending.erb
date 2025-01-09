@@ -11,8 +11,8 @@
 
   <%== partial 'consumers/consumers/consumer/tabs' %>
 
-  <% if @running_jobs.empty? %>
-    <%== partial 'consumers/consumers/consumer/no_jobs', locals: { type: 'running' } %>
+  <% if @pending_jobs.empty? %>
+    <%== partial 'consumers/jobs/no_jobs', locals: { type: 'pending' } %>
   <% else %>
     <div class="data-table-wrapper">
       <table class="data-table">
@@ -34,8 +34,8 @@
         <tbody>
           <%==
             render_each(
-              @running_jobs,
-              'consumers/consumers/consumer/_job',
+              @pending_jobs,
+              'consumers/jobs/_job',
               local: :job
             )
           %>

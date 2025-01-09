@@ -82,32 +82,6 @@ module Karafka
                 render
               end
 
-              # Renders details about running jobs
-              #
-              # @param process_id [String] id of the process we're interested in
-              def running_jobs(process_id)
-                details(process_id)
-
-                @running_jobs = @process.jobs.running
-
-                refine(@running_jobs)
-
-                render
-              end
-
-              # Renders details about pending jobs
-              #
-              # @param process_id [String] id of the process we're interested in
-              def pending_jobs(process_id)
-                details(process_id)
-
-                @pending_jobs = @process.jobs.pending
-
-                refine(@pending_jobs)
-
-                render
-              end
-
               # @param process_id [String] id of the process we're interested in
               def subscriptions(process_id)
                 details(process_id)
