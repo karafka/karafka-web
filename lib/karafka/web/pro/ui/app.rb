@@ -45,9 +45,33 @@ module Karafka
             raise(Errors::Ui::ForbiddenError)
           end
 
+          # Sub-routes for given pieces of the Web UI
+          SUB_ROUTES = [
+            Routes::Assets,
+            Routes::Dashboard,
+            Routes::Consumers,
+            Routes::Jobs,
+            Routes::Routing,
+            Routes::Explorer,
+            Routes::Messages,
+            Routes::RecurringTasks,
+            Routes::ScheduledMessages,
+            Routes::Health,
+            Routes::Cluster,
+            Routes::Topics,
+            Routes::Errors,
+            Routes::Dlq,
+            Routes::Status,
+            Routes::Support,
+            Routes::Ux
+          ].freeze
+
+          private_constant :SUB_ROUTES
+
           route do |r|
             r.root { r.redirect root_path('dashboard') }
 
+<<<<<<< Updated upstream
             # Serve current version specific assets to prevent users from fetching old assets
             # after upgrade
             r.on 'assets', Karafka::Web::VERSION do
@@ -434,6 +458,9 @@ module Karafka
               controller = Controllers::SupportController.new(params)
               controller.show
             end
+=======
+            SUB_ROUTES.each { |sub_route| sub_route.bind(self, r) }
+>>>>>>> Stashed changes
           end
         end
       end
