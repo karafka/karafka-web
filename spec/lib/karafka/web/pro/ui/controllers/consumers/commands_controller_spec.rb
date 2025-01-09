@@ -11,7 +11,7 @@ RSpec.describe_current do
       before do
         topics_config.consumers.commands = SecureRandom.uuid
 
-        get 'commands'
+        get 'consumers/commands'
       end
 
       it do
@@ -24,7 +24,7 @@ RSpec.describe_current do
       before do
         topics_config.consumers.commands = commands_topic
 
-        get 'commands'
+        get 'consumers/commands'
       end
 
       it do
@@ -42,7 +42,7 @@ RSpec.describe_current do
         data = Fixtures.consumers_commands_json
         data[:schema_version] = '0.0.1'
         produce(commands_topic, data.to_json)
-        get 'commands'
+        get 'consumers/commands'
       end
 
       it do
@@ -59,7 +59,7 @@ RSpec.describe_current do
     end
 
     context 'when there are active commands' do
-      before { get 'commands' }
+      before { get 'consumers/commands' }
 
       it do
         expect(response).to be_ok
@@ -94,7 +94,7 @@ RSpec.describe_current do
       end
 
       context 'when we visit first page' do
-        before { get 'commands' }
+        before { get 'consumers/commands' }
 
         it do
           expect(response).to be_ok
@@ -109,7 +109,7 @@ RSpec.describe_current do
       end
 
       context 'when we visit second page' do
-        before { get 'commands/overview?offset=52' }
+        before { get 'consumers/commands/overview?offset=52' }
 
         it do
           expect(response).to be_ok
@@ -126,7 +126,7 @@ RSpec.describe_current do
       end
 
       context 'when we go beyond available offsets' do
-        before { get 'commands/overview?offset=200' }
+        before { get 'consumers/commands/overview?offset=200' }
 
         it do
           expect(response).to be_ok
@@ -142,7 +142,7 @@ RSpec.describe_current do
     let(:incompatible_message) { 'Incompatible Command Schema' }
 
     context 'when visiting offset that does not exist' do
-      before { get 'commands/123456' }
+      before { get 'consumers/commands/123456' }
 
       it do
         expect(response).not_to be_ok
@@ -161,7 +161,7 @@ RSpec.describe_current do
         before do
           topics_config.consumers.commands = commands_topic
           produce(commands_topic, Fixtures.consumers_commands_file("v1.0.0_#{command}.json"))
-          get 'commands/0'
+          get 'consumers/commands/0'
         end
 
         it do
@@ -183,7 +183,7 @@ RSpec.describe_current do
           data = Fixtures.consumers_commands_json("v1.0.0_#{command}")
           data[:schema_version] = '0.0.1'
           produce(commands_topic, data.to_json)
-          get 'commands/0'
+          get 'consumers/commands/0'
         end
 
         it do
@@ -203,7 +203,7 @@ RSpec.describe_current do
       before do
         topics_config.consumers.commands = commands_topic
         produce(commands_topic, Fixtures.consumers_commands_file('v1.0.0_trace_result.json'))
-        get 'commands/0'
+        get 'consumers/commands/0'
       end
 
       it do
@@ -225,7 +225,7 @@ RSpec.describe_current do
         data = Fixtures.consumers_commands_json('v1.0.0_trace_result')
         data[:schema_version] = '0.0.1'
         produce(commands_topic, data.to_json)
-        get 'commands/0'
+        get 'consumers/commands/0'
       end
 
       it do
@@ -243,7 +243,7 @@ RSpec.describe_current do
       before do
         topics_config.consumers.commands = SecureRandom.uuid
 
-        get 'commands/recent'
+        get 'consumers/commands/recent'
       end
 
       it do
@@ -255,7 +255,7 @@ RSpec.describe_current do
     context 'when no messages are present' do
       before do
         topics_config.consumers.commands = commands_topic
-        get 'commands/recent'
+        get 'consumers/commands/recent'
       end
 
       it do
@@ -265,7 +265,7 @@ RSpec.describe_current do
     end
 
     context 'when message exists' do
-      before { get 'commands/recent' }
+      before { get 'consumers/commands/recent' }
 
       it do
         expect(response).to be_ok
