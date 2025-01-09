@@ -38,6 +38,7 @@ RSpec.describe_current do
       end
 
       it do
+        expect(body).not_to include('Pro Feature')
         expect(response).to be_ok
         expect(body).not_to include(support_message)
         expect(body).to include(breadcrumbs)
@@ -55,6 +56,8 @@ RSpec.describe_current do
 
       it do
         expect(response).to be_ok
+
+        expect(body).not_to include('Pro Feature')
         expect(body).not_to include('Controls')
         expect(body).not_to include('Commands')
       end

@@ -119,7 +119,7 @@
             <% topic.partitions.each do |partition| %>
               <%==
                 partial(
-                  'consumers/consumer/partition',
+                  'consumers/consumers/consumer/partition',
                   locals: {
                     topic: topic,
                     partition: partition,

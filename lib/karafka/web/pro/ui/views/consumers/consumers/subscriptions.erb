@@ -1,0 +1,25 @@
+<% view_title @process.id %>
+
+<%== partial 'consumers/consumers/consumer/commands', locals: { process: @process } %>
+
+<div class="col-span-12">
+  <% if @process.status == 'stopped' %>
+    <%== partial 'consumers/consumers/consumer/stopped' %>
+  <% end %>
+
+  <%== partial 'consumers/consumers/consumer/metrics' %>
+
+  <%== partial 'consumers/consumers/consumer/tabs' %>
+
+  <% if @process.subscribed? %>
+    <%==
+      render_each(
+        @process.consumer_groups,
+        'consumers/consumers/consumer/_consumer_group',
+        local: :consumer_group
+      )
+    %>
+  <% else %>
+    <%== partial 'consumers/consumers/consumer/no_subscriptions' %>
+  <% end %>
+</div>

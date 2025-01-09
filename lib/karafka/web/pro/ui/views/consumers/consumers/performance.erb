@@ -1,6 +1,6 @@
 <% view_title 'Consumers Performance Details' %>
 
-<%== partial 'consumers/tabs' %>
+<%== partial 'consumers/consumers/tabs' %>
 
 <div class="col-span-12">
   <% if @processes.empty? && params.current_page <= 1 %>
@@ -37,7 +37,7 @@
           <%==
             render_each(
               @processes,
-              'consumers/_consumer_performance',
+              'consumers/consumers/_consumer_performance',
               local: :process
             )
           %>

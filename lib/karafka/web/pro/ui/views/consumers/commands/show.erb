@@ -4,9 +4,9 @@
   <% if command[:schema_version] == @schema_version %>
     <% view_title "#{command[:command][:name]} #{command[:type]} #{@command_message.key}" %>
 
-    <%== partial 'consumers/tabs' %>
+    <%== partial 'consumers/consumers/tabs' %>
 
-    <%== partial 'commands/metadata', locals: { command: command } %>
+    <%== partial 'consumers/commands/metadata', locals: { command: command } %>
 
     <h2 class="h2">
       <% if command[:type] == 'command' %>
@@ -17,17 +17,17 @@
     </h2>
 
     <% if command[:type] == 'command' %>
-      <%== partial 'commands/command_details', locals: { command: command } %>
+      <%== partial 'consumers/commands/command_details', locals: { command: command } %>
     <% else %>
       <% command[:result].each_value do |backtrace| %>
-        <%== partial 'commands/backtrace', locals: { backtrace: backtrace } %>
+        <%== partial 'consumers/commands/backtrace', locals: { backtrace: backtrace } %>
       <% end %>
     <% end %>
   <% else %>
     <% view_title 'Incompatible Command Schema' %>
 
-    <%== partial 'consumers/tabs' %>
+    <%== partial 'consumers/consumers/tabs' %>
 
-    <%== partial 'commands/incompatible_schema' %>
+    <%== partial 'consumers/commands/incompatible_schema' %>
   <% end %>
 </div>
