@@ -1,3 +1,6 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
 <% if @safe_headers.success? %>
   <% visible = @visibility_filter.headers?(message) %>
   <% message.metadata.headers.each do |k, v| %>
