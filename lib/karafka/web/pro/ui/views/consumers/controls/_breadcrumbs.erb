@@ -1,0 +1,13 @@
+<li>
+  <a href="<%= root_path('consumers/overview') %>">
+    Consumers
+  </a>
+</li>
+
+<% if current_path.include?('/controls') %>
+  <li>
+    <a href="<%= root_path('consumers', 'controls') %>">
+      Controls
+    </a>
+  </li>
+<% end %>

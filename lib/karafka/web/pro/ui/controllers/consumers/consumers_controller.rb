@@ -74,13 +74,6 @@ module Karafka
                 render
               end
 
-              # Displays processes with details + ability to manage
-              def controls
-                index
-
-                render
-              end
-
               # @param process_id [String] id of the process we're interested in
               def details(process_id)
                 current_state = Models::ConsumersState.current!

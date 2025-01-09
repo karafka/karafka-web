@@ -71,10 +71,6 @@ module Karafka
                 controller.performance
               end
 
-              r.get 'controls' do
-                controller.controls
-              end
-
               r.on String, 'jobs' do |process_id|
                 r.get 'running' do
                   controller.running_jobs(process_id)
@@ -93,6 +89,12 @@ module Karafka
 
               r.get String, 'details' do |process_id|
                 controller.details(process_id)
+              end
+
+              r.get 'controls' do
+                controller = Controllers::Consumers::ControlsController.new(params)
+
+                controller.index
               end
 
               r.redirect root_path('consumers/overview')
