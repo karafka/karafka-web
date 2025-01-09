@@ -37,26 +37,33 @@ module Karafka
             raise(Errors::Ui::ForbiddenError)
           end
 
+          # Sub-routes for given pieces of the Web UI
+          SUB_ROUTES = [
+            Routes::Assets,
+            Routes::Dashboard,
+            Routes::Consumers,
+            Routes::Jobs,
+            Routes::Routing,
+            Routes::Explorer,
+            Routes::Messages,
+            Routes::RecurringTasks,
+            Routes::ScheduledMessages,
+            Routes::Health,
+            Routes::Cluster,
+            Routes::Topics,
+            Routes::Errors,
+            Routes::Dlq,
+            Routes::Status,
+            Routes::Support,
+            Routes::Ux
+          ].freeze
+
+          private_constant :SUB_ROUTES
+
           route do |r|
             r.root { r.redirect root_path('dashboard') }
 
-            Routes::Assets.bind(self, r)
-            Routes::Dashboard.bind(self, r)
-            Routes::Consumers.bind(self, r)
-            Routes::Jobs.bind(self, r)
-            Routes::Routing.bind(self, r)
-            Routes::Explorer.bind(self, r)
-            Routes::Messages.bind(self, r)
-            Routes::RecurringTasks.bind(self, r)
-            Routes::ScheduledMessages.bind(self, r)
-            Routes::Health.bind(self, r)
-            Routes::Cluster.bind(self, r)
-            Routes::Topics.bind(self, r)
-            Routes::Errors.bind(self, r)
-            Routes::Dlq.bind(self, r)
-            Routes::Status.bind(self, r)
-            Routes::Support.bind(self, r)
-            Routes::Ux.bind(self, r)
+            SUB_ROUTES.each { |sub_route| sub_route.bind(self, r) }
           end
         end
       end
