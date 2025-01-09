@@ -9,7 +9,7 @@ RSpec.describe_current do
   before { topics_config.consumers.commands = commands_topic }
 
   describe '#trace' do
-    before { post "commanding/#{process_id}/trace" }
+    before { post "consumers/commanding/#{process_id}/trace" }
 
     it do
       expect(response.status).to eq(302)
@@ -31,7 +31,7 @@ RSpec.describe_current do
   end
 
   describe '#quiet' do
-    before { post "commanding/#{process_id}/quiet" }
+    before { post "consumers/commanding/#{process_id}/quiet" }
 
     it do
       expect(response.status).to eq(302)
@@ -53,7 +53,7 @@ RSpec.describe_current do
   end
 
   describe '#stop' do
-    before { post "commanding/#{process_id}/stop" }
+    before { post "consumers/commanding/#{process_id}/stop" }
 
     it do
       expect(response.status).to eq(302)
@@ -75,7 +75,7 @@ RSpec.describe_current do
   end
 
   describe '#quiet_all' do
-    before { post 'commanding/quiet_all' }
+    before { post 'consumers/commanding/quiet_all' }
 
     it do
       expect(response.status).to eq(302)
@@ -97,7 +97,7 @@ RSpec.describe_current do
   end
 
   describe '#stop_all' do
-    before { post 'commanding/stop_all' }
+    before { post 'consumers/commanding/stop_all' }
 
     it do
       expect(response.status).to eq(302)

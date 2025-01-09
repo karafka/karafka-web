@@ -115,33 +115,33 @@ module Karafka
                 end
               end
 
+              r.on 'commanding' do
+                controller = Controllers::Consumers::CommandingController.new(params)
+
+                r.post 'quiet_all' do
+                  controller.quiet_all
+                end
+
+                r.post 'stop_all' do
+                  controller.stop_all
+                end
+
+                r.on String do |process_id|
+                  r.post 'trace' do
+                    controller.trace(process_id)
+                  end
+
+                  r.post 'quiet' do
+                    controller.quiet(process_id)
+                  end
+
+                  r.post 'stop' do
+                    controller.stop(process_id)
+                  end
+                end
+              end
+
               r.redirect root_path('consumers/overview')
-            end
-
-            r.on 'commanding' do
-              controller = Controllers::Consumers::CommandingController.new(params)
-
-              r.post 'quiet_all' do
-                controller.quiet_all
-              end
-
-              r.post 'stop_all' do
-                controller.stop_all
-              end
-
-              r.on String do |process_id|
-                r.post 'trace' do
-                  controller.trace(process_id)
-                end
-
-                r.post 'quiet' do
-                  controller.quiet(process_id)
-                end
-
-                r.post 'stop' do
-                  controller.stop(process_id)
-                end
-              end
             end
 
             r.on 'jobs' do
