@@ -13,7 +13,6 @@ module Karafka
 
         # Aggregates consumers state into a single current state representation
         def consume
-          sleep(rand + 3)
           bootstrap!
 
           consumers_messages = messages.select { |message| message.payload[:type] == 'consumer' }
