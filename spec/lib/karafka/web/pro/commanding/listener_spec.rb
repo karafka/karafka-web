@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# This code is part of Karafka Pro, a commercial component not licensed under LGPL.
+# See LICENSE for details.
+
 RSpec.describe_current do
   let(:listener) { described_class.new }
   let(:iterator_double) { instance_double(Karafka::Pro::Iterator) }
