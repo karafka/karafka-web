@@ -72,12 +72,14 @@ module Karafka
               end
 
               r.on String, 'jobs' do |process_id|
+                controller = Controllers::Consumers::JobsController.new(params)
+
                 r.get 'running' do
-                  controller.running_jobs(process_id)
+                  controller.running(process_id)
                 end
 
                 r.get 'pending' do
-                  controller.pending_jobs(process_id)
+                  controller.pending(process_id)
                 end
 
                 r.redirect root_path("consumers/#{process_id}/jobs/running")

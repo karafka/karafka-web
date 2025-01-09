@@ -12,14 +12,6 @@
   </li>
 <% end %>
 
-<% if current_path.include?('/controls') %>
-  <li>
-    <a href="<%= root_path('consumers', 'controls') %>">
-      Controls
-    </a>
-  </li>
-<% end %>
-
 <% if @process %>
   <li>
     <a href="<%= root_path('consumers', @process.id, 'subscriptions') %>">
@@ -27,19 +19,7 @@
     </a>
   </li>
 
-  <% if current_path.include?('/jobs') %>
-    <li>
-      <a href="<%= root_path('consumers', @process.id, 'jobs') %>">
-        Jobs
-      </a>
-    </li>
-
-    <li>
-      <a href="<%= root_path('consumers', @process.id, 'jobs') %>">
-        Running
-      </a>
-    </li>
-  <% elsif current_path.include?('/subscriptions') %>
+  <% if current_path.include?('/subscriptions') %>
     <li>
       <a href="<%= root_path('consumers', @process.id, 'subscriptions') %>">
         Subscriptions

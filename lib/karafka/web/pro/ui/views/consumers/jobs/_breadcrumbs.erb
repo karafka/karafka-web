@@ -1,0 +1,33 @@
+<li>
+  <a href="<%= root_path('consumers/overview') %>">
+    Consumers
+  </a>
+</li>
+
+<li>
+  <a href="<%= root_path('consumers', @process.id, 'subscriptions') %>">
+    <%== truncate(@process.id, strategy: :middle) %>
+  </a>
+</li>
+
+<li>
+  <a href="<%= root_path('consumers', @process.id, 'jobs') %>">
+    Jobs
+  </a>
+</li>
+
+<% if current_path.include?('/running') %>
+  <li>
+    <a href="<%= root_path('consumers', @process.id, 'jobs', 'pending') %>">
+      Running
+    </a>
+  </li>
+<% end %>
+
+<% if current_path.include?('/pending') %>
+  <li>
+    <a href="<%= root_path('consumers', @process.id, 'jobs', 'pending') %>">
+      Pending
+    </a>
+  </li>
+<% end %>
