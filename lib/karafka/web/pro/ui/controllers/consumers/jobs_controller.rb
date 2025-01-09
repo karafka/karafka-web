@@ -34,6 +34,7 @@ module Karafka
               ].freeze
 
               # Shows all running jobs of a consumer
+              # @param process_id [String]
               def running(process_id)
                 details(process_id)
 
@@ -45,6 +46,7 @@ module Karafka
               end
 
               # Shows all pending jobs of a consumer
+              # @param process_id [String]
               def pending(process_id)
                 details(process_id)
 
