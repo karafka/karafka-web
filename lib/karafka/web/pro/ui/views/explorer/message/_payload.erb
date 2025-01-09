@@ -1,3 +1,6 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
 <% if @visibility_filter.payload?(@message) %>
   <% if @safe_payload.failure? %>
     <%==

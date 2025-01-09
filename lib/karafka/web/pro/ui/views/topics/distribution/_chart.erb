@@ -1,3 +1,6 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
 <% data = { 'Estimated count': @distribution.map { [_1.partition_id, _1.count] } }.to_json %>
 <div class="mb-5">
   <%== partial 'shared/charts/bar', locals: { data: data, id: 'distribution' } %>
