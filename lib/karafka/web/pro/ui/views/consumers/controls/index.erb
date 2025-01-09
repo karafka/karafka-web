@@ -5,7 +5,7 @@
 <% unless @processes.empty? %>
   <div class="col-span-12 flex justify-end space-x-2 mb-6">
     <%
-      quiet_all_path = root_path('commanding', 'quiet_all')
+      quiet_all_path = root_path('consumers', 'commanding', 'quiet_all')
     %>
     <form action="<%= quiet_all_path %>" method="post" class="inline-flex items-center">
       <%== csrf_tag(quiet_all_path) %>
@@ -16,7 +16,7 @@
     </form>
 
     <%
-      stop_all_path = root_path('commanding', 'stop_all')
+      stop_all_path = root_path('consumers', 'commanding', 'stop_all')
     %>
     <form action="<%= stop_all_path %>" method="post" class="inline-flex items-center">
       <%== csrf_tag(stop_all_path) %>

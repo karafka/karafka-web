@@ -45,7 +45,7 @@
 
   <td class="commands-inline-3">
     <%
-      trace_path = root_path('commanding', process.id, 'trace')
+      trace_path = root_path('consumers', 'commanding', process.id, 'trace')
       disabled_class = process.status != 'stopped' ? '' : 'btn-disabled'
     %>
     <form action="<%= trace_path %>" method="post" class="inline" title="Trace">
@@ -57,7 +57,7 @@
     </form>
 
     <%
-      quiet_path = root_path('commanding', process.id, 'quiet')
+      quiet_path = root_path('consumers', 'commanding', process.id, 'quiet')
       disabled_class = process.status == 'running' ? '' : 'btn-disabled'
 
       if process.execution_mode == 'standalone'
@@ -75,7 +75,7 @@
     </form>
 
     <%
-      stop_path = root_path('commanding', process.id, 'stop')
+      stop_path = root_path('consumers', 'commanding', process.id, 'stop')
       disabled_class = process.status != 'stopping' && process.status != 'stopped' ? '' : 'btn-disabled'
 
       if process.execution_mode == 'standalone'

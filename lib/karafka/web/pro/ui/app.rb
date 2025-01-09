@@ -67,6 +67,14 @@ module Karafka
                 controller.index
               end
 
+              r.get String, 'subscriptions' do |process_id|
+                controller.subscriptions(process_id)
+              end
+
+              r.get String, 'details' do |process_id|
+                controller.details(process_id)
+              end
+
               r.get 'performance' do
                 controller.performance
               end
@@ -85,63 +93,55 @@ module Karafka
                 r.redirect root_path("consumers/#{process_id}/jobs/running")
               end
 
-              r.get String, 'subscriptions' do |process_id|
-                controller.subscriptions(process_id)
-              end
-
-              r.get String, 'details' do |process_id|
-                controller.details(process_id)
-              end
-
               r.get 'controls' do
                 controller = Controllers::Consumers::ControlsController.new(params)
 
                 controller.index
               end
 
+              r.on 'commands' do
+                controller = Controllers::Consumers::CommandsController.new(params)
+
+                r.on Integer do |offset_id|
+                  controller.show(offset_id)
+                end
+
+                r.get 'recent' do
+                  controller.recent
+                end
+
+                r.get do
+                  controller.index
+                end
+              end
+
+              r.on 'commanding' do
+                controller = Controllers::Consumers::CommandingController.new(params)
+
+                r.post 'quiet_all' do
+                  controller.quiet_all
+                end
+
+                r.post 'stop_all' do
+                  controller.stop_all
+                end
+
+                r.on String do |process_id|
+                  r.post 'trace' do
+                    controller.trace(process_id)
+                  end
+
+                  r.post 'quiet' do
+                    controller.quiet(process_id)
+                  end
+
+                  r.post 'stop' do
+                    controller.stop(process_id)
+                  end
+                end
+              end
+
               r.redirect root_path('consumers/overview')
-            end
-
-            r.on 'commands' do
-              controller = Controllers::Consumers::CommandsController.new(params)
-
-              r.on Integer do |offset_id|
-                controller.show(offset_id)
-              end
-
-              r.get 'recent' do
-                controller.recent
-              end
-
-              r.get do
-                controller.index
-              end
-            end
-
-            r.on 'commanding' do
-              controller = Controllers::Consumers::CommandingController.new(params)
-
-              r.post 'quiet_all' do
-                controller.quiet_all
-              end
-
-              r.post 'stop_all' do
-                controller.stop_all
-              end
-
-              r.on String do |process_id|
-                r.post 'trace' do
-                  controller.trace(process_id)
-                end
-
-                r.post 'quiet' do
-                  controller.quiet(process_id)
-                end
-
-                r.post 'stop' do
-                  controller.stop(process_id)
-                end
-              end
             end
 
             r.on 'jobs' do
