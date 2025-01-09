@@ -6,7 +6,7 @@
 
 <% if current_path.include?('/commands') %>
   <li>
-    <a href="<%= root_path('commands') %>">
+    <a href="<%= root_path('consumers', 'commands') %>">
       Commands
     </a>
   </li>
@@ -14,7 +14,7 @@
 
 <% if @command_message %>
   <li>
-    <a href="<%= root_path('commands', @command_message.offset) %>">
+    <a href="<%= root_path('consumers', 'commands', @command_message.offset) %>">
       <%= @command_message.offset %>
     </a>
   </li>
