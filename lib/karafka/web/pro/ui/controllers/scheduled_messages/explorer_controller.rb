@@ -16,7 +16,7 @@ module Karafka
               #
               # @param topic_id [String]
               def topic(topic_id)
-                response = Controllers::ExplorerController
+                response = Controllers::Explorer::ExplorerController
                            .new(@params)
                            .topic(topic_id)
 
@@ -28,7 +28,7 @@ module Karafka
               # @param topic_id [String]
               # @param partition_id [Integer]
               def partition(topic_id, partition_id)
-                response = Controllers::ExplorerController
+                response = Controllers::Explorer::ExplorerController
                            .new(@params)
                            .partition(topic_id, partition_id)
 
@@ -42,7 +42,7 @@ module Karafka
               # @param partition_id [Integer]
               # @param time [Time] time of the message
               def closest(topic_id, partition_id, time)
-                response = Controllers::ExplorerController
+                response = Controllers::Explorer::ExplorerController
                            .new(@params)
                            .closest(topic_id, partition_id, time)
 

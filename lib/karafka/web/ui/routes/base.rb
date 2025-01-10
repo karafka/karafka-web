@@ -21,8 +21,12 @@ module Karafka
             #
             # @param app [Karafka::Web::Ui::App] roda app
             # @param request [Karafka::Web::Ui::App::RodaRequest] roda request
+            # @return [nil] We should always return nil so Roda does not interpret it as a custom
+            #   result
             def bind(app, request)
               app.instance_exec(request, &@route_block)
+
+              nil
             end
           end
         end

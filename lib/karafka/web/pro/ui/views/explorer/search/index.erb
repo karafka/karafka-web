@@ -3,30 +3,30 @@
 
 <% view_title @search_criteria ? "Search Results from #{@topic_id}" : @topic_id %>
 
-<%== partial 'search/search_criteria' %>
+<%== partial 'explorer/search/search_criteria' %>
 
 <div class="col-span-12">
   <% unless @search_criteria %>
-    <%== partial 'search/no_search_criteria' %>
+    <%== partial 'explorer/search/no_search_criteria' %>
   <% end %>
 
   <% if @messages && @search_details[:stop_reason] == :timeout %>
-    <%== partial 'search/timeout' %>
+    <%== partial 'explorer/search/timeout' %>
   <% end %>
 
   <% if @errors.any? %>
-    <%== partial 'search/fix_errors' %>
+    <%== partial 'explorer/search/fix_errors' %>
   <% elsif @messages %>
-    <%== partial 'search/metadata' %>
+    <%== partial 'explorer/search/metadata' %>
 
     <% if @messages.empty? && params.current_page == 1 %>
-      <%== partial 'search/no_results' %>
+      <%== partial 'explorer/search/no_results' %>
     <% elsif @messages.empty? %>
       <%== partial 'shared/no_paginated_data' %>
     <% else %>
-      <%== partial('explorer/partition/messages') %>
+      <%== partial('explorer/explorer/partition/messages') %>
     <% end %>
   <% end %>
 </div>
 
-<%== partial 'search/search_modal' %>
+<%== partial 'explorer/search/search_modal' %>

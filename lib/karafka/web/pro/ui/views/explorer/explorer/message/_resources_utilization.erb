@@ -6,7 +6,7 @@
     <tbody>
       <%==
         partial(
-          'explorer/messages/detail',
+          'explorer/explorer/messages/detail',
           locals: {
             k: 'key.bytesize',
             v: format_memory((@message.raw_key&.bytesize || 0) / 1024.0)
@@ -54,7 +54,7 @@
 
       <%==
         partial(
-          'explorer/messages/detail',
+          'explorer/explorer/messages/detail',
           locals: {
             k: 'headers.bytesize',
             v: format_memory(kbytesize)
@@ -91,7 +91,7 @@
 
       <%==
         partial(
-          'explorer/messages/detail',
+          'explorer/explorer/messages/detail',
           locals: {
             k: 'payload.bytesize',
             v: format_memory((@message.raw_payload&.bytesize || 0) / 1024.0)

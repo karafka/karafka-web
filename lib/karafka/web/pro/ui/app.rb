@@ -45,7 +45,6 @@ module Karafka
             Routes::Jobs,
             Routes::Routing,
             Routes::Explorer,
-            Routes::Messages,
             Routes::RecurringTasks,
             Routes::ScheduledMessages,
             Routes::Health,
@@ -64,6 +63,8 @@ module Karafka
             r.root { r.redirect root_path('dashboard') }
 
             SUB_ROUTES.each { |sub_route| sub_route.bind(self, r) }
+
+            nil
           end
         end
       end

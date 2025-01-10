@@ -32,6 +32,8 @@ module Karafka
           r.root { r.redirect root_path('dashboard') }
 
           SUB_ROUTES.each { |sub_route| sub_route.bind(self, r) }
+
+          nil
         end
       end
     end

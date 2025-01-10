@@ -4,13 +4,13 @@
 <% view_title 'Explorer' %>
 
 <% if @topics.empty? %>
-  <%== partial 'explorer/no_topics' %>
+  <%== partial 'explorer/explorer/no_topics' %>
 <% else %>
   <div class="topic-tiles">
     <%==
       each_partial(
         @topics,
-        'explorer/topic'
+        'explorer/explorer/topic'
       )
     %>
   </div>
