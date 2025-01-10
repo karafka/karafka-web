@@ -10,7 +10,7 @@ RSpec.describe_current do
 
   describe '#republish' do
     context 'when we want to republish message from a non-existing topic' do
-      before { post 'messages/non-existing/0/1/republish' }
+      before { post 'explorer/messages/non-existing/0/1/republish' }
 
       it do
         expect(response).not_to be_ok
@@ -24,7 +24,7 @@ RSpec.describe_current do
 
       before do
         produce(topic, payload)
-        post "messages/#{topic}/0/0/republish"
+        post "explorer/messages/#{topic}/0/0/republish"
       end
 
       it do
@@ -44,7 +44,7 @@ RSpec.describe_current do
           .and_return(false)
 
         produce(topic, payload)
-        post "messages/#{topic}/0/0/republish"
+        post "explorer/messages/#{topic}/0/0/republish"
       end
 
       it do
@@ -56,7 +56,7 @@ RSpec.describe_current do
 
   describe '#download' do
     context 'when we want to download message from a non-existing topic' do
-      before { get 'messages/non-existing/0/1/download' }
+      before { get 'explorer/messages/non-existing/0/1/download' }
 
       it do
         expect(response).not_to be_ok
@@ -71,7 +71,7 @@ RSpec.describe_current do
 
       before do
         produce(topic, payload)
-        get "messages/#{topic}/0/0/download"
+        get "explorer/messages/#{topic}/0/0/download"
       end
 
       it do
@@ -91,7 +91,7 @@ RSpec.describe_current do
           .and_return(false)
 
         produce(topic, payload)
-        get "messages/#{topic}/0/0/download"
+        get "explorer/messages/#{topic}/0/0/download"
       end
 
       it do
@@ -103,7 +103,7 @@ RSpec.describe_current do
 
   describe '#export' do
     context 'when we want to export message from a non-existing topic' do
-      before { get 'messages/non-existing/0/1/export' }
+      before { get 'explorer/messages/non-existing/0/1/export' }
 
       it do
         expect(response).not_to be_ok
@@ -118,7 +118,7 @@ RSpec.describe_current do
 
       before do
         produce(topic, payload)
-        get "messages/#{topic}/0/0/export"
+        get "explorer/messages/#{topic}/0/0/export"
       end
 
       it do
@@ -145,7 +145,7 @@ RSpec.describe_current do
         end
 
         produce(topic, payload)
-        get "messages/#{topic}/0/0/export"
+        get "explorer/messages/#{topic}/0/0/export"
       end
 
       it 'expect to use custom deserializer' do
@@ -165,7 +165,7 @@ RSpec.describe_current do
           .and_return(false)
 
         produce(topic, payload)
-        get "messages/#{topic}/0/0/export"
+        get "explorer/messages/#{topic}/0/0/export"
       end
 
       it do

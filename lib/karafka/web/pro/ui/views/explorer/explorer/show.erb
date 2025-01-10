@@ -4,7 +4,7 @@
 <% view_title "Message with offset #{@message.offset} from partition #{@message.partition}" %>
 
 <%
-  republish_path = root_path('messages', @message.topic, @message.partition, @message.offset, 'republish')
+  republish_path = root_path('explorer', 'messages', @message.topic, @message.partition, @message.offset, 'republish')
   surrounding_path = explorer_path(@message.topic, @message.partition, @message.offset, 'surrounding')
 %>
 
@@ -35,7 +35,7 @@
 
     <% if @visibility_filter.download?(@message) %>
       <a
-        href="<%= root_path('messages', @message.topic, @message.partition, @message.offset, 'download') %>"
+        href="<%= root_path('explorer', 'messages', @message.topic, @message.partition, @message.offset, 'download') %>"
         class="btn-action"
         title="Download raw payload"
         data-turbo="false"
@@ -46,7 +46,7 @@
 
     <% if @visibility_filter.export?(@message) && @safe_payload.success? %>
       <a
-        href="<%= root_path('messages', @message.topic, @message.partition, @message.offset, 'export') %>"
+        href="<%= root_path('explorer', 'messages', @message.topic, @message.partition, @message.offset, 'export') %>"
         class="btn-action"
         title="Export as JSON"
         data-turbo="false"
@@ -81,7 +81,7 @@
       Utilization
     </h2>
 
-    <%== partial 'explorer/message/resources_utilization' %>
+    <%== partial 'explorer/explorer/message/resources_utilization' %>
   </div>
 
   <div id="metadata-details">
@@ -89,12 +89,12 @@
       Metadata
     </h2>
 
-    <%== partial 'explorer/message/metadata' %>
+    <%== partial 'explorer/explorer/message/metadata' %>
   </div>
 
   <h2 class="h2">
     Payload
   </h2>
 
-  <%== partial 'explorer/message/payload' %>
+  <%== partial 'explorer/explorer/message/payload' %>
 </div>

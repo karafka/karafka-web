@@ -5,14 +5,14 @@
   <% if @safe_payload.failure? %>
     <%==
       partial(
-        'explorer/failed_deserialization',
+        'explorer/explorer/failed_deserialization',
         locals: { attribute: 'payload', error: @safe_payload.error }
       )
     %>
   <% end %>
 
   <% if (@message.raw_payload&.bytesize || 0) > Karafka::Web.config.ui.max_visible_payload_size %>
-    <%== partial('explorer/message/too_big_to_be_displayed') %>
+    <%== partial('explorer/explorer/message/too_big_to_be_displayed') %>
   <% else %>
     <% if @safe_payload.failure? %>
       <pre class="code"><code class="json"><%= @message.raw_payload %></code></pre>
@@ -21,5 +21,5 @@
     <% end %>
   <% end %>
 <% else %>
-  <%== partial 'explorer/filtered' %>
+  <%== partial 'explorer/explorer/filtered' %>
 <% end %>

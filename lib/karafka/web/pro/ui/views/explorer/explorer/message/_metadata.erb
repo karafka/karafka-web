@@ -4,7 +4,7 @@
 <% if @safe_key.failure? %>
   <%==
     partial(
-      'explorer/failed_deserialization',
+      'explorer/explorer/failed_deserialization',
       locals: {
         attribute: 'key',
         error: @safe_key.error
@@ -16,7 +16,7 @@
 <% if @safe_headers.failure? %>
   <%==
     partial(
-      'explorer/failed_deserialization',
+      'explorer/explorer/failed_deserialization',
       locals: {
         attribute: 'headers',
         error: @safe_headers.error
@@ -30,14 +30,14 @@
     <tbody>
       <%==
         partial(
-          'explorer/messages/key',
+          'explorer/explorer/messages/key',
           locals: { message: @message }
         )
       %>
 
       <%==
         partial(
-          'explorer/messages/detail',
+          'explorer/explorer/messages/detail',
           locals: {
             k: 'time',
             v: @message.timestamp
@@ -47,7 +47,7 @@
 
       <%==
         partial(
-          'explorer/messages/detail',
+          'explorer/explorer/messages/detail',
           locals: {
             k: 'timestamp',
             v: (@message.timestamp.to_f * 1_000).to_i
@@ -59,7 +59,7 @@
       <% @message.metadata.to_h.except(*special).each do |k, v| %>
         <%==
           partial(
-            'explorer/messages/detail',
+            'explorer/explorer/messages/detail',
             locals: {
               k: k,
               v: v
@@ -97,7 +97,7 @@
 
       <%==
         partial(
-          'explorer/messages/headers',
+          'explorer/explorer/messages/headers',
           locals: { message: @message }
         )
       %>

@@ -33,11 +33,11 @@
 
 <div class="col-span-12">
   <% if @limited %>
-    <%== partial('explorer/topic/limited') %>
+    <%== partial('explorer/explorer/topic/limited') %>
   <% end %>
 
   <% if @error_messages.empty? && params.current_page == 1 %>
-    <%== partial 'explorer/topic/empty' %>
+    <%== partial 'explorer/explorer/topic/empty' %>
   <% else %>
     <% content_for :table_metadata do %>
       <p class="table_metadata">

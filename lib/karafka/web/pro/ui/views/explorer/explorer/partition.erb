@@ -39,19 +39,19 @@
 
 <div class="col-span-8 mb-3">
   <section class="actions">
-    <%== partial 'explorer/selector' %>
+    <%== partial 'explorer/explorer/selector' %>
   </section>
 </div>
 
 <div class="col-span-12">
   <% if @limited %>
-    <%== partial('explorer/topic/limited') %>
+    <%== partial('explorer/explorer/topic/limited') %>
   <% end %>
 
   <% if @watermark_offsets.empty? && params.current_page == 1 %>
-    <%== partial 'explorer/partition/empty' %>
+    <%== partial 'explorer/explorer/partition/empty' %>
   <% elsif @watermark_offsets.cleaned? && params.current_page == 1 %>
-    <%== partial 'explorer/partition/cleaned' %>
+    <%== partial 'explorer/explorer/partition/cleaned' %>
   <% elsif @messages.empty? %>
     <%== partial 'shared/no_paginated_data' %>
   <% else %>
@@ -68,6 +68,6 @@
       </p>
     <% end %>
 
-    <%== partial('explorer/partition/messages') %>
+    <%== partial('explorer/explorer/partition/messages') %>
   <% end %>
 </div>
