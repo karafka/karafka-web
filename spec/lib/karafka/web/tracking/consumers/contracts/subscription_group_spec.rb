@@ -29,7 +29,8 @@ RSpec.describe_current do
               ls_offset_fd: 0,
               fetch_state: 'active',
               poll_state: 'active',
-              poll_state_ch: 0
+              poll_state_ch: 0,
+              transactional: false
             }
           }
         }

@@ -41,7 +41,8 @@ RSpec.describe_current do
                   eof_offset: 0,
                   ls_offset: 0,
                   ls_offset_d: 0,
-                  ls_offset_fd: 0
+                  ls_offset_fd: 0,
+                  transactional: false
                 }
               }
             }

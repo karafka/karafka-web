@@ -23,7 +23,8 @@ RSpec.describe_current do
       eof_offset: 0,
       ls_offset: 0,
       ls_offset_d: 0,
-      ls_offset_fd: 0
+      ls_offset_fd: 0,
+      transactional: false
     }
   end
 
@@ -78,6 +79,7 @@ RSpec.describe_current do
     ls_offset_d
     ls_offset_fd
     poll_state_ch
+    transactional
   ].each do |key|
     context "when #{key} is not numeric" do
       before { config[key] = '2' }

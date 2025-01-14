@@ -93,7 +93,8 @@ module Karafka
             Tracking::Consumers::Listeners::Statistics.new,
             Tracking::Consumers::Listeners::Pausing.new,
             Tracking::Consumers::Listeners::Processing.new,
-            Tracking::Consumers::Listeners::Tags.new
+            Tracking::Consumers::Listeners::Tags.new,
+            Tracking::Consumers::Listeners::Transactions.new
           ]
         end
 
