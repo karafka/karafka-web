@@ -54,7 +54,12 @@ module Karafka
                 polled_at: monotonic_now,
                 topics: Hash.new do |h1, topic|
                   h1[topic] = Hash.new do |h2, partition|
-                    h2[partition] = { seek_offset: -1, transactional: false }
+                    # We track those details in case we need to fill statistical gaps for
+                    # transactional consumers
+                    h2[partition] = {
+                      seek_offset: -1,
+                      transactional: false
+                    }
                   end
                 end
               }
