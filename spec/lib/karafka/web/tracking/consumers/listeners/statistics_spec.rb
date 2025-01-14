@@ -26,6 +26,8 @@ RSpec.describe_current do
     listener.on_statistics_emitted(event)
   end
 
+  after { sampler.consumer_groups.clear }
+
   it { expect(sampler.consumer_groups['cgid']).not_to be_empty }
   it { expect(sampler.consumer_groups['cgid'][:id]).to eq('cgid') }
   it { expect(sg_details.keys).to include('sgid') }
