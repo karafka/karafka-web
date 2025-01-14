@@ -42,7 +42,7 @@ RSpec.describe_current do
       expect(topic_data[0][:hi_offset]).to eq(327_356)
       expect(topic_data[0][:id]).to eq(0)
       expect(topic_data[0][:poll_state]).to eq('active')
-      expect(topic_data[0][:process][:schema_version]).to eq('1.4.0')
+      expect(topic_data[0][:process][:schema_version]).to eq('1.4.1')
       expect(topic_data[0][:process][:type]).to eq('consumer')
       expect(topic_data[0][:process][:dispatched_at]).to eq(2_690_883_271.575_513)
       expect(topic_data[0][:process][:process][:concurrency]).to eq(2)
@@ -94,6 +94,7 @@ RSpec.describe_current do
         lag lag_d lag_stored lag_stored_d committed_offset stored_offset fetch_state hi_offset id
         poll_state process hi_offset_fd stored_offset_fd lo_offset ls_offset ls_offset_fd
         eof_offset committed_offset_fd poll_state_ch partition_id lag_hybrid lag_hybrid_d
+        transactional
       ].sort
       expect(sg[:topics][:default][:partitions]['0'.to_sym].keys.sort).to eq(keys)
     end
