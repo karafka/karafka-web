@@ -28,6 +28,7 @@ module Karafka
             required(:ls_offset) { |val| val.is_a?(Integer) }
             required(:ls_offset_d) { |val| val.is_a?(Integer) }
             required(:ls_offset_fd) { |val| val.is_a?(Integer) && val >= 0 }
+            required(:transactional) { |val| [true, false].include?(val) }
           end
         end
       end

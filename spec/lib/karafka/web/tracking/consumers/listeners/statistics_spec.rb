@@ -20,13 +20,13 @@ RSpec.describe_current do
   before do
     # This data is set in the connections listener prior to any polling
     sampler.track do |sampler|
-      sampler.subscription_groups['sgid'] = {
-        polled_at: sampler.monotonic_now
-      }
+      sampler.subscription_groups['sgid'][:polled_at] = sampler.monotonic_now
     end
 
     listener.on_statistics_emitted(event)
   end
+
+  after { sampler.consumer_groups.clear }
 
   it { expect(sampler.consumer_groups['cgid']).not_to be_empty }
   it { expect(sampler.consumer_groups['cgid'][:id]).to eq('cgid') }

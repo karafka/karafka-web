@@ -15,7 +15,7 @@ module Karafka
           # Current schema version
           # This is used for detecting incompatible changes and not using outdated data during
           # upgrades
-          SCHEMA_VERSION = '1.4.0'
+          SCHEMA_VERSION = '1.4.1'
 
           # Counters that count events occurrences during the given window
           COUNTERS_BASE = {
@@ -51,7 +51,17 @@ module Karafka
             @subscription_groups = Hash.new do |h, sg_id|
               h[sg_id] = {
                 id: sg_id,
-                polled_at: monotonic_now
+                polled_at: monotonic_now,
+                topics: Hash.new do |h1, topic|
+                  h1[topic] = Hash.new do |h2, partition|
+                    # We track those details in case we need to fill statistical gaps for
+                    # transactional consumers
+                    h2[partition] = {
+                      seek_offset: -1,
+                      transactional: false
+                    }
+                  end
+                end
               }
             end
 
@@ -308,9 +318,50 @@ module Karafka
                   # This should be always available, since the subscription group polled at time
                   # is first initialized before we start polling, there should be no case where
                   # we have statistics about a given subscription group but we do not have the
-                  # last polling time
-                  polled_at = subscription_groups.fetch(sg_id).fetch(:polled_at)
+                  # sg reference
+                  sg_tracking = subscription_groups.fetch(sg_id)
+
+                  polled_at = sg_tracking.fetch(:polled_at)
                   sg_details[:state][:poll_age] = (monotonic_now - polled_at).round(2)
+
+                  sg_details[:topics].each do |topic_name, topic_details|
+                    topic_details[:partitions].each do |partition_id, partition_details|
+                      # Always assume non-transactional as default. Will be overwritten by the
+                      # consumer level details if collected
+                      partition_details[:transactional] ||= false
+
+                      # If we have stored offset or stored lag, it means it's not a transactional
+                      # consumer at all so we can skip enrichment
+                      next if partition_details[:lag_stored].positive?
+                      next if partition_details[:stored_offset].positive?
+                      next unless sg_tracking[:topics].key?(topic_name)
+                      next unless sg_tracking[:topics][topic_name].key?(partition_id)
+
+                      k_partition_details = sg_tracking[:topics][topic_name][partition_id]
+
+                      # If seek offset was not yey set, nothing to enrich
+                      next unless k_partition_details[:seek_offset].positive?
+
+                      partition_details[:transactional] = k_partition_details[:transactional]
+
+                      # Seek offset is always +1 from the last stored in Karafka
+                      stored_offset = k_partition_details[:seek_offset] - 1
+
+                      # In case of transactions we have to compute the lag ourselves
+                      # -1 because ls offset (or high watermark) is last + 1
+                      lag = partition_details[:ls_offset] - stored_offset
+                      # This can happen if ls_offset is refreshed slower than our stored offset
+                      # fetching from Karafka transactional layer
+                      lag = 0 if lag.negative?
+
+                      partition_details[:lag] = lag
+                      partition_details[:lag_d] = 0
+                      partition_details[:lag_stored] = lag
+                      partition_details[:lag_stored_d] = 0
+                      partition_details[:stored_offset] = stored_offset
+                      partition_details[:committed_offset] = stored_offset
+                    end
+                  end
                 end
               end
             end
