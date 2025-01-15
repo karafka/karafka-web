@@ -55,12 +55,6 @@ module Karafka
                 @timeout = Web.config.ui.search.timeout
                 @stop_reason = nil
                 @matched = []
-                # Key and headers may be used when presenting the search results, thus we do not
-                # clean them. Payload is not presented in the search results so it can be removed
-                # Pre Karafka 2.4.17 do not support granular cleaning and would never clean
-                # metadata. This should be removed once the minimal version of Karafka required
-                # by Web UI is 2.4.17.
-                @full_cleaning = ::Karafka::Messages::Message.instance_method(:clean!).arity.zero?
               end
 
               # Runs the search, collects search statistics and returns the results
@@ -185,7 +179,7 @@ module Karafka
                     @totals_stats[:matched] += 1
                   end
 
-                  @full_cleaning ? message.clean! : message.clean!(metadata: false)
+                  message.clean!(metadata: false)
                 end
 
                 @stop_reason ||= :eof
