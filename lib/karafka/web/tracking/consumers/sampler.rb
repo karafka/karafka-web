@@ -345,11 +345,12 @@ module Karafka
                       partition_details[:transactional] = k_partition_details[:transactional]
 
                       # Seek offset is always +1 from the last stored in Karafka
-                      stored_offset = k_partition_details[:seek_offset] - 1
+                      seek_offset = k_partition_details[:seek_offset]
+                      stored_offset = seek_offset - 1
 
                       # In case of transactions we have to compute the lag ourselves
                       # -1 because ls offset (or high watermark) is last + 1
-                      lag = partition_details[:ls_offset] - stored_offset
+                      lag = partition_details[:ls_offset] - seek_offset
                       # This can happen if ls_offset is refreshed slower than our stored offset
                       # fetching from Karafka transactional layer
                       lag = 0 if lag.negative?
