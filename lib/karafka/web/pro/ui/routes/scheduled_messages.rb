@@ -36,7 +36,14 @@ module Karafka
                   end
 
                   # Jumps to offset matching the expected time
-                  r.get String, Integer, Time do |topic_id, partition_id, time|
+                  r.get String, Integer, 'closest', Time do |topic_id, partition_id, time|
+                    controller.closest(topic_id, partition_id, time)
+                  end
+
+                  # Jumps to the offset matching the expected timestamp
+                  r.get String, Integer, 'closest', Integer do |topic_id, partition_id, timestamp|
+                    # To simplify we just convert timestamp to time with ms precision
+                    time = Time.at(timestamp / 1_000.0)
                     controller.closest(topic_id, partition_id, time)
                   end
                 end
