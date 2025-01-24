@@ -24,7 +24,7 @@
         <%== icon(:magnifying_glass) %>
       </a>
 
-      <% closest_path = scheduled_messages_explorer_path(@topic_id, @partition_id) %>
+      <% closest_path = scheduled_messages_explorer_path(@topic_id, @partition_id, 'closest') %>
       <input
         type="image"
         src="<%= asset_path('images/calendar.svg') %>"

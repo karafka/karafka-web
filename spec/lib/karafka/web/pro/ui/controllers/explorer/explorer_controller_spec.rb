@@ -859,8 +859,19 @@ RSpec.describe_current do
   end
 
   describe '#closest' do
-    context 'when requested topic does not exist' do
-      before { get 'explorer/topic/100/2023-10-10/12:12:12' }
+    let(:now_in_ms) { (Time.now.to_f * 1_000).round }
+
+    context 'when requested topic does not exist with date' do
+      before { get 'explorer/topic/100/closest/2023-10-10/12:12:12' }
+
+      it do
+        expect(response).not_to be_ok
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context 'when requested topic does not exist with timestamp' do
+      before { get 'explorer/topic/100/closest/0' }
 
       it do
         expect(response).not_to be_ok
@@ -869,7 +880,7 @@ RSpec.describe_current do
     end
 
     context 'when requested date is not a valid date' do
-      before { get 'explorer/topic/100/2023-13-10/27:12:12' }
+      before { get 'explorer/topic/100/closest/2023-13-10/27:12:12' }
 
       it do
         expect(response).not_to be_ok
@@ -877,10 +888,31 @@ RSpec.describe_current do
       end
     end
 
-    context 'when we have only one older message' do
+    context 'when requested date is not a valid timestamp' do
+      before { get 'explorer/topic/100/closest/03142341231' }
+
+      it do
+        expect(response).not_to be_ok
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context 'when we have only one older message with date' do
       before do
         produce(topic, '1')
-        get "explorer/#{topic}/0/2100-01-01/12:00:12"
+        get "explorer/#{topic}/0/closest/2100-01-01/12:00:12"
+      end
+
+      it do
+        expect(response.status).to eq(302)
+        expect(response.location).to eq("/explorer/#{topic}/0?offset=0")
+      end
+    end
+
+    context 'when we have only one older message with timestamp' do
+      before do
+        produce(topic, '1')
+        get "explorer/#{topic}/0/closest/#{now_in_ms + 100_000}"
       end
 
       it do
@@ -892,7 +924,19 @@ RSpec.describe_current do
     context 'when we have many messages and we request earlier time' do
       before do
         produce_many(topic, Array.new(100, '1'))
-        get "explorer/#{topic}/0/2000-01-01/12:00:12"
+        get "explorer/#{topic}/0/closest/2000-01-01/12:00:12"
+      end
+
+      it do
+        expect(response.status).to eq(302)
+        expect(response.location).to eq("/explorer/#{topic}/0?offset=0")
+      end
+    end
+
+    context 'when we have many messages and we request earlier timestamp' do
+      before do
+        produce_many(topic, Array.new(100, '1'))
+        get "explorer/#{topic}/0/closest/#{now_in_ms - 100_000}"
       end
 
       it do
@@ -906,7 +950,21 @@ RSpec.describe_current do
 
       before do
         produce_many(topic, Array.new(100, '1'), partition: 1)
-        get "explorer/#{topic}/1/2000-01-01/12:00:12"
+        get "explorer/#{topic}/1/closest/2000-01-01/12:00:12"
+      end
+
+      it do
+        expect(response.status).to eq(302)
+        expect(response.location).to eq("/explorer/#{topic}/1?offset=0")
+      end
+    end
+
+    context 'when we have many messages and we request earlier timestamp on a higher partition' do
+      let(:partitions) { 2 }
+
+      before do
+        produce_many(topic, Array.new(100, '1'), partition: 1)
+        get "explorer/#{topic}/1/closest/#{now_in_ms - 100_000}"
       end
 
       it do
@@ -918,7 +976,19 @@ RSpec.describe_current do
     context 'when we have many messages and we request later time' do
       before do
         produce_many(topic, Array.new(100, '1'))
-        get "explorer/#{topic}/0/2100-01-01/12:00:12"
+        get "explorer/#{topic}/0/closest/2100-01-01/12:00:12"
+      end
+
+      it do
+        expect(response.status).to eq(302)
+        expect(response.location).to eq("/explorer/#{topic}/0?offset=99")
+      end
+    end
+
+    context 'when we have many messages and we request later timestamp' do
+      before do
+        produce_many(topic, Array.new(100, '1'))
+        get "explorer/#{topic}/0/closest/#{now_in_ms + 100_000}"
       end
 
       it do
@@ -928,7 +998,16 @@ RSpec.describe_current do
     end
 
     context 'when we request a time on an empty topic partition' do
-      before { get "explorer/#{topic}/0/2100-01-01/12:00:12" }
+      before { get "explorer/#{topic}/0/closest/2100-01-01/12:00:12" }
+
+      it do
+        expect(response.status).to eq(302)
+        expect(response.location).to eq("/explorer/#{topic}/0")
+      end
+    end
+
+    context 'when we request a timestamp on an empty topic partition' do
+      before { get "explorer/#{topic}/0/closest/#{now_in_ms}" }
 
       it do
         expect(response.status).to eq(302)
