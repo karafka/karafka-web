@@ -112,6 +112,7 @@ module Karafka
         end
 
         plugin :class_matchers
+        plugin :symbol_matchers
 
         # Time matcher with optional hours, minutes and seconds
         TIME_MATCHER = %r{(\d{4}-\d{2}-\d{2}/?(\d{2})?(:\d{2})?(:\d{2})?)}
@@ -126,6 +127,16 @@ module Karafka
           [Time.parse(datetime)]
         rescue ArgumentError
           raise Errors::Ui::NotFoundError
+        end
+
+        # Partitions ids cannot be bigger than 32 bit C int. We use this matcher to ensure we
+        # only support that big partition numbers. Otherwise librdkafka would crash.
+        symbol_matcher :partition_id, /(\d{1,14})/ do |value|
+          int_value = value.to_i
+
+          raise Errors::Ui::NotFoundError unless int_value.between?(0, 2_147_483_647)
+
+          [int_value]
         end
 
         # Allows us to build current path with additional params + it merges existing params into

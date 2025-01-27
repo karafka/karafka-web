@@ -14,7 +14,7 @@ module Karafka
               r.on 'errors' do
                 controller = Controllers::ErrorsController.new(params)
 
-                r.get Integer, Integer do |partition_id, offset|
+                r.get :partition_id, Integer do |partition_id, offset|
                   if params.current_offset != -1
                     r.redirect root_path('errors', partition_id, params.current_offset)
                   else
@@ -22,7 +22,7 @@ module Karafka
                   end
                 end
 
-                r.get Integer do |partition_id|
+                r.get :partition_id do |partition_id|
                   controller.partition(partition_id)
                 end
 
