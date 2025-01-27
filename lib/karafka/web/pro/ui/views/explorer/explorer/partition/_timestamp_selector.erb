@@ -1,0 +1,33 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<div class="dropdown">
+  <button
+    class="btn-action"
+    title="Input timestamp to navigate through messages"
+  >
+    <%== icon(:clock) %>
+  </button>
+
+  <div class="dropdown-content p-4 bg-base-100 w-80 border border-base-300 shadow-lg z-50 rounded-box">
+    <form
+      class="form-control"
+      data-target="<%= target %>"
+      id="timestamp-form"
+    >
+      <input
+        type="number"
+        min="<%= Time.utc(2010, 1, 1).to_i * 1_000 %>"
+        max="<%= (Time.now.utc + 86_400).to_i * 1_000 %>"
+        required
+        class="input input-bordered input-sm"
+        placeholder="Enter timestamp"
+      />
+
+      <button
+        type="submit"
+        class="btn btn-primary btn-sm mt-4 btn-lockable"
+      >Go to timestamp</button>
+   </form>
+ </div>
+</div>

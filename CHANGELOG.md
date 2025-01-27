@@ -1,6 +1,7 @@
 # Karafka Web Changelog
 
 ## 0.11.0 (Unreleased)
+- [Feature] Provide ability to navigate to a timestamp in the Explorer (Pro).
 - [Enhancement] Provide better support for fully transactional consumers.
 - [Enhancement] Error out when `#setup` is called after `#enable!`.
 - [Fix] Fix incorrect breadcrumbs for pending consumer jobs.
