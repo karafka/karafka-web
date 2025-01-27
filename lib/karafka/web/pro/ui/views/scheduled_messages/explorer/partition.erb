@@ -25,17 +25,13 @@
       </a>
 
       <% closest_path = scheduled_messages_explorer_path(@topic_id, @partition_id, 'closest') %>
-      <input
-        type="image"
-        src="<%= asset_path('images/calendar.svg') %>"
-        width="45"
-        height="32"
-        class="btn-action p-1 opacity-60"
-        id="offset-lookup-datepicker"
-        value=""
-        title="Select a point in time to browse the topic partition data"
-        data-target="<%= closest_path %>"
-      />
+
+      <%==
+        partial(
+          'explorer/explorer/partition/time_selector',
+          locals: { target: closest_path }
+        )
+      %>
 
       <%==
         partial(
