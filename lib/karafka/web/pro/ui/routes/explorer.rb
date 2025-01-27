@@ -22,26 +22,34 @@ module Karafka
                 r.on 'messages' do
                   controller = Controllers::Explorer::MessagesController.new(params)
 
-                  r.post String, Integer, Integer, 'republish' do |topic_id, partition_id, offset|
+                  r.post(
+                    String, :partition_id, Integer, 'republish'
+                  ) do |topic_id, partition_id, offset|
                     controller.republish(topic_id, partition_id, offset)
                   end
 
-                  r.get String, Integer, Integer, 'download' do |topic_id, partition_id, offset|
+                  r.get(
+                    String, :partition_id, Integer, 'download'
+                  ) do |topic_id, partition_id, offset|
                     controller.download(topic_id, partition_id, offset)
                   end
 
-                  r.get String, Integer, Integer, 'export' do |topic_id, partition_id, offset|
+                  r.get(
+                    String, :partition_id, Integer, 'export'
+                  ) do |topic_id, partition_id, offset|
                     controller.export(topic_id, partition_id, offset)
                   end
                 end
 
                 controller = Controllers::Explorer::ExplorerController.new(params)
 
-                r.get String, Integer, 'recent' do |topic_id, partition_id|
+                r.get String, :partition_id, 'recent' do |topic_id, partition_id|
                   controller.recent(topic_id, partition_id)
                 end
 
-                r.get String, Integer, Integer, 'surrounding' do |topic_id, partition_id, offset|
+                r.get(
+                  String, :partition_id, Integer, 'surrounding'
+                ) do |topic_id, partition_id, offset|
                   controller.surrounding(topic_id, partition_id, offset)
                 end
 
@@ -50,18 +58,20 @@ module Karafka
                 end
 
                 # Jumps to offset matching the expected time
-                r.get String, Integer, 'closest', Time do |topic_id, partition_id, time|
+                r.get String, :partition_id, 'closest', Time do |topic_id, partition_id, time|
                   controller.closest(topic_id, partition_id, time)
                 end
 
                 # Jumps to the offset matching the expected timestamp
-                r.get String, Integer, 'closest', Integer do |topic_id, partition_id, timestamp|
+                r.get(
+                  String, :partition_id, 'closest', Integer
+                ) do |topic_id, partition_id, timestamp|
                   # To simplify we just convert timestamp to time with ms precision
                   time = Time.at(timestamp / 1_000.0)
                   controller.closest(topic_id, partition_id, time)
                 end
 
-                r.get String, Integer, Integer do |topic_id, partition_id, offset|
+                r.get String, :partition_id, Integer do |topic_id, partition_id, offset|
                   # If when viewing given message we get an offset of different message, we should
                   # redirect there. This allows us to support pagination with the current engine
                   if params.current_offset != -1
@@ -71,7 +81,7 @@ module Karafka
                   end
                 end
 
-                r.get String, Integer do |topic_id, partition_id|
+                r.get String, :partition_id do |topic_id, partition_id|
                   controller.partition(topic_id, partition_id)
                 end
 

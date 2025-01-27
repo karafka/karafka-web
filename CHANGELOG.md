@@ -4,6 +4,7 @@
 - [Feature] Provide ability to navigate to a timestamp in the Explorer (Pro).
 - [Enhancement] Provide better support for fully transactional consumers.
 - [Enhancement] Error out when `#setup` is called after `#enable!`.
+- [Fix] Direct URL access with too big partition causes librdkafka crash.
 - [Fix] Fix incorrect breadcrumbs for pending consumer jobs.
 - [Fix] Allow for using default search matchers in Karafka Web UI topics including Errors.
 - [Maintenance] Require `karafka-core` `>= 2.4.8` and `karafka` `>= 2.4.16`.

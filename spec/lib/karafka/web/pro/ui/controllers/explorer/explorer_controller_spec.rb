@@ -266,6 +266,15 @@ RSpec.describe_current do
       end
     end
 
+    context 'when given partition is more than 32bit C int' do
+      before { get "explorer/#{topic}/2147483648" }
+
+      it do
+        expect(response).not_to be_ok
+        expect(response.status).to eq(404)
+      end
+    end
+
     context 'when no data in the given partition' do
       before { get "explorer/#{topic}/0" }
 

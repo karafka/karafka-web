@@ -31,17 +31,19 @@ module Karafka
                     controller.topic(topic_id)
                   end
 
-                  r.get String, Integer do |topic_id, partition_id|
+                  r.get String, :partition_id do |topic_id, partition_id|
                     controller.partition(topic_id, partition_id)
                   end
 
                   # Jumps to offset matching the expected time
-                  r.get String, Integer, 'closest', Time do |topic_id, partition_id, time|
+                  r.get String, :partition_id, 'closest', Time do |topic_id, partition_id, time|
                     controller.closest(topic_id, partition_id, time)
                   end
 
                   # Jumps to the offset matching the expected timestamp
-                  r.get String, Integer, 'closest', Integer do |topic_id, partition_id, timestamp|
+                  r.get(
+                    String, :partition_id, 'closest', Integer
+                  ) do |topic_id, partition_id, timestamp|
                     # To simplify we just convert timestamp to time with ms precision
                     time = Time.at(timestamp / 1_000.0)
                     controller.closest(topic_id, partition_id, time)
@@ -52,7 +54,7 @@ module Karafka
                   controller = Controllers::ScheduledMessages::MessagesController.new(params)
 
                   r.post(
-                    String, Integer, Integer, 'cancel'
+                    String, :partition_id, Integer, 'cancel'
                   ) do |topic_id, partition_id, message_offset|
                     controller.cancel(topic_id, partition_id, message_offset)
                   end
