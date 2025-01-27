@@ -56,3 +56,15 @@ table td.commands-inline-3 {
 .drawer-side.collapsed:hover .btn-toggle-nav-collapsed::after {
   content: 'Expand';
 }
+
+.datepicker-input-wrapper {
+  margin-bottom: -5px;
+}
+
+[data-theme="dark"] .datepicker-input-wrapper input[type="image"]:not(:hover) {
+  filter: invert(1) brightness(0.7);
+}
+
+[data-theme="dark"] .datepicker-input-wrapper input[type="image"]:hover {
+  opacity: 1;
+}
