@@ -1,6 +1,7 @@
 # Karafka Web Changelog
 
 ## 0.11.0 (Unreleased)
+- [Feature] Support consumers that have mismatching schema.
 - [Feature] Provide ability to navigate to a timestamp in the Explorer (Pro).
 - [Enhancement] Provide better support for fully transactional consumers.
 - [Enhancement] Error out when `#setup` is called after `#enable!`.
@@ -8,6 +9,7 @@
 - [Fix] Direct URL access with too big partition causes librdkafka crash.
 - [Fix] Fix incorrect breadcrumbs for pending consumer jobs.
 - [Fix] Allow for using default search matchers in Karafka Web UI topics including Errors.
+- [Fix] Ensure that when flashes or alerts are visible, pages are not auto-refreshed (would cause them to dissapear).
 - [Maintenance] Require `karafka-core` `>= 2.4.8` and `karafka` `>= 2.4.16`.
 
 ## 0.10.4 (2024-11-26)

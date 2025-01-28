@@ -1,0 +1,31 @@
+<p class="mb-2">
+  Some consumers are using schema versions that do not match the Web UI schema
+  (<%= ::Karafka::Web::Tracking::Consumers::Sampler::SCHEMA_VERSION %>).
+</p>
+
+<p class="mb-4">
+  This typically occurs during gradual deployments when components are being updated incrementally. While these processes will be visible, their functionality will be limited until all components use matching schemas.
+</p>
+
+<div class="data-table-wrapper mb-0">
+ <table class="data-table">
+   <thead>
+     <tr>
+       <th>Process</th>
+       <th>Schema Version</th>
+     </tr>
+   </thead>
+   <tbody>
+    <% details[:incompatible].each do |process| %>
+      <tr>
+        <td><%= process.id %></td>
+        <td><%= process.schema_version %></td>
+      </tr>
+    <% end %>
+   </tbody>
+ </table>
+</div>
+
+<p>
+  To resolve this, please ensure all Karafka components are updated to use the same version.
+</p>

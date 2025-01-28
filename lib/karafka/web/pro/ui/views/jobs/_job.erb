@@ -1,42 +1,51 @@
 <%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
 <%# See LICENSE for details. %>
 
-<tr>
-  <td>
-    <a href="<%= root_path('consumers', job.process.id, 'subscriptions') %>">
-      <%== truncate(job.process.id, strategy: :middle) %>
-    </a>
-  </td>
-  <td>
-    <span class="badge badge-secondary" title="Consumer group: <%= job.consumer_group %>">
-      <%= job.topic %>:
-      <%= job.partition %>
-    </span>
-  </td>
-  <td>
-    <code><%= job.consumer %></code>
+<% if job.process.schema_compatible? %>
+  <tr>
+    <td>
+      <a href="<%= root_path('consumers', job.process.id, 'subscriptions') %>">
+        <%== truncate(job.process.id, strategy: :middle) %>
+      </a>
+    </td>
+    <td>
+      <span class="badge badge-secondary" title="Consumer group: <%= job.consumer_group %>">
+        <%= job.topic %>:
+        <%= job.partition %>
+      </span>
+    </td>
+    <td>
+      <code><%= job.consumer %></code>
 
-    <% unless job.tags.empty? %>
-      <br/>
-      <%== tags(job.tags) %>
-    <% end %>
-  </td>
-  <td>
-    <code>#<%= job.type %></code>
-  </td>
-  <td>
-    <%= job.messages %>
-  </td>
-  <td>
-    <%== offset_with_label job.topic, job.partition, job.first_offset, explore: true %>
-  </td>
-  <td>
-    <%== offset_with_label job.topic, job.partition, job.last_offset, explore: true %>
-  </td>
-  <td>
-    <%== offset_with_label job.topic, job.partition, job.committed_offset %>
-  </td>
-  <td>
-    <%== relative_time job.updated_at %>
-  </td>
-</tr>
+      <% unless job.tags.empty? %>
+        <br/>
+        <%== tags(job.tags) %>
+      <% end %>
+    </td>
+    <td>
+      <code>#<%= job.type %></code>
+    </td>
+    <td>
+      <%= job.messages %>
+    </td>
+    <td>
+      <%== offset_with_label job.topic, job.partition, job.first_offset, explore: true %>
+    </td>
+    <td>
+      <%== offset_with_label job.topic, job.partition, job.last_offset, explore: true %>
+    </td>
+    <td>
+      <%== offset_with_label job.topic, job.partition, job.committed_offset %>
+    </td>
+    <td>
+      <%== relative_time job.updated_at %>
+    </td>
+  </tr>
+<% else %>
+  <%==
+    partial(
+      'consumers/incompatible',
+      locals: { colspan: 8, process: job.process }
+    )
+  %>
+<% end %>

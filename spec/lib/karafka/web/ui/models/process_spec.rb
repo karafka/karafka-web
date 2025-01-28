@@ -42,4 +42,24 @@ RSpec.describe_current do
       expect(process.subscribed?).to be(true)
     end
   end
+
+  describe '#schema_compatible?' do
+    subject(:process) { described_class.find(state, 'shinra:1:1') }
+
+    context 'when schema matches the one in memory' do
+      it { expect(process.schema_compatible?).to be(true) }
+    end
+
+    context 'when schema is newer than the one in memory' do
+      before { process[:schema_version] = "#{process[:schema_version]}1" }
+
+      it { expect(process.schema_compatible?).to be(false) }
+    end
+
+    context 'when schema is older than the one in memory' do
+      before { process[:schema_version] = '0.1' }
+
+      it { expect(process.schema_compatible?).to be(false) }
+    end
+  end
 end

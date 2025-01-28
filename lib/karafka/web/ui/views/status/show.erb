@@ -138,6 +138,21 @@
 
   <%==
     partial(
+      "status/#{@status.consumers_schemas.to_s}",
+      locals: {
+        title: 'Consumers schemas compatibility',
+        description: partial(
+          'status/warnings/consumers_schemas',
+          locals: {
+            details: @status.consumers_schemas.details
+          }
+        )
+      }
+    )
+  %>
+
+  <%==
+    partial(
       "status/#{@status.materializing_lag.to_s}",
       locals: {
         title: 'Materializing lag',

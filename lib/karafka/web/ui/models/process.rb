@@ -74,6 +74,20 @@ module Karafka
               .flat_map(&:partitions)
               .count
           end
+
+          # @return [Boolean] consumer process data is only compatible if the version of its schema
+          #   matches the Web UI version of the schema. Some users have gradual deployment where
+          #   they slowly rollout new versions of consumers and for this time, we want to indicate
+          #   which instances have incompatible schema. This will allow us to show those processes
+          #   to indicate they exist, so users are not confused with them missing, but will also
+          #   block all capabilities until the full update of all components.
+          #
+          # @note We do not differentiate between reporting older or newer against Web UI Puma
+          #   instance. Any incompatibility will cause reporting of incompatible. That's for the
+          #   sake of simplicity as the long term goal for user is anyhow to align those.
+          def schema_compatible?
+            schema_version == ::Karafka::Web::Tracking::Consumers::Sampler::SCHEMA_VERSION
+          end
         end
       end
     end

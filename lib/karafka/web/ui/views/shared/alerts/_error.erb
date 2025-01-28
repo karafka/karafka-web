@@ -3,4 +3,12 @@
   <span>
     <%== message %>
   </span>
+
+  <% allow_close ||= false %>
+
+  <% if allow_close %>
+    <button type="button" class="close-alert" title="Close this error notice">
+      <%== icon :x_mark  %>
+    </button>
+  <% end %>
 </div>

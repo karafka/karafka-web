@@ -9,6 +9,7 @@ RSpec.describe_current do
   let(:no_processes) { 'There are no Karafka consumer processes' }
   let(:states_topic) { create_topic }
   let(:reports_topic) { create_topic }
+  let(:incompatible_schema) { 'This process uses schema' }
 
   describe '#index' do
     context 'when we open a consumers root' do
@@ -131,6 +132,31 @@ RSpec.describe_current do
         expect(body).to include('shinra:1:1')
         expect(body).to include('/consumers/shinra:1:1/subscriptions')
         expect(body).to include('2690818651.82293')
+      end
+    end
+
+    context 'when active consumer has incompatible schema' do
+      before do
+        topics_config.consumers.reports = reports_topic
+
+        report = Fixtures.consumers_reports_json
+        report[:schema_version] = '0.0.1'
+        produce(reports_topic, report.to_json)
+
+        get 'consumers/overview'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(incompatible_schema)
+        expect(body).not_to include('0,1,2,3,4,5,6,7,8,9...')
+        expect(body).not_to include('partitions: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9')
+        expect(body).not_to include(support_message)
+        expect(body).to include(breadcrumbs)
+        expect(body).not_to include(no_processes)
+        expect(body).not_to include(pagination)
+        expect(body).not_to include('/consumers/shinra:1:1/subscriptions')
+        expect(body).not_to include('2690818651.82293')
       end
     end
 
@@ -336,6 +362,35 @@ RSpec.describe_current do
         expect(body).to include('Threads')
         expect(body).to include('120 MB')
         expect(body).to include('5.6%')
+      end
+    end
+
+    context 'when there are active consumers with incompatible schema' do
+      before do
+        topics_config.consumers.reports = reports_topic
+
+        report = Fixtures.consumers_reports_json
+        report[:schema_version] = '100.0'
+        produce(reports_topic, report.to_json)
+
+        get 'consumers/performance'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(incompatible_schema)
+        expect(body).not_to include(support_message)
+        expect(body).not_to include(no_processes)
+        expect(body).not_to include(pagination)
+        expect(body).to include(breadcrumbs)
+        expect(body).to include('shinra:1:1')
+        expect(body).not_to include('/consumers/shinra:1:1/subscriptions')
+        expect(body).to include('RSS')
+        expect(body).to include('ID')
+        expect(body).to include('Utilization')
+        expect(body).to include('Threads')
+        expect(body).not_to include('120 MB')
+        expect(body).not_to include('5.6%')
       end
     end
 
@@ -576,6 +631,34 @@ RSpec.describe_current do
       end
     end
 
+    context 'when there are active consumers but with incompatible schema' do
+      before do
+        topics_config.consumers.reports = reports_topic
+
+        report = Fixtures.consumers_reports_json
+        report[:schema_version] = '0.0.1'
+        produce(reports_topic, report.to_json)
+
+        get 'consumers/controls'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(incompatible_schema)
+        expect(body).not_to include(support_message)
+        expect(body).not_to include(no_processes)
+        expect(body).not_to include(pagination)
+        expect(body).to include(breadcrumbs)
+        expect(body).to include('shinra:1:1')
+        expect(body).not_to include('/consumers/shinra:1:1/subscriptions')
+        expect(body).to include('running')
+        expect(body).to include('ID')
+        expect(body).to include('Performance')
+        expect(body).to include('Quiet All')
+        expect(body).to include('Stop All')
+      end
+    end
+
     context 'when there are more consumers that we fit in a single page' do
       before do
         topics_config.consumers.states = states_topic
@@ -687,6 +770,22 @@ RSpec.describe_current do
       end
     end
 
+    context 'when trying to visit details of a process with incompatible schema' do
+      before do
+        topics_config.consumers.reports = reports_topic
+
+        report = Fixtures.consumers_reports_json
+        report[:schema_version] = '100.0'
+        produce(reports_topic, report.to_json)
+
+        get 'consumers/shinra:1:1/details'
+      end
+
+      it do
+        expect(response.status).to eq(422)
+      end
+    end
+
     context 'when details exist written in a transactional fashion' do
       before do
         topics_config.consumers.states = states_topic
@@ -781,6 +880,22 @@ RSpec.describe_current do
         expect(body).to include('This process does not consume any')
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
+      end
+    end
+
+    context 'when trying to visit subscriptions of a process with incompatible schema' do
+      before do
+        topics_config.consumers.reports = reports_topic
+
+        report = Fixtures.consumers_reports_json
+        report[:schema_version] = '100.0'
+        produce(reports_topic, report.to_json)
+
+        get 'consumers/shinra:1:1/subscriptions'
+      end
+
+      it do
+        expect(response.status).to eq(422)
       end
     end
 
