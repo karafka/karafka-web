@@ -6,6 +6,7 @@ RSpec.describe_current do
   let(:no_processes) { 'There are no Karafka consumer processes' }
   let(:states_topic) { create_topic }
   let(:reports_topic) { create_topic }
+  let(:incompatible_schema) { 'This process uses schema' }
 
   context 'when the state data is missing' do
     before do
@@ -49,6 +50,29 @@ RSpec.describe_current do
       expect(body).to include('shinra:1:1')
       expect(body).to include('/consumers/shinra:1:1/subscriptions')
       expect(body).to include('2690818651.82293')
+    end
+  end
+
+  context 'when there are active consumers but with incompatible schema' do
+    before do
+      topics_config.consumers.reports = reports_topic
+
+      report = Fixtures.consumers_reports_json
+      report[:schema_version] = '0.0.1'
+      produce(reports_topic, report.to_json)
+
+      get 'consumers'
+    end
+
+    it do
+      expect(response).to be_ok
+      expect(body).to include(support_message)
+      expect(body).not_to include(no_processes)
+      expect(body).not_to include(pagination)
+      expect(body).to include(breadcrumbs)
+      expect(body).to include(incompatible_schema)
+      expect(body).not_to include('/consumers/shinra:1:1/subscriptions')
+      expect(body).not_to include('2690818651.82293')
     end
   end
 

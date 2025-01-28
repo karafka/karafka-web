@@ -83,6 +83,20 @@ RSpec.describe_current do
       end
     end
 
+    context 'when given process has incompatible schema' do
+      before do
+        topics_config.consumers.reports = reports_topic
+
+        report = Fixtures.consumers_reports_json
+        report[:schema_version] = '1.0.0'
+        produce(reports_topic, report.to_json)
+
+        get 'consumers/shinra:1:1/jobs/running'
+      end
+
+      it { expect(response.status).to eq(422) }
+    end
+
     context 'when given process does not exist' do
       before { get 'consumers/4e8f7174ae53/jobs/running' }
 
@@ -179,6 +193,20 @@ RSpec.describe_current do
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
       end
+    end
+
+    context 'when given process has incompatible schema' do
+      before do
+        topics_config.consumers.reports = reports_topic
+
+        report = Fixtures.consumers_reports_json
+        report[:schema_version] = '1.0.0'
+        produce(reports_topic, report.to_json)
+
+        get 'consumers/shinra:1:1/jobs/pending'
+      end
+
+      it { expect(response.status).to eq(422) }
     end
 
     context 'when given process does not exist' do

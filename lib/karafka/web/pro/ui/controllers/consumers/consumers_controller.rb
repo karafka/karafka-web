@@ -71,7 +71,9 @@ module Karafka
                 current_state = Models::ConsumersState.current!
                 @process = Models::Process.find(current_state, process_id)
 
-                render
+                return render if @process.schema_compatible?
+
+                raise Errors::Ui::IncompatibleSchemaError
               end
 
               # @param process_id [String] id of the process we're interested in

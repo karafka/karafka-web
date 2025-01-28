@@ -68,3 +68,13 @@ table td.commands-inline-3 {
 [data-theme="dark"] .datepicker-input-wrapper input[type="image"]:hover {
   opacity: 1;
 }
+
+.alert .close-alert svg {
+  width: 22px;
+  height: 22px;
+  opacity: 0.5;
+}
+
+.alert .close-alert:hover svg {
+  opacity: 0.7;
+}

@@ -334,6 +334,10 @@
     @apply border-l border-l-error;
   }
 
+  table .status-row-incompatible td:first-child {
+    @apply border-l border-l-secondary;
+  }
+
   pre.code {
     @apply text-sm border border-gray-300;
   }

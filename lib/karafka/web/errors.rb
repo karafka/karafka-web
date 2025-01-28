@@ -79,6 +79,11 @@ module Karafka
 
         # Raised when we want to stop the flow and render 403
         ForbiddenError = Class.new(BaseError)
+
+        # Raised when trying to get info about a consumer that has incompatible schema in its
+        # report. It usually means you are running different version of the Web UI in the consumer
+        # and in the Web server
+        IncompatibleSchemaError = Class.new(BaseError)
       end
     end
   end

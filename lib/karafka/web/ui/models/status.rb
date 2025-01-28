@@ -209,6 +209,27 @@ module Karafka
             )
           end
 
+          # @return [Status::Step] are there any consumer processes with incompatible schema that
+          #   does not match exactly the one used by the Web UI.
+          #
+          # @note It issues a warning, not an error.
+          def consumers_schemas
+            details = { incompatible: [] }
+
+            status = if consumers_reports.success?
+                       incompatible = @processes.reject(&:schema_compatible?)
+                       details[:incompatible] = incompatible
+                       incompatible.empty? ? :success : :warning
+                     else
+                       :halted
+                     end
+
+            Step.new(
+              status,
+              details
+            )
+          end
+
           # @return [Status::Step] Is there a significant lag in the reporting of aggregated data
           #   back to the Kafka. If yes, it means that the results in the Web UI will be delayed
           #   against the reality. Often it means, that there is over-saturation on the consumer

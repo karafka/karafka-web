@@ -1,98 +1,107 @@
 <%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
 <%# See LICENSE for details. %>
 
-<tr class="status-row-<%= process.status %>">
-  <td>
-    <a href="<%= root_path('consumers', process.id, 'subscriptions') %>">
-      <%== truncate(process.id, strategy: :middle) %>
-    </a>
+<% if process.schema_compatible? %>
+  <tr class="status-row-<%= process.status %>">
+    <td>
+      <a href="<%= root_path('consumers', process.id, 'subscriptions') %>">
+        <%== truncate(process.id, strategy: :middle) %>
+      </a>
 
-    <p class="mt-1">
-      <%== tags(process.tags) %>
-    </p>
-  </td>
+      <p class="mt-1">
+        <%== tags(process.tags) %>
+      </p>
+    </td>
 
-  <td>
-    <div class="badge <%= status_badge(process.status) %>">
-      <%= process.status %>
-    </div>
-  </td>
+    <td>
+      <div class="badge <%= status_badge(process.status) %>">
+        <%= process.status %>
+      </div>
+    </td>
 
-  <td>
-    <%== partial 'consumers/assignments_badges', locals: { process: process } %>
-  </td>
+    <td>
+      <%== partial 'consumers/assignments_badges', locals: { process: process } %>
+    </td>
 
-  <td>
-    <%== relative_time process.started_at %>
-  </td>
+    <td>
+      <%== relative_time process.started_at %>
+    </td>
 
-  <td>
-    <span class="badge badge-primary">
-      <%= format_memory process.memory_usage %>
-    </span>
-  </td>
+    <td>
+      <span class="badge badge-primary">
+        <%= format_memory process.memory_usage %>
+      </span>
+    </td>
 
-  <td>
-    <span class="badge badge-primary">
-      <%= process.utilization.round(1) %>%
-    </span>
-    <span class="badge badge-primary">
-      <%= process.workers %> /
-      <%= process.busy %>
-    </span>
-  </td>
+    <td>
+      <span class="badge badge-primary">
+        <%= process.utilization.round(1) %>%
+      </span>
+      <span class="badge badge-primary">
+        <%= process.workers %> /
+        <%= process.busy %>
+      </span>
+    </td>
 
-  <td>
-    <%= process.lag_hybrid %>
-  </td>
+    <td>
+      <%= process.lag_hybrid %>
+    </td>
 
-  <td class="commands-inline-3">
-    <%
-      trace_path = root_path('consumers', 'commanding', process.id, 'trace')
-      disabled_class = process.status != 'stopped' ? '' : 'btn-disabled'
-    %>
-    <form action="<%= trace_path %>" method="post" class="inline" title="Trace">
-      <%== csrf_tag(trace_path) %>
+    <td class="commands-inline-3">
+      <%
+        trace_path = root_path('consumers', 'commanding', process.id, 'trace')
+        disabled_class = process.status != 'stopped' ? '' : 'btn-disabled'
+      %>
+      <form action="<%= trace_path %>" method="post" class="inline" title="Trace">
+        <%== csrf_tag(trace_path) %>
 
-      <button type="submit" class="btn btn-info btn-sm <%= disabled_class %>">
-        <%== icon(:gear) %>
-      </button>
-    </form>
+        <button type="submit" class="btn btn-info btn-sm <%= disabled_class %>">
+          <%== icon(:gear) %>
+        </button>
+      </form>
 
-    <%
-      quiet_path = root_path('consumers', 'commanding', process.id, 'quiet')
-      disabled_class = process.status == 'running' ? '' : 'btn-disabled'
+      <%
+        quiet_path = root_path('consumers', 'commanding', process.id, 'quiet')
+        disabled_class = process.status == 'running' ? '' : 'btn-disabled'
 
-      if process.execution_mode == 'standalone'
-        title = 'Quiet'
-      else
-        disabled_class = 'btn-disabled'
-        title = 'Supported only in standalone consumer processes'
-      end
-    %>
-    <form action="<%= quiet_path %>" method="post" class="inline" title="<%= title %>">
-      <%== csrf_tag(quiet_path) %>
-      <button type="submit" class="btn btn-warning btn-sm <%= disabled_class %>">
-        <%== icon(:pause) %>
-      </button>
-    </form>
+        if process.execution_mode == 'standalone'
+          title = 'Quiet'
+        else
+          disabled_class = 'btn-disabled'
+          title = 'Supported only in standalone consumer processes'
+        end
+      %>
+      <form action="<%= quiet_path %>" method="post" class="inline" title="<%= title %>">
+        <%== csrf_tag(quiet_path) %>
+        <button type="submit" class="btn btn-warning btn-sm <%= disabled_class %>">
+          <%== icon(:pause) %>
+        </button>
+      </form>
 
-    <%
-      stop_path = root_path('consumers', 'commanding', process.id, 'stop')
-      disabled_class = process.status != 'stopping' && process.status != 'stopped' ? '' : 'btn-disabled'
+      <%
+        stop_path = root_path('consumers', 'commanding', process.id, 'stop')
+        disabled_class = process.status != 'stopping' && process.status != 'stopped' ? '' : 'btn-disabled'
 
-      if process.execution_mode == 'standalone'
-        title = 'Stop'
-      else
-        disabled_class = 'btn-disabled'
-        title = 'Supported only in standalone consumer processes'
-      end
-    %>
-    <form action="<%= stop_path %>" method="post" class="inline" title="<%= title %>">
-      <%== csrf_tag(stop_path) %>
-      <button type="submit" class="btn btn-error btn-sm <%= disabled_class %>">
-        <%== icon(:stop) %>
-      </button>
-    </form>
-  </td>
-</tr>
+        if process.execution_mode == 'standalone'
+          title = 'Stop'
+        else
+          disabled_class = 'btn-disabled'
+          title = 'Supported only in standalone consumer processes'
+        end
+      %>
+      <form action="<%= stop_path %>" method="post" class="inline" title="<%= title %>">
+        <%== csrf_tag(stop_path) %>
+        <button type="submit" class="btn btn-error btn-sm <%= disabled_class %>">
+          <%== icon(:stop) %>
+        </button>
+      </form>
+    </td>
+  </tr>
+<% else %>
+  <%==
+    partial(
+      'consumers/incompatible',
+      locals: { colspan: 7, process: process }
+    )
+  %>
+<% end %>

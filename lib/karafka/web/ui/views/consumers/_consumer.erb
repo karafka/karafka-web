@@ -1,36 +1,45 @@
-<tr class="status-row-<%= process.status %>">
-  <td>
-    <p>
-      <a href="<%= root_path('consumers', process.id, 'subscriptions') %>">
-        <%== truncate(process.id, strategy: :middle) %>
-      </a>
-    </p>
+<% if process.schema_compatible? %>
+  <tr class="status-row-<%= process.status %>">
+    <td>
+      <p>
+        <a href="<%= root_path('consumers', process.id, 'subscriptions') %>">
+          <%== truncate(process.id, strategy: :middle) %>
+        </a>
+      </p>
 
-    <p class="mt-1">
-      <%== partial 'consumers/assignments_badges', locals: { process: process } %>
-    </p>
+      <p class="mt-1">
+        <%== partial 'consumers/assignments_badges', locals: { process: process } %>
+      </p>
 
-    <p>
-      <%== tags(process.tags) %>
-    </p>
-  </td>
+      <p>
+        <%== tags(process.tags) %>
+      </p>
+    </td>
 
-  <td>
-    <%== relative_time process.started_at %>
-  </td>
+    <td>
+      <%== relative_time process.started_at %>
+    </td>
 
-  <td>
-    <%== badge_primary_sm format_memory process.memory_usage %>
-  </td>
+    <td>
+      <%== badge_primary_sm format_memory process.memory_usage %>
+    </td>
 
-  <td>
-    <span class="badge badge-primary">
-      <%= process.workers %> /
-      <%= process.busy %>
-    </span>
-  </td>
+    <td>
+      <span class="badge badge-primary">
+        <%= process.workers %> /
+        <%= process.busy %>
+      </span>
+    </td>
 
-  <td>
-    <%= process.lag_hybrid %>
-  </td>
-</tr>
+    <td>
+      <%= process.lag_hybrid %>
+    </td>
+  </tr>
+<% else %>
+  <%==
+    partial(
+      'consumers/incompatible',
+      locals: { colspan: 5, process: process }
+    )
+  %>
+<% end %>
