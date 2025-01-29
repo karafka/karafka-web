@@ -62,26 +62,28 @@ module Karafka
             @listener.each do |message|
               next unless @matcher.matches?(message)
 
-              control(message.payload[:command][:name])
+              control(message.payload[:command])
             end
           end
 
           # Runs the expected command
           #
-          # @param command [String] command expected to run
-          def control(command)
-            case command
-            when 'trace'
-              Commands::Trace.new.call
-            when 'stop'
-              Commands::Stop.new.call
-            when 'quiet'
-              Commands::Quiet.new.call
-            else
-              # We raise it and will be rescued, reported and ignored. We raise it as this should
-              # not happen unless there are version conflicts
-              raise ::Karafka::Errors::UnsupportedCaseError, command
-            end
+          # @param params [Hash] command request params hash
+          def control(params)
+            command = case params[:name]
+                      when 'trace'
+                        Commands::Trace
+                      when 'stop'
+                        Commands::Stop
+                      when 'quiet'
+                        Commands::Quiet
+                      else
+                        # We raise it and will be rescued, reported and ignored. We raise it as
+                        # this should not happen unless there are version conflicts
+                        raise ::Karafka::Errors::UnsupportedCaseError, command
+                      end
+
+            command.new(params).call
           end
         end
       end

@@ -66,7 +66,7 @@ RSpec.describe_current do
     end
 
     context 'when command is trace' do
-      let(:trace_command) { Karafka::Web::Pro::Commanding::Commands::Trace.new }
+      let(:trace_command) { Karafka::Web::Pro::Commanding::Commands::Trace.new({}) }
       let(:command_name) { 'trace' }
 
       before do
@@ -81,7 +81,7 @@ RSpec.describe_current do
     end
 
     context 'when command is quiet' do
-      let(:quiet_command) { Karafka::Web::Pro::Commanding::Commands::Quiet.new }
+      let(:quiet_command) { Karafka::Web::Pro::Commanding::Commands::Quiet.new({}) }
       let(:command_name) { 'quiet' }
 
       before do
@@ -96,7 +96,7 @@ RSpec.describe_current do
     end
 
     context 'when command is stop' do
-      let(:stop_command) { Karafka::Web::Pro::Commanding::Commands::Stop.new }
+      let(:stop_command) { Karafka::Web::Pro::Commanding::Commands::Stop.new({}) }
       let(:command_name) { 'stop' }
 
       before do

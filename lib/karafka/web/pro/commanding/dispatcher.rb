@@ -14,7 +14,7 @@ module Karafka
         # Dispatcher requires Web UI to have a producer
         class Dispatcher
           # What schema do we have in current Karafka version for commands dispatches
-          SCHEMA_VERSION = '1.0.0'
+          SCHEMA_VERSION = '1.1.0'
 
           class << self
             # Dispatches the command request
@@ -22,15 +22,15 @@ module Karafka
             # @param name [String, Symbol] name of the command we want to deal with in the process
             # @param process_id [String] id of the process. We use name instead of id only
             #   because in the web ui we work with the full name and it is easier. Since
-            def command(name, process_id)
+            # @param params [Hash] hash with extra command params that some commands may use.
+            def command(name, process_id, params = {})
               produce(
                 process_id,
                 {
                   schema_version: SCHEMA_VERSION,
                   type: 'command',
-                  command: {
-                    name: name
-                  },
+                  # Name is auto-generated and required. Should not be changed
+                  command: params.merge(name: name),
                   dispatched_at: Time.now.to_f,
                   process: {
                     id: process_id

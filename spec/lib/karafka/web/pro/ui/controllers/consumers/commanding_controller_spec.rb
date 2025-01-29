@@ -25,7 +25,7 @@ RSpec.describe_current do
       sleep(1)
       message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
       expect(message.key).to eq(process_id)
-      expect(message.payload[:schema_version]).to eq('1.0.0')
+      expect(message.payload[:schema_version]).to eq('1.1.0')
       expect(message.payload[:type]).to eq('command')
       expect(message.payload[:dispatched_at]).not_to be_nil
       expect(message.payload[:command]).to eq(name: 'trace')
@@ -47,7 +47,7 @@ RSpec.describe_current do
       sleep(1)
       message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
       expect(message.key).to eq(process_id)
-      expect(message.payload[:schema_version]).to eq('1.0.0')
+      expect(message.payload[:schema_version]).to eq('1.1.0')
       expect(message.payload[:type]).to eq('command')
       expect(message.payload[:dispatched_at]).not_to be_nil
       expect(message.payload[:command]).to eq(name: 'quiet')
@@ -69,7 +69,7 @@ RSpec.describe_current do
       sleep(1)
       message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
       expect(message.key).to eq(process_id)
-      expect(message.payload[:schema_version]).to eq('1.0.0')
+      expect(message.payload[:schema_version]).to eq('1.1.0')
       expect(message.payload[:type]).to eq('command')
       expect(message.payload[:dispatched_at]).not_to be_nil
       expect(message.payload[:command]).to eq(name: 'stop')
@@ -91,7 +91,7 @@ RSpec.describe_current do
       sleep(1)
       message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
       expect(message.key).to eq('*')
-      expect(message.payload[:schema_version]).to eq('1.0.0')
+      expect(message.payload[:schema_version]).to eq('1.1.0')
       expect(message.payload[:type]).to eq('command')
       expect(message.payload[:dispatched_at]).not_to be_nil
       expect(message.payload[:command]).to eq(name: 'quiet')
@@ -113,7 +113,7 @@ RSpec.describe_current do
       sleep(1)
       message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
       expect(message.key).to eq('*')
-      expect(message.payload[:schema_version]).to eq('1.0.0')
+      expect(message.payload[:schema_version]).to eq('1.1.0')
       expect(message.payload[:type]).to eq('command')
       expect(message.payload[:dispatched_at]).not_to be_nil
       expect(message.payload[:command]).to eq(name: 'stop')
