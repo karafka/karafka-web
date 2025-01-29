@@ -1,0 +1,54 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<h2 class="h2 mb-6">
+  <%= consumer_group.id %> /
+  <%= subscription_group.id %>
+</h2>
+
+<% if subscription_group.topics.empty? %>
+  <div class="mb-6">
+    <%==
+      alert_info('This process does not consume any messages from any topics of this subscription group.')
+    %>
+  </div>
+<% else %>
+  <% subscription_group.topics.each do |topic| %>
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th colspan="10">
+              <%= topic.name %>
+            </th>
+          </tr>
+          <tr>
+            <th rowspan="2"><%== sort_link('Partition', :id) %></th>
+            <th colspan="1">Lag</th>
+            <th colspan="3">Offsets</th>
+          </tr>
+          <tr>
+            <th><%== sort_link(:lag_hybrid) %></th>
+            <th><%== sort_link(:committed_offset) %></th>
+            <th><%== sort_link(:stored_offset) %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+            <% topic.partitions.each do |partition| %>
+              <%==
+                partial(
+                  'consumers/offsets/partition',
+                  locals: {
+                    topic: topic,
+                    partition: partition,
+                    subscription_group: subscription_group
+                  }
+                )
+              %>
+            <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+<% end %>

@@ -39,6 +39,28 @@ module Karafka
               )
             end
 
+            # Dispatches the pending info. Indicates that a command was received and appropriate
+            # action will be taken but async. Useful for commands that may not take immediate
+            # actions upon receiving a command.
+            #
+            # @param params [Hash] input command params (or empty hash if none)
+            # @param process_id [String] related process id
+            # @param command_name [String, Symbol] command that triggered this result
+            def pending(params, process_id, command_name)
+              produce(
+                process_id,
+                {
+                  schema_version: SCHEMA_VERSION,
+                  type: 'pending',
+                  command: params.merge(name: command_name),
+                  dispatched_at: Time.now.to_f,
+                  process: {
+                    id: process_id
+                  }
+                }
+              )
+            end
+
             # Dispatches the result request
             #
             # @param result [Object] anything that can be the result of the command execution

@@ -9,7 +9,13 @@
   <% if command[:schema_version] == @schema_version %>
     <tr>
       <td>
-        <% color = command[:type] == 'result' ? 'success' : 'primary' %>
+        <%
+          type = command[:type]
+          color = 'primary'
+          color = 'success' if type == 'result'
+          color = 'secondary' if type == 'pending'
+        %>
+
         <span class="badge badge-<%= color %>">
           <%= command[:type] %>
         </span>
@@ -20,6 +26,8 @@
           color = case command[:command][:name]
                   when 'trace'
                     'info'
+                  when 'seek'
+                    'primary'
                   when 'quiet'
                     'warning'
                   when 'stop'

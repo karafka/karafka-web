@@ -30,6 +30,22 @@ module Karafka
                   controller.performance
                 end
 
+                r.on String, 'offsets' do |process_id|
+                  controller = Controllers::Consumers::OffsetsController.new(params)
+
+                  r.get 'edit' do
+                    controller.edit(process_id)
+                  end
+
+                  r.post 'update' do
+                    controller.update(process_id)
+                  end
+
+                  r.get do
+                    controller.index(process_id)
+                  end
+                end
+
                 r.on String, 'jobs' do |process_id|
                   controller = Controllers::Consumers::JobsController.new(params)
 

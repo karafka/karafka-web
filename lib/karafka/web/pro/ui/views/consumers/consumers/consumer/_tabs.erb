@@ -25,6 +25,13 @@
     </a>
 
     <a
+      href="<%= root_path('consumers', @process.id, 'offsets') %>"
+      class="custom-tab <%= nav_class(include: 'offsets') %>"
+    >
+      Offsets
+    </a>
+
+    <a
       href="<%= root_path('consumers', @process.id, 'details') %>"
       class="custom-tab <%= nav_class(include: 'details') %>"
     >
