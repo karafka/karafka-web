@@ -4,7 +4,7 @@
 # See LICENSE for details.
 
 RSpec.describe_current do
-  subject(:trace_command) { described_class.new }
+  subject(:trace_command) { described_class.new({}) }
 
   let(:dispatcher) { Karafka::Web::Pro::Commanding::Dispatcher }
   let(:test_thread) { Thread.new { sleep(0.5) } }

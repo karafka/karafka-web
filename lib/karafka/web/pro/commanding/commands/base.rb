@@ -11,6 +11,15 @@ module Karafka
         module Commands
           # Base for all the commands
           class Base
+            # @return [Hash]
+            attr_reader :params
+
+            # @param params [Hash] command details (if any). Some commands may require extra
+            #   details to work. They can be obtained from here.
+            def initialize(params)
+              @params = params
+            end
+
             private
 
             # @return [String] current process id

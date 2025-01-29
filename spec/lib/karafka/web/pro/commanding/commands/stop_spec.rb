@@ -4,7 +4,7 @@
 # See LICENSE for details.
 
 RSpec.describe_current do
-  subject(:stop_command) { described_class.new }
+  subject(:stop_command) { described_class.new({}) }
 
   before { allow(Process).to receive(:kill) }
 
