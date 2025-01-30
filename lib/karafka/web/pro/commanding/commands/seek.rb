@@ -11,10 +11,10 @@ module Karafka
           # Topic partition seek command request handler
           class Seek < Base
             # Dispatches the seek request into the appropriate filter and indicates that the
-            # seeking is in a pending state
+            # seeking is in an acceptance state
             def call
               # Publish back info on who did this with all the details for inspection
-              Dispatcher.pending(params, process_id, 'seek')
+              Dispatcher.acceptance(params, process_id, 'seek')
             end
           end
         end

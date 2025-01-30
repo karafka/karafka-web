@@ -23,8 +23,6 @@ module Karafka
                 t_d[:backtrace] = (thread.backtrace || ['<no backtrace available>']).join("\n")
               end
 
-              Dispatcher.pending(params, process_id, 'seek')
-
               Dispatcher.result(threads, process_id, 'trace')
             end
           end

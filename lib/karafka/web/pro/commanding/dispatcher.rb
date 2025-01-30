@@ -39,19 +39,19 @@ module Karafka
               )
             end
 
-            # Dispatches the pending info. Indicates that a command was received and appropriate
+            # Dispatches the acceptance info. Indicates that a command was received and appropriate
             # action will be taken but async. Useful for commands that may not take immediate
             # actions upon receiving a command.
             #
             # @param params [Hash] input command params (or empty hash if none)
             # @param process_id [String] related process id
             # @param command_name [String, Symbol] command that triggered this result
-            def pending(params, process_id, command_name)
+            def acceptance(params, process_id, command_name)
               produce(
                 process_id,
                 {
                   schema_version: SCHEMA_VERSION,
-                  type: 'pending',
+                  type: 'acceptance',
                   command: params.merge(name: command_name),
                   dispatched_at: Time.now.to_f,
                   process: {
