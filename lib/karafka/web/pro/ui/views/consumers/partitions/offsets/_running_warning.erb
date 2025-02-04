@@ -1,0 +1,12 @@
+<% alert_box_warning('Running Consumer Process Operation') do %>
+  <p>
+    You are about to modify offset for an actively running consumer. This operation:
+  </p>
+
+  <ul class="list-disc ml-6 mt-2">
+    <li>Takes effect during the next poll operation</li>
+    <li>May affect message processing</li>
+    <li>Cannot be undone</li>
+    <li>Will take effect only if the current process still owns the assignment</li>
+  </ul>
+<% end %>

@@ -1,0 +1,24 @@
+<% alert_box_error 'Cannot Manage Long-Running Job Partitions Pausing' do %>
+  <p class="mb-2">
+    Manual pause/resume operations are not supported for partitions using Long-Running Jobs.
+  </p>
+
+  <p class="mb-2">
+    These partitions are automatically paused and resumed based on the message processing flow to ensure reliable and consistent behavior.
+  </p>
+
+  <p>
+    Long-Running Jobs handle partition pausing internally to maintain processing stability and prevent message duplication or loss.
+  </p>
+<% end %>
+
+<div class="form-control text-center mt-6">
+  <div class="flex justify-end">
+    <a
+      href="<%= consumer_path(@process.id, 'partitions', @subscription_group.id, @topic, @partition_id, 'offsets') %>"
+      class="btn btn-ghost"
+    >
+      Cancel
+    </a>
+  </div>
+</div>

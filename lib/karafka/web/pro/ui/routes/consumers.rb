@@ -30,15 +30,39 @@ module Karafka
                   controller.performance
                 end
 
-                r.on String, 'offsets' do |process_id|
-                  controller = Controllers::Consumers::OffsetsController.new(params)
+                r.on String, 'partitions' do |process_id|
+                  controller = Controllers::Consumers::Partitions::PausesController.new(params)
 
-                  r.get 'edit' do
-                    controller.edit(process_id)
+                  r.get(
+                    String, String, :partition_id, 'pause', 'toggle'
+                  ) do |subscription_group_id, topic, partition_id|
+                    controller.toggle(process_id, subscription_group_id, topic, partition_id)
                   end
 
-                  r.post 'update' do
-                    controller.update(process_id)
+                  r.post(
+                    String, String, :partition_id, 'pause'
+                  ) do |subscription_group_id, topic, partition_id|
+                    controller.create(process_id, subscription_group_id, topic, partition_id)
+                  end
+
+                  r.delete(
+                    String, String, :partition_id, 'pause'
+                  ) do |subscription_group_id, topic, partition_id|
+                    controller.delete(process_id, subscription_group_id, topic, partition_id)
+                  end
+
+                  controller = Controllers::Consumers::Partitions::OffsetsController.new(params)
+
+                  r.get(
+                    String, String, :partition_id, 'offset', 'edit'
+                  ) do |subscription_group_id, topic, partition_id|
+                    controller.edit(process_id, subscription_group_id, topic, partition_id)
+                  end
+
+                  r.put(
+                    String, String, :partition_id, 'offset'
+                  ) do |subscription_group_id, topic, partition_id|
+                    controller.update(process_id, subscription_group_id, topic, partition_id)
                   end
 
                   r.get do

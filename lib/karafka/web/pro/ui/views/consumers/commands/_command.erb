@@ -23,15 +23,16 @@
 
       <td>
         <%
+          scope = ::Karafka::Web::Pro::Commanding::Commands
           color = case command[:command][:name]
-                  when 'trace'
+                  when scope::Consumers::Trace.id
                     'info'
-                  when 'seek'
-                    'primary'
-                  when 'quiet'
+                  when scope::Consumers::Quiet.id
                     'warning'
-                  when 'stop'
+                  when scope::Consumers::Stop.id
                     'error'
+                  when scope::Partitions::Seek.id
+                    'primary'
                   else
                     'secondary'
                   end
@@ -45,7 +46,7 @@
         <% if command[:process][:id] == '*' %>
           *
         <% else %>
-          <a href="<%= root_path('consumers', command[:process][:id], 'subscriptions') %>">
+          <a href="<%= consumer_path(command[:process][:id], 'subscriptions') %>">
             <%= truncate(command[:process][:id], strategy: :middle) %>
           </a>
         <% end %>
@@ -56,7 +57,7 @@
       </td>
 
       <td>
-        <a href="<%= root_path('consumers', 'commands', command_message.offset) %>" class="btn btn-sm btn-primary">
+        <a href="<%= consumers_path('commands', command_message.offset) %>" class="btn btn-sm btn-primary">
           Details
         </a>
       </td>

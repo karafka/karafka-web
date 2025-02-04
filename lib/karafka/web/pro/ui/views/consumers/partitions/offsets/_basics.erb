@@ -1,0 +1,74 @@
+<div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4 mb-6 mt-6">
+  <div class="card-metric">
+    <h3>Basic Info</h3>
+    <ul>
+      <li>
+        Process ID:
+        <%== badge_primary @process.id %>
+      </li>
+      <li>
+        Topic:
+        <%== badge_info @topic %>
+      </li>
+      <li>
+        Partition:
+        <%== badge_info @partition_id %>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card-metric">
+    <h3>Consumer Details</h3>
+    <ul>
+      <li>
+        Consumer Group:
+        <%== badge_secondary @consumer_group.id %>
+      </li>
+      <li>
+        Subscription Group:
+        <%== badge_secondary @subscription_group.id %>
+      </li>
+      <li>
+        Poll State:
+        <%== poll_state_with_change_time_label(@partition_stats.poll_state, @partition_stats.poll_state_ch) %>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card-metric">
+    <h3>Current Position</h3>
+    <ul>
+      <li>
+        Committed Offset:
+        <%== badge_secondary(normalized_metric(@partition_stats.committed_offset)) %>
+      </li>
+      <li>
+        Stored Offset:
+        <%== badge_secondary(normalized_metric(@partition_stats.stored_offset)) %>
+      </li>
+      <li>
+        Lag:
+
+        <%== badge_secondary(normalized_metric(@partition_stats.lag_hybrid)) %>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card-metric">
+    <h3>Partition Details</h3>
+    <ul>
+      <li>
+        High Offset:
+        <%== badge_info(normalized_metric(@partition_stats.hi_offset)) %>
+      </li>
+      <li>
+        Low Offset:
+        <%== badge_info(normalized_metric(@partition_stats.lo_offset)) %>
+      </li>
+      <li>
+        EOF Offset:
+        <%== badge_info(normalized_metric(@partition_stats.eof_offset)) %>
+      </li>
+    </ul>
+  </div>
+</div>

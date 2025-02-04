@@ -11,6 +11,10 @@ module Karafka
         module Commands
           # Base for all the commands
           class Base
+            class << self
+              attr_accessor :id
+            end
+
             # @return [Hash]
             attr_reader :params
 
@@ -33,6 +37,10 @@ module Karafka
             #   handled differently (either via the main process or supervisor).
             def standalone?
               Karafka::Server.execution_mode == :standalone
+            end
+
+            def id
+              self.class.id
             end
           end
         end

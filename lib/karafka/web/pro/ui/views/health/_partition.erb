@@ -25,7 +25,7 @@
     </span>
   </td>
   <td>
-    <a href="<%= root_path('consumers', details.process.id, 'subscriptions') %>">
+    <a href="<%= consumer_path(details.process.id, 'subscriptions') %>">
       <%== truncate(details.process.id, strategy: :middle) %>
     </a>
   </td>

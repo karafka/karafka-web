@@ -71,12 +71,14 @@ module Karafka
           # @param params [Hash] command request params hash
           def control(params)
             command = case params[:name]
-                      when 'trace'
-                        Commands::Trace
-                      when 'stop'
-                        Commands::Stop
-                      when 'quiet'
-                        Commands::Quiet
+                      when Commands::Consumers::Trace.id
+                        Commands::Consumers::Trace
+                      when Commands::Consumers::Stop.id
+                        Commands::Consumers::Stop
+                      when Commands::Consumers::Quiet.id
+                        Commands::Consumers::Quiet
+                      when Commands::Partitions::Seek.id
+                        Commands::Partitions::Seek
                       else
                         # We raise it and will be rescued, reported and ignored. We raise it as
                         # this should not happen unless there are version conflicts

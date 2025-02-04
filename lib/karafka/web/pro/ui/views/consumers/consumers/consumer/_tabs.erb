@@ -4,35 +4,35 @@
 <div class="tab-container-wrapper">
   <div class="tab-container">
     <a
-      href="<%= root_path('consumers', @process.id, 'subscriptions') %>"
+      href="<%= consumer_path(@process.id, 'subscriptions') %>"
       class="custom-tab <%= nav_class(include: 'subscriptions') %>"
     >
       Subscriptions (<%= @process.subscribed_partitions_count %>)
     </a>
 
     <a
-      href="<%= root_path('consumers', @process.id, 'jobs', 'running') %>"
+      href="<%= consumer_path(@process.id, 'partitions') %>"
+      class="custom-tab <%= nav_class(include: 'partitions') %>"
+    >
+      Partitions
+    </a>
+
+    <a
+      href="<%= consumer_path(@process.id, 'jobs', 'running') %>"
       class="custom-tab <%= nav_class(include: 'jobs/running') %>"
     >
       Running jobs (<%= @process.jobs.running.count %>)
     </a>
 
     <a
-      href="<%= root_path('consumers', @process.id, 'jobs', 'pending') %>"
+      href="<%= consumer_path(@process.id, 'jobs', 'pending') %>"
       class="custom-tab <%= nav_class(include: 'jobs/pending') %>"
     >
       Pending jobs (<%= @process.jobs.pending.count %>)
     </a>
 
     <a
-      href="<%= root_path('consumers', @process.id, 'offsets') %>"
-      class="custom-tab <%= nav_class(include: 'offsets') %>"
-    >
-      Offsets
-    </a>
-
-    <a
-      href="<%= root_path('consumers', @process.id, 'details') %>"
+      href="<%= consumer_path(@process.id, 'details') %>"
       class="custom-tab <%= nav_class(include: 'details') %>"
     >
       Details

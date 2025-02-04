@@ -14,7 +14,7 @@
     <%==
       render_each(
         @process.consumer_groups,
-        'consumers/offsets/_consumer_group',
+        'consumers/partitions/offsets/_consumer_group',
         local: :consumer_group
       )
     %>

@@ -40,6 +40,7 @@ module Karafka
         plugin :capture_erb
         plugin :content_for
         plugin :inject_erb
+        plugin :all_verbs
 
         # Based on
         # https://github.com/sidekiq/sidekiq/blob/ae6ca119/lib/sidekiq/web/application.rb#L8

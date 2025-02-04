@@ -1,0 +1,134 @@
+<% view_title "#{@process.id} - Pause Adjustment - #{@subscription_group_id} - #{@topic}##{@partition_id}" %>
+
+<% if @topic_lrj %>
+  <%== partial 'consumers/partitions/pauses/lrj_not_manageable' %>
+<% else %>
+
+<% if @process.status == 'running' %>
+  <% alert_box_warning('Running Consumer Process Operation') do %>
+    <p>
+      You are about to adjust pause for an actively running consumer. This operation:
+    </p>
+
+    <ul class="list-disc ml-6 mt-2">
+      <li>Takes effect during the next poll operation</li>
+      <li>May affect message processing</li>
+      <li>Cannot be undone</li>
+      <li>Will take effect only if the current process still owns the assignment</li>
+    </ul>
+  <% end %>
+<% else %>
+  <div class="col-span-12">
+    <div class="mb-6">
+      <%==
+        alert_error(
+          'This operation cannot be performed. Consumer pauses can only be altered using Web UI when the consumer is in a running state.'
+        )
+      %>
+    </div>
+  </div>
+<% end %>
+
+<%== partial 'consumers/partitions/offsets/basics' %>
+
+<% if @partition_stats.poll_state == 'active' %>
+<div class="card bg-base-100 mt-4">
+ <div class="card-body">
+   <% pause_path = 'partition_pause_path(@partition_id)' %>
+   <form class="space-y-4 w-full" method="post" action="<%= pause_path %>">
+     <%== csrf_tag(pause_path) %>
+
+     <div class="flex items-center w-full mb-8">
+       <label class="w-1/4 text-gray-700">Pause Duration:</label>
+       <div class="w-3/4">
+         <input
+           type="number"
+           min="0"
+           max="31536000"
+           name="duration"
+           class="block input input-bordered w-full"
+           placeholder="Enter pause duration in seconds (0 for indefinite)"
+           required
+         />
+         <div class="text-sm text-gray-500 mt-1">
+           Set to 0 for indefinite pause or specify time in seconds
+         </div>
+       </div>
+     </div>
+
+     <div class="flex items-center w-full">
+       <label class="w-1/4 text-gray-700">Safety Check:</label>
+       <div class="w-3/4">
+         <label class="flex items-center gap-4 cursor-pointer">
+           <input type="hidden" name="prevent_override" value="off">
+           <input type="checkbox" name="prevent_override" class="checkbox checkbox-warning" checked />
+           <div class="space-y-1">
+             <div class="flex items-center gap-2">
+               Only pause if partition is not already paused
+             </div>
+             <div class="text-sm text-gray-500">
+               Prevents accidental override of existing pause
+             </div>
+           </div>
+         </label>
+       </div>
+     </div>
+
+     <div class="form-control text-center mt-6">
+       <div class="flex gap-4 justify-end">
+                    <a href="<%= consumer_path(@process.id, 'partitions', @subscription_group.id, @topic, @partition_id, 'offsets') %>" class="btn btn-ghost">
+
+           Cancel
+         </a>
+         <button type="submit" class="btn btn-warning gap-2 btn-lockable">
+           <%== icon(:play_pause) %>
+           Set Pause
+         </button>
+       </div>
+     </div>
+   </form>
+ </div>
+</div>
+<% else %>
+  <div class="card bg-base-100 mt-4">
+   <div class="card-body">
+     <% resume_path = 'partition_pause_path(@partition_id)' %>
+     <form class="space-y-4 w-full" method="post" action="<%= resume_path %>">
+       <%== csrf_tag(resume_path) %>
+       <input type="hidden" name="_method" value="delete">
+
+       <div class="flex items-center w-full">
+         <label class="w-1/4 text-gray-700">Reset Counter:</label>
+         <div class="w-3/4">
+           <label class="flex items-center gap-4 cursor-pointer">
+             <input type="hidden" name="reset_attempts" value="off">
+             <input type="checkbox" name="reset_attempts" class="checkbox checkbox-warning" />
+             <div class="space-y-1">
+               <div class="flex items-center gap-2">
+                 Reset the processing attempts counter when resuming
+               </div>
+               <div class="text-sm text-gray-500">
+                 Resets retries counter for features like DLQ dispatching. Does not affect message offset position.
+               </div>
+             </div>
+           </label>
+         </div>
+       </div>
+
+       <div class="form-control text-center mt-6">
+         <div class="flex gap-4 justify-end">
+           <a href="<%= consumer_path(@process.id, 'partitions', @subscription_group.id, @topic, @partition_id, 'offsets') %>" class="btn btn-ghost">
+             Cancel
+           </a>
+           <button type="submit" class="btn btn-warning gap-2 btn-lockable">
+             <%== icon(:play_pause) %>
+             Resume Processing
+           </button>
+         </div>
+       </div>
+     </form>
+   </div>
+  </div>
+<% end %>
+
+<% end %>

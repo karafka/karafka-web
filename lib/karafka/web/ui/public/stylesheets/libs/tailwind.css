@@ -83,6 +83,10 @@
     @apply bg-warning;
   }
 
+  [data-theme="dark"] .alert-box-warning .alert-box-header {
+    @apply text-base-100;
+  }
+
   .alert-box-success {
     @apply border-success;
   }
@@ -471,4 +475,8 @@
 
 [data-theme="corporate"] .bg-base-200 {
   background: #f5f6fe;
+}
+
+tr:not(:first-child) th[colspan]:not([colspan="1"]) {
+  @apply text-center;
 }

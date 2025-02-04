@@ -7,6 +7,11 @@
 - [Enhancement] Provide better support for fully transactional consumers.
 - [Enhancement] Error out when `#setup` is called after `#enable!`.
 - [Change] Remove per-consumer process duplicated details from Subscriptions and Jobs tabs.
+- [Fix] Fix incorrect indentation of some of the info messages.
+- [Fix] Fix tables headers inconsistent alignments.
+- [Fix] Fix incorrect warning box header color in the dark mode.
+- [Fix] Fix missing breadcrumbs on the consumers overview page.
+- [Fix] Fix a case where disabled buttons would be enabled back too early.
 - [Fix] The recent page breadcrumbs and offset id are not refreshed on change.
 - [Fix] Direct URL access with too big partition causes librdkafka crash.
 - [Fix] Fix incorrect breadcrumbs for pending consumer jobs.

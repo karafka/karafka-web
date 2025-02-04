@@ -4,7 +4,7 @@
 <%==
   render_each(
     consumer_group.subscription_groups,
-    'consumers/offsets/_subscription_group',
+    'consumers/partitions/offsets/_subscription_group',
     local: :subscription_group,
     locals: { consumer_group: consumer_group }
   )

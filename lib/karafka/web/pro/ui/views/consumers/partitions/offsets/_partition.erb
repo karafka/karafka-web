@@ -1,0 +1,45 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<tr class="<%= lso_risk_state_bg(partition) %>">
+  <td>
+    <%= partition.id %>
+  </td>
+  <td>
+    <%== poll_state_with_change_time_label(partition.poll_state, partition.poll_state_ch) %>
+  </td>
+  <td>
+    <%== lag_with_label partition.lag_hybrid %>
+  </td>
+  <td>
+    <% if partition.stored_offset.negative? %>
+      <%== offset_with_label topic.name, partition.id, partition.committed_offset - 1 %>
+    <% else %>
+      <%== offset_with_label topic.name, partition.id, partition.committed_offset %>
+    <% end %>
+  </td>
+  <td>
+    <%== offset_with_label topic.name, partition.id, partition.stored_offset %>
+  </td>
+  <td>
+    <% if Karafka::Web.config.commanding.active %>
+      <a
+        href="<%= consumer_path(@process.id, 'partitions', subscription_group.id, topic.name, partition.id, 'offset', 'edit') %>"
+        class="btn btn-info btn-sm"
+        title="Edit the offset position for this topic partition"
+      >
+        <%== icon(:pencil_square) %>
+      </a>
+
+      <a
+        href="<%= consumer_path(@process.id, 'partitions', subscription_group.id, topic.name, partition.id, 'pause', 'toggle') %>"
+        class="btn btn-warning btn-sm"
+        title="Manage the pause state for this topic partition"
+      >
+        <%== icon(:play_pause) %>
+      </a>
+    <% else %>
+      <span class="text-muted">Commanding has been disabled.</span>
+    <% end %>
+  </td>
+</tr>

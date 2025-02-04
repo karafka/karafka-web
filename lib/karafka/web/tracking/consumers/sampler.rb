@@ -84,46 +84,48 @@ module Karafka
 
           # @return [Hash] report hash with all the details about consumer operations
           def to_report
-            {
-              schema_version: SCHEMA_VERSION,
-              type: 'consumer',
-              dispatched_at: float_now,
+            track do
+              {
+                schema_version: SCHEMA_VERSION,
+                type: 'consumer',
+                dispatched_at: float_now,
 
-              process: {
-                id: process_id,
-                started_at: started_at,
-                status: ::Karafka::App.config.internal.status.to_s,
-                execution_mode: ::Karafka::Server.execution_mode.to_s,
-                listeners: listeners,
-                workers: workers,
-                memory_usage: @memory_usage,
-                memory_total_usage: @memory_total_usage,
-                memory_size: memory_size,
-                cpus: cpus,
-                threads: threads,
-                cpu_usage: @cpu_usage,
-                tags: Karafka::Process.tags,
-                bytes_received: bytes_received,
-                bytes_sent: bytes_sent
-              },
+                process: {
+                  id: process_id,
+                  started_at: started_at,
+                  status: ::Karafka::App.config.internal.status.to_s,
+                  execution_mode: ::Karafka::Server.execution_mode.to_s,
+                  listeners: listeners,
+                  workers: workers,
+                  memory_usage: @memory_usage,
+                  memory_total_usage: @memory_total_usage,
+                  memory_size: memory_size,
+                  cpus: cpus,
+                  threads: threads,
+                  cpu_usage: @cpu_usage,
+                  tags: Karafka::Process.tags,
+                  bytes_received: bytes_received,
+                  bytes_sent: bytes_sent
+                },
 
-              versions: {
-                ruby: ruby_version,
-                karafka: karafka_version,
-                karafka_core: karafka_core_version,
-                karafka_web: karafka_web_version,
-                waterdrop: waterdrop_version,
-                rdkafka: rdkafka_version,
-                librdkafka: librdkafka_version
-              },
+                versions: {
+                  ruby: ruby_version,
+                  karafka: karafka_version,
+                  karafka_core: karafka_core_version,
+                  karafka_web: karafka_web_version,
+                  waterdrop: waterdrop_version,
+                  rdkafka: rdkafka_version,
+                  librdkafka: librdkafka_version
+                },
 
-              stats: jobs_queue_statistics.merge(
-                utilization: utilization
-              ).merge(total: @counters),
+                stats: jobs_queue_statistics.merge(
+                  utilization: utilization
+                ).merge(total: @counters),
 
-              consumer_groups: enriched_consumer_groups,
-              jobs: jobs.values
-            }
+                consumer_groups: enriched_consumer_groups,
+                jobs: jobs.values
+              }
+            end
           end
 
           # Clears counters and errors.

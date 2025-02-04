@@ -230,6 +230,15 @@ module Karafka
             end
           end
 
+          # Normalizes the metric value for display. Negative values coming from statistics usually
+          #   mean, that the value is not (yet) available.
+          #
+          # @param value [Integer]
+          # @return [String] input value if not negative or N/A
+          def normalized_metric(value)
+            value.negative? ? 'N/A' : value.to_s
+          end
+
           # @param details [::Karafka::Web::Ui::Models::Partition] partition information with
           #   lso risk state info
           # @return [String] background classes for row marking

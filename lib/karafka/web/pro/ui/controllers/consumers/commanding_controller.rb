@@ -74,7 +74,7 @@ module Karafka
               # @param command [Symbol] command
               # @param process_id [String] process id
               def command(command, process_id)
-                Commanding::Dispatcher.command(command, process_id)
+                Commanding::Dispatcher.command("consumers.#{command}", process_id)
               end
 
               # @param process_id [String] find given process

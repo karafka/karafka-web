@@ -1,7 +1,7 @@
 <%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
 <%# See LICENSE for details. %>
 
-<h2 class="h2 mb-6">
+<h2 class="h2 mb-6" id="<%= subscription_group.id %>">
   <%= consumer_group.id %> /
   <%= subscription_group.id %>
 </h2>
@@ -18,27 +18,27 @@
       <table class="data-table">
         <thead>
           <tr>
-            <th colspan="10">
+            <th colspan="6">
               <%= topic.name %>
             </th>
           </tr>
           <tr>
             <th rowspan="2"><%== sort_link('Partition', :id) %></th>
-            <th colspan="1">Lag</th>
-            <th colspan="3">Offsets</th>
+            <th rowspan="2"><%== sort_link(:poll_state) %></th>
+            <th rowspan="2"><%== sort_link(:lag_hybrid) %></th>
+            <th colspan="2">Offsets</th>
+            <th rowspan="2">Options</th>
           </tr>
           <tr>
-            <th><%== sort_link(:lag_hybrid) %></th>
             <th><%== sort_link(:committed_offset) %></th>
             <th><%== sort_link(:stored_offset) %></th>
-            <th></th>
           </tr>
         </thead>
         <tbody>
             <% topic.partitions.each do |partition| %>
               <%==
                 partial(
-                  'consumers/offsets/partition',
+                  'consumers/partitions/offsets/partition',
                   locals: {
                     topic: topic,
                     partition: partition,

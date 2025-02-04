@@ -9,7 +9,7 @@
   <% if @command_messages && !@command_messages.empty? %>
     <section class="actions">
       <a
-        href="<%= root_path('consumers', 'commands', 'recent') %>"
+        href="<%= consumers_path('commands', 'recent') %>"
         class="btn-action"
         title="Display the most recent command"
       >
