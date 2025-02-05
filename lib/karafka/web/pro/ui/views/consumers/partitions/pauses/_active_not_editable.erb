@@ -1,0 +1,22 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<% alert_box_error 'Cannot Configure Pause Settings' do %>
+  <p class="mb-2">
+    This partition is currently active and processing messages.
+  </p>
+  <p class="mb-2">
+    Pause settings can only be configured for partitions that are already in a paused state.
+  </p>
+  <p>
+    You can pause this partition first using the pause action from the partitions list.
+  </p>
+<% end %>
+
+<div class="form-control text-center mt-6">
+  <div class="flex justify-end">
+    <a href="<%= consumer_path(@process.id, 'partitions') %>" class="btn btn-ghost">
+      Cancel
+    </a>
+  </div>
+</div>

@@ -30,6 +30,18 @@ module Karafka
               @request_params.fetch(key.to_s)
             end
 
+            # @param key [String, Symbol] params key
+            # @return [Integer] integer casted value of the key
+            def int(key)
+              self[key].to_i
+            end
+
+            # @param key [String, Symbol] params key
+            # @return [Boolean] boolean key value
+            def bool(key)
+              self[key] == 'on'
+            end
+
             # @return [Hash] current search or empty if no search query present
             def current_search
               return @current_search if @current_search

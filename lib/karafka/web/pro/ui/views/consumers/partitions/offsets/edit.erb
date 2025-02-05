@@ -1,3 +1,6 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
 <% view_title "#{@process.id} - Offset Adjustment - #{@subscription_group_id} - #{@topic}##{@partition_id}" %>
 
 <% if @process.status != 'running' %>
@@ -72,9 +75,9 @@
         <label class="w-1/4 text-gray-700">Resume Immediately:</label>
         <div class="w-3/4">
           <label class="flex items-center gap-4 cursor-pointer">
-            <input type="hidden" name="force_unpause" value="off">
+            <input type="hidden" name="force_resume" value="off">
             <input
-              name="force_unpause"
+              name="force_resume"
               type="checkbox"
               class="checkbox checkbox-warning"
               <%= 'disabled' if @topic_lrj %>
@@ -99,7 +102,10 @@
 
       <div class="form-control text-center mt-6 ">
         <div class="flex gap-4 justify-end">
-          <a href="<%= consumer_path(@process.id, 'partitions', @subscription_group.id, @topic, @partition_id, 'offsets') %>" class="btn btn-ghost">
+          <a
+            href="<%= consumer_path(@process.id, 'partitions', @subscription_group.id, @topic, @partition_id, 'offsets') %>"
+            class="btn btn-ghost"
+          >
             Cancel
           </a>
 

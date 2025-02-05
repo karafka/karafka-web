@@ -5,12 +5,15 @@
   <td>
     <%= partition.id %>
   </td>
+
   <td>
     <%== poll_state_with_change_time_label(partition.poll_state, partition.poll_state_ch) %>
   </td>
+
   <td>
     <%== lag_with_label partition.lag_hybrid %>
   </td>
+
   <td>
     <% if partition.stored_offset.negative? %>
       <%== offset_with_label topic.name, partition.id, partition.committed_offset - 1 %>
@@ -18,9 +21,11 @@
       <%== offset_with_label topic.name, partition.id, partition.committed_offset %>
     <% end %>
   </td>
+
   <td>
     <%== offset_with_label topic.name, partition.id, partition.stored_offset %>
   </td>
+
   <td>
     <% if Karafka::Web.config.commanding.active %>
       <a
@@ -31,12 +36,22 @@
         <%== icon(:pencil_square) %>
       </a>
 
+      <% if partition.poll_state != 'active' %>
+        <a
+          href="<%= consumer_path(@process.id, 'partitions', subscription_group.id, topic.name, partition.id, 'pause', 'edit') %>"
+          class="btn btn-success btn-sm"
+          title="Resume processing of this topic partition"
+        >
+          <%== icon(:play) %>
+        </a>
+      <% end %>
+
       <a
-        href="<%= consumer_path(@process.id, 'partitions', subscription_group.id, topic.name, partition.id, 'pause', 'toggle') %>"
+        href="<%= consumer_path(@process.id, 'partitions', subscription_group.id, topic.name, partition.id, 'pause', 'new') %>"
         class="btn btn-warning btn-sm"
-        title="Manage the pause state for this topic partition"
+        title="Setup or configure pause duration for this topic partition"
       >
-        <%== icon(:play_pause) %>
+        <%== icon(:pause) %>
       </a>
     <% else %>
       <span class="text-muted">Commanding has been disabled.</span>

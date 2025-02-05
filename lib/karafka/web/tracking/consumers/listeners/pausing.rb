@@ -8,10 +8,7 @@ module Karafka
           # Tracks pausing and un-pausing of topics partitions for both user requested and
           # automatic events.
           class Pausing < Base
-            # Indicate pause
-            #
-            # @param event [Karafka::Core::Monitoring::Event]
-            def on_consumer_consuming_pause(event)
+            def on_client_pause(event)
               track do |sampler|
                 sampler.pauses[pause_id(event)] = {
                   timeout: event[:timeout],

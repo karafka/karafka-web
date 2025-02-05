@@ -10,17 +10,24 @@ module Karafka
         module Controllers
           module Consumers
             module Partitions
+              # Base controller for all the partition related management stuff
               class BaseController < ConsumersController
                 private
 
                 # Finds all the needed details and if not found raises a not found.
-                # This prevents most cases where something would change between visiting the edit
-                # page and dispatching no longer valid data.
+                # This prevents most cases where something would change between visiting the pages
+                # and dispatching no longer valid data.
                 #
-                #
-                # @param consumer_groups [Array<Karafka::Web::Ui::Models::ConsumerGroup>] current
-                #   process consumer groups in use.
-                def bootstrap!(consumer_groups, process_id, subscription_group_id, topic, partition_id)
+                # @param process_id [String]
+                # @param subscription_group_id [String]
+                # @param topic [String]
+                # @param partition_id [Integer]
+                def bootstrap!(
+                  process_id,
+                  subscription_group_id,
+                  topic,
+                  partition_id
+                )
                   subscriptions(process_id)
 
                   @subscription_group_id = subscription_group_id
@@ -30,7 +37,11 @@ module Karafka
                   @subscription_group = nil
                   @partition_stats = nil
 
-                  consumer_groups.each do |consumer_group|
+                  # Looks for the appropriate details aobut given partition and so on in the
+                  # current process data. Since we operate in the context of the given process,
+                  # it must have those details. If not it means that assignment most likely have
+                  # changed and it is no longer valid anyhow.
+                  @process.consumer_groups.each do |consumer_group|
                     consumer_group.subscription_groups.each do |subscription_group|
                       next unless subscription_group.id == @subscription_group_id
 
@@ -55,10 +66,11 @@ module Karafka
                     topic.subscription_group.id == @subscription_group.id && topic.name == @topic
                   end
 
-                  # May not be found when not all routing is available
-                  @topic_lrj = @routing_topic && @routing_topic.long_running_job?
                   @subscription_group || raise(Karafka::Web::Errors::Ui::NotFoundError)
                   @partition_stats || raise(Karafka::Web::Errors::Ui::NotFoundError)
+                  # May not be found when not all routing is available. In such cases we assume
+                  # that topic is not LRJ and it's up to the end user to handle this correctly.
+                  @topic_lrj = @routing_topic && @routing_topic.long_running_job?
                 end
               end
             end

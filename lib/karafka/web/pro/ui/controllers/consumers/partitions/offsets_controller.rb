@@ -10,6 +10,8 @@ module Karafka
         module Controllers
           module Consumers
             module Partitions
+              # Partition offset management controller in the context of current consumer process
+              # assignments
               class OffsetsController < BaseController
                 self.sortable_attributes = %w[
                   id
@@ -19,6 +21,10 @@ module Karafka
                   poll_state
                 ].freeze
 
+                # Displays the list of currently assigned partitions to this process with the
+                # processing details and edit/pause options (when applicable). It is the starting
+                # point for all the management.
+                #
                 # @param process_id [String] id of the process we're interested in
                 def index(process_id)
                   subscriptions(process_id)
@@ -26,20 +32,19 @@ module Karafka
                   render
                 end
 
-                # Displays the edit page
+                # Displays the offset edit page with the edit form or a warning when not applicable
                 #
                 # @param process_id [String] id of the process we're interested in
                 # @param subscription_group_id [String]
                 # @param topic [String]
                 # @param partition_id [Integer]
                 def edit(process_id, subscription_group_id, topic, partition_id)
-                  subscriptions(process_id)
-                  bootstrap!(@process.consumer_groups, process_id, subscription_group_id, topic, partition_id)
+                  bootstrap!(process_id, subscription_group_id, topic, partition_id)
 
                   render
                 end
 
-                # Triggers the offset change in the running process via the commanding
+                # Triggers the offset change in the running process via the commanding API
                 #
                 # @param process_id [String] id of the process we're interested in
                 # @param subscription_group_id [String]
@@ -48,9 +53,9 @@ module Karafka
                 def update(process_id, subscription_group_id, topic, partition_id)
                   edit(process_id, subscription_group_id, topic, partition_id)
 
-                  offset = @params[:offset].to_i
-                  prevent_overtaking = @params[:prevent_overtaking] == 'on'
-                  force_unpause = @params[:force_unpause] == 'on'
+                  offset = params.int(:offset)
+                  prevent_overtaking = params.bool(:prevent_overtaking)
+                  force_resume = params.bool(:force_resume)
 
                   Commanding::Dispatcher.command(
                     Commanding::Commands::Partitions::Seek.id,
@@ -62,7 +67,7 @@ module Karafka
                       partition_id: partition_id,
                       offset: offset,
                       prevent_overtaking: prevent_overtaking,
-                      force_unpause: force_unpause
+                      force_resume: force_resume
                     }
                   )
 

@@ -1,0 +1,81 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<%
+  pause_path = consumer_path(
+    @process.id,
+    'partitions',
+    @subscription_group.id,
+    @topic,
+    @partition_id,
+    'pause'
+  )
+%>
+
+<div class="card bg-base-100 mt-4">
+ <div class="card-body">
+    <form class="space-y-4 w-full" method="post" action="<%= pause_path %>">
+      <%== csrf_tag(pause_path) %>
+
+      <div class="flex items-center w-full mb-8">
+        <label class="w-1/4 text-gray-700">Pause Duration:</label>
+        <div class="w-3/4">
+          <input
+            type="number"
+            min="0"
+            max="31536000"
+            name="duration"
+            class="block input input-bordered w-full"
+            placeholder="Enter pause duration in seconds (0 for indefinite)"
+            required
+          />
+
+          <div class="text-sm text-gray-500 mt-1">
+           Set to 0 for indefinite pause or specify time in seconds
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center w-full">
+        <label class="w-1/4 text-gray-700">Safety Check:</label>
+        <div class="w-3/4">
+          <label class="flex items-center gap-4 cursor-pointer">
+            <input type="hidden" name="prevent_override" value="off">
+
+            <input
+             type="checkbox"
+             name="prevent_override"
+             class="checkbox checkbox-warning"
+             checked
+            />
+
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                Only pause if partition is not already paused
+              </div>
+              <div class="text-sm text-gray-500">
+                Prevents accidental override of existing pause
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-control text-center mt-6">
+        <div class="flex gap-4 justify-end">
+          <a
+            href="<%= consumer_path(@process.id, 'partitions', @subscription_group.id, @topic, @partition_id, 'offsets') %>"
+            class="btn btn-ghost"
+          >
+            Cancel
+          </a>
+
+          <button type="submit" class="btn btn-warning gap-2 btn-lockable">
+            <%== icon(:play_pause) %>
+            Set or Update Pause
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

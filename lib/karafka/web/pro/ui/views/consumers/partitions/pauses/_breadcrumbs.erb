@@ -26,28 +26,41 @@
     </a>
   </li>
 
-  <% new_path = consumer_path(@process.id, 'partitions', @subscription_group_id, @topic, @partition_id, 'pause', 'toggle') %>
+  <%
+    action = current_path.include?('/new') ? 'new' : 'edit'
+
+    target_path = consumer_path(
+      @process.id,
+      'partitions',
+      @subscription_group_id,
+      @topic,
+      @partition_id,
+      'pause',
+      action
+    )
+  %>
+
   <li>
-    <a href="<%= new_path %>">
+    <a href="<%= target_path %>">
       <%= @topic %>
     </a>
   </li>
 
   <li>
-    <a href="<%= new_path %>">
+    <a href="<%= target_path %>">
       <%= @partition_id %>
     </a>
   </li>
 
   <li>
-    <a href="<%= new_path %>">
+    <a href="<%= target_path %>">
       Pauses
     </a>
   </li>
 
   <li>
-    <a href="<%= new_path %>">
-      Toggle
+    <a href="<%= target_path %>">
+      <%= action.capitalize %>
     </a>
   </li>
 <% end %>

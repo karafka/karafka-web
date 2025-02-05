@@ -34,15 +34,21 @@ module Karafka
                   controller = Controllers::Consumers::Partitions::PausesController.new(params)
 
                   r.get(
-                    String, String, :partition_id, 'pause', 'toggle'
+                    String, String, :partition_id, 'pause', 'new'
                   ) do |subscription_group_id, topic, partition_id|
-                    controller.toggle(process_id, subscription_group_id, topic, partition_id)
+                    controller.new(process_id, subscription_group_id, topic, partition_id)
                   end
 
                   r.post(
                     String, String, :partition_id, 'pause'
                   ) do |subscription_group_id, topic, partition_id|
                     controller.create(process_id, subscription_group_id, topic, partition_id)
+                  end
+
+                  r.get(
+                    String, String, :partition_id, 'pause', 'edit'
+                  ) do |subscription_group_id, topic, partition_id|
+                    controller.edit(process_id, subscription_group_id, topic, partition_id)
                   end
 
                   r.delete(

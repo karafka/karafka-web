@@ -79,6 +79,10 @@ module Karafka
                         Commands::Consumers::Quiet
                       when Commands::Partitions::Seek.id
                         Commands::Partitions::Seek
+                      when Commands::Partitions::Resume.id
+                        Commands::Partitions::Resume
+                      when Commands::Partitions::Pause.id
+                        Commands::Partitions::Pause
                       else
                         # We raise it and will be rescued, reported and ignored. We raise it as
                         # this should not happen unless there are version conflicts

@@ -26,7 +26,18 @@
     </a>
   </li>
 
-  <% edit_path = consumer_path(@process.id, 'partitions', @subscription_group_id, @topic, @partition_id, 'offset', 'edit') %>
+  <%
+    edit_path = consumer_path(
+      @process.id,
+      'partitions',
+      @subscription_group_id,
+      @topic,
+      @partition_id,
+      'offset',
+      'edit'
+    )
+  %>
+
   <li>
     <a href="<%= edit_path %>">
       <%= @topic %>

@@ -10,26 +10,88 @@ module Karafka
         module Controllers
           module Consumers
             module Partitions
+              # Controller for managing partitions pauses in the context of the given consumer
+              # process
               class PausesController < BaseController
                 self.sortable_attributes = %w[].freeze
 
-                def toggle(process_id, subscription_group_id, topic, partition_id)
-                  subscriptions(process_id)
-                  bootstrap!(@process.consumer_groups, process_id, subscription_group_id, topic, partition_id)
+                # Displays the toggle (pause / resume)
+                #
+                # @param process_id [String] id of the process we're interested in
+                # @param subscription_group_id [String]
+                # @param topic [String]
+                # @param partition_id [Integer]
+                def new(process_id, subscription_group_id, topic, partition_id)
+                  bootstrap!(process_id, subscription_group_id, topic, partition_id)
 
                   render
                 end
 
+                # @param process_id [String]
+                # @param subscription_group_id [String]
+                # @param topic [String]
+                # @param partition_id [Integer]
                 def create(process_id, subscription_group_id, topic, partition_id)
-                  toggle(process_id, subscription_group_id, topic, partition_id)
+                  new(process_id, subscription_group_id, topic, partition_id)
+
+                  Commanding::Dispatcher.command(
+                    Commanding::Commands::Partitions::Pause.id,
+                    process_id,
+                    {
+                      consumer_group_id: @consumer_group.id,
+                      subscription_group_id: @subscription_group.id,
+                      topic: topic,
+                      partition_id: partition_id,
+                      duration: params.int(:duration),
+                      prevent_override: params.bool(:prevent_override)
+                    }
+                  )
+
+                  redirect(
+                    "consumers/#{process_id}/partitions",
+                    success: <<~MESSAGE
+                      Initiated partition pause for #{topic}##{partition_id}
+                      (subscription group: #{subscription_group_id})
+                    MESSAGE
+                  )
+                end
+
+                # @param process_id [String]
+                # @param subscription_group_id [String]
+                # @param topic [String]
+                # @param partition_id [Integer]
+                def edit(process_id, subscription_group_id, topic, partition_id)
+                  new(process_id, subscription_group_id, topic, partition_id)
 
                   render
                 end
 
+                # @param process_id [String]
+                # @param subscription_group_id [String]
+                # @param topic [String]
+                # @param partition_id [Integer]
                 def delete(process_id, subscription_group_id, topic, partition_id)
-                  toggle(process_id, subscription_group_id, topic, partition_id)
+                  new(process_id, subscription_group_id, topic, partition_id)
 
-                  render
+                  Commanding::Dispatcher.command(
+                    Commanding::Commands::Partitions::Resume.id,
+                    process_id,
+                    {
+                      consumer_group_id: @consumer_group.id,
+                      subscription_group_id: @subscription_group.id,
+                      topic: topic,
+                      partition_id: partition_id,
+                      reset_attempts: params.bool(:reset_attempts)
+                    }
+                  )
+
+                  redirect(
+                    "consumers/#{process_id}/partitions",
+                    success: <<~MESSAGE
+                      Initiated partition resume for #{topic}##{partition_id}
+                      (subscription group: #{subscription_group_id})
+                    MESSAGE
+                  )
                 end
               end
             end
