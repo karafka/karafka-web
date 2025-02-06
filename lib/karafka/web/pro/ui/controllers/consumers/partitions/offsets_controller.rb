@@ -57,8 +57,8 @@ module Karafka
                   prevent_overtaking = params.bool(:prevent_overtaking)
                   force_resume = params.bool(:force_resume)
 
-                  Commanding::Dispatcher.command(
-                    Commanding::Commands::Partitions::Seek.id,
+                  Commanding::Dispatcher.request(
+                    Commanding::Commands::Partitions::Seek.name,
                     process_id,
                     {
                       consumer_group_id: @consumer_group.id,

@@ -31,7 +31,7 @@ module Karafka
             end
 
             # @param key [String, Symbol] params key
-            # @return [Integer] integer casted value of the key
+            # @return [Integer] integer value of the key
             def int(key)
               self[key].to_i
             end

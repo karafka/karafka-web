@@ -13,7 +13,7 @@ module Karafka
             # Sends a signal to stop the process
             # @note Does not work in an embedded mode because we do not own the Ruby process.
             class Stop < Base
-              self.id = 'consumers.stop'
+              self.name = 'consumers.stop'
 
               # Performs the command if not in embedded mode
               def call
@@ -21,7 +21,7 @@ module Karafka
 
                 ::Process.kill('QUIT', ::Process.pid)
 
-                Dispatcher.result({ status: 'applied' }, process_id, id)
+                result(status: 'applied')
               end
             end
           end

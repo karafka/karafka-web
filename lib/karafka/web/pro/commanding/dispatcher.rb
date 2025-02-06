@@ -19,18 +19,19 @@ module Karafka
           class << self
             # Dispatches the command request
             #
-            # @param name [String, Symbol] name of the command we want to deal with in the process
+            # @param command_name [String, Symbol] name of the command we want to deal with in the process
             # @param process_id [String] id of the process. We use name instead of id only
             #   because in the web ui we work with the full name and it is easier. Since
             # @param params [Hash] hash with extra command params that some commands may use.
-            def command(name, process_id, params = {})
+            def request(command_name, process_id, params = {})
               produce(
                 process_id,
+                'request',
                 {
                   schema_version: SCHEMA_VERSION,
-                  type: 'command',
+                  type: 'request',
                   # Name is auto-generated and required. Should not be changed
-                  command: params.merge(name: name),
+                  command: params.merge(name: command_name),
                   dispatched_at: Time.now.to_f,
                   process: {
                     id: process_id
@@ -43,12 +44,13 @@ module Karafka
             # action will be taken but async. Useful for commands that may not take immediate
             # actions upon receiving a command.
             #
-            # @param params [Hash] input command params (or empty hash if none)
-            # @param process_id [String] related process id
             # @param command_name [String, Symbol] command that triggered this result
-            def acceptance(params, process_id, command_name)
+            # @param process_id [String] related process id
+            # @param params [Hash] input command params (or empty hash if none)
+            def acceptance(command_name, process_id, params = {})
               produce(
                 process_id,
+                'acceptance',
                 {
                   schema_version: SCHEMA_VERSION,
                   type: 'acceptance',
@@ -63,12 +65,13 @@ module Karafka
 
             # Dispatches the result request
             #
-            # @param result [Object] anything that can be the result of the command execution
-            # @param process_id [String] related process id
             # @param command_name [String, Symbol] command that triggered this result
-            def result(result, process_id, command_name)
+            # @param process_id [String] related process id
+            # @param result [Object] anything that can be the result of the command execution
+            def result(command_name, process_id, result)
               produce(
                 process_id,
+                'result',
                 {
                   schema_version: SCHEMA_VERSION,
                   type: 'result',
@@ -98,15 +101,19 @@ module Karafka
 
             # Converts payload to json, compresses it and dispatches to Kafka
             #
-            # @param payload [Hash] hash with payload
             # @param process_id [String]
-            def produce(process_id, payload)
+            # @param type [String] type of the request
+            # @param payload [Hash] hash with payload
+            def produce(process_id, type, payload)
               producer.produce_async(
                 topic: commands_topic,
                 key: process_id,
                 partition: 0,
                 payload: ::Zlib::Deflate.deflate(payload.to_json),
-                headers: { 'zlib' => 'true' }
+                headers: {
+                  'zlib' => 'true',
+                  'type' => type
+                }
               )
             end
           end

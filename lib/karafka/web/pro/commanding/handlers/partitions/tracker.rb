@@ -14,46 +14,44 @@ module Karafka
             class Tracker
               include Singleton
 
-              # Empty hash for internal usage
-              EMPTY_HASH = {}.freeze
+              # Empty array for internal usage
+              EMPTY_ARRAY = [].freeze
 
-              private_constant :EMPTY_HASH
+              private_constant :EMPTY_ARRAY
 
               def initialize
                 @mutex = Mutex.new
-                @requests = Hash.new { |h, k| h[k] = {} }
+                @requests = Hash.new { |h, k| h[k] = [] }
               end
 
-              def each_for(subscription_group_id)
-                (delete(subscription_group_id) || EMPTY_HASH).each_value do |details|
-                  yield(details)
+              # Adds the given command into the tracker so it can be retrieved when needed.
+              #
+              # @param command [Request] command we want to schedule
+              # @note We accumulate requests per subscription group because this is the layer of
+              #   applicability of those even for partition related requests.
+              def <<(command)
+                @mutex.synchronize do
+                  @requests[command[:subscription_group_id]] << command
                 end
               end
 
-              def <<(details)
-                subscription_group_id = details.fetch(:subscription_group_id)
-                topic = details.fetch(:topic)
-                partition_id = details.fetch(:partition_id)
-                key = key(topic, partition_id)
+              # Selects all incoming command requests for given subscription group and iterates
+              # over them. It removes selected requests during iteration.
+              #
+              # @param subscription_group_id [String] id of the subscription group for which we
+              #   want to get all the requests. Subscription groups ids (not names) are unique
+              #   within the application, so it is unique "enough".
+              # @param block [Proc]
+              #
+              # @yieldparam [Request] given command request for the requested subscription group
+              def each_for(subscription_group_id, &block)
+                requests = nil
 
                 @mutex.synchronize do
-                  @requests[subscription_group_id][key] = details
+                  requests = @requests.delete(subscription_group_id)
                 end
-              end
 
-              private
-
-              def delete(subscription_group_id)
-                @mutex.synchronize do
-                  @requests.delete(subscription_group_id)
-                end
-              end
-
-              def key(topic, partition_id)
-                [
-                  topic,
-                  partition_id
-                ].map(&:to_s).join
+                (requests || EMPTY_ARRAY).each(&block)
               end
             end
           end

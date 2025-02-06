@@ -11,15 +11,15 @@ module Karafka
           module Partitions
             # Topic partition seek command request handler
             class Seek < Base
-              self.id = 'partitions.seek'
+              self.name = 'partitions.seek'
 
               # Dispatches the seek request into the appropriate filter and indicates that the
               # seeking is in an acceptance state
               def call
-                Handlers::Partitions::Tracker.instance << params
+                Handlers::Partitions::Tracker.instance << command
 
                 # Publish back info on who did this with all the details for inspection
-                Dispatcher.acceptance(params, process_id, id)
+                acceptance(command.to_h)
               end
             end
           end

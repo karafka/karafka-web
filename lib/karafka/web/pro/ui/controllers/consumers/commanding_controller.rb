@@ -16,7 +16,10 @@ module Karafka
               #
               # @param process_id [String]
               def trace(process_id)
-                command(:trace, process_id)
+                request(
+                  Commanding::Commands::Consumers::Trace,
+                  process_id
+                )
 
                 redirect(
                   :back,
@@ -28,7 +31,10 @@ module Karafka
               #
               # @param process_id [String]
               def quiet(process_id)
-                command(:quiet, process_id)
+                request(
+                  Commanding::Commands::Consumers::Quiet,
+                  process_id
+                )
 
                 redirect(
                   :back,
@@ -40,7 +46,10 @@ module Karafka
               #
               # @param process_id [String]
               def stop(process_id)
-                command(:stop, process_id)
+                request(
+                  Commanding::Commands::Consumers::Stop,
+                  process_id
+                )
 
                 redirect(
                   :back,
@@ -50,7 +59,10 @@ module Karafka
 
               # Dispatches the quiet request that should trigger on all consumers
               def quiet_all
-                command(:quiet, '*')
+                request(
+                  Commanding::Commands::Consumers::Quiet,
+                  '*'
+                )
 
                 redirect(
                   :back,
@@ -60,7 +72,10 @@ module Karafka
 
               # Dispatches the stop request that should trigger on all consumers
               def stop_all
-                command(:stop, '*')
+                request(
+                  Commanding::Commands::Consumers::Stop,
+                  '*'
+                )
 
                 redirect(
                   :back,
@@ -71,10 +86,13 @@ module Karafka
               private
 
               # Dispatches given command
-              # @param command [Symbol] command
+              # @param command [Class] command class
               # @param process_id [String] process id
-              def command(command, process_id)
-                Commanding::Dispatcher.command("consumers.#{command}", process_id)
+              def request(command, process_id)
+                Commanding::Dispatcher.request(
+                  command.name,
+                  process_id
+                )
               end
 
               # @param process_id [String] find given process
@@ -86,20 +104,20 @@ module Karafka
               end
 
               # Generates a nice flash message about the dispatch
-              # @param command [Symbol]
+              # @param name [Symbol]
               # @param process_id [String]
               # @return [String] flash message that command has been dispatched to a given process
-              def dispatched_to_one(command, process_id)
-                command_name = command.to_s.capitalize
+              def dispatched_to_one(name, process_id)
+                command_name = name.to_s.capitalize
 
                 "The #{command_name} command has been dispatched to the #{process_id} process."
               end
 
               # Generates a nice flash message about dispatch of multi-process command
-              # @param command [Symbol]
+              # @param name [Symbol]
               # @return [String] flash message that command has been dispatched
-              def dispatched_to_all(command)
-                command_name = command.to_s.capitalize
+              def dispatched_to_all(name)
+                command_name = name.to_s.capitalize
 
                 "The #{command_name} command has been dispatched to all active processes."
               end

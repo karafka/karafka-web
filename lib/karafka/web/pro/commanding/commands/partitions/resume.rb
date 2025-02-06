@@ -10,15 +10,15 @@ module Karafka
         module Commands
           module Partitions
             class Resume < Base
-              self.id = 'partitions.resume'
+              self.name = 'partitions.resume'
 
               # Dispatches the seek request into the appropriate filter and indicates that the
               # seeking is in an acceptance state
               def call
-                Handlers::Partitions::Tracker.instance << params
+                Handlers::Partitions::Tracker.instance << command
 
                 # Publish back info on who did this with all the details for inspection
-                Dispatcher.acceptance(params, process_id, id)
+                acceptance(command.to_h)
               end
             end
           end

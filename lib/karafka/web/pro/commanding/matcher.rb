@@ -16,17 +16,15 @@ module Karafka
           # @param message [Karafka::Messages::Message] message with command
           # @return [Boolean] is this message dedicated to current process and is actionable
           def matches?(message)
-            matches = true
-
+            # We operate only on commands. Result and other messages should be ignored
+            return false unless message.headers['type'] == 'request'
             # We want to work only with commands that target all processes or our current
-            matches = false unless message.key == '*' || message.key == process_id
-            # We operate only on commands. Result messages should be ignored
-            matches = false unless message.payload[:type] == 'command'
+            return false unless message.key == '*' || message.key == process_id
             # Ignore messages that have different schema. This can happen in the middle of
             # upgrades of the framework. We ignore this not to risk compatibility issues
-            matches = false unless message.payload[:schema_version] == Dispatcher::SCHEMA_VERSION
+            return unless message.payload[:schema_version] == Dispatcher::SCHEMA_VERSION
 
-            matches
+            true
           end
 
           private

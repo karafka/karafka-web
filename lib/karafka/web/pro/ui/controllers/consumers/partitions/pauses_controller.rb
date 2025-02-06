@@ -34,15 +34,16 @@ module Karafka
                 def create(process_id, subscription_group_id, topic, partition_id)
                   new(process_id, subscription_group_id, topic, partition_id)
 
-                  Commanding::Dispatcher.command(
-                    Commanding::Commands::Partitions::Pause.id,
+                  Commanding::Dispatcher.request(
+                    Commanding::Commands::Partitions::Pause.name,
                     process_id,
                     {
                       consumer_group_id: @consumer_group.id,
                       subscription_group_id: @subscription_group.id,
                       topic: topic,
                       partition_id: partition_id,
-                      duration: params.int(:duration),
+                      # User provides this in seconds, we operate on ms in the system
+                      duration: params.int(:duration) * 1_000,
                       prevent_override: params.bool(:prevent_override)
                     }
                   )
@@ -73,8 +74,8 @@ module Karafka
                 def delete(process_id, subscription_group_id, topic, partition_id)
                   new(process_id, subscription_group_id, topic, partition_id)
 
-                  Commanding::Dispatcher.command(
-                    Commanding::Commands::Partitions::Resume.id,
+                  Commanding::Dispatcher.request(
+                    Commanding::Commands::Partitions::Resume.name,
                     process_id,
                     {
                       consumer_group_id: @consumer_group.id,

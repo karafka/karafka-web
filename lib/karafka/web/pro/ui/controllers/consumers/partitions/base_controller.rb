@@ -37,7 +37,7 @@ module Karafka
                   @subscription_group = nil
                   @partition_stats = nil
 
-                  # Looks for the appropriate details aobut given partition and so on in the
+                  # Looks for the appropriate details about given partition and so on in the
                   # current process data. Since we operate in the context of the given process,
                   # it must have those details. If not it means that assignment most likely have
                   # changed and it is no longer valid anyhow.
