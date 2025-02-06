@@ -3,14 +3,13 @@
 
 <% view_title @process.id %>
 
-<%== partial 'consumers/consumers/consumer/commands', locals: { process: @process } %>
-
 <% if @process.status == 'stopped' %>
   <%== partial 'consumers/consumers/consumer/stopped' %>
 <% end %>
 
-<%== partial 'consumers/consumers/consumer/metrics' %>
-
 <%== partial 'consumers/consumers/consumer/tabs' %>
+
+<%== partial 'consumers/consumers/consumer/commands', locals: { process: @process } %>
+<%== partial 'consumers/consumers/consumer/metrics' %>
 
 <pre class="code"><code class="json p-0 m-0"><%= JSON.pretty_generate(@process.to_h) %></code></pre>

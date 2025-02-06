@@ -8,6 +8,7 @@
 - [Enhancement] Provide better support for fully transactional consumers.
 - [Enhancement] Error out when `#setup` is called after `#enable!`.
 - [Change] Remove per-consumer process duplicated details from Subscriptions and Jobs tabs.
+- [Fix] Normalize position of commanding buttons in regards to other UI elements.
 - [Fix] Fix incorrect indentation of some of the info messages.
 - [Fix] Fix tables headers inconsistent alignments.
 - [Fix] Fix incorrect warning box header color in the dark mode.
