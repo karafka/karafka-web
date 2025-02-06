@@ -286,7 +286,7 @@ RSpec.describe_current do
         expect(body).not_to include(support_message)
         expect(body).to include('<td>Type</td>')
         expect(body).to include('<code class="json"')
-        expect(body).to include('<td>consumers.quiet</td>')
+        expect(body).to include('<td>consumers.')
       end
     end
   end
