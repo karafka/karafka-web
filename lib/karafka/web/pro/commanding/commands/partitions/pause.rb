@@ -8,6 +8,7 @@ module Karafka
     module Pro
       module Commanding
         module Commands
+          # Namespace for post-fetch command execution
           module Partitions
             # Delegates the pause request into the partition changes tracker and dispatches the
             # acceptance message back to Kafka

@@ -9,6 +9,8 @@ module Karafka
       module Ui
         module Controllers
           module Consumers
+            # Namespace for controllers related to working with particular partitions in the
+            # context of consumers processes
             module Partitions
               # Base controller for all the partition related management stuff
               class BaseController < ConsumersController
@@ -71,7 +73,7 @@ module Karafka
                   @partition_stats || raise(Karafka::Web::Errors::Ui::NotFoundError)
                   # May not be found when not all routing is available. In such cases we assume
                   # that topic is not LRJ and it's up to the end user to handle this correctly.
-                  @topic_lrj = @routing_topic && @routing_topic.long_running_job?
+                  @topic_lrj = @routing_topic&.long_running_job?
                 end
               end
             end
