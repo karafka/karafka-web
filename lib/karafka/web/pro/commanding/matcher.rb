@@ -22,7 +22,7 @@ module Karafka
             return false unless message.key == '*' || message.key == process_id
             # Ignore messages that have different schema. This can happen in the middle of
             # upgrades of the framework. We ignore this not to risk compatibility issues
-            return unless message.payload[:schema_version] == Dispatcher::SCHEMA_VERSION
+            return false unless message.payload[:schema_version] == Dispatcher::SCHEMA_VERSION
 
             true
           end

@@ -12,7 +12,8 @@ RSpec.describe_current do
     instance_double(
       Karafka::Messages::Message,
       key: message_key,
-      payload: message_payload
+      payload: message_payload,
+      headers: { 'type' => message_payload[:type] }
     )
   end
 
@@ -26,21 +27,21 @@ RSpec.describe_current do
 
   context 'when message is for all processes and is a command of current schema version' do
     let(:message_key) { '*' }
-    let(:message_payload) { { type: 'command', schema_version: schema_version } }
+    let(:message_payload) { { type: 'request', schema_version: schema_version } }
 
     it { expect(matcher.matches?(message)).to be true }
   end
 
   context 'when message is for this process and is a command of current schema version' do
     let(:message_key) { process_id }
-    let(:message_payload) { { type: 'command', schema_version: schema_version } }
+    let(:message_payload) { { type: 'request', schema_version: schema_version } }
 
     it { expect(matcher.matches?(message)).to be true }
   end
 
   context 'when message key does not match current process id or "*"' do
     let(:message_key) { 'other_process_id' }
-    let(:message_payload) { { type: 'command', schema_version: schema_version } }
+    let(:message_payload) { { type: 'request', schema_version: schema_version } }
 
     it { expect(matcher.matches?(message)).to be false }
   end
@@ -54,7 +55,7 @@ RSpec.describe_current do
 
   context 'when message schema version does not match' do
     let(:message_key) { '*' }
-    let(:message_payload) { { type: 'command', schema_version: '2.0' } }
+    let(:message_payload) { { type: 'request', schema_version: '2.0' } }
 
     it { expect(matcher.matches?(message)).to be false }
   end

@@ -1,6 +1,7 @@
 # Karafka Web Changelog
 
 ## 0.11.0 (Unreleased)
+- [Feature] Provide ability to pause/resume partitions via the UI (Pro).
 - [Feature] Introduce a per-consumer offsets page and ability to edit offsets of running consumers (Pro).
 - [Feature] Support consumers that have mismatching schema.
 - [Feature] Provide ability to navigate to a timestamp in the Explorer (Pro).

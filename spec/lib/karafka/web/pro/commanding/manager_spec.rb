@@ -66,8 +66,8 @@ RSpec.describe_current do
     end
 
     context 'when command is trace' do
-      let(:trace_command) { Karafka::Web::Pro::Commanding::Commands::Trace.new({}) }
-      let(:command_name) { 'trace' }
+      let(:trace_command) { Karafka::Web::Pro::Commanding::Commands::Consumers::Trace.new({}) }
+      let(:command_name) { trace_command.class.name }
 
       before do
         allow(trace_command.class).to receive(:new).and_return(trace_command)
@@ -81,8 +81,8 @@ RSpec.describe_current do
     end
 
     context 'when command is quiet' do
-      let(:quiet_command) { Karafka::Web::Pro::Commanding::Commands::Quiet.new({}) }
-      let(:command_name) { 'quiet' }
+      let(:quiet_command) { Karafka::Web::Pro::Commanding::Commands::Consumers::Quiet.new({}) }
+      let(:command_name) { quiet_command.class.name }
 
       before do
         allow(quiet_command.class).to receive(:new).and_return(quiet_command)
@@ -96,8 +96,8 @@ RSpec.describe_current do
     end
 
     context 'when command is stop' do
-      let(:stop_command) { Karafka::Web::Pro::Commanding::Commands::Stop.new({}) }
-      let(:command_name) { 'stop' }
+      let(:stop_command) { Karafka::Web::Pro::Commanding::Commands::Consumers::Stop.new({}) }
+      let(:command_name) { stop_command.class.name }
 
       before do
         allow(stop_command.class).to receive(:new).and_return(stop_command)
