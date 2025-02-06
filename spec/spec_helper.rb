@@ -149,7 +149,7 @@ draw_defaults
 produce(TOPICS[0], Fixtures.consumers_states_file)
 produce(TOPICS[1], Fixtures.consumers_metrics_file)
 produce(TOPICS[2], Fixtures.consumers_reports_file)
-produce(TOPICS[3], Fixtures.consumers_commands_file)
+produce(TOPICS[3], Fixtures.consumers_commands_file('consumers/current.json'))
 
 # Run the migrations so even if we use older fixtures, the data in Kafka is aligned
 ::Karafka::Web::Management::Actions::MigrateStatesData.new.call

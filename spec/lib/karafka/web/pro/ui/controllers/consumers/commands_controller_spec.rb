@@ -42,7 +42,7 @@ RSpec.describe_current do
     context 'when command is with a schema that does not match system one' do
       before do
         topics_config.consumers.commands = commands_topic
-        data = Fixtures.consumers_commands_json
+        data = Fixtures.consumers_commands_json('consumers/current')
         data[:schema_version] = '0.0.1'
         produce(commands_topic, data.to_json)
         get 'consumers/commands'
@@ -88,7 +88,10 @@ RSpec.describe_current do
             stop
             quiet
           ].each do |type|
-            data = Fixtures.consumers_commands_json("v1.1.0_#{type}", symbolize_names: false)
+            data = Fixtures.consumers_commands_json(
+              "consumers/v1.1.0_#{type}",
+              symbolize_names: false
+            )
             id = ['*', SecureRandom.uuid].sample
             data['process']['id'] = id
             produce(commands_topic, data.to_json, key: id)
@@ -163,7 +166,10 @@ RSpec.describe_current do
       context "when visiting #{command} command" do
         before do
           topics_config.consumers.commands = commands_topic
-          produce(commands_topic, Fixtures.consumers_commands_file("v1.1.0_#{command}.json"))
+          produce(
+            commands_topic,
+            Fixtures.consumers_commands_file("consumers/v1.1.0_#{command}.json")
+          )
           get 'consumers/commands/0'
         end
 
@@ -175,7 +181,7 @@ RSpec.describe_current do
           expect(body).to include('<td>Type</td>')
           expect(body).to include('<code class="json"')
           # quiet_all and stop_all display just stop with a wildcard target
-          expect(body).to include("<td>#{command.split('_').first}</td>")
+          expect(body).to include("<td>consumers.#{command.split('_').first}</td>")
           expect(body).not_to include(incompatible_message)
         end
       end
@@ -183,7 +189,7 @@ RSpec.describe_current do
       context "when visiting #{command} command that is not with a compatible schema" do
         before do
           topics_config.consumers.commands = commands_topic
-          data = Fixtures.consumers_commands_json("v1.1.0_#{command}")
+          data = Fixtures.consumers_commands_json("consumers/v1.1.0_#{command}")
           data[:schema_version] = '0.0.1'
           produce(commands_topic, data.to_json)
           get 'consumers/commands/0'
@@ -205,7 +211,10 @@ RSpec.describe_current do
     context 'when visiting trace result' do
       before do
         topics_config.consumers.commands = commands_topic
-        produce(commands_topic, Fixtures.consumers_commands_file('v1.1.0_trace_result.json'))
+        produce(
+          commands_topic,
+          Fixtures.consumers_commands_file('consumers/v1.1.0_trace_result.json')
+        )
         get 'consumers/commands/0'
       end
 
@@ -225,7 +234,7 @@ RSpec.describe_current do
     context 'when visiting trace result that is not with a compatible schema' do
       before do
         topics_config.consumers.commands = commands_topic
-        data = Fixtures.consumers_commands_json('v1.1.0_trace_result')
+        data = Fixtures.consumers_commands_json('consumers/v1.1.0_trace_result')
         data[:schema_version] = '0.0.1'
         produce(commands_topic, data.to_json)
         get 'consumers/commands/0'
@@ -277,7 +286,7 @@ RSpec.describe_current do
         expect(body).not_to include(support_message)
         expect(body).to include('<td>Type</td>')
         expect(body).to include('<code class="json"')
-        expect(body).to include('<td>quiet</td>')
+        expect(body).to include('<td>consumers.quiet</td>')
       end
     end
   end

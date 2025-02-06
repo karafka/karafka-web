@@ -9,6 +9,7 @@ module Karafka
       module Commanding
         module Commands
           module Partitions
+            # Delegates the resuming of the processing
             class Resume < Base
               self.name = 'partitions.resume'
 

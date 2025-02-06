@@ -9,6 +9,7 @@ module Karafka
       module Commanding
         # Namespace for commands the process can react to
         module Commands
+          # Namespace for commands related to consumers themselves
           module Consumers
             # Sends a signal to quiet the consumer
             # @note Does not work in an embedded mode because we do not own the Ruby process.

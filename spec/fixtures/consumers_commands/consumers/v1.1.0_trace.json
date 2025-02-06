@@ -2,7 +2,7 @@
   "schema_version": "1.1.0",
   "type": "command",
   "command": {
-    "name": "stop"
+    "name": "consumers.trace"
   },
   "dispatched_at": 1712518179.6275373,
   "process": {

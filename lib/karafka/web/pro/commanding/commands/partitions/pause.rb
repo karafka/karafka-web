@@ -14,6 +14,7 @@ module Karafka
             class Pause < Base
               self.name = 'partitions.pause'
 
+              # Delegates the pause request to async handling
               def call
                 Handlers::Partitions::Tracker.instance << command
 

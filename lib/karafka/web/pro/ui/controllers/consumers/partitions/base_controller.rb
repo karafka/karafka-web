@@ -48,10 +48,10 @@ module Karafka
                       @subscription_group = subscription_group
                       @consumer_group = consumer_group
 
-                      subscription_group.topics.each do |topic|
-                        next unless topic.name == @topic
+                      subscription_group.topics.each do |s_topic|
+                        next unless s_topic.name == @topic
 
-                        topic.partitions.each do |partition|
+                        s_topic.partitions.each do |partition|
                           next unless @partition_id.to_s == partition.partition_id.to_s
 
                           @partition_stats = partition
@@ -62,8 +62,9 @@ module Karafka
 
                   routing_topics = Karafka::App.routes.flat_map(&:topics).flat_map(&:to_a)
 
-                  @routing_topic = routing_topics.find do |topic|
-                    topic.subscription_group.id == @subscription_group.id && topic.name == @topic
+                  @routing_topic = routing_topics.find do |r_topic|
+                    r_topic.subscription_group.id == @subscription_group.id &&
+                      r_topic.name == @topic
                   end
 
                   @subscription_group || raise(Karafka::Web::Errors::Ui::NotFoundError)
