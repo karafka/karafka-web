@@ -69,6 +69,7 @@ RSpec.describe_current do
       expect(topic_data[0][:process][:stats][:total][:errors]).to eq(0)
       expect(topic_data[0][:process][:stats][:total][:messages]).to eq(22)
       expect(topic_data[0][:process][:stats][:total][:retries]).to eq(0)
+      expect(topic_data[0][:subscription_group_id]).to eq('c4ca4238a0b9_0')
 
       cgs = topic_data[0][:process][:consumer_groups]
       sg = cgs[:example_app6_app][:subscription_groups][:c4ca4238a0b9_0]
@@ -94,7 +95,7 @@ RSpec.describe_current do
         lag lag_d lag_stored lag_stored_d committed_offset stored_offset fetch_state hi_offset id
         poll_state process hi_offset_fd stored_offset_fd lo_offset ls_offset ls_offset_fd
         eof_offset committed_offset_fd poll_state_ch partition_id lag_hybrid lag_hybrid_d
-        transactional
+        subscription_group_id transactional
       ].sort
       expect(sg[:topics][:default][:partitions]['0'.to_sym].keys.sort).to eq(keys)
     end
