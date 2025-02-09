@@ -1,0 +1,29 @@
+<% if Karafka::Web.config.commanding.active %>
+  <a
+    href="<%= consumer_path(process.id, 'partitions', subscription_group_id, topic_name, partition.id, 'offset', 'edit') %>"
+    class="btn btn-info btn-sm"
+    title="Edit the offset position for this topic partition"
+  >
+    <%== icon(:pencil_square) %>
+  </a>
+
+  <% if partition.poll_state != 'active' %>
+    <a
+      href="<%= consumer_path(process.id, 'partitions', subscription_group_id, topic_name, partition.id, 'pause', 'edit') %>"
+      class="btn btn-success btn-sm"
+      title="Resume processing of this topic partition"
+    >
+      <%== icon(:play) %>
+    </a>
+  <% end %>
+
+  <a
+    href="<%= consumer_path(process.id, 'partitions', subscription_group_id, topic_name, partition.id, 'pause', 'new') %>"
+    class="btn btn-warning btn-sm"
+    title="Setup or configure pause duration for this topic partition"
+  >
+    <%== icon(:pause) %>
+  </a>
+<% else %>
+  <span class="text-muted">Commanding has been disabled.</span>
+<% end %>

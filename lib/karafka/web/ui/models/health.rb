@@ -50,15 +50,17 @@ module Karafka
             # @param state [Hash]
             # @param stats [Hash] hash where we will store all the aggregated data
             def fetch_topics_data(state, stats)
-              iterate_partitions(state) do |process, consumer_group, topic, partition|
-                cg_name = consumer_group.id
+              iterate_partitions(state) do |process, consumer_group, subscription_group, topic, partition|
+                cg_id = consumer_group.id
+                sg_id = subscription_group.id
                 t_name = topic.name
                 pt_id = partition.id
 
-                stats[cg_name] ||= { topics: {} }
-                stats[cg_name][:topics][t_name] ||= {}
-                stats[cg_name][:topics][t_name][pt_id] = partition
-                stats[cg_name][:topics][t_name][pt_id][:process] = process
+                stats[cg_id] ||= { topics: {} }
+                stats[cg_id][:topics][t_name] ||= {}
+                stats[cg_id][:topics][t_name][pt_id] = partition
+                stats[cg_id][:topics][t_name][pt_id][:process] = process
+                stats[cg_id][:topics][t_name][pt_id][:subscription_group_id] = sg_id
               end
             end
 
@@ -99,7 +101,7 @@ module Karafka
                   consumer_group.subscription_groups.each do |subscription_group|
                     subscription_group.topics.each do |topic|
                       topic.partitions.each do |partition|
-                        yield(process, consumer_group, topic, partition)
+                        yield(process, consumer_group, subscription_group, topic, partition)
                       end
                     end
                   end

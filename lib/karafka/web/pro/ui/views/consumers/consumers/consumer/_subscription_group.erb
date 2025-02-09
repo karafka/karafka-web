@@ -1,7 +1,7 @@
 <%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
 <%# See LICENSE for details. %>
 
-<h2 class="h2 mb-3">
+<h2 class="h2 mb-3" id="<%= subscription_group.id %>">
   <%= consumer_group.id %> /
   <%= subscription_group.id %>
 </h2>
@@ -106,7 +106,8 @@
             <th rowspan="2"><%== sort_link('Partition', :id) %></th>
             <th colspan="2">Lag</th>
             <th colspan="2">Offsets</th>
-            <th colspan="10">States</th>
+            <th colspan="3">States</th>
+            <th rowspan="2">Options</th>
           </tr>
           <tr>
             <th><%== sort_link(:lag_hybrid) %></th>

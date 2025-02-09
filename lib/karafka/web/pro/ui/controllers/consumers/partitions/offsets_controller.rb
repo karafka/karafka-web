@@ -13,24 +13,7 @@ module Karafka
               # Partition offset management controller in the context of current consumer process
               # assignments
               class OffsetsController < BaseController
-                self.sortable_attributes = %w[
-                  id
-                  lag_hybrid
-                  committed_offset
-                  stored_offset
-                  poll_state
-                ].freeze
-
-                # Displays the list of currently assigned partitions to this process with the
-                # processing details and edit/pause options (when applicable). It is the starting
-                # point for all the management.
-                #
-                # @param process_id [String] id of the process we're interested in
-                def index(process_id)
-                  subscriptions(process_id)
-
-                  render
-                end
+                self.sortable_attributes = [].freeze
 
                 # Displays the offset edit page with the edit form or a warning when not applicable
                 #
@@ -72,7 +55,7 @@ module Karafka
                   )
 
                   redirect(
-                    "consumers/#{process_id}/partitions",
+                    "consumers/#{process_id}/subscriptions",
                     success: <<~MESSAGE
                       Initiated offset adjustment to #{offset}
                       for #{topic}##{partition_id}

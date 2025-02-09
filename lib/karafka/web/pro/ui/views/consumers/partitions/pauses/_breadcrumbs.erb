@@ -13,15 +13,9 @@
   </a>
 </li>
 
-<li>
-  <a href="<%= consumer_path(@process.id, 'partitions') %>">
-    Partitions
-  </a>
-</li>
-
 <% if @subscription_group_id %>
   <li>
-    <a href="<%= consumer_path(@process.id, "partitions##{@subscription_group_id}") %>">
+    <a href="<%= consumer_path(@process.id, "subscriptions##{@subscription_group_id}") %>">
       <%= @subscription_group_id %>
     </a>
   </li>

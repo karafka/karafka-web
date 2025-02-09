@@ -70,10 +70,6 @@ module Karafka
                   ) do |subscription_group_id, topic, partition_id|
                     controller.update(process_id, subscription_group_id, topic, partition_id)
                   end
-
-                  r.get do
-                    controller.index(process_id)
-                  end
                 end
 
                 r.on String, 'jobs' do |process_id|

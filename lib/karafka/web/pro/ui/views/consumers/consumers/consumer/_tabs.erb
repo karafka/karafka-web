@@ -11,13 +11,6 @@
     </a>
 
     <a
-      href="<%= consumer_path(@process.id, 'partitions') %>"
-      class="custom-tab <%= nav_class(include: 'partitions') %>"
-    >
-      Partitions
-    </a>
-
-    <a
       href="<%= consumer_path(@process.id, 'jobs', 'running') %>"
       class="custom-tab <%= nav_class(include: 'jobs/running') %>"
     >

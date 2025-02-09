@@ -49,7 +49,7 @@ module Karafka
                   )
 
                   redirect(
-                    "consumers/#{process_id}/partitions",
+                    "consumers/#{process_id}/subscriptions",
                     success: <<~MESSAGE
                       Initiated partition pause for #{topic}##{partition_id}
                       (subscription group: #{subscription_group_id})
@@ -87,7 +87,7 @@ module Karafka
                   )
 
                   redirect(
-                    "consumers/#{process_id}/partitions",
+                    "consumers/#{process_id}/subscriptions",
                     success: <<~MESSAGE
                       Initiated partition resume for #{topic}##{partition_id}
                       (subscription group: #{subscription_group_id})
