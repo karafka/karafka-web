@@ -1,3 +1,6 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
 <% if Karafka::Web.config.commanding.active %>
   <a
     href="<%= consumer_path(process.id, 'partitions', subscription_group_id, topic_name, partition.id, 'offset', 'edit') %>"
