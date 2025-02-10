@@ -16,11 +16,6 @@ module Karafka
               @path = path
               @flashes = flashes
             end
-
-            # @return [Boolean] are we going back via referer and not explicit path
-            def back?
-              @path == :back
-            end
           end
         end
       end

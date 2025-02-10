@@ -30,6 +30,7 @@
     >
       <%== csrf_tag(update_path, 'PUT') %>
       <input type="hidden" name="_method" value="PUT">
+      <input type="hidden" name="referrer" value="<%= request.referrer %>">
 
       <div class="flex items-center w-full mb-8">
         <label class="w-1/4 text-gray-700">New Offset:</label>

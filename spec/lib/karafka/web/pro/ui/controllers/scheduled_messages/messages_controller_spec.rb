@@ -39,7 +39,7 @@ RSpec.describe_current do
       it do
         expect(response.status).to eq(302)
         # Taken from referer and referer is nil in specs
-        expect(response.location).to be_nil
+        expect(response.location).to eq('/')
         expect(cancelled.raw_headers['schedule_source_type']).to eq('cancel')
         expect(flash[:success]).to include('A scheduled message with offset 0')
       end

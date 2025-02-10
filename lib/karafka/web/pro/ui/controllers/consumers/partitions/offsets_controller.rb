@@ -55,7 +55,7 @@ module Karafka
                   )
 
                   redirect(
-                    "consumers/#{process_id}/subscriptions",
+                    :previous,
                     success: <<~MESSAGE
                       Initiated offset adjustment to #{offset}
                       for #{topic}##{partition_id}
