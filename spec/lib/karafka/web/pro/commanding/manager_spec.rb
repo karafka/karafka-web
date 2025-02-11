@@ -110,6 +110,51 @@ RSpec.describe_current do
       end
     end
 
+    context 'when command is seek' do
+      let(:seek_command) { Karafka::Web::Pro::Commanding::Commands::Partitions::Seek.new({}) }
+      let(:command_name) { seek_command.class.name }
+
+      before do
+        allow(seek_command.class).to receive(:new).and_return(seek_command)
+        allow(seek_command).to receive(:call)
+      end
+
+      it 'executes stop command' do
+        manager.send(:call)
+        expect(seek_command).to have_received(:call)
+      end
+    end
+
+    context 'when command is pause' do
+      let(:pause_command) { Karafka::Web::Pro::Commanding::Commands::Partitions::Pause.new({}) }
+      let(:command_name) { pause_command.class.name }
+
+      before do
+        allow(pause_command.class).to receive(:new).and_return(pause_command)
+        allow(pause_command).to receive(:call)
+      end
+
+      it 'executes stop command' do
+        manager.send(:call)
+        expect(pause_command).to have_received(:call)
+      end
+    end
+
+    context 'when command is pause' do
+      let(:resume_command) { Karafka::Web::Pro::Commanding::Commands::Partitions::Resume.new({}) }
+      let(:command_name) { resume_command.class.name }
+
+      before do
+        allow(resume_command.class).to receive(:new).and_return(resume_command)
+        allow(resume_command).to receive(:call)
+      end
+
+      it 'executes stop command' do
+        manager.send(:call)
+        expect(resume_command).to have_received(:call)
+      end
+    end
+
     context 'when command is unsupported' do
       let(:command_name) { unsupported_command_name }
 
