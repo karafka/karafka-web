@@ -161,3 +161,10 @@ Karafka::Web::App.engine.plugin(:route_csrf, check_request_methods: [])
 
 # We need to clear argv because otherwise we would get reports on invalid options for CLI specs
 ARGV.clear
+
+# Temporary patch until the new Karafka version is released
+unless Karafka::Connection::Listener.method_defined?(:coordinators)
+  Karafka::Connection::Listener.class_eval do
+    def coordinators; end
+  end
+end
