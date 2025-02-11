@@ -140,7 +140,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when command is pause' do
+    context 'when command is resume' do
       let(:resume_command) { Karafka::Web::Pro::Commanding::Commands::Partitions::Resume.new({}) }
       let(:command_name) { resume_command.class.name }
 
