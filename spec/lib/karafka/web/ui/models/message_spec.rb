@@ -13,7 +13,7 @@ RSpec.describe_current do
     let(:message) { described_class.find(topic, partition, offset) }
 
     context 'when topic does not exist' do
-      let(:topic) { SecureRandom.uuid }
+      let(:topic) { generate_topic_name }
       let(:partition) { 0 }
       let(:offset) { 1 }
 
@@ -53,7 +53,7 @@ RSpec.describe_current do
     end
 
     context 'when topic does not exist' do
-      let(:topic) { SecureRandom.uuid }
+      let(:topic) { generate_topic_name }
       let(:start_offset) { 0 }
       let(:watermark_offsets) { Karafka::Web::Ui::Models::WatermarkOffsets.new(low: 0, high: 0) }
 

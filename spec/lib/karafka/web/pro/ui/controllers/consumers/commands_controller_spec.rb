@@ -12,7 +12,7 @@ RSpec.describe_current do
   describe '#index' do
     context 'when commands topic does not exist' do
       before do
-        topics_config.consumers.commands = SecureRandom.uuid
+        topics_config.consumers.commands = generate_topic_name
 
         get 'consumers/commands'
       end
@@ -253,7 +253,7 @@ RSpec.describe_current do
   describe '#recent' do
     context 'when commands topic does not exist' do
       before do
-        topics_config.consumers.commands = SecureRandom.uuid
+        topics_config.consumers.commands = generate_topic_name
 
         get 'consumers/commands/recent'
       end

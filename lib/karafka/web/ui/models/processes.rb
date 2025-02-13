@@ -83,7 +83,7 @@ module Karafka
             # @param processes [Array<Hash>]
             # @return [Array<Hash>] sorted processes data
             def sort_processes(processes)
-              processes.sort_by { |consumer| consumer[:process][:id] }
+              processes.sort_by { |consumer| consumer[:process].fetch(:id) }
             end
           end
         end

@@ -9,7 +9,7 @@ RSpec.describe_current do
   let(:topic) { create_topic(partitions: partitions) }
   let(:partitions) { 1 }
   let(:removed_or_compacted) { 'This offset does not contain any data.' }
-  let(:internal_topic) { "__#{SecureRandom.uuid}" }
+  let(:internal_topic) { "__#{generate_topic_name}" }
 
   describe '#index' do
     before do
@@ -69,7 +69,7 @@ RSpec.describe_current do
 
   describe '#config' do
     context 'when trying to read configs of a non-existing topic' do
-      before { get "topics/#{SecureRandom.uuid}/config" }
+      before { get "topics/#{generate_topic_name}/config" }
 
       it do
         expect(response).not_to be_ok
@@ -95,7 +95,7 @@ RSpec.describe_current do
 
   describe '#replication' do
     context 'when trying to read configs of a non-existing topic' do
-      before { get "topics/#{SecureRandom.uuid}/replication" }
+      before { get "topics/#{generate_topic_name}/replication" }
 
       it do
         expect(response).not_to be_ok
@@ -123,7 +123,7 @@ RSpec.describe_current do
     let(:many_partitions_msg) { 'distribution results are computed based only' }
 
     context 'when trying to read distribution of a non-existing topic' do
-      before { get "topics/#{SecureRandom.uuid}/distribution" }
+      before { get "topics/#{generate_topic_name}/distribution" }
 
       it do
         expect(response).not_to be_ok
@@ -250,7 +250,7 @@ RSpec.describe_current do
 
   describe '#offsets' do
     context 'when trying to read offsets of a non-existing topic' do
-      before { get "topics/#{SecureRandom.uuid}/offsets" }
+      before { get "topics/#{generate_topic_name}/offsets" }
 
       it do
         expect(response).not_to be_ok

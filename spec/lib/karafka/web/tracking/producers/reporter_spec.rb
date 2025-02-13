@@ -5,7 +5,7 @@ RSpec.describe_current do
 
   let(:producer) { WaterDrop::Producer.new }
   let(:sampler) { ::Karafka::Web.config.tracking.producers.sampler }
-  let(:errors_topic) { SecureRandom.uuid }
+  let(:errors_topic) { generate_topic_name }
   let(:valid_error) do
     {
       schema_version: '1.0.0',

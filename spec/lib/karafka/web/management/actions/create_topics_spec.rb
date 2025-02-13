@@ -21,7 +21,7 @@ RSpec.describe_current do
   end
 
   context 'when consumers states topic does not exist' do
-    let(:consumers_states_topic) { SecureRandom.uuid }
+    let(:consumers_states_topic) { generate_topic_name }
 
     before { Karafka::Web.config.topics.consumers.states = consumers_states_topic }
 
@@ -46,7 +46,7 @@ RSpec.describe_current do
   end
 
   context 'when consumers metrics topic does not exist' do
-    let(:consumers_metrics_topic) { SecureRandom.uuid }
+    let(:consumers_metrics_topic) { generate_topic_name }
 
     before { Karafka::Web.config.topics.consumers.metrics = consumers_metrics_topic }
 
@@ -71,7 +71,7 @@ RSpec.describe_current do
   end
 
   context 'when consumers reports topic does not exist' do
-    let(:consumers_reports_topic) { SecureRandom.uuid }
+    let(:consumers_reports_topic) { generate_topic_name }
 
     before { Karafka::Web.config.topics.consumers.reports = consumers_reports_topic }
 
@@ -96,7 +96,7 @@ RSpec.describe_current do
   end
 
   context 'when errors topic does not exist' do
-    let(:errors_topic) { SecureRandom.uuid }
+    let(:errors_topic) { generate_topic_name }
 
     before { Karafka::Web.config.topics.errors = errors_topic }
 

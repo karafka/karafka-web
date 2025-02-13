@@ -19,10 +19,10 @@ RSpec.describe_current do
 
     context 'when topics are missing' do
       before do
-        topics_config.consumers.states = SecureRandom.uuid
-        topics_config.consumers.metrics = SecureRandom.uuid
-        topics_config.consumers.reports = SecureRandom.uuid
-        topics_config.errors = SecureRandom.uuid
+        topics_config.consumers.states = generate_topic_name
+        topics_config.consumers.metrics = generate_topic_name
+        topics_config.consumers.reports = generate_topic_name
+        topics_config.errors = generate_topic_name
 
         get 'status'
       end

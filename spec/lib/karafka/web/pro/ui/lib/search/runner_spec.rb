@@ -132,7 +132,7 @@ RSpec.describe_current do
     end
 
     context 'when requested topic does not exist' do
-      let(:topic) { SecureRandom.uuid }
+      let(:topic) { generate_topic_name }
 
       it { expect { runner.call }.to raise_error(Rdkafka::RdkafkaError) }
     end

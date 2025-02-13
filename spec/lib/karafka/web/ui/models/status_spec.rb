@@ -104,7 +104,7 @@ RSpec.describe_current do
     end
 
     context 'when error topic is missing' do
-      let(:na_topic) { SecureRandom.uuid }
+      let(:na_topic) { generate_topic_name }
 
       before do
         Karafka::Web.config.topics.errors = na_topic
@@ -128,7 +128,7 @@ RSpec.describe_current do
     end
 
     context 'when metrics topic is missing' do
-      let(:na_topic) { SecureRandom.uuid }
+      let(:na_topic) { generate_topic_name }
 
       before do
         Karafka::Web.config.topics.consumers.metrics = na_topic
@@ -156,7 +156,7 @@ RSpec.describe_current do
     subject(:result) { status.partitions }
 
     context 'when not all topics are there' do
-      before { Karafka::Web.config.topics.errors = SecureRandom.uuid }
+      before { Karafka::Web.config.topics.errors = generate_topic_name }
 
       it { expect(result.success?).to be(false) }
       it { expect(result.to_s).to eq('halted') }
@@ -678,7 +678,7 @@ RSpec.describe_current do
       end
 
       context 'when some routing topics are missing' do
-        let(:non_existing_topic) { SecureRandom.uuid }
+        let(:non_existing_topic) { generate_topic_name }
 
         before do
           allow(::Karafka::App.routes.first.topics.first)

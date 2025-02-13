@@ -6,7 +6,7 @@
 RSpec.describe_current do
   before { Karafka::Web.config.topics.consumers.commands = commands_topic }
 
-  let(:commands_topic) { SecureRandom.uuid }
+  let(:commands_topic) { generate_topic_name }
 
   before { allow(Karafka::Web.producer).to receive(:produce_async) }
 
