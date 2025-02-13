@@ -6,9 +6,9 @@
 RSpec.describe_current do
   subject(:app) { Karafka::Web::Pro::Ui::App }
 
-  let(:uuid) { SecureRandom.uuid }
+  let(:topic_name) { generate_topic_name }
 
-  before { Karafka::Web.config.ui.dlq_patterns = [/#{uuid}-dlq/] }
+  before { Karafka::Web.config.ui.dlq_patterns = [/#{topic_name}-dlq/] }
 
   describe '#index' do
     context 'when there are no dlq topics' do
@@ -67,8 +67,8 @@ RSpec.describe_current do
     end
 
     context 'when there are topics matching the DLQ auto-discovery' do
-      let(:topic) { create_topic(topic_name: uuid) }
-      let(:dlq_topic) { create_topic(topic_name: "#{uuid}-dlq") }
+      let(:topic) { create_topic(topic_name: topic_name) }
+      let(:dlq_topic) { create_topic(topic_name: "#{topic_name}-dlq") }
 
       before do
         topic
@@ -83,7 +83,7 @@ RSpec.describe_current do
         expect(body).not_to include('No Dead Letter Queue topics exist in Kafka')
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
-        expect(body).not_to include("#{uuid}\"")
+        expect(body).not_to include("#{topic_name}\"")
       end
     end
   end
