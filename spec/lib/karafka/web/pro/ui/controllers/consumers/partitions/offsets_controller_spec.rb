@@ -135,7 +135,7 @@ RSpec.describe_current do
         subscription_group_id,
         topic_name,
         partition_id,
-        'offset',
+        'offset'
       ].join('/')
     end
 
@@ -172,8 +172,8 @@ RSpec.describe_current do
       expect(command[:topic]).to eq(topic_name)
       expect(command[:partition_id]).to eq(0)
       expect(command[:offset]).to eq(offset)
-      expect(command[:prevent_overtaking]).to eq(false)
-      expect(command[:force_resume]).to eq(true)
+      expect(command[:prevent_overtaking]).to be(false)
+      expect(command[:force_resume]).to be(true)
       expect(command[:name]).to eq('partitions.seek')
     end
   end
