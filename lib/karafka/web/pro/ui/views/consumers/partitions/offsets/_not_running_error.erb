@@ -1,12 +1,16 @@
 <%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
 <%# See LICENSE for details. %>
 
-<div class="col-span-12">
-  <div class="mb-6">
-    <%==
-      alert_error(
-        'This operation cannot be performed. Consumer offsets can only be modified using Web UI when the consumer is in a running state.'
-      )
-    %>
+<% alert_box_error 'This Operation Cannot Be Performed' do %>
+  <p>
+    Consumer offsets can only be modified using Web UI when the consumer is in a running state.
+  </p>
+<% end %>
+
+<div class="form-control text-center mt-6">
+  <div class="flex justify-end">
+    <a href="<%= consumers_path %>" class="btn btn-ghost">
+      Cancel
+    </a>
   </div>
 </div>

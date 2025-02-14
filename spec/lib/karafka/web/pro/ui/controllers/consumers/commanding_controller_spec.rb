@@ -18,6 +18,7 @@ RSpec.describe_current do
       expect(response.status).to eq(302)
       # Taken from referer and referer is nil in specs
       expect(response.location).to eq('/')
+      expect(flash[:success]).to include('The Trace command has been dispatched to the')
     end
 
     it 'expect to create new command in the given topic with process_id reference' do
@@ -40,6 +41,7 @@ RSpec.describe_current do
       expect(response.status).to eq(302)
       # Taken from referer and referer is nil in specs
       expect(response.location).to eq('/')
+      expect(flash[:success]).to include('The Quiet command has been dispatched to the')
     end
 
     it 'expect to create new command in the given topic with process_id reference' do
@@ -62,6 +64,7 @@ RSpec.describe_current do
       expect(response.status).to eq(302)
       # Taken from referer and referer is nil in specs
       expect(response.location).to eq('/')
+      expect(flash[:success]).to include('The Stop command has been dispatched to the')
     end
 
     it 'expect to create new command in the given topic with process_id reference' do
@@ -84,6 +87,7 @@ RSpec.describe_current do
       expect(response.status).to eq(302)
       # Taken from referer and referer is nil in specs
       expect(response.location).to eq('/')
+      expect(flash[:success]).to include('The Quiet command has been dispatched to all')
     end
 
     it 'expect to create new command in the given topic with wildcard process reference' do
@@ -106,6 +110,7 @@ RSpec.describe_current do
       expect(response.status).to eq(302)
       # Taken from referer and referer is nil in specs
       expect(response.location).to eq('/')
+      expect(flash[:success]).to include('The Stop command has been dispatched to all')
     end
 
     it 'expect to create new command in the given topic with wildcard process reference' do

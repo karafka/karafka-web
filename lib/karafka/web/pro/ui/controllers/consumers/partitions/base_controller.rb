@@ -62,6 +62,8 @@ module Karafka
                     end
                   end
 
+                  @subscription_group || raise(Karafka::Web::Errors::Ui::NotFoundError)
+
                   routing_topics = Karafka::App.routes.flat_map(&:topics).flat_map(&:to_a)
 
                   @routing_topic = routing_topics.find do |r_topic|
@@ -69,7 +71,6 @@ module Karafka
                       r_topic.name == @topic
                   end
 
-                  @subscription_group || raise(Karafka::Web::Errors::Ui::NotFoundError)
                   @partition_stats || raise(Karafka::Web::Errors::Ui::NotFoundError)
                   # May not be found when not all routing is available. In such cases we assume
                   # that topic is not LRJ and it's up to the end user to handle this correctly.
