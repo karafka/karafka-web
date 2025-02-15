@@ -13,6 +13,7 @@ RSpec.describe_current do
   let(:topic_name) { 'default' }
   let(:partition_id) { 0 }
   let(:commands_topic) { create_topic }
+  let(:form) { '<form' }
 
   before do
     topics_config.consumers.states = states_topic
@@ -37,20 +38,7 @@ RSpec.describe_current do
       ].join('/')
     end
 
-    before do
-      t_name = topic_name
-      s_name = subscription_group_id
-
-      draw_routes do
-        subscription_group s_name do
-          topic t_name do
-            consumer Class.new(Karafka::BaseConsumer)
-          end
-        end
-      end
-
-      get(edit_path)
-    end
+    before { get(edit_path) }
 
     context 'when the process exists and is running' do
       it 'expect to include relevant details' do
@@ -65,7 +53,7 @@ RSpec.describe_current do
         expect(body).to include('checkbox')
         expect(body).to include('Adjust Offset')
         expect(body).to include('Consumers')
-        expect(body).to include('<form')
+        expect(body).to include(form)
         expect(body).to include('Offsets')
         expect(body).to include('Edit')
         expect(body).to include('High Offset:')
@@ -77,7 +65,7 @@ RSpec.describe_current do
         expect(body).to include('Running Consumer Process Operation')
         expect(body).to include('Takes effect during the next poll operation')
         expect(body).to include('May affect message processing')
-        expect(body).not_to include('This operation cannot be performed')
+        expect(body).not_to include('This Operation Cannot Be Performed')
       end
     end
 
@@ -118,7 +106,7 @@ RSpec.describe_current do
         expect(response).to be_ok
         expect(body).to include('This Operation Cannot Be Performed')
         expect(body).to include('Consumer offsets can only be modified using Web UI when the')
-        expect(body).not_to include('<form')
+        expect(body).not_to include(form)
       end
     end
   end
