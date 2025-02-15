@@ -66,8 +66,7 @@ RSpec.describe_current do
     context 'when the process exists, is running but topic is lrj' do
       before do
         topic = Karafka::App.routes.first.topics.to_a.first
-        allow(Karafka::App.routes).to receive(:flat_map).and_return(Karafka::App.routes)
-        allow(Karafka::App.routes).to receive(:find).and_return(topic)
+        allow(Karafka::App.routes).to receive_messages(flat_map: Karafka::App.routes, find: topic)
         allow(topic).to receive(:long_running_job?).and_return(true)
 
         get(new_path)
@@ -130,5 +129,17 @@ RSpec.describe_current do
         expect(body).not_to include(form)
       end
     end
+  end
+
+  describe '#create' do
+    pending
+  end
+
+  describe '#edit' do
+    pending
+  end
+
+  describe '#delete' do
+    pending
   end
 end
