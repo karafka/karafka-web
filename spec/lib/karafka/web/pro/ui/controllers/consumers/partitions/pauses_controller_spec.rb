@@ -132,14 +132,14 @@ RSpec.describe_current do
   end
 
   describe '#create' do
-    pending
+    pending 'wip'
   end
 
   describe '#edit' do
-    pending
+    pending 'wip'
   end
 
   describe '#delete' do
-    pending
+    pending 'wip'
   end
 end
