@@ -344,6 +344,77 @@ RSpec.describe_current do
   end
 
   describe '#delete' do
-    pending 'wip'
+    let(:reset_attempts) { 'yes' }
+    let(:delete_path) do
+      [
+        'consumers',
+        process_id,
+        'partitions',
+        subscription_group_id,
+        topic_name,
+        partition_id,
+        'pause'
+      ].join('/')
+    end
+
+    before do
+      delete(
+        delete_path,
+        reset_attempts: reset_attempts
+      )
+    end
+
+    context 'when the process exists and is running' do
+      it 'expect to redirect with success message' do
+        expect(response.status).to eq(302)
+        expect(response.location).to eq('/')
+        expect(flash[:success]).to include(
+          "Initiated partition resume for #{topic_name}##{partition_id}"
+        )
+      end
+
+      it 'expect to create resume command with correct parameters' do
+        sleep(1)
+        message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
+
+        expect(message.key).to eq(process_id)
+        expect(message.payload[:schema_version]).to eq('1.1.0')
+        expect(message.payload[:type]).to eq('request')
+        expect(message.payload[:dispatched_at]).not_to be_nil
+
+        command = message.payload.fetch(:command)
+
+        expect(command[:subscription_group_id]).to eq(subscription_group_id)
+        expect(command[:consumer_group_id]).to eq('example_app6_app')
+        expect(command[:topic]).to eq(topic_name)
+        expect(command[:partition_id]).to eq(partition_id)
+        expect(command[:reset_attempts]).to be(true)
+        expect(command[:name]).to eq('partitions.resume')
+      end
+    end
+
+    context 'when process does not exist' do
+      let(:process_id) { 'not-existing' }
+
+      it { expect(status).to eq(404) }
+    end
+
+    context 'when subscription_group is not correct' do
+      let(:subscription_group_id) { 'not-existing' }
+
+      it { expect(status).to eq(404) }
+    end
+
+    context 'when topic is not correct' do
+      let(:topic_name) { 'not-existing' }
+
+      it { expect(status).to eq(404) }
+    end
+
+    context 'when partition is not assigned to this process' do
+      let(:partition_id) { 100 }
+
+      it { expect(status).to eq(404) }
+    end
   end
 end
