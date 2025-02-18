@@ -1,10 +1,11 @@
 # Karafka Web Changelog
 
 ## 0.11.0 (Unreleased)
-- [Feature] Provide ability to pause/resume partitions on running consumers via the UI (Pro).
-- [Feature] Provide ability to edit offsets of running consumers (Pro).
-- [Feature] Support consumers that have mismatching schema.
-- [Feature] Provide ability to navigate to a timestamp in the Explorer (Pro).
+- **[Feature]** Provide ability to pause/resume partitions on running consumers via the UI (Pro).
+- **[Feature]** Provide ability to edit offsets of running consumers (Pro).
+- **[Feature]** Support consumers that have mismatching schema.
+- **[Feature]** Provide ability to navigate to a timestamp in the Explorer (Pro).
+- **[Feature]** Provide ability to manage topics and their configuration from the Web UI (Pro).
 - [Enhancement] Improve handling of post-submit redirects.
 - [Enhancement] Provide better support for fully transactional consumers.
 - [Enhancement] Error out when `#setup` is called after `#enable!`.
