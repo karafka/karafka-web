@@ -3,22 +3,22 @@
 
 <% view_title @topic.topic_name %>
 
-<%== partial 'topics/tabs' %>
+<%== partial 'topics/topics/tabs' %>
 
 <% if @limited %>
-  <%== partial 'topics/distribution/limited' %>
+  <%== partial 'topics/distributions/limited' %>
 <% end %>
 
 <% if @aggregated.sum.zero? %>
-  <%== partial 'topics/distribution/empty_partitions' %>
+  <%== partial 'topics/distributions/empty_partitions' %>
 <% else %>
   <div class="col-span-12 mb-3">
     <% if @active_partitions.size >= 2 %>
-      <%== partial 'topics/distribution/chart' %>
+      <%== partial 'topics/distributions/chart' %>
     <% end %>
 
     <div id="refreshable" class="mt-4">
-      <%== partial 'topics/distribution/badges' %>
+      <%== partial 'topics/distributions/badges' %>
 
       <div class="data-table-wrapper">
         <table class="data-table">
@@ -34,7 +34,7 @@
             <%==
               each_partial(
                 @distribution,
-                'topics/distribution/partition'
+                'topics/distributions/partition'
               )
             %>
           </tbody>

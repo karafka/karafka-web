@@ -1,0 +1,20 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<li>
+  <a href="<%= root_path('topics') %>">
+    Topics
+  </a>
+</li>
+
+<li>
+  <a href="<%= root_path('topics', @topic.topic_name, 'config') %>">
+    <%= @topic.topic_name %>
+  </a>
+</li>
+
+<li>
+  <a href="<%= root_path('topics', @topic.topic_name, 'replication') %>">
+    Replication
+  </a>
+</li>

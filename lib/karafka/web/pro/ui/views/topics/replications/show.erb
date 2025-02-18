@@ -3,7 +3,7 @@
 
 <% view_title @topic.topic_name %>
 
-<%== partial 'topics/tabs' %>
+<%== partial 'topics/topics/tabs' %>
 
 <div class="data-table-wrapper">
   <table class="data-table">
@@ -19,7 +19,7 @@
       <%==
         each_partial(
           @partitions,
-          'topics/partition'
+          'topics/replications/partition'
         )
       %>
     </tbody>

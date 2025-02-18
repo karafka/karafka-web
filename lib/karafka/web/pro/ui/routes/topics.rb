@@ -12,30 +12,33 @@ module Karafka
           class Topics < Base
             route do |r|
               r.on 'topics' do
-                controller = Controllers::TopicsController.new(params)
-
-                r.get String, 'config' do |topic_id|
-                  controller.config(topic_id)
+                r.get String, 'distribution' do |topic_id|
+                  controller = Controllers::Topics::DistributionsController.new(params)
+                  controller.show(topic_id)
                 end
 
                 r.get String, 'replication' do |topic_id|
-                  controller.replication(topic_id)
-                end
-
-                r.get String, 'distribution' do |topic_id|
-                  controller.distribution(topic_id)
+                  controller = Controllers::Topics::ReplicationsController.new(params)
+                  controller.show(topic_id)
                 end
 
                 r.get String, 'offsets' do |topic_id|
-                  controller.offsets(topic_id)
+                  controller = Controllers::Topics::OffsetsController.new(params)
+                  controller.show(topic_id)
+                end
+
+                r.get String, 'config' do |topic_id|
+                  controller = Controllers::Topics::ConfigsController.new(params)
+                  controller.show(topic_id)
+                end
+
+                r.get do
+                  controller = Controllers::Topics::TopicsController.new(params)
+                  controller.index
                 end
 
                 r.get String do |topic_id|
                   r.redirect root_path('topics', topic_id, 'config')
-                end
-
-                r.get do
-                  controller.index
                 end
               end
             end
