@@ -2,19 +2,19 @@
 <%# See LICENSE for details. %>
 
 <li>
-  <a href="<%= root_path('topics') %>">
+  <a href="<%= topics_path %>">
     Topics
   </a>
 </li>
 
 <li>
-  <a href="<%= root_path('topics', @topic.topic_name, 'config') %>">
+  <a href="<%= topics_path(@topic.topic_name, 'config') %>">
     <%= @topic.topic_name %>
   </a>
 </li>
 
 <li>
-  <a href="<%= root_path('topics', @topic.topic_name, 'replication') %>">
+  <a href="<%= topics_path(@topic.topic_name, 'replication') %>">
     Replication
   </a>
 </li>

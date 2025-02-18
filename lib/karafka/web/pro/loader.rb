@@ -42,6 +42,13 @@ module Karafka
               setting(:branding, default: Ui::Lib::Branding::Config.config)
               setting(:policies, default: Ui::Lib::Policies::Config.config)
               setting(:search, default: Ui::Lib::Search::Config.config)
+
+              setting :topics do
+                setting :management do
+                  # Should we allow users to manage topics (edit config, resize, etc) from the UI
+                  setting(:active, default: true)
+                end
+              end
             end
           end
 

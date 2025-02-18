@@ -56,11 +56,13 @@ module Karafka
 
                   redirect(
                     :previous,
-                    success: <<~MESSAGE
-                      Initiated offset adjustment to #{offset}
-                      for #{topic}##{partition_id}
-                      (subscription group: #{subscription_group_id})
-                    MESSAGE
+                    success: format_flash(
+                      'Initiated offset adjustment to ? for ?#? (subscription group: ?)',
+                      offset,
+                      topic,
+                      partition_id,
+                      subscription_group_id
+                    )
                   )
                 end
               end

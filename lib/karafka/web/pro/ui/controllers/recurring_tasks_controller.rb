@@ -104,7 +104,11 @@ module Karafka
             def dispatched_to_one(command, task_id)
               command_name = command.to_s.capitalize
 
-              "The #{command_name} command has been dispatched to the #{task_id} task."
+              format_flash(
+                'The ? command has been dispatched to the ? task',
+                command_name,
+                task_id
+              )
             end
 
             # Generates a nice flash message about dispatch of multi-task command
@@ -113,7 +117,10 @@ module Karafka
             def dispatched_to_all(command)
               command_name = command.to_s.capitalize
 
-              "The #{command_name} command has been dispatched to all tasks."
+              format_flash(
+                'The ? command has been dispatched to all tasks',
+                command_name
+              )
             end
           end
         end

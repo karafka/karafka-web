@@ -32,8 +32,17 @@ module Karafka
                   controller.show(topic_id)
                 end
 
+                controller = Controllers::Topics::TopicsController.new(params)
+
+                r.post do
+                  controller.create
+                end
+
+                r.get 'new' do
+                  controller.new
+                end
+
                 r.get do
-                  controller = Controllers::Topics::TopicsController.new(params)
                   controller.index
                 end
 

@@ -110,7 +110,11 @@ module Karafka
               def dispatched_to_one(name, process_id)
                 command_name = name.to_s.capitalize
 
-                "The #{command_name} command has been dispatched to the #{process_id} process."
+                format_flash(
+                  'The ? command has been dispatched to the ? process',
+                  command_name,
+                  process_id
+                )
               end
 
               # Generates a nice flash message about dispatch of multi-process command
@@ -119,7 +123,11 @@ module Karafka
               def dispatched_to_all(name)
                 command_name = name.to_s.capitalize
 
-                "The #{command_name} command has been dispatched to all active processes."
+                format_flash(
+                  'The ? command has been dispatched to ? active processes',
+                  command_name,
+                  'all'
+                )
               end
             end
           end

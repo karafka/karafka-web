@@ -3,6 +3,8 @@
 
 <% view_title 'Topics' %>
 
+<%== partial 'topics/topics/commands' %>
+
 <% if @topics.empty? %>
   <%== partial 'explorer/explorer/no_topics' %>
 <% else %>

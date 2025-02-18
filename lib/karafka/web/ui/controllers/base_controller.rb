@@ -52,6 +52,8 @@ module Karafka
 
             attributes[:breadcrums_scope] = scope
 
+            @current_action_name = caller(1..1).first[/`.*'/][1..-2].to_sym
+
             instance_variables.each do |iv|
               next if iv.to_s.start_with?('@_')
               next if iv.to_s.start_with?('@params')
@@ -72,6 +74,20 @@ module Karafka
           # @return [Responses::Redirect] redirect result
           def redirect(path = :back, flashes = {})
             Responses::Redirect.new(path, flashes)
+          end
+
+          # Wraps the provided arguments inside a message with a `<strong>` tag to simplify flash
+          # messages building.
+          #
+          # @param message [String] message with `?` to be replaced.
+          # @param args [Array<Object>] arguments to use to replace `?` with strong
+          # @return [String] formatted string
+          def format_flash(message, *args)
+            args.each do |arg|
+              message = message.sub('?', "<strong>#{arg}</strong>")
+            end
+
+            message
           end
 
           # Builds a file response object that will be used as a base to dispatch the file

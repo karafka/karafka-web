@@ -4,7 +4,7 @@
 <div class="topic-tile">
   <div class="topic-tile-body">
     <p class="topic-tile-text">
-      <a href="<%= root_path('topics', topic.topic_name, 'config') %>" class="topic-tile-link">
+      <a href="<%= topics_path(topic.topic_name, 'config') %>" class="topic-tile-link">
         <%= topic.topic_name %> / <%= topic.partition_count %>
       </a>
     </p>
