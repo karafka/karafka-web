@@ -6,7 +6,7 @@
 RSpec.describe_current do
   subject(:app) { Karafka::Web::Pro::Ui::App }
 
-  let(:no_processes) { 'There are no Karafka consumer processes' }
+  let(:no_processes) { 'There Are No Karafka Consumer Processes' }
   let(:states_topic) { create_topic }
   let(:reports_topic) { create_topic }
   let(:incompatible_schema) { 'This process uses schema' }

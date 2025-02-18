@@ -8,6 +8,7 @@ RSpec.describe_current do
 
   let(:states_topic) { create_topic }
   let(:metrics_topic) { create_topic }
+  let(:no_meaningful) { 'There Needs to Be More Data to Draw Meaningful Graphs' }
 
   context 'when the state data is missing' do
     before do
@@ -35,7 +36,7 @@ RSpec.describe_current do
 
     it do
       expect(response).to be_ok
-      expect(body).to include('There needs to be more data to draw meaningful graphs')
+      expect(body).to include('no_meaningful')
       expect(body).to include('id="refreshable"')
       expect(body).to include('<div id="refreshable" class="col-span-12 mb-10">')
       expect(body).not_to include(support_message)
@@ -57,7 +58,7 @@ RSpec.describe_current do
 
     it do
       expect(response).to be_ok
-      expect(body).to include('There needs to be more data to draw meaningful graphs')
+      expect(body).to include('no_meaningful')
       expect(body).not_to include(support_message)
       expect(body).not_to include(breadcrumbs)
       expect(body).to include('id="refreshable"')
