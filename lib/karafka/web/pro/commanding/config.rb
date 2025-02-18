@@ -35,6 +35,10 @@ module Karafka
             'auto.offset.reset': 'latest'
           }
 
+          setting :listeners, default: [
+            Handlers::Partitions::Listener.new
+          ]
+
           configure
         end
       end

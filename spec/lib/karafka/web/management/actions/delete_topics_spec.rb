@@ -7,11 +7,11 @@ RSpec.describe_current do
     -> { Karafka::Web::Ui::Models::ClusterInfo.topics(cached: false).map(&:topic_name) }
   end
 
-  let(:consumers_states_topic) { SecureRandom.uuid }
-  let(:consumers_metrics_topic) { SecureRandom.uuid }
-  let(:consumers_reports_topic) { SecureRandom.uuid }
-  let(:consumers_commands_topic) { SecureRandom.uuid }
-  let(:errors_topic) { SecureRandom.uuid }
+  let(:consumers_states_topic) { generate_topic_name }
+  let(:consumers_metrics_topic) { generate_topic_name }
+  let(:consumers_reports_topic) { generate_topic_name }
+  let(:consumers_commands_topic) { generate_topic_name }
+  let(:errors_topic) { generate_topic_name }
 
   before do
     Karafka::Web.config.topics.consumers.states = consumers_states_topic

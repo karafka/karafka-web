@@ -17,11 +17,36 @@ module Karafka
               days
             ].freeze
 
-            private_constant :ALLOWED_RANGES
+            # What string values true can be in params
+            ALLOWED_BOOLEAN_TRUE = %w[
+              on
+              yes
+              true
+            ].freeze
+
+            private_constant :ALLOWED_RANGES, :ALLOWED_BOOLEAN_TRUE
 
             # @param request_params [Hash] raw hash with params
             def initialize(request_params)
               @request_params = request_params
+            end
+
+            # @param key [String, Symbol] params key
+            # @return [Object] value of the requested param
+            def [](key)
+              @request_params.fetch(key.to_s)
+            end
+
+            # @param key [String, Symbol] params key
+            # @return [Integer] integer value of the key
+            def int(key)
+              self[key].to_i
+            end
+
+            # @param key [String, Symbol] params key
+            # @return [Boolean] boolean key value
+            def bool(key)
+              ALLOWED_BOOLEAN_TRUE.include?(self[key])
             end
 
             # @return [Hash] current search or empty if no search query present

@@ -66,6 +66,23 @@ module Karafka
             root_path(*['explorer', topic_name, partition_id, offset, action].compact)
           end
 
+          # Helps build consumers paths
+          #
+          # @param args [Array<String>] path params for consumers scope
+          # @return [String] consumers scope path
+          def consumers_path(*args)
+            root_path('consumers', *args)
+          end
+
+          # Helps build per-consumer scope paths
+          #
+          # @param consumer_id [String] consumer process id
+          # @param args [Array<String>] other path components
+          # @return [String] per consumer specific path
+          def consumer_path(consumer_id, *args)
+            consumers_path(consumer_id, *args)
+          end
+
           # Helps build scheduled messages paths.
           # Similar to the explorer helper one
           # @param topic_name [String]

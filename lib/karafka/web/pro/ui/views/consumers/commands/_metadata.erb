@@ -33,7 +33,7 @@
           <% if process_id == '*' %>
               <%= process_id %>
           <% else %>
-            <a href="<%= root_path('consumers', process_id, 'subscriptions') %>">
+            <a href="<%= consumer_path(process_id, 'subscriptions') %>">
               <%= process_id %>
             </a>
           <% end %>

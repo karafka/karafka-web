@@ -11,7 +11,7 @@ RSpec.describe_current do
 
   describe '#index' do
     context 'when needed topics are missing' do
-      let(:errors_topic) { SecureRandom.uuid }
+      let(:errors_topic) { generate_topic_name }
 
       before { get 'errors' }
 

@@ -23,8 +23,8 @@ RSpec.describe_current do
 
   describe '#schedule' do
     context 'when schedules topic does not exist' do
-      let(:schedules_topic) { SecureRandom.uuid }
-      let(:logs_topic) { SecureRandom.uuid }
+      let(:schedules_topic) { generate_topic_name }
+      let(:logs_topic) { generate_topic_name }
 
       before { get 'recurring_tasks/schedule' }
 
@@ -223,8 +223,8 @@ RSpec.describe_current do
 
   describe '#logs' do
     context 'when logs topic does not exist' do
-      let(:schedules_topic) { SecureRandom.uuid }
-      let(:logs_topic) { SecureRandom.uuid }
+      let(:schedules_topic) { generate_topic_name }
+      let(:logs_topic) { generate_topic_name }
 
       before { get 'recurring_tasks/logs' }
 
@@ -338,7 +338,7 @@ RSpec.describe_current do
     it do
       expect(response.status).to eq(302)
       # Taken from referer and referer is nil in specs
-      expect(response.location).to be_nil
+      expect(response.location).to eq('/')
     end
 
     it 'expect to create new command' do
@@ -358,7 +358,7 @@ RSpec.describe_current do
     it do
       expect(response.status).to eq(302)
       # Taken from referer and referer is nil in specs
-      expect(response.location).to be_nil
+      expect(response.location).to eq('/')
     end
 
     it 'expect to create new command' do
@@ -378,7 +378,7 @@ RSpec.describe_current do
     it do
       expect(response.status).to eq(302)
       # Taken from referer and referer is nil in specs
-      expect(response.location).to be_nil
+      expect(response.location).to eq('/')
     end
 
     it 'expect to create new command' do
@@ -398,7 +398,7 @@ RSpec.describe_current do
     it do
       expect(response.status).to eq(302)
       # Taken from referer and referer is nil in specs
-      expect(response.location).to be_nil
+      expect(response.location).to eq('/')
     end
 
     it 'expect to create new command' do
@@ -418,7 +418,7 @@ RSpec.describe_current do
     it do
       expect(response.status).to eq(302)
       # Taken from referer and referer is nil in specs
-      expect(response.location).to be_nil
+      expect(response.location).to eq('/')
     end
 
     it 'expect to create new command' do
@@ -438,7 +438,7 @@ RSpec.describe_current do
     it do
       expect(response.status).to eq(302)
       # Taken from referer and referer is nil in specs
-      expect(response.location).to be_nil
+      expect(response.location).to eq('/')
     end
 
     it 'expect to create new command' do

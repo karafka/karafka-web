@@ -62,28 +62,36 @@ module Karafka
             @listener.each do |message|
               next unless @matcher.matches?(message)
 
-              control(message.payload[:command])
+              control(
+                Request.new(message.payload[:command])
+              )
             end
           end
 
           # Runs the expected command
           #
-          # @param params [Hash] command request params hash
-          def control(params)
-            command = case params[:name]
-                      when 'trace'
-                        Commands::Trace
-                      when 'stop'
-                        Commands::Stop
-                      when 'quiet'
-                        Commands::Quiet
-                      else
-                        # We raise it and will be rescued, reported and ignored. We raise it as
-                        # this should not happen unless there are version conflicts
-                        raise ::Karafka::Errors::UnsupportedCaseError, command
-                      end
+          # @param command [Request] command request
+          def control(command)
+            action = case command.name
+                     when Commands::Consumers::Trace.name
+                       Commands::Consumers::Trace
+                     when Commands::Consumers::Stop.name
+                       Commands::Consumers::Stop
+                     when Commands::Consumers::Quiet.name
+                       Commands::Consumers::Quiet
+                     when Commands::Partitions::Seek.name
+                       Commands::Partitions::Seek
+                     when Commands::Partitions::Resume.name
+                       Commands::Partitions::Resume
+                     when Commands::Partitions::Pause.name
+                       Commands::Partitions::Pause
+                     else
+                       # We raise it and will be rescued, reported and ignored. We raise it as
+                       # this should not happen unless there are version conflicts
+                       raise ::Karafka::Errors::UnsupportedCaseError, command.name
+                     end
 
-            command.new(params).call
+            action.new(command).call
           end
         end
       end

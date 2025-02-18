@@ -6,16 +6,16 @@
 RSpec.describe_current do
   before { Karafka::Web.config.topics.consumers.commands = commands_topic }
 
-  let(:commands_topic) { SecureRandom.uuid }
+  let(:commands_topic) { generate_topic_name }
 
   before { allow(Karafka::Web.producer).to receive(:produce_async) }
 
-  describe '.command' do
+  describe '.request' do
     let(:process_id) { 'process123' }
     let(:command_name) { 'quiet' }
 
-    it 'dispatches a command message with the correct structure' do
-      described_class.command(command_name, process_id)
+    it 'dispatches a request message with the correct structure' do
+      described_class.request(command_name, process_id)
 
       expect(Karafka::Web.producer).to have_received(:produce_async).with(
         hash_including(

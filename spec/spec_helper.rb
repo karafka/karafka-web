@@ -149,7 +149,7 @@ draw_defaults
 produce(TOPICS[0], Fixtures.consumers_states_file)
 produce(TOPICS[1], Fixtures.consumers_metrics_file)
 produce(TOPICS[2], Fixtures.consumers_reports_file)
-produce(TOPICS[3], Fixtures.consumers_commands_file)
+produce(TOPICS[3], Fixtures.consumers_commands_file('consumers/current.json'))
 
 # Run the migrations so even if we use older fixtures, the data in Kafka is aligned
 ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
@@ -161,3 +161,10 @@ Karafka::Web::App.engine.plugin(:route_csrf, check_request_methods: [])
 
 # We need to clear argv because otherwise we would get reports on invalid options for CLI specs
 ARGV.clear
+
+# Temporary patch until the new Karafka version is released
+unless Karafka::Connection::Listener.method_defined?(:coordinators)
+  Karafka::Connection::Listener.class_eval do
+    def coordinators; end
+  end
+end

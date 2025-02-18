@@ -30,6 +30,48 @@ module Karafka
                   controller.performance
                 end
 
+                r.on String, 'partitions' do |process_id|
+                  controller = Controllers::Consumers::Partitions::PausesController.new(params)
+
+                  r.get(
+                    String, String, :partition_id, 'pause', 'new'
+                  ) do |subscription_group_id, topic, partition_id|
+                    controller.new(process_id, subscription_group_id, topic, partition_id)
+                  end
+
+                  r.post(
+                    String, String, :partition_id, 'pause'
+                  ) do |subscription_group_id, topic, partition_id|
+                    controller.create(process_id, subscription_group_id, topic, partition_id)
+                  end
+
+                  r.get(
+                    String, String, :partition_id, 'pause', 'edit'
+                  ) do |subscription_group_id, topic, partition_id|
+                    controller.edit(process_id, subscription_group_id, topic, partition_id)
+                  end
+
+                  r.delete(
+                    String, String, :partition_id, 'pause'
+                  ) do |subscription_group_id, topic, partition_id|
+                    controller.delete(process_id, subscription_group_id, topic, partition_id)
+                  end
+
+                  controller = Controllers::Consumers::Partitions::OffsetsController.new(params)
+
+                  r.get(
+                    String, String, :partition_id, 'offset', 'edit'
+                  ) do |subscription_group_id, topic, partition_id|
+                    controller.edit(process_id, subscription_group_id, topic, partition_id)
+                  end
+
+                  r.put(
+                    String, String, :partition_id, 'offset'
+                  ) do |subscription_group_id, topic, partition_id|
+                    controller.update(process_id, subscription_group_id, topic, partition_id)
+                  end
+                end
+
                 r.on String, 'jobs' do |process_id|
                   controller = Controllers::Consumers::JobsController.new(params)
 

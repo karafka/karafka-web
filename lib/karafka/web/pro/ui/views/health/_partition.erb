@@ -25,8 +25,20 @@
     </span>
   </td>
   <td>
-    <a href="<%= root_path('consumers', details.process.id, 'subscriptions') %>">
+    <a href="<%= consumer_path(details.process.id, 'subscriptions') %>">
       <%== truncate(details.process.id, strategy: :middle) %>
     </a>
+  </td>
+  <td>
+    <%== partial(
+      'consumers/consumers/consumer/partition_edit_options',
+      locals: {
+        process: details.process,
+        subscription_group_id: details.subscription_group_id,
+        topic_name: topic_name,
+        partition: details
+      }
+    )
+    %>
   </td>
 </tr>

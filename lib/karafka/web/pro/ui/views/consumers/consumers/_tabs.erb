@@ -4,14 +4,14 @@
 <div class="tab-container-wrapper">
   <div class="tab-container">
     <a
-      href="<%= root_path('consumers', 'overview') %>"
+      href="<%= consumers_path('overview') %>"
       class="custom-tab <%= nav_class(include: 'overview') %>"
     >
       Overview
     </a>
 
     <a
-      href="<%= root_path('consumers', 'performance') %>"
+      href="<%= consumers_path('performance') %>"
       class="custom-tab <%= nav_class(include: 'performance') %>"
     >
       Performance
@@ -19,14 +19,14 @@
 
     <% if Karafka::Web.config.commanding.active %>
       <a
-        href="<%= root_path('consumers', 'controls') %>"
+        href="<%= consumers_path('controls') %>"
         class="custom-tab <%= nav_class(include: 'controls') %>"
       >
         Controls
       </a>
 
       <a
-        href="<%= root_path('consumers', 'commands') %>"
+        href="<%= consumers_path('commands') %>"
         class="custom-tab <%= nav_class(include: 'commands') %>"
       >
         Commands

@@ -8,7 +8,7 @@
 <% unless @processes.empty? %>
   <div class="col-span-12 flex justify-end space-x-2 mb-6">
     <%
-      quiet_all_path = root_path('consumers', 'commanding', 'quiet_all')
+      quiet_all_path = consumers_path('commanding', 'quiet_all')
     %>
     <form action="<%= quiet_all_path %>" method="post" class="inline-flex items-center">
       <%== csrf_tag(quiet_all_path) %>
@@ -19,7 +19,7 @@
     </form>
 
     <%
-      stop_all_path = root_path('consumers', 'commanding', 'stop_all')
+      stop_all_path = consumers_path('commanding', 'stop_all')
     %>
     <form action="<%= stop_all_path %>" method="post" class="inline-flex items-center">
       <%== csrf_tag(stop_all_path) %>
@@ -41,7 +41,7 @@
       <table class="data-table">
         <thead>
           <tr>
-            <th><%== sort_link(:id) %></th>
+            <th><%== sort_link('Process ID', :id) %></th>
             <th><%== sort_link(:status) %></th>
             <th>Subscriptions</th>
             <th><%== sort_link(:started_at, rev: true) %></th>

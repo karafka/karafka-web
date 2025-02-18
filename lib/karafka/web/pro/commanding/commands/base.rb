@@ -11,20 +11,38 @@ module Karafka
         module Commands
           # Base for all the commands
           class Base
-            # @return [Hash]
-            attr_reader :params
+            class << self
+              attr_accessor :name
+            end
 
-            # @param params [Hash] command details (if any). Some commands may require extra
+            # @return [Hash]
+            attr_reader :command
+
+            # @param command [Command] command details (if any). Some commands may require extra
             #   details to work. They can be obtained from here.
-            def initialize(params)
-              @params = params
+            def initialize(command)
+              @command = command
+            end
+
+            # Executes the command after receiving it.
+            def call
+              raise NotImlementedError, 'Please implement in a subclass'
             end
 
             private
 
-            # @return [String] current process id
-            def process_id
-              @process_id ||= ::Karafka::Web.config.tracking.consumers.sampler.process_id
+            # Dispatches the acceptance message back to Kafka as a confirmation
+            #
+            # @param params [Hash] hash with the acceptance message details
+            def acceptance(params)
+              Dispatcher.acceptance(self.class.name, process_id, params)
+            end
+
+            # Dispatches the result message back to Kafka with execution details
+            #
+            # @param params [Hash] hash with the result message details
+            def result(params)
+              Dispatcher.result(self.class.name, process_id, params)
             end
 
             # @return [Boolean] Is given process to which a command was sent operating in an
@@ -33,6 +51,11 @@ module Karafka
             #   handled differently (either via the main process or supervisor).
             def standalone?
               Karafka::Server.execution_mode == :standalone
+            end
+
+            # @return [String] id of the current consumer process
+            def process_id
+              ::Karafka::Web.config.tracking.consumers.sampler.process_id
             end
           end
         end

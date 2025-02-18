@@ -53,6 +53,10 @@ module Karafka
             Ui::Lib::Branding.post_setup(config)
             Ui::Lib::Policies.post_setup(config)
             Ui::Lib::Search.post_setup(config)
+
+            config.commanding.listeners.each do |listener|
+              ::Karafka::App.monitor.subscribe(listener)
+            end
           end
         end
       end

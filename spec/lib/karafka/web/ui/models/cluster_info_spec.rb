@@ -5,7 +5,7 @@ RSpec.describe_current do
 
   let(:topic) { create_topic }
   let(:not_found_error) { Karafka::Web::Errors::Ui::NotFoundError }
-  let(:non_existing_topic) { SecureRandom.uuid }
+  let(:non_existing_topic) { generate_topic_name }
 
   before { topic }
 

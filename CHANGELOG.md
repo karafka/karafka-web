@@ -1,10 +1,22 @@
 # Karafka Web Changelog
 
 ## 0.11.0 (Unreleased)
+- [Feature] Provide ability to pause/resume partitions on running consumers via the UI (Pro).
+- [Feature] Provide ability to edit offsets of running consumers (Pro).
 - [Feature] Support consumers that have mismatching schema.
 - [Feature] Provide ability to navigate to a timestamp in the Explorer (Pro).
+- [Enhancement] Improve handling of post-submit redirects.
 - [Enhancement] Provide better support for fully transactional consumers.
 - [Enhancement] Error out when `#setup` is called after `#enable!`.
+- [Change] Remove per-consumer process duplicated details from Subscriptions and Jobs tabs.
+- [Refactor] Make sure all temporary topics have a `it-` prefix in their name.
+- [Fix] Fix incorrect names in some of the tables headers.
+- [Fix] Normalize position of commanding buttons in regards to other UI elements.
+- [Fix] Fix incorrect indentation of some of the info messages.
+- [Fix] Fix tables headers inconsistent alignments.
+- [Fix] Fix incorrect warning box header color in the dark mode.
+- [Fix] Fix missing breadcrumbs on the consumers overview page.
+- [Fix] Fix a case where disabled buttons would be enabled back too early.
 - [Fix] The recent page breadcrumbs and offset id are not refreshed on change.
 - [Fix] Direct URL access with too big partition causes librdkafka crash.
 - [Fix] Fix incorrect breadcrumbs for pending consumer jobs.

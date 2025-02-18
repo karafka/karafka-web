@@ -20,7 +20,7 @@ RSpec.describe_current do
         ::Karafka::Web::Errors::Processing::MissingConsumersMetricsTopicError
       end
 
-      before { Karafka::Web.config.topics.consumers.metrics = SecureRandom.uuid }
+      before { Karafka::Web.config.topics.consumers.metrics = generate_topic_name }
 
       it { expect { metrics }.to raise_error(expected_error) }
     end

@@ -9,6 +9,8 @@ module Karafka
         class BaseController
           include Web::Ui::Lib::Paginations
 
+          attr_reader :params
+
           # Alias for easier referencing
           Models = Web::Ui::Models
 

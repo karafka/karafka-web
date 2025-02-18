@@ -36,4 +36,17 @@
       <%= partition.lso_risk_state %>
     </span>
   </td>
+
+  <td>
+    <%== partial(
+      'consumers/consumers/consumer/partition_edit_options',
+      locals: {
+        process: @process,
+        subscription_group_id: subscription_group.id,
+        topic_name: topic.name,
+        partition: partition
+      }
+    )
+    %>
+  </td>
 </tr>

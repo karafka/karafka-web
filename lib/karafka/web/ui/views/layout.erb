@@ -8,6 +8,8 @@
     </body>
   <% else %>
     <body class="drawer min-h-screen lg:drawer-open bg-base-200">
+      <div class="turbo-progress-bar"></div>
+
       <input id="main-drawer" type="checkbox" class="drawer-toggle" />
 
       <aside id="drawer-side" class="drawer-side z-10">
@@ -16,8 +18,7 @@
         <%== partial 'shared/navigation' %>
       </aside>
 
-      <main class="drawer-content" id="content">
-        <div class="turbo-progress-bar"></div>
+      <main class="drawer-content">
 
         <div class="grid-default lg:pb-0">
           <% if Karafka.pro? %>
@@ -27,7 +28,7 @@
           <%== partial 'shared/become_pro' %>
           <%== partial 'shared/breadcrumbs' %>
 
-          <header class="col-span-12 flex items-center gap-2 lg:gap-4 mb-3">
+          <header class="col-span-12 flex items-center gap-2 lg:gap-4 mb-3" id="content-header">
             <label for="main-drawer" class="btn btn-square btn-ghost drawer-button lg:hidden">
               <%== icon(:burger) %>
             </label>
@@ -40,7 +41,7 @@
           <%== partial 'shared/flashes' %>
         </div>
 
-        <div class="grid-default pt-5">
+        <div class="grid-default pt-5" id="content">
           <%== partial 'shared/content', locals: { content: yield } %>
         </div>
       </main>

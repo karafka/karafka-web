@@ -40,8 +40,10 @@ RSpec.describe_current do
 
     context 'when there are saml details' do
       before do
+        t_name = generate_topic_name
+
         draw_routes do
-          topic SecureRandom.uuid do
+          topic t_name do
             consumer Karafka::BaseConsumer
             kafka(
               'sasl.username': 'username',
@@ -66,8 +68,10 @@ RSpec.describe_current do
 
     context 'when there are ssl details' do
       before do
+        t_name = generate_topic_name
+
         draw_routes do
-          topic SecureRandom.uuid do
+          topic t_name do
             consumer Karafka::BaseConsumer
             kafka(
               'ssl.key.password': 'password',

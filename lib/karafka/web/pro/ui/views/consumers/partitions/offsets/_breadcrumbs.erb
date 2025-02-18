@@ -1,0 +1,58 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<li>
+  <a href="<%= consumers_path('overview') %>">
+    Consumers
+  </a>
+</li>
+
+<li>
+  <a href="<%= consumer_path(@process.id, 'subscriptions') %>">
+    <%== truncate(@process.id, strategy: :middle) %>
+  </a>
+</li>
+
+<% if @subscription_group_id %>
+  <li>
+    <a href="<%= consumer_path(@process.id, "subscriptions##{@subscription_group_id}") %>">
+      <%= @subscription_group_id %>
+    </a>
+  </li>
+
+  <%
+    edit_path = consumer_path(
+      @process.id,
+      'partitions',
+      @subscription_group_id,
+      @topic,
+      @partition_id,
+      'offset',
+      'edit'
+    )
+  %>
+
+  <li>
+    <a href="<%= edit_path %>">
+      <%= @topic %>
+    </a>
+  </li>
+
+  <li>
+    <a href="<%= edit_path %>">
+      <%= @partition_id %>
+    </a>
+  </li>
+
+  <li>
+    <a href="<%= edit_path %>">
+      Offsets
+    </a>
+  </li>
+
+  <li>
+    <a href="<%= edit_path %>">
+      Edit
+    </a>
+  </li>
+<% end %>

@@ -9,7 +9,7 @@ RSpec.describe_current do
   let(:topic) { create_topic(partitions: partitions) }
   let(:partitions) { 1 }
   let(:removed_or_compacted) { 'This offset does not contain any data.' }
-  let(:internal_topic) { "__#{SecureRandom.uuid}" }
+  let(:internal_topic) { "__#{generate_topic_name}" }
   let(:search_button) { 'title="Search in this topic"' }
 
   describe '#index' do

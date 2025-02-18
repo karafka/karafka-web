@@ -1,0 +1,20 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<% view_title "#{@process.id} - Pause Adjustment - #{@subscription_group_id} - #{@topic}##{@partition_id}" %>
+
+<% if @topic_lrj %>
+  <%== partial 'consumers/partitions/pauses/lrj_not_manageable' %>
+<% else %>
+  <% if @process.status == 'running' %>
+    <% if @partition_stats.poll_state == 'active' %>
+      <%== partial 'consumers/partitions/pauses/active_not_editable' %>
+    <% else %>
+      <%== partial 'consumers/partitions/pauses/adjusting_warning' %>
+      <%== partial 'consumers/partitions/offsets/basics' %>
+      <%== partial 'consumers/partitions/pauses/edit_form' %>
+    <% end %>
+  <% else %>
+    <%== partial 'consumers/partitions/pauses/not_running' %>
+  <% end %>
+<% end %>

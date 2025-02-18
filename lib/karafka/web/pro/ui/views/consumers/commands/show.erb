@@ -11,20 +11,16 @@
 
     <%== partial 'consumers/commands/metadata', locals: { command: command } %>
 
-    <h2 class="h2">
-      <% if command[:type] == 'command' %>
-        Details
-      <% else %>
-        Backtraces
-      <% end %>
-    </h2>
+    <% if command[:type] == 'result' && command[:command][:name] == 'consumers.trace' %>
+      <h2 class="h2">Backtraces</h2>
 
-    <% if command[:type] == 'command' %>
-      <%== partial 'consumers/commands/command_details', locals: { command: command } %>
-    <% else %>
       <% command[:result].each_value do |backtrace| %>
         <%== partial 'consumers/commands/backtrace', locals: { backtrace: backtrace } %>
       <% end %>
+    <% else %>
+      <h2 class="h2">Details</h2>
+
+      <%== partial 'consumers/commands/command_details', locals: { command: command } %>
     <% end %>
   <% else %>
     <% view_title 'Incompatible Command Schema' %>

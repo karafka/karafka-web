@@ -9,7 +9,13 @@
   <% if command[:schema_version] == @schema_version %>
     <tr>
       <td>
-        <% color = command[:type] == 'result' ? 'success' : 'primary' %>
+        <%
+          type = command[:type]
+          color = 'primary'
+          color = 'success' if type == 'result'
+          color = 'secondary' if type == 'acceptance'
+        %>
+
         <span class="badge badge-<%= color %>">
           <%= command[:type] %>
         </span>
@@ -17,13 +23,20 @@
 
       <td>
         <%
+          scope = ::Karafka::Web::Pro::Commanding::Commands
           color = case command[:command][:name]
-                  when 'trace'
+                  when scope::Consumers::Trace.name
                     'info'
-                  when 'quiet'
+                  when scope::Consumers::Quiet.name
                     'warning'
-                  when 'stop'
+                  when scope::Consumers::Stop.name
                     'error'
+                  when scope::Partitions::Seek.name
+                    'primary'
+                  when scope::Partitions::Pause.name
+                    'warning'
+                  when scope::Partitions::Resume.name
+                    'warning'
                   else
                     'secondary'
                   end
@@ -37,7 +50,7 @@
         <% if command[:process][:id] == '*' %>
           *
         <% else %>
-          <a href="<%= root_path('consumers', command[:process][:id], 'subscriptions') %>">
+          <a href="<%= consumer_path(command[:process][:id], 'subscriptions') %>">
             <%= truncate(command[:process][:id], strategy: :middle) %>
           </a>
         <% end %>
@@ -48,7 +61,7 @@
       </td>
 
       <td>
-        <a href="<%= root_path('consumers', 'commands', command_message.offset) %>" class="btn btn-sm btn-primary">
+        <a href="<%= consumers_path('commands', command_message.offset) %>" class="btn btn-sm btn-primary">
           Details
         </a>
       </td>

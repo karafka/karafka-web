@@ -40,6 +40,7 @@ module Karafka
         plugin :capture_erb
         plugin :content_for
         plugin :inject_erb
+        plugin :all_verbs
 
         # Based on
         # https://github.com/sidekiq/sidekiq/blob/ae6ca119/lib/sidekiq/web/application.rb#L8
@@ -70,7 +71,16 @@ module Karafka
           # Map redirect flashes (if any) to Roda flash messages
           result.flashes.each { |key, value| flash[key] = value }
 
-          response.redirect result.back? ? request.referer : root_path(result.path)
+          path = case result.path
+                 when :back
+                   session[:current_path]
+                 when :previous
+                   session[:previous_path]
+                 else
+                   root_path(result.path)
+                 end
+
+          response.redirect path || root_path
         end
 
         handle_block_result Controllers::Responses::File do |result|
@@ -113,6 +123,7 @@ module Karafka
 
         before do
           check_csrf!
+          store_paths_history(request, session)
         end
 
         plugin :class_matchers
@@ -176,6 +187,31 @@ module Karafka
         # @return [Karafka::Web::Ui::Controllers::Requests::Params] curated params
         def params
           Controllers::Requests::Params.new(request.params)
+        end
+
+        private
+
+        # Stores history about visited paths. Useful for redirecting users back when needed.
+        # @param request [Karafka::Web::Ui::App::RodaRequest]
+        # @param session [Object] session object (Rails or Rack)
+        def store_paths_history(request, session)
+          # Code below tracks previous paths so we can use it to redirect users back
+          return unless request.get?
+          return unless request.env['HTTP_ACCEPT']&.include?('text/html')
+
+          requested_path = request.path
+
+          if session[:current_path].nil?
+            session[:current_path] = requested_path
+
+            return
+          end
+
+          return if request.path == session[:current_path]
+
+          # When navigating to a different page
+          session[:previous_path] = session[:current_path]
+          session[:current_path] = requested_path
         end
       end
     end

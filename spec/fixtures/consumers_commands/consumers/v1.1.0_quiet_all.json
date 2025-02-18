@@ -1,8 +1,8 @@
 {
   "schema_version": "1.1.0",
-  "type": "command",
+  "type": "request",
   "command": {
-    "name": "stop"
+    "name": "consumers.quiet"
   },
   "dispatched_at": 1712518283.748216,
   "process": {

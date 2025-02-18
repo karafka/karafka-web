@@ -66,8 +66,8 @@ RSpec.describe_current do
     end
 
     context 'when command is trace' do
-      let(:trace_command) { Karafka::Web::Pro::Commanding::Commands::Trace.new({}) }
-      let(:command_name) { 'trace' }
+      let(:trace_command) { Karafka::Web::Pro::Commanding::Commands::Consumers::Trace.new({}) }
+      let(:command_name) { trace_command.class.name }
 
       before do
         allow(trace_command.class).to receive(:new).and_return(trace_command)
@@ -81,8 +81,8 @@ RSpec.describe_current do
     end
 
     context 'when command is quiet' do
-      let(:quiet_command) { Karafka::Web::Pro::Commanding::Commands::Quiet.new({}) }
-      let(:command_name) { 'quiet' }
+      let(:quiet_command) { Karafka::Web::Pro::Commanding::Commands::Consumers::Quiet.new({}) }
+      let(:command_name) { quiet_command.class.name }
 
       before do
         allow(quiet_command.class).to receive(:new).and_return(quiet_command)
@@ -96,8 +96,8 @@ RSpec.describe_current do
     end
 
     context 'when command is stop' do
-      let(:stop_command) { Karafka::Web::Pro::Commanding::Commands::Stop.new({}) }
-      let(:command_name) { 'stop' }
+      let(:stop_command) { Karafka::Web::Pro::Commanding::Commands::Consumers::Stop.new({}) }
+      let(:command_name) { stop_command.class.name }
 
       before do
         allow(stop_command.class).to receive(:new).and_return(stop_command)
@@ -107,6 +107,51 @@ RSpec.describe_current do
       it 'executes stop command' do
         manager.send(:call)
         expect(stop_command).to have_received(:call)
+      end
+    end
+
+    context 'when command is seek' do
+      let(:seek_command) { Karafka::Web::Pro::Commanding::Commands::Partitions::Seek.new({}) }
+      let(:command_name) { seek_command.class.name }
+
+      before do
+        allow(seek_command.class).to receive(:new).and_return(seek_command)
+        allow(seek_command).to receive(:call)
+      end
+
+      it 'executes stop command' do
+        manager.send(:call)
+        expect(seek_command).to have_received(:call)
+      end
+    end
+
+    context 'when command is pause' do
+      let(:pause_command) { Karafka::Web::Pro::Commanding::Commands::Partitions::Pause.new({}) }
+      let(:command_name) { pause_command.class.name }
+
+      before do
+        allow(pause_command.class).to receive(:new).and_return(pause_command)
+        allow(pause_command).to receive(:call)
+      end
+
+      it 'executes stop command' do
+        manager.send(:call)
+        expect(pause_command).to have_received(:call)
+      end
+    end
+
+    context 'when command is resume' do
+      let(:resume_command) { Karafka::Web::Pro::Commanding::Commands::Partitions::Resume.new({}) }
+      let(:command_name) { resume_command.class.name }
+
+      before do
+        allow(resume_command.class).to receive(:new).and_return(resume_command)
+        allow(resume_command).to receive(:call)
+      end
+
+      it 'executes stop command' do
+        manager.send(:call)
+        expect(resume_command).to have_received(:call)
       end
     end
 
