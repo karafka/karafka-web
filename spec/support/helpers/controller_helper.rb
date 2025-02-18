@@ -10,7 +10,8 @@ module ControllerHelper
   # @return [Hash] sanitized flash messages hash or nil if none
   # @note We sanitize it because of auto-wrapping of some parts with bold
   def flash
-    last_request.env['rack.session']['_flash']
+    last_request
+      .env['rack.session']['_flash']
       .transform_values { |value| value.gsub('<strong>', '').gsub('</strong>', '') }
   end
 
