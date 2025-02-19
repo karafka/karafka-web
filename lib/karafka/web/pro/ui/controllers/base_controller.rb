@@ -13,6 +13,7 @@ module Karafka
           class BaseController < Web::Ui::Controllers::BaseController
             private
 
+            # @return [Karafka::Web::Pro::Ui::Lib::Features] features fetcher
             def features
               Lib::Features
             end
