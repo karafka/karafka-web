@@ -36,7 +36,7 @@ RSpec.describe_current do
 
     it do
       expect(response).to be_ok
-      expect(body).to include('no_meaningful')
+      expect(body).to include(no_meaningful)
       expect(body).to include('id="refreshable"')
       expect(body).to include('<div id="refreshable" class="col-span-12 mb-10">')
       expect(body).not_to include(support_message)
@@ -58,7 +58,7 @@ RSpec.describe_current do
 
     it do
       expect(response).to be_ok
-      expect(body).to include('no_meaningful')
+      expect(body).to include(no_meaningful)
       expect(body).not_to include(support_message)
       expect(body).not_to include(breadcrumbs)
       expect(body).to include('id="refreshable"')
