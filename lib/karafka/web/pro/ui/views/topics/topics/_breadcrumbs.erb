@@ -14,3 +14,19 @@
     </a>
   </li>
 <% end %>
+
+<% if @topic %>
+  <li>
+    <a href="<%= topics_path(@topic.topic_name, 'config') %>">
+      <%= @topic.topic_name %>
+    </a>
+  </li>
+<% end %>
+
+<% if action?(:edit) %>
+  <li>
+    <a href="<%= topics_path(@topic.topic_name, 'delete') %>">
+      Removal Confirmation
+    </a>
+  </li>
+<% end %>

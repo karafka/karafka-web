@@ -13,6 +13,8 @@ module Karafka
             class CommandsController < BaseController
               # Lists commands from the consumers commands topic
               def index
+                features.commanding!
+
                 @schema_version = Commanding::Dispatcher::SCHEMA_VERSION
                 @watermark_offsets = Models::WatermarkOffsets.find(commands_topic, 0)
 
@@ -37,6 +39,8 @@ module Karafka
               #
               # @param offset [Integer] offset of the command message we're interested in
               def show(offset)
+                features.commanding!
+
                 @schema_version = Commanding::Dispatcher::SCHEMA_VERSION
                 @command_message = Models::Message.find(
                   commands_topic,
@@ -49,6 +53,8 @@ module Karafka
 
               # Displays the most recent available command message details
               def recent
+                features.commanding!
+
                 # We read 25 just in case there would be a lot of transactional noise
                 messages = ::Karafka::Admin.read_topic(commands_topic, 0, 25)
 

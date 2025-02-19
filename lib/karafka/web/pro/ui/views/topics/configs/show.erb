@@ -1,7 +1,7 @@
 <%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
 <%# See LICENSE for details. %>
 
-<% view_title @topic.topic_name %>
+<% view_title "#{@topic.topic_name} Configuraton" %>
 
 <%== partial 'topics/topics/tabs' %>
 
@@ -26,7 +26,5 @@
     </tbody>
   </table>
 </div>
-
-<hr/>
 
 <%== partial 'topics/configs/delete_button' %>

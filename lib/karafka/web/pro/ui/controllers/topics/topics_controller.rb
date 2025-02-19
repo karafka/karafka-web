@@ -30,7 +30,7 @@ module Karafka
               # Renders form for creating a new topic with basic details like number of partitions
               # and the replication factor
               def new
-                only_with_management_active!
+                features.topics_management!
 
                 render
               end
@@ -40,7 +40,7 @@ module Karafka
               #   a topic a moment to be fully available in the cluster. We "buy" ourselves this
               #   time by redirecting user back to the topics list
               def create
-                only_with_management_active!
+                features.topics_management!
 
                 begin
                   Karafka::Admin.create_topic(
@@ -67,7 +67,7 @@ module Karafka
               #
               # @param topic_name [String]
               def edit(topic_name)
-                only_with_management_active!
+                features.topics_management!
 
                 @topic = Models::Topic.find(topic_name)
                 @topic_name = topic_name
@@ -79,9 +79,9 @@ module Karafka
               #
               # @param topic_name [String] name of the topic we want to remove
               def delete(topic_name)
-                edit(topic_name)
+                features.topics_management!
 
-                only_with_management_active!
+                edit(topic_name)
 
                 Karafka::Admin.delete_topic(topic_name)
 

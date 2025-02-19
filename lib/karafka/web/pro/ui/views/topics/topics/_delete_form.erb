@@ -22,7 +22,7 @@
       <input type="hidden" name="_method" value="delete">
 
       <div class="flex justify-end gap-4">
-        <a href="<%= topics_path %>" class="btn btn-ghost">
+        <a href="<%= topics_path(@topic.topic_name, 'config') %>" class="btn btn-ghost">
           Cancel
         </a>
 

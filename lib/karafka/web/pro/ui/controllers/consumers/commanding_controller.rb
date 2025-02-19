@@ -16,6 +16,8 @@ module Karafka
               #
               # @param process_id [String]
               def trace(process_id)
+                features.commanding!
+
                 request(
                   Commanding::Commands::Consumers::Trace,
                   process_id
@@ -31,6 +33,8 @@ module Karafka
               #
               # @param process_id [String]
               def quiet(process_id)
+                features.commanding!
+
                 request(
                   Commanding::Commands::Consumers::Quiet,
                   process_id
@@ -46,6 +50,8 @@ module Karafka
               #
               # @param process_id [String]
               def stop(process_id)
+                features.commanding!
+
                 request(
                   Commanding::Commands::Consumers::Stop,
                   process_id
@@ -59,6 +65,8 @@ module Karafka
 
               # Dispatches the quiet request that should trigger on all consumers
               def quiet_all
+                features.commanding!
+
                 request(
                   Commanding::Commands::Consumers::Quiet,
                   '*'
@@ -72,6 +80,8 @@ module Karafka
 
               # Dispatches the stop request that should trigger on all consumers
               def stop_all
+                features.commanding!
+
                 request(
                   Commanding::Commands::Consumers::Stop,
                   '*'

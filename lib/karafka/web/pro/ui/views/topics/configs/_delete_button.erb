@@ -1,15 +1,13 @@
 <%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
 <%# See LICENSE for details. %>
 
-<% if @management_active %>
-  <div class="col-span-12 flex justify-end space-x-2 mt-6">
-    <a
-      class="btn btn-error btn-sm"
-      href="<%= topics_path(@topic.topic_name, 'delete') %>"
-      title="Delete this topic"
-    >
-      <%== icon(:trash) %>
-      Delete Topic
-    </a>
-  </div>
-<% end %>
+<div class="col-span-12 flex justify-end space-x-2 mt-6">
+  <a
+    class="btn btn-error btn-sm <%= 'btn-disabled' unless features.topics_management? %>"
+    href="<%= topics_path(@topic.topic_name, 'delete') %>"
+    title="Delete this topic"
+  >
+    <%== icon(:trash) %>
+    Delete Topic
+  </a>
+</div>

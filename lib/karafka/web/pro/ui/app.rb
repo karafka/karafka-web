@@ -66,6 +66,11 @@ module Karafka
 
             nil
           end
+
+          # @return [Karafka::Web::Ui::Lib::Features] features fetcher
+          def features
+            Lib::Features
+          end
         end
       end
     end

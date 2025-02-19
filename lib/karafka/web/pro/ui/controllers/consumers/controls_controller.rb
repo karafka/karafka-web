@@ -21,6 +21,8 @@ module Karafka
 
               # Displays list of consumer processes + options to manage them
               def index
+                features.commanding!
+
                 super
 
                 render

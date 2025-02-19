@@ -11,6 +11,11 @@ module Karafka
         module Controllers
           # Base Pro controller
           class BaseController < Web::Ui::Controllers::BaseController
+            private
+
+            def features
+              Lib::Features
+            end
           end
         end
       end

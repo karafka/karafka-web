@@ -52,7 +52,7 @@ module Karafka
 
             attributes[:breadcrums_scope] = scope
 
-            @current_action_name = caller(1..1).first.split('#').last.to_sym
+            @current_action_name = action.to_sym
 
             instance_variables.each do |iv|
               next if iv.to_s.start_with?('@_')
