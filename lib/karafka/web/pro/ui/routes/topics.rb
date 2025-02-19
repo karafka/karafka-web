@@ -34,6 +34,10 @@ module Karafka
 
                 controller = Controllers::Topics::TopicsController.new(params)
 
+                r.delete String do |topic_id|
+                  controller.delete(topic_id)
+                end
+
                 r.post do
                   controller.create
                 end

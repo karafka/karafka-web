@@ -1,0 +1,12 @@
+<% alert_box_info('Topic Creation Settings') do %>
+ <p>
+   You are about to create a new Kafka topic. Please note:
+ </p>
+ <ul class="list-disc ml-6 mt-2">
+   <li>Topic name cannot be changed after creation</li>
+   <li>Number of partitions can only be increased, never decreased</li>
+   <li>Additional settings can be configured from the topic configuration page</li>
+   <li>It may take Kafka up to few minutes to fully synchronize the new topic</li>
+   <li>Consumers may require additional time to discover the topic, depending on their metadata refresh frequency</li>
+ </ul>
+<% end %>

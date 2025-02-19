@@ -15,7 +15,10 @@ module Karafka
 
               # Displays list of topics we can work with
               def index
-                @topics = Models::Topic.all.sort_by(&:topic_name)
+                # We always re-fetch this without cache so the data is fresh in case of adding or
+                # removing topics
+                # Without disabling cache here, any changes might not be reflected immediately
+                @topics = Models::Topic.all(cached: false).sort_by(&:topic_name)
 
                 unless ::Karafka::Web.config.ui.visibility.internal_topics
                   @topics.delete_if { |topic| topic[:topic_name].start_with?('__') }
@@ -56,6 +59,23 @@ module Karafka
                   success: format_flash(
                     'Topic ? successfully created',
                     params[:topic_name]
+                  )
+                )
+              end
+
+              # Deletes the requested topic
+              #
+              # @param topic_name [String] name of the topic we want to remove
+              def delete(topic_name)
+                only_with_management_active!
+
+                Karafka::Admin.delete_topic(topic_name)
+
+                redirect(
+                  'topics',
+                  success: format_flash(
+                    'Topic ? successfully deleted',
+                    topic_name
                   )
                 )
               end

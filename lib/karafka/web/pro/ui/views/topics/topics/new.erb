@@ -3,97 +3,10 @@
 
 <% view_title "Creating New Topic" %>
 
-<% unless @form_error %>
-  <% alert_box_info('Topic Creation Settings') do %>
-   <p>
-     You are about to create a new Kafka topic. Please note:
-   </p>
-   <ul class="list-disc ml-6 mt-2">
-     <li>Topic name cannot be changed after creation</li>
-     <li>Number of partitions can only be increased, never decreased</li>
-     <li>Additional settings can be configured from the topic configuration page</li>
-     <li>It may take Kafka up to few minutes to fully synchronize the new topic</li>
-     <li>Consumers may require additional time to discover the topic, depending on their metadata refresh frequency</li>
-   </ul>
-  <% end %>
+<% if @form_error %>
+  <%== partial 'shared/rdkafka_form_error_alert_box' %>
+<% else %>
+  <%== partial 'topics/topics/hints' %>
 <% end %>
 
-<%== partial 'shared/rdkafka_form_error_alert_box' %>
-
-<div class="card bg-base-100 mt-4">
-  <div class="card-body border-error">
-    <form class="space-y-4 w-full" method="post" action="<%= topics_path %>" data-turbo="false">
-      <%== csrf_tag(topics_path) %>
-
-      <div class="flex items-center w-full mb-8">
-        <label class="w-1/4 text-gray-700">Topic Name:</label>
-        <div class="w-3/4">
-          <input
-            type="text"
-            name="topic_name"
-            class="block input input-bordered w-full"
-            placeholder="Enter topic name"
-            pattern="[A-Za-z0-9\-_.]+"
-            minlength="1"
-            maxlength="249"
-            value="<%= params.fetch(:topic_name, '') %>"
-            required
-          />
-          <div class="text-sm text-gray-500 mt-1">
-            Only alphanumeric characters, dots, underscores, and hyphens are allowed
-          </div>
-        </div>
-      </div>
-
-      <div class="flex items-center w-full mb-8">
-        <label class="w-1/4 text-gray-700">Number of Partitions:</label>
-        <div class="w-3/4">
-          <input
-            type="number"
-            min="1"
-            max="1000"
-            name="partitions_count"
-            class="block input input-bordered w-full"
-            placeholder="Enter number of partitions"
-            value="<%= params.fetch(:partitions_count, 5) %>"
-            required
-          />
-          <div class="text-sm text-gray-500 mt-1">
-            Minimum 1 partition, cannot be decreased after creation
-          </div>
-        </div>
-      </div>
-
-      <div class="flex items-center w-full">
-        <label class="w-1/4 text-gray-700">Replication Factor:</label>
-        <div class="w-3/4">
-          <input
-            type="number"
-            min="1"
-            max="100"
-            name="replication_factor"
-            class="block input input-bordered w-full"
-            placeholder="Enter replication factor"
-            value="<%= params.fetch(:replication_factor, 1) %>"
-            required
-          />
-          <div class="text-sm text-gray-500 mt-1">
-            Number of replicas for each partition (minimum 1, recommended 3 for production)
-          </div>
-        </div>
-      </div>
-
-      <div class="form-control text-center mt-6">
-        <div class="flex gap-4 justify-end">
-          <a href="<%= topics_path %>" class="btn btn-ghost">
-            Cancel
-          </a>
-          <button type="submit" class="btn btn-primary gap-2 btn-lockable">
-            <%== icon(:plus) %>
-            Create Topic
-          </button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
+<%== partial 'topics/topics/form' %>
