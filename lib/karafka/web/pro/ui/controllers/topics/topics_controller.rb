@@ -63,10 +63,24 @@ module Karafka
                 )
               end
 
+              # Renders a confirmation page for topic removal since it is a sensitive operation
+              #
+              # @param topic_name [String]
+              def edit(topic_name)
+                only_with_management_active!
+
+                @topic = Models::Topic.find(topic_name)
+                @topic_name = topic_name
+
+                render
+              end
+
               # Deletes the requested topic
               #
               # @param topic_name [String] name of the topic we want to remove
               def delete(topic_name)
+                edit(topic_name)
+
                 only_with_management_active!
 
                 Karafka::Admin.delete_topic(topic_name)

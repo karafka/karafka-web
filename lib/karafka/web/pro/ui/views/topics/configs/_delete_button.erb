@@ -3,19 +3,13 @@
 
 <% if @management_active %>
   <div class="col-span-12 flex justify-end space-x-2 mt-6">
-    <% path = topics_path(@topic.topic_name) %>
-
-    <form action="<%= path %>" method="post" class="inline-flex items-center">
-      <%== csrf_tag(path, 'DELETE') %>
-      <input type="hidden" name="_method" value="delete">
-
-      <button
-        type="submit"
-        class="btn btn-error btn-sm confirm-action"
-      >
-        <%== icon(:trash) %>
-        Delete Topic
-      </button>
-    </form>
+    <a
+      class="btn btn-error btn-sm"
+      href="<%= topics_path(@topic.topic_name, 'delete') %>"
+      title="Delete this topic"
+    >
+      <%== icon(:trash) %>
+      Delete Topic
+    </a>
   </div>
 <% end %>

@@ -34,16 +34,21 @@ module Karafka
 
                 controller = Controllers::Topics::TopicsController.new(params)
 
-                r.delete String do |topic_id|
-                  controller.delete(topic_id)
+                r.get 'new' do
+                  controller.new
                 end
 
                 r.post do
                   controller.create
                 end
 
-                r.get 'new' do
-                  controller.new
+                # Topic removal confirmation page since it's a sensitive operation
+                r.get String, 'delete' do |topic_id|
+                  controller.edit(topic_id)
+                end
+
+                r.delete String do |topic_id|
+                  controller.delete(topic_id)
                 end
 
                 r.get do

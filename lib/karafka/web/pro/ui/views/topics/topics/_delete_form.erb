@@ -1,0 +1,36 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<div class="card bg-base-100">
+  <div class="card-body">
+    <div class="alert alert-error">
+      <div class="flex items-center gap-4">
+        <%== icon(:trash) %>
+        <span>
+          You are about to delete topic:
+          <span class="font-bold ml-1"><%= @topic.topic_name %></span>
+          with
+          <span class="font-bold ml-1"><%= @topic.partition_count %></span>
+          partitions
+        </span>
+      </div>
+    </div>
+
+    <% path = topics_path(@topic.topic_name) %>
+    <form action="<%= path %>" method="post" class="mt-6" data-turbo="false">
+      <%== csrf_tag(path, 'DELETE') %>
+      <input type="hidden" name="_method" value="delete">
+
+      <div class="flex justify-end gap-4">
+        <a href="<%= topics_path %>" class="btn btn-ghost">
+          Cancel
+        </a>
+
+        <button type="submit" class="btn btn-error gap-2 btn-lockable confirm-action">
+          <%== icon(:trash) %>
+          Delete Topic
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
