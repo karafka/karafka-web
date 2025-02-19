@@ -66,7 +66,7 @@ RSpec.configure do |config|
 
     # Enable all features in case they were disabled for the controllers specs
 
-    if described_class < Karafka::Web::Ui::Controllers::BaseController
+    if Karafka.pro? && described_class < Karafka::Web::Ui::Controllers::BaseController
       ::Karafka::Web.config.commanding.active = true
       ::Karafka::Web.config.ui.topics.management.active = true
     end
