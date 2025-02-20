@@ -4,11 +4,11 @@
 <div class="mb-6">
   <% alert_box_error('Please Correct the Following Errors Before Continuing') do %>
     <ul class="list-disc m-5 mb-0 mt-0">
-      <% unless @form_error.message.to_s.blank? %>
+      <% unless @form_error.message.to_s.empty? %>
         <li><%= @form_error.message %></li>
       <% end %>
 
-      <% unless @form_error.broker_message.to_s.blank? %>
+      <% unless @form_error.broker_message.to_s.empty? %>
         <li><%= @form_error.broker_message %></li>
       <% end %>
     </ul>
