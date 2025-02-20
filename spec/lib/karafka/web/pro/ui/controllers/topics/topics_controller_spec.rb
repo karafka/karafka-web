@@ -7,6 +7,7 @@ RSpec.describe_current do
   subject(:app) { Karafka::Web::Pro::Ui::App }
 
   let(:internal_topic) { "__#{generate_topic_name}" }
+  let(:cluster_topics) { Karafka::Admin.cluster_info.topics.map { |t| t[:topic_name] } }
 
   describe '#index' do
     before do
@@ -123,7 +124,6 @@ RSpec.describe_current do
     let(:topic_name) { generate_topic_name }
     let(:partitions_count) { 3 }
     let(:replication_factor) { 1 }
-    let(:cluster_topics) { Karafka::Admin.cluster_info.topics.map { |t| t[:topic_name] } }
     let(:default_params) do
       {
         topic_name: topic_name,
@@ -221,10 +221,105 @@ RSpec.describe_current do
   end
 
   describe '#edit' do
-    pending 'tba'
+    let(:topic_name) { generate_topic_name }
+    let(:test_topic) { create_topic(topic_name: topic_name) }
+
+    context 'when topics management feature is enabled' do
+      before do
+        test_topic
+        get "topics/#{topic_name}/delete"
+      end
+
+      it 'renders removal confirmation page with all required elements' do
+        expect(response).to be_ok
+        expect(body).to include(breadcrumbs)
+        expect(body).to include("Topic #{topic_name} Removal Confirmation")
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+
+        # Topic details
+        expect(body).to include('You are about to delete topic:')
+        expect(body).to include(topic_name)
+
+        # Warning messages
+        expect(body).to include('Topic Removal Warning')
+        expect(body).to include('All data in this topic will be permanently deleted')
+        expect(body).to include('All consumers and producers for this topic will stop functioning')
+        expect(body).to include('Consumer group offsets associated with this topic will be lost')
+
+        # Pre-deletion checklist
+        expect(body).to include('Before proceeding, ensure that:')
+        expect(body).to include('All applications consuming from this topic have been properly')
+        expect(body).to include('All producers to this topic have been stopped')
+        expect(body).to include('You have backed up any critical data if needed')
+        expect(body).to include('You have notified relevant team members about this deletion')
+
+        # Form elements
+        expect(body).to include('method="post"')
+        expect(body).to include('type="hidden"')
+        expect(body).to include('name="_method" value="delete"')
+        expect(body).to include('Delete Topic')
+        expect(body).to include('Cancel')
+      end
+    end
+
+    context 'when topics management feature is not enabled' do
+      before do
+        Karafka::Web.config.ui.topics.management.active = false
+        get "topics/#{topic_name}/delete"
+      end
+
+      it 'returns unauthorized status' do
+        expect(response).not_to be_ok
+        expect(status).to eq(403)
+      end
+    end
+
+    context 'when topic does not exist' do
+      before { get 'topics/non-existent-topic/delete' }
+
+      it 'returns not found status' do
+        expect(status).to eq(404)
+      end
+    end
   end
 
   describe '#delete' do
-    pending 'tba'
+    let(:topic_name) { generate_topic_name }
+    let(:test_topic) { create_topic(topic_name: topic_name) }
+
+    context 'when topics management feature is enabled' do
+      before do
+        test_topic
+        delete "topics/#{topic_name}"
+      end
+
+      it 'deletes topic and redirects with success message' do
+        expect(response.status).to eq(302)
+        expect(response.location).to end_with('/topics')
+        expect(flash[:success]).to include("Topic #{topic_name} successfully deleted")
+        expect(cluster_topics).not_to include(topic_name)
+      end
+    end
+
+    context 'when topics management feature is not enabled' do
+      before do
+        Karafka::Web.config.ui.topics.management.active = false
+        delete "topics/#{topic_name}"
+      end
+
+      it 'returns unauthorized status' do
+        expect(response).not_to be_ok
+        expect(status).to eq(403)
+      end
+    end
+
+    context 'when topic does not exist' do
+      before { delete 'topics/non-existent-topic' }
+
+      it 'returns not found status' do
+        expect(status).to eq(404)
+      end
+    end
   end
 end
