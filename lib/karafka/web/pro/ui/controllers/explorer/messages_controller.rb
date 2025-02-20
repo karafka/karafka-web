@@ -81,11 +81,13 @@ module Karafka
               # @param delivery [Rdkafka::Producer::DeliveryReport]
               # @return [String] flash message about message reproducing
               def reproduced(message, delivery)
-                <<~MSG
-                  Message with offset #{message.offset}
-                  has been sent again to #{message.topic}##{message.partition}
-                  and received offset #{delivery.offset}.
-                MSG
+                format_flash(
+                  'Message with offset ? has been sent again to ?#? and received offset ?',
+                  message.offset,
+                  message.topic,
+                  message.partition,
+                  delivery.offset
+                )
               end
 
               # @return [Object] visibility filter. Either default or user-based

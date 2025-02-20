@@ -1,0 +1,16 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<div class="alert">
+  <div class="space-y-2">
+    <p>Before updating this configuration:</p>
+    <ul class="list-disc ml-6">
+      <li>Ensure you understand the impact of changing this value</li>
+      <li>Consider testing the change in a non-production environment first</li>
+      <li>Monitor the topic after the change to ensure expected behavior</li>
+      <% if @property.sensitive? %>
+        <li>Keep this value secure and only share with authorized team members</li>
+      <% end %>
+    </ul>
+  </div>
+</div>

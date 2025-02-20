@@ -50,10 +50,13 @@ module Karafka
 
                   redirect(
                     :previous,
-                    success: <<~MESSAGE
-                      Initiated partition pause for #{topic}##{partition_id}
-                      (subscription group: #{subscription_group_id})
-                    MESSAGE
+                    success: format_flash(
+                      'Initiated partition ? for ?#? (subscription group: ?)',
+                      'pause',
+                      topic,
+                      partition_id,
+                      subscription_group_id
+                    )
                   )
                 end
 
@@ -88,10 +91,13 @@ module Karafka
 
                   redirect(
                     :previous,
-                    success: <<~MESSAGE
-                      Initiated partition resume for #{topic}##{partition_id}
-                      (subscription group: #{subscription_group_id})
-                    MESSAGE
+                    success: format_flash(
+                      'Initiated partition ? for ?#? (subscription group: ?)',
+                      'resume',
+                      topic,
+                      partition_id,
+                      subscription_group_id
+                    )
                   )
                 end
               end

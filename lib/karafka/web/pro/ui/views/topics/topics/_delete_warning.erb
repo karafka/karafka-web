@@ -1,0 +1,13 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<% alert_box_warning('Topic Removal Warning') do %>
+  <div class="space-y-4">
+    <ul class="list-disc ml-6">
+      <li>All data in this topic will be permanently deleted and cannot be recovered</li>
+      <li>All consumers and producers for this topic will stop functioning</li>
+      <li>Applications dependent on this topic may experience errors or disruptions</li>
+      <li>Consumer group offsets associated with this topic will be lost</li>
+    </ul>
+  </div>
+<% end %>

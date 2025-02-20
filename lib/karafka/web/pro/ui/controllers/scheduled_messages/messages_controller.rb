@@ -36,11 +36,13 @@ module Karafka
 
                 redirect(
                   :back,
-                  success: <<~MESSAGE
-                    A scheduled message with offset #{message_offset}
-                    from #{topic_id} partition #{partition_id}
-                    had a cancel request message successfully created.
-                  MESSAGE
+                  success: format_flash(
+                    'A scheduled message with offset ? from ?#? had a ? successfully created',
+                    message_offset,
+                    topic_id,
+                    partition_id,
+                    'cancel request'
+                  )
                 )
               end
             end

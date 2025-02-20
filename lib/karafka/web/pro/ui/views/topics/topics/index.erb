@@ -3,6 +3,8 @@
 
 <% view_title 'Topics' %>
 
+<%== partial 'topics/topics/create_button' %>
+
 <% if @topics.empty? %>
   <%== partial 'explorer/explorer/no_topics' %>
 <% else %>
@@ -10,7 +12,7 @@
     <%==
       each_partial(
         @topics,
-        'topics/topic'
+        'topics/topics/topic'
       )
     %>
   </div>

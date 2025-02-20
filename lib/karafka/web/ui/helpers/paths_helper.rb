@@ -6,6 +6,15 @@ module Karafka
       module Helpers
         # Helper for web ui paths builders
         module PathsHelper
+          # Method that can be used to have conditions in breadcrumbs, etc based on the action
+          # we're in
+          #
+          # @param args [Array<Symbol>] action names we want to check
+          # @return [Boolean] true if any matches the current action name
+          def action?(*args)
+            args.include?(@current_action_name)
+          end
+
           # Helper method to flatten nested hashes and arrays
           # @param prefix [String] The prefix for nested keys, initially an empty string.
           # @param hash [Hash, Array] The nested hash or array to be flattened.
@@ -64,6 +73,14 @@ module Karafka
           # @return [String] path to the expected location
           def explorer_path(topic_name = nil, partition_id = nil, offset = nil, action = nil)
             root_path(*['explorer', topic_name, partition_id, offset, action].compact)
+          end
+
+          # Helps build topics paths
+          #
+          # @param args [Array<String>] path params for the topics scope
+          # @return [String] topics scope path
+          def topics_path(*args)
+            root_path('topics', *args)
           end
 
           # Helps build consumers paths

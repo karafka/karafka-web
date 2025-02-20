@@ -1,0 +1,50 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<div class="card bg-base-100">
+  <div class="card-body">
+    <% form_path = topics_path(@topic.topic_name, 'config', @property.name) %>
+    <form method="post" action="<%= form_path %>" data-turbo="false">
+      <%== csrf_tag(form_path, 'PUT') %>
+      <input type="hidden" name="_method" value="put">
+
+      <div class="flex items-center w-full mb-4">
+        <label class="w-1/4 text-gray-700">Property:</label>
+        <div class="w-3/4">
+          <code class="bg-base-200 px-2 py-1 rounded"><%= @property.name %></code>
+        </div>
+      </div>
+
+      <div class="flex items-center w-full mb-4">
+        <label class="w-1/4 text-gray-700">Current Value:</label>
+        <div class="w-3/4">
+          <code class="bg-base-200 px-2 py-1 rounded"><%= @property.value %></code>
+        </div>
+      </div>
+
+      <div class="flex items-center w-full mb-8">
+        <label class="w-1/4 text-gray-700">New Value:</label>
+        <div class="w-3/4">
+          <input
+            type="<%= @property.sensitive? ? 'password' : 'text' %>"
+            name="property_value"
+            class="block input input-bordered w-full"
+            placeholder="Enter new value for <%= @property.name %>"
+            value="<%= params.fetch(:property_value, @property.value) %>"
+          />
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-4 mt-4">
+        <a href="<%= topics_path(@topic.topic_name, 'config') %>" class="btn btn-ghost">
+          Cancel
+        </a>
+
+        <button type="submit" class="btn btn-primary gap-2 btn-lockable">
+          <%== icon(:pencil_square) %>
+          Update Property
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

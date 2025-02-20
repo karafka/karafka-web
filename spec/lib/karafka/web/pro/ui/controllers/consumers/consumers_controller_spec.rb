@@ -6,7 +6,7 @@
 RSpec.describe_current do
   subject(:app) { Karafka::Web::Pro::Ui::App }
 
-  let(:no_processes) { 'There are no Karafka consumer processes' }
+  let(:no_processes) { 'There Are No Karafka Consumer Processes' }
   let(:states_topic) { create_topic }
   let(:reports_topic) { create_topic }
   let(:incompatible_schema) { 'This process uses schema' }
@@ -61,9 +61,9 @@ RSpec.describe_current do
       it do
         expect(response).to be_ok
 
+        expect(body).to include('Commands')
+        expect(body).to include('Controls')
         expect(body).not_to include('Pro Feature')
-        expect(body).not_to include('Controls')
-        expect(body).not_to include('Commands')
       end
     end
 
@@ -280,20 +280,6 @@ RSpec.describe_current do
         expect(body).not_to include(pagination)
         expect(body).to include(breadcrumbs)
         expect(body).to include(no_processes)
-      end
-    end
-
-    context 'when commanding is disabled' do
-      before do
-        Karafka::Web.config.commanding.active = false
-
-        get 'consumers/performance'
-      end
-
-      it do
-        expect(response).to be_ok
-        expect(body).not_to include('Controls')
-        expect(body).not_to include('Commands')
       end
     end
 
@@ -764,9 +750,10 @@ RSpec.describe_current do
 
       it do
         expect(response).to be_ok
-        expect(body).not_to include('Trace')
-        expect(body).not_to include('Quiet')
-        expect(body).not_to include('Stop')
+        expect(body).to include('btn-lockable  btn-disabled')
+        expect(body).to include('Trace')
+        expect(body).to include('Quiet')
+        expect(body).to include('Stop')
       end
     end
 

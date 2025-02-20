@@ -1,75 +1,80 @@
 <%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
 <%# See LICENSE for details. %>
 
-<% if Karafka::Web.config.commanding.active && !process.tags.include?('embedded') %>
-  <div class="col-span-12 flex justify-end space-x-2 mb-6">
-    <%
-      trace_path = consumers_path('commanding', process.id, 'trace')
-      disabled_class = process.status != 'stopped' ? '' : 'btn-disabled'
-    %>
-    <form
-      action="<%= trace_path %>"
-      method="post"
-      class="inline-flex items-center"
+<%
+  commanding_class = 'btn-disabled'
+  commanding_class = '' if features.commanding?
+  trace_class = 'btn-disabled'
+  trace_class = '' unless process.tags.include?('embedded')
+%>
+
+<div class="col-span-12 flex justify-end space-x-2 mb-6">
+  <%
+    trace_path = consumers_path('commanding', process.id, 'trace')
+    disabled_class = process.status != 'stopped' ? '' : 'btn-disabled'
+  %>
+  <form
+    action="<%= trace_path %>"
+    method="post"
+    class="inline-flex items-center"
+  >
+    <%== csrf_tag(trace_path) %>
+    <button
+      type="submit"
+      class="btn btn-info btn-sm btn-lockable <%= disabled_class %> <%= commanding_class %>"
     >
-      <%== csrf_tag(trace_path) %>
-      <button
-        type="submit"
-        class="btn btn-info btn-sm btn-lockable <%= disabled_class %>"
-      >
-        <%== icon(:gear) %>
-        Trace
-      </button>
-    </form>
+      <%== icon(:gear) %>
+      Trace
+    </button>
+  </form>
 
-    <%
-      quiet_path = consumers_path('commanding', process.id, 'quiet')
-      disabled_class = process.status == 'running' ? '' : 'btn-disabled'
+  <%
+    quiet_path = consumers_path('commanding', process.id, 'quiet')
+    disabled_class = process.status == 'running' ? '' : 'btn-disabled'
 
-      unless process.execution_mode == 'standalone'
-        disabled_class = 'btn-disabled'
-        title = 'Supported only in standalone consumer processes'
-      end
-    %>
-    <form
-      action="<%= quiet_path %>"
-      method="post"
-      class="inline-flex items-center"
-      title="<%= title %>"
+    unless process.execution_mode == 'standalone'
+      disabled_class = 'btn-disabled'
+      title = 'Supported only in standalone consumer processes'
+    end
+  %>
+  <form
+    action="<%= quiet_path %>"
+    method="post"
+    class="inline-flex items-center"
+    title="<%= title %>"
+  >
+    <%== csrf_tag(quiet_path) %>
+    <button
+      type="submit"
+      class="btn btn-warning btn-sm btn-lockable <%= disabled_class %> <%= commanding_class %> <%= trace_class %>"
     >
-      <%== csrf_tag(quiet_path) %>
-      <button
-        type="submit"
-        class="btn btn-warning btn-sm btn-lockable <%= disabled_class %>"
-      >
-        <%== icon(:pause) %>
-        Quiet
-      </button>
-    </form>
+      <%== icon(:pause) %>
+      Quiet
+    </button>
+  </form>
 
-    <%
-      stop_path = consumers_path('commanding', process.id, 'stop')
-      disabled_class = process.status != 'stopping' && process.status != 'stopped' ? '' : 'btn-disabled'
+  <%
+    stop_path = consumers_path('commanding', process.id, 'stop')
+    disabled_class = process.status != 'stopping' && process.status != 'stopped' ? '' : 'btn-disabled'
 
-      unless process.execution_mode == 'standalone'
-        disabled_class = 'btn-disabled'
-        title = 'Supported only in standalone consumer processes'
-      end
-    %>
-    <form
-      action="<%= stop_path %>"
-      method="post"
-      class="inline-flex items-center"
-      title="<%= title %>"
+    unless process.execution_mode == 'standalone'
+      disabled_class = 'btn-disabled'
+      title = 'Supported only in standalone consumer processes'
+    end
+  %>
+  <form
+    action="<%= stop_path %>"
+    method="post"
+    class="inline-flex items-center"
+    title="<%= title %>"
+  >
+    <%== csrf_tag(stop_path) %>
+    <button
+      type="submit"
+      class="btn btn-error btn-sm btn-lockable <%= disabled_class %> <%= commanding_class %> <%= trace_class %>"
     >
-      <%== csrf_tag(stop_path) %>
-      <button
-        type="submit"
-        class="btn btn-error btn-sm btn-lockable <%= disabled_class %>"
-      >
-        <%== icon(:stop) %>
-        Stop
-      </button>
-    </form>
-  </div>
-<% end %>
+      <%== icon(:stop) %>
+      Stop
+    </button>
+  </form>
+</div>

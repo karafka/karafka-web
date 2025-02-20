@@ -1,0 +1,12 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<% view_title "Creating New Topic" %>
+
+<% if @form_error %>
+  <%== partial 'shared/rdkafka_form_error_alert_box' %>
+<% else %>
+  <%== partial 'topics/topics/create_hints' %>
+<% end %>
+
+<%== partial 'topics/topics/new_form' %>

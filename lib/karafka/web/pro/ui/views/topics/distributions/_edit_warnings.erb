@@ -1,0 +1,14 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<% alert_box_warning('Partition Update Warning') do %>
+  <div class="space-y-4">
+    <ul class="list-disc ml-6">
+      <li>Increasing partitions is a one-way operation - partition count cannot be decreased later</li>
+      <li>Adding partitions affects message ordering and consistent hashing</li>
+      <li>Consumers will need to detect the partition count change and rebalance</li>
+      <li>Message distribution across partitions may become uneven until data rotates</li>
+      <li>Changes may take several minutes to be visible in the UI but will be applied immediately</li>
+    </ul>
+  </div>
+<% end %>
