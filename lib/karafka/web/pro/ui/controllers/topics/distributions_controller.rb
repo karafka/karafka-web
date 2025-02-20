@@ -41,6 +41,14 @@ module Karafka
 
                 render
               end
+
+              def edit
+                raise
+              end
+
+              def update
+                raise
+              end
             end
           end
         end

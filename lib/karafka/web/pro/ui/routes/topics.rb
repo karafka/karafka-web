@@ -27,9 +27,20 @@ module Karafka
                   controller.show(topic_id)
                 end
 
-                r.get String, 'config' do |topic_id|
+                r.on String, 'config' do |topic_id|
                   controller = Controllers::Topics::ConfigsController.new(params)
-                  controller.show(topic_id)
+
+                  r.get String, 'edit' do |property_name|
+                    controller.edit(topic_id, property_name)
+                  end
+
+                  r.put String do |property_name|
+                    controller.update(topic_id, property_name)
+                  end
+
+                  r.get do
+                    controller.index(topic_id)
+                  end
                 end
 
                 controller = Controllers::Topics::TopicsController.new(params)

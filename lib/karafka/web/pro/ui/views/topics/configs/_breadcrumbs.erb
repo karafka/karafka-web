@@ -13,10 +13,22 @@
   </a>
 </li>
 
-<% if @configs %>
+<li>
+  <a href="<%= topics_path(@topic.topic_name, 'config') %>">
+    Configuration
+  </a>
+</li>
+
+<% if action?(:edit, :update) %>
   <li>
-    <a href="<%= topics_path(@topic.topic_name, 'config') %>">
-      Configuration
+    <a href="<%= topics_path(@topic.topic_name, 'config', @property.name, 'edit') %>">
+      <%= @property.name %>
+    </a>
+  </li>
+
+  <li>
+    <a href="<%= topics_path(@topic.topic_name, 'config', @property.name, 'edit') %>">
+      Edit
     </a>
   </li>
 <% end %>

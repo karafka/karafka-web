@@ -5,7 +5,9 @@
 - **[Feature]** Provide ability to edit offsets of running consumers (Pro).
 - **[Feature]** Support consumers that have mismatching schema.
 - **[Feature]** Provide ability to navigate to a timestamp in the Explorer (Pro).
-- **[Feature]** Provide ability to manage topics and their configuration from the Web UI (Pro).
+- **[Feature]** Provide ability to create and delete topics from the Web UI (Pro).
+- **[Feature]** Provide ability to manage topics configuration from the Web UI (Pro).
+- **[Feature]** Provide ability to manage topics partitioning from the Web UI (Pro).
 - [Enhancement] Improve flash messages.
 - [Enhancement] Improve handling of post-submit redirects.
 - [Enhancement] Provide better support for fully transactional consumers.
