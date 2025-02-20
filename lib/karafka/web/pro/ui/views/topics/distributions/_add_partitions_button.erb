@@ -4,10 +4,10 @@
 <div class="col-span-12 flex justify-end space-x-2 mb-6">
   <a
     class="btn btn-primary btn-sm <%= 'btn-disabled' unless features.topics_management? %>"
-    href="<%= topics_path('new') %>"
-    title="Create new topic"
+    href="<%= topics_path(@topic.topic_name, 'distribution', 'edit') %>"
+    title="Add more partitions to this topic"
   >
     <%== icon(:plus) %>
-    Create Topic
+    Increase Partitions
   </a>
 </div>

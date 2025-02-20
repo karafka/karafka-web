@@ -12,9 +12,20 @@ module Karafka
           class Topics < Base
             route do |r|
               r.on 'topics' do
-                r.get String, 'distribution' do |topic_id|
+                r.on String, 'distribution' do |topic_id|
                   controller = Controllers::Topics::DistributionsController.new(params)
-                  controller.show(topic_id)
+
+                  r.get 'edit' do
+                    controller.edit(topic_id)
+                  end
+
+                  r.put do
+                    controller.update(topic_id)
+                  end
+
+                  r.get do
+                    controller.show(topic_id)
+                  end
                 end
 
                 r.get String, 'replication' do |topic_id|

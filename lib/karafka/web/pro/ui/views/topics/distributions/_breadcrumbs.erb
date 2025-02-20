@@ -18,3 +18,11 @@
     Distribution
   </a>
 </li>
+
+<% if action?(:edit, :update) %>
+  <li>
+    <a href="<%= topics_path(@topic.topic_name, 'distribution', 'edit') %>">
+      Increasing Number of Partitions
+    </a>
+  </li>
+<% end %>

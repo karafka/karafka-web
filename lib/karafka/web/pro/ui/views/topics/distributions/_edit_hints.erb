@@ -1,0 +1,15 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<div class="alert">
+  <div class="space-y-2">
+    <p>Before increasing partitions:</p>
+    <ul class="list-disc ml-6">
+      <li>Ensure all consumers support dynamic partition detection</li>
+      <li>Consider the impact on message ordering in your applications</li>
+      <li>Plan for temporary rebalancing as consumers detect the change</li>
+      <li>Monitor consumer lag during and after the operation</li>
+      <li>Consider increasing partitions during low-traffic periods</li>
+    </ul>
+  </div>
+</div>

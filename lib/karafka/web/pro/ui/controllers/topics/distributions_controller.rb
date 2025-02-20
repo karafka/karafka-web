@@ -42,12 +42,40 @@ module Karafka
                 render
               end
 
-              def edit
-                raise
+              # @param topic_name [String]
+              def edit(topic_name)
+                features.topics_management!
+
+                @topic = Models::Topic.find(topic_name)
+
+                render
               end
 
-              def update
-                raise
+              # @param topic_name [String]
+              def update(topic_name)
+                edit(topic_name)
+
+                partition_count = params.int(:partition_count)
+
+                begin
+                  Karafka::Admin.create_partitions(
+                    topic_name,
+                    partition_count
+                  )
+                rescue Rdkafka::RdkafkaError => e
+                  @form_error = e
+                end
+
+                return edit(topic_name) if @form_error
+
+                redirect(
+                  "topics/#{topic_name}/distribution",
+                  success: format_flash(
+                    'Topic ? repartitioning to ? partitions successfully started',
+                    topic_name,
+                    partition_count
+                  )
+                )
               end
             end
           end
