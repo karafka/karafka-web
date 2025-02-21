@@ -46,7 +46,6 @@ RSpec.describe_current do
           internal_topics: true,
           active_topics_cluster_lags_only: true
         },
-        cache: Object.new,
         per_page: 50,
         dlq_patterns: [],
         max_visible_payload_size: 100,
@@ -190,12 +189,6 @@ RSpec.describe_current do
 
         it { expect(contract.call(params)).not_to be_success }
       end
-    end
-
-    context 'when cache is nil' do
-      before { params[:ui][:cache] = nil }
-
-      it { expect(contract.call(params)).not_to be_success }
     end
 
     context 'when kafka is nil' do
