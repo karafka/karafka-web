@@ -17,6 +17,7 @@
 - [Change] Do not fully hide config-disabled features but make them disabled.
 - [Change] Remove per-consumer process duplicated details from Subscriptions and Jobs tabs.
 - [Refactor] Make sure all temporary topics have a `it-` prefix in their name.
+- [Refactor] Introduce a `bin/verify_topics_naming` script to ensure proper test topics naming convention.
 - [Fix] Fix incorrect names in some of the tables headers.
 - [Fix] Normalize position of commanding buttons in regards to other UI elements.
 - [Fix] Fix incorrect indentation of some of the info messages.
