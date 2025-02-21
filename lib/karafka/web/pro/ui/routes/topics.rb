@@ -12,30 +12,73 @@ module Karafka
           class Topics < Base
             route do |r|
               r.on 'topics' do
-                controller = Controllers::TopicsController.new(params)
+                r.on String, 'distribution' do |topic_id|
+                  controller = Controllers::Topics::DistributionsController.new(params)
 
-                r.get String, 'config' do |topic_id|
-                  controller.config(topic_id)
+                  r.get 'edit' do
+                    controller.edit(topic_id)
+                  end
+
+                  r.put do
+                    controller.update(topic_id)
+                  end
+
+                  r.get do
+                    controller.show(topic_id)
+                  end
                 end
 
                 r.get String, 'replication' do |topic_id|
-                  controller.replication(topic_id)
-                end
-
-                r.get String, 'distribution' do |topic_id|
-                  controller.distribution(topic_id)
+                  controller = Controllers::Topics::ReplicationsController.new(params)
+                  controller.show(topic_id)
                 end
 
                 r.get String, 'offsets' do |topic_id|
-                  controller.offsets(topic_id)
+                  controller = Controllers::Topics::OffsetsController.new(params)
+                  controller.show(topic_id)
                 end
 
-                r.get String do |topic_id|
-                  r.redirect root_path('topics', topic_id, 'config')
+                r.on String, 'config' do |topic_id|
+                  controller = Controllers::Topics::ConfigsController.new(params)
+
+                  r.get String, 'edit' do |property_name|
+                    controller.edit(topic_id, property_name)
+                  end
+
+                  r.put String do |property_name|
+                    controller.update(topic_id, property_name)
+                  end
+
+                  r.get do
+                    controller.index(topic_id)
+                  end
+                end
+
+                controller = Controllers::Topics::TopicsController.new(params)
+
+                r.get 'new' do
+                  controller.new
+                end
+
+                r.post do
+                  controller.create
+                end
+
+                # Topic removal confirmation page since it's a sensitive operation
+                r.get String, 'delete' do |topic_id|
+                  controller.edit(topic_id)
+                end
+
+                r.delete String do |topic_id|
+                  controller.delete(topic_id)
                 end
 
                 r.get do
                   controller.index
+                end
+
+                r.get String do |topic_id|
+                  r.redirect root_path('topics', topic_id, 'config')
                 end
               end
             end

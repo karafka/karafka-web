@@ -1,0 +1,13 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<div class="col-span-12 flex justify-end space-x-2 mb-6">
+  <a
+    class="btn btn-primary btn-sm <%= 'btn-disabled' unless features.topics_management? %>"
+    href="<%= topics_path(@topic.topic_name, 'distribution', 'edit') %>"
+    title="Add more partitions to this topic"
+  >
+    <%== icon(:plus) %>
+    Increase Partitions
+  </a>
+</div>

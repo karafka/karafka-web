@@ -1,9 +1,9 @@
 <%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
 <%# See LICENSE for details. %>
 
-<% view_title @topic.topic_name %>
+<% view_title "#{@topic.topic_name} Configuraton" %>
 
-<%== partial 'topics/tabs' %>
+<%== partial 'topics/topics/tabs' %>
 
 <div class="data-table-wrapper">
   <table class="data-table">
@@ -14,15 +14,18 @@
         <th><%== sort_link(:default?) %></th>
         <th><%== sort_link(:sensitive?) %></th>
         <th><%== sort_link(:read_only?) %></th>
+        <th>Options</th>
       </tr>
     </thead>
     <tbody>
       <%==
         each_partial(
           @configs,
-          'cluster/config'
+          'topics/configs/config'
         )
       %>
     </tbody>
   </table>
 </div>
+
+<%== partial 'topics/configs/delete_button' %>

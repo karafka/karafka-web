@@ -1,0 +1,16 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<div class="mb-6">
+  <% alert_box_error('Please Correct the Following Errors Before Continuing') do %>
+    <ul class="list-disc m-5 mb-0 mt-0">
+      <% unless @form_error.message.to_s.empty? %>
+        <li><%= @form_error.message %></li>
+      <% end %>
+
+      <% if @form_error.respond_to?(:broker_message) && !@form_error.broker_message.to_s.empty? %>
+        <li><%= @form_error.broker_message %></li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>

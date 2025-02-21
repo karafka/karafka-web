@@ -60,7 +60,6 @@ module Karafka
             required(:secret) { |val| val.is_a?(String) && val.length >= 64 }
           end
 
-          required(:cache) { |val| !val.nil? }
           required(:per_page) { |val| val.is_a?(Integer) && val >= 1 && val <= 100 }
           required(:max_visible_payload_size) { |val| val.is_a?(Integer) && val >= 1 }
           required(:kafka) { |val| val.is_a?(Hash) }

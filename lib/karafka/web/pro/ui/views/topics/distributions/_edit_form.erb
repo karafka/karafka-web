@@ -1,0 +1,47 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<div class="card bg-base-100">
+  <div class="card-body">
+    <% form_path = topics_path(@topic.topic_name, 'distribution') %>
+    <form class="space-y-4" method="post" action="<%= form_path %>" data-turbo="false">
+      <%== csrf_tag(form_path, 'PUT') %>
+      <input type="hidden" name="_method" value="put">
+
+      <div class="flex items-center w-full mb-8">
+        <label class="w-1/4 text-gray-700">Current Partitions:</label>
+        <div class="w-3/4">
+          <code class="bg-base-200 px-2 py-1 rounded"><%= @topic.partition_count %></code>
+        </div>
+      </div>
+
+      <div class="flex items-center w-full mb-8">
+        <label class="w-1/4 text-gray-700">New Partition Count:</label>
+        <div class="w-3/4">
+          <input
+            type="number"
+            name="partition_count"
+            class="block input input-bordered w-full"
+            placeholder="Enter new partition count"
+            value="<%= params.fetch(:partition_count, @topic.partition_count) %>"
+            min="<%= @topic.partition_count + 1 %>"
+            required
+          />
+          <div class="text-sm text-gray-500 mt-1">
+            Must be greater than current partition count (<%= @topic.partition_count %>)
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-4">
+        <a href="<%= topics_path(@topic.topic_name, 'distribution') %>" class="btn btn-ghost">
+          Cancel
+        </a>
+        <button type="submit" class="btn btn-primary gap-2 btn-lockable confirm-action">
+          <%== icon(:plus) %>
+          Increase Partitions
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

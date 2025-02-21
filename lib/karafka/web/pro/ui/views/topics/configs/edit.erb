@@ -1,0 +1,16 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<% view_title "Topic #{@topic.topic_name} - Edit #{@property.name}" %>
+
+<div class="space-y-4">
+
+<%== partial('topics/configs/edit_warning') %>
+
+<% if @form_error %>
+  <%== partial 'shared/rdkafka_form_error_alert_box' %>
+<% else %>
+  <%== partial 'topics/configs/edit_plan' %>
+<% end %>
+
+<%== partial 'topics/configs/edit_form' %>

@@ -17,20 +17,22 @@
       Performance
     </a>
 
-    <% if Karafka::Web.config.commanding.active %>
-      <a
-        href="<%= consumers_path('controls') %>"
-        class="custom-tab <%= nav_class(include: 'controls') %>"
-      >
-        Controls
-      </a>
+    <%
+      disabled = 'disabled btn-disabled'
+      disabled = '' if features.commanding?
+    %>
+    <a
+      href="<%= consumers_path('controls') %>"
+      class="custom-tab <%= nav_class(include: 'controls') %> <%= disabled %>"
+    >
+      Controls
+    </a>
 
-      <a
-        href="<%= consumers_path('commands') %>"
-        class="custom-tab <%= nav_class(include: 'commands') %>"
-      >
-        Commands
-      </a>
-    <% end %>
+    <a
+      href="<%= consumers_path('commands') %>"
+      class="custom-tab <%= nav_class(include: 'commands') %> <%= disabled %>"
+    >
+      Commands
+    </a>
   </div>
 </div>

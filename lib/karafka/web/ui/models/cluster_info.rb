@@ -10,26 +10,16 @@ module Karafka
           class << self
             # Gets us all the cluster metadata info
             #
-            # @param cached [Boolean] should we use cached data (true by default)
             # @return [Rdkafka::Metadata] cluster metadata info
-            def fetch(cached: true)
-              cache = ::Karafka::Web.config.ui.cache
-
-              cluster_info = cache.read(:cluster_info)
-
-              if cluster_info.nil? || !cached
-                cluster_info = cache.write(:cluster_info, Lib::Admin.cluster_info)
-              end
-
-              cluster_info
+            def fetch
+              Lib::Admin.cluster_info
             end
 
             # Returns us all the info about available topics from the cluster
             #
-            # @param cached [Boolean] should we use cached data (true by default)
             # @return [Array<Ui::Models::Topic>] topics details
-            def topics(cached: true)
-              fetch(cached: cached)
+            def topics
+              fetch
                 .topics
                 .map { |topic| Topic.new(topic) }
             end
@@ -37,19 +27,21 @@ module Karafka
             # Fetches us details about particular topic
             #
             # @param topic_name [String] name of the topic we are looking for
-            # @param cached [Boolean] should we use cached data (true by default)
             # @return [Ui::Models::Topic] topic details
-            def topic(topic_name, cached: true)
-              topics(cached: cached)
-                .find { |topic_data| topic_data.topic_name == topic_name }
-                .tap { |topic| topic || raise(Web::Errors::Ui::NotFoundError, topic_name) }
+            def topic(topic_name)
+              Lib::Admin
+                .topic_info(topic_name)
+                .then { |topic| Topic.new(topic) }
+            rescue Rdkafka::RdkafkaError => e
+              raise e unless e.code == :unknown_topic_or_part
+
+              raise(Web::Errors::Ui::NotFoundError, topic_name)
             end
 
             # @param topic_name [String] name of the topic we are looking for
-            # @param cached [Boolean] should we use cached data (true by default)
             # @return [Integer] number of partitions in a given topic
-            def partitions_count(topic_name, cached: true)
-              topic(topic_name, cached: cached).partition_count
+            def partitions_count(topic_name)
+              topic(topic_name).partition_count
             end
           end
         end

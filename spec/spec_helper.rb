@@ -62,7 +62,13 @@ RSpec.configure do |config|
 
     ::Karafka::Web.config.tracking.consumers.sampler.clear
     ::Karafka::Web.config.tracking.producers.sampler.clear
-    ::Karafka::Web.config.ui.cache.clear
+
+    # Enable all features in case they were disabled for the controllers specs
+
+    if Karafka.pro? && described_class < Karafka::Web::Ui::Controllers::BaseController
+      ::Karafka::Web.config.commanding.active = true
+      ::Karafka::Web.config.ui.topics.management.active = true
+    end
   end
 
   # Restore them as some specs modify those

@@ -32,7 +32,7 @@ RSpec.describe_current do
 
     it do
       expect(response).to be_ok
-      expect(body).to include('There needs to be more data to draw meaningful graphs')
+      expect(body).to include('There Needs to Be More Data to Draw Meaningful Graphs')
       expect(body).to include(support_message)
       expect(body).not_to include(breadcrumbs)
       expect(body).to include('id="refreshable"')
@@ -54,7 +54,7 @@ RSpec.describe_current do
 
     it do
       expect(response).to be_ok
-      expect(body).to include('There needs to be more data to draw meaningful graphs')
+      expect(body).to include('There Needs to Be More Data to Draw Meaningful Graphs')
       expect(body).to include(support_message)
       expect(body).not_to include(breadcrumbs)
       expect(body).to include('id="refreshable"')

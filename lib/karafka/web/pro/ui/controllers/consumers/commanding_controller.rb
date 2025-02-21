@@ -16,6 +16,8 @@ module Karafka
               #
               # @param process_id [String]
               def trace(process_id)
+                features.commanding!
+
                 request(
                   Commanding::Commands::Consumers::Trace,
                   process_id
@@ -31,6 +33,8 @@ module Karafka
               #
               # @param process_id [String]
               def quiet(process_id)
+                features.commanding!
+
                 request(
                   Commanding::Commands::Consumers::Quiet,
                   process_id
@@ -46,6 +50,8 @@ module Karafka
               #
               # @param process_id [String]
               def stop(process_id)
+                features.commanding!
+
                 request(
                   Commanding::Commands::Consumers::Stop,
                   process_id
@@ -59,6 +65,8 @@ module Karafka
 
               # Dispatches the quiet request that should trigger on all consumers
               def quiet_all
+                features.commanding!
+
                 request(
                   Commanding::Commands::Consumers::Quiet,
                   '*'
@@ -72,6 +80,8 @@ module Karafka
 
               # Dispatches the stop request that should trigger on all consumers
               def stop_all
+                features.commanding!
+
                 request(
                   Commanding::Commands::Consumers::Stop,
                   '*'
@@ -110,7 +120,11 @@ module Karafka
               def dispatched_to_one(name, process_id)
                 command_name = name.to_s.capitalize
 
-                "The #{command_name} command has been dispatched to the #{process_id} process."
+                format_flash(
+                  'The ? command has been dispatched to the ? process',
+                  command_name,
+                  process_id
+                )
               end
 
               # Generates a nice flash message about dispatch of multi-process command
@@ -119,7 +133,11 @@ module Karafka
               def dispatched_to_all(name)
                 command_name = name.to_s.capitalize
 
-                "The #{command_name} command has been dispatched to all active processes."
+                format_flash(
+                  'The ? command has been dispatched to ? active processes',
+                  command_name,
+                  'all'
+                )
               end
             end
           end

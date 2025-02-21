@@ -1,0 +1,12 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<% alert_box_warning('Configuration Update Warning') do %>
+  <div class="space-y-4">
+    <ul class="list-disc ml-6">
+      <li>Changing topic configurations may affect topic behavior and performance</li>
+      <li>Some changes may take time to propagate across the cluster</li>
+      <li>Applications consuming from this topic may be impacted</li>
+    </ul>
+  </div>
+<% end %>

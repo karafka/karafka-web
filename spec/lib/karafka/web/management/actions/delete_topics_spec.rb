@@ -4,7 +4,7 @@ RSpec.describe_current do
   subject(:delete) { described_class.new.call }
 
   let(:topics) do
-    -> { Karafka::Web::Ui::Models::ClusterInfo.topics(cached: false).map(&:topic_name) }
+    -> { Karafka::Web::Ui::Models::ClusterInfo.topics.map(&:topic_name) }
   end
 
   let(:consumers_states_topic) { generate_topic_name }

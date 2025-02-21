@@ -50,9 +50,9 @@ module Karafka
 
           private
 
-          # Make sure, that for the cluster view we always get the most recent cluster state
+          # @return [Array] whole cluster info
           def cluster_info
-            @cluster_info ||= Models::ClusterInfo.fetch(cached: false)
+            @cluster_info ||= Models::ClusterInfo.fetch
           end
 
           # @param cluster_info [Rdkafka::Metadata] cluster metadata

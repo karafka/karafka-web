@@ -34,7 +34,14 @@ module Karafka
             # @param key [String, Symbol] params key
             # @return [Object] value of the requested param
             def [](key)
-              @request_params.fetch(key.to_s)
+              fetch(key.to_s)
+            end
+
+            # @param args [Symbol, Object] key we want to fetch and other args for `Hash#fetch`
+            # @return [Object] fetched object
+            def fetch(*args)
+              args[0] = args[0].to_s
+              @request_params.fetch(*args)
             end
 
             # @param key [String, Symbol] params key

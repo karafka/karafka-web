@@ -1,0 +1,13 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<tr>
+  <td>
+    <a href="<%= explorer_path(@topic[:topic_name], partition[:partition_id]) %>">
+      <%= partition[:partition_id] %>
+    </a>
+  </td>
+  <td><%= partition[:low] %></td>
+  <td><%= partition[:high] %></td>
+  <td><%= partition[:diff] %></td>
+</tr>
