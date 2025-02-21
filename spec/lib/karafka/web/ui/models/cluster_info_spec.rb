@@ -9,10 +9,10 @@ RSpec.describe_current do
 
   before { topic }
 
-  it { expect { info.fetch(cached: false) }.not_to raise_error }
-  it { expect(info.topics(cached: false).map(&:topic_name)).to include(topic) }
-  it { expect(info.topics(cached: false).map(&:topic_name)).not_to include(non_existing_topic) }
-  it { expect { info.topic(non_existing_topic, cached: false) }.to raise_error(not_found_error) }
-  it { expect(info.topic(topic, cached: false)).not_to be_nil }
-  it { expect(info.partitions_count(topic, cached: false)).to eq(1) }
+  it { expect { info.fetch }.not_to raise_error }
+  it { expect(info.topics.map(&:topic_name)).to include(topic) }
+  it { expect(info.topics.map(&:topic_name)).not_to include(non_existing_topic) }
+  it { expect { info.topic(non_existing_topic) }.to raise_error(not_found_error) }
+  it { expect(info.topic(topic)).not_to be_nil }
+  it { expect(info.partitions_count(topic)).to eq(1) }
 end

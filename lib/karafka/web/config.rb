@@ -151,9 +151,6 @@ module Karafka
           setting :secret, default: SecureRandom.hex(32)
         end
 
-        # No longer used, kept until we have a breaking release
-        setting :cache, default: nil
-
         setting :visibility do
           # Should we display internal topics of Kafka. The once starting with `__`
           # By default we do not display them as they are not usable from regular users perspective
