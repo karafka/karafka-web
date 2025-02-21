@@ -204,6 +204,83 @@ RSpec.describe_current do
   end
 
   describe '#update' do
-    pending 'wip'
+    let(:topic_name) { generate_topic_name }
+    let(:test_topic) { create_topic(topic_name: topic_name) }
+    let(:new_partition_count) { 5 }
+    let(:default_params) do
+      {
+        partition_count: new_partition_count
+      }
+    end
+
+    context 'when topics management feature is enabled' do
+      context 'when update succeeds' do
+        before do
+          test_topic
+          put "topics/#{topic_name}/distribution", default_params
+        end
+
+        it 'increases partitions and redirects with success message' do
+          expect(response.status).to eq(302)
+          expect(response.location).to end_with("/topics/#{topic_name}/distribution")
+          expect(flash[:success])
+            .to include("Topic #{topic_name} repartitioning to #{new_partition_count} partitions")
+
+          sleep(1)
+
+          updated_topic = Karafka::Web::Ui::Models::Topic.find(topic_name)
+          expect(updated_topic.partition_count).to eq(new_partition_count)
+        end
+      end
+
+      context 'with invalid partition count' do
+        context 'when partition count is equal to current' do
+          before do
+            test_topic
+            put "topics/#{topic_name}/distribution", partition_count: 1
+          end
+
+          it 'renders edit form' do
+            expect(response).to be_ok
+            expect(body).to include('Topic')
+            expect(body).to include('Increase Partitions')
+          end
+        end
+
+        context 'when partition count is too high' do
+          before do
+            test_topic
+            put "topics/#{topic_name}/distribution", partition_count: 1_000_000
+          end
+
+          it 'renders edit form with error' do
+            expect(response).to be_ok
+            expect(body).to include('Topic')
+            expect(body).to include('Increase Partitions')
+            expect(body).to include('new_total_cnt')
+          end
+        end
+      end
+    end
+
+    context 'when topics management feature is not enabled' do
+      before do
+        Karafka::Web.config.ui.topics.management.active = false
+        put "topics/#{topic_name}/distribution", default_params
+      end
+
+      it 'returns unauthorized status' do
+        expect(response).not_to be_ok
+        expect(status).to eq(403)
+      end
+    end
+
+    context 'when topic does not exist' do
+      before { put 'topics/non-existent-topic/distribution', default_params }
+
+      it 'returns not found status' do
+        expect(status).to eq(404)
+      end
+    end
   end
 end

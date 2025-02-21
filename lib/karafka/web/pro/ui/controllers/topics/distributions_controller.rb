@@ -64,6 +64,8 @@ module Karafka
                   )
                 rescue Rdkafka::RdkafkaError => e
                   @form_error = e
+                rescue Rdkafka::Config::ConfigError => e
+                  @form_error = e
                 end
 
                 return edit(topic_name) if @form_error

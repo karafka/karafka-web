@@ -62,7 +62,6 @@ RSpec.configure do |config|
 
     ::Karafka::Web.config.tracking.consumers.sampler.clear
     ::Karafka::Web.config.tracking.producers.sampler.clear
-    ::Karafka::Web.config.ui.cache.clear
 
     # Enable all features in case they were disabled for the controllers specs
 

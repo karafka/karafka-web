@@ -7,10 +7,9 @@ module Karafka
         # Single topic data representation model
         class Topic < Lib::HashProxy
           class << self
-            # @param cached [Boolean] should we use cached data (true by default)
             # @return [Array<Broker>] all topics in the cluster
-            def all(cached: true)
-              ClusterInfo.fetch(cached: cached).topics.map do |topic|
+            def all
+              ClusterInfo.fetch.topics.map do |topic|
                 new(topic)
               end
             end

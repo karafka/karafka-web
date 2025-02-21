@@ -8,7 +8,7 @@
         <li><%= @form_error.message %></li>
       <% end %>
 
-      <% unless @form_error.broker_message.to_s.empty? %>
+      <% if @form_error.respond_to?(:broker_message) && !@form_error.broker_message.to_s.empty? %>
         <li><%= @form_error.broker_message %></li>
       <% end %>
     </ul>

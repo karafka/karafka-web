@@ -151,12 +151,8 @@ module Karafka
           setting :secret, default: SecureRandom.hex(32)
         end
 
-        # UI cache to improve performance of views that reuse states that are not often changed
-        setting :cache, default: Ui::Lib::TtlCache.new(
-          # Use the TTL for internal cache in prod but invalidate quickly in other environments,
-          # as for example in development things may change frequently
-          Karafka.env.production? ? 60_000 * 5 : 5_000
-        )
+        # No longer used, kept until we have a breaking release
+        setting :cache, default: nil
 
         setting :visibility do
           # Should we display internal topics of Kafka. The once starting with `__`

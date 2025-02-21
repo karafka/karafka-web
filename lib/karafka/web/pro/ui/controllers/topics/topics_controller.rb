@@ -15,10 +15,7 @@ module Karafka
 
               # Displays list of topics we can work with
               def index
-                # We always re-fetch this without cache so the data is fresh in case of adding or
-                # removing topics
-                # Without disabling cache here, any changes might not be reflected immediately
-                @topics = Models::Topic.all(cached: false).sort_by(&:topic_name)
+                @topics = Models::Topic.all.sort_by(&:topic_name)
 
                 unless ::Karafka::Web.config.ui.visibility.internal_topics
                   @topics.delete_if { |topic| topic[:topic_name].start_with?('__') }

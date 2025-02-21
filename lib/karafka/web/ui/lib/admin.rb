@@ -17,7 +17,7 @@ module Karafka
           class << self
             extend Forwardable
 
-            def_delegators ::Karafka::Admin, :read_watermark_offsets, :cluster_info
+            def_delegators ::Karafka::Admin, :read_watermark_offsets, :cluster_info, :topic_info
 
             # Allows us to read messages from the topic
             #
