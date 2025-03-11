@@ -15,6 +15,7 @@
 - [Enhancement] Provide better support for fully transactional consumers.
 - [Enhancement] Error out when `#setup` is called after `#enable!`.
 - [Enhancement] Use more performant Kafka API calls to describe topics.
+- [Enhancement] Inject `.action-NAME` and `.controller-NAME` body classes for usage with custom CSS and JS.
 - [Change] Do not fully hide config-disabled features but make them disabled.
 - [Change] Remove per-consumer process duplicated details from Subscriptions and Jobs tabs.
 - [Refactor] Make sure all temporary topics have a `it-` prefix in their name.
