@@ -54,6 +54,15 @@ RSpec.describe_current do
         expect(response).not_to be_ok
         expect(status).to eq(404)
       end
+
+      context 'when rendering the layout' do
+        before { get 'ux' }
+
+        it do
+          expect(response).to be_ok
+          expect(body).not_to include('custom.css')
+        end
+      end
     end
 
     context 'when there is custom inline css' do
@@ -72,6 +81,15 @@ RSpec.describe_current do
         expect(headers['content-type']).to eq('text/css')
         expect(headers['cache-control']).to eq('max-age=31536000, immutable')
       end
+
+      context 'when rendering the layout' do
+        before { get 'ux' }
+
+        it do
+          expect(response).to be_ok
+          expect(body).to include('custom.css')
+        end
+      end
     end
 
     context 'when there is custom css path that points to nothing' do
@@ -89,6 +107,15 @@ RSpec.describe_current do
         expect(body).to eq(css_content)
         expect(headers['content-type']).to eq('text/css')
         expect(headers['cache-control']).to eq('max-age=31536000, immutable')
+      end
+
+      context 'when rendering the layout' do
+        before { get 'ux' }
+
+        it do
+          expect(response).to be_ok
+          expect(body).to include('custom.css')
+        end
       end
     end
 
@@ -110,6 +137,15 @@ RSpec.describe_current do
         expect(headers['content-type']).to eq('text/css')
         expect(headers['cache-control']).to eq('max-age=31536000, immutable')
       end
+
+      context 'when rendering the layout' do
+        before { get 'ux' }
+
+        it do
+          expect(response).to be_ok
+          expect(body).to include('custom.css')
+        end
+      end
     end
 
     context 'when there is no custom js' do
@@ -118,6 +154,15 @@ RSpec.describe_current do
       it do
         expect(response).not_to be_ok
         expect(status).to eq(404)
+      end
+
+      context 'when rendering the layout' do
+        before { get 'ux' }
+
+        it do
+          expect(response).to be_ok
+          expect(body).not_to include('custom.js')
+        end
       end
     end
 
@@ -137,6 +182,15 @@ RSpec.describe_current do
         expect(headers['content-type']).to eq('application/javascript')
         expect(headers['cache-control']).to eq('max-age=31536000, immutable')
       end
+
+      context 'when rendering the layout' do
+        before { get 'ux' }
+
+        it do
+          expect(response).to be_ok
+          expect(body).to include('custom.js')
+        end
+      end
     end
 
     context 'when there is custom js path that points to nothing' do
@@ -154,6 +208,15 @@ RSpec.describe_current do
         expect(body).to eq(js_content)
         expect(headers['content-type']).to eq('application/javascript')
         expect(headers['cache-control']).to eq('max-age=31536000, immutable')
+      end
+
+      context 'when rendering the layout' do
+        before { get 'ux' }
+
+        it do
+          expect(response).to be_ok
+          expect(body).to include('custom.js')
+        end
       end
     end
 
@@ -174,6 +237,15 @@ RSpec.describe_current do
         expect(body).to eq(fetched_content)
         expect(headers['content-type']).to eq('application/javascript')
         expect(headers['cache-control']).to eq('max-age=31536000, immutable')
+      end
+
+      context 'when rendering the layout' do
+        before { get 'ux' }
+
+        it do
+          expect(response).to be_ok
+          expect(body).to include('custom.js')
+        end
       end
     end
   end
