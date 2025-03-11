@@ -49,7 +49,9 @@ RSpec.describe_current do
         per_page: 50,
         dlq_patterns: [],
         max_visible_payload_size: 100,
-        kafka: {}
+        kafka: {},
+        custom_js: false,
+        custom_css: false
       }
     }
   end
@@ -255,6 +257,56 @@ RSpec.describe_current do
       before { params[:ui][:dlq_patterns] = [1, 2, 3] }
 
       it { expect(contract.call(params)).not_to be_success }
+    end
+
+    context 'when validating custom_js and custom_css' do
+      context 'when custom_js is false' do
+        before { params[:ui][:custom_js] = false }
+
+        it { expect(contract.call(params)).to be_success }
+      end
+
+      context 'when custom_js is an empty string' do
+        before { params[:ui][:custom_js] = '' }
+
+        it { expect(contract.call(params)).not_to be_success }
+      end
+
+      context 'when custom_js is a non-empty string' do
+        before { params[:ui][:custom_js] = 'valid.js' }
+
+        it { expect(contract.call(params)).to be_success }
+      end
+
+      context 'when custom_js is not a string or false' do
+        before { params[:ui][:custom_js] = 123 }
+
+        it { expect(contract.call(params)).not_to be_success }
+      end
+
+      context 'when custom_css is false' do
+        before { params[:ui][:custom_css] = false }
+
+        it { expect(contract.call(params)).to be_success }
+      end
+
+      context 'when custom_css is an empty string' do
+        before { params[:ui][:custom_css] = '' }
+
+        it { expect(contract.call(params)).not_to be_success }
+      end
+
+      context 'when custom_css is a non-empty string' do
+        before { params[:ui][:custom_css] = 'valid.css' }
+
+        it { expect(contract.call(params)).to be_success }
+      end
+
+      context 'when custom_css is not a string or false' do
+        before { params[:ui][:custom_css] = 123 }
+
+        it { expect(contract.call(params)).not_to be_success }
+      end
     end
   end
 end

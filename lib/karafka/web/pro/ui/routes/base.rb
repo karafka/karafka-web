@@ -7,6 +7,7 @@ module Karafka
   module Web
     module Pro
       module Ui
+        # Namespace for Pro routes
         module Routes
           # Base class for Pro UI routing components
           class Base < Web::Ui::Routes::Base

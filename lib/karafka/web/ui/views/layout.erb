@@ -7,7 +7,9 @@
       <%== yield %>
     </body>
   <% else %>
-    <body class="drawer min-h-screen lg:drawer-open bg-base-200">
+    <body
+      class="drawer min-h-screen lg:drawer-open bg-base-200 action-<%= @current_action_name %> controller-<%= @current_controller_name %>"
+    >
       <div class="turbo-progress-bar"></div>
 
       <input id="main-drawer" type="checkbox" class="drawer-toggle" />
@@ -19,7 +21,6 @@
       </aside>
 
       <main class="drawer-content">
-
         <div class="grid-default lg:pb-0">
           <% if Karafka.pro? %>
             <%== partial 'shared/branding/notice' %>

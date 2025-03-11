@@ -8,15 +8,19 @@
 - **[Feature]** Provide ability to create and delete topics from the Web UI (Pro).
 - **[Feature]** Provide ability to manage topics configuration from the Web UI (Pro).
 - **[Feature]** Provide ability to manage topics partitioning from the Web UI (Pro).
+- **[Feature]** Provide ability to inject custom CSS and JS to adjust the Web UI.
 - [Enhancement] Remove state cache usage that complicated ability to manage topics.
 - [Enhancement] Improve flash messages.
 - [Enhancement] Improve handling of post-submit redirects.
 - [Enhancement] Provide better support for fully transactional consumers.
 - [Enhancement] Error out when `#setup` is called after `#enable!`.
 - [Enhancement] Use more performant Kafka API calls to describe topics.
+- [Enhancement] Inject `.action-NAME` and `.controller-NAME` body classes for usage with custom CSS and JS.
 - [Change] Do not fully hide config-disabled features but make them disabled.
 - [Change] Remove per-consumer process duplicated details from Subscriptions and Jobs tabs.
 - [Refactor] Make sure all temporary topics have a `it-` prefix in their name.
+- [Refactor] Introduce a `bin/verify_topics_naming` script to ensure proper test topics naming convention.
+- [Fix] Support dark mode in error pages.
 - [Fix] Fix incorrect names in some of the tables headers.
 - [Fix] Normalize position of commanding buttons in regards to other UI elements.
 - [Fix] Fix incorrect indentation of some of the info messages.

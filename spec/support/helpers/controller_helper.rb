@@ -7,6 +7,11 @@ module ControllerHelper
     response.body
   end
 
+  # @return [Hash] response headers
+  def headers
+    response.headers
+  end
+
   # @return [Hash] sanitized flash messages hash or nil if none
   # @note We sanitize it because of auto-wrapping of some parts with bold
   def flash

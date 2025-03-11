@@ -180,6 +180,12 @@ module Karafka
         # default will not be displayed not to hang the browser. 512KB of serialized data is a lot.
         setting :max_visible_payload_size, default: 524_288
 
+        # Path to a custom CSS, string with the CSS or false if not used
+        setting :custom_css, default: false
+
+        # Path to a custom JS, string with the JS or false if not used
+        setting :custom_js, default: false
+
         # Specific kafka settings that are tuned to operate within the Web UI interface.
         #
         # Please do not change them unless you know what you are doing as their misconfiguration

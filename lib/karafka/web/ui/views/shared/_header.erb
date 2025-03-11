@@ -22,8 +22,31 @@
     disabled="disabled"
   />
 
-  <link href="<%= asset_path('stylesheets/application.min.css') %>" rel="stylesheet">
-  <script type="text/javascript" src="<%= asset_path('javascripts/application.min.js') %>"></script>
+  <link
+    rel="stylesheet"
+    href="<%= asset_path('stylesheets/application.min.css') %>"
+  >
+
+  <% if Karafka::Web.config.ui.custom_css %>
+    <link
+      rel="stylesheet"
+      href="<%= asset_path('stylesheets/custom.css') %>"
+    />
+  <% end %>
+
+  <script
+    type="text/javascript"
+    src="<%= asset_path('javascripts/application.min.js') %>"
+  >
+  </script>
+
+  <% if Karafka::Web.config.ui.custom_js %>
+    <script
+      type="text/javascript"
+      src="<%= asset_path('javascripts/custom.js') %>"
+    >
+    </script>
+  <% end %>
 
   <link rel="icon" href="<%= asset_path('images/favicon.ico') %>">
 </head>
