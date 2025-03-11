@@ -39,7 +39,8 @@ module Karafka
 
           # Sub-routes for given pieces of the Web UI
           SUB_ROUTES = [
-            Routes::Assets,
+            # Asset handling is exactly the same in both cases
+            ::Karafka::Web::Ui::Routes::Assets,
             Routes::Dashboard,
             Routes::Consumers,
             Routes::Jobs,

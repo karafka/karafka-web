@@ -53,6 +53,7 @@ module Karafka
             attributes[:breadcrums_scope] = scope
 
             @current_action_name = action.to_sym
+            @current_controller_name = base.join('-')
 
             instance_variables.each do |iv|
               next if iv.to_s.start_with?('@_')
