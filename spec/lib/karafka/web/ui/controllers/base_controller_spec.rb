@@ -63,6 +63,14 @@ RSpec.describe_current do
           expect(body).not_to include('custom.css')
         end
       end
+
+      context 'when reaching an error page' do
+        before { get 'not-found' }
+
+        it do
+          expect(body).not_to include('custom.css')
+        end
+      end
     end
 
     context 'when there is custom inline css' do
@@ -90,6 +98,14 @@ RSpec.describe_current do
           expect(body).to include('custom.css')
         end
       end
+
+      context 'when reaching an error page' do
+        before { get 'not-found' }
+
+        it do
+          expect(body).to include('custom.css')
+        end
+      end
     end
 
     context 'when there is custom css path that points to nothing' do
@@ -114,6 +130,14 @@ RSpec.describe_current do
 
         it do
           expect(response).to be_ok
+          expect(body).to include('custom.css')
+        end
+      end
+
+      context 'when reaching an error page' do
+        before { get 'not-found' }
+
+        it do
           expect(body).to include('custom.css')
         end
       end
@@ -146,6 +170,14 @@ RSpec.describe_current do
           expect(body).to include('custom.css')
         end
       end
+
+      context 'when reaching an error page' do
+        before { get 'not-found' }
+
+        it do
+          expect(body).to include('custom.css')
+        end
+      end
     end
 
     context 'when there is no custom js' do
@@ -161,6 +193,14 @@ RSpec.describe_current do
 
         it do
           expect(response).to be_ok
+          expect(body).not_to include('custom.js')
+        end
+      end
+
+      context 'when reaching an error page' do
+        before { get 'not-found' }
+
+        it do
           expect(body).not_to include('custom.js')
         end
       end
@@ -191,6 +231,14 @@ RSpec.describe_current do
           expect(body).to include('custom.js')
         end
       end
+
+      context 'when reaching an error page' do
+        before { get 'not-found' }
+
+        it do
+          expect(body).to include('custom.js')
+        end
+      end
     end
 
     context 'when there is custom js path that points to nothing' do
@@ -215,6 +263,14 @@ RSpec.describe_current do
 
         it do
           expect(response).to be_ok
+          expect(body).to include('custom.js')
+        end
+      end
+
+      context 'when reaching an error page' do
+        before { get 'not-found' }
+
+        it do
           expect(body).to include('custom.js')
         end
       end
@@ -244,6 +300,14 @@ RSpec.describe_current do
 
         it do
           expect(response).to be_ok
+          expect(body).to include('custom.js')
+        end
+      end
+
+      context 'when reaching an error page' do
+        before { get 'not-found' }
+
+        it do
           expect(body).to include('custom.js')
         end
       end
