@@ -8,6 +8,7 @@
 - **[Feature]** Provide ability to create and delete topics from the Web UI (Pro).
 - **[Feature]** Provide ability to manage topics configuration from the Web UI (Pro).
 - **[Feature]** Provide ability to manage topics partitioning from the Web UI (Pro).
+- **[Feature]** Provide ability to inject custom CSS and JS to adjust the Web UI.
 - [Enhancement] Remove state cache usage that complicated ability to manage topics.
 - [Enhancement] Improve flash messages.
 - [Enhancement] Improve handling of post-submit redirects.

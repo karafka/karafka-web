@@ -63,6 +63,8 @@ module Karafka
           required(:per_page) { |val| val.is_a?(Integer) && val >= 1 && val <= 100 }
           required(:max_visible_payload_size) { |val| val.is_a?(Integer) && val >= 1 }
           required(:kafka) { |val| val.is_a?(Hash) }
+          required(:custom_css) { |val| val == false || (val.is_a?(String) && !val.empty?) }
+          required(:custom_js) { |val| val == false || (val.is_a?(String) && !val.empty?) }
 
           required(:dlq_patterns) do |val|
             val.is_a?(Array) &&
