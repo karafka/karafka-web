@@ -16,7 +16,7 @@ module Karafka
           Step = Struct.new(:status, :details) do
             # @return [Boolean] is the given step successfully configured and working
             def success?
-              status == :success || status == :warning
+              %i[success warning].include?(status)
             end
 
             # @return [String] local namespace for partial of a given type
