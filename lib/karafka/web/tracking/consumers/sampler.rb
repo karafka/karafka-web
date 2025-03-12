@@ -233,9 +233,9 @@ module Karafka
           def memory_size
             @memory_size ||= case RUBY_PLATFORM
                              when /linux/
-                                mem_info = File.read('/proc/meminfo')
-                                mem_total_line = mem_info.match(/MemTotal\:\s*(?<total>\d+)/)
-                                mem_total_line['total'].to_i
+                               mem_info = File.read('/proc/meminfo')
+                               mem_total_line = mem_info.match(/MemTotal:\s*(?<total>\d+)/)
+                               mem_total_line['total'].to_i
                              when /darwin|bsd/
                                @shell
                              .call('sysctl -a')
