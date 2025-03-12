@@ -254,7 +254,8 @@ module Karafka
           def cpu_usage
             case RUBY_PLATFORM
             when /linux/
-              File.read('/proc/loadavg')
+              File
+                .read('/proc/loadavg')
                 .split(' ')
                 .first(3)
                 .map(&:to_f)
@@ -293,21 +294,21 @@ module Karafka
           def memory_threads_ps
             @memory_threads_ps = case RUBY_PLATFORM
                                  when /linux/
-                                  page_size = Karafka::Web::Tracking::Helpers::Sysconf.page_size
-                                  Dir.glob('/proc/[0-9]*/status').map do |status_file|
-                                    pid = status_file.match(%r{/proc/(\d+)/status})[1]
+                                   page_size = Karafka::Web::Tracking::Helpers::Sysconf.page_size
+                                   Dir.glob('/proc/[0-9]*/status').map do |status_file|
+                                     pid = status_file.match(%r{/proc/(\d+)/status})[1]
 
-                                    # Extract thread count from /proc/<pid>/status
-                                    thcount = File.read(status_file)[/^Threads:\s+(\d+)/, 1].to_i
+                                     # Extract thread count from /proc/<pid>/status
+                                     thcount = File.read(status_file)[/^Threads:\s+(\d+)/, 1].to_i
 
-                                    # Extract RSS from /proc/<pid>/statm (second field)
-                                    statm_file = "/proc/#{pid}/statm"
-                                    rss_pages = File.read(statm_file).split[1].to_i rescue 0
-                                    # page size is retrieved from Sysconf
-                                    rss_kb = (rss_pages * page_size) / 1024
+                                     # Extract RSS from /proc/<pid>/statm (second field)
+                                     statm_file = "/proc/#{pid}/statm"
+                                     rss_pages = File.read(statm_file).split[1].to_i rescue 0
+                                     # page size is retrieved from Sysconf
+                                     rss_kb = (rss_pages * page_size) / 1024
 
-                                    [rss_kb, thcount, pid.to_i]
-                                  end.to_a
+                                     [rss_kb, thcount, pid.to_i]
+                                   end.to_a
                                  # thcount is not available on macos ps
                                  # because of that we inject 0 as threads count similar to how
                                  # we do on windows
