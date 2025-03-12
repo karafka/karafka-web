@@ -21,7 +21,7 @@
     <div class="tab-container inline-tabs">
       <%== partial 'shared/tab_nav', locals: { title: 'Consumed', id: 'consumed', active: true } %>
       <%== partial 'shared/tab_nav', locals: { title: 'Batches', id: 'batches' } %>
-      <%== partial 'shared/tab_nav', locals: { title: 'Lags', id: 'lags', disabled: true } %>
+      <%== partial 'shared/tab_nav', locals: { title: 'Lags', id: 'lags', active: true } %>
       <%== partial 'shared/tab_nav', locals: { title: 'Max LSO', id: 'max-lso' } %>
       <%== partial 'shared/tab_nav', locals: { title: 'Pace', id: 'pace' } %>
     </div>
@@ -39,9 +39,7 @@
     </div>
 
     <div id="lags" class="hidden">
-      <%== partial 'dashboard/feature_pro' %>
-      <% data = { enqueued: set.call, busy: set.call }.to_json %>
-      <%== partial 'shared/charts/line', locals: { data: data, id: 'lags', blurred: true } %>
+      <%== partial 'shared/charts/line', locals: { data: @topics_charts.lags_hybrid, id: 'lags' } %>
     </div>
 
     <div id="max-lso" class="hidden">
@@ -58,7 +56,7 @@
   <div class="tab-container-wrapper" id="graphs2">
     <div class="tab-container inline-tabs">
       <%== partial 'shared/tab_nav', locals: { title: 'Utilization', id: 'utilization', active: true } %>
-      <%== partial 'shared/tab_nav', locals: { title: 'RSS', id: 'rss', disabled: true } %>
+      <%== partial 'shared/tab_nav', locals: { title: 'RSS', id: 'rss', active: true } %>
       <%== partial 'shared/tab_nav', locals: { title: 'Concurrency', id: 'concurrency' } %>
       <%== partial 'shared/tab_nav', locals: { title: 'Data transfers', id: 'data-transfers', disabled: true } %>
     </div>
@@ -71,9 +69,8 @@
     </div>
 
     <div id="rss" class="hidden">
-      <%== partial 'dashboard/feature_pro' %>
-      <% data = { rss: set.call(1_050), process_rss: set.call(1_000) }.to_json %>
-      <%== partial 'shared/charts/line', locals: { data: data, id: 'rss', blurred: true } %>
+      <% data = @aggregated_charts.with(:rss, :process_rss) %>
+      <%== partial 'shared/charts/line', locals: { data: data, id: 'rss', label_type_y: 'memory' } %>
     </div>
 
     <div id="concurrency" class="hidden">
