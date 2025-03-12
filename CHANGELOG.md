@@ -10,6 +10,8 @@
 - **[Feature]** Provide ability to manage topics partitioning from the Web UI (Pro).
 - **[Feature]** Provide ability to inject custom CSS and JS to adjust the Web UI.
 - [Enhancement] Make consumer sampler/stats gathering compatible across debian/alpine/wolfi OSes (chen-anders)
+- [Enhancement] Promote consumers lags statistics chart to OSS.
+- [Enhancement] Promote consumers RSS statistics chart to OSS.
 - [Enhancement] Remove state cache usage that complicated ability to manage topics.
 - [Enhancement] Improve flash messages.
 - [Enhancement] Improve handling of post-submit redirects.
@@ -21,6 +23,7 @@
 - [Change] Remove per-consumer process duplicated details from Subscriptions and Jobs tabs.
 - [Refactor] Make sure all temporary topics have a `it-` prefix in their name.
 - [Refactor] Introduce a `bin/verify_topics_naming` script to ensure proper test topics naming convention.
+- [Fix] Fix incorrect background color in some of the alert notices.
 - [Fix] Support dark mode in error pages.
 - [Fix] Fix incorrect names in some of the tables headers.
 - [Fix] Normalize position of commanding buttons in regards to other UI elements.
