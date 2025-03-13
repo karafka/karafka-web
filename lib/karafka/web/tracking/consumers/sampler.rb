@@ -233,11 +233,9 @@ module Karafka
           def memory_size
             @memory_size ||= case RUBY_PLATFORM
                              when /linux/
-                               @shell
-                             .call('grep MemTotal /proc/meminfo')
-                             .match(/(\d+)/)
-                             .to_s
-                             .to_i
+                               mem_info = File.read('/proc/meminfo')
+                               mem_total_line = mem_info.match(/MemTotal:\s*(?<total>\d+)/)
+                               mem_total_line['total'].to_i
                              when /darwin|bsd/
                                @shell
                              .call('sysctl -a')
@@ -255,7 +253,13 @@ module Karafka
           # @return [Array<Float>] load averages for last 1, 5 and 15 minutes
           def cpu_usage
             case RUBY_PLATFORM
-            when /darwin|bsd|linux/
+            when /linux/
+              File
+                .read('/proc/loadavg')
+                .split(' ')
+                .first(3)
+                .map(&:to_f)
+            when /darwin|bsd/
               @shell
                 .call('w | head -1')
                 .strip
@@ -290,10 +294,21 @@ module Karafka
           def memory_threads_ps
             @memory_threads_ps = case RUBY_PLATFORM
                                  when /linux/
-                                   @shell
-                                 .call('ps -A -o rss=,thcount=,pid=')
-                                 .split("\n")
-                                 .map { |row| row.strip.split(' ').map(&:to_i) }
+                                   page_size = Karafka::Web::Tracking::Helpers::Sysconf.page_size
+                                   status_file = "/proc/#{::Process.pid}/status"
+
+                                   pid = status_file.match(%r{/proc/(\d+)/status})[1]
+
+                                   # Extract thread count from /proc/<pid>/status
+                                   thcount = File.read(status_file)[/^Threads:\s+(\d+)/, 1].to_i
+
+                                   # Extract RSS from /proc/<pid>/statm (second field)
+                                   statm_file = "/proc/#{pid}/statm"
+                                   rss_pages = File.read(statm_file).split[1].to_i rescue 0
+                                   # page size is retrieved from Sysconf
+                                   rss_kb = (rss_pages * page_size) / 1024
+
+                                   [[rss_kb, thcount, pid.to_i]]
                                  # thcount is not available on macos ps
                                  # because of that we inject 0 as threads count similar to how
                                  # we do on windows

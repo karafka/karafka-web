@@ -9,6 +9,7 @@
 - **[Feature]** Provide ability to manage topics configuration from the Web UI (Pro).
 - **[Feature]** Provide ability to manage topics partitioning from the Web UI (Pro).
 - **[Feature]** Provide ability to inject custom CSS and JS to adjust the Web UI.
+- [Enhancement] Make consumer sampler/stats gathering compatible across debian/alpine/wolfi OSes (chen-anders)
 - [Enhancement] Promote consumers lags statistics chart to OSS.
 - [Enhancement] Promote consumers RSS statistics chart to OSS.
 - [Enhancement] Remove state cache usage that complicated ability to manage topics.
