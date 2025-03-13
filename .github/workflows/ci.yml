@@ -137,7 +137,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Set up Node.js
-        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
+        uses: actions/setup-node@22c0e7494f4cf8e8133097a3fefafe255caf66eb
         with:
           node-version: '17'
           cache: npm
