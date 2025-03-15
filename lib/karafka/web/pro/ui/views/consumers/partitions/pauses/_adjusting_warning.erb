@@ -6,10 +6,22 @@
     You are about to adjust pause for an actively running consumer. This operation:
   </p>
 
-  <ul class="list-disc ml-6 mt-2">
+  <ul class="list-disc ml-6 mt-2 mb-2">
     <li>Takes effect during the next poll operation</li>
     <li>May affect message processing</li>
     <li>Cannot be undone</li>
     <li>Will take effect only if the current process still owns the assignment</li>
   </ul>
+
+  <hr/>
+
+  <p class="mt-2">
+    During long pauses, lag reporting on this topic partition may stop as librdkafka freezes the last known high watermark.
+  </p>
+
+  <p class="mt-2">
+    Real-time, state-independent lag metrics can always be checked in the
+    <a href="<%= root_path('health', 'cluster_lags') %>">Cluster Lags</a> tab
+    of the <a href="<%= root_path('health') %>">Health</a> section.
+  </p>
 <% end %>
