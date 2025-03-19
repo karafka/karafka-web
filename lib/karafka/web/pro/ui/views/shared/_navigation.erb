@@ -5,10 +5,10 @@
   <%== partial 'shared/brand' %>
   <%== partial 'shared/branding/label' %>
 
-  <ul class="menu grow">
+  <ul class="menu menu-md grow w-auto">
     <li>
       <a
-        class="sidebar-nav-item <%= nav_class(start_with: '/dashboard') %>"
+        class="sidebar-nav-item menu-<%= nav_class(start_with: '/dashboard') %>"
         href="<%= root_path('dashboard') %>"
       >
         <%== icon(:home) %>
@@ -18,7 +18,7 @@
 
     <li>
       <a
-        class="sidebar-nav-item <%= nav_class(match: /\A\/(consumers|commands)/) %>"
+        class="sidebar-nav-item menu-<%= nav_class(match: /\A\/(consumers|commands)/) %>"
         href="<%= root_path('consumers') %>"
       >
         <%== icon(:cpu) %>
@@ -28,7 +28,7 @@
 
     <li>
       <a
-        class="sidebar-nav-item <%= nav_class(start_with: '/jobs') %>"
+        class="sidebar-nav-item menu-<%= nav_class(start_with: '/jobs') %>"
         href="<%= root_path('jobs/running') %>"
       >
         <%== icon(:arrow_on_squares) %>
@@ -38,7 +38,7 @@
 
     <li>
       <a
-        class="sidebar-nav-item <%= nav_class(start_with: '/health') %>"
+        class="sidebar-nav-item menu-<%= nav_class(start_with: '/health') %>"
         href="<%= root_path('health/overview') %>"
       >
         <%== icon(:heart) %>
@@ -48,7 +48,7 @@
 
     <li>
       <a
-        class="sidebar-nav-item <%= nav_class(start_with: '/routing') %>"
+        class="sidebar-nav-item menu-<%= nav_class(start_with: '/routing') %>"
         href="<%= root_path('routing') %>"
       >
         <%== icon(:queue_list) %>
@@ -58,7 +58,7 @@
 
     <li>
       <a
-        class="sidebar-nav-item <%= nav_class(start_with: '/explorer') %>"
+        class="sidebar-nav-item menu-<%= nav_class(start_with: '/explorer') %>"
         href="<%= root_path('explorer') %>"
       >
         <%== icon(:document_glass) %>
@@ -68,7 +68,7 @@
 
     <li>
       <a
-        class="sidebar-nav-item <%= nav_class(start_with: '/recurring_tasks') %>"
+        class="sidebar-nav-item menu-<%= nav_class(start_with: '/recurring_tasks') %>"
         href="<%= root_path('recurring_tasks') %>"
       >
         <%== icon(:arrow_path_rounded) %>
@@ -78,7 +78,7 @@
 
     <li>
       <a
-        class="sidebar-nav-item <%= nav_class(start_with: '/scheduled_messages') %>"
+        class="sidebar-nav-item menu-<%= nav_class(start_with: '/scheduled_messages') %>"
         href="<%= root_path('scheduled_messages') %>"
       >
         <%== icon(:calendar) %>
@@ -88,7 +88,7 @@
 
     <li>
       <a
-        class="sidebar-nav-item <%= nav_class(start_with: '/errors') %>"
+        class="sidebar-nav-item menu-<%= nav_class(start_with: '/errors') %>"
         href="<%= root_path('errors') %>"
       >
         <%== icon(:bug) %>
@@ -98,7 +98,7 @@
 
     <li>
       <a
-        class="sidebar-nav-item <%= nav_class(start_with: '/dlq') %>"
+        class="sidebar-nav-item menu-<%= nav_class(start_with: '/dlq') %>"
         href="<%= root_path('dlq') %>"
       >
         <%== icon(:x_circle) %>
@@ -108,7 +108,7 @@
 
     <li>
       <a
-        class="sidebar-nav-item <%= nav_class(start_with: '/cluster') %>"
+        class="sidebar-nav-item menu-<%= nav_class(start_with: '/cluster') %>"
         href="<%= root_path('cluster') %>"
       >
         <%== icon(:blocks) %>
@@ -118,7 +118,7 @@
 
     <li>
       <a
-        class="sidebar-nav-item <%= nav_class(start_with: '/topics') %>"
+        class="sidebar-nav-item menu-<%= nav_class(start_with: '/topics') %>"
         href="<%= root_path('topics') %>"
       >
         <%== icon(:list_bullets) %>
@@ -128,7 +128,7 @@
 
     <li>
       <a
-        class="sidebar-nav-item <%= nav_class(start_with: '/status') %>"
+        class="sidebar-nav-item menu-<%= nav_class(start_with: '/status') %>"
         href="<%= root_path('status') %>"
       >
         <%== icon(:check_badge) %>
@@ -138,7 +138,7 @@
 
     <li>
       <a
-        class="sidebar-nav-item <%= nav_class(start_with: '/support') %>"
+        class="sidebar-nav-item menu-<%= nav_class(start_with: '/support') %>"
         href="<%= root_path('support') %>"
       >
         <%== icon(:lifebuoy) %>
@@ -147,7 +147,10 @@
     </li>
   </ul>
 
-  <button type="button" class="btn-toggle-nav-collapsed grid gap-2 grid-flow-col items-center justify-start ml-6 text-sm invisible lg:visible" data-toggle-target="drawer-side">
+  <button
+    type="button"
+    class="cursor-pointer btn-toggle-nav-collapsed grid gap-2 grid-flow-col items-center justify-start ml-6 text-sm invisible lg:visible" data-toggle-target="drawer-side"
+  >
     <%== icon(:chevron) %>
   </button>
 </nav>

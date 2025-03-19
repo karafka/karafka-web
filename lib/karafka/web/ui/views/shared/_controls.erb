@@ -1,5 +1,8 @@
-<div>
-  <button class="py-1 px-3 rounded-md text-sm hover:bg-gray-200 active" title="Toggle theme" id="theme-selector">
+<div id="controls">
+  <button
+    class="active"
+    title="Toggle theme" id="theme-selector"
+  >
     <span id="theme-selector-light" class="hidden">
       <%== icon(:sun) %>
     </span>
@@ -9,7 +12,10 @@
     </span>
   </button>
 
-  <button class="py-1 px-3 rounded-md text-sm hover:bg-gray-200" title="Toggle live poll" id="live-poll">
+  <button
+    title="Toggle live poll"
+    id="live-poll"
+  >
     <%== icon(:refresh) %>
   </button>
 </div>
