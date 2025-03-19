@@ -52,6 +52,7 @@ module Karafka
               @executed = true
 
               if objspace?
+                GC.disable
                 ObjectSpace.trace_object_allocations_start
                 before = ObjectSpace.each_object.count
               end
@@ -79,6 +80,7 @@ module Karafka
               if objspace?
                 @allocations = ObjectSpace.each_object.count - before
                 ObjectSpace.trace_object_allocations_stop
+                GC.enable
               end
             end
 
