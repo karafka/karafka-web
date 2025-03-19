@@ -51,7 +51,7 @@
     </div>
   </div>
 
-  <h2 class="h2">Utilization Metrics</h2>
+  <h2 class="h2 mt-4">Utilization Metrics</h2>
 
   <div class="tab-container-wrapper" id="graphs2">
     <div class="tab-container inline-tabs">
@@ -86,44 +86,4 @@
   </div>
 <% else %>
   <%== partial 'dashboard/not_enough_data' %>
-<% end %>
-
-
-
-
-
-
-
-
-
-
-<% if false && @aggregated.sufficient? %>
-  <%== partial 'dashboard/ranges_selector' %>
-
-        <div class="tab-content">
-          <div class="tab-pane show active" id="utilization" role="tabpanel">
-            <% data = @aggregated_charts.with(:utilization) %>
-            <%== partial 'shared/charts/line', locals: { data: data, id: 'utilization', label_type_y: 'percentage' } %>
-          </div>
-
-          <div class="tab-pane show" id="rss" role="tabpanel">
-            <%== partial 'dashboard/feature_pro' %>
-            <% data = { rss: set.call(1_050), process_rss: set.call(1_000) }.to_json %>
-            <%== partial 'shared/charts/line', locals: { data: data, id: 'rss', blurred: true } %>
-          </div>
-
-          <div class="tab-pane show" id="concurrency" role="tabpanel">
-            <% data = @aggregated_charts.with(:processes, :workers, :active_listeners, :standby_listeners) %>
-            <%== partial 'shared/charts/line', locals: { data: data, id: 'concurrency' } %>
-          </div>
-
-          <div class="tab-pane show" id="data-transfers" role="tabpanel">
-            <%== partial 'dashboard/feature_pro' %>
-            <% data = { bytes_received: set.call(4, 10..15), bytes_sent: set.call(2, 0..5) }.to_json %>
-            <%== partial 'shared/charts/line', locals: { data: data, id: 'data-transfers', blurred: true } %>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 <% end %>

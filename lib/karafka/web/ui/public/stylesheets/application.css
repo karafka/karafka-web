@@ -78,3 +78,11 @@ table td.commands-inline-3 {
 .alert .close-alert:hover svg {
   opacity: 0.7;
 }
+
+.btn {
+  box-shadow: none !important;
+}
+
+.alert {
+  box-shadow: none !important;
+}

@@ -3,10 +3,6 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [require("daisyui")],
-  daisyui: {
-    themes: ["corporate", "dark"]
-  },
   safelist: [
     {
       pattern: /((badge|bg|alert)-(success|warning|error|primary|secondary))|(status-row-*)/,

@@ -3,7 +3,6 @@ const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
 const through2 = require('through2');
 const path = require('path');
-const cleanCSS = require('gulp-clean-css');
 const sourcemaps = require('gulp-sourcemaps');
 
 // Check if we are in development mode
@@ -64,7 +63,6 @@ gulp.task('styles', function() {
   return gulp.src(cssFiles)
     .pipe(isDev ? sourcemaps.init() : through2.obj()) // Initialize sourcemaps in dev
     .pipe(concat('application.min.css'))
-    .pipe(cleanCSS({ level: 2 })) // Minify CSS
     .pipe(isDev ? sourcemaps.write('.') : through2.obj()) // Write sourcemaps in dev
     .pipe(gulp.dest('lib/karafka/web/ui/public/stylesheets'));
 });
