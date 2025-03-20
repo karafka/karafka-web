@@ -1319,6 +1319,7 @@
       border-width: 1px;
       border-color: var(--color-gray-300);
       padding: calc(var(--spacing) * 2);
+      color: var(--color-gray-500);
     }
     & thead tr {
       vertical-align: middle;
@@ -4278,10 +4279,6 @@ tr:not(:first-child) th[colspan]:not([colspan="1"]) {
 }
 #controls {
   button {
-    &:hover {
-      --btn-color: var(--color-primary);
-      --btn-fg: var(--color-primary-content);
-    }
     display: inline-flex;
     flex-shrink: 0;
     cursor: pointer;
@@ -4393,6 +4390,10 @@ tr:not(:first-child) th[colspan]:not([colspan="1"]) {
     --fontsize: 0.75rem;
     --btn-p: 0.75rem;
     --size: calc(var(--size-field, 0.25rem) * 8);
+  }
+  button:hover {
+    --btn-color: var(--color-primary);
+    --btn-fg: var(--color-primary-content);
   }
 }
 .close-alert {
