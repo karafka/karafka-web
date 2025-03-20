@@ -17,23 +17,43 @@ module Karafka
         nested(:topics) do
           nested(:errors) do
             required(:name) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
+
+            required(:config) do |val|
+              val.is_a?(Hash) && !val.empty? && val.keys.all? { |key| key.is_a?(Symbol) }
+            end
           end
 
           nested(:consumers) do
             nested(:reports) do
               required(:name) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
+
+              required(:config) do |val|
+                val.is_a?(Hash) && !val.empty? && val.keys.all? { |key| key.is_a?(Symbol) }
+              end
             end
 
             nested(:states) do
               required(:name) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
+
+              required(:config) do |val|
+                val.is_a?(Hash) && !val.empty? && val.keys.all? { |key| key.is_a?(Symbol) }
+              end
             end
 
             nested(:metrics) do
               required(:name) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
+
+              required(:config) do |val|
+                val.is_a?(Hash) && !val.empty? && val.keys.all? { |key| key.is_a?(Symbol) }
+              end
             end
 
             nested(:commands) do
               required(:name) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
+
+              required(:config) do |val|
+                val.is_a?(Hash) && !val.empty? && val.keys.all? { |key| key.is_a?(Symbol) }
+              end
             end
           end
         end

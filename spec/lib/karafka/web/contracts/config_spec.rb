@@ -10,20 +10,25 @@ RSpec.describe_current do
       group_id: 'consumer-group-topic',
       topics: {
         errors: {
-          name: 'errors-topic'
+          name: 'errors-topic',
+          config: { 'cleanup.policy': 'delete' }
         },
         consumers: {
           reports: {
-            name: 'reports-topic'
+            name: 'reports-topic',
+            config: { 'cleanup.policy': 'delete' }
           },
           states: {
-            name: 'states-topic'
+            name: 'states-topic',
+            config: { 'cleanup.policy': 'delete' }
           },
           metrics: {
-            name: 'metrics-topic'
+            name: 'metrics-topic',
+            config: { 'cleanup.policy': 'delete' }
           },
           commands: {
-            name: 'commands-topic'
+            name: 'commands-topic',
+            config: { 'cleanup.policy': 'delete' }
           }
         }
       },
@@ -99,8 +104,20 @@ RSpec.describe_current do
         metrics
         commands
       ].each do |field|
-        context "when #{field} does not match the regexp" do
+        context "when #{field} name does not match the regexp" do
           before { params[:topics][:consumers][field][:name] = 'invalid topic!' }
+
+          it { expect(contract.call(params)).not_to be_success }
+        end
+
+        context "when #{field} config contains non-symbol keys" do
+          before { params[:topics][:consumers][field][:config] = { 'a' => 'b' } }
+
+          it { expect(contract.call(params)).not_to be_success }
+        end
+
+        context "when #{field} config is empty" do
+          before { params[:topics][:consumers][field][:config] = {} }
 
           it { expect(contract.call(params)).not_to be_success }
         end
