@@ -36,17 +36,17 @@ module Karafka
           def prepare_data(consumers_state, consumers_metrics)
             [
               {
-                topic: Karafka::Web.config.topics.consumers.states,
+                topic: Karafka::Web.config.topics.consumers.states.name,
                 payload: Zlib::Deflate.deflate(consumers_state.to_json),
                 # This will ensure that the consumer states are compacted
-                key: Karafka::Web.config.topics.consumers.states,
+                key: Karafka::Web.config.topics.consumers.states.name,
                 partition: 0,
                 headers: { 'zlib' => 'true' }
               },
               {
-                topic: Karafka::Web.config.topics.consumers.metrics,
+                topic: Karafka::Web.config.topics.consumers.metrics.name,
                 payload: Zlib::Deflate.deflate(consumers_metrics.to_json),
-                key: Karafka::Web.config.topics.consumers.metrics,
+                key: Karafka::Web.config.topics.consumers.metrics.name,
                 partition: 0,
                 headers: { 'zlib' => 'true' }
               }

@@ -63,7 +63,7 @@ module Karafka
               # Report consumers statuses
               messages = [
                 {
-                  topic: ::Karafka::Web.config.topics.consumers.reports,
+                  topic: ::Karafka::Web.config.topics.consumers.reports.name,
                   payload: Zlib::Deflate.deflate(report.to_json),
                   key: process_id,
                   partition: 0,
@@ -76,7 +76,7 @@ module Karafka
                 @error_contract.validate!(error)
 
                 {
-                  topic: Karafka::Web.config.topics.errors,
+                  topic: Karafka::Web.config.topics.errors.name,
                   payload: Zlib::Deflate.deflate(error.to_json),
                   # Always dispatch errors from the same process to the same partition
                   key: process_id,

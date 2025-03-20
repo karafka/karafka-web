@@ -35,33 +35,33 @@
     <tbody>
       <tr>
         <td>Errors</td>
-        <td><code><%= Karafka::Web.config.topics.errors %></code></td>
+        <td><code><%= Karafka::Web.config.topics.errors.name %></code></td>
       </tr>
 
       <tr>
         <td>Consumers reports</td>
-        <td><code><%= Karafka::Web.config.topics.consumers.reports %></code></td>
+        <td><code><%= Karafka::Web.config.topics.consumers.reports.name %></code></td>
       </tr>
 
       <tr>
         <td>Consumers states</td>
-        <td><code><%= Karafka::Web.config.topics.consumers.states %></code></td>
+        <td><code><%= Karafka::Web.config.topics.consumers.states.name %></code></td>
       </tr>
 
       <tr>
         <td>Consumers metrics</td>
-        <td><code><%= Karafka::Web.config.topics.consumers.metrics %></code></td>
+        <td><code><%= Karafka::Web.config.topics.consumers.metrics.name %></code></td>
       </tr>
 
       <% if Karafka.pro? %>
         <tr>
           <td>Recurring Tasks schedules</td>
-          <td><code><%= Karafka::App.config.recurring_tasks.topics.schedules %></code></td>
+          <td><code><%= Karafka::App.config.recurring_tasks.topics.schedules.name %></code></td>
         </tr>
 
         <tr>
           <td>Recurring Tasks logs</td>
-          <td><code><%= Karafka::App.config.recurring_tasks.topics.logs %></code></td>
+          <td><code><%= Karafka::App.config.recurring_tasks.topics.logs.name %></code></td>
         </tr>
       <% end %>
     </tbody>

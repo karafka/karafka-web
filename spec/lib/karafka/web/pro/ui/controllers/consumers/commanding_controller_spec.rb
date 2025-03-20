@@ -9,7 +9,7 @@ RSpec.describe_current do
   let(:commands_topic) { create_topic }
   let(:process_id) { SecureRandom.uuid }
 
-  before { topics_config.consumers.commands = commands_topic }
+  before { topics_config.consumers.commands.name = commands_topic }
 
   describe '#trace' do
     before { post "consumers/commanding/#{process_id}/trace" }

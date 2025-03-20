@@ -73,11 +73,11 @@ RSpec.configure do |config|
 
   # Restore them as some specs modify those
   config.after do
-    ::Karafka::Web.config.topics.consumers.states = TOPICS[0]
-    ::Karafka::Web.config.topics.consumers.metrics = TOPICS[1]
-    ::Karafka::Web.config.topics.consumers.reports = TOPICS[2]
-    ::Karafka::Web.config.topics.consumers.commands = TOPICS[3]
-    ::Karafka::Web.config.topics.errors = TOPICS[4]
+    ::Karafka::Web.config.topics.consumers.states.name = TOPICS[0]
+    ::Karafka::Web.config.topics.consumers.metrics.name = TOPICS[1]
+    ::Karafka::Web.config.topics.consumers.reports.name = TOPICS[2]
+    ::Karafka::Web.config.topics.consumers.commands.name = TOPICS[3]
+    ::Karafka::Web.config.topics.errors.name = TOPICS[4]
   end
 
   config.after(:suite) do
@@ -131,20 +131,20 @@ TOPICS = Array.new(5) { create_topic }
 RSpec.configure do |config|
   # Set existing topics
   config.before do
-    ::Karafka::Web.config.topics.consumers.states = TOPICS[0]
-    ::Karafka::Web.config.topics.consumers.metrics = TOPICS[1]
-    ::Karafka::Web.config.topics.consumers.reports = TOPICS[2]
-    ::Karafka::Web.config.topics.consumers.commands = TOPICS[3]
-    ::Karafka::Web.config.topics.errors = TOPICS[4]
+    ::Karafka::Web.config.topics.consumers.states.name = TOPICS[0]
+    ::Karafka::Web.config.topics.consumers.metrics.name = TOPICS[1]
+    ::Karafka::Web.config.topics.consumers.reports.name = TOPICS[2]
+    ::Karafka::Web.config.topics.consumers.commands.name = TOPICS[3]
+    ::Karafka::Web.config.topics.errors.name = TOPICS[4]
   end
 end
 
 Karafka::Web.setup do |config|
-  config.topics.consumers.states = TOPICS[0]
-  config.topics.consumers.metrics = TOPICS[1]
-  config.topics.consumers.reports = TOPICS[2]
-  config.topics.consumers.commands = TOPICS[3]
-  config.topics.errors = TOPICS[4]
+  config.topics.consumers.states.name = TOPICS[0]
+  config.topics.consumers.metrics.name = TOPICS[1]
+  config.topics.consumers.reports.name = TOPICS[2]
+  config.topics.consumers.commands.name = TOPICS[3]
+  config.topics.errors.name = TOPICS[4]
 
   # Disable so it is not auto-subscribed under the hood of tests
   config.commanding.active = false if Karafka.pro?

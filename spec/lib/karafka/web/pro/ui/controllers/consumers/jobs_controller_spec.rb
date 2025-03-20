@@ -12,8 +12,8 @@ RSpec.describe_current do
   describe '#running_jobs' do
     context 'when process has jobs but not running' do
       before do
-        topics_config.consumers.states = states_topic
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.states.name = states_topic
+        topics_config.consumers.reports.name = reports_topic
 
         report = Fixtures.consumers_reports_json(symbolize_names: false)
         report['jobs'][0]['status'] = 'pending'
@@ -46,8 +46,8 @@ RSpec.describe_current do
 
     context 'when process has jobs reported in a transactional fashion' do
       before do
-        topics_config.consumers.states = states_topic
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.states.name = states_topic
+        topics_config.consumers.reports.name = reports_topic
 
         produce(states_topic, Fixtures.consumers_states_file, type: :transactional)
         produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)
@@ -65,7 +65,7 @@ RSpec.describe_current do
 
     context 'when given process has no jobs running' do
       before do
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.reports.name = reports_topic
 
         report = Fixtures.consumers_reports_json(symbolize_names: false)
         report['jobs'] = []
@@ -85,7 +85,7 @@ RSpec.describe_current do
 
     context 'when given process has incompatible schema' do
       before do
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.reports.name = reports_topic
 
         report = Fixtures.consumers_reports_json
         report[:schema_version] = '1.0.0'
@@ -110,8 +110,8 @@ RSpec.describe_current do
   describe '#pending_jobs' do
     context 'when process has jobs but not pending' do
       before do
-        topics_config.consumers.states = states_topic
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.states.name = states_topic
+        topics_config.consumers.reports.name = reports_topic
 
         report = Fixtures.consumers_reports_json(symbolize_names: false)
         report['jobs'][0]['status'] = 'running'
@@ -133,8 +133,8 @@ RSpec.describe_current do
 
     context 'when process has pending jobs' do
       before do
-        topics_config.consumers.states = states_topic
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.states.name = states_topic
+        topics_config.consumers.reports.name = reports_topic
 
         report = Fixtures.consumers_reports_json(symbolize_names: false)
         report['jobs'][0]['status'] = 'pending'
@@ -155,8 +155,8 @@ RSpec.describe_current do
 
     context 'when process has jobs reported in a transactional fashion' do
       before do
-        topics_config.consumers.states = states_topic
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.states.name = states_topic
+        topics_config.consumers.reports.name = reports_topic
 
         report = Fixtures.consumers_reports_json(symbolize_names: false)
         report['jobs'].first['status'] = 'pending'
@@ -177,7 +177,7 @@ RSpec.describe_current do
 
     context 'when given process has no jobs pending' do
       before do
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.reports.name = reports_topic
 
         report = Fixtures.consumers_reports_json(symbolize_names: false)
         report['jobs'] = []
@@ -197,7 +197,7 @@ RSpec.describe_current do
 
     context 'when given process has incompatible schema' do
       before do
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.reports.name = reports_topic
 
         report = Fixtures.consumers_reports_json
         report[:schema_version] = '1.0.0'

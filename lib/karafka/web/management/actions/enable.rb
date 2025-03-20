@@ -55,7 +55,7 @@ module Karafka
 
               consumer_group ::Karafka::Web.config.group_id do
                 # Topic we listen on to materialize the states
-                topic ::Karafka::Web.config.topics.consumers.reports do
+                topic ::Karafka::Web.config.topics.consumers.reports.name do
                   config(active: false)
                   active ::Karafka::Web.config.processing.active
                   # Since we materialize state in intervals, we can poll for half of this time
@@ -80,25 +80,25 @@ module Karafka
 
                 # We define those three here without consumption, so Web understands how to
                 # deserialize them when used / viewed
-                topic ::Karafka::Web.config.topics.consumers.states do
+                topic ::Karafka::Web.config.topics.consumers.states.name do
                   config(active: false)
                   active false
                   deserializers(payload: payload_deserializer)
                 end
 
-                topic ::Karafka::Web.config.topics.consumers.metrics do
+                topic ::Karafka::Web.config.topics.consumers.metrics.name do
                   config(active: false)
                   active false
                   deserializers(payload: payload_deserializer)
                 end
 
-                topic ::Karafka::Web.config.topics.consumers.commands do
+                topic ::Karafka::Web.config.topics.consumers.commands.name do
                   config(active: false)
                   active false
                   deserializers(payload: payload_deserializer)
                 end
 
-                topic ::Karafka::Web.config.topics.errors do
+                topic ::Karafka::Web.config.topics.errors.name do
                   config(active: false)
                   active false
                   deserializers(payload: payload_deserializer)

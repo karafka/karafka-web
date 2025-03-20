@@ -85,7 +85,7 @@ module Karafka
 
               # @return [String] consumers commands topic name
               def commands_topic
-                ::Karafka::Web.config.topics.consumers.commands
+                ::Karafka::Web.config.topics.consumers.commands.name
               end
             end
           end

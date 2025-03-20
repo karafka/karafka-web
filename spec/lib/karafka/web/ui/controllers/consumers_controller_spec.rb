@@ -10,7 +10,7 @@ RSpec.describe_current do
 
   context 'when the state data is missing' do
     before do
-      topics_config.consumers.states = states_topic
+      topics_config.consumers.states.name = states_topic
 
       get 'consumers'
     end
@@ -23,7 +23,7 @@ RSpec.describe_current do
 
   context 'when there are no active consumers' do
     before do
-      topics_config.consumers.reports = states_topic
+      topics_config.consumers.reports.name = states_topic
 
       get 'consumers'
     end
@@ -55,7 +55,7 @@ RSpec.describe_current do
 
   context 'when there are active consumers but with incompatible schema' do
     before do
-      topics_config.consumers.reports = reports_topic
+      topics_config.consumers.reports.name = reports_topic
 
       report = Fixtures.consumers_reports_json
       report[:schema_version] = '0.0.1'
@@ -78,8 +78,8 @@ RSpec.describe_current do
 
   context 'when there is an active consumer but without any partitions assigned yet' do
     before do
-      topics_config.consumers.states = states_topic
-      topics_config.consumers.reports = reports_topic
+      topics_config.consumers.states.name = states_topic
+      topics_config.consumers.reports.name = reports_topic
 
       report = Fixtures.consumers_reports_json
       scope = report[:consumer_groups][:example_app6_app][:subscription_groups][:c4ca4238a0b9_0]
@@ -107,8 +107,8 @@ RSpec.describe_current do
 
   context 'when there are active consumers with many partitions assigned' do
     before do
-      topics_config.consumers.states = states_topic
-      topics_config.consumers.reports = reports_topic
+      topics_config.consumers.states.name = states_topic
+      topics_config.consumers.reports.name = reports_topic
 
       report = Fixtures.consumers_reports_json
       scope = report[:consumer_groups][:example_app6_app][:subscription_groups][:c4ca4238a0b9_0]
@@ -139,8 +139,8 @@ RSpec.describe_current do
 
   context 'when there are active consumers reported in a transactional fashion' do
     before do
-      topics_config.consumers.states = states_topic
-      topics_config.consumers.reports = reports_topic
+      topics_config.consumers.states.name = states_topic
+      topics_config.consumers.reports.name = reports_topic
 
       produce(states_topic, Fixtures.consumers_states_file, type: :transactional)
       produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)
@@ -163,8 +163,8 @@ RSpec.describe_current do
 
   context 'when there are more consumers that we fit in a single page' do
     before do
-      topics_config.consumers.states = states_topic
-      topics_config.consumers.reports = reports_topic
+      topics_config.consumers.states.name = states_topic
+      topics_config.consumers.reports.name = reports_topic
 
       data = Fixtures.consumers_states_json(symbolize_names: false)
       base_report = Fixtures.consumers_reports_json(symbolize_names: false)

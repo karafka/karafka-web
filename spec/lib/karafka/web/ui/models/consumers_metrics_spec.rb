@@ -7,7 +7,7 @@ RSpec.describe_current do
   let(:fixture) { Fixtures.consumers_metrics_file }
   let(:fixture_hash) { Fixtures.consumers_metrics_json }
 
-  before { Karafka::Web.config.topics.consumers.metrics = metrics_topic }
+  before { Karafka::Web.config.topics.consumers.metrics.name = metrics_topic }
 
   context 'when no metrics' do
     it { expect(metrics.current).to be(false) }

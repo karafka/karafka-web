@@ -75,7 +75,7 @@ module Karafka
 
             # @return [String] errors topic
             def errors_topic
-              ::Karafka::Web.config.topics.errors
+              ::Karafka::Web.config.topics.errors.name
             end
           end
         end

@@ -20,7 +20,7 @@ RSpec.describe_current do
   end
 
   before do
-    Karafka::Web.config.topics.errors = errors_topic
+    Karafka::Web.config.topics.errors.name = errors_topic
     allow(Karafka::Web).to receive(:producer).and_return(producer)
     allow(producer.status).to receive(:active?).and_return(true)
     allow(Karafka::Web.producer).to receive(:produce_many_sync)

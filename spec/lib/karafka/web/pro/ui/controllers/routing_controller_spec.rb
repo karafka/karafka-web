@@ -12,10 +12,10 @@ RSpec.describe_current do
 
       it do
         expect(response).to be_ok
-        expect(body).to include(topics_config.consumers.states)
-        expect(body).to include(topics_config.consumers.metrics)
-        expect(body).to include(topics_config.consumers.reports)
-        expect(body).to include(topics_config.errors)
+        expect(body).to include(topics_config.consumers.states.name)
+        expect(body).to include(topics_config.consumers.metrics.name)
+        expect(body).to include(topics_config.consumers.reports.name)
+        expect(body).to include(topics_config.errors.name)
         expect(body).to include('karafka_web')
         expect(body).to include(breadcrumbs)
         expect(body).not_to include(support_message)
@@ -31,10 +31,10 @@ RSpec.describe_current do
 
       it do
         expect(response).to be_ok
-        expect(body).to include(topics_config.consumers.states)
-        expect(body).to include(topics_config.consumers.metrics)
-        expect(body).to include(topics_config.consumers.reports)
-        expect(body).to include(topics_config.errors)
+        expect(body).to include(topics_config.consumers.states.name)
+        expect(body).to include(topics_config.consumers.metrics.name)
+        expect(body).to include(topics_config.consumers.reports.name)
+        expect(body).to include(topics_config.errors.name)
         expect(body).to include('karafka_web')
         expect(body).to include(breadcrumbs)
         expect(body).not_to include(support_message)
@@ -46,8 +46,8 @@ RSpec.describe_current do
       let(:reports_topic) { create_topic }
 
       before do
-        topics_config.consumers.states = states_topic
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.states.name = states_topic
+        topics_config.consumers.reports.name = reports_topic
 
         report = Fixtures.consumers_reports_json
         scope = report[:consumer_groups][:example_app6_app][:subscription_groups][:c4ca4238a0b9_0]
@@ -63,7 +63,7 @@ RSpec.describe_current do
 
       it do
         expect(response).to be_ok
-        expect(body).to include(topics_config.errors)
+        expect(body).to include(topics_config.errors.name)
         expect(body).to include('karafka_web')
         expect(body).to include(breadcrumbs)
         expect(body).not_to include(support_message)

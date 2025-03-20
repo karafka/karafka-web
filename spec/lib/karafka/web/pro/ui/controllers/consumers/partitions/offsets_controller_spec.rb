@@ -16,9 +16,9 @@ RSpec.describe_current do
   let(:form) { '<form' }
 
   before do
-    topics_config.consumers.states = states_topic
-    topics_config.consumers.reports = reports_topic
-    topics_config.consumers.commands = commands_topic
+    topics_config.consumers.states.name = states_topic
+    topics_config.consumers.reports.name = reports_topic
+    topics_config.consumers.commands.name = commands_topic
 
     produce(states_topic, Fixtures.consumers_states_file)
     produce(reports_topic, Fixtures.consumers_reports_file)

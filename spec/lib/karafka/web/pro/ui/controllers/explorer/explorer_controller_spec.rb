@@ -23,10 +23,10 @@ RSpec.describe_current do
       expect(body).to include(breadcrumbs)
       expect(body).not_to include(pagination)
       expect(body).not_to include(support_message)
-      expect(body).to include(topics_config.consumers.states)
-      expect(body).to include(topics_config.consumers.metrics)
-      expect(body).to include(topics_config.consumers.reports)
-      expect(body).to include(topics_config.errors)
+      expect(body).to include(topics_config.consumers.states.name)
+      expect(body).to include(topics_config.consumers.metrics.name)
+      expect(body).to include(topics_config.consumers.reports.name)
+      expect(body).to include(topics_config.errors.name)
       expect(body).not_to include(internal_topic)
     end
 
@@ -59,10 +59,10 @@ RSpec.describe_current do
         expect(body).to include(breadcrumbs)
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
-        expect(body).to include(topics_config.consumers.states)
-        expect(body).to include(topics_config.consumers.metrics)
-        expect(body).to include(topics_config.consumers.reports)
-        expect(body).to include(topics_config.errors)
+        expect(body).to include(topics_config.consumers.states.name)
+        expect(body).to include(topics_config.consumers.metrics.name)
+        expect(body).to include(topics_config.consumers.reports.name)
+        expect(body).to include(topics_config.errors.name)
         expect(body).to include(internal_topic)
       end
     end

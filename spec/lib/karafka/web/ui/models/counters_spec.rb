@@ -6,7 +6,7 @@ RSpec.describe_current do
   let(:state) { Fixtures.consumers_states_json }
   let(:errors_topic) { create_topic }
 
-  before { Karafka::Web.config.topics.errors = errors_topic }
+  before { Karafka::Web.config.topics.errors.name = errors_topic }
 
   context 'when errors topic does not exist' do
     it 'expect to have zero errors and loaded other stats' do

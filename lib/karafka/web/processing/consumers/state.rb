@@ -12,7 +12,7 @@ module Karafka
             # @return [Hash] last (current) aggregated processes state
             def current!
               state_message = ::Karafka::Admin.read_topic(
-                Karafka::Web.config.topics.consumers.states,
+                Karafka::Web.config.topics.consumers.states.name,
                 0,
                 # We need to take more in case there would be transactions running.
                 # In theory we could take two but this compensates for any involuntary

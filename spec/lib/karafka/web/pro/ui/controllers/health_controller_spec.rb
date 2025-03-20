@@ -24,7 +24,7 @@ RSpec.describe_current do
   describe '#overview' do
     context 'when no report data' do
       before do
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.reports.name = reports_topic
         get 'health/overview'
       end
 
@@ -58,7 +58,7 @@ RSpec.describe_current do
 
     context 'when data is present but written in a transactional fashion' do
       before do
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.reports.name = reports_topic
         produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)
 
         get 'health/overview'
@@ -78,7 +78,7 @@ RSpec.describe_current do
   describe '#lags' do
     context 'when no report data' do
       before do
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.reports.name = reports_topic
 
         get 'health/lags'
       end
@@ -109,7 +109,7 @@ RSpec.describe_current do
 
     context 'when data is present but reported in a transactional fashion' do
       before do
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.reports.name = reports_topic
         produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)
 
         get 'health/lags'
@@ -161,7 +161,7 @@ RSpec.describe_current do
   describe '#offsets' do
     context 'when no report data' do
       before do
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.reports.name = reports_topic
 
         get 'health/offsets'
       end
@@ -194,7 +194,7 @@ RSpec.describe_current do
 
     context 'when data is present but reported in a transactional fashion' do
       before do
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.reports.name = reports_topic
         produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)
 
         get 'health/offsets'
@@ -214,7 +214,7 @@ RSpec.describe_current do
 
     context 'when one of partitions is at risk due to LSO' do
       before do
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.reports.name = reports_topic
 
         report = Fixtures.consumers_reports_json(symbolize_names: false)
 
@@ -244,7 +244,7 @@ RSpec.describe_current do
 
     context 'when one of partitions is stopped due to LSO' do
       before do
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.reports.name = reports_topic
 
         report = Fixtures.consumers_reports_json(symbolize_names: false)
 
@@ -276,7 +276,7 @@ RSpec.describe_current do
   describe '#changes' do
     context 'when no report data' do
       before do
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.reports.name = reports_topic
 
         get 'health/changes'
       end
@@ -308,7 +308,7 @@ RSpec.describe_current do
 
     context 'when data is present but reported in a transactional fashion' do
       before do
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.reports.name = reports_topic
         produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)
 
         get 'health/changes'
@@ -326,7 +326,7 @@ RSpec.describe_current do
 
     context 'when one of partitions is paused forever' do
       before do
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.reports.name = reports_topic
 
         report = Fixtures.consumers_reports_json(symbolize_names: false)
 

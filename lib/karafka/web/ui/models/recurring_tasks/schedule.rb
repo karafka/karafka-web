@@ -22,7 +22,7 @@ module Karafka
               #   get it because requested topic/partition does not exist or nothing was present
               def current
                 messages = Karafka::Admin.read_topic(
-                  config.topics.schedules,
+                  config.topics.schedules.name,
                   0,
                   # We work here with the assumption that users won't click so fast to load
                   # more than 20 commands prior to a state flush. If that happens, this will

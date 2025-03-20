@@ -32,7 +32,7 @@ module Karafka
             MAX_ERROR_PARTITIONS.times do |partition|
               begin
                 offsets = Lib::Admin.read_watermark_offsets(
-                  ::Karafka::Web.config.topics.errors,
+                  ::Karafka::Web.config.topics.errors.name,
                   partition
                 )
               # We estimate that way instead of using `#cluster_info` to get the partitions count

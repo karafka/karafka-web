@@ -9,11 +9,22 @@ RSpec.describe_current do
       ttl: 5000,
       group_id: 'consumer-group-topic',
       topics: {
-        errors: 'errors-topic',
+        errors: {
+          name: 'errors-topic'
+        },
         consumers: {
-          reports: 'reports-topic',
-          states: 'states-topic',
-          metrics: 'metrics-topic'
+          reports: {
+            name: 'reports-topic'
+          },
+          states: {
+            name: 'states-topic'
+          },
+          metrics: {
+            name: 'metrics-topic'
+          },
+          commands: {
+            name: 'commands-topic'
+          }
         }
       },
       tracking: {
@@ -76,7 +87,7 @@ RSpec.describe_current do
 
   context 'when validating topics topics' do
     context 'when errors topic does not match the regexp' do
-      before { params[:topics][:errors] = 'invalid topic!' }
+      before { params[:topics][:errors][:name] = 'invalid topic!' }
 
       it { expect(contract.call(params)).not_to be_success }
     end
@@ -86,9 +97,10 @@ RSpec.describe_current do
         reports
         states
         metrics
+        commands
       ].each do |field|
         context "when #{field} does not match the regexp" do
-          before { params[:topics][:consumers][field] = 'invalid topic!' }
+          before { params[:topics][:consumers][field][:name] = 'invalid topic!' }
 
           it { expect(contract.call(params)).not_to be_success }
         end

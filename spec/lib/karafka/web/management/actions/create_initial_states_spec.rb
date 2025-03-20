@@ -9,8 +9,8 @@ RSpec.describe_current do
   let(:consumers_metrics) { Karafka::Web::Processing::Consumers::Metrics.current! }
 
   before do
-    Karafka::Web.config.topics.consumers.states = consumers_states_topic
-    Karafka::Web.config.topics.consumers.metrics = consumers_metrics_topic
+    Karafka::Web.config.topics.consumers.states.name = consumers_states_topic
+    Karafka::Web.config.topics.consumers.metrics.name = consumers_metrics_topic
   end
 
   context 'when the consumers state already exists' do

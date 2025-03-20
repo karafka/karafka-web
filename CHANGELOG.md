@@ -9,6 +9,7 @@
 - **[Feature]** Provide ability to manage topics configuration from the Web UI (Pro).
 - **[Feature]** Provide ability to manage topics partitioning from the Web UI (Pro).
 - **[Feature]** Provide ability to inject custom CSS and JS to adjust the Web UI.
+- [Enhancement] Move web ui topics configuration into config.
 - [Enhancement] Upgrade DaisyUI to 5.0 and Tailwind to 4.0.
 - [Enhancement] Make consumer sampler/stats gathering compatible across debian/alpine/wolfi OSes (chen-anders)
 - [Enhancement] Promote consumers lags statistics chart to OSS.

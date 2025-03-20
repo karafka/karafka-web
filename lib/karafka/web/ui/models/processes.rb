@@ -45,7 +45,7 @@ module Karafka
                         .sort
 
               Lib::Admin.read_topic(
-                ::Karafka::Web.config.topics.consumers.reports,
+                ::Karafka::Web.config.topics.consumers.reports.name,
                 0,
                 # We set 10k here because we start from the latest offset of the reports, hence
                 # we will never get this much. Do do not know however exactly how many reports

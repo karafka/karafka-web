@@ -15,12 +15,26 @@ module Karafka
         required(:group_id) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
 
         nested(:topics) do
-          required(:errors) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
+          nested(:errors) do
+            required(:name) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
+          end
 
           nested(:consumers) do
-            required(:reports) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
-            required(:states) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
-            required(:metrics) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
+            nested(:reports) do
+              required(:name) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
+            end
+
+            nested(:states) do
+              required(:name) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
+            end
+
+            nested(:metrics) do
+              required(:name) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
+            end
+
+            nested(:commands) do
+              required(:name) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
+            end
           end
         end
 

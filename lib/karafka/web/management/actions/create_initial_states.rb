@@ -20,25 +20,25 @@ module Karafka
 
           # Creates the initial states for the Web-UI if needed (if they don't exist)
           def call
-            if exists?(Karafka::Web.config.topics.consumers.states)
+            if exists?(Karafka::Web.config.topics.consumers.states.name)
               exists('consumers state')
             else
               creating('consumers state')
               ::Karafka::Web.producer.produce_sync(
-                topic: Karafka::Web.config.topics.consumers.states,
-                key: Karafka::Web.config.topics.consumers.states,
+                topic: Karafka::Web.config.topics.consumers.states.name,
+                key: Karafka::Web.config.topics.consumers.states.name,
                 payload: DEFAULT_STATE.to_json
               )
               created('consumers state')
             end
 
-            if exists?(Karafka::Web.config.topics.consumers.metrics)
+            if exists?(Karafka::Web.config.topics.consumers.metrics.name)
               exists('consumers metrics')
             else
               creating('consumers metrics')
               ::Karafka::Web.producer.produce_sync(
-                topic: Karafka::Web.config.topics.consumers.metrics,
-                key: Karafka::Web.config.topics.consumers.metrics,
+                topic: Karafka::Web.config.topics.consumers.metrics.name,
+                key: Karafka::Web.config.topics.consumers.metrics.name,
                 payload: DEFAULT_METRICS.to_json
               )
               created('consumers metrics')
