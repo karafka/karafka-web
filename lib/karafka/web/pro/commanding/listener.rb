@@ -26,7 +26,7 @@ module Karafka
             t_config = Karafka::Web.config.topics
 
             iterator = Karafka::Pro::Iterator.new(
-              { t_config.consumers.commands => true },
+              { t_config.consumers.commands.name => true },
               settings: c_config.kafka,
               yield_nil: true,
               max_wait_time: c_config.max_wait_time
