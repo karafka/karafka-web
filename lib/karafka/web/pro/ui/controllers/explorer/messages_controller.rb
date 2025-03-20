@@ -13,6 +13,33 @@ module Karafka
             # While part of messages operations is done via explorer (exploring), this controller
             # handles other cases not related to viewing data
             class MessagesController < BaseController
+              # Renders a form allowing for piping a message to a different topic
+              #
+              # @param topic_id [String]
+              # @param partition_id [Integer]
+              # @param offset [Integer] offset of the message we want to republish
+              def forward(topic_id, partition_id, offset)
+                @message = Models::Message.find(topic_id, partition_id, offset)
+                @topic_id = topic_id
+                @partition_id = partition_id
+                @offset = offset
+
+@available_topics = [
+  "users.events",
+  "payments.transactions",
+  "notifications.outbox",
+  "analytics.events",
+  "orders.created",
+  "orders.processed",
+  "system.logs",
+  "jobs.scheduled",
+  "inventory.updates",
+  "audit.trail"
+]
+
+                render
+              end
+
               # Takes a requested message content and republishes it again
               #
               # @param topic_id [String]

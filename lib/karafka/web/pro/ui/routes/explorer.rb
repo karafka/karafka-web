@@ -22,6 +22,12 @@ module Karafka
                 r.on 'messages' do
                   controller = Controllers::Explorer::MessagesController.new(params)
 
+                  r.get(
+                    String, :partition_id, Integer, 'forward'
+                  ) do |topic_id, partition_id, offset|
+                    controller.forward(topic_id, partition_id, offset)
+                  end
+
                   r.post(
                     String, :partition_id, Integer, 'republish'
                   ) do |topic_id, partition_id, offset|

@@ -1,0 +1,129 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+<%
+  forward_path = root_path(
+    @message.topic,
+    @message.partition,
+    @message.offset,
+    'forward'
+  )
+%>
+<div class="card bg-base-100 mt-4">
+  <div class="card-body">
+    <form class="space-y-4 w-full" method="post" action="<%= forward_path %>">
+      <%== csrf_tag(forward_path) %>
+      
+      <!-- Message Source Info -->
+      <div class="flex items-center w-full mb-4">
+        <label class="w-1/4 text-gray-700">Source Topic:</label>
+        <div class="w-3/4">
+          <code class="bg-base-200 px-2 py-1 rounded-sm"><%= @message.topic %></code>
+        </div>
+      </div>
+      
+      <div class="flex items-center w-full mb-4">
+        <label class="w-1/4 text-gray-700">Source Partition:</label>
+        <div class="w-3/4">
+          <code class="bg-base-200 px-2 py-1 rounded-sm"><%= @message.partition %></code>
+        </div>
+      </div>
+      
+      <div class="flex items-center w-full mb-6">
+        <label class="w-1/4 text-gray-700">Source Offset:</label>
+        <div class="w-3/4">
+          <code class="bg-base-200 px-2 py-1 rounded-sm"><%= @message.offset %></code>
+        </div>
+      </div>
+      
+      <!-- Destination Settings -->
+      <div class="flex items-center w-full mb-6">
+        <label class="w-1/4 text-gray-700">Target Topic:</label>
+        <div class="w-3/4">
+          <select name="target_topic" class="select select-bordered w-full" required>
+            <option value="">Select Target Topic</option>
+            <% @available_topics.each do |topic| %>
+              <option value="<%= topic %>"><%= topic %></option>
+            <% end %>
+          </select>
+          <div class="text-sm text-gray-500 mt-1">
+            Topic to which the message will be forwarded
+          </div>
+        </div>
+      </div>
+      
+      <div class="flex items-center w-full mb-8">
+        <label class="w-1/4 text-gray-700">Target Partition:</label>
+        <div class="w-3/4">
+          <input
+            type="number"
+            name="target_partition"
+            class="block input input-bordered w-full"
+            placeholder="Leave empty for automatic partition assignment"
+            min="0"
+          />
+          <div class="text-sm text-gray-500 mt-1">
+            Optional. If left empty, partition will be assigned automatically
+          </div>
+        </div>
+      </div>
+      
+      <!-- Advanced Options -->
+      <div class="flex items-center w-full">
+        <label class="w-1/4 text-gray-700">Delivery Options:</label>
+        <div class="w-3/4">
+          <label class="flex items-center gap-4 cursor-pointer mb-4">
+            <input type="hidden" name="use_message_key" value="off">
+            <input type="checkbox" name="use_message_key" class="checkbox checkbox-primary" checked />
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                Send with original message key
+              </div>
+              <div class="text-sm text-gray-500">
+                Uses the original message key for consistent partitioning
+              </div>
+            </div>
+          </label>
+          
+          <label class="flex items-center gap-4 cursor-pointer mb-4">
+            <input type="hidden" name="use_partition_key" value="off">
+            <input type="checkbox" name="use_partition_key" class="checkbox checkbox-primary" />
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                Use partition key instead of message key
+              </div>
+              <div class="text-sm text-gray-500">
+                If enabled, will use partition key instead of message key for routing
+              </div>
+            </div>
+          </label>
+          
+          <label class="flex items-center gap-4 cursor-pointer">
+            <input type="hidden" name="include_source_headers" value="off">
+            <input type="checkbox" name="include_source_headers" class="checkbox checkbox-primary" checked />
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                Include source message headers
+              </div>
+              <div class="text-sm text-gray-500">
+                Add origin headers with source topic, partition, and offset information
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Submit Buttons -->
+      <div class="fieldset text-center mt-8">
+        <div class="flex gap-4 justify-end">
+          <a href="<%= root_path(@message.topic, @message.partition, @message.offset) %>" class="btn btn-ghost">
+            Cancel
+          </a>
+          <button type="submit" class="btn btn-primary gap-2 btn-lockable">
+            <%#== icon(:arrow_right_circle) %>
+            Forward Message
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
