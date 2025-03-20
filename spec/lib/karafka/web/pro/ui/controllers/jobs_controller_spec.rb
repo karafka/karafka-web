@@ -24,10 +24,10 @@ RSpec.describe_current do
   describe '#running' do
     context 'when needed topics are missing' do
       before do
-        topics_config.consumers.states = generate_topic_name
-        topics_config.consumers.metrics = generate_topic_name
-        topics_config.consumers.reports = generate_topic_name
-        topics_config.errors = generate_topic_name
+        topics_config.consumers.states.name = generate_topic_name
+        topics_config.consumers.metrics.name = generate_topic_name
+        topics_config.consumers.reports.name = generate_topic_name
+        topics_config.errors.name = generate_topic_name
 
         get 'jobs/running'
       end
@@ -54,8 +54,8 @@ RSpec.describe_current do
 
     context 'when we have only jobs different than running' do
       before do
-        topics_config.consumers.states = states_topic
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.states.name = states_topic
+        topics_config.consumers.reports.name = reports_topic
 
         data = Fixtures.consumers_states_json(symbolize_names: false)
         report = Fixtures.consumers_reports_json(symbolize_names: false)
@@ -80,8 +80,8 @@ RSpec.describe_current do
 
     context 'when we have a running job for incompatible process' do
       before do
-        topics_config.consumers.states = states_topic
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.states.name = states_topic
+        topics_config.consumers.reports.name = reports_topic
 
         data = Fixtures.consumers_states_json(symbolize_names: false)
         report = Fixtures.consumers_reports_json(symbolize_names: false)
@@ -106,8 +106,8 @@ RSpec.describe_current do
 
     context 'when there are more jobs than fits on a single page' do
       before do
-        topics_config.consumers.states = states_topic
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.states.name = states_topic
+        topics_config.consumers.reports.name = reports_topic
 
         data = Fixtures.consumers_states_json(symbolize_names: false)
         base_report = Fixtures.consumers_reports_json(symbolize_names: false)
@@ -156,8 +156,8 @@ RSpec.describe_current do
 
       context 'when visiting page with data published in a transactional fashion' do
         before do
-          topics_config.consumers.states = states_topic
-          topics_config.consumers.reports = reports_topic
+          topics_config.consumers.states.name = states_topic
+          topics_config.consumers.reports.name = reports_topic
 
           produce(states_topic, Fixtures.consumers_states_file, type: :transactional)
           produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)
@@ -213,8 +213,8 @@ RSpec.describe_current do
 
     context 'when we visit tick jobs' do
       before do
-        topics_config.consumers.states = states_topic
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.states.name = states_topic
+        topics_config.consumers.reports.name = reports_topic
 
         data = Fixtures.consumers_states_json(symbolize_names: false)
         report = Fixtures.consumers_reports_json(symbolize_names: false)
@@ -241,8 +241,8 @@ RSpec.describe_current do
 
     context 'when we visit shutdown jobs' do
       before do
-        topics_config.consumers.states = states_topic
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.states.name = states_topic
+        topics_config.consumers.reports.name = reports_topic
 
         data = Fixtures.consumers_states_json(symbolize_names: false)
         report = Fixtures.consumers_reports_json(symbolize_names: false)
@@ -270,10 +270,10 @@ RSpec.describe_current do
   describe '#pending' do
     context 'when needed topics are missing' do
       before do
-        topics_config.consumers.states = generate_topic_name
-        topics_config.consumers.metrics = generate_topic_name
-        topics_config.consumers.reports = generate_topic_name
-        topics_config.errors = generate_topic_name
+        topics_config.consumers.states.name = generate_topic_name
+        topics_config.consumers.metrics.name = generate_topic_name
+        topics_config.consumers.reports.name = generate_topic_name
+        topics_config.errors.name = generate_topic_name
 
         get 'jobs/pending'
       end
@@ -286,8 +286,8 @@ RSpec.describe_current do
 
     context 'when needed topics are present with data' do
       before do
-        topics_config.consumers.states = states_topic
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.states.name = states_topic
+        topics_config.consumers.reports.name = reports_topic
 
         data = Fixtures.consumers_states_json(symbolize_names: false)
         report = Fixtures.consumers_reports_json(symbolize_names: false)
@@ -311,8 +311,8 @@ RSpec.describe_current do
 
     context 'when we have only jobs different than pending' do
       before do
-        topics_config.consumers.states = states_topic
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.states.name = states_topic
+        topics_config.consumers.reports.name = reports_topic
 
         data = Fixtures.consumers_states_json(symbolize_names: false)
         report = Fixtures.consumers_reports_json(symbolize_names: false)
@@ -337,8 +337,8 @@ RSpec.describe_current do
 
     context 'when process has incompatible schema' do
       before do
-        topics_config.consumers.states = states_topic
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.states.name = states_topic
+        topics_config.consumers.reports.name = reports_topic
 
         data = Fixtures.consumers_states_json(symbolize_names: false)
         report = Fixtures.consumers_reports_json(symbolize_names: false)
@@ -363,8 +363,8 @@ RSpec.describe_current do
 
     context 'when there are more jobs than fits on a single page' do
       before do
-        topics_config.consumers.states = states_topic
-        topics_config.consumers.reports = reports_topic
+        topics_config.consumers.states.name = states_topic
+        topics_config.consumers.reports.name = reports_topic
 
         data = Fixtures.consumers_states_json(symbolize_names: false)
         base_report = Fixtures.consumers_reports_json(symbolize_names: false)
@@ -409,8 +409,8 @@ RSpec.describe_current do
 
       context 'when visiting page with data published in a transactional fashion' do
         before do
-          topics_config.consumers.states = states_topic
-          topics_config.consumers.reports = reports_topic
+          topics_config.consumers.states.name = states_topic
+          topics_config.consumers.reports.name = reports_topic
 
           produce(states_topic, Fixtures.consumers_states_file, type: :transactional)
           produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)

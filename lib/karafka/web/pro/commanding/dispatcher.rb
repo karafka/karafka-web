@@ -96,7 +96,7 @@ module Karafka
 
             # @return [String] consumers commands topic
             def commands_topic
-              ::Karafka::Web.config.topics.consumers.commands
+              ::Karafka::Web.config.topics.consumers.commands.name
             end
 
             # Converts payload to json, compresses it and dispatches to Kafka

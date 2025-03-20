@@ -15,12 +15,46 @@ module Karafka
         required(:group_id) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
 
         nested(:topics) do
-          required(:errors) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
+          nested(:errors) do
+            required(:name) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
+
+            required(:config) do |val|
+              val.is_a?(Hash) && !val.empty? && val.keys.all? { |key| key.is_a?(Symbol) }
+            end
+          end
 
           nested(:consumers) do
-            required(:reports) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
-            required(:states) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
-            required(:metrics) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
+            nested(:reports) do
+              required(:name) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
+
+              required(:config) do |val|
+                val.is_a?(Hash) && !val.empty? && val.keys.all? { |key| key.is_a?(Symbol) }
+              end
+            end
+
+            nested(:states) do
+              required(:name) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
+
+              required(:config) do |val|
+                val.is_a?(Hash) && !val.empty? && val.keys.all? { |key| key.is_a?(Symbol) }
+              end
+            end
+
+            nested(:metrics) do
+              required(:name) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
+
+              required(:config) do |val|
+                val.is_a?(Hash) && !val.empty? && val.keys.all? { |key| key.is_a?(Symbol) }
+              end
+            end
+
+            nested(:commands) do
+              required(:name) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
+
+              required(:config) do |val|
+                val.is_a?(Hash) && !val.empty? && val.keys.all? { |key| key.is_a?(Symbol) }
+              end
+            end
           end
         end
 

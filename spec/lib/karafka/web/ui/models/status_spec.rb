@@ -3,10 +3,10 @@
 RSpec.describe_current do
   subject(:status) { described_class.new }
 
-  let(:errors_topic) { Karafka::Web.config.topics.errors = create_topic }
-  let(:reports_topic) { Karafka::Web.config.topics.consumers.reports = create_topic }
-  let(:metrics_topic) { Karafka::Web.config.topics.consumers.metrics = create_topic }
-  let(:states_topic) { Karafka::Web.config.topics.consumers.states = create_topic }
+  let(:errors_topic) { Karafka::Web.config.topics.errors.name = create_topic }
+  let(:reports_topic) { Karafka::Web.config.topics.consumers.reports.name = create_topic }
+  let(:metrics_topic) { Karafka::Web.config.topics.consumers.metrics.name = create_topic }
+  let(:states_topic) { Karafka::Web.config.topics.consumers.states.name = create_topic }
   let(:state) { Fixtures.consumers_states_file }
   let(:metrics) { Fixtures.consumers_metrics_file }
   let(:report) { Fixtures.consumers_reports_file }
@@ -107,7 +107,7 @@ RSpec.describe_current do
       let(:na_topic) { generate_topic_name }
 
       before do
-        Karafka::Web.config.topics.errors = na_topic
+        Karafka::Web.config.topics.errors.name = na_topic
         reports_topic
         metrics_topic
         states_topic
@@ -131,7 +131,7 @@ RSpec.describe_current do
       let(:na_topic) { generate_topic_name }
 
       before do
-        Karafka::Web.config.topics.consumers.metrics = na_topic
+        Karafka::Web.config.topics.consumers.metrics.name = na_topic
         errors_topic
         reports_topic
         states_topic
@@ -156,7 +156,7 @@ RSpec.describe_current do
     subject(:result) { status.partitions }
 
     context 'when not all topics are there' do
-      before { Karafka::Web.config.topics.errors = generate_topic_name }
+      before { Karafka::Web.config.topics.errors.name = generate_topic_name }
 
       it { expect(result.success?).to be(false) }
       it { expect(result.to_s).to eq('halted') }
@@ -182,7 +182,7 @@ RSpec.describe_current do
 
     context 'when there are many error partitions' do
       before do
-        Karafka::Web.config.topics.errors = create_topic(partitions: 5)
+        Karafka::Web.config.topics.errors.name = create_topic(partitions: 5)
         reports_topic
         metrics_topic
         states_topic
@@ -201,7 +201,7 @@ RSpec.describe_current do
         errors_topic
         reports_topic
         metrics_topic
-        Karafka::Web.config.topics.consumers.states = create_topic(partitions: 5)
+        Karafka::Web.config.topics.consumers.states.name = create_topic(partitions: 5)
       end
 
       it 'expect to fail and report' do
@@ -221,7 +221,7 @@ RSpec.describe_current do
         errors_topic
         reports_topic
         metrics_topic
-        Karafka::Web.config.topics.consumers.states = create_topic(partitions: 5)
+        Karafka::Web.config.topics.consumers.states.name = create_topic(partitions: 5)
       end
 
       it 'expect to halt' do

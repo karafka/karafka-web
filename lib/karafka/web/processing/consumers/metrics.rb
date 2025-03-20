@@ -12,7 +12,7 @@ module Karafka
             # @return [Hash] latest (current) aggregated metrics state
             def current!
               metrics_message = ::Karafka::Admin.read_topic(
-                Karafka::Web.config.topics.consumers.metrics,
+                Karafka::Web.config.topics.consumers.metrics.name,
                 0,
                 # We need to take more in case there would be transactions running.
                 # In theory we could take two but this compensates for any involuntary

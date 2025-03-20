@@ -1,10 +1,21 @@
+GIT
+  remote: https://github.com/karafka/karafka.git
+  revision: c0c04afb7f75fa737f72cd80fe7bcd8e490aff88
+  specs:
+    karafka (2.4.18)
+      base64 (~> 0.2)
+      karafka-core (>= 2.4.11, < 2.5.0)
+      karafka-rdkafka (>= 0.19.0)
+      waterdrop (>= 2.7.3, < 3.0.0)
+      zeitwerk (~> 2.3)
+
 PATH
   remote: .
   specs:
     karafka-web (0.11.0)
       erubi (~> 1.4)
       karafka (>= 2.4.17, < 2.5.0)
-      karafka-core (>= 2.4.8, < 2.5.0)
+      karafka-core (>= 2.4.11, < 2.5.0)
       roda (~> 3.68, >= 3.69)
       tilt (~> 2.0)
 
@@ -37,27 +48,22 @@ GEM
       tzinfo
     factory_bot (6.5.1)
       activesupport (>= 6.1.0)
-    ffi (1.17.0)
+    ffi (1.17.1)
+    ffi (1.17.1-x86_64-linux-gnu)
     fugit (1.11.1)
       et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
-    karafka (2.4.17)
-      base64 (~> 0.2)
-      karafka-core (>= 2.4.4, < 2.5.0)
-      karafka-rdkafka (>= 0.17.2)
-      waterdrop (>= 2.7.3, < 3.0.0)
-      zeitwerk (~> 2.3)
-    karafka-core (2.4.8)
-      karafka-rdkafka (>= 0.17.6, < 0.19.0)
+    karafka-core (2.4.11)
+      karafka-rdkafka (>= 0.17.6, < 0.20.0)
       logger (>= 1.6.0)
-    karafka-rdkafka (0.18.1)
+    karafka-rdkafka (0.19.0)
       ffi (~> 1.15)
       mini_portile2 (~> 2.6)
       rake (> 12)
-    logger (1.6.5)
-    mini_portile2 (2.8.7)
+    logger (1.6.6)
+    mini_portile2 (2.8.8)
     minitest (5.25.4)
     ostruct (0.6.1)
     raabro (1.4.0)
@@ -108,6 +114,7 @@ DEPENDENCIES
   byebug
   factory_bot
   fugit
+  karafka!
   karafka-web!
   ostruct
   rack-test

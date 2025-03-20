@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe_current do
-  let(:states_topic) { Karafka::Web.config.topics.consumers.states = create_topic }
+  let(:states_topic) { Karafka::Web.config.topics.consumers.states.name = create_topic }
   let(:fixture) { Fixtures.consumers_states_file }
 
   describe '#current!' do
@@ -20,7 +20,7 @@ RSpec.describe_current do
         ::Karafka::Web::Errors::Processing::MissingConsumersStatesTopicError
       end
 
-      before { Karafka::Web.config.topics.consumers.states = generate_topic_name }
+      before { Karafka::Web.config.topics.consumers.states.name = generate_topic_name }
 
       it { expect { state }.to raise_error(expected_error) }
     end

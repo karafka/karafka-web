@@ -9,11 +9,27 @@ RSpec.describe_current do
       ttl: 5000,
       group_id: 'consumer-group-topic',
       topics: {
-        errors: 'errors-topic',
+        errors: {
+          name: 'errors-topic',
+          config: { 'cleanup.policy': 'delete' }
+        },
         consumers: {
-          reports: 'reports-topic',
-          states: 'states-topic',
-          metrics: 'metrics-topic'
+          reports: {
+            name: 'reports-topic',
+            config: { 'cleanup.policy': 'delete' }
+          },
+          states: {
+            name: 'states-topic',
+            config: { 'cleanup.policy': 'delete' }
+          },
+          metrics: {
+            name: 'metrics-topic',
+            config: { 'cleanup.policy': 'delete' }
+          },
+          commands: {
+            name: 'commands-topic',
+            config: { 'cleanup.policy': 'delete' }
+          }
         }
       },
       tracking: {
@@ -76,7 +92,7 @@ RSpec.describe_current do
 
   context 'when validating topics topics' do
     context 'when errors topic does not match the regexp' do
-      before { params[:topics][:errors] = 'invalid topic!' }
+      before { params[:topics][:errors][:name] = 'invalid topic!' }
 
       it { expect(contract.call(params)).not_to be_success }
     end
@@ -86,9 +102,22 @@ RSpec.describe_current do
         reports
         states
         metrics
+        commands
       ].each do |field|
-        context "when #{field} does not match the regexp" do
-          before { params[:topics][:consumers][field] = 'invalid topic!' }
+        context "when #{field} name does not match the regexp" do
+          before { params[:topics][:consumers][field][:name] = 'invalid topic!' }
+
+          it { expect(contract.call(params)).not_to be_success }
+        end
+
+        context "when #{field} config contains non-symbol keys" do
+          before { params[:topics][:consumers][field][:config] = { 'a' => 'b' } }
+
+          it { expect(contract.call(params)).not_to be_success }
+        end
+
+        context "when #{field} config is empty" do
+          before { params[:topics][:consumers][field][:config] = {} }
 
           it { expect(contract.call(params)).not_to be_success }
         end

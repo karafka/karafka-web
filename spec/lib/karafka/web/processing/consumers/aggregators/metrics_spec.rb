@@ -3,9 +3,9 @@
 RSpec.describe_current do
   subject(:metrics_aggregator) { described_class.new }
 
-  let(:reports_topic) { Karafka::Web.config.topics.consumers.reports = create_topic }
-  let(:metrics_topic) { Karafka::Web.config.topics.consumers.metrics = create_topic }
-  let(:states_topic) { Karafka::Web.config.topics.consumers.states = create_topic }
+  let(:reports_topic) { Karafka::Web.config.topics.consumers.reports.name = create_topic }
+  let(:metrics_topic) { Karafka::Web.config.topics.consumers.metrics.name = create_topic }
+  let(:states_topic) { Karafka::Web.config.topics.consumers.states.name = create_topic }
   let(:schema_manager) { Karafka::Web::Processing::Consumers::SchemaManager.new }
   let(:state_aggregator) do
     Karafka::Web::Processing::Consumers::Aggregators::State.new(schema_manager)

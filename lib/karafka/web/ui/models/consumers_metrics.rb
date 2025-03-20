@@ -33,7 +33,7 @@ module Karafka
             # @return [::Karafka::Messages::Message, nil] most recent state or nil if none
             def fetch
               Lib::Admin.read_topic(
-                Karafka::Web.config.topics.consumers.metrics,
+                Karafka::Web.config.topics.consumers.metrics.name,
                 0,
                 # We need to take last two and not the last because in case of a transactional
                 # producer, the last one will match the transaction commit message

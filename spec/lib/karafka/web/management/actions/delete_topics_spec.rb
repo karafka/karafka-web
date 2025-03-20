@@ -14,11 +14,11 @@ RSpec.describe_current do
   let(:errors_topic) { generate_topic_name }
 
   before do
-    Karafka::Web.config.topics.consumers.states = consumers_states_topic
-    Karafka::Web.config.topics.consumers.metrics = consumers_metrics_topic
-    Karafka::Web.config.topics.consumers.reports = consumers_reports_topic
-    Karafka::Web.config.topics.consumers.commands = consumers_commands_topic
-    Karafka::Web.config.topics.errors = errors_topic
+    Karafka::Web.config.topics.consumers.states.name = consumers_states_topic
+    Karafka::Web.config.topics.consumers.metrics.name = consumers_metrics_topic
+    Karafka::Web.config.topics.consumers.reports.name = consumers_reports_topic
+    Karafka::Web.config.topics.consumers.commands.name = consumers_commands_topic
+    Karafka::Web.config.topics.errors.name = errors_topic
   end
 
   context 'when topics do not exist' do

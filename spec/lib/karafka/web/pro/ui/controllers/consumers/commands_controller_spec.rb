@@ -12,7 +12,7 @@ RSpec.describe_current do
   describe '#index' do
     context 'when commands topic does not exist' do
       before do
-        topics_config.consumers.commands = generate_topic_name
+        topics_config.consumers.commands.name = generate_topic_name
 
         get 'consumers/commands'
       end
@@ -25,7 +25,7 @@ RSpec.describe_current do
 
     context 'when there are no commands' do
       before do
-        topics_config.consumers.commands = commands_topic
+        topics_config.consumers.commands.name = commands_topic
 
         get 'consumers/commands'
       end
@@ -41,7 +41,7 @@ RSpec.describe_current do
 
     context 'when command is with a schema that does not match system one' do
       before do
-        topics_config.consumers.commands = commands_topic
+        topics_config.consumers.commands.name = commands_topic
         data = Fixtures.consumers_commands_json('consumers/current')
         data[:schema_version] = '0.0.1'
         produce(commands_topic, data.to_json)
@@ -80,7 +80,7 @@ RSpec.describe_current do
 
     context 'when there are more commands that we fit in a single page' do
       before do
-        topics_config.consumers.commands = commands_topic
+        topics_config.consumers.commands.name = commands_topic
 
         34.times do
           %w[
@@ -165,7 +165,7 @@ RSpec.describe_current do
     ].each do |command|
       context "when visiting #{command} command" do
         before do
-          topics_config.consumers.commands = commands_topic
+          topics_config.consumers.commands.name = commands_topic
           produce(
             commands_topic,
             Fixtures.consumers_commands_file("consumers/v1.1.0_#{command}.json")
@@ -188,7 +188,7 @@ RSpec.describe_current do
 
       context "when visiting #{command} command that is not with a compatible schema" do
         before do
-          topics_config.consumers.commands = commands_topic
+          topics_config.consumers.commands.name = commands_topic
           data = Fixtures.consumers_commands_json("consumers/v1.1.0_#{command}")
           data[:schema_version] = '0.0.1'
           produce(commands_topic, data.to_json)
@@ -210,7 +210,7 @@ RSpec.describe_current do
 
     context 'when visiting trace result' do
       before do
-        topics_config.consumers.commands = commands_topic
+        topics_config.consumers.commands.name = commands_topic
         produce(
           commands_topic,
           Fixtures.consumers_commands_file('consumers/v1.1.0_trace_result.json')
@@ -233,7 +233,7 @@ RSpec.describe_current do
 
     context 'when visiting trace result that is not with a compatible schema' do
       before do
-        topics_config.consumers.commands = commands_topic
+        topics_config.consumers.commands.name = commands_topic
         data = Fixtures.consumers_commands_json('consumers/v1.1.0_trace_result')
         data[:schema_version] = '0.0.1'
         produce(commands_topic, data.to_json)
@@ -253,7 +253,7 @@ RSpec.describe_current do
   describe '#recent' do
     context 'when commands topic does not exist' do
       before do
-        topics_config.consumers.commands = generate_topic_name
+        topics_config.consumers.commands.name = generate_topic_name
 
         get 'consumers/commands/recent'
       end
@@ -266,7 +266,7 @@ RSpec.describe_current do
 
     context 'when no messages are present' do
       before do
-        topics_config.consumers.commands = commands_topic
+        topics_config.consumers.commands.name = commands_topic
         get 'consumers/commands/recent'
       end
 

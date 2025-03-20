@@ -7,7 +7,7 @@ RSpec.describe_current do
   let(:fixture) { Fixtures.consumers_states_file }
   let(:fixture_hash) { Fixtures.consumers_states_json }
 
-  before { Karafka::Web.config.topics.consumers.states = states_topic }
+  before { Karafka::Web.config.topics.consumers.states.name = states_topic }
 
   context 'when no state' do
     it { expect(state.current).to be(false) }

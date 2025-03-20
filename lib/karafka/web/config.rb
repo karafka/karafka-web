@@ -35,24 +35,79 @@ module Karafka
       # Topics naming - used for processing and UI
       setting :topics do
         # All the errors encountered will be dispatched to this topic for inspection
-        setting :errors, default: 'karafka_errors'
+        setting :errors do
+          setting :name, default: 'karafka_errors'
+
+          # Remove really old errors (older than 3 months just to preserve space)
+          setting :config, default: {
+            'cleanup.policy': 'delete',
+            'retention.ms': 3 * 31 * 24 * 60 * 60 * 1_000 # 3 months
+          }
+        end
 
         setting :consumers do
           # Reports containing particular consumer processes. This topic contains the heartbeat
           # information sent from each consumer process.
-          setting :reports, default: 'karafka_consumers_reports'
+          setting :reports do
+            # Name of the topic
+            setting :name, default: 'karafka_consumers_reports'
+
+            # We do not need to to store this data for longer than 1 day as this data is only
+            # used to materialize the end states
+            # On the other hand we do not want to have it really short-living because in case
+            # of a consumer crash, we may want to use this info to catch up and backfill the
+            # state.
+            #
+            # In case its not consumed because no processes are running, it also usually means
+            # there's no data to consume because no karafka servers report
+            setting :config, default: {
+              'cleanup.policy': 'delete',
+              'retention.ms': 24 * 60 * 60 * 1_000 # 1 day
+            }
+          end
 
           # Topic for storing states aggregated info
-          setting :states, default: 'karafka_consumers_states'
+          setting :states do
+            setting :name, default: 'karafka_consumers_states'
+
+            # We care only about the most recent state, previous are irrelevant. So we can
+            # easily compact after one minute. We do not use this beyond the most recent
+            # collective state, hence it all can easily go away. We also limit the segment
+            # size to at most 100MB not to use more space ever.
+            setting :config, default: {
+              'cleanup.policy': 'compact',
+              'retention.ms': 60 * 60 * 1_000,
+              'segment.ms': 24 * 60 * 60 * 1_000, # 1 day
+              'segment.bytes': 104_857_600 # 100MB
+            }
+          end
 
           # Topic for storing consumers historical metrics info
-          setting :metrics, default: 'karafka_consumers_metrics'
+          setting :metrics do
+            setting :name, default: 'karafka_consumers_metrics'
+
+            setting :config, default: {
+              'cleanup.policy': 'compact',
+              'retention.ms': 24 * 60 * 60 * 1_000, # 1 day
+              'segment.ms': 24 * 60 * 60 * 1_000, # 1 day
+              'segment.bytes': 104_857_600 # 100MB
+            }
+          end
 
           # Topic for storing commands and their results
           # This is used only in Pro, however we do setup it in OSS in case of upgrade so the
           # transition from one to another is smooth. Otherwise upgrade would require changes
           # to topics (migration) which may be more complex
-          setting :commands, default: 'karafka_consumers_commands'
+          setting :commands do
+            setting :name, default: 'karafka_consumers_commands'
+
+            setting :config, default: {
+              'cleanup.policy': 'delete',
+              'retention.ms': 7 * 24 * 60 * 60 * 1_000, # 7 days
+              'segment.ms': 24 * 60 * 60 * 1_000, # 1 day
+              'segment.bytes': 104_857_600 # 100MB
+            }
+          end
         end
       end
 

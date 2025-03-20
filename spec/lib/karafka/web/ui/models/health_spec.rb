@@ -7,7 +7,7 @@ RSpec.describe_current do
   let(:report) { Fixtures.consumers_reports_json }
   let(:reports_topic) { create_topic }
 
-  before { Karafka::Web.config.topics.consumers.reports = reports_topic }
+  before { Karafka::Web.config.topics.consumers.reports.name = reports_topic }
 
   context 'when none of the processes are active' do
     it { expect(stats).to eq({}) }

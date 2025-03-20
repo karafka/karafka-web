@@ -12,7 +12,7 @@ RSpec.describe_current do
 
   context 'when the state data is missing' do
     before do
-      topics_config.consumers.states = create_topic
+      topics_config.consumers.states.name = create_topic
 
       get 'dashboard'
     end
@@ -25,8 +25,8 @@ RSpec.describe_current do
 
   context 'when there is no data to display' do
     before do
-      topics_config.consumers.states = states_topic
-      topics_config.consumers.metrics = metrics_topic
+      topics_config.consumers.states.name = states_topic
+      topics_config.consumers.metrics.name = metrics_topic
 
       ::Karafka::Web::Management::Actions::CreateInitialStates.new.call
       ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
@@ -46,8 +46,8 @@ RSpec.describe_current do
 
   context 'when there is only one data sample in metrics' do
     before do
-      topics_config.consumers.states = states_topic
-      topics_config.consumers.metrics = metrics_topic
+      topics_config.consumers.states.name = states_topic
+      topics_config.consumers.metrics.name = metrics_topic
 
       ::Karafka::Web::Management::Actions::CreateInitialStates.new.call
       produce(metrics_topic, Fixtures.consumers_metrics_file('v1.0.0_single.json'))
@@ -92,8 +92,8 @@ RSpec.describe_current do
   # means in the UI to compensate for that
   context 'when there is enough data written in a transaction' do
     before do
-      topics_config.consumers.states = states_topic
-      topics_config.consumers.metrics = metrics_topic
+      topics_config.consumers.states.name = states_topic
+      topics_config.consumers.metrics.name = metrics_topic
 
       produce(states_topic, Fixtures.consumers_states_file, type: :transactional)
       produce(metrics_topic, Fixtures.consumers_metrics_file, type: :transactional)
@@ -123,8 +123,8 @@ RSpec.describe_current do
   # https://github.com/karafka/karafka-web/issues/356
   context 'when there are gaps in pace' do
     before do
-      topics_config.consumers.states = states_topic
-      topics_config.consumers.metrics = metrics_topic
+      topics_config.consumers.states.name = states_topic
+      topics_config.consumers.metrics.name = metrics_topic
 
       ::Karafka::Web::Management::Actions::CreateInitialStates.new.call
       produce(metrics_topic, Fixtures.consumers_metrics_file('v1.3.0_pace_gaps.json'))

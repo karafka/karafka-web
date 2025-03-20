@@ -86,7 +86,7 @@ module Karafka
 
             # @return [String] recurring tasks logs topic
             def logs_topic
-              ::Karafka::App.config.recurring_tasks.topics.logs
+              ::Karafka::App.config.recurring_tasks.topics.logs.name
             end
 
             # Runs the recurring tasks command

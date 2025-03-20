@@ -13,8 +13,8 @@ RSpec.describe_current do
 
   before do
     topics = Karafka::App.config.recurring_tasks.topics
-    topics.schedules = schedules_topic
-    topics.logs = logs_topic
+    topics.schedules.name = schedules_topic
+    topics.logs.name = logs_topic
 
     draw_routes do
       recurring_tasks(true)

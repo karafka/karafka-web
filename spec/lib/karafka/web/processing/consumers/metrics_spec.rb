@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe_current do
-  let(:metrics_topic) { Karafka::Web.config.topics.consumers.metrics = create_topic }
+  let(:metrics_topic) { Karafka::Web.config.topics.consumers.metrics.name = create_topic }
   let(:fixture) { Fixtures.consumers_metrics_file }
 
   describe '#current!' do
@@ -20,7 +20,7 @@ RSpec.describe_current do
         ::Karafka::Web::Errors::Processing::MissingConsumersMetricsTopicError
       end
 
-      before { Karafka::Web.config.topics.consumers.metrics = generate_topic_name }
+      before { Karafka::Web.config.topics.consumers.metrics.name = generate_topic_name }
 
       it { expect { metrics }.to raise_error(expected_error) }
     end

@@ -4,7 +4,7 @@
 # See LICENSE for details.
 
 RSpec.describe_current do
-  before { Karafka::Web.config.topics.consumers.commands = commands_topic }
+  before { Karafka::Web.config.topics.consumers.commands.name = commands_topic }
 
   let(:commands_topic) { generate_topic_name }
 

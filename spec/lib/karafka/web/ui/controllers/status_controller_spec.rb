@@ -21,10 +21,10 @@ RSpec.describe_current do
 
     context 'when topics are missing' do
       before do
-        topics_config.consumers.states = generate_topic_name
-        topics_config.consumers.metrics = generate_topic_name
-        topics_config.consumers.reports = generate_topic_name
-        topics_config.errors = generate_topic_name
+        topics_config.consumers.states.name = generate_topic_name
+        topics_config.consumers.metrics.name = generate_topic_name
+        topics_config.consumers.reports.name = generate_topic_name
+        topics_config.errors.name = generate_topic_name
 
         get 'status'
       end
@@ -66,7 +66,7 @@ RSpec.describe_current do
       let(:states_topic) { create_topic }
 
       before do
-        topics_config.consumers.states = states_topic
+        topics_config.consumers.states.name = states_topic
         # Corrupted on purpose
         produce(states_topic, '{')
 
@@ -85,7 +85,7 @@ RSpec.describe_current do
       let(:metrics_topic) { create_topic }
 
       before do
-        topics_config.consumers.metrics = metrics_topic
+        topics_config.consumers.metrics.name = metrics_topic
         produce(metrics_topic, '{')
 
         get 'status'

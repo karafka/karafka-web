@@ -328,22 +328,22 @@ module Karafka
 
           # @return [String] consumers states topic name
           def topics_consumers_states
-            ::Karafka::Web.config.topics.consumers.states.to_s
+            ::Karafka::Web.config.topics.consumers.states.name.to_s
           end
 
           # @return [String] consumers reports topic name
           def topics_consumers_reports
-            ::Karafka::Web.config.topics.consumers.reports.to_s
+            ::Karafka::Web.config.topics.consumers.reports.name.to_s
           end
 
           # @return [String] consumers metrics topic name
           def topics_consumers_metrics
-            ::Karafka::Web.config.topics.consumers.metrics.to_s
+            ::Karafka::Web.config.topics.consumers.metrics.name.to_s
           end
 
           # @return [String] errors topic name
           def topics_errors
-            ::Karafka::Web.config.topics.errors
+            ::Karafka::Web.config.topics.errors.name
           end
 
           # @return [Hash] hash with topics with which we work details (even if don't exist)

@@ -11,7 +11,7 @@ RSpec.describe_current do
   let(:error_report) { Fixtures.errors_file }
   let(:no_errors) { 'There are no errors in this errors topic partition' }
 
-  before { topics_config.errors = errors_topic }
+  before { topics_config.errors.name = errors_topic }
 
   describe '#index' do
     context 'when needed topics are missing' do

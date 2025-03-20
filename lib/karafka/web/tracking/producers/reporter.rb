@@ -33,7 +33,7 @@ module Karafka
                 @error_contract.validate!(error)
 
                 {
-                  topic: Karafka::Web.config.topics.errors,
+                  topic: Karafka::Web.config.topics.errors.name,
                   payload: error.to_json,
                   # Always dispatch errors from the same process to the same partition
                   key: error[:process][:id]

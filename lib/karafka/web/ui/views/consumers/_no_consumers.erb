@@ -1,3 +1,3 @@
 <% alert_box_info 'There Are No Karafka Consumer Processes Actively Reporting to the Web UI' do %>
-    If you are sure you are running at least one <code>karafka server</code> instance, please make sure that it can report to the <code><%= Karafka::Web.config.topics.consumers.reports %></code> topic.
+    If you are sure you are running at least one <code>karafka server</code> instance, please make sure that it can report to the <code><%= Karafka::Web.config.topics.consumers.reports.name %></code> topic.
 <% end %>

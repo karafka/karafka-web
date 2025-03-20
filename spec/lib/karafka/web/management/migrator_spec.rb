@@ -13,7 +13,7 @@ RSpec.describe_current do
 
   context 'when consumers state schema is newer than what we support' do
     before do
-      topics_config.consumers.states = states_topic
+      topics_config.consumers.states.name = states_topic
       produce(states_topic, { schema_version: '999.99.9' }.to_json)
     end
 
@@ -22,7 +22,7 @@ RSpec.describe_current do
 
   context 'when consumers metrics schema is newer than what we support' do
     before do
-      topics_config.consumers.metrics = metrics_topic
+      topics_config.consumers.metrics.name = metrics_topic
       produce(metrics_topic, { schema_version: '999.99.9' }.to_json)
     end
 
@@ -31,8 +31,8 @@ RSpec.describe_current do
 
   context 'when we start from empty states' do
     before do
-      topics_config.consumers.states = states_topic
-      topics_config.consumers.metrics = metrics_topic
+      topics_config.consumers.states.name = states_topic
+      topics_config.consumers.metrics.name = metrics_topic
 
       produce(states_topic, { schema_version: '0.0.0' }.to_json)
       produce(metrics_topic, { schema_version: '0.0.0' }.to_json)
@@ -74,7 +74,7 @@ RSpec.describe_current do
       let(:migrated) { Karafka::Admin.read_topic(metrics_topic, 0, 1).first.payload }
 
       before do
-        topics_config.consumers.metrics = metrics_topic
+        topics_config.consumers.metrics.name = metrics_topic
         produce(metrics_topic, current.to_json)
         migrate
       end
@@ -87,7 +87,7 @@ RSpec.describe_current do
       let(:migrated) { Karafka::Admin.read_topic(states_topic, 0, 1).first.payload }
 
       before do
-        topics_config.consumers.states = states_topic
+        topics_config.consumers.states.name = states_topic
         produce(states_topic, current.to_json)
         migrate
       end

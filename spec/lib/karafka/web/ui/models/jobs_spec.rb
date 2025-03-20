@@ -9,7 +9,7 @@ RSpec.describe_current do
   let(:reports_topic) { create_topic }
 
   before do
-    Karafka::Web.config.topics.consumers.reports = reports_topic
+    Karafka::Web.config.topics.consumers.reports.name = reports_topic
     produce(reports_topic, report.to_json)
   end
 

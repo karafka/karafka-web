@@ -9,7 +9,7 @@ RSpec.describe_current do
     let(:consumers_states_topic) { create_topic }
 
     before do
-      Karafka::Web.config.topics.consumers.states = consumers_states_topic
+      Karafka::Web.config.topics.consumers.states.name = consumers_states_topic
       # Produce one message to check if the topic is not re-created
       produce(consumers_states_topic, {}.to_json)
     end
@@ -23,7 +23,7 @@ RSpec.describe_current do
   context 'when consumers states topic does not exist' do
     let(:consumers_states_topic) { generate_topic_name }
 
-    before { Karafka::Web.config.topics.consumers.states = consumers_states_topic }
+    before { Karafka::Web.config.topics.consumers.states.name = consumers_states_topic }
 
     it 'expect to create it' do
       create
@@ -35,7 +35,7 @@ RSpec.describe_current do
     let(:consumers_metrics_topic) { create_topic }
 
     before do
-      Karafka::Web.config.topics.consumers.metrics = consumers_metrics_topic
+      Karafka::Web.config.topics.consumers.metrics.name = consumers_metrics_topic
       produce(consumers_metrics_topic, {}.to_json)
     end
 
@@ -48,7 +48,7 @@ RSpec.describe_current do
   context 'when consumers metrics topic does not exist' do
     let(:consumers_metrics_topic) { generate_topic_name }
 
-    before { Karafka::Web.config.topics.consumers.metrics = consumers_metrics_topic }
+    before { Karafka::Web.config.topics.consumers.metrics.name = consumers_metrics_topic }
 
     it 'expect to create it' do
       create
@@ -60,7 +60,7 @@ RSpec.describe_current do
     let(:consumers_reports_topic) { create_topic }
 
     before do
-      Karafka::Web.config.topics.consumers.reports = consumers_reports_topic
+      Karafka::Web.config.topics.consumers.reports.name = consumers_reports_topic
       produce(consumers_reports_topic, {}.to_json)
     end
 
@@ -73,7 +73,7 @@ RSpec.describe_current do
   context 'when consumers reports topic does not exist' do
     let(:consumers_reports_topic) { generate_topic_name }
 
-    before { Karafka::Web.config.topics.consumers.reports = consumers_reports_topic }
+    before { Karafka::Web.config.topics.consumers.reports.name = consumers_reports_topic }
 
     it 'expect to create it' do
       create
@@ -85,7 +85,7 @@ RSpec.describe_current do
     let(:errors_topic) { create_topic }
 
     before do
-      Karafka::Web.config.topics.errors = errors_topic
+      Karafka::Web.config.topics.errors.name = errors_topic
       produce(errors_topic, {}.to_json)
     end
 
@@ -98,7 +98,7 @@ RSpec.describe_current do
   context 'when errors topic does not exist' do
     let(:errors_topic) { generate_topic_name }
 
-    before { Karafka::Web.config.topics.errors = errors_topic }
+    before { Karafka::Web.config.topics.errors.name = errors_topic }
 
     it 'expect to create it' do
       create
