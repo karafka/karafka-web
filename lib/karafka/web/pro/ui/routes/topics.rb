@@ -13,7 +13,7 @@ module Karafka
             route do |r|
               r.on 'topics' do
                 r.on String, 'distribution' do |topic_id|
-                  controller = Controllers::Topics::DistributionsController.new(params)
+                  controller = build(Controllers::Topics::DistributionsController)
 
                   r.get 'edit' do
                     controller.edit(topic_id)
@@ -29,17 +29,17 @@ module Karafka
                 end
 
                 r.get String, 'replication' do |topic_id|
-                  controller = Controllers::Topics::ReplicationsController.new(params)
+                  controller = build(Controllers::Topics::ReplicationsController)
                   controller.show(topic_id)
                 end
 
                 r.get String, 'offsets' do |topic_id|
-                  controller = Controllers::Topics::OffsetsController.new(params)
+                  controller = build(Controllers::Topics::OffsetsController)
                   controller.show(topic_id)
                 end
 
                 r.on String, 'config' do |topic_id|
-                  controller = Controllers::Topics::ConfigsController.new(params)
+                  controller = build(Controllers::Topics::ConfigsController)
 
                   r.get String, 'edit' do |property_name|
                     controller.edit(topic_id, property_name)
@@ -54,7 +54,7 @@ module Karafka
                   end
                 end
 
-                controller = Controllers::Topics::TopicsController.new(params)
+                controller = build(Controllers::Topics::TopicsController)
 
                 r.get 'new' do
                   controller.new

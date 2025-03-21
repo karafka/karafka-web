@@ -13,6 +13,8 @@ module Karafka
             class TopicsController < BaseController
               self.sortable_attributes = [].freeze
 
+              after(:create, :delete) { cache.clear }
+
               # Displays list of topics we can work with
               def index
                 @topics = Models::Topic.all.sort_by(&:topic_name)

@@ -1,48 +1,87 @@
 <%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
 <%# See LICENSE for details. %>
+
+<% view_title "Republishing of message with offset #{@message.offset} from partition #{@message.partition}" %>
+
+<% alert_box_info('Message Republishing Operation') do  %>
+  <p>
+    You are about to republish a copy of this message to another topic. This operation:
+  </p>
+
+  <ul class="list-disc ml-6 mt-2">
+    <li>Creates a new message on the target topic</li>
+    <li>Does not remove the original message</li>
+    <li>Preserves the original payload</li>
+    <li>Can include source tracking headers</li>
+    <li>Cannot be undone</li>
+  </ul>
+<% end %>
+
 <%
-  forward_path = root_path(
+  republish_path = root_path(
+    'explorer',
+    'messages',
     @message.topic,
     @message.partition,
     @message.offset,
-    'forward'
+    'republish'
   )
 %>
+
 <div class="card bg-base-100 mt-4">
   <div class="card-body">
-    <form class="space-y-4 w-full" method="post" action="<%= forward_path %>">
-      <%== csrf_tag(forward_path) %>
-      
-      <!-- Message Source Info -->
+    <form class="space-y-4 w-full mt-6" method="post" action="<%= republish_path %>" id="message-republish-form">
+      <%== csrf_tag(republish_path) %>
+
       <div class="flex items-center w-full mb-4">
         <label class="w-1/4 text-gray-700">Source Topic:</label>
         <div class="w-3/4">
-          <code class="bg-base-200 px-2 py-1 rounded-sm"><%= @message.topic %></code>
+          <code class="bg-base-200 px-2 py-1 rounded-sm">
+            <%= @message.topic %>
+          </code>
         </div>
       </div>
-      
+
       <div class="flex items-center w-full mb-4">
         <label class="w-1/4 text-gray-700">Source Partition:</label>
         <div class="w-3/4">
-          <code class="bg-base-200 px-2 py-1 rounded-sm"><%= @message.partition %></code>
+          <code class="bg-base-200 px-2 py-1 rounded-sm">
+            <%= @message.partition %>
+          </code>
         </div>
       </div>
-      
+
       <div class="flex items-center w-full mb-6">
         <label class="w-1/4 text-gray-700">Source Offset:</label>
         <div class="w-3/4">
           <code class="bg-base-200 px-2 py-1 rounded-sm"><%= @message.offset %></code>
         </div>
       </div>
-      
-      <!-- Destination Settings -->
+
+      <div class="flex items-center w-full mb-6">
+        <label class="w-1/4 text-gray-700">Source Raw Key:</label>
+        <div class="w-3/4">
+          <% if @message.raw_key %>
+            <code class="bg-base-200 px-2 py-1 rounded-sm"><%= @message.raw_key %></code>
+          <% else %>
+            None
+          <% end %>
+        </div>
+      </div>
+
       <div class="flex items-center w-full mb-6">
         <label class="w-1/4 text-gray-700">Target Topic:</label>
         <div class="w-3/4">
           <select name="target_topic" class="select select-bordered w-full" required>
-            <option value="">Select Target Topic</option>
-            <% @available_topics.each do |topic| %>
-              <option value="<%= topic %>"><%= topic %></option>
+            <option value="" data-partitions="1">Select Target Topic</option>
+            <% @topics.each do |topic| %>
+              <option
+                value="<%= topic.topic_name %>"
+                data-partitions="<%= topic.partition_count %>"
+                <%= topic.topic_name == @target_topic ? 'selected' : '' %>
+              >
+                <%= topic.topic_name %> (<%= topic.partition_count %>)
+              </option>
             <% end %>
           </select>
           <div class="text-sm text-gray-500 mt-1">
@@ -50,7 +89,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="flex items-center w-full mb-8">
         <label class="w-1/4 text-gray-700">Target Partition:</label>
         <div class="w-3/4">
@@ -60,43 +99,19 @@
             class="block input input-bordered w-full"
             placeholder="Leave empty for automatic partition assignment"
             min="0"
+            max="10000"
+            id="target_partition"
+            value="<%= @target_partition %>"
           />
           <div class="text-sm text-gray-500 mt-1">
-            Optional. If left empty, partition will be assigned automatically
+            Optional. If left empty, partition will be assigned based on key or round-robin strategy
           </div>
         </div>
       </div>
-      
-      <!-- Advanced Options -->
+
       <div class="flex items-center w-full">
         <label class="w-1/4 text-gray-700">Delivery Options:</label>
         <div class="w-3/4">
-          <label class="flex items-center gap-4 cursor-pointer mb-4">
-            <input type="hidden" name="use_message_key" value="off">
-            <input type="checkbox" name="use_message_key" class="checkbox checkbox-primary" checked />
-            <div class="space-y-1">
-              <div class="flex items-center gap-2">
-                Send with original message key
-              </div>
-              <div class="text-sm text-gray-500">
-                Uses the original message key for consistent partitioning
-              </div>
-            </div>
-          </label>
-          
-          <label class="flex items-center gap-4 cursor-pointer mb-4">
-            <input type="hidden" name="use_partition_key" value="off">
-            <input type="checkbox" name="use_partition_key" class="checkbox checkbox-primary" />
-            <div class="space-y-1">
-              <div class="flex items-center gap-2">
-                Use partition key instead of message key
-              </div>
-              <div class="text-sm text-gray-500">
-                If enabled, will use partition key instead of message key for routing
-              </div>
-            </div>
-          </label>
-          
           <label class="flex items-center gap-4 cursor-pointer">
             <input type="hidden" name="include_source_headers" value="off">
             <input type="checkbox" name="include_source_headers" class="checkbox checkbox-primary" checked />
@@ -105,21 +120,20 @@
                 Include source message headers
               </div>
               <div class="text-sm text-gray-500">
-                Add origin headers with source topic, partition, and offset information
+                Add origin headers with source topic, partition, and offset information for traceability
               </div>
             </div>
           </label>
         </div>
       </div>
 
-      <!-- Submit Buttons -->
       <div class="fieldset text-center mt-8">
         <div class="flex gap-4 justify-end">
-          <a href="<%= root_path(@message.topic, @message.partition, @message.offset) %>" class="btn btn-ghost">
+          <a href="<%= explorer_path(@message.topic, @message.partition, @message.offset) %>" class="btn btn-ghost">
             Cancel
           </a>
           <button type="submit" class="btn btn-primary gap-2 btn-lockable">
-            <%#== icon(:arrow_right_circle) %>
+            <%== icon(:arrow_uturn_right) %>
             Forward Message
           </button>
         </div>

@@ -12,7 +12,7 @@ module Karafka
           class RecurringTasks < Base
             route do |r|
               r.on 'recurring_tasks' do
-                controller = Controllers::RecurringTasksController.new(params)
+                controller = build(Controllers::RecurringTasksController)
 
                 r.get 'schedule' do
                   controller.schedule

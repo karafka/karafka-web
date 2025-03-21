@@ -56,6 +56,12 @@ module Karafka
               ALLOWED_BOOLEAN_TRUE.include?(self[key])
             end
 
+            # @param key [String, Symbol] params key
+            # @return [String] stringified key value
+            def str(key)
+              self[key].to_s
+            end
+
             # @return [Hash] current search or empty if no search query present
             def current_search
               return @current_search if @current_search

@@ -20,7 +20,7 @@ module Karafka
             # @return [Topic]
             # @raise [::Karafka::Web::Errors::Ui::NotFoundError]
             def find(topic_name)
-              found = all.find { |topic| topic.topic_name == topic_name }
+              found = ClusterInfo.topic(topic_name)
 
               return found if found
 

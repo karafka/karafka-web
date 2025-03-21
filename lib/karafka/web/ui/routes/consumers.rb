@@ -23,7 +23,7 @@ module Karafka
               end
 
               r.get do
-                controller = Controllers::ConsumersController.new(params)
+                controller = build(Controllers::ConsumersController)
                 controller.index
               end
             end

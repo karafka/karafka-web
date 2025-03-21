@@ -10,6 +10,9 @@ module Karafka
         # page where we check that everything is as expected and if not, we can provide some
         # helpful instructions on how to fix the issues.
         class StatusController < BaseController
+          # Fresh state is needed to generate always correct status
+          before { cache.clear }
+
           # Displays the Web UI setup status
           def show
             @status = Models::Status.new

@@ -15,12 +15,12 @@ module Karafka
                 r.get String, 'search' do |topic_id|
                   # Search has it's own controller but we want to have this in the explorer routing
                   # namespace because topic search is conceptually part of the explorer
-                  controller = Controllers::Explorer::SearchController.new(params)
+                  controller = build(Controllers::Explorer::SearchController)
                   controller.index(topic_id)
                 end
 
                 r.on 'messages' do
-                  controller = Controllers::Explorer::MessagesController.new(params)
+                  controller = build(Controllers::Explorer::MessagesController)
 
                   r.get(
                     String, :partition_id, Integer, 'forward'
@@ -47,7 +47,7 @@ module Karafka
                   end
                 end
 
-                controller = Controllers::Explorer::ExplorerController.new(params)
+                controller = build(Controllers::Explorer::ExplorerController)
 
                 r.get String, :partition_id, 'recent' do |topic_id, partition_id|
                   controller.recent(topic_id, partition_id)

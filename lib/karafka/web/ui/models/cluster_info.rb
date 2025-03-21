@@ -12,7 +12,9 @@ module Karafka
             #
             # @return [Rdkafka::Metadata] cluster metadata info
             def fetch
-              Lib::Admin.cluster_info
+              Karafka::Web.config.ui.cache.fetch(:cluster_info) do
+                Lib::Admin.cluster_info
+              end
             end
 
             # Returns us all the info about available topics from the cluster

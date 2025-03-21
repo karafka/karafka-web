@@ -13,7 +13,7 @@ module Karafka
             route do |r|
               r.get 'dashboard' do
                 @breadcrumbs = false
-                controller = Controllers::DashboardController.new(params)
+                controller = build(Controllers::DashboardController)
                 controller.index
               end
             end

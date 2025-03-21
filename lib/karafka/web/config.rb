@@ -206,6 +206,16 @@ module Karafka
           setting :secret, default: SecureRandom.hex(32)
         end
 
+        # Process cache with invalidation only
+        setting :cache, default: Ui::Lib::Cache.new(
+          # Use the TTL for internal cache in prod but invalidate quickly in other environments,
+          # as for example in development things may change frequently. In dev also the cache
+          # is less needed since local clusters are usually smaller than prod.
+          # It is set to 5 minutes by default because in prod the cluster chances are not frequent
+          # and anyhow we refresh on certain web ui actions so this is as fail-safe
+          Karafka.env.production? ? 60_000 * 5 : 5_000
+        )
+
         setting :visibility do
           # Should we display internal topics of Kafka. The once starting with `__`
           # By default we do not display them as they are not usable from regular users perspective

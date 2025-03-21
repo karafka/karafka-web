@@ -171,6 +171,14 @@ module Karafka
           [request.path, query_string].compact.join('?')
         end
 
+        # Builds a consumer instance with all needed details
+        # @param consumer_class [Class]
+        def build(consumer_class)
+          Controllers::Requests::ExecutionWrapper.new(
+            consumer_class.new(params, session)
+          )
+        end
+
         # Sets appropriate template variables based on the response object and renders the
         # expected view
         # @param response [Karafka::Web::Ui::Controllers::Responses::Data] response data object

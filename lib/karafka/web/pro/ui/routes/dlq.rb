@@ -12,7 +12,7 @@ module Karafka
           class Dlq < Base
             route do |r|
               r.get 'dlq' do
-                controller = Controllers::DlqController.new(params)
+                controller = build(Controllers::DlqController)
                 controller.index
               end
             end

@@ -13,7 +13,7 @@ module Karafka
             route do |r|
               r.on 'scheduled_messages' do
                 r.on 'schedules' do
-                  controller = Controllers::ScheduledMessages::SchedulesController.new(params)
+                  controller = build(Controllers::ScheduledMessages::SchedulesController)
 
                   r.get String do |topic_id|
                     controller.show(topic_id)
@@ -25,7 +25,7 @@ module Karafka
                 end
 
                 r.on 'explorer' do
-                  controller = Controllers::ScheduledMessages::ExplorerController.new(params)
+                  controller = build(Controllers::ScheduledMessages::ExplorerController)
 
                   r.get String do |topic_id|
                     controller.topic(topic_id)
@@ -51,7 +51,7 @@ module Karafka
                 end
 
                 r.on 'messages' do
-                  controller = Controllers::ScheduledMessages::MessagesController.new(params)
+                  controller = build(Controllers::ScheduledMessages::MessagesController)
 
                   r.post(
                     String, :partition_id, Integer, 'cancel'

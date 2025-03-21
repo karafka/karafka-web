@@ -8,7 +8,7 @@ module Karafka
         class Status < Base
           route do |r|
             r.get 'status' do
-              controller = Controllers::StatusController.new(params)
+              controller = build(Controllers::StatusController)
               controller.show
             end
           end

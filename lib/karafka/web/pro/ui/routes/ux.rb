@@ -12,7 +12,7 @@ module Karafka
           class Ux < Base
             route do |r|
               r.get 'ux' do
-                controller = Controllers::UxController.new(params)
+                controller = build(Controllers::UxController)
                 controller.show
               end
             end

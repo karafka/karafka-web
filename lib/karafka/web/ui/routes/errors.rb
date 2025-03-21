@@ -8,7 +8,7 @@ module Karafka
         class Errors < Base
           route do |r|
             r.on 'errors' do
-              controller = Controllers::ErrorsController.new(params)
+              controller = build(Controllers::ErrorsController)
 
               r.get Integer do |offset|
                 controller.show(offset)
