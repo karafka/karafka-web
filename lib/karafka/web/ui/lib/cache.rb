@@ -43,11 +43,10 @@ module Karafka
               return @values[key] if @values.key?(key)
 
               @values[key] = yield
-              @timestamp = Time.now.to_i
               @hash = Digest::SHA256.hexdigest(
                 @values.sort.to_h.to_json
               )
-
+              @timestamp = Time.now.to_f
               @values[key]
             end
           end
@@ -121,6 +120,7 @@ module Karafka
             return true if session_hash.nil? || session_timestamp.nil?
 
             now = (Time.now.to_f * 1_000).to_i
+
             return true if now - (@timestamp * 1_000) > @ttl_ms
 
             return false if @hash == session_hash

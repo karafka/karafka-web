@@ -34,7 +34,7 @@ module Karafka
             next unless cache.exist?
 
             session[:cache_hash] = cache.hash
-            session[:cache_timestamp] = cache.timestamp
+            session[:cache_timestamp] = cache.timestamp.to_i
           end
 
           # @param params [Karafka::Web::Ui::Controllers::Requests::Params] request parameters
