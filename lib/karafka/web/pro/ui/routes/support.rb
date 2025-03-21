@@ -12,7 +12,7 @@ module Karafka
           class Support < Base
             route do |r|
               r.get 'support' do
-                controller = Controllers::SupportController.new(params)
+                controller = build(Controllers::SupportController)
                 controller.show
               end
             end

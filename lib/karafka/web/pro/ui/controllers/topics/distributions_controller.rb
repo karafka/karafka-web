@@ -18,6 +18,9 @@ module Karafka
                 diff
               ].freeze
 
+              # After repartitioning we need to clear the cache to get fresh state
+              after(:update) { cache.clear }
+
               # Displays the messages distribution across various partitions
               #
               # @param topic_name [String] topic we're interested in

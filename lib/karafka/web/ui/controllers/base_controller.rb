@@ -8,8 +8,9 @@ module Karafka
         # Base controller from which all the controllers should inherit.
         class BaseController
           include Web::Ui::Lib::Paginations
+          include Requests::Hookable
 
-          attr_reader :params
+          attr_reader :params, :session
 
           # Alias for easier referencing
           Models = Web::Ui::Models
@@ -21,9 +22,31 @@ module Karafka
 
           self.sortable_attributes = []
 
+          # Detect that the state of the cache has changed and
+          before do
+            cache.clear_if_needed(
+              session[:cache_hash],
+              session[:cache_timestamp].to_i
+            )
+          end
+
+          after do
+            next unless cache.exist?
+
+            session[:cache_hash] = cache.hash
+            session[:cache_timestamp] = cache.timestamp.to_i
+          end
+
           # @param params [Karafka::Web::Ui::Controllers::Requests::Params] request parameters
-          def initialize(params)
+          # @param session [Request::Session] request session (Rails or other framework)
+          def initialize(params, session)
             @params = params
+            @session = session
+          end
+
+          # @return [Karafka::Web::Ui::Lib::Cache] per-process cache instance
+          def cache
+            Karafka::Web.config.ui.cache
           end
 
           private

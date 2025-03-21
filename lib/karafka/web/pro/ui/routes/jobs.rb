@@ -12,7 +12,7 @@ module Karafka
           class Jobs < Base
             route do |r|
               r.on 'jobs' do
-                controller = Controllers::JobsController.new(params)
+                controller = build(Controllers::JobsController)
 
                 r.get 'running' do
                   controller.running

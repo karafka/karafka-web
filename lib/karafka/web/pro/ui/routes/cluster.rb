@@ -12,11 +12,11 @@ module Karafka
           class Cluster < Base
             route do |r|
               r.on 'cluster' do
-                controller = Controllers::ClusterController.new(params)
+                controller = build(Controllers::ClusterController)
 
                 r.get 'replication' do
                   # We use the non-pro controller here because this action is the same
-                  controller = Ui::Controllers::ClusterController.new(params)
+                  controller = build(Ui::Controllers::ClusterController)
                   controller.replication
                 end
 

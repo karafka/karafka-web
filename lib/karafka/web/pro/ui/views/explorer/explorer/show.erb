@@ -11,17 +11,13 @@
 <div class="col-span-12">
   <section class="actions">
     <% if @visibility_filter.republish?(@message) %>
-      <form action="<%= republish_path %>" method="post" class="confirm-action float-end">
-        <%== csrf_tag(republish_path) %>
-        <button
-          type="submit"
-          class="btn-action"
-          title="Republish this message to the same topic partition"
-          data-turbo="false"
-        >
-          <%== icon(:arrow_path_rounded) %>
-        </button>
-      </form>
+      <a
+        href="<%= root_path('explorer', 'messages', @message.topic, @message.partition, @message.offset, 'forward') %>"
+        class="btn-action"
+        title="Republish this message"
+      >
+        <%== icon(:arrow_uturn_right) %>
+      </a>
     <% end %>
 
     <a
@@ -31,7 +27,6 @@
     >
       <%== icon(:arrows_right_left) %>
     </a>
-
 
     <% if @visibility_filter.download?(@message) %>
       <a

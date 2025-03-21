@@ -12,7 +12,7 @@ module Karafka
           class Consumers < Base
             route do |r|
               r.on 'consumers' do
-                controller = Controllers::Consumers::ConsumersController.new(params)
+                controller = build(Controllers::Consumers::ConsumersController)
 
                 r.get 'overview' do
                   controller.index
@@ -31,7 +31,7 @@ module Karafka
                 end
 
                 r.on String, 'partitions' do |process_id|
-                  controller = Controllers::Consumers::Partitions::PausesController.new(params)
+                  controller = build(Controllers::Consumers::Partitions::PausesController)
 
                   r.get(
                     String, String, :partition_id, 'pause', 'new'
@@ -57,7 +57,7 @@ module Karafka
                     controller.delete(process_id, subscription_group_id, topic, partition_id)
                   end
 
-                  controller = Controllers::Consumers::Partitions::OffsetsController.new(params)
+                  controller = build(Controllers::Consumers::Partitions::OffsetsController)
 
                   r.get(
                     String, String, :partition_id, 'offset', 'edit'
@@ -73,7 +73,7 @@ module Karafka
                 end
 
                 r.on String, 'jobs' do |process_id|
-                  controller = Controllers::Consumers::JobsController.new(params)
+                  controller = build(Controllers::Consumers::JobsController)
 
                   r.get 'running' do
                     controller.running(process_id)
@@ -87,13 +87,13 @@ module Karafka
                 end
 
                 r.get 'controls' do
-                  controller = Controllers::Consumers::ControlsController.new(params)
+                  controller = build(Controllers::Consumers::ControlsController)
 
                   controller.index
                 end
 
                 r.on 'commands' do
-                  controller = Controllers::Consumers::CommandsController.new(params)
+                  controller = build(Controllers::Consumers::CommandsController)
 
                   r.on Integer do |offset_id|
                     controller.show(offset_id)
@@ -109,7 +109,7 @@ module Karafka
                 end
 
                 r.on 'commanding' do
-                  controller = Controllers::Consumers::CommandingController.new(params)
+                  controller = build(Controllers::Consumers::CommandingController)
 
                   r.post 'quiet_all' do
                     controller.quiet_all

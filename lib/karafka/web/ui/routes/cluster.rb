@@ -8,7 +8,7 @@ module Karafka
         class Cluster < Base
           route do |r|
             r.on 'cluster' do
-              controller = Controllers::ClusterController.new(params)
+              controller = build(Controllers::ClusterController)
 
               r.get 'brokers' do
                 controller.brokers

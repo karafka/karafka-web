@@ -28,16 +28,6 @@ module Karafka
 
                 render
               end
-
-              # Renders form for increasing number of partitions on a topic
-              def edit
-                raise
-              end
-
-              # Changes number of partitions and redirects back
-              def update
-                raise
-              end
             end
           end
         end

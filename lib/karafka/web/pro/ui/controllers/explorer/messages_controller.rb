@@ -13,27 +13,69 @@ module Karafka
             # While part of messages operations is done via explorer (exploring), this controller
             # handles other cases not related to viewing data
             class MessagesController < BaseController
+              # Renders a form allowing for piping a message to a different topic
+              #
+              # @param topic_id [String]
+              # @param partition_id [Integer]
+              # @param offset [Integer] offset of the message we want to republish
+              def forward(topic_id, partition_id, offset)
+                @message = Models::Message.find(topic_id, partition_id, offset)
+
+                deny! unless visibility_filter.republish?(@message)
+
+                @topic_id = topic_id
+                @partition_id = partition_id
+                @offset = offset
+
+                @target_topic = @topic_id
+                @target_partition = @partition_id
+
+                @topics = Models::ClusterInfo
+                          .topics
+                          .sort_by { |topic| topic[:topic_name] }
+
+                unless ::Karafka::Web.config.ui.visibility.internal_topics
+                  @topics.reject! { |topic| topic[:topic_name].start_with?('__') }
+                end
+
+                render
+              end
+
               # Takes a requested message content and republishes it again
               #
               # @param topic_id [String]
               # @param partition_id [Integer]
               # @param offset [Integer] offset of the message we want to republish
               def republish(topic_id, partition_id, offset)
-                message = Models::Message.find(topic_id, partition_id, offset)
+                forward(topic_id, partition_id, offset)
 
-                deny! unless visibility_filter.republish?(message)
+                dispatch_message = {
+                  topic: params.str(:target_topic),
+                  payload: @message.raw_payload,
+                  headers: @message.headers.dup,
+                  key: @message.key
+                }
 
-                delivery = ::Karafka::Web.producer.produce_sync(
-                  topic: topic_id,
-                  partition: partition_id,
-                  payload: message.raw_payload,
-                  headers: message.headers,
-                  key: message.key
-                )
+                # Add target partition only if it was requested, otherwise it will use either the
+                # message key (if present) or will jut round-robin
+                unless params.fetch(:target_partition).empty?
+                  dispatch_message[:partition] = params.int(:target_partition)
+                end
+
+                # Include source headers for enhanced debuggability
+                if params.bool(:include_source_headers)
+                  dispatch_message[:headers].merge!(
+                    'source_topic' => @message.topic,
+                    'source_partition' => @message.partition.to_s,
+                    'source_offset' => @message.offset.to_s
+                  )
+                end
+
+                delivery = ::Karafka::Web.producer.produce_sync(dispatch_message)
 
                 redirect(
-                  :back,
-                  success: reproduced(message, delivery)
+                  :previous,
+                  success: republished(@message, delivery)
                 )
               end
 
@@ -80,12 +122,12 @@ module Karafka
               # @param message [Karafka::Messages::Message]
               # @param delivery [Rdkafka::Producer::DeliveryReport]
               # @return [String] flash message about message reproducing
-              def reproduced(message, delivery)
+              def republished(message, delivery)
                 format_flash(
-                  'Message with offset ? has been sent again to ?#? and received offset ?',
+                  'Message with offset ? has been sent to ?#? and received offset ?',
                   message.offset,
-                  message.topic,
-                  message.partition,
+                  delivery.topic,
+                  delivery.partition,
                   delivery.offset
                 )
               end

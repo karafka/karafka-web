@@ -12,7 +12,7 @@ module Karafka
           class Health < Base
             route do |r|
               r.on 'health' do
-                controller = Controllers::HealthController.new(params)
+                controller = build(Controllers::HealthController)
 
                 r.get 'lags' do
                   controller.lags

@@ -12,7 +12,7 @@ module Karafka
           class Routing < Base
             route do |r|
               r.on 'routing' do
-                controller = Controllers::RoutingController.new(params)
+                controller = build(Controllers::RoutingController)
 
                 r.get String do |topic_id|
                   controller.show(topic_id)

@@ -17,7 +17,7 @@ module Karafka
               # @param topic_id [String]
               def topic(topic_id)
                 response = Controllers::Explorer::ExplorerController
-                           .new(@params)
+                           .new(@params, @session)
                            .topic(topic_id)
 
                 render(attributes: response.attributes)
@@ -29,7 +29,7 @@ module Karafka
               # @param partition_id [Integer]
               def partition(topic_id, partition_id)
                 response = Controllers::Explorer::ExplorerController
-                           .new(@params)
+                           .new(@params, @session)
                            .partition(topic_id, partition_id)
 
                 render(attributes: response.attributes)
@@ -43,7 +43,7 @@ module Karafka
               # @param time [Time] time of the message
               def closest(topic_id, partition_id, time)
                 response = Controllers::Explorer::ExplorerController
-                           .new(@params)
+                           .new(@params, @session)
                            .closest(topic_id, partition_id, time)
 
                 redirect("scheduled_messages/#{response.path}")

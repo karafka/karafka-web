@@ -1,0 +1,32 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<li>
+  <a href="<%= root_path('explorer') %>">
+    Explorer
+  </a>
+</li>
+
+<li>
+  <a href="<%= explorer_path(@topic_id) %>">
+    <%= @topic_id %>
+  </a>
+</li>
+
+<li>
+  <a href="<%= explorer_path(@topic_id, @partition_id) %>">
+    Partition <%= @partition_id %>
+  </a>
+</li>
+
+<li>
+  <a href="<%= explorer_path(@topic_id, @partition_id, @offset) %>">
+    <%= @offset %>
+  </a>
+</li>
+
+<li>
+  <a href="<%= root_path('explorer', 'messages', @topic_id, @partition_id, @offset, 'forward') %>">
+    Forward
+  </a>
+</li>
