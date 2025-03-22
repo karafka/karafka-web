@@ -22,6 +22,7 @@ en:
       ui.branding.type_format: 'must be :info, :error, :warning, :success, :primary or :secondary'
       ui.branding.label_format: must be false or non-empty string
       ui.branding.notice_format: must be false or non-empty string
+      ui.branding.nav_extras_format: must be an ERB template code or a path to one
 
     search_form:
       missing: needs to be present

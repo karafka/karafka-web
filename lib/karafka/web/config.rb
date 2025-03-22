@@ -245,11 +245,17 @@ module Karafka
         # default will not be displayed not to hang the browser. 512KB of serialized data is a lot.
         setting :max_visible_payload_size, default: 524_288
 
-        # Path to a custom CSS, string with the CSS or false if not used
-        setting :custom_css, default: false
+        setting :custom do
+          # Path to a custom CSS, string with the CSS or false if not used
+          setting :css, default: false
 
-        # Path to a custom JS, string with the JS or false if not used
-        setting :custom_js, default: false
+          # Path to a custom JS, string with the JS or false if not used
+          setting :js, default: false
+
+          # ERB template (path or string) for injecting extra navigation items below the default
+          # menu. Useful for adding "Back to app" links or other quick access actions.
+          setting :nav_erb, default: false
+        end
 
         # Specific kafka settings that are tuned to operate within the Web UI interface.
         #
