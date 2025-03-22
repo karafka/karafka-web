@@ -43,8 +43,8 @@ RSpec.describe_current do
     let(:ui_config) { Karafka::Web.config.ui }
 
     after do
-      ui_config.custom_css = false
-      ui_config.custom_js = false
+      ui_config.custom.css = false
+      ui_config.custom.js = false
     end
 
     context 'when there is no custom css' do
@@ -77,7 +77,7 @@ RSpec.describe_current do
       let(:css_content) { 'div { display: none }' }
 
       before do
-        ui_config.custom_css = css_content
+        ui_config.custom.css = css_content
 
         get custom_css
       end
@@ -112,7 +112,7 @@ RSpec.describe_current do
       let(:css_content) { '/nothing/really' }
 
       before do
-        ui_config.custom_css = css_content
+        ui_config.custom.css = css_content
 
         get custom_css
       end
@@ -149,7 +149,7 @@ RSpec.describe_current do
       let(:fetched_content) { File.read(css_content) }
 
       before do
-        ui_config.custom_css = css_content
+        ui_config.custom.css = css_content
 
         get custom_css
       end
@@ -210,7 +210,7 @@ RSpec.describe_current do
       let(:js_content) { 'div { display: none }' }
 
       before do
-        ui_config.custom_js = js_content
+        ui_config.custom.js = js_content
 
         get custom_js
       end
@@ -245,7 +245,7 @@ RSpec.describe_current do
       let(:js_content) { '/nothing/really' }
 
       before do
-        ui_config.custom_js = js_content
+        ui_config.custom.js = js_content
 
         get custom_js
       end
@@ -282,7 +282,7 @@ RSpec.describe_current do
       let(:fetched_content) { File.read(js_content) }
 
       before do
-        ui_config.custom_js = js_content
+        ui_config.custom.js = js_content
 
         get custom_js
       end

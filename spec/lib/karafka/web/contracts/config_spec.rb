@@ -66,8 +66,11 @@ RSpec.describe_current do
         dlq_patterns: [],
         max_visible_payload_size: 100,
         kafka: {},
-        custom_js: false,
-        custom_css: false
+        custom: {
+          js: false,
+          css: false,
+          nav_erb: false
+        }
       }
     }
   end
@@ -288,53 +291,33 @@ RSpec.describe_current do
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when validating custom_js and custom_css' do
-      context 'when custom_js is false' do
-        before { params[:ui][:custom_js] = false }
+    context 'when validating custom UI config options' do
+      %i[js css nav_erb].each do |key|
+        context "when checking custom.#{key}" do
+          context 'when set to false' do
+            before { params[:ui][:custom][key] = false }
 
-        it { expect(contract.call(params)).to be_success }
-      end
+            it { expect(contract.call(params)).to be_success }
+          end
 
-      context 'when custom_js is an empty string' do
-        before { params[:ui][:custom_js] = '' }
+          context 'when set to an empty string' do
+            before { params[:ui][:custom][key] = '' }
 
-        it { expect(contract.call(params)).not_to be_success }
-      end
+            it { expect(contract.call(params)).not_to be_success }
+          end
 
-      context 'when custom_js is a non-empty string' do
-        before { params[:ui][:custom_js] = 'valid.js' }
+          context 'when set to a non-empty string' do
+            before { params[:ui][:custom][key] = 'something.valid' }
 
-        it { expect(contract.call(params)).to be_success }
-      end
+            it { expect(contract.call(params)).to be_success }
+          end
 
-      context 'when custom_js is not a string or false' do
-        before { params[:ui][:custom_js] = 123 }
+          context 'when set to an invalid type' do
+            before { params[:ui][:custom][key] = 123 }
 
-        it { expect(contract.call(params)).not_to be_success }
-      end
-
-      context 'when custom_css is false' do
-        before { params[:ui][:custom_css] = false }
-
-        it { expect(contract.call(params)).to be_success }
-      end
-
-      context 'when custom_css is an empty string' do
-        before { params[:ui][:custom_css] = '' }
-
-        it { expect(contract.call(params)).not_to be_success }
-      end
-
-      context 'when custom_css is a non-empty string' do
-        before { params[:ui][:custom_css] = 'valid.css' }
-
-        it { expect(contract.call(params)).to be_success }
-      end
-
-      context 'when custom_css is not a string or false' do
-        before { params[:ui][:custom_css] = 123 }
-
-        it { expect(contract.call(params)).not_to be_success }
+            it { expect(contract.call(params)).not_to be_success }
+          end
+        end
       end
     end
   end

@@ -11,7 +11,7 @@ module Karafka
             # Serves current version specific assets to prevent users from fetching old assets
             # after upgrade.
             r.on 'assets', Karafka::Web::VERSION do
-              custom_css = Karafka::Web.config.ui.custom_css
+              custom_css = Karafka::Web.config.ui.custom.css
 
               # If there are custom css styles and js inserted via the config we should display
               # them. They can be either files or just content.
@@ -28,7 +28,7 @@ module Karafka
                 end
               end
 
-              custom_js = Karafka::Web.config.ui.custom_js
+              custom_js = Karafka::Web.config.ui.custom.js
 
               if custom_js
                 r.get('javascripts/custom.js') do

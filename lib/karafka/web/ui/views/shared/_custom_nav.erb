@@ -1,0 +1,9 @@
+<% custom_nav = Karafka::Web.config.ui.custom.nav_erb %>
+
+<% if custom_nav %>
+  <% if File.exist?(custom_nav) %>
+    <%== ERB.new(File.read(custom_nav)).result(binding) %>
+  <% else %>
+    <%== ERB.new(custom_nav).result(binding) %>
+  <% end %>
+<% end %>

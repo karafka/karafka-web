@@ -9,6 +9,7 @@
 - **[Feature]** Provide ability to manage topics configuration from the Web UI (Pro).
 - **[Feature]** Provide ability to manage topics partitioning from the Web UI (Pro).
 - **[Feature]** Provide ability to inject custom CSS and JS to adjust the Web UI.
+- [Enhancement] Allow for custom links in the navigation (Pro).
 - [Enhancement] Optimize topic specific lookups (Pro).
 - [Enhancement] Replace simple in-process metadata cache with user tracking version for multi-process deployments improvements.
 - [Enhancement] Move web ui topics configuration into config.
