@@ -3,15 +3,22 @@
 # A simple wrapper to get fixtures both in plain text and in JSON if needed
 class Fixtures
   class << self
+    # Builds the fixtures file path
+    #
+    # @param file_name [String] fixture file name
+    # @return [Pathname] path to the fixture file
+    def path(file_name)
+      File
+        .dirname(__FILE__)
+        .then { |location| File.join(location, '../', 'fixtures', file_name) }
+    end
+
     # Fetches fixture content
     #
     # @param file_name [String] fixture file name
     # @return [String] fixture content
     def file(file_name)
-      File
-        .dirname(__FILE__)
-        .then { |location| File.join(location, '../', 'fixtures', file_name) }
-        .then { |fixture_path| File.read(fixture_path) }
+      path(file_name).then { |fixture_path| File.read(fixture_path) }
     end
 
     # Fetches and parses to JSON data from the fixture file

@@ -27,7 +27,7 @@
     href="<%= asset_path('stylesheets/application.min.css') %>"
   >
 
-  <% if Karafka::Web.config.ui.custom_css %>
+  <% if Karafka::Web.config.ui.custom.css %>
     <link
       rel="stylesheet"
       href="<%= asset_path('stylesheets/custom.css') %>"
@@ -40,7 +40,7 @@
   >
   </script>
 
-  <% if Karafka::Web.config.ui.custom_js %>
+  <% if Karafka::Web.config.ui.custom.js %>
     <script
       type="text/javascript"
       src="<%= asset_path('javascripts/custom.js') %>"

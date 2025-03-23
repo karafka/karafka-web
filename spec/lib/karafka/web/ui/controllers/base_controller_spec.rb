@@ -5,6 +5,7 @@ RSpec.describe_current do
   subject(:app) { Karafka::Web::Ui::App }
 
   let(:make_better) { 'Please help us make the Karafka ecosystem better' }
+  let(:ui_config) { Karafka::Web.config.ui }
 
   describe '#health' do
     before { get 'health' }
@@ -40,11 +41,9 @@ RSpec.describe_current do
     let(:custom_css) { "assets/#{Karafka::Web::VERSION}/stylesheets/custom.css" }
     let(:custom_js) { "assets/#{Karafka::Web::VERSION}/javascripts/custom.js" }
 
-    let(:ui_config) { Karafka::Web.config.ui }
-
     after do
-      ui_config.custom_css = false
-      ui_config.custom_js = false
+      ui_config.custom.css = false
+      ui_config.custom.js = false
     end
 
     context 'when there is no custom css' do
@@ -77,7 +76,7 @@ RSpec.describe_current do
       let(:css_content) { 'div { display: none }' }
 
       before do
-        ui_config.custom_css = css_content
+        ui_config.custom.css = css_content
 
         get custom_css
       end
@@ -112,7 +111,7 @@ RSpec.describe_current do
       let(:css_content) { '/nothing/really' }
 
       before do
-        ui_config.custom_css = css_content
+        ui_config.custom.css = css_content
 
         get custom_css
       end
@@ -149,7 +148,7 @@ RSpec.describe_current do
       let(:fetched_content) { File.read(css_content) }
 
       before do
-        ui_config.custom_css = css_content
+        ui_config.custom.css = css_content
 
         get custom_css
       end
@@ -210,7 +209,7 @@ RSpec.describe_current do
       let(:js_content) { 'div { display: none }' }
 
       before do
-        ui_config.custom_js = js_content
+        ui_config.custom.js = js_content
 
         get custom_js
       end
@@ -245,7 +244,7 @@ RSpec.describe_current do
       let(:js_content) { '/nothing/really' }
 
       before do
-        ui_config.custom_js = js_content
+        ui_config.custom.js = js_content
 
         get custom_js
       end
@@ -282,7 +281,7 @@ RSpec.describe_current do
       let(:fetched_content) { File.read(js_content) }
 
       before do
-        ui_config.custom_js = js_content
+        ui_config.custom.js = js_content
 
         get custom_js
       end
@@ -310,6 +309,47 @@ RSpec.describe_current do
         it do
           expect(body).to include('custom.js')
         end
+      end
+    end
+  end
+
+  describe 'custom nav' do
+    before do
+      ui_config.custom.nav_erb = nav_erb
+
+      get 'dashboard'
+    end
+
+    after { ui_config.custom.nav_erb = false }
+
+    context 'when nav_erb is set to an erb template code' do
+      let(:nav_erb) do
+        <<~ERB
+          <strong><%= 100 %></strong>
+        ERB
+      end
+
+      it 'expect to render it' do
+        expect(response).to be_ok
+        expect(body).to include('<strong>100</strong>')
+      end
+    end
+
+    context 'when it is set to a non-existing file' do
+      let(:nav_erb) { '/tmp/does-not-exist' }
+
+      it 'expect to render it as an erb string' do
+        expect(response).to be_ok
+        expect(body).to include('/tmp/does-not-exist')
+      end
+    end
+
+    context 'when it is set to an existing custom user erb component' do
+      let(:nav_erb) { Fixtures.path('custom/nav.erb') }
+
+      it 'expect to render it' do
+        expect(response).to be_ok
+        expect(body).to include('this is a test')
       end
     end
   end
