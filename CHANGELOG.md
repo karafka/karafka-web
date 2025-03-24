@@ -28,6 +28,7 @@
 - [Change] Remove per-consumer process duplicated details from Subscriptions and Jobs tabs.
 - [Refactor] Make sure all temporary topics have a `it-` prefix in their name.
 - [Refactor] Introduce a `bin/verify_topics_naming` script to ensure proper test topics naming convention.
+- [Fix] Fix a case where live poll button enabling would not immediately start refreshes.
 - [Fix] Fix negative message deserialization allocation stats.
 - [Fix] Fix incorrect background color in some of the alert notices.
 - [Fix] Support dark mode in error pages.
