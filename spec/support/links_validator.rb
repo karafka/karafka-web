@@ -17,8 +17,12 @@ class LinksValidator
   # Cases that are hardcoded or come from fixtures that are always 404 or are expected to fail
   # in other ways
   EXCEPTIONS = [
-    /explorer\/topics\/\w+\/\d+/,
-    /explorer\/topics\/it-[a-f0-9-]+\/\d+/
+    %r{explorer/topics/\w+/\d+},
+    %r{explorer/topics/it-[a-f0-9-]+/\d+},
+    '/consumers/shinra:1404842:f66b40c75f92/subscriptions',
+    '/consumers/shinra:397793:6fa3f39acf46/subscriptions',
+    '/explorer/topics/test3',
+    %r{/consumers/[a-f0-9-]+/subscriptions}
   ].freeze
 
   private_constant :ALLOWED_RESPONSES
