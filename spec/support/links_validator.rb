@@ -19,10 +19,16 @@ class LinksValidator
   EXCEPTIONS = [
     %r{explorer/topics/\w+/\d+},
     %r{explorer/topics/it-[a-f0-9-]+/\d+},
-    '/consumers/shinra:1404842:f66b40c75f92/subscriptions',
-    '/consumers/shinra:397793:6fa3f39acf46/subscriptions',
+    %r{consumers/shinra:[a-f0-9]+:[a-f0-9]+/subscriptions},
     '/explorer/topics/test3',
     %r{/consumers/[a-f0-9-]+/subscriptions}
+  ].freeze
+
+  # There is no point in visiting same urls for different uuids (like topic views). We use those
+  # regexps as a baseline to build visited keys so we know that we visited one and worked
+  KEY_TRANSFORMERS = [
+    /it-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
+    /shinra:\d+:\d+/
   ].freeze
 
   private_constant :ALLOWED_RESPONSES
@@ -81,11 +87,13 @@ class LinksValidator
       end
     end
 
+    link_key = visit_key(link)
+
     # Skip if we've already visited this link
-    return if @visited_links.include?(link)
+    return if @visited_links.include?(link_key)
 
     # Add to visited set to avoid checking again
-    @visited_links.add(link)
+    @visited_links.add(link_key)
 
     # Make GET request to the link using the RSpec context
     @context.get link
@@ -97,5 +105,18 @@ class LinksValidator
         @context.include(@context.response.status),
         "Link '#{link}' returned #{@context.response.status} status"
       )
+  end
+
+  # Builds a visit key so we track similar links and do not visit similar stuff twice
+  # @param link [String]
+  # @return [String]
+  def visit_key(link)
+    final_key = link.dup
+
+    KEY_TRANSFORMERS.each do |transformer|
+      final_key = final_key.gsub(transformer, 'KEY')
+    end
+
+    final_key
   end
 end
