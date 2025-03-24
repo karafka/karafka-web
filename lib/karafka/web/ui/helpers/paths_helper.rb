@@ -63,16 +63,10 @@ module Karafka
 
           # Helps build explorer paths. We often link offsets to proper messages, etc so this
           # allows us to short-track this
-          # @param topic_name [String, nil] name of the topic where we want to go within the
-          #   explorer or nil if we want to just go to the explorer root
-          # @param partition_id [Integer, nil] partition we want to display in the explorer or nil
-          #   if we want to go to the topic root
-          # @param offset [Integer, nil] offset of particular message or nil of we want to just go
-          #   to the partition root
-          # @param action [String, nil] specific routed action or nil
+          # @param args [Array<String>] sub-paths
           # @return [String] path to the expected location
-          def explorer_path(topic_name = nil, partition_id = nil, offset = nil, action = nil)
-            root_path(*['explorer', topic_name, partition_id, offset, action].compact)
+          def explorer_path(*args)
+            root_path(*['explorer', args.compact].flatten)
           end
 
           # Helps build topics paths
