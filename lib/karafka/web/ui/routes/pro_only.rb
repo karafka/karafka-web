@@ -12,6 +12,8 @@ module Karafka
               explorer
               dlq
               topics
+              recurring_tasks
+              scheduled_messages
             ].each do |route|
               r.get route, [String, true], [String, true] do
                 raise ::Karafka::Web::Errors::Ui::ProOnlyError

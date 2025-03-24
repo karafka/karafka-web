@@ -8,25 +8,25 @@
 </li>
 
 <li>
-  <a href="<%= explorer_path(@topic_id) %>">
+  <a href="<%= explorer_topics_path(@topic_id) %>">
     <%= @topic_id %>
   </a>
 </li>
 
 <li>
-  <a href="<%= explorer_path(@topic_id, @partition_id) %>">
+  <a href="<%= explorer_topics_path(@topic_id, @partition_id) %>">
     Partition <%= @partition_id %>
   </a>
 </li>
 
 <li>
-  <a href="<%= explorer_path(@topic_id, @partition_id, @offset) %>">
+  <a href="<%= explorer_topics_path(@topic_id, @partition_id, @offset) %>">
     <%= @offset %>
   </a>
 </li>
 
 <li>
-  <a href="<%= explorer_path('messages', @topic_id, @partition_id, @offset, 'forward') %>">
+  <a href="<%= explorer_messages_path(@topic_id, @partition_id, @offset, 'forward') %>">
     Forward
   </a>
 </li>

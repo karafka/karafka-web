@@ -9,7 +9,7 @@
 
 <% if @topic_id %>
   <li>
-    <a href="<%= explorer_path(@topic_id) %>">
+    <a href="<%= explorer_topics_path(@topic_id) %>">
       <%= @topic_id %>
     </a>
   </li>
@@ -17,7 +17,7 @@
 
 <% if @partition_id %>
   <li>
-    <a href="<%= explorer_path(@topic_id, @partition_id) %>">
+    <a href="<%= explorer_topics_path(@topic_id, @partition_id) %>">
       Partition <%= @partition_id %>
     </a>
   </li>
@@ -27,7 +27,7 @@
   <% mapped_offset = @offset == -1 ? 'Recent' : @offset %>
 
   <li class="breadcrumb-item active">
-    <a href="<%= explorer_path(@topic_id, @partition_id, mapped_offset) %>">
+    <a href="<%= explorer_topics_path(@topic_id, @partition_id, mapped_offset) %>">
       <%= mapped_offset %>
     </a>
   </li>

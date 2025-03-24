@@ -223,7 +223,7 @@ module Karafka
               title = 'Not available until first offset commit'
               %(<span class="badge badge-secondary" title="#{title}">N/A</span>)
             elsif explore
-              path = explorer_path(topic_name, partition_id, offset)
+              path = explorer_topics_path(topic_name, partition_id, offset)
               %(<a href="#{path}">#{offset}</a>)
             else
               offset.to_s

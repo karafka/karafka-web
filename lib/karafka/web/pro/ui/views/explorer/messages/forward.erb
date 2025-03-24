@@ -129,7 +129,7 @@
 
       <div class="fieldset text-center mt-8">
         <div class="flex gap-4 justify-end">
-          <a href="<%= explorer_path(@message.topic, @message.partition, @message.offset) %>" class="btn btn-ghost">
+          <a href="<%= explorer_topics_path(@message.topic, @message.partition, @message.offset) %>" class="btn btn-ghost">
             Cancel
           </a>
           <button type="submit" class="btn btn-primary gap-2 btn-lockable">

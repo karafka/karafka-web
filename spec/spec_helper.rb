@@ -4,6 +4,9 @@ require 'factory_bot'
 require 'simplecov'
 require 'rack/test'
 require 'ostruct'
+require 'set'
+require 'nokogiri'
+require 'singleton'
 
 # Are we running regular specs or pro specs
 SPECS_TYPE = ENV.fetch('SPECS_TYPE', 'default')
@@ -84,6 +87,18 @@ RSpec.configure do |config|
   config.after(:suite) do
     PRODUCERS.regular.close
     PRODUCERS.transactional.close
+  end
+
+  config.after(:each, type: :controller) do |example|
+    # Skip on short runs as links validation takes a lot of time
+    next if ENV['KARAFKA_SPECS_VALIDATE_LINKS'] == 'false'
+
+    # Only proceed if the test passed and we have a valid HTML response
+    if example.exception.nil? && response&.content_type&.include?('text/html')
+      validator = LinksValidator.instance
+      validator.context = self
+      validator.validate_all!(response)
+    end
   end
 end
 

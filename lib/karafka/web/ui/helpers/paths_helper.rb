@@ -69,6 +69,22 @@ module Karafka
             root_path(*['explorer', args.compact].flatten)
           end
 
+          # Generates routes for explorer topics paths
+          #
+          # @param args [Array<String>] sub-paths
+          # @return explorer topics path
+          def explorer_topics_path(*args)
+            explorer_path(*['topics', args.compact].flatten)
+          end
+
+          # Generates routes for explorer messages paths
+          #
+          # @param args [Array<String>] sub-paths
+          # @return [String] explorer messages path
+          def explorer_messages_path(*args)
+            explorer_path(*['messages', args.compact].flatten)
+          end
+
           # Helps build topics paths
           #
           # @param args [Array<String>] path params for the topics scope
@@ -108,7 +124,7 @@ module Karafka
             action = nil
           )
             root_path(
-              *['scheduled_messages', 'explorer', topic_name, partition_id, offset, action].compact
+              *['scheduled_messages', 'explorer', 'topics', topic_name, partition_id, offset, action].compact
             )
           end
         end
