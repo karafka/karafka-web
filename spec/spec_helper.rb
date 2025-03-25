@@ -90,15 +90,14 @@ RSpec.configure do |config|
   end
 
   config.after(:each, type: :controller) do |example|
-    # Skip on short runs as links validation takes a lot of time
-    next if ENV['KARAFKA_SPECS_VALIDATE_LINKS'] == 'false'
+    # Do not proceed if there were any errors in the test
+    next if example.exception
+    # Analyze only valid html responses data
+    next unless response&.content_type&.include?('text/html')
 
-    # Only proceed if the test passed and we have a valid HTML response
-    if example.exception.nil? && response&.content_type&.include?('text/html')
-      validator = LinksValidator.instance
-      validator.context = self
-      validator.validate_all!(response)
-    end
+    validator = LinksValidator.instance
+    validator.context = self
+    validator.validate_all!(response)
   end
 end
 

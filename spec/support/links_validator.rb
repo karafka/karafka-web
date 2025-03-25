@@ -2,10 +2,6 @@
 
 # Simple validator that extracts all the links rendered after each page and visits them to make
 # sure, that we do not have any dead links.
-#
-# @note This process can be time consuming. You can set `KARAFKA_SPECS_VALIDATE_LINKS` to false to
-#   skip those when running specs.
-
 class LinksValidator
   include Singleton
 
