@@ -12,7 +12,7 @@ RSpec.describe_current do
 
   describe '#topic' do
     context 'when we view topic without any messages' do
-      before { get "scheduled_messages/explorer/#{topic}" }
+      before { get "scheduled_messages/explorer/topics/#{topic}" }
 
       it do
         expect(response).to be_ok
@@ -28,7 +28,7 @@ RSpec.describe_current do
     context 'when we view topic with one tombstone message' do
       before do
         produce_many(topic, [nil])
-        get "scheduled_messages/explorer/#{topic}"
+        get "scheduled_messages/explorer/topics/#{topic}"
       end
 
       it do
@@ -44,7 +44,7 @@ RSpec.describe_current do
     context 'when we view topic with one cancel message' do
       before do
         produce_many(topic, [nil], headers: { 'schedule_source_type' => 'cancel' })
-        get "scheduled_messages/explorer/#{topic}"
+        get "scheduled_messages/explorer/topics/#{topic}"
       end
 
       it do
@@ -74,7 +74,7 @@ RSpec.describe_current do
         end
 
         produce_many(topic, [nil], key: '{')
-        get "scheduled_messages/explorer/#{topic}"
+        get "scheduled_messages/explorer/topics/#{topic}"
       end
 
       it do
@@ -90,7 +90,7 @@ RSpec.describe_current do
     context 'when we view first page from a topic with one partition with data' do
       before do
         produce_many(topic, Array.new(30, '1'), headers: { 'schedule_source_type' => 'schedule' })
-        get "scheduled_messages/explorer/#{topic}"
+        get "scheduled_messages/explorer/topics/#{topic}"
       end
 
       it do
@@ -111,7 +111,7 @@ RSpec.describe_current do
           type: :transactional,
           headers: { 'schedule_source_type' => 'schedule' }
         )
-        get "scheduled_messages/explorer/#{topic}"
+        get "scheduled_messages/explorer/topics/#{topic}"
       end
 
       it do
@@ -133,7 +133,7 @@ RSpec.describe_current do
     let(:no_data) { 'This partition is empty and does not contain any data' }
 
     context 'when given partition does not exist' do
-      before { get "scheduled_messages/explorer/#{topic}/1" }
+      before { get "scheduled_messages/explorer/topics/#{topic}/1" }
 
       it do
         expect(response).not_to be_ok
@@ -142,7 +142,7 @@ RSpec.describe_current do
     end
 
     context 'when no data in the given partition' do
-      before { get "scheduled_messages/explorer/#{topic}/0" }
+      before { get "scheduled_messages/explorer/topics/#{topic}/0" }
 
       it do
         expect(response).to be_ok
@@ -160,7 +160,7 @@ RSpec.describe_current do
     context 'when single result in a given partition is present' do
       before do
         produce(topic, '1')
-        get "scheduled_messages/explorer/#{topic}/0"
+        get "scheduled_messages/explorer/topics/#{topic}/0"
       end
 
       it do
@@ -179,7 +179,7 @@ RSpec.describe_current do
     context 'when only single transactional result in a given partition is present' do
       before do
         produce(topic, '1', type: :transactional)
-        get "scheduled_messages/explorer/#{topic}/0"
+        get "scheduled_messages/explorer/topics/#{topic}/0"
       end
 
       it do
@@ -202,7 +202,7 @@ RSpec.describe_current do
           .to receive(:offset_page)
           .and_return([false, [[0, 0]], false])
 
-        get "scheduled_messages/explorer/#{topic}/0"
+        get "scheduled_messages/explorer/topics/#{topic}/0"
       end
 
       it do
@@ -221,7 +221,7 @@ RSpec.describe_current do
       before { produce_many(topic, Array.new(100, '1')) }
 
       context 'when we view the from the highest available offset' do
-        before { get "scheduled_messages/explorer/#{topic}/0?offset=99" }
+        before { get "scheduled_messages/explorer/topics/#{topic}/0?offset=99" }
 
         it do
           expect(response).to be_ok
@@ -230,16 +230,16 @@ RSpec.describe_current do
           expect(body).to include('high: 100')
           expect(body).to include('low: 0')
           expect(body).to include(pagination)
-          expect(body).to include("/explorer/#{topic}/0/99")
-          expect(body).not_to include("/explorer/#{topic}/0/98")
-          expect(body).not_to include("/explorer/#{topic}/0/100")
+          expect(body).to include("/explorer/topics/#{topic}/0/99")
+          expect(body).not_to include("/explorer/topics/#{topic}/0/98")
+          expect(body).not_to include("/explorer/topics/#{topic}/0/100")
           expect(body).not_to include(no_data)
           expect(body).not_to include(support_message)
         end
       end
 
       context 'when we view the from the highest full page' do
-        before { get "scheduled_messages/explorer/#{topic}/0?offset=75" }
+        before { get "scheduled_messages/explorer/topics/#{topic}/0?offset=75" }
 
         it do
           expect(response).to be_ok
@@ -248,19 +248,19 @@ RSpec.describe_current do
           expect(body).to include('high: 100')
           expect(body).to include('low: 0')
           expect(body).to include(pagination)
-          expect(body).to include("/explorer/#{topic}/0/99")
-          expect(body).to include("/explorer/#{topic}/0/75")
-          expect(body).not_to include("/explorer/#{topic}/0/100")
-          expect(body).not_to include("/explorer/#{topic}/0/74")
+          expect(body).to include("/explorer/topics/#{topic}/0/99")
+          expect(body).to include("/explorer/topics/#{topic}/0/75")
+          expect(body).not_to include("/explorer/topics/#{topic}/0/100")
+          expect(body).not_to include("/explorer/topics/#{topic}/0/74")
           expect(body).not_to include(no_data)
           expect(body).not_to include(support_message)
           # 26 because 25 for details + one for breadcrumbs
-          expect(body.scan("href=\"/explorer/#{topic}/0/").count).to eq(26)
+          expect(body.scan("href=\"/explorer/topics/#{topic}/0/").count).to eq(26)
         end
       end
 
       context 'when we view the lowest offsets' do
-        before { get "scheduled_messages/explorer/#{topic}/0?offset=0" }
+        before { get "scheduled_messages/explorer/topics/#{topic}/0?offset=0" }
 
         it do
           expect(response).to be_ok
@@ -269,20 +269,20 @@ RSpec.describe_current do
           expect(body).to include('high: 100')
           expect(body).to include('low: 0')
           expect(body).to include(pagination)
-          expect(body).to include("/explorer/#{topic}/0/0")
-          expect(body).to include("/explorer/#{topic}/0/24")
-          expect(body).not_to include("/explorer/#{topic}/0/99")
-          expect(body).not_to include("/explorer/#{topic}/0/75")
-          expect(body).not_to include("/explorer/#{topic}/0/25")
+          expect(body).to include("/explorer/topics/#{topic}/0/0")
+          expect(body).to include("/explorer/topics/#{topic}/0/24")
+          expect(body).not_to include("/explorer/topics/#{topic}/0/99")
+          expect(body).not_to include("/explorer/topics/#{topic}/0/75")
+          expect(body).not_to include("/explorer/topics/#{topic}/0/25")
           expect(body).not_to include(no_data)
           expect(body).not_to include(support_message)
           # 26 because 25 for details + one for breadcrumbs
-          expect(body.scan("href=\"/explorer/#{topic}/0/").count).to eq(26)
+          expect(body.scan("href=\"/explorer/topics/#{topic}/0/").count).to eq(26)
         end
       end
 
       context 'when we go way above the existing offsets' do
-        before { get "scheduled_messages/explorer/#{topic}/0?offset=1000" }
+        before { get "scheduled_messages/explorer/topics/#{topic}/0?offset=1000" }
 
         it do
           expect(response).to be_ok
@@ -292,8 +292,8 @@ RSpec.describe_current do
           expect(body).not_to include('high: 100')
           expect(body).not_to include('low: 0')
           expect(body).not_to include(pagination)
-          expect(body).not_to include("/explorer/#{topic}/0/99")
-          expect(body).not_to include("/explorer/#{topic}/0/100")
+          expect(body).not_to include("/explorer/topics/#{topic}/0/99")
+          expect(body).not_to include("/explorer/topics/#{topic}/0/100")
           expect(body).not_to include(support_message)
         end
       end
@@ -342,48 +342,48 @@ RSpec.describe_current do
     context 'when we have only one older message with date' do
       before do
         produce(topic, '1')
-        get "scheduled_messages/explorer/#{topic}/0/closest/2100-01-01/12:00:12"
+        get "scheduled_messages/explorer/topics/#{topic}/0/closest/2100-01-01/12:00:12"
       end
 
       it do
         expect(response.status).to eq(302)
-        expect(response.location).to eq("/scheduled_messages/explorer/#{topic}/0?offset=0")
+        expect(response.location).to eq("/scheduled_messages/explorer/topics/#{topic}/0?offset=0")
       end
     end
 
     context 'when we have only one older message with timestamp' do
       before do
         produce(topic, '1')
-        get "scheduled_messages/explorer/#{topic}/0/closest/#{now_in_ms + 100_000}"
+        get "scheduled_messages/explorer/topics/#{topic}/0/closest/#{now_in_ms + 100_000}"
       end
 
       it do
         expect(response.status).to eq(302)
-        expect(response.location).to eq("/scheduled_messages/explorer/#{topic}/0?offset=0")
+        expect(response.location).to eq("/scheduled_messages/explorer/topics/#{topic}/0?offset=0")
       end
     end
 
     context 'when we have many messages and we request earlier time' do
       before do
         produce_many(topic, Array.new(100, '1'))
-        get "scheduled_messages/explorer/#{topic}/0/closest/2000-01-01/12:00:12"
+        get "scheduled_messages/explorer/topics/#{topic}/0/closest/2000-01-01/12:00:12"
       end
 
       it do
         expect(response.status).to eq(302)
-        expect(response.location).to eq("/scheduled_messages/explorer/#{topic}/0?offset=0")
+        expect(response.location).to eq("/scheduled_messages/explorer/topics/#{topic}/0?offset=0")
       end
     end
 
     context 'when we have many messages and we request earlier timestamp' do
       before do
         produce_many(topic, Array.new(100, '1'))
-        get "scheduled_messages/explorer/#{topic}/0/closest/#{now_in_ms - 100_000}"
+        get "scheduled_messages/explorer/topics/#{topic}/0/closest/#{now_in_ms - 100_000}"
       end
 
       it do
         expect(response.status).to eq(302)
-        expect(response.location).to eq("/scheduled_messages/explorer/#{topic}/0?offset=0")
+        expect(response.location).to eq("/scheduled_messages/explorer/topics/#{topic}/0?offset=0")
       end
     end
 
@@ -392,12 +392,12 @@ RSpec.describe_current do
 
       before do
         produce_many(topic, Array.new(100, '1'), partition: 1)
-        get "scheduled_messages/explorer/#{topic}/1/closest/2000-01-01/12:00:12"
+        get "scheduled_messages/explorer/topics/#{topic}/1/closest/2000-01-01/12:00:12"
       end
 
       it do
         expect(response.status).to eq(302)
-        expect(response.location).to eq("/scheduled_messages/explorer/#{topic}/1?offset=0")
+        expect(response.location).to eq("/scheduled_messages/explorer/topics/#{topic}/1?offset=0")
       end
     end
 
@@ -406,54 +406,54 @@ RSpec.describe_current do
 
       before do
         produce_many(topic, Array.new(100, '1'), partition: 1)
-        get "scheduled_messages/explorer/#{topic}/1/closest/#{now_in_ms - 100_000}"
+        get "scheduled_messages/explorer/topics/#{topic}/1/closest/#{now_in_ms - 100_000}"
       end
 
       it do
         expect(response.status).to eq(302)
-        expect(response.location).to eq("/scheduled_messages/explorer/#{topic}/1?offset=0")
+        expect(response.location).to eq("/scheduled_messages/explorer/topics/#{topic}/1?offset=0")
       end
     end
 
     context 'when we have many messages and we request later time' do
       before do
         produce_many(topic, Array.new(100, '1'))
-        get "scheduled_messages/explorer/#{topic}/0/closest/2100-01-01/12:00:12"
+        get "scheduled_messages/explorer/topics/#{topic}/0/closest/2100-01-01/12:00:12"
       end
 
       it do
         expect(response.status).to eq(302)
-        expect(response.location).to eq("/scheduled_messages/explorer/#{topic}/0?offset=99")
+        expect(response.location).to eq("/scheduled_messages/explorer/topics/#{topic}/0?offset=99")
       end
     end
 
     context 'when we have many messages and we request later timestamp' do
       before do
         produce_many(topic, Array.new(100, '1'))
-        get "scheduled_messages/explorer/#{topic}/0/closest/#{now_in_ms + 100_000}"
+        get "scheduled_messages/explorer/topics/#{topic}/0/closest/#{now_in_ms + 100_000}"
       end
 
       it do
         expect(response.status).to eq(302)
-        expect(response.location).to eq("/scheduled_messages/explorer/#{topic}/0?offset=99")
+        expect(response.location).to eq("/scheduled_messages/explorer/topics/#{topic}/0?offset=99")
       end
     end
 
     context 'when we request a time on an empty topic partition' do
-      before { get "scheduled_messages/explorer/#{topic}/0/closest/2100-01-01/12:00:12" }
+      before { get "scheduled_messages/explorer/topics/#{topic}/0/closest/2100-01-01/12:00:12" }
 
       it do
         expect(response.status).to eq(302)
-        expect(response.location).to eq("/scheduled_messages/explorer/#{topic}/0")
+        expect(response.location).to eq("/scheduled_messages/explorer/topics/#{topic}/0")
       end
     end
 
     context 'when we request a timestamp on an empty topic partition' do
-      before { get "scheduled_messages/explorer/#{topic}/0/closest/#{now_in_ms}" }
+      before { get "scheduled_messages/explorer/topics/#{topic}/0/closest/#{now_in_ms}" }
 
       it do
         expect(response.status).to eq(302)
-        expect(response.location).to eq("/scheduled_messages/explorer/#{topic}/0")
+        expect(response.location).to eq("/scheduled_messages/explorer/topics/#{topic}/0")
       end
     end
   end

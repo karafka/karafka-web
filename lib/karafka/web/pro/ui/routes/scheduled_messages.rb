@@ -25,28 +25,30 @@ module Karafka
                 end
 
                 r.on 'explorer' do
-                  controller = build(Controllers::ScheduledMessages::ExplorerController)
+                  r.on 'topics' do
+                    controller = build(Controllers::ScheduledMessages::ExplorerController)
 
-                  r.get String do |topic_id|
-                    controller.topic(topic_id)
-                  end
+                    r.get String do |topic_id|
+                      controller.topic(topic_id)
+                    end
 
-                  r.get String, :partition_id do |topic_id, partition_id|
-                    controller.partition(topic_id, partition_id)
-                  end
+                    r.get String, :partition_id do |topic_id, partition_id|
+                      controller.partition(topic_id, partition_id)
+                    end
 
-                  # Jumps to offset matching the expected time
-                  r.get String, :partition_id, 'closest', Time do |topic_id, partition_id, time|
-                    controller.closest(topic_id, partition_id, time)
-                  end
+                    # Jumps to offset matching the expected time
+                    r.get String, :partition_id, 'closest', Time do |topic_id, partition_id, time|
+                      controller.closest(topic_id, partition_id, time)
+                    end
 
-                  # Jumps to the offset matching the expected timestamp
-                  r.get(
-                    String, :partition_id, 'closest', Integer
-                  ) do |topic_id, partition_id, timestamp|
-                    # To simplify we just convert timestamp to time with ms precision
-                    time = Time.at(timestamp / 1_000.0)
-                    controller.closest(topic_id, partition_id, time)
+                    # Jumps to the offset matching the expected timestamp
+                    r.get(
+                      String, :partition_id, 'closest', Integer
+                    ) do |topic_id, partition_id, timestamp|
+                      # To simplify we just convert timestamp to time with ms precision
+                      time = Time.at(timestamp / 1_000.0)
+                      controller.closest(topic_id, partition_id, time)
+                    end
                   end
                 end
 

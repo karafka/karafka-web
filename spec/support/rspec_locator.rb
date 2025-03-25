@@ -15,9 +15,13 @@ class RSpecLocator < ::Karafka::Core::Helpers::RSpecLocator
     # out the proper class that we want to describe
     # @param block [Proc] block with specs
     rspec.define_singleton_method :describe_current do |&block|
-      type = this.inherited.to_s.include?('::Controllers') ? :controller : :regular
+      full_name = this.inherited.to_s
 
-      describe(this.inherited, type: type, &block)
+      if full_name.include?('::Controllers') && full_name.end_with?('Controller')
+        describe(this.inherited, type: :controller, &block)
+      else
+        describe(this.inherited, type: :regular, &block)
+      end
     end
   end
 end

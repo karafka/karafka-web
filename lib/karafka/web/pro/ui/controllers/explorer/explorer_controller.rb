@@ -175,7 +175,7 @@ module Karafka
 
                 target = offset - shift
 
-                redirect("explorer/#{topic_id}/#{partition_id}?offset=#{target}")
+                redirect("explorer/topics/#{topic_id}/#{partition_id}?offset=#{target}")
               end
 
               # Finds the closest offset matching the requested time and redirects to this location
@@ -187,7 +187,7 @@ module Karafka
               def closest(topic_id, partition_id, time)
                 target = Web::Ui::Lib::Admin.read_topic(topic_id, partition_id, 1, time).first
 
-                partition_path = "explorer/#{topic_id}/#{partition_id}"
+                partition_path = "explorer/topics/#{topic_id}/#{partition_id}"
                 partition_path += "?offset=#{target.offset}" if target
 
                 redirect(partition_path)

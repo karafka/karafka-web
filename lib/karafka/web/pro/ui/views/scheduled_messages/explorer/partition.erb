@@ -9,7 +9,7 @@
   <section class="actions">
     <% if @messages && !@messages.empty? %>
       <a
-        href="<%= explorer_path(@topic_id, @partition_id, 'recent') %>"
+        href="<%= explorer_topics_path(@topic_id, @partition_id, 'recent') %>"
         class="btn-action"
         title="Display the most recent message for this partition with auto-refresh"
       >

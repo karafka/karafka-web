@@ -9,6 +9,7 @@
 - **[Feature]** Provide ability to manage topics configuration from the Web UI (Pro).
 - **[Feature]** Provide ability to manage topics partitioning from the Web UI (Pro).
 - **[Feature]** Provide ability to inject custom CSS and JS to adjust the Web UI.
+- [Enhancement] Include crawl-based link validator to the CI to ensure no dead links are generated.
 - [Enhancement] Allow for custom links in the navigation (Pro).
 - [Enhancement] Optimize topic specific lookups (Pro).
 - [Enhancement] Replace simple in-process metadata cache with user tracking version for multi-process deployments improvements.
@@ -28,6 +29,7 @@
 - [Change] Remove per-consumer process duplicated details from Subscriptions and Jobs tabs.
 - [Refactor] Make sure all temporary topics have a `it-` prefix in their name.
 - [Refactor] Introduce a `bin/verify_topics_naming` script to ensure proper test topics naming convention.
+- [Fix] Topic named messages collides with the explorer routes.
 - [Fix] Fix a case where live poll button enabling would not immediately start refreshes.
 - [Fix] Fix negative message deserialization allocation stats.
 - [Fix] Fix incorrect background color in some of the alert notices.

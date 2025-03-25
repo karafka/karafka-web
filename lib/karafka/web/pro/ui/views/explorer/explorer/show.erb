@@ -4,15 +4,15 @@
 <% view_title "Message with offset #{@message.offset} from partition #{@message.partition}" %>
 
 <%
-  republish_path = explorer_path('messages', @message.topic, @message.partition, @message.offset, 'republish')
-  surrounding_path = explorer_path(@message.topic, @message.partition, @message.offset, 'surrounding')
+  republish_path = explorer_messages_path(@message.topic, @message.partition, @message.offset, 'republish')
+  surrounding_path = explorer_topics_path(@message.topic, @message.partition, @message.offset, 'surrounding')
 %>
 
 <div class="col-span-12">
   <section class="actions">
     <% if @visibility_filter.republish?(@message) %>
       <a
-        href="<%= explorer_path('messages', @message.topic, @message.partition, @message.offset, 'forward') %>"
+        href="<%= explorer_messages_path(@message.topic, @message.partition, @message.offset, 'forward') %>"
         class="btn-action"
         title="Republish this message"
       >
@@ -30,7 +30,7 @@
 
     <% if @visibility_filter.download?(@message) %>
       <a
-        href="<%= explorer_path('messages', @message.topic, @message.partition, @message.offset, 'download') %>"
+        href="<%= explorer_messages_path(@message.topic, @message.partition, @message.offset, 'download') %>"
         class="btn-action"
         title="Download raw payload"
         data-turbo="false"
@@ -41,7 +41,7 @@
 
     <% if @visibility_filter.export?(@message) && @safe_payload.success? %>
       <a
-        href="<%= explorer_path('messages', @message.topic, @message.partition, @message.offset, 'export') %>"
+        href="<%= explorer_messages_path(@message.topic, @message.partition, @message.offset, 'export') %>"
         class="btn-action"
         title="Export as JSON"
         data-turbo="false"
