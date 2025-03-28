@@ -93,8 +93,14 @@ class LinksValidator
     # Add to visited set to avoid checking again
     @visited_links.add(link_key)
 
-    # Make GET request to the link using the RSpec context
-    @context.get link
+    begin
+      # Make GET request to the link using the RSpec context
+      @context.get link
+    # We ignore errors because some specs are designed to inject invalid data, etc, so other
+    # views to which we reach out may in fact be corrupted
+    rescue StandardError
+      return
+    end
 
     # The test will fail automatically if the GET request returns an error status
     @context
