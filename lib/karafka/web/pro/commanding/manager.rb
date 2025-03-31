@@ -70,7 +70,7 @@ module Karafka
           rescue StandardError => e
             ::Karafka.monitor.instrument(
               'error.occurred',
-              error: error,
+              error: e,
               caller: self,
               type: 'web.commanding.manager.error'
             )
