@@ -66,6 +66,16 @@ module Karafka
                 Request.new(message.payload[:command])
               )
             end
+          # This should not happen, if this is happening, please report this as a bug
+          rescue StandardError => e
+            ::Karafka.monitor.instrument(
+              'error.occurred',
+              error: e,
+              caller: self,
+              type: 'web.commanding.manager.error'
+            )
+
+            raise e
           end
 
           # Runs the expected command

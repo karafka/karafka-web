@@ -79,7 +79,7 @@ module Karafka
               'error.occurred',
               error: error,
               caller: self,
-              type: 'web.controlling.controller.error'
+              type: 'web.commanding.listener.error'
             )
           end
         end
