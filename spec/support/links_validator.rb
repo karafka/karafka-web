@@ -27,7 +27,8 @@ class LinksValidator
   # cause other links not to work correctly. This is why we should not check links on their
   # usage
   EXCLUDED_CONTROLLERS = [
-    Karafka::Web::Ui::Controllers::StatusController
+    # Covers both oss and pro
+    'StatusController'
   ].freeze
 
   # There is no point in visiting same urls for different uuids (like topic views). We use those
@@ -66,7 +67,9 @@ class LinksValidator
   # @param html [Nokogiri::HTML4::Document] nokogiri document
   # @return [Array<String>] list of links potentially to visit
   def extract_links(html)
-    return [] if EXCLUDED_CONTROLLERS.any? { |klass| @context.described_class == klass }
+    return [] if EXCLUDED_CONTROLLERS.any? do |klass|
+      @context.described_class.to_s.include?(klass)
+    end
 
     # Get all anchor tags with href attributes
     links = html.css('a[href]').map { |a| a['href'] }
