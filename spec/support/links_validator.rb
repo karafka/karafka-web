@@ -22,7 +22,7 @@ class LinksValidator
     %r{/consumers/[a-f0-9-]+/subscriptions}
   ].freeze
 
-  # Controllers on whicch we do not want to run checks.
+  # Controllers on which we do not want to run checks.
   # Some controllers like the status one set explicitly system into incorrect states that can
   # cause other links not to work correctly. This is why we should not check links on their
   # usage
