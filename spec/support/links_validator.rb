@@ -22,6 +22,14 @@ class LinksValidator
     %r{/consumers/[a-f0-9-]+/subscriptions}
   ].freeze
 
+  # Controllers on whicch we do not want to run checks.
+  # Some controllers like the status one set explicitly system into incorrect states that can
+  # cause other links not to work correctly. This is why we should not check links on their
+  # usage
+  EXCLUDED_CONTROLLERS = [
+    Karafka::Web::Ui::Controllers::StatusController
+  ].freeze
+
   # There is no point in visiting same urls for different uuids (like topic views). We use those
   # regexps as a baseline to build visited keys so we know that we visited one and worked
   KEY_TRANSFORMERS = [
@@ -29,7 +37,7 @@ class LinksValidator
     /shinra:\d+:\d+/
   ].freeze
 
-  private_constant :ALLOWED_RESPONSES
+  private_constant :ALLOWED_RESPONSES, :EXCLUDED_CONTROLLERS
 
   attr_writer :context
 
@@ -58,6 +66,8 @@ class LinksValidator
   # @param html [Nokogiri::HTML4::Document] nokogiri document
   # @return [Array<String>] list of links potentially to visit
   def extract_links(html)
+    return [] if EXCLUDED_CONTROLLERS.any? { |klass| @context.described_class == klass }
+
     # Get all anchor tags with href attributes
     links = html.css('a[href]').map { |a| a['href'] }
 
