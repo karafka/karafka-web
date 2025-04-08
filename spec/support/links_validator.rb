@@ -30,7 +30,8 @@ class LinksValidator
     # Covers both oss and pro. On status since there are so many invalid we exclude all
     'StatusController' => [/.*/],
     # Also deals with invalid state that affects dashboard
-    'RoutingController' => [%r{/dashboard}, %r{/jobs}, %r{/health}]
+    'RoutingController' => [%r{/dashboard}, %r{/jobs}, %r{/health}],
+    'ClusterController' => [%r{/explorer}]
   }.freeze
 
   # There is no point in visiting same urls for different uuids (like topic views). We use those
