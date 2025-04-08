@@ -22,14 +22,16 @@ class LinksValidator
     %r{/consumers/[a-f0-9-]+/subscriptions}
   ].freeze
 
-  # Controllers on which we do not want to run checks.
+  # Controllers on which we do not want to run checks or want to run only some checks.
   # Some controllers like the status one set explicitly system into incorrect states that can
   # cause other links not to work correctly. This is why we should not check links on their
   # usage
-  EXCLUDED_CONTROLLERS = [
-    # Covers both oss and pro
-    'StatusController'
-  ].freeze
+  EXCLUDED_CONTROLLERS = {
+    # Covers both oss and pro. On status since there are so many invalid we exclude all
+    'StatusController' => [/.*/],
+    # Also deals with invalid state that affects dashboard
+    'RoutingController' => [%r{/dashboard}, %r{/jobs}, %r{/health}]
+  }.freeze
 
   # There is no point in visiting same urls for different uuids (like topic views). We use those
   # regexps as a baseline to build visited keys so we know that we visited one and worked
@@ -67,10 +69,6 @@ class LinksValidator
   # @param html [Nokogiri::HTML4::Document] nokogiri document
   # @return [Array<String>] list of links potentially to visit
   def extract_links(html)
-    return [] if EXCLUDED_CONTROLLERS.any? do |klass|
-      @context.described_class.to_s.include?(klass)
-    end
-
     # Get all anchor tags with href attributes
     links = html.css('a[href]').map { |a| a['href'] }
 
@@ -81,6 +79,16 @@ class LinksValidator
 
       true
     end
+
+    links.delete_if do |link|
+      EXCLUDED_CONTROLLERS.any? do |klass, matches|
+        @context.described_class.to_s.include?(klass) && matches.any? do |match|
+          link =~ match
+        end
+      end
+    end
+
+    links
   end
 
   # Validates a single link by visiting the page under the link and checking the response status
@@ -99,6 +107,8 @@ class LinksValidator
     end
 
     link_key = visit_key(link)
+
+    p @visited_links.count
 
     # Skip if we've already visited this link
     return if @visited_links.include?(link_key)
