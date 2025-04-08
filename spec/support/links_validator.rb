@@ -73,11 +73,11 @@ class LinksValidator
     links = html.css('a[href]').map { |a| a['href'] }
 
     # Filter to only include internal links (not external or anchors)
-    links.select do |link|
-      next if link.start_with?('#', 'http://', 'https://', 'mailto:', 'tel:')
-      next if link.empty?
+    links.delete_if do |link|
+      next true if link.start_with?('#', 'http://', 'https://', 'mailto:', 'tel:')
+      next true if link.empty?
 
-      true
+      false
     end
 
     links.delete_if do |link|
@@ -107,8 +107,6 @@ class LinksValidator
     end
 
     link_key = visit_key(link)
-
-    p @visited_links.count
 
     # Skip if we've already visited this link
     return if @visited_links.include?(link_key)
