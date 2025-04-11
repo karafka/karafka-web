@@ -34,6 +34,13 @@ class LinksValidator
     'ClusterController' => [%r{/explorer}]
   }.freeze
 
+  # Descriptions that indicate some features disabled
+  # We do not track links on those as they may return 403 and other unexpected statuses
+  EXCLUDED_DESCRIPTIONS = [
+    'is disabled',
+    'is not enabled'
+  ].freeze
+
   # There is no point in visiting same urls for different uuids (like topic views). We use those
   # regexps as a baseline to build visited keys so we know that we visited one and worked
   KEY_TRANSFORMERS = [
@@ -41,7 +48,7 @@ class LinksValidator
     /shinra:\d+:\d+/
   ].freeze
 
-  private_constant :ALLOWED_RESPONSES, :EXCLUDED_CONTROLLERS
+  private_constant :ALLOWED_RESPONSES, :EXCLUDED_CONTROLLERS, :EXCLUDED_DESCRIPTIONS
 
   attr_writer :context
 
@@ -72,11 +79,13 @@ class LinksValidator
   def extract_links(html)
     # Get all anchor tags with href attributes
     links = html.css('a[href]').map { |a| a['href'] }
+    full_description = RSpec.current_example.metadata[:full_description]
 
     # Filter to only include internal links (not external or anchors)
     links.delete_if do |link|
       next true if link.start_with?('#', 'http://', 'https://', 'mailto:', 'tel:')
       next true if link.empty?
+      next true if EXCLUDED_DESCRIPTIONS.any? { |excluded| full_description.include?(excluded) }
 
       false
     end
