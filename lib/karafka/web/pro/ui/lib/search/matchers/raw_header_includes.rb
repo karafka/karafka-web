@@ -22,7 +22,14 @@ module Karafka
                 def call(message, phrase)
                   message.raw_headers.each do |raw_header_key, raw_header_value|
                     return true if safe_include?(raw_header_key, phrase)
-                    return true if safe_include?(raw_header_value, phrase)
+
+                    if raw_header_value.is_a?(Array)
+                      raw_header_value.each do |raw_header_sub_value|
+                        return true if safe_include?(raw_header_sub_value, phrase)
+                      end
+                    elsif safe_include?(raw_header_value, phrase)
+                      return true
+                    end
                   end
 
                   false

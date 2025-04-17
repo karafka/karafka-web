@@ -4,18 +4,33 @@
 <% if @safe_headers.success? %>
   <% visible = @visibility_filter.headers?(message) %>
   <% message.metadata.headers.each do |k, v| %>
-    <tr>
-      <td>
-        <%= "headers.#{k}" %>
-      </td>
-      <td>
-        <% if visible %>
-          <%= object_value_to_s(v) %>
-        <% else %>
-          <span class="text-muted">[Filtered]</span>
-        <% end %>
-      </td>
-    </tr>
+    <% if v.is_a?(Array) && visible %>
+      <tr>
+        <td>
+          <%= "headers.#{k}" %>
+        </td>
+        <td>
+          <ul class="list-disc ml-3">
+            <% v.each do |sub_v| %>
+              <li><%= object_value_to_s(sub_v) %></li>
+            <% end %>
+          </ul>
+        </td>
+      </tr>
+    <% else %>
+      <tr>
+        <td>
+          <%= "headers.#{k}" %>
+        </td>
+        <td>
+          <% if visible %>
+            <%= object_value_to_s(v) %>
+          <% else %>
+            <span class="text-muted">[Filtered]</span>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
   <% end %>
 <% else %>
   <% visible = @visibility_filter.headers?(message) %>

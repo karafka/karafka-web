@@ -9,6 +9,7 @@
 - **[Feature]** Provide ability to manage topics configuration from the Web UI (Pro).
 - **[Feature]** Provide ability to manage topics partitioning from the Web UI (Pro).
 - **[Feature]** Provide ability to inject custom CSS and JS to adjust the Web UI.
+- [Enhancement] Support KIP-82 (header values of arrays).
 - [Enhancement] Include crawl-based link validator to the CI to ensure no dead links are generated.
 - [Enhancement] Allow for custom links in the navigation (Pro).
 - [Enhancement] Optimize topic specific lookups (Pro).
