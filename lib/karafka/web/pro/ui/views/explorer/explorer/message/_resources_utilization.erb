@@ -46,7 +46,7 @@
 
         @message.raw_headers.each do |h, v|
           bytesize += h.bytesize
-          bytesize += v.bytesize
+          bytesize += Array(v).sum(&:bytesize)
         end
 
         kbytesize = bytesize / 1024.0

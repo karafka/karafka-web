@@ -22,7 +22,7 @@ RSpec.describe Karafka::Web::Pro::Ui::Lib::Search::Matchers::RawHeaderIncludes d
       end
     end
 
-    context 'when the raw headers include the phrase in a value' do
+    context 'when the raw headers include the phrase in a value as header' do
       let(:raw_headers) { { 'some key' => 'test phrase' } }
 
       it 'returns true' do
@@ -32,6 +32,22 @@ RSpec.describe Karafka::Web::Pro::Ui::Lib::Search::Matchers::RawHeaderIncludes d
 
     context 'when the raw headers do not include the phrase' do
       let(:raw_headers) { { 'some key' => 'some value' } }
+
+      it 'returns false' do
+        expect(matcher.call(message, phrase)).to be false
+      end
+    end
+
+    context 'when the raw headers include the phrase in a value as array of headers' do
+      let(:raw_headers) { { 'some key' => ['test phrase', 'xda'] } }
+
+      it 'returns true' do
+        expect(matcher.call(message, phrase)).to be true
+      end
+    end
+
+    context 'when the raw headers do not include the phrase as array of headers' do
+      let(:raw_headers) { { 'some key' => ['some value', 'xda'] } }
 
       it 'returns false' do
         expect(matcher.call(message, phrase)).to be false

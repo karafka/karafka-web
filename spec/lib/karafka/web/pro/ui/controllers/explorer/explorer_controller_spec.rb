@@ -476,6 +476,37 @@ RSpec.describe_current do
       end
     end
 
+    context 'when requested message exists and has array headers' do
+      before do
+        produce(
+          topic,
+          { test: 'me' }.to_json,
+          headers: {
+            'super1' => 'tadam1',
+            'super2' => 'tadam2'
+          }
+        )
+        get "explorer/topics/#{topic}/0/0"
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(breadcrumbs)
+        expect(body).to include('<code class="json')
+        expect(body).to include('Metadata')
+        expect(body).to include('Export as JSON')
+        expect(body).to include('Download raw')
+        expect(body).to include('Republish')
+        expect(body).to include('super1')
+        expect(body).to include('super2')
+        expect(body).to include('tadam1')
+        expect(body).to include('tadam2')
+        expect(body).not_to include(cannot_deserialize)
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
+
     context 'when requested message exists but should not be republishable' do
       before do
         allow(::Karafka::Web.config.ui.policies.messages)
