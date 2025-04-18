@@ -949,6 +949,18 @@ RSpec.describe_current do
       end
     end
 
+    context 'when we have a timestamp without seconds' do
+      before do
+        produce(topic, '1')
+        get "explorer/topics/#{topic}/0/closest/2025-04-18/12:37"
+      end
+
+      it do
+        expect(response.status).to eq(302)
+        expect(response.location).to eq("/explorer/topics/#{topic}/0?offset=0")
+      end
+    end
+
     context 'when we have only one older message with timestamp' do
       before do
         produce(topic, '1')
