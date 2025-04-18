@@ -31,6 +31,7 @@
 - [Change] Remove per-consumer process duplicated details from Subscriptions and Jobs tabs.
 - [Refactor] Make sure all temporary topics have a `it-` prefix in their name.
 - [Refactor] Introduce a `bin/verify_topics_naming` script to ensure proper test topics naming convention.
+- [Fix] Closest time based lookup redirect fails.
 - [Fix] Fi incorrect error type in commanding listener from `web.controlling.controller.error` to `web.commanding.listener.error` (Pro).
 - [Fix] Topic named messages collides with the explorer routes.
 - [Fix] Fix a case where live poll button enabling would not immediately start refreshes.
