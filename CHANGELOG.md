@@ -140,39 +140,6 @@
 - [Fix] License identifier `LGPL-3.0` is deprecated for SPDX (#2177).
 - [Fix] Do not include prettifying the payload for visibility in the resource computation cost.
 
-### Upgrade Notes
-
-This is a **major** release that brings many things to the table.
-
-This version of the Karafka Web UI requires Karafka `>= 2.4.7`. You can either upgrade both or upgrade Karafka first and then the Web UI. Karafka `2.4.7` is also compatible with Web UI `0.9.1`; thus, you can upgrade one at a time.
-
-#### Configuration
-
-Visibility Filters have been reorganized into messages policies.
-
-Please read the [Policies API](https://karafka.io/docs/Pro-Web-UI-Policies/) documentation and convert your visibility filters to policies.
-
-Your existing message-related visibility filter policies should now be assigned to a new configuration:
-
-```ruby
-Karafka::Web.setup do |config|
-  config.ui.policies.messages = MyCustomRequestsPolicy.new
-end
-```
-
-#### Deployment
-
-Because of the reporting schema update, it is recommended to:
-
-0. Make sure you have upgraded to `0.9.1` before and that it was fully deployed.
-1. Test the upgrade on a staging or dev environment.
-3. The Web UI interface may throw 500 errors during the upgrade because of schema incompatibility (until Puma is deployed and all consumers redeployed). This will have no long-term effects and can be ignored.
-4. `Karafka::Web::Errors::Processing::IncompatibleSchemaError` **is expected**. It is part of the Karafka Web UI zero-downtime deployment strategy. This error allows the Web UI materialization consumer to back off and wait for it to be replaced with a new one.
-5. Perform a rolling deployment (or a regular one) and replace all consumer processes.
-6. Update the Web UI Puma.
-7. **No** CLI command execution is required.
-8. Enjoy.
-
 ## 0.9.1 (2024-05-03)
 - [Fix] OSS `lag_stored` for not-subscribed consumers causes Web UI to crash.
 
@@ -209,12 +176,6 @@ Because of the reporting schema update, it is recommended to:
 - [Fix] Fix 404 error page invalid recommendation of `install` instead of `migrate`.
 - [Fix] Fix dangling `console.log`.
 - [Fix] Fix a case where consumer assignments would not be truncated on the consumers view.
-
-### Upgrade Notes
-
-This is a **major** release that brings many things to the table.
-
-This version of the Karafka Web UI should be upgraded together with Karafka. All upgrade documentation for Karafka and Web UI `0.9` can be found [here](https://karafka.io/docs/Upgrades-2.4/).
 
 ## 0.8.2 (2024-02-16)
 - [Enhancement] Defer scheduler background thread creation until needed allowing for forks.
@@ -264,28 +225,6 @@ This version of the Karafka Web UI should be upgraded together with Karafka. All
 - [Change] Rename "Active subscriptions" to "Subscriptions" as process subscriptions are always active.
 - [Maintenance] Introduce granular subscription group contracts.
 
-### Upgrade Notes
-
-This is a **major** release that brings many things to the table.
-
-#### Configuration
-
-**No** configuration changes are needed.
-
-#### Deployment
-
-Because of the reporting schema update, it is recommended to:
-
-0. Make sure you have upgraded to `0.7.10` before and that it was fully deployed.
-1. Test the upgrade on a staging or dev environment.
-2. Starting from `0.7.0` Karafka Web UI supports rolling deploys, so there is no need to "stop the world".
-3. The Web UI interface may throw 500 errors during the upgrade because of schema incompatibility (until Puma is deployed). This will have no long-term effects and can be ignored.
-4. `Karafka::Web::Errors::Processing::IncompatibleSchemaError` **is expected**. It is part of the Karafka Web UI zero-downtime deployment strategy. This error allows the Web UI materialization consumer to back off and wait for it to be replaced with a new one.
-5. Perform a rolling deployment (or a regular one) and replace all consumer processes.
-6. Update the Web UI Puma.
-7. **No** CLI command execution is required. Starting from this release (`0.8.0`), the Karafka Web UI contains an automatic schema migrator that allows it to automatically adjust internal topic data formats.
-8. Enjoy.
-
 ## 0.7.10 (2023-10-31)
 - [Fix] Max LSO chart does not work as expected (#201)
 
@@ -316,14 +255,6 @@ Because of the reporting schema update, it is recommended to:
 - [Fix] Remove source maps pointing to non-existing locations.
 - [Maintenance] Include license and copyrights notice for `timeago.js` that was missing in the JS min file. 
 - [Refactor] Rename `ui.show_internal_topics` to `ui.visibility.internal_topics_display`
-
-### Upgrade Notes
-
-**NO** rolling upgrade needed. Just configuration update.
-
-1. If you are using `ui.visibility_filter` this option is now `ui.visibility.filter` (yes, only `.` difference).
-2. If you are using a custom visibility filter, it requires now two extra methods: `#download?` and `#export?`. The default visibility filter allows both actions unless message is encrypted.
-3. `ui.show_internal_topics` config option has been moved and renamed to `ui.visibility.internal_topics`.
 
 ## 0.7.4 (2023-09-19)
 - [Improvement] Skip aggregations on older schemas during upgrades. This only skips process-reports (that are going to be rolled) on the 5s window in case of an upgrade that should not be a rolling one anyhow. This simplifies the operations and minimizes the risk on breaking upgrades.
@@ -419,48 +350,6 @@ Because of the reporting schema update, it is recommended to:
 - [Refactor] Use Roda `custom_block_results` plugin for controllers results handling.
 - [Maintenance] Require `karafka` `2.2.0` due to fixes in the Iterator API and routing API extensions.
 
-### Upgrade Notes
-
-This is a **major** release that brings many things to the table.
-
-#### Configuration
-
-Karafka Web UI now relies on Roda session management. Please configure the `ui.sessions.secret` key with a secret value string of at least 64 characters:
-
-```ruby
-# Configure it BEFORE enabling
-Karafka::Web.setup do |config|
-  # REPLACE THIS with your own value. You can use `SecureRandom.hex(64)` to generate it
-  # You may want to set it per ENV
-  config.ui.sessions.secret = 'REPLACE ME! b94b2215cc66371f2c34b7d0c0df1a010f83ca45 REPLACE ME!'
-end
-
-Karafka::Web.enable!
-```
-
-#### Deployment
-
-Because of the reporting schema update and new web-ui topics introduction, it is recommended to:
-
-0. Make sure you have upgraded to `0.6.3` before and that it was deployed. To all the environments you want to migrate to `0.7.0`.
-1. Upgrade the codebase based on the below details.
-2. **Stop** the consumer materializing Web-UI. Unless you are running a Web-UI dedicated consumer as recommended [here](https://karafka.io/docs/Web-UI-Development-vs-Production/), you will have to stop all the consumers. This is **crucial** because of schema changes. `karafka-web` `0.7.0` introduces the detection of schema changes, so this step should not be needed in the future.
-3. Run a migration command: `bundle exec karafka-web migrate` that will create missing states and missing topics. You **need** to run it for each of the environments where you use Karafka Web UI.
-4. Deploy **all** the Karafka consumer processes (`karafka server`).
-5. Deploy the Web update to your web server and check that everything is OK by visiting the status page.
-
-Please note that if you decide to use the updated Web UI with not updated consumers, you may hit a 500 error, or offset-related data may not be displayed correctly.
-
-#### Code and API changes
-
-1. `bundle exec karafka-web install` is now a single-purpose command that should run **only** when installing the Web-UI for the first time.
-2. For creating needed topics and states per environment and during upgrades, please use the newly introduced non-destructive `bundle exec karafka-web migrate`. It will assess changes required and will apply only those.
-3. Is no longer`ui.decrypt` has been replaced with `ui.visibility_filter` API. This API by default also does not decrypt data. To change this behavior, please implement your visibility filter as presented in our documentation.
-4. Karafka Web UI `0.7.0` introduces an in-memory topics cache for some views. This means that rapid topics changes (repartitions/new topics) may be visible up to 5 minutes after those changes.
-3. `ui.decrypt` setting has been replaced with `ui.visibility_filter` API. This API by default also does not decrypt data. To change this behavior, please implement your visibility filter as presented in our documentation.
-4. Karafka Web-UI `0.7.0` introduces an in-memory topics cache for some views. This means that rapid topics changes (repartitions/new topics) may be visible up to 5 minutes after those changes.
-5. Karafka Web UI requires now a new topic called `karafka_consumers_metrics`. If you use strict topic creation and ACL policies, please make sure it exists and that Karafka can both read and write to it.
-
 ## 0.6.3 (2023-07-22)
 - [Fix] Remove files from 0.7.0 accidentally added to the release.
 
@@ -498,38 +387,6 @@ Please note that if you decide to use the updated Web UI with not updated consum
 - [Refactor] Remove not used and redundant partials.
 - [Maintenance] Require `karafka` `2.1.4` due to fixes in metrics usage for workless flows.
 
-### Upgrade Notes
-
-Because of the reporting schema update, it is recommended to:
-
-- First, deploy **all** the Karafka consumer processes (`karafka server`)
-- Deploy the Web update to your web server.
-
-Please note that if you decide to use the updated Web UI with not updated consumers, you may hit a 500 error or offset related data may not be displayed correctly.
-
-#### Disabling producers instrumentation
-
-Producers error tracking **is** enabled by default. If you want to opt out of it, you need to disable the producers' instrumentation by clearing the producers' listeners:
-
-```ruby
-Karafka::Web.setup do |config|
-  # Do not instrument producers with web-ui listeners
-  config.tracking.producers.listeners = []
-end
-```
-
-#### Custom producers instrumentation
-
-By default, Karafka Web-UI instruments only `Karafka.producer`. If you use producers initialized by yourself, you need to connect the listeners to them manually. To do so, run the following code:
-
-```ruby
-::Karafka::Web.config.tracking.producers.listeners.each do |listener|
-  MY_CUSTOM_PRODUCER.monitor.subscribe(listener)
-end
-```
-
-Please make sure **not** to do it for the default `Karafka.producer` because it is instrumented out of the box.
-
 ## 0.5.2 (2023-05-22)
 - [Improvement] Label ActiveJob consumers jobs with `active_job` tag.
 - [Improvement] Label Virtual Partitions consumers with `virtual` tag.
@@ -546,15 +403,6 @@ Please make sure **not** to do it for the default `Karafka.producer` because it 
 - [Fix] Fix misspelling of word `committed`.
 - [Fix] Shutdown and revocation jobs statistics extraction crashes when idle initialized without messages (#53)
 
-### Upgrade Notes
-
-Because of the reporting schema change, it is recommended to:
-
-- First, deploy **all** the Karafka consumer processes (`karafka server`)
-- Deploy the Web update to your web server.
-
-Please note that if you decide to use the updated Web UI with not updated consumers, you may hit a 500 error or offset related data may not be displayed correctly.
-
 ## 0.4.1 (2023-04-12)
 - [Improvement] Replace the "x time ago" in the code explorer with an exact date (`2023-04-12 10:16:48.596 +0200 `).
 - [Improvement] When hovering over a message timestamp, a label with raw numeric timestamp will be presented.
@@ -567,25 +415,10 @@ Please note that if you decide to use the updated Web UI with not updated consum
 - [Fix] Add missing support for using multiple subscription groups within a single consumer group.
 - [Fix] Mask SASL credentials in topic routing view (#46)
 
-### Upgrade Notes
-
-Because of the reporting schema change, it is recommended to:
-
-- First, deploy **all** the Karafka consumer processes (`karafka server`)
-- Deploy the Web update to your web server.
-
-Please note that if you decide to use the updated Web UI with not updated consumers, you may hit a 500 error.
-
 ## 0.3.1 (2023-03-27)
 - [Fix] Add missing retention policy for states topic.
 - [Fix] Fix display of compacted messages placeholders for offsets lower than low watermark.
 - [Fix] Fix invalid pagination per page count.
-
-### Upgrade Notes
-
-If upgrading from `0.3.0`, nothing.
-
-If upgrading from lower, please follow `0.3.0` upgrade procedure.
 
 ## 0.3.0 (2023-03-27)
 - **[Feature]** Support paginating over compacted topics partitions.
@@ -605,15 +438,6 @@ If upgrading from lower, please follow `0.3.0` upgrade procedure.
 - [Fix] Display `N/A` instead of `-1` and `-1001` on lag stored and stored offset for consumer processes that did not mark any messages as consumed yet in the per consumer view.
 - [Maintenance] Remove compatibility fallbacks for job and process tags (#1342)
 - [Maintenance] Extract base sampler for tracking and web.
-
-### Upgrade Notes
-
-Because of the removal of compatibility fallbacks for some metrics fetches, it is recommended to:
-
-- First, deploy **all** the Karafka consumer processes (`karafka server`)
-- Deploy the Web update to your web server.
-
-Please note that if you decide to use the updated Web UI with not updated consumers, you may hit a 500 error.
 
 ## 0.2.5 (2023-03-17)
 - [Fix] Critical instrumentation async errors intercepted by Web don't have JID for job removal (#1366)

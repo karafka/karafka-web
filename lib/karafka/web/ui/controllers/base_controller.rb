@@ -22,7 +22,7 @@ module Karafka
 
           self.sortable_attributes = []
 
-          # Detect that the state of the cache has changed and
+          # Detect that the state of the cache has changed
           before do
             cache.clear_if_needed(
               session[:cache_hash],
