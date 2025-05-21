@@ -50,7 +50,9 @@
 - [Fix] Fix incorrect breadcrumbs for pending consumer jobs.
 - [Fix] Allow for using default search matchers in Karafka Web UI topics including Errors.
 - [Fix] Ensure that when flashes or alerts are visible, pages are not auto-refreshed (would cause them to dissapear).
+- [Fix] Time selector in the explorer does not disappear after clicking out.
 - [Maintenance] Require `karafka-core` `>= 2.4.8` and `karafka` `>= 2.4.16`.
+- [Maintenance] Update `AirDatepicker` to `3.6.0`.
 
 ## 0.10.4 (2024-11-26)
 - **[Breaking]** Drop Ruby `3.0` support according to the EOL schedule.
