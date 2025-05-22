@@ -120,6 +120,7 @@ module Karafka
             # this fetching all data from Kafka for each view.
             def refresh_current_stats
               stats = state[:stats]
+              tracking_schema_version = Tracking::Consumers::Sampler::SCHEMA_VERSION
 
               stats[:busy] = 0
               stats[:enqueued] = 0
@@ -135,6 +136,22 @@ module Karafka
               @active_reports
                 .values
                 .reject { |report| report[:process][:status] == 'stopped' }
+                # Older reports mean someone is in the middle of upgrade. Schema change related
+                # upgrades always should happen without a rolling-upgrade, hence we can reject
+                # those requests without significant or any impact on data quality but without
+                # having to worry about backwards compatibility. Errors are tracked independently,
+                # so it should not be a problem.
+                #
+                # In case user wants to do a rolling upgrade, the user docs state that this can
+                # happen and it is something user should be aware.
+                #
+                # For outdated consumers we only show them in the UI as grey with small hint, that
+                # they do exist but they are not included in any reporting statistics, etc
+                #
+                # The basic data (schema version and status) are pretty stable, but we cannot rely
+                # on the other metrics cross-version. This is why we aggregate them for the generic
+                # fetching display but do not count their statistics
+                .select { |report| report[:schema_version] == tracking_schema_version }
                 .each do |report|
                   report_stats = report[:stats]
                   report_process = report[:process]

@@ -28,15 +28,9 @@ module Karafka
               dispatch
 
               raise ::Karafka::Web::Errors::Processing::IncompatibleSchemaError
-            # Older reports mean someone is in the middle of upgrade. Schema change related
-            # upgrades always should happen without a rolling-upgrade, hence we can reject those
-            # requests without significant or any impact on data quality but without having to
-            # worry about backwards compatibility. Errors are tracked independently, so it should
-            # not be a problem.
-            #
-            # In case user wants to do a rolling upgrade, the user docs state that this can happen
-            # and it is something user should be aware
             when :older
+              @state_aggregator.add(message.payload, message.offset)
+
               next
             else
               raise ::Karafka::Errors::UnsupportedCaseError

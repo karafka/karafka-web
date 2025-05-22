@@ -48,7 +48,7 @@ module Karafka
                 ::Karafka::Web.config.topics.consumers.reports.name,
                 0,
                 # We set 10k here because we start from the latest offset of the reports, hence
-                # we will never get this much. Do do not know however exactly how many reports
+                # we will never get this much. We do not know however exactly how many reports
                 # we may get as for some processes we may get few if the reporting interval
                 # was bypassed by state changes in the processes
                 10_000,
