@@ -1,59 +1,50 @@
 <%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
 <%# See LICENSE for details. %>
 
-<% if process.schema_compatible? %>
-  <tr class="status-row-<%= process.status %>">
-    <td>
-      <p>
-        <a href="<%= consumer_path(process.id, 'subscriptions') %>">
-          <%== truncate(process.id, strategy: :middle) %>
-        </a>
-      </p>
+<tr class="status-row-<%= process.status %>">
+  <td>
+    <p>
+      <a href="<%= consumer_path(process.id, 'subscriptions') %>">
+        <%== truncate(process.id, strategy: :middle) %>
+      </a>
+    </p>
 
-      <p class="mt-1">
-        <%== partial 'consumers/assignments_badges', locals: { process: process } %>
-      </p>
+    <p class="mt-1">
+      <%== partial 'consumers/assignments_badges', locals: { process: process } %>
+    </p>
 
-      <p>
-        <%== tags(process.tags) %>
-      </p>
-    </td>
+    <p>
+      <%== tags(process.tags) %>
+    </p>
+  </td>
 
-    <td>
-      <%== relative_time process.started_at %>
-    </td>
+  <td>
+    <%== relative_time process.started_at %>
+  </td>
 
-    <td>
-      <%== badge_primary_sm format_memory process.memory_usage %>
-      <%== badge_primary_sm format_memory process.memory_total_usage %>
-      <%== badge_primary_sm format_memory process.memory_size %>
-    </td>
+  <td>
+    <%== badge_primary_sm format_memory process.memory_usage %>
+    <%== badge_primary_sm format_memory process.memory_total_usage %>
+    <%== badge_primary_sm format_memory process.memory_size %>
+  </td>
 
-    <td>
-      <span class="badge badge-primary">
-        <%= process.utilization.round(1) %>%
-      </span>
-      <span class="badge badge-primary">
-        <%= process.workers %> /
-        <%= process.busy %>
-      </span>
-    </td>
+  <td>
+    <span class="badge badge-primary">
+      <%= process.utilization.round(1) %>%
+    </span>
+    <span class="badge badge-primary">
+      <%= process.workers %> /
+      <%= process.busy %>
+    </span>
+  </td>
 
-    <td>
-      <% process.cpu_usage.each do |metric| %>
-        <%== badge_primary_sm metric %>
-      <% end %>
-    </td>
+  <td>
+    <% process.cpu_usage.each do |metric| %>
+      <%== badge_primary_sm metric %>
+    <% end %>
+  </td>
 
-    <td>
-      <%= process.lag_hybrid %>
-    </td>
-  </tr>
-<% else %>
-  <%==
-    partial(
-      'consumers/incompatible',
-      locals: { colspan: 5, process: process }
-    )
-  %>
-<% end %>
+  <td>
+    <%= process.lag_hybrid %>
+  </td>
+</tr>

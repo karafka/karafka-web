@@ -1,39 +1,30 @@
-<% if job.process.schema_compatible? %>
-  <tr>
-    <td>
-      <a href="<%= consumer_path(job.process.id, 'subscriptions') %>">
-        <%== truncate(job.process.id, strategy: :middle) %>
-      </a>
-    </td>
-    <td>
-      <span class="badge badge-secondary" title="Consumer group: <%= job.consumer_group %>">
-        <%= job.topic %>:
-        <%= job.partition %>
-      </span>
-    </td>
-    <td>
-      <code><%= job.consumer %></code>
+<tr>
+  <td>
+    <a href="<%= consumer_path(job.process.id, 'subscriptions') %>">
+      <%== truncate(job.process.id, strategy: :middle) %>
+    </a>
+  </td>
+  <td>
+    <span class="badge badge-secondary" title="Consumer group: <%= job.consumer_group %>">
+      <%= job.topic %>:
+      <%= job.partition %>
+    </span>
+  </td>
+  <td>
+    <code><%= job.consumer %></code>
 
-      <% unless job.tags.empty? %>
-        <br/>
-        <%== tags(job.tags) %>
-      <% end %>
-    </td>
-    <td>
-      <code>#<%= job.type %></code>
-    </td>
-    <td>
-      <%== offset_with_label job.topic, job.partition, job.first_offset %>
-    </td>
-    <td>
-      <%== relative_time job.updated_at %>
-    </td>
-  </tr>
-<% else %>
-  <%==
-    partial(
-      'consumers/incompatible',
-      locals: { colspan: 5, process: job.process }
-    )
-  %>
-<% end %>
+    <% unless job.tags.empty? %>
+      <br/>
+      <%== tags(job.tags) %>
+    <% end %>
+  </td>
+  <td>
+    <code>#<%= job.type %></code>
+  </td>
+  <td>
+    <%== offset_with_label job.topic, job.partition, job.first_offset %>
+  </td>
+  <td>
+    <%== relative_time job.updated_at %>
+  </td>
+</tr>

@@ -3,7 +3,7 @@
 ## 0.11.0 (Unreleased)
 - **[Feature]** Provide ability to pause/resume partitions on running consumers via the UI (Pro).
 - **[Feature]** Provide ability to edit offsets of running consumers (Pro).
-- **[Feature]** Support consumers that have mismatching schema.
+- **[Feature]** Support consumers that have mismatching schema in the Status page.
 - **[Feature]** Provide ability to navigate to a timestamp in the Explorer (Pro).
 - **[Feature]** Provide ability to create and delete topics from the Web UI (Pro).
 - **[Feature]** Provide ability to manage topics configuration from the Web UI (Pro).

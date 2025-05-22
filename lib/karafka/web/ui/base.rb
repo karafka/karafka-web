@@ -94,8 +94,7 @@ module Karafka
           ::Rdkafka::RdkafkaError,
           Errors::Ui::NotFoundError,
           Errors::Ui::ProOnlyError,
-          Errors::Ui::ForbiddenError,
-          Errors::Ui::IncompatibleSchemaError
+          Errors::Ui::ForbiddenError
         ] do |e|
           @error = true
 
@@ -106,9 +105,6 @@ module Karafka
           when Errors::Ui::ForbiddenError
             response.status = 403
             view 'shared/exceptions/not_allowed'
-          when Errors::Ui::IncompatibleSchemaError
-            response.status = 422
-            view 'shared/exceptions/incompatible_schema'
           else
             response.status = 404
             view 'shared/exceptions/not_found'

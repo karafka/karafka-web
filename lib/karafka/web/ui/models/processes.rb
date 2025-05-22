@@ -11,20 +11,28 @@ module Karafka
           class << self
             include ::Karafka::Core::Helpers::Time
 
-            # Returns the active processes in an array and alongside of that the current state of
-            # the system. We use those together in the UI and it would be expensive to pick it up
-            # while we've already had it.
-            #
+            # Returns processes that are running or recently shutdown. It may also return processes
+            # with incompatible schema.
             # @param state [State] current system state from which we can get processes metadata
             # @return [Array<Process>]
-            def active(state)
+            def all(state)
               messages = fetch_reports(state)
               messages = squash_processes_data(messages)
               processes = messages.map(&:payload)
               evict_expired_processes(processes)
               processes = sort_processes(processes)
-
               processes.map { |process_hash| Process.new(process_hash) }
+            end
+
+            # Returns the active processes in an array and alongside of that the current state of
+            # the system. We use those together in the UI and it would be expensive to pick it up
+            # while we've already had it. Active means it is running (or recently shutdown) and
+            # it has current schema. Basically any process about which we can reason
+            #
+            # @param state [State] current system state from which we can get processes metadata
+            # @return [Array<Process>]
+            def active(state)
+              all(state).delete_if { |process| !process.schema_compatible? }
             end
 
             private
@@ -76,6 +84,19 @@ module Karafka
 
               processes.delete_if do |details|
                 now - details[:dispatched_at] > max_ttl
+              end
+            end
+
+            # Removes processes that have schema different than the one supported by the Web UI
+            # We support incompatible schema processes reporting in the status page so users know
+            # what and how to update. For other processes we do not display them or their data
+            # as it would be too complex to support
+            #
+            # @param processes [Array<Hash>]
+            # @return [Array<Hash>] only data about processes running current schema
+            def evict_incompatible_processes(processes)
+              processes.delete_if do |details|
+                details[:schema_version] != Tracking::Consumers::Sampler::SCHEMA_VERSION
               end
             end
 

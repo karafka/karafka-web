@@ -507,12 +507,6 @@
   }
 }
 
-@utility status-row-incompatible {
-  table & td:first-child {
-    @apply border-l border-l-secondary;
-  }
-}
-
 @utility code {
   @apply text-sm border border-gray-300;
 }
