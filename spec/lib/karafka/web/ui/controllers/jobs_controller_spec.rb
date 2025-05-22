@@ -5,7 +5,6 @@ RSpec.describe_current do
 
   let(:states_topic) { create_topic }
   let(:reports_topic) { create_topic }
-  let(:incompatible_schema) { 'This process uses schema' }
 
   describe 'jobs/ path redirect' do
     context 'when visiting the jobs/ path without type indicator' do
@@ -45,7 +44,6 @@ RSpec.describe_current do
         expect(body).to include(support_message)
         expect(body).to include(breadcrumbs)
         expect(body).not_to include(pagination)
-        expect(body).not_to include(incompatible_schema)
       end
     end
 
@@ -71,7 +69,6 @@ RSpec.describe_current do
         expect(body).to include(support_message)
         expect(body).to include(breadcrumbs)
         expect(body).not_to include(pagination)
-        expect(body).not_to include(incompatible_schema)
       end
     end
 
@@ -97,34 +94,6 @@ RSpec.describe_current do
         expect(body).to include(support_message)
         expect(body).to include(breadcrumbs)
         expect(body).to include('N/A')
-        expect(body).not_to include(pagination)
-        expect(body).not_to include(incompatible_schema)
-      end
-    end
-
-    context 'when we have a running job for incompatible process' do
-      before do
-        topics_config.consumers.states.name = states_topic
-        topics_config.consumers.reports.name = reports_topic
-
-        data = Fixtures.consumers_states_json(symbolize_names: false)
-        report = Fixtures.consumers_reports_json(symbolize_names: false)
-        report['schema_version'] = '0.0.1'
-        report['jobs'] = [report['jobs'][0]]
-        report['jobs'][0]['first_offset'] = -1
-        report['jobs'][0]['last_offset'] = -1
-
-        produce(reports_topic, report.to_json)
-        produce(states_topic, data.to_json)
-
-        get 'jobs/running'
-      end
-
-      it do
-        expect(response).to be_ok
-        expect(body).to include(support_message)
-        expect(body).to include(breadcrumbs)
-        expect(body).to include(incompatible_schema)
         expect(body).not_to include(pagination)
       end
     end
@@ -154,7 +123,6 @@ RSpec.describe_current do
         expect(body).to include(breadcrumbs)
         expect(body).to include('N/A')
         expect(body).not_to include(pagination)
-        expect(body).not_to include(incompatible_schema)
       end
     end
 
@@ -295,34 +263,6 @@ RSpec.describe_current do
         expect(body).to include(support_message)
         expect(body).to include(breadcrumbs)
         expect(body).not_to include(pagination)
-        expect(body).not_to include(incompatible_schema)
-      end
-    end
-
-    context 'when process has incompatible schema' do
-      before do
-        topics_config.consumers.states.name = states_topic
-        topics_config.consumers.reports.name = reports_topic
-
-        data = Fixtures.consumers_states_json(symbolize_names: false)
-        report = Fixtures.consumers_reports_json(symbolize_names: false)
-        report['schema_version'] = '0.0.1'
-        report['jobs'][0]['status'] = 'pending'
-
-        produce(reports_topic, report.to_json)
-        produce(states_topic, data.to_json)
-
-        get 'jobs/pending'
-      end
-
-      it do
-        expect(response).to be_ok
-        expect(body).to include(support_message)
-        expect(body).to include(breadcrumbs)
-        expect(body).to include(incompatible_schema)
-        expect(body).not_to include('2023-08-01T09:47:51')
-        expect(body).not_to include('ActiveJob::Consumer')
-        expect(body).not_to include(pagination)
       end
     end
 
@@ -392,7 +332,6 @@ RSpec.describe_current do
           expect(body).to include('shinra:11:11')
           expect(body).to include('shinra:12:12')
           expect(body.scan('shinra:').size).to eq(50)
-          expect(body).not_to include(incompatible_schema)
         end
       end
 
@@ -434,7 +373,6 @@ RSpec.describe_current do
           expect(body).to include('shinra:35:35')
           expect(body).to include('shinra:35:35')
           expect(body.scan('shinra:').size).to eq(50)
-          expect(body).not_to include(incompatible_schema)
         end
       end
 
@@ -447,7 +385,6 @@ RSpec.describe_current do
           expect(body).to include(support_message)
           expect(body.scan('shinra:').size).to eq(0)
           expect(body).to include(no_meaningful_results)
-          expect(body).not_to include(incompatible_schema)
         end
       end
     end

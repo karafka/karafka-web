@@ -183,7 +183,7 @@ module Karafka
           # @return [Status::Step] could we read and operate on the current processes data (if any)
           def consumers_reports
             if initial_consumers_metrics.success?
-              @processes ||= Models::Processes.active(@current_state)
+              @processes ||= Models::Processes.all(@current_state)
               status = :success
             else
               status = :halted

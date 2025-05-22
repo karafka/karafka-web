@@ -36,7 +36,7 @@ module Karafka
             def add(report, offset)
               super(report)
               increment_total_counters(report)
-              update_process_state(report, offset)
+              add_state(report, offset)
               # We always evict after counters updates because we want to use expired (stopped)
               # data for counters as it was valid previously. This can happen only when web consumer
               # had a lag and is catching up.
@@ -44,6 +44,19 @@ module Karafka
               # current means current in the context of processing window (usually now but in case
               # of lag, this state may be from the past)
               refresh_current_stats
+            end
+
+            # Registers or updates the given process state based on the report
+            #
+            # @param report [Hash]
+            # @param offset [Integer]
+            def add_state(report, offset)
+              process_id = report[:process][:id]
+
+              state[:processes][process_id] = {
+                dispatched_at: report[:dispatched_at],
+                offset: offset
+              }
             end
 
             # @return [Array<Hash, Float>] aggregated current stats value and time from which this
@@ -82,19 +95,6 @@ module Karafka
                 state[:stats][key] ||= 0
                 state[:stats][key] += value
               end
-            end
-
-            # Registers or updates the given process state based on the report
-            #
-            # @param report [Hash]
-            # @param offset [Integer]
-            def update_process_state(report, offset)
-              process_id = report[:process][:id]
-
-              state[:processes][process_id] = {
-                dispatched_at: report[:dispatched_at],
-                offset: offset
-              }
             end
 
             # Evicts expired processes from the current state

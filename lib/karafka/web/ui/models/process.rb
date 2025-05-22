@@ -12,6 +12,8 @@ module Karafka
             # @param process_id [String] id of the process we are looking for
             # @return [Process] selected process or error raised
             # @raise [::Karafka::Web::Errors::Ui::NotFoundError] raised if process not found
+            # @note Keep in mind, that this search is looking only within processes with a
+            #   compatible schema, as it uses `#active` under the hood.
             def find(state, process_id)
               found_process = Processes.active(state).find { |process| process.id == process_id }
               found_process || raise(::Karafka::Web::Errors::Ui::NotFoundError, process_id)
@@ -86,7 +88,7 @@ module Karafka
           #   instance. Any incompatibility will cause reporting of incompatible. That's for the
           #   sake of simplicity as the long term goal for user is anyhow to align those.
           def schema_compatible?
-            schema_version == ::Karafka::Web::Tracking::Consumers::Sampler::SCHEMA_VERSION
+            self[:schema_version] == ::Karafka::Web::Tracking::Consumers::Sampler::SCHEMA_VERSION
           end
         end
       end
