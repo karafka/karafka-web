@@ -29,6 +29,7 @@
 - [Enhancement] Improve error handling in the commanding iterator listener (Pro).
 - [Change] Do not fully hide config-disabled features but make them disabled.
 - [Change] Remove per-consumer process duplicated details from Subscriptions and Jobs tabs.
+- [Change] Move to trusted-publishers and remove signing since no longer needed.
 - [Refactor] Make sure all temporary topics have a `it-` prefix in their name.
 - [Refactor] Introduce a `bin/verify_topics_naming` script to ensure proper test topics naming convention.
 - [Fix] Closest time based lookup redirect fails.
