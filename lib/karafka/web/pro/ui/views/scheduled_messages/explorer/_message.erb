@@ -1,8 +1,6 @@
 <%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
 <%# See LICENSE for details. %>
 
-<% safe_key = ::Karafka::Web::Pro::Ui::Lib::SafeRunner.new { message.key } %>
-
 <% if message.is_a?(Array) %>
   <%==
     partial(
@@ -11,11 +9,26 @@
     )
   %>
 <% else %>
-  <% type = message.headers['schedule_source_type'] %>
-
   <%==
+    safe_key = ::Karafka::Web::Pro::Ui::Lib::SafeRunner.new { message.key }
+    type = message.headers['schedule_source_type']
+    path = 'scheduled_messages/explorer/message/'
+
+    partial = case type
+              when 'cancel'
+                'cancel'
+              when 'tombstone'
+                'tombstone'
+              when 'schedule'
+                'schedule'
+              else
+                'unknown'
+              end
+
+    full_path = "#{path}/#{partial}"
+
     partial(
-      "scheduled_messages/explorer/message/#{type}",
+      full_path,
       locals: { message: message, safe_key: safe_key, type: type }
     )
   %>
