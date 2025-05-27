@@ -1,0 +1,49 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<tr>
+  <td>
+    <%= message.partition %>
+  </td>
+
+  <td>
+    <%= message.offset %>
+  </td>
+
+  <td>
+    <%== badge_warning type %>
+  </td>
+
+  <td>
+    <%= message.headers['schedule_schema_version'] %>
+  </td>
+
+  <td>
+    <%== relative_time(message.timestamp) %>
+  </td>
+  <td class="text-center text-muted">
+    N/A
+  </td>
+  <td>
+    <%==
+      partial(
+        'scheduled_messages/explorer/key',
+        locals: { message: message, safe_key: safe_key }
+      )
+    %>
+  </td>
+
+  <td colspan="2" class="text-center text-muted">
+    N/A
+  </td>
+
+  <td>
+    <%==
+      link_button_primary_sm(
+        icon(:info_circle),
+        explorer_topics_path(message.topic, message.partition, message.offset),
+        title: 'Display details of this message'
+      )
+    %>
+  </td>
+</tr>

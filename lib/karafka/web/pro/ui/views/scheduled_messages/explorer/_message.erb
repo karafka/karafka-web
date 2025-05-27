@@ -4,122 +4,19 @@
 <% safe_key = ::Karafka::Web::Pro::Ui::Lib::SafeRunner.new { message.key } %>
 
 <% if message.is_a?(Array) %>
-  <tr>
-    <td class="text-muted">
-      <%= message[0] %>
-    </td>
-    <td class="text-muted">
-      <%= message[1] %>
-    </td>
-    <td colspan="8" class="text-center text-muted">
-      This offset does not contain any data. The message may have been compacted or is a system entry.
-    </td>
-  </tr>
+  <%==
+    partial(
+      'scheduled_messages/explorer/message/compacted',
+      locals: { message: message }
+    )
+  %>
 <% else %>
   <% type = message.headers['schedule_source_type'] %>
-  <tr>
-    <td>
-      <%= message.partition %>
-    </td>
-    <td>
-      <%= message.offset %>
-    </td>
-    <td>
-      <% if type == 'tombstone' %>
-        <%== badge_secondary type %>
-      <% end %>
 
-      <% if type == 'cancel' %>
-        <%== badge_warning type %>
-      <% end %>
-
-      <% if type == 'schedule' %>
-        <%== badge_primary type %>
-      <% end %>
-    </td>
-    <td>
-      <%= message.headers['schedule_schema_version'] %>
-    </td>
-
-    <% if type == 'cancel' %>
-      <td>
-        <%== relative_time(message.timestamp) %>
-      </td>
-      <td class="text-center text-muted">
-        N/A
-      </td>
-      <td>
-        <%==
-          partial(
-            'scheduled_messages/explorer/key',
-            locals: { message: message, safe_key: safe_key }
-          )
-        %>
-      </td>
-      <td colspan="2" class="text-center text-muted">
-        N/A
-      </td>
-    <% else %>
-      <td>
-        <%== relative_time(message.timestamp) %>
-      </td>
-      <td>
-        <%== relative_time message.headers['schedule_target_epoch'].to_i %>
-      </td>
-      <td>
-        <%==
-          partial(
-            'scheduled_messages/explorer/key',
-            locals: { message: message, safe_key: safe_key }
-          )
-        %>
-      </td>
-      <td>
-        <%= message.headers['schedule_target_topic'] %>
-      </td>
-      <td>
-        <% if @visibility_filter.key?(message) %>
-          <%= message.headers['schedule_target_key'] %>
-        <% else %>
-          <span class="text-muted">[Filtered]</span>
-        <% end %>
-      </td>
-    <% end %>
-
-    <td>
-      <% if type == 'schedule' %>
-        <%
-          cancel_path = root_path(
-            "scheduled_messages/messages",
-            message.topic,
-            message.partition,
-            message.offset,
-            'cancel'
-          )
-        %>
-        <form
-          action="<%= cancel_path %>"
-          method="post"
-          class="inline"
-        >
-          <%== csrf_tag(cancel_path) %>
-          <button
-            type="submit"
-            class="btn btn-error btn-sm confirm-action"
-            title="Cancel dispatch of this scheduled message"
-          >
-            <%== icon(:x_circle) %>
-          </button>
-        </form>
-      <% end %>
-
-      <%==
-        link_button_primary_sm(
-          icon(:info_circle),
-          explorer_topics_path(message.topic, message.partition, message.offset),
-          title: 'Display details of this message'
-        )
-      %>
-    </td>
-  </tr>
+  <%==
+    partial(
+      "scheduled_messages/explorer/message/#{type}",
+      locals: { message: message, safe_key: safe_key, type: type }
+    )
+  %>
 <% end %>

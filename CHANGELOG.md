@@ -52,6 +52,7 @@
 - [Fix] Allow for using default search matchers in Karafka Web UI topics including Errors.
 - [Fix] Ensure that when flashes or alerts are visible, pages are not auto-refreshed (would cause them to dissapear).
 - [Fix] Time selector in the explorer does not disappear after clicking out.
+- [Fix] Tombstone message presentation epoch doesn't make sense.
 - [Maintenance] Require `karafka-core` `>= 2.4.8` and `karafka` `>= 2.4.16`.
 - [Maintenance] Update `AirDatepicker` to `3.6.0`.
 
