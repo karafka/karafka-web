@@ -27,7 +27,7 @@ RSpec.describe_current do
 
     context 'when we view topic with one tombstone message' do
       before do
-        produce_many(topic, [nil])
+        produce_many(topic, [nil], headers: { 'schedule_source_type' => 'tombstone' })
         get "scheduled_messages/explorer/topics/#{topic}"
       end
 
@@ -36,6 +36,23 @@ RSpec.describe_current do
         expect(body).to include('total: 1')
         expect(body).to include(breadcrumbs)
         expect(body).to include(search_button)
+        expect(body).not_to include(pagination)
+        expect(body).not_to include(support_message)
+      end
+    end
+
+    context 'when we view topic with messages with incorrect type' do
+      before do
+        produce_many(topic, [nil], headers: { 'schedule_source_type' => 'something else' })
+        get "scheduled_messages/explorer/topics/#{topic}"
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('total: 1')
+        expect(body).to include(breadcrumbs)
+        expect(body).to include(search_button)
+        expect(body).to include('This offset does not contain any recognized data type.')
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
       end
@@ -73,7 +90,7 @@ RSpec.describe_current do
           end
         end
 
-        produce_many(topic, [nil], key: '{')
+        produce_many(topic, [nil], key: '{', headers: { 'schedule_source_type' => 'schedule' })
         get "scheduled_messages/explorer/topics/#{topic}"
       end
 
