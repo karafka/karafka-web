@@ -38,7 +38,20 @@
           <%== relative_time(details[:dispatched_at]) %>
         </span>
 
-        <span class="badge badge-<%= details[:state] == 'loaded' ? 'success' : 'warning' %>">
+        <%
+          state = details[:state]
+
+          type = case state
+                 when 'loaded'
+                   'success'
+                 when 'stopped'
+                   'error'
+                 else
+                   'warning'
+                 end
+        %>
+
+        <span class="badge badge-<%= type %>">
           State: <%= details[:state] %>
         </span>
       </p>
