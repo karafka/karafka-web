@@ -85,6 +85,7 @@ module Karafka
                 # with -1001, which is "N/A" offset position for all the offsets here
                 committed_offset: (consumer.coordinator.seek_offset || -1_000) - 1,
                 consumer: consumer.class.to_s,
+                trace_id: Karafka.pro? ? consumer.errors_tracker.trace_id : nil,
                 tags: consumer.tags
               }
             end
