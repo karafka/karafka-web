@@ -10,6 +10,13 @@
   "packageRules": [
     {
       "matchManagers": [
+        "npm"
+      ],
+      "rangeStrategy": "bump",
+      "minimumReleaseAge": "3 days"
+    },
+    {
+      "matchManagers": [
         "github-actions"
       ],
       "minimumReleaseAge": "7 days"
