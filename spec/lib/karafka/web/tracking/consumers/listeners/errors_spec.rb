@@ -101,6 +101,35 @@ RSpec.describe_current do
           expect(sampler.errors.last[:details][:committed_offset]).to eq(-1001)
         end
       end
+
+      context 'when Karafka is pro version' do
+        let(:errors_tracker) { OpenStruct.new(trace_id: 'trace-123-abc') }
+
+        before do
+          allow(Karafka).to receive(:pro?).and_return(true)
+          allow(caller_ref).to receive(:errors_tracker).and_return(errors_tracker)
+        end
+
+        it 'expect to include trace_id in details' do
+          listener.on_error_occurred(event)
+          error_details = sampler.errors.last[:details]
+
+          expect(error_details).to include(trace_id: 'trace-123-abc')
+        end
+      end
+
+      context 'when Karafka is not pro version' do
+        before do
+          allow(Karafka).to receive(:pro?).and_return(false)
+        end
+
+        it 'expect trace_id to be nil' do
+          listener.on_error_occurred(event)
+          error_details = sampler.errors.last[:details]
+
+          expect(error_details).to include(trace_id: nil)
+        end
+      end
     end
 
     context 'when caller is a client' do

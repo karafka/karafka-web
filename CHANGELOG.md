@@ -27,6 +27,7 @@
 - [Enhancement] Use more performant Kafka API calls to describe topics.
 - [Enhancement] Inject `.action-NAME` and `.controller-NAME` body classes for usage with custom CSS and JS.
 - [Enhancement] Improve error handling in the commanding iterator listener (Pro).
+- [Enhancement] Introduce `trace_id` to the errors tracked for DLQ correlation (if in use) (Pro).
 - [Change] Do not fully hide config-disabled features but make them disabled.
 - [Change] Remove per-consumer process duplicated details from Subscriptions and Jobs tabs.
 - [Change] Move to trusted-publishers and remove signing since no longer needed.
