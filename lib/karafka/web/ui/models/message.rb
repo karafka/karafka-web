@@ -35,7 +35,7 @@ module Karafka
               return message if message
 
               # Not found can also occur for system entries and compacted messages.
-              # Since we want to know about this in some cases we handle this case nad check if the
+              # Since we want to know about this in some cases we handle this case and check if the
               # requested offset is within the range and if so, it means it has been cleaned or
               # is a system entry. In such cases we do display user an info message.
               return nil if watermark_offsets &&

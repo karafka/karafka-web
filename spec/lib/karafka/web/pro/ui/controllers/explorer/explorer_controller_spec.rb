@@ -621,6 +621,23 @@ RSpec.describe_current do
       end
     end
 
+    context 'when requested message exists but is a system entry' do
+      before do
+        produce(topic, nil, type: :transactional)
+        get "explorer/topics/#{topic}/0/1"
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include(breadcrumbs)
+        expect(body).to include('The message has been removed through')
+        expect(body).to include(pagination)
+        expect(body).not_to include('<code class="json')
+        expect(body).not_to include('Metadata')
+        expect(body).not_to include(support_message)
+      end
+    end
+
     context 'when requested message exists but is too big to be presented' do
       before do
         topic_name = topic
