@@ -56,6 +56,9 @@
 - [Fix] Time selector in the explorer does not disappear after clicking out.
 - [Fix] Tombstone message presentation epoch doesn't make sense.
 - [Fix] Fix incorrectly displayed "No jobs" alert info.
+- [Fix] Previous / next navigation in the explorer does not work when moving to transactional checkpoints.
+- [Fix] Errors explorer does not work with transactional produced data.
+- [Fix] Errors explorer in OSS does not have pagination.
 - [Maintenance] Require `karafka-core` `>= 2.4.8` and `karafka` `>= 2.4.16`.
 - [Maintenance] Update `AirDatepicker` to `3.6.0`.
 

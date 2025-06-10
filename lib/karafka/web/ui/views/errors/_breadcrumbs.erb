@@ -4,15 +4,10 @@
   </a>
 </li>
 
-<% if @error_message %>
+<% if @offset %>
   <li>
-    <a href="<%= root_path('errors', @offset) %>">
-      <%=
-        type = @error_message.payload[:type]
-        error_class = @error_message.payload[:error_class]
-
-        "#{type}: #{error_class}"
-      %>
+    <a href="<%= root_path('errors', @partition_id, @offset) %>">
+      <%= "Offset #{@offset}" %>
     </a>
   </li>
 <% end %>

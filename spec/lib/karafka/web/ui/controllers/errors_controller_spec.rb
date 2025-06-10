@@ -153,10 +153,50 @@ RSpec.describe_current do
         expect(response).to be_ok
         expect(body).not_to include(no_errors)
         expect(body).to include('shinra:1555833:4e8f7174ae53')
-        expect(body.scan('StandardError').size).to eq(4)
+        expect(body.scan('StandardError').size).to eq(3)
         expect(body).not_to include(pagination)
         expect(body).to include(breadcrumbs)
         expect(body).to include('app/jobs/visitors_job.rb:9:in')
+      end
+    end
+
+    context 'when visiting error offset with a transactional record in range' do
+      before do
+        produce(errors_topic, error_report, partition: 0, type: :transactional)
+
+        get 'errors/1'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).not_to include('shinra:1555833:4e8f7174ae53')
+        expect(body).not_to include('StandardError')
+        expect(body).to include(breadcrumbs)
+        expect(body).to include(pagination)
+        expect(body).to include('The message has been removed')
+        expect(body).to include(support_message)
+      end
+    end
+
+    context 'when visiting offset on transactional above watermark' do
+      before do
+        produce(errors_topic, error_report, partition: 0, type: :transactional)
+
+        get 'errors/2'
+      end
+
+      it do
+        expect(response).not_to be_ok
+        expect(status).to eq(404)
+      end
+    end
+
+    context 'when viewing an error but having a different one in the offset' do
+      before { get 'errors/0?offset=1' }
+
+      it 'expect to redirect to the one from the offset' do
+        expect(response.status).to eq(302)
+        expect(response.headers['location']).to include('errors/1')
       end
     end
   end

@@ -43,7 +43,7 @@ en:
     - "Are you concerned about managing large data flows? Virtual Partitions in Karafka Pro simplify data processing, offering unparalleled efficiency and scalability."
     - "Looking for flexible scheduling solutions? Karafka's Pro Periodic Jobs feature allows precise task timing and execution, enhancing your application's performance and reliability."
     - "Need advanced routing capabilities? Routing Patterns in Karafka Pro provide dynamic message routing, improving your system's adaptability and efficiency."
-    - "Are you Seeking to control your workload? With Rate Limiting in Karafka Pro, you can effectively manage and balance your system's load, ensuring optimal performance under any conditions."
+    - "Are you seeking to control your workload? With Rate Limiting in Karafka Pro, you can effectively manage and balance your system's load, ensuring optimal performance under any conditions."
     - "Need quick data access methods? The Iterator API in Karafka Pro provides efficient data retrieval methods."
     - "Want more nuanced error handling? Discover Granular Backoffs in Karafka Pro, which allows for detailed control over retry mechanisms and error recovery processes."
     - "Need a boost in data processing speed? Multiplexing in Karafka Pro enables parallel processing, significantly increasing throughput and reducing processing times."

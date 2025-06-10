@@ -17,7 +17,8 @@ module Karafka
               previous_offset,
               @params.current_offset,
               next_offset,
-              @error_messages.map(&:offset)
+              # If message is an array, it means it's a compacted dummy offset representation
+              @error_messages.map { |message| message.is_a?(Array) ? message.last : message.offset }
             )
 
             render
@@ -25,11 +26,19 @@ module Karafka
 
           # @param offset [Integer] given error message offset
           def show(offset)
+            @partition_id = 0
+            @offset = offset
+
+            watermark_offsets = Models::WatermarkOffsets.find(errors_topic, @partition_id)
+
             @error_message = Models::Message.find(
               errors_topic,
-              0,
-              offset
+              @partition_id,
+              offset,
+              watermark_offsets: watermark_offsets
             )
+
+            paginate(offset, watermark_offsets.low, watermark_offsets.high)
 
             render
           end

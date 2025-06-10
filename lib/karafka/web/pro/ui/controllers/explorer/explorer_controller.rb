@@ -91,20 +91,30 @@ module Karafka
                 @topic_id = topic_id
                 @partition_id = partition_id
                 @offset = offset
-                @message = Models::Message.find(@topic_id, @partition_id, @offset)
 
-                @safe_key = Web::Pro::Ui::Lib::SafeRunner.new { @message.key }.tap(&:call)
-                @safe_headers = Web::Pro::Ui::Lib::SafeRunner.new { @message.headers }.tap(&:call)
-                @safe_payload = Web::Pro::Ui::Lib::SafeRunner.new { @message.payload }.tap(&:call)
+                watermark_offsets = Models::WatermarkOffsets.find(topic_id, partition_id)
+
+                @message = Models::Message.find(
+                  @topic_id,
+                  @partition_id,
+                  @offset,
+                  watermark_offsets: watermark_offsets
+                )
+
+                # Only if it is not a compacted message we can deserialize stuff
+                if @message
+                  @safe_key = Web::Pro::Ui::Lib::SafeRunner.new { @message.key }.tap(&:call)
+                  @safe_headers = Web::Pro::Ui::Lib::SafeRunner.new { @message.headers }.tap(&:call)
+                  @safe_payload = Web::Pro::Ui::Lib::SafeRunner.new { @message.payload }.tap(&:call)
+                end
 
                 # This may be off for certain views like recent view where we are interested only
                 # in the most recent all the time. It does not make any sense to display pagination
                 # there
-                if paginate
-                  # We need watermark offsets to decide if we can paginate left and right
-                  watermark_offsets = Models::WatermarkOffsets.find(topic_id, partition_id)
-                  paginate(offset, watermark_offsets.low, watermark_offsets.high)
-                end
+                #
+                # We need watermark offsets to decide if we can paginate left and right
+                # We check that because it may have got here via the transactional flow
+                paginate(offset, watermark_offsets.low, watermark_offsets.high) if paginate
 
                 render
               end

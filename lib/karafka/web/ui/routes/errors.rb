@@ -11,7 +11,11 @@ module Karafka
               controller = build(Controllers::ErrorsController)
 
               r.get Integer do |offset|
-                controller.show(offset)
+                if params.current_offset != -1
+                  r.redirect root_path('errors', params.current_offset)
+                else
+                  controller.show(offset)
+                end
               end
 
               r.get do

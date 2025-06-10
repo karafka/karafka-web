@@ -10,13 +10,21 @@ module Karafka
           extend Lib::Paginations::Paginators
 
           class << self
-            # Looks for a message from a given topic partition
+            # Looks for a message from a given topic partition. When no offsets provided, will
+            # raise if there is no data under the given offset. If watermarks were provided, it
+            # will check if this is a system entry and in such cases will return nil.
+            # Will always raise if request is out of range.
             #
             # @param topic_id [String]
             # @param partition_id [Integer]
             # @param offset [Integer]
+            # @param watermark_offsets [WatermarkOffsets, false] watermark offsets for this topic
+            #   partition or false if not provided
+            # @return [Karafka::Messages::Message, nil] found message or nil in case watermark
+            #   offsets were provided and we encountered a message matching watermarks
             # @raise [::Karafka::Web::Errors::Ui::NotFoundError] when not found
-            def find(topic_id, partition_id, offset)
+            # @note If no watermark offsets provided will always raise if no message with data
+            def find(topic_id, partition_id, offset, watermark_offsets: false)
               message = Lib::Admin.read_topic(
                 topic_id,
                 partition_id,
@@ -26,6 +34,16 @@ module Karafka
 
               return message if message
 
+              # Not found can also occur for system entries and compacted messages.
+              # Since we want to know about this in some cases we handle this case and check if the
+              # requested offset is within the range and if so, it means it has been cleaned or
+              # is a system entry. In such cases we do display user an info message.
+              return nil if watermark_offsets &&
+                            offset >= watermark_offsets.low &&
+                            offset < watermark_offsets.high
+
+              # If beyond the watermark offsets, we raise 404 as user should not reach such
+              # non-existent messages as we cannot reason about them
               raise(
                 ::Karafka::Web::Errors::Ui::NotFoundError,
                 [topic_id, partition_id, offset].join(', ')

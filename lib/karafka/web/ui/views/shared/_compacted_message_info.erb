@@ -1,0 +1,16 @@
+<div class="col-span-12 mb-6">
+  <% alert_box_info('Empty Offset - No Data') do %>
+    <p>
+      This offset does not contain any consumable message data. This is normal Kafka behavior that occurs when:
+    </p>
+    <ul class="list-disc ml-6 mt-2">
+      <li>The message has been removed through log compaction</li>
+      <li>This offset contains internal Kafka system records (transaction markers, control records)</li>
+      <li>The message is a tombstone record (deletion marker with null value)</li>
+      <li>The topic uses cleanup policies that have processed this offset</li>
+    </ul>
+    <p class="mt-2">
+      Try navigating to nearby offsets or verify the topic's log compaction settings if you expected message data here.
+    </p>
+  <% end %>
+</div>

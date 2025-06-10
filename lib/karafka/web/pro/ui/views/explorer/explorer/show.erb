@@ -1,95 +1,100 @@
 <%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
 <%# See LICENSE for details. %>
 
-<% view_title "Message with offset #{@message.offset} from partition #{@message.partition}" %>
+<% if @message %>
+  <% view_title "Message with offset #{@offset} from partition #{@partition_id}" %>
 
-<%
-  republish_path = explorer_messages_path(@message.topic, @message.partition, @message.offset, 'republish')
-  surrounding_path = explorer_topics_path(@message.topic, @message.partition, @message.offset, 'surrounding')
-%>
+  <%
+    republish_path = explorer_messages_path(@message.topic, @message.partition, @message.offset, 'republish')
+    surrounding_path = explorer_topics_path(@message.topic, @message.partition, @message.offset, 'surrounding')
+  %>
+  <div class="col-span-12">
+    <section class="actions">
+      <% if @visibility_filter.republish?(@message) %>
+        <a
+          href="<%= explorer_messages_path(@message.topic, @message.partition, @message.offset, 'forward') %>"
+          class="btn-action"
+          title="Republish this message"
+        >
+          <%== icon(:arrow_uturn_right) %>
+        </a>
+      <% end %>
 
-<div class="col-span-12">
-  <section class="actions">
-    <% if @visibility_filter.republish?(@message) %>
       <a
-        href="<%= explorer_messages_path(@message.topic, @message.partition, @message.offset, 'forward') %>"
+        href="<%= surrounding_path %>"
         class="btn-action"
-        title="Republish this message"
+        title="Go to this message surrounding position"
       >
-        <%== icon(:arrow_uturn_right) %>
+        <%== icon(:arrows_right_left) %>
       </a>
-    <% end %>
 
-    <a
-      href="<%= surrounding_path %>"
-      class="btn-action"
-      title="Go to this message surrounding position"
-    >
-      <%== icon(:arrows_right_left) %>
-    </a>
+      <% if @visibility_filter.download?(@message) %>
+        <a
+          href="<%= explorer_messages_path(@message.topic, @message.partition, @message.offset, 'download') %>"
+          class="btn-action"
+          title="Download raw payload"
+          data-turbo="false"
+        >
+          <%== icon(:arrow_down_tray) %>
+        </a>
+      <% end %>
 
-    <% if @visibility_filter.download?(@message) %>
-      <a
-        href="<%= explorer_messages_path(@message.topic, @message.partition, @message.offset, 'download') %>"
-        class="btn-action"
-        title="Download raw payload"
-        data-turbo="false"
+      <% if @visibility_filter.export?(@message) && @safe_payload.success? %>
+        <a
+          href="<%= explorer_messages_path(@message.topic, @message.partition, @message.offset, 'export') %>"
+          class="btn-action"
+          title="Export as JSON"
+          data-turbo="false"
+        >
+          <%== icon(:arrow_down_on_square) %>
+        </a>
+      <% end %>
+
+      <button
+        class="btn-action btn-toggle"
+        title="Show the message metadata details"
+        id="metadata-button"
+        data-toggle-target="metadata-details"
       >
-        <%== icon(:arrow_down_tray) %>
-      </a>
-    <% end %>
+        <%== icon(:circle_stack) %>
+      </button>
 
-    <% if @visibility_filter.export?(@message) && @safe_payload.success? %>
-      <a
-        href="<%= explorer_messages_path(@message.topic, @message.partition, @message.offset, 'export') %>"
-        class="btn-action"
-        title="Export as JSON"
-        data-turbo="false"
+      <button
+        class="btn-action btn-toggle"
+        title="Show the message utilization details"
+        id="utilization-button"
+        data-toggle-target="utilization-details"
       >
-        <%== icon(:arrow_down_on_square) %>
-      </a>
-    <% end %>
-
-    <button
-      class="btn-action btn-toggle"
-      title="Show the message metadata details"
-      id="metadata-button"
-      data-toggle-target="metadata-details"
-    >
-      <%== icon(:circle_stack) %>
-    </button>
-
-    <button
-      class="btn-action btn-toggle"
-      title="Show the message utilization details"
-      id="utilization-button"
-      data-toggle-target="utilization-details"
-    >
-      <%== icon(:cpu) %>
-    </button>
-  </section>
-</div>
-
-<div class="col-span-12 mb-6">
-  <div id="utilization-details" class="hidden">
-    <h2 class="h2">
-      Utilization
-    </h2>
-
-    <%== partial 'explorer/explorer/message/resources_utilization' %>
+        <%== icon(:cpu) %>
+      </button>
+    </section>
   </div>
 
-  <div id="metadata-details">
+  <div class="col-span-12 mb-6">
+    <div id="utilization-details" class="hidden">
+      <h2 class="h2">
+        Utilization
+      </h2>
+
+      <%== partial 'explorer/explorer/message/resources_utilization' %>
+    </div>
+
+    <div id="metadata-details">
+      <h2 class="h2">
+        Metadata
+      </h2>
+
+      <%== partial 'explorer/explorer/message/metadata' %>
+    </div>
+
     <h2 class="h2">
-      Metadata
+      Payload
     </h2>
 
-    <%== partial 'explorer/explorer/message/metadata' %>
+    <%== partial 'explorer/explorer/message/payload' %>
   </div>
+<% else %>
+  <% view_title "Message with offset #{@offset} from partition #{@partition_id} (No Data)" %>
 
-  <h2 class="h2">
-    Payload
-  </h2>
-
-  <%== partial 'explorer/explorer/message/payload' %>
-</div>
+  <%== partial 'shared/compacted_message_info' %>
+<% end %>
