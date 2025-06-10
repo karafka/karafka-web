@@ -121,8 +121,8 @@ RSpec.describe_current do
 
       it do
         expect(response).to be_ok
-        expect(body).to include('0,1,2,3,4,5,6,7,8,9...')
-        expect(body).to include('partitions: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9')
+        expect(body).to include('0-50')
+        expect(body).to include('default-[0-50] (51 partitions total)')
         expect(body).not_to include(support_message)
         expect(body).to include(breadcrumbs)
         expect(body).not_to include(no_processes)
