@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require 'time'
-
 RSpec.describe Karafka::Web::Ui::Helpers::TimeHelper do
   let(:helper_class) do
     Class.new do

@@ -28,6 +28,7 @@
 - [Enhancement] Inject `.action-NAME` and `.controller-NAME` body classes for usage with custom CSS and JS.
 - [Enhancement] Improve error handling in the commanding iterator listener (Pro).
 - [Enhancement] Introduce `trace_id` to the errors tracked for DLQ correlation (if in use) (Pro).
+- [Enhancement] Normalize how topics with partitions data is being displayed (`topic-[0,1,2]` etc).
 - [Change] Do not fully hide config-disabled features but make them disabled.
 - [Change] Remove per-consumer process duplicated details from Subscriptions and Jobs tabs.
 - [Change] Move to trusted-publishers and remove signing since no longer needed.
@@ -54,6 +55,7 @@
 - [Fix] Ensure that when flashes or alerts are visible, pages are not auto-refreshed (would cause them to dissapear).
 - [Fix] Time selector in the explorer does not disappear after clicking out.
 - [Fix] Tombstone message presentation epoch doesn't make sense.
+- [Fix] Fix incorrectly displayed "No jobs" alert info.
 - [Maintenance] Require `karafka-core` `>= 2.4.8` and `karafka` `>= 2.4.16`.
 - [Maintenance] Update `AirDatepicker` to `3.6.0`.
 

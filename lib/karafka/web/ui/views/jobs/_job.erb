@@ -6,8 +6,7 @@
   </td>
   <td>
     <span class="badge badge-secondary" title="Consumer group: <%= job.consumer_group %>">
-      <%= job.topic %>:
-      <%= job.partition %>
+      <%= topics_partition_identifier(job.topic, job.partition) %>
     </span>
   </td>
   <td>

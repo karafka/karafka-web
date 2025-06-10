@@ -8,6 +8,7 @@ module Karafka
         include Helpers::PathsHelper
         include Helpers::ApplicationHelper
         include Helpers::TimeHelper
+        include Helpers::TopicsHelper
         include Helpers::TailwindHelper
 
         # Details that need to be evaluated in the context of OSS or Pro web UI.

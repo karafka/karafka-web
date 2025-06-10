@@ -1,7 +1,11 @@
 <%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
 <%# See LICENSE for details. %>
 
-<% view_title "#{@process.id} - Offset Adjustment - #{@subscription_group_id} - #{@topic}##{@partition_id}" %>
+<%
+  tpi = topics_partition_identifier(@topic, @partition_id)
+
+  view_title "#{@process.id} - Offset Adjustment - #{@subscription_group_id} - #{tpi}"
+%>
 
 <% if @process.status != 'running' %>
   <%== partial 'consumers/partitions/offsets/not_running_error' %>

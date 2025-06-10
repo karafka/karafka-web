@@ -11,14 +11,9 @@
     <% partitions_list = partitions.join(', ') %>
     <span
       class="badge badge-secondary"
-      title="Consumer group: <%= consumer_group.id %>, partitions: <%= partitions_list%>"
+      title="Consumer group: <%= consumer_group.id %>, assignments: <%= topics_assignment_label(topic_name, partitions, limit: 25) %>"
     >
-      <%= topic_name %>:
-      <% if partitions.size > 10 %>
-        <%= "#{partitions.sort.first(10).join(',')}..." %>
-      <% else %>
-        <%= partitions.sort.join(',') %>
-      <% end %>
+      <%= topics_assignment_text(topic_name, partitions) %>
     </span>
   <% end %>
 <% end %>

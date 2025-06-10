@@ -7,7 +7,12 @@
     <td>
       <span class="badge badge-secondary">
         <% if error[:details].key?(:topic) %>
-          <%= error[:details][:topic] %>: <%= error[:details][:partition] %>
+          <%=
+            topic = error[:details][:topic]
+            partition = error[:details][:partition]
+
+            topics_partition_identifier(topic, partition)
+          %>
         <% else %>
           <%= error[:type] %>
         <% end %>
