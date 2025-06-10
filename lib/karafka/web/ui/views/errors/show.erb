@@ -1,39 +1,45 @@
-<%
-  type = @error_message.payload[:type]
-  error_class = @error_message.payload[:error_class]
+<% if @error_message %>
+  <%
+    type = @error_message.payload[:type]
+    error_class = @error_message.payload[:error_class]
 
-  view_title "#{type}: #{error_class}"
-%>
+    view_title "#{type}: #{error_class}"
+  %>
 
-<div class="col-span-12 mb-3">
-  <h2 class="h2">
-    Metadata
-  </h2>
+  <div class="col-span-12 mb-3">
+    <h2 class="h2">
+      Metadata
+    </h2>
 
-  <div class="data-table-wrapper">
-    <table class="data-table">
-      <tbody>
-        <% @error_message.payload.each do |k, v| %>
-          <% next if k == :backtrace %>
-          <%==
-            partial(
-              'errors/detail',
-              locals: {
-                k: k,
-                v: v
-              }
-            )
-          %>
-        <% end %>
-      </tbody>
-    </table>
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <tbody>
+          <% @error_message.payload.each do |k, v| %>
+            <% next if k == :backtrace %>
+            <%==
+              partial(
+                'errors/detail',
+                locals: {
+                  k: k,
+                  v: v
+                }
+              )
+            %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
 
-<div class="col-span-12 mb-3">
-  <h2 class="h2">
-    Backtrace
-  </h2>
+  <div class="col-span-12 mb-6">
+    <h2 class="h2">
+      Backtrace
+    </h2>
 
-  <pre class="mb-5 p-0 border border-gray-300 text-sm"><code class="wrapped json p-0 m-0"><%= @error_message.payload[:backtrace] %></code></pre>
-</div>
+    <pre class="mb-5 p-0 border border-gray-300 text-sm"><code class="wrapped json p-0 m-0"><%= @error_message.payload[:backtrace] %></code></pre>
+  </div>
+<% else %>
+  <% view_title "Offset #{@offset}" %>
+
+  <%== partial 'shared/compacted_message_info' %>
+<% end %>
