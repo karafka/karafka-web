@@ -164,6 +164,9 @@ RSpec.describe_current do
       before do
         produce(errors_topic, error_report, partition: 0, type: :transactional)
 
+        # Sleep so watermark offsets and transaction is reflected
+        sleep(1)
+
         get 'errors/1'
       end
 
