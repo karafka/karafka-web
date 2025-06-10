@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'factory_bot'
-require 'simplecov'
 require 'rack/test'
 require 'ostruct'
 require 'set'
@@ -11,21 +10,27 @@ require 'singleton'
 # Are we running regular specs or pro specs
 SPECS_TYPE = ENV.fetch('SPECS_TYPE', 'default')
 
-# Don't include unnecessary stuff into rcov
-SimpleCov.start do
-  add_filter '/spec/'
-  add_filter '/vendor/'
-  add_filter '/gems/'
-  add_filter '/.bundle/'
-  add_filter '/doc/'
-  add_filter '/config/'
+IS_CI = ENV.key?('GITHUB_ACTIONS')
 
-  command_name SPECS_TYPE
-  merge_timeout 3600
-  enable_coverage :branch
+if (IS_CI && ENV.key?('GITHUB_COVERAGE')) || !IS_CI
+  require 'simplecov'
+
+  # Don't include unnecessary stuff into rcov
+  SimpleCov.start do
+    add_filter '/spec/'
+    add_filter '/vendor/'
+    add_filter '/gems/'
+    add_filter '/.bundle/'
+    add_filter '/doc/'
+    add_filter '/config/'
+
+    command_name SPECS_TYPE
+    merge_timeout 3600
+    enable_coverage :branch
+  end
+
+  SimpleCov.minimum_coverage(92) if SPECS_TYPE == 'pro'
 end
-
-SimpleCov.minimum_coverage(92) if SPECS_TYPE == 'pro'
 
 # Load Pro components when running pro specs
 if ENV['SPECS_TYPE'] == 'pro'
