@@ -44,10 +44,11 @@ jobs:
       - name: Install package dependencies
         run: "[ -e $APT_DEPS ] || sudo apt-get install -y --no-install-recommends $APT_DEPS"
 
-      - name: Remove platform-specific ffi entries for Ruby previews
+      - name: Remove platform-specific entries for Ruby previews
         if: contains(matrix.ruby, '3.5')
         run: |
           ruby -i -ne 'puts $_ unless /^\s*ffi \(.*-.*\)$/' Gemfile.lock
+          ruby -i -ne 'puts $_ unless /^\s*nokogiri \(.*-.*\)$/' Gemfile.lock
 
       - name: Start Kafka with Docker Compose
         run: |
