@@ -49,6 +49,7 @@ jobs:
         run: |
           ruby -i -ne 'puts $_ unless /^\s*ffi \(.*-.*\)$/' Gemfile.lock
           ruby -i -ne 'puts $_ unless /^\s*nokogiri \(.*-.*\)$/' Gemfile.lock
+          ruby -i -e 'prev = nil; $<.each { |line| puts line unless line == prev; prev = line }' Gemfile.lock
 
       - name: Start Kafka with Docker Compose
         run: |
