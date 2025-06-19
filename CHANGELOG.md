@@ -1,5 +1,8 @@
 # Karafka Web Changelog
 
+## 0.11.1 (Unreleased)
+- [Fix] 
+
 ## 0.11.0 (2025-06-15)
 - **[Feature]** Provide ability to pause/resume partitions on running consumers via the UI (Pro).
 - **[Feature]** Provide ability to edit offsets of running consumers (Pro).
