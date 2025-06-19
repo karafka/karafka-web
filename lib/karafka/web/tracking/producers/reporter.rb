@@ -23,6 +23,8 @@ module Karafka
 
           # Dispatches the current state from sampler to appropriate topics
           def report
+            messages = nil
+
             MUTEX.synchronize do
               return unless report?
 
@@ -42,12 +44,12 @@ module Karafka
 
               return if messages.empty?
 
-              produce(messages)
-
               # Clear the sampler so it tracks new state changes without previous once impacting
               # the data
               sampler.clear
             end
+
+            produce(messages)
           end
 
           private

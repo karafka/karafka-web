@@ -49,6 +49,10 @@ module Karafka
             # block during this time
             sampler.sample
 
+            messages = nil
+
+            # We aggregate all the data behind a mutex to make sure, we do not corrupt the already
+            # aggregated data in a different thread
             MUTEX.synchronize do
               return unless report?(forced)
 
@@ -84,12 +88,12 @@ module Karafka
                 }
               end
 
-              produce(messages)
-
               # Clear the sampler so it tracks new state changes without previous once impacting
               # the data
               sampler.clear
             end
+
+            produce(messages)
           end
 
           # Reports bypassing frequency check. This can be used to report when state changes in the
