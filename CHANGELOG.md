@@ -1,6 +1,6 @@
 # Karafka Web Changelog
 
-## 0.11.1 (Unreleased)
+## 0.11.1 (2025-06-23)
 - [Fix] Extremely high error turnover from hundreds of partitions can cause a deadlock in the reporter for transactional Web producer.
 
 ## 0.11.0 (2025-06-15)
