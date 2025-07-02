@@ -15,7 +15,7 @@ class LinksValidator
   EXCEPTIONS = [
     %r{explorer/topics/\w+/\d+},
     %r{explorer/topics/it-[a-f0-9-]+/\d+},
-    %r{consumers/shinra:[a-f0-9]+:[a-f0-9]+/subscriptions},
+    %r{consumers/[a-z0-9]+:[a-f0-9]+:[a-f0-9]+/subscriptions},
     # github runners process names
     %r{consumers/fv-[a-z0-9:-]+/subscriptions},
     '/explorer/topics/test3',
@@ -45,7 +45,7 @@ class LinksValidator
   # regexps as a baseline to build visited keys so we know that we visited one and worked
   KEY_TRANSFORMERS = [
     /it-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
-    /shinra:\d+:\d+/
+    /[a-z0-9]+:\d+:\d+/
   ].freeze
 
   private_constant :ALLOWED_RESPONSES, :EXCLUDED_CONTROLLERS, :EXCLUDED_DESCRIPTIONS
