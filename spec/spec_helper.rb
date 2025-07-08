@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'factory_bot'
+require 'ostruct'
 require 'simplecov'
 require 'rack/test'
 
