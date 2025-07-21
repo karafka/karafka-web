@@ -6,8 +6,6 @@ plugin 'diffend'
 
 gemspec
 
-gem 'karafka'
-
 group :test do
   gem 'byebug'
   gem 'factory_bot'
