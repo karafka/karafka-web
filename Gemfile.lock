@@ -137,7 +137,6 @@ DEPENDENCIES
   byebug
   factory_bot
   fugit
-  karafka
   karafka-web!
   nokogiri
   ostruct
