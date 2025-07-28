@@ -10,7 +10,8 @@ module Karafka
           class Hash < Hash
             # @param ttl [Integer] milliseconds ttl
             def initialize(ttl)
-              super() { |k, v| k[v] = Ttls::Array.new(ttl) }
+              @ttl = ttl
+              super() { |k, v| k[v] = Ttls::Array.new(@ttl) }
             end
 
             # Takes a block where we provide a hash select filtering to select keys we are
@@ -25,6 +26,11 @@ module Karafka
               Stats.new(
                 select(&block)
               )
+            end
+
+            # @return [String] thread-safe inspect of the ttls hash
+            def inspect
+              "#<#{self.class.name}:#{format('%#x', object_id)} size=#{size} ttl=#{@ttl}ms>"
             end
           end
         end
