@@ -1,7 +1,7 @@
 {
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.11",
-    "daisyui": "^5.0.46",
+    "daisyui": "^5.0.47",
     "gulp": "^5.0.1",
     "gulp-concat": "^2.6.1",
     "gulp-sourcemaps": "^3.0.0",
