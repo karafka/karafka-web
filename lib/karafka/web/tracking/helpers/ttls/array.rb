@@ -56,6 +56,17 @@ module Karafka
               super
             end
 
+            # @return [String] thread-safe inspection string
+            def inspect
+              clear
+              size = @accu.size
+
+              parts = ["ttl=#{@ttl}ms"]
+              parts << "size=#{size}"
+
+              "#<#{self.class.name}:#{format('%#x', object_id)} #{parts.join(' ')}>"
+            end
+
             private
 
             # Evicts outdated samples
