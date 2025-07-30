@@ -2,6 +2,7 @@
 
 ## 0.11.2 (Unreleased)
 - [Enhancement] Make sure that TTL counters related `#inspect` are thread-safe.
+- [Change] Add new CI action to trigger auto-doc refresh.
 
 ## 0.11.1 (2025-06-23)
 - [Fix] Extremely high error turnover from hundreds of partitions can cause a deadlock in the reporter for transactional Web producer.
