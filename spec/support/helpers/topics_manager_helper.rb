@@ -12,6 +12,19 @@ module TopicsManagerHelper
   # @return [String] generated topic name
   def create_topic(topic_name: generate_topic_name, partitions: 1)
     Karafka::Admin.create_topic(topic_name, partitions, 1)
+
+    # Topic synchronization may take some time, especially when there are hundreds of partitions,
+    # hence we check if topic is available and if not we wait
+    # Slow topic creation can happen especially on CI
+    loop do
+      topics = Karafka::Admin.cluster_info.topics
+      found = topics.find { |topic| topic[:topic_name] == topic_name }
+
+      break if found
+
+      sleep(0.1)
+    end
+
     topic_name
   end
 
