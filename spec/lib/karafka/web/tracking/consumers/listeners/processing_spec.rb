@@ -207,7 +207,7 @@ RSpec.describe_current do
       expect(job[:partition]).to eq(0)
       expect(job[:first_offset]).to eq(0)
       expect(job[:last_offset]).to eq(1)
-      # CI hickups can cause this to drift a bit
+      # CI hiccups can cause this to drift a bit
       expect(job[:processing_lag]).to be_within(10).of(1_000)
       expect(job[:consumption_lag]).to eq(0)
       expect(job[:committed_offset]).to eq(0)
