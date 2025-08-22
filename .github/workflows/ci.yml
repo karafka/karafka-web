@@ -21,7 +21,7 @@ env:
 
 jobs:
   specs:
-    timeout-minutes: 15
+    timeout-minutes: 25
     runs-on: >-
       ${{
         (github.event_name != 'pull_request' ||
@@ -125,7 +125,7 @@ jobs:
         run: bundle secure
 
   coditsu:
-    timeout-minutes: 5
+    timeout-minutes: 10
     runs-on: >-
       ${{
         (github.event_name != 'pull_request' ||
