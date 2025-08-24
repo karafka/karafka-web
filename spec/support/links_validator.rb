@@ -15,9 +15,7 @@ class LinksValidator
   EXCEPTIONS = [
     %r{explorer/topics/\w+/\d+},
     %r{explorer/topics/it-[a-f0-9-]+/\d+},
-    %r{consumers/[a-z0-9]+:[a-f0-9]+:[a-f0-9]+/subscriptions},
-    # github runners process names
-    %r{consumers/fv-[a-z0-9:-]+/subscriptions},
+    %r{consumers/[a-z0-9-]+:[a-z0-9]+(:[a-z0-9]+)?/subscriptions},
     '/explorer/topics/test3',
     %r{/consumers/[a-f0-9-]+/subscriptions}
   ].freeze
