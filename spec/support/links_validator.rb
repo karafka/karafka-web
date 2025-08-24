@@ -119,8 +119,6 @@ class LinksValidator
     # Skip if we've already visited this link
     return if @visited_links.include?(link_key)
 
-    p link_key
-
     # Add to visited set to avoid checking again
     @visited_links.add(link_key)
 
