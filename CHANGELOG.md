@@ -1,5 +1,8 @@
 # Karafka Web Changelog
 
+## 0.11.3 (Unreleased)
+- [Change] Normalize how libs and dependencies are required (no functional change for the end user)
+
 ## 0.11.2 (2025-08-18)
 - [Enhancement] Make sure that TTL counters related `#inspect` are thread-safe.
 - [Change] Add new CI action to trigger auto-doc refresh.

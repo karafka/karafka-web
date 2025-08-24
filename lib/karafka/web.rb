@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
-%w[
-  karafka
-  roda
-  etc
-  open3
-  zlib
-  securerandom
-  cgi
-  uri
-].each { |lib| require lib }
+require 'karafka'
+require 'roda'
+require 'etc'
+require 'open3'
+require 'zlib'
+require 'securerandom'
+require 'cgi'
+require 'uri'
 
 module Karafka
   # Karafka Web UI + Karafka web monitoring
