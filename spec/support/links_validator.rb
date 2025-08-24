@@ -152,6 +152,6 @@ class LinksValidator
       final_key = final_key.gsub(transformer, 'KEY')
     end
 
-    'test' || final_key
+    final_key
   end
 end
