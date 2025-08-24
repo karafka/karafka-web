@@ -19,7 +19,8 @@ class LinksValidator
     # github runners process names
     %r{consumers/fv-[a-z0-9:-]+/subscriptions},
     # custom self-hosted runners
-    %r{github-runner-[a-z0-9-]+:\d+:[a-f0-9]+},
+    github-runner-template:11308:e4a15a2c75bf
+    %r{github-runner-[a-z0-9-]+:[a-f0-9]+:[a-f0-9]+},
     '/explorer/topics/test3',
     %r{/consumers/[a-f0-9-]+/subscriptions}
   ].freeze
