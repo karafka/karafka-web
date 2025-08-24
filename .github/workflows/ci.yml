@@ -21,7 +21,7 @@ env:
 
 jobs:
   specs:
-    timeout-minutes: 25
+    timeout-minutes: 30
     runs-on: >-
       ${{
         (github.event_name != 'pull_request' ||
