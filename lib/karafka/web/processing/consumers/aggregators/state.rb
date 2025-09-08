@@ -51,7 +51,11 @@ module Karafka
             # @param report [Hash]
             # @param offset [Integer]
             def add_state(report, offset)
-              process_id = report[:process][:id]
+              # When we deserialize the keys from the stored state, because we convert keys into
+              # symbols, we may have given process state already stored. This means that in order
+              # to update it, we do need to have the new report process id also as a symbol to
+              # act as the key
+              process_id = report[:process][:id].to_sym
 
               state[:processes][process_id] = {
                 dispatched_at: report[:dispatched_at],

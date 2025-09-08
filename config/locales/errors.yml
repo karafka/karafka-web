@@ -7,3 +7,4 @@ en:
       missing: needs to be present
       id_format: needs to be a String
       format: is invalid
+      processes_format: must be a hash with symbol keys
