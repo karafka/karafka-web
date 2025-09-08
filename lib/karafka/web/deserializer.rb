@@ -21,7 +21,12 @@ module Karafka
 
         ::JSON.parse(
           raw_payload,
-          symbolize_names: true
+          symbolize_names: true,
+          # We allow duplicates keys because of a fixed bug that was causing duplicated process
+          # ids to leak into the consumers states data. Once a proper migration is written, this
+          # can be retired
+          # @see https://github.com/karafka/karafka-web/issues/741
+          allow_duplicate_key: true
         )
       end
     end
