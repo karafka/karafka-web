@@ -88,7 +88,6 @@ RSpec.describe_current do
     before do
       allow(sampler).to receive(:track)
       allow(reporter).to receive(:report)
-      allow(reporter).to receive(:report)
     end
 
     it 'can be used as a base class for specific producer listeners' do
