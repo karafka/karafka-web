@@ -91,5 +91,79 @@ RSpec.describe_current do
         expect(body).to include(breadcrumbs)
       end
     end
+
+    context 'when topic has manual offset management' do
+      before do
+        t_name = generate_topic_name
+
+        draw_routes do
+          topic t_name do
+            consumer Karafka::BaseConsumer
+            manual_offset_management true
+          end
+        end
+
+        get "routing/#{Karafka::App.routes.last.topics.last.id}"
+      end
+
+      it 'displays manual offset management setting' do
+        expect(response).to be_ok
+        expect(body).to include('manual_offset_management')
+        expect(body).to include('true')
+        expect(body).to include(support_message)
+        expect(body).to include(breadcrumbs)
+      end
+    end
+
+    context 'when topic has complex configuration' do
+      before do
+        t_name = generate_topic_name
+
+        draw_routes do
+          topic t_name do
+            consumer Karafka::BaseConsumer
+            max_messages 100
+            max_wait_time 1000
+            initial_offset 'earliest'
+          end
+        end
+
+        get "routing/#{Karafka::App.routes.last.topics.last.id}"
+      end
+
+      it 'displays processing settings' do
+        expect(response).to be_ok
+        expect(body).to include('max_messages')
+        expect(body).to include('100')
+        expect(body).to include('max_wait_time')
+        expect(body).to include('1000')
+        expect(body).to include('initial_offset')
+        expect(body).to include('earliest')
+        expect(body).to include(support_message)
+      end
+    end
+
+    context 'when topic belongs to subscription group' do
+      before do
+        t_name = generate_topic_name
+
+        draw_routes do
+          subscription_group :critical do
+            topic t_name do
+              consumer Karafka::BaseConsumer
+            end
+          end
+        end
+
+        get "routing/#{Karafka::App.routes.last.topics.last.id}"
+      end
+
+      it 'displays subscription group information' do
+        expect(response).to be_ok
+        expect(body).to include('subscription_group_details.name')
+        expect(body).to include('critical')
+        expect(body).to include(support_message)
+      end
+    end
   end
 end

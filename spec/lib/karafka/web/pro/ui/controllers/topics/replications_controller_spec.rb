@@ -19,7 +19,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when getting replication of an existing topic' do
+    context 'when getting replication of an existing topic with single partition' do
       before { get "topics/#{topic}/replication" }
 
       it do
@@ -30,6 +30,34 @@ RSpec.describe_current do
         expect(body).to include(topic)
         expect(body).to include('Replica Count')
         expect(body).to include('In Sync Brokers')
+      end
+
+      it 'shows partition details' do
+        expect(body).to include('Partition')
+        expect(body).to include('Leader')
+        expect(body).to include('0') # First partition
+      end
+    end
+
+    context 'when topic has multiple partitions' do
+      let(:partitions) { 5 }
+
+      before { get "topics/#{topic}/replication" }
+
+      it 'displays all partitions' do
+        expect(response).to be_ok
+        expect(body).to include(topic)
+        expect(body).to include('0')
+        expect(body).to include('1')
+        expect(body).to include('2')
+        expect(body).to include('3')
+        expect(body).to include('4')
+      end
+
+      it 'shows replication details for each partition' do
+        expect(body).to include('Replica Count')
+        expect(body).to include('In Sync Brokers')
+        expect(body).to include('Leader')
       end
     end
   end
