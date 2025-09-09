@@ -3,7 +3,7 @@
 # This code is part of Karafka Pro, a commercial component not licensed under LGPL.
 # See LICENSE for details.
 
-RSpec.describe Karafka::Web::Pro::Ui::Lib::Search::Matchers::RawHeaderIncludes do
+RSpec.describe_current do
   subject(:matcher) { described_class.new }
 
   describe '.active?' do
