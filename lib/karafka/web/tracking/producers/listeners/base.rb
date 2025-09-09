@@ -12,7 +12,7 @@ module Karafka
             extend Forwardable
 
             def_delegators :sampler, :track
-            def_delegators :reporter, :report, :report!
+            def_delegators :reporter, :report
 
             private
 

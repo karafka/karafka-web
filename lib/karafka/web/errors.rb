@@ -54,6 +54,14 @@ module Karafka
 
         # Similar to the one related to consumers states
         MissingConsumersMetricsTopicError = Class.new(BaseError)
+
+        # Similar to management and ui errors with the same name, it is raised when a critical
+        # incompatibility is detected during processing.
+        #
+        # This error is raised when there was an attempt to process reports that are in a newer
+        # version that the one in the current process. We prevent this from happening not to
+        # corrupt the data. Please upgrade all the Web UI consumers to the same version
+        IncompatibleSchemaError = Class.new(BaseError)
       end
 
       # Ui related errors
@@ -67,11 +75,6 @@ module Karafka
 
         # Raised when we want to stop the flow and render 403
         ForbiddenError = Class.new(BaseError)
-
-        # Raised when trying to get info about a consumer that has incompatible schema in its
-        # report. It usually means you are running different version of the Web UI in the consumer
-        # and in the Web server
-        IncompatibleSchemaError = Class.new(BaseError)
       end
     end
   end
