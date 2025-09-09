@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Karafka::Web::Ui::Helpers::TimeHelper do
+RSpec.describe_current do
   let(:helper_class) do
     Class.new do
       include Karafka::Web::Ui::Helpers::TimeHelper
