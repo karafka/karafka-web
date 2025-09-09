@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Karafka::Web::Processing::TimeSeriesTracker do
+RSpec.describe_current do
   subject(:tracker) { described_class.new(existing) }
 
   let(:existing) { {} }

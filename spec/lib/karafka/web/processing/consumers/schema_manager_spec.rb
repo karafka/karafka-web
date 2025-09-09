@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Karafka::Web::Processing::Consumers::SchemaManager do
+RSpec.describe_current do
   subject(:manager) { described_class.new }
 
   let(:message) do
@@ -12,12 +12,8 @@ RSpec.describe Karafka::Web::Processing::Consumers::SchemaManager do
   end
 
   describe '#initialize' do
-    it 'initializes with compatible state' do
+    it 'initializes as compatible' do
       expect(manager.to_s).to eq('compatible')
-    end
-
-    it 'initializes with valid internal state' do
-      expect(manager.instance_variable_get(:@valid)).to be(true)
     end
   end
 
@@ -30,9 +26,9 @@ RSpec.describe Karafka::Web::Processing::Consumers::SchemaManager do
           expect(manager.call(message)).to eq(:current)
         end
 
-        it 'maintains valid internal state' do
+        it 'remains compatible after processing' do
           manager.call(message)
-          expect(manager.instance_variable_get(:@valid)).to be(true)
+          expect(manager.to_s).to eq('compatible')
         end
       end
 
@@ -43,9 +39,9 @@ RSpec.describe Karafka::Web::Processing::Consumers::SchemaManager do
           expect(manager.call(message)).to eq(:older)
         end
 
-        it 'maintains valid internal state' do
+        it 'remains compatible after processing' do
           manager.call(message)
-          expect(manager.instance_variable_get(:@valid)).to be(true)
+          expect(manager.to_s).to eq('compatible')
         end
       end
 
@@ -56,9 +52,9 @@ RSpec.describe Karafka::Web::Processing::Consumers::SchemaManager do
           expect(manager.call(message)).to eq(:newer)
         end
 
-        it 'maintains valid internal state' do
+        it 'remains compatible after processing' do
           manager.call(message)
-          expect(manager.instance_variable_get(:@valid)).to be(true)
+          expect(manager.to_s).to eq('compatible')
         end
       end
 
@@ -97,9 +93,9 @@ RSpec.describe Karafka::Web::Processing::Consumers::SchemaManager do
         expect(result).to eq(:current)
       end
 
-      it 'maintains invalid internal state' do
+      it 'remains incompatible after processing' do
         manager.call(message)
-        expect(manager.instance_variable_get(:@valid)).to be(false)
+        expect(manager.to_s).to eq('incompatible')
       end
     end
 
@@ -115,11 +111,7 @@ RSpec.describe Karafka::Web::Processing::Consumers::SchemaManager do
   describe '#invalidate!' do
     it 'changes state to incompatible' do
       expect { manager.invalidate! }
-        .to change { manager.to_s }.from('compatible').to('incompatible')
-    end
-
-    it 'changes internal valid flag to false' do
-      expect { manager.invalidate! }.to change { manager.instance_variable_get(:@valid) }.from(true).to(false)
+        .to change(manager, :to_s).from('compatible').to('incompatible')
     end
 
     it 'is idempotent' do
@@ -129,14 +121,14 @@ RSpec.describe Karafka::Web::Processing::Consumers::SchemaManager do
     end
   end
 
-  describe 'internal state management' do
-    it 'starts with valid flag as true' do
-      expect(manager.instance_variable_get(:@valid)).to be(true)
+  describe 'state management' do
+    it 'starts as compatible' do
+      expect(manager.to_s).to eq('compatible')
     end
 
-    it 'sets valid flag to false after invalidation' do
+    it 'becomes incompatible after invalidation' do
       manager.invalidate!
-      expect(manager.instance_variable_get(:@valid)).to be(false)
+      expect(manager.to_s).to eq('incompatible')
     end
   end
 
@@ -221,7 +213,7 @@ RSpec.describe Karafka::Web::Processing::Consumers::SchemaManager do
       it 'handles single digit versions' do
         message = OpenStruct.new(payload: { schema_version: '1' })
         result = manager.call(message)
-        expect(%i[older newer current]).to include(result)
+        expect(%i[older newer current] & [result]).not_to be_empty
       end
 
       it 'handles two-part versions' do
@@ -240,7 +232,7 @@ RSpec.describe Karafka::Web::Processing::Consumers::SchemaManager do
 
       5.times do
         expect(manager.call(current_version_message)).to eq(:current)
-        expect(manager.instance_variable_get(:@valid)).to be(true)
+        expect(manager.to_s).to eq('compatible')
       end
     end
 
@@ -252,7 +244,7 @@ RSpec.describe Karafka::Web::Processing::Consumers::SchemaManager do
 
       5.times do
         expect(manager.call(current_version_message)).to eq(:current)
-        expect(manager.instance_variable_get(:@valid)).to be(false)
+        expect(manager.to_s).to eq('incompatible')
       end
     end
   end

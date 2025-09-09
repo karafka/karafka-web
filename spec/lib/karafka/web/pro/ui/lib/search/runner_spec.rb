@@ -71,10 +71,10 @@ RSpec.describe_current do
       end
 
       it 'collects the correct metrics' do
-        runner.call
+        _results, metrics = runner.call
 
-        expect(runner.instance_variable_get(:@totals_stats)[:checked]).to eq(4)
-        expect(runner.instance_variable_get(:@totals_stats)[:matched]).to eq(0)
+        expect(metrics[:totals][:checked]).to eq(4)
+        expect(metrics[:totals][:matched]).to eq(0)
       end
 
       context 'when a message matches the phrase' do

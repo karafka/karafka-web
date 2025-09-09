@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Karafka::Web::Ui::Helpers::PathsHelper do
+RSpec.describe_current do
   subject(:helper) do
     helper_class = Class.new do
       include Karafka::Web::Ui::Helpers::PathsHelper

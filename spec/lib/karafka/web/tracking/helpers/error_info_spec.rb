@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Karafka::Web::Tracking::Helpers::ErrorInfo do
+RSpec.describe_current do
   subject(:extractor) do
     helper = described_class
 

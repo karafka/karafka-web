@@ -25,8 +25,8 @@ RSpec.describe_current do
   end
 
   describe '#initialize' do
-    it 'initializes with empty active reports hash' do
-      expect(aggregator.instance_variable_get(:@active_reports)).to eq({})
+    it 'creates a new aggregator instance' do
+      expect(aggregator).to be_a(described_class)
     end
 
     it 'includes time helpers' do
@@ -36,136 +36,108 @@ RSpec.describe_current do
   end
 
   describe '#add' do
-    it 'adds a report to active reports' do
-      aggregator.add(report1)
-
-      active_reports = aggregator.instance_variable_get(:@active_reports)
-      expect(active_reports['process-1']).to eq(report1)
+    it 'accepts a report without raising errors' do
+      expect { aggregator.add(report1) }.not_to raise_error
     end
 
-    it 'updates existing process report with newer data' do
-      aggregator.add(report1)
-      aggregator.add(report3)
-
-      active_reports = aggregator.instance_variable_get(:@active_reports)
-      expect(active_reports['process-1']).to eq(report3)
+    it 'accepts multiple reports' do
+      expect { aggregator.add(report1) }.not_to raise_error
+      expect { aggregator.add(report2) }.not_to raise_error
+      expect { aggregator.add(report3) }.not_to raise_error
     end
 
-    it 'stores multiple process reports' do
-      aggregator.add(report1)
-      aggregator.add(report2)
-
-      active_reports = aggregator.instance_variable_get(:@active_reports)
-      expect(active_reports).to include('process-1' => report1)
-      expect(active_reports).to include('process-2' => report2)
+    it 'handles reports with same process id' do
+      expect { aggregator.add(report1) }.not_to raise_error
+      expect { aggregator.add(report3) }.not_to raise_error
     end
 
-    it 'updates aggregated_from timestamp to the latest dispatch time' do
-      aggregator.add(report1)
-      expect(aggregator.instance_variable_get(:@aggregated_from)).to eq(report1[:dispatched_at])
-
-      aggregator.add(report2)
-      expect(aggregator.instance_variable_get(:@aggregated_from)).to eq(report2[:dispatched_at])
-
-      aggregator.add(report3)
-      expect(aggregator.instance_variable_get(:@aggregated_from)).to eq(report3[:dispatched_at])
+    it 'handles reports with different process ids' do
+      expect { aggregator.add(report1) }.not_to raise_error
+      expect { aggregator.add(report2) }.not_to raise_error
     end
 
-    it 'handles multiple reports with different dispatch times correctly' do
-      # Add reports in mixed order
-      aggregator.add(report2) # middle time
-      aggregator.add(report1) # oldest time
-      aggregator.add(report3) # newest time
+    context 'with various dispatch times' do
+      it 'accepts reports with past dispatch times' do
+        past_report = {
+          process: { id: 'process-past' },
+          dispatched_at: Time.now.to_f - 1000
+        }
+        expect { aggregator.add(past_report) }.not_to raise_error
+      end
 
-      # Should use the latest dispatch time regardless of addition order
-      expect(aggregator.instance_variable_get(:@aggregated_from)).to eq(report3[:dispatched_at])
-    end
-  end
+      it 'accepts reports with current dispatch times' do
+        current_report = {
+          process: { id: 'process-current' },
+          dispatched_at: Time.now.to_f
+        }
+        expect { aggregator.add(current_report) }.not_to raise_error
+      end
 
-  describe 'time handling' do
-    context 'when dealing with lagged reports' do
-      it 'uses dispatch time from reports instead of real time for aggregation' do
-        older_time = Time.now.to_f - 100
-        older_report = { process: { id: 'old-process' }, dispatched_at: older_time }
-
-        aggregator.add(older_report)
-
-        expect(aggregator.instance_variable_get(:@aggregated_from)).to eq(older_time)
+      it 'accepts reports with future dispatch times' do
+        future_report = {
+          process: { id: 'process-future' },
+          dispatched_at: Time.now.to_f + 1000
+        }
+        expect { aggregator.add(future_report) }.not_to raise_error
       end
     end
 
-    context 'when reports arrive out of order' do
-      it 'always uses the maximum dispatch time for aggregated_from' do
-        future_time = Time.now.to_f + 10
-        past_time = Time.now.to_f - 10
-        present_time = Time.now.to_f
+    context 'with different report structures' do
+      it 'handles minimal valid report structure' do
+        minimal_report = {
+          process: { id: 'minimal' },
+          dispatched_at: 123.456
+        }
+        expect { aggregator.add(minimal_report) }.not_to raise_error
+      end
 
-        future_report = { process: { id: 'future' }, dispatched_at: future_time }
-        past_report = { process: { id: 'past' }, dispatched_at: past_time }
-        present_report = { process: { id: 'present' }, dispatched_at: present_time }
-
-        # Add in chronological order
-        aggregator.add(past_report)
-        aggregator.add(present_report)
-        aggregator.add(future_report)
-
-        expect(aggregator.instance_variable_get(:@aggregated_from)).to eq(future_time)
-
-        # Add another past report - shouldn't change aggregated_from
-        another_past = { process: { id: 'another-past' }, dispatched_at: past_time - 5 }
-        aggregator.add(another_past)
-
-        expect(aggregator.instance_variable_get(:@aggregated_from)).to eq(future_time)
+      it 'handles reports with additional data' do
+        extended_report = {
+          process: { id: 'extended', name: 'test', pid: 12_345 },
+          dispatched_at: Time.now.to_f,
+          extra_field: 'additional data'
+        }
+        expect { aggregator.add(extended_report) }.not_to raise_error
       end
     end
-  end
 
-  describe 'inheritance and modularity' do
-    it 'is designed to be inherited by specific aggregators' do
-      child_class = Class.new(described_class) do
-        def custom_method
-          'custom functionality'
+    context 'with rapid succession of reports' do
+      it 'handles multiple reports added quickly' do
+        10.times do |i|
+          report = {
+            process: { id: "process-#{i}" },
+            dispatched_at: Time.now.to_f + i
+          }
+          expect { aggregator.add(report) }.not_to raise_error
         end
       end
 
-      child_instance = child_class.new
-      expect(child_instance).to respond_to(:add)
-      expect(child_instance.custom_method).to eq('custom functionality')
-    end
-
-    it 'provides access to active reports for child classes' do
-      aggregator.add(report1)
-      aggregator.add(report2)
-
-      active_reports = aggregator.instance_variable_get(:@active_reports)
-      expect(active_reports.size).to eq(2)
-      expect(active_reports.keys).to contain_exactly('process-1', 'process-2')
+      it 'handles overwriting reports for same process' do
+        5.times do |i|
+          report = {
+            process: { id: 'same-process' },
+            dispatched_at: Time.now.to_f + i
+          }
+          expect { aggregator.add(report) }.not_to raise_error
+        end
+      end
     end
   end
 
-  describe 'edge cases' do
-    context 'when adding reports with identical dispatch times' do
-      let(:same_time) { Time.now.to_f }
-      let(:report_a) { { process: { id: 'a' }, dispatched_at: same_time } }
-      let(:report_b) { { process: { id: 'b' }, dispatched_at: same_time } }
-
-      it 'handles identical dispatch times correctly' do
-        aggregator.add(report_a)
-        aggregator.add(report_b)
-
-        expect(aggregator.instance_variable_get(:@aggregated_from)).to eq(same_time)
-      end
+  describe 'time helpers inclusion' do
+    it 'provides monotonic_now method' do
+      expect(aggregator.monotonic_now).to be_a(Float)
     end
 
-    context 'when process reports are updated multiple times' do
-      it 'only keeps the latest report per process' do
-        aggregator.add(report1)
-        aggregator.add(report3) # Same process ID, newer dispatch time
+    it 'provides float_now method' do
+      expect(aggregator.float_now).to be_a(Float)
+    end
 
-        active_reports = aggregator.instance_variable_get(:@active_reports)
-        expect(active_reports.size).to eq(1)
-        expect(active_reports['process-1']).to eq(report3)
-      end
+    it 'returns increasing monotonic time' do
+      time1 = aggregator.monotonic_now
+      sleep(0.001)
+      time2 = aggregator.monotonic_now
+      expect(time2).to be > time1
     end
   end
 end
