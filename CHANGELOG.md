@@ -5,6 +5,7 @@
 - [Change] Remove Ruby `3.1` specs according to the EOL schedule.
 - [Change] Normalize how libs and dependencies are required (no functional change for the end user)
 - [Fix] Fix a case where the states JSON would contain multiple entries for the same processes causing `JSON.parse` with `allow_duplicate_key: false` to fail.
+- [Fix] Fix incorrect reference to `IncompatibleSchemaError`.
 
 ## 0.11.2 (2025-08-18)
 - [Enhancement] Make sure that TTL counters related `#inspect` are thread-safe.
