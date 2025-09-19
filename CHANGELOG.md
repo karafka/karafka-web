@@ -1,5 +1,8 @@
 # Karafka Web changelog
 
+## 0.9.2 (2025-09-19)
+- [Fix] Fix BaseController caller action name extraction.
+
 ## 0.9.1 (2024-05-03)
 - [Fix] OSS `lag_stored` for not-subscribed consumers causes Web UI to crash.
 
