@@ -165,6 +165,9 @@
 - [Fix] License identifier `LGPL-3.0` is deprecated for SPDX (#2177).
 - [Fix] Do not include prettifying the payload for visibility in the resource computation cost.
 
+## 0.9.2 (2025-09-19)
+- [Fix] Fix BaseController caller action name extraction.
+
 ## 0.9.1 (2024-05-03)
 - [Fix] OSS `lag_stored` for not-subscribed consumers causes Web UI to crash.
 
