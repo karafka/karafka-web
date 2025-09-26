@@ -2,7 +2,7 @@
 
 ## 0.11.3 (Unreleased)
 - [Enhancement] Upgrade DaisyUI to 5.1.
-- [Change] Remove Ruby `3.1` specs according to the EOL schedule.
+- [Change] Remove Ruby `3.1` support according to the EOL schedule.
 - [Change] Normalize how libs and dependencies are required (no functional change for the end user)
 - [Fix] Fix a case where the states JSON would contain multiple entries for the same processes causing `JSON.parse` with `allow_duplicate_key: false` to fail.
 - [Fix] Fix incorrect reference to `IncompatibleSchemaError`.
