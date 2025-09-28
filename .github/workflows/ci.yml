@@ -53,7 +53,7 @@ jobs:
           docker compose up -d || (sleep 5 && docker compose up -d)
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@866b91cc020931c510d42e43e498a7f07d335f60 # v1.259.0
+        uses: ruby/setup-ruby@1c58d16f1a2d74dc895c05f92d1e31ffe691110e # v1.261.0
         with:
           ruby-version: ${{matrix.ruby}}
           bundler-cache: true
@@ -96,7 +96,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@866b91cc020931c510d42e43e498a7f07d335f60 # v1.259.0
+        uses: ruby/setup-ruby@1c58d16f1a2d74dc895c05f92d1e31ffe691110e # v1.261.0
         with:
           ruby-version: 3.4
           bundler-cache: true
