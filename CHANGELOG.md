@@ -1,6 +1,6 @@
 # Karafka Web Changelog
 
-## 0.11.3 (Unreleased)
+## 0.11.3 (2025-09-29)
 - [Enhancement] Upgrade DaisyUI to 5.1.
 - [Change] Remove Ruby `3.1` support according to the EOL schedule.
 - [Change] Normalize how libs and dependencies are required (no functional change for the end user)
