@@ -50,7 +50,7 @@ module Karafka
             #   being executed in the embedded or swarm processes since there the signaling is
             #   handled differently (either via the main process or supervisor).
             def standalone?
-              Karafka::Server.execution_mode == :standalone
+              Karafka::Server.execution_mode.standalone?
             end
 
             # @return [String] id of the current consumer process

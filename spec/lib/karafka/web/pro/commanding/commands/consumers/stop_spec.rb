@@ -14,18 +14,8 @@ RSpec.describe_current do
     expect(Process).to have_received(:kill).with('QUIT', Process.pid)
   end
 
-  context 'when process to which we send request is an embedded one' do
-    before { allow(Karafka::Server).to receive(:execution_mode).and_return(:embedded) }
-
-    it 'expect to ignore quiet command in an embedded one' do
-      stop_command.call
-
-      expect(Process).not_to have_received(:kill)
-    end
-  end
-
-  context 'when process to which we send request is a swarm one' do
-    before { allow(Karafka::Server).to receive(:execution_mode).and_return(:swarm) }
+  context 'when process to which we send request is not a standalone one' do
+    before { allow(Karafka::Server.execution_mode).to receive(:standalone?).and_return(false) }
 
     it 'expect to ignore quiet command in a swarm one' do
       stop_command.call
