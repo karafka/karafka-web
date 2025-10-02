@@ -8,7 +8,7 @@ RSpec.describe_current do
   it { expect(sampler.karafka_web_version).to include('0.11.') }
   it { expect(sampler.karafka_core_version).to include('2.5.') }
   it { expect(sampler.rdkafka_version).to start_with('0.2') }
-  it { expect(sampler.librdkafka_version).to start_with('2.8') }
+  it { expect(sampler.librdkafka_version).to start_with('2.11') }
   it { expect(sampler.waterdrop_version).to start_with('2.8') }
   it { expect(sampler.process_id).not_to be_empty }
 end
