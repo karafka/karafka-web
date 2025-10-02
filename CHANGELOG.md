@@ -1,5 +1,8 @@
 # Karafka Web Changelog
 
+## 0.11.4 (2025-10-02)
+- [Enhancement] Require Karafka 2.5.1 at minimum and migrate from string-based execution mode comparisons to the new ExecutionMode object API.
+
 ## 0.11.3 (2025-09-29)
 - [Enhancement] Upgrade DaisyUI to 5.1.
 - [Change] Remove Ruby `3.1` support according to the EOL schedule.

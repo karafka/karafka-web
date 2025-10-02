@@ -4,7 +4,6 @@ require 'factory_bot'
 require 'simplecov'
 require 'rack/test'
 require 'ostruct'
-require 'set'
 require 'nokogiri'
 require 'singleton'
 
