@@ -32,7 +32,7 @@
     quiet_path = consumers_path('commanding', process.id, 'quiet')
     disabled_class = process.status == 'running' ? '' : 'btn-disabled'
 
-    unless process.execution_mode.standalone?
+    unless process.execution_mode == 'standalone'
       disabled_class = 'btn-disabled'
       title = 'Supported only in standalone consumer processes'
     end
@@ -57,7 +57,7 @@
     stop_path = consumers_path('commanding', process.id, 'stop')
     disabled_class = process.status != 'stopping' && process.status != 'stopped' ? '' : 'btn-disabled'
 
-    unless process.execution_mode.standalone?
+    unless process.execution_mode == 'standalone'
       disabled_class = 'btn-disabled'
       title = 'Supported only in standalone consumer processes'
     end

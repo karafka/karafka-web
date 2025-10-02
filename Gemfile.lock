@@ -23,7 +23,7 @@ GEM
       minitest (>= 5.1)
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
-    base64 (0.2.0)
+    base64 (0.3.0)
     benchmark (0.4.1)
     bigdecimal (3.1.9)
     byebug (12.0.0)
@@ -155,7 +155,7 @@ GEM
       karafka-rdkafka (>= 0.20.0)
       zeitwerk (~> 2.3)
     webrick (1.9.1)
-    zeitwerk (2.6.18)
+    zeitwerk (2.7.3)
 
 PLATFORMS
   aarch64-linux-gnu
