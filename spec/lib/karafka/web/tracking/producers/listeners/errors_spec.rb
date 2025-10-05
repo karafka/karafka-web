@@ -38,5 +38,27 @@ RSpec.describe_current do
       schema = ::Karafka::Web::Tracking::Contracts::Error.new
       expect(schema.call(recorded_errors.first)).to be_success
     end
+
+    it 'expect to include schema version 1.2.0' do
+      expect(recorded_errors.first[:schema_version]).to eq('1.2.0')
+    end
+
+    it 'expect to include a unique id' do
+      error_id = recorded_errors.first[:id]
+
+      expect(error_id).to be_a(String)
+      expect(error_id).not_to be_empty
+      # UUID format validation
+      expect(error_id).to match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
+    end
+
+    it 'expect each error to have a different id' do
+      first_id = recorded_errors.first[:id]
+
+      listener.on_error_occurred(event)
+      second_id = sampler.errors.last[:id]
+
+      expect(first_id).not_to eq(second_id)
+    end
   end
 end

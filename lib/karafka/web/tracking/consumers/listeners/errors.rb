@@ -10,7 +10,7 @@ module Karafka
             include Tracking::Helpers::ErrorInfo
 
             # Schema used by consumers error reporting
-            SCHEMA_VERSION = '1.1.0'
+            SCHEMA_VERSION = '1.2.0'
 
             private_constant :SCHEMA_VERSION
 
@@ -38,6 +38,7 @@ module Karafka
               track do |sampler|
                 sampler.errors << {
                   schema_version: SCHEMA_VERSION,
+                  id: SecureRandom.uuid,
                   type: event[:type],
                   error_class: error_class,
                   error_message: error_message,
