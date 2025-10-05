@@ -124,6 +124,12 @@ module Karafka
 
               ::Karafka::Web.producer.monitor.subscribe(listener)
             end
+
+            # Installs all the UI related listeners for tracking errors from web processes
+            # These listen on Karafka monitor to catch instrumented UI errors
+            ::Karafka::Web.config.tracking.ui.listeners.each do |listener|
+              ::Karafka.monitor.subscribe(listener)
+            end
           end
 
           # In most cases we want to close the producer if possible.
