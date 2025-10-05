@@ -3,6 +3,7 @@
 ## 0.11.4 (Unreleased)
 - [Enhancement] Track and report UI errors originating from Roda/Puma web processes directly to Kafka errors topic for visibility and debugging. UI errors are dispatched asynchronously from web processes using a dedicated listener.
 - [Enhancement] Require Karafka 2.5.1 at minimum and migrate from string-based execution mode comparisons to the new ExecutionMode object API.
+- [Enhancement] Increase Web UI processing consumer backoff time to 30 seconds when encountering incompatible schema errors to prevent error spam during rolling upgrades.
 
 ## 0.11.3 (2025-09-29)
 - [Enhancement] Upgrade DaisyUI to 5.1.
