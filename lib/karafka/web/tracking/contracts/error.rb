@@ -12,6 +12,7 @@ module Karafka
           configure
 
           required(:schema_version) { |val| val.is_a?(String) }
+          required(:id) { |val| val.is_a?(String) && !val.empty? }
           required(:type) { |val| val.is_a?(String) && !val.empty? }
           required(:error_class) { |val| val.is_a?(String) && !val.empty? }
           required(:error_message) { |val| val.is_a?(String) }

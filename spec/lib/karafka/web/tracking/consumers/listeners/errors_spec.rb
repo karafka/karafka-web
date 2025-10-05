@@ -46,6 +46,35 @@ RSpec.describe_current do
       end
     end
 
+    context 'when tracking error' do
+      let(:caller_ref) { nil }
+
+      it 'expect to include schema version 1.2.0' do
+        listener.on_error_occurred(event)
+        expect(sampler.errors.last[:schema_version]).to eq('1.2.0')
+      end
+
+      it 'expect to include a unique id' do
+        listener.on_error_occurred(event)
+        error_id = sampler.errors.last[:id]
+
+        expect(error_id).to be_a(String)
+        expect(error_id).not_to be_empty
+        # UUID format validation
+        expect(error_id).to match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
+      end
+
+      it 'expect each error to have a different id' do
+        listener.on_error_occurred(event)
+        first_id = sampler.errors.last[:id]
+
+        listener.on_error_occurred(event)
+        second_id = sampler.errors.last[:id]
+
+        expect(first_id).not_to eq(second_id)
+      end
+    end
+
     context 'when caller is a consumer' do
       let(:messages_metadata) do
         instance_double(Karafka::Messages::BatchMetadata, first_offset: 5, last_offset: 10)

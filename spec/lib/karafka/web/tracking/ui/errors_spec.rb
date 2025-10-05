@@ -28,7 +28,11 @@ RSpec.describe Karafka::Web::Tracking::Ui::Errors do
           expect(params[:headers]).to eq('zlib' => 'true')
 
           payload = JSON.parse(Zlib::Inflate.inflate(params[:payload]))
-          expect(payload['schema_version']).to eq('1.1.0')
+          expect(payload['schema_version']).to eq('1.2.0')
+          expect(payload['id']).to be_a(String)
+          expect(payload['id']).not_to be_empty
+          # UUID format validation
+          expect(payload['id']).to match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
           expect(payload['type']).to eq('web.ui.error')
           expect(payload['error_class']).to eq('StandardError')
           expect(payload['error_message']).to eq('UI error message')
@@ -39,6 +43,19 @@ RSpec.describe Karafka::Web::Tracking::Ui::Errors do
           expect(payload['process']['id'].split(':').size).to eq(3)
           expect(payload['process']['id']).to match(/^.+:\d+:[a-f0-9]{12}$/)
         end
+      end
+
+      it 'expect each error to have a unique id' do
+        listener.on_error_occurred(event)
+        listener.on_error_occurred(event)
+
+        ids = []
+        expect(producer).to have_received(:produce_async).twice do |params|
+          payload = JSON.parse(Zlib::Inflate.inflate(params[:payload]))
+          ids << payload['id']
+        end
+
+        expect(ids[0]).not_to eq(ids[1])
       end
     end
 
