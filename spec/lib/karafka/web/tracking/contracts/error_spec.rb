@@ -5,7 +5,8 @@ RSpec.describe_current do
 
   let(:error) do
     {
-      schema_version: '1.0.0',
+      schema_version: '1.2.0',
+      id: SecureRandom.uuid,
       type: 'librdkafka.dispatch_error',
       error_class: 'StandardError',
       error_message: 'Raised',
@@ -20,6 +21,32 @@ RSpec.describe_current do
   end
 
   it { expect(contract.call(error)).to be_success }
+
+  context 'when validating id' do
+    context 'when missing' do
+      before { error.delete(:id) }
+
+      it { expect(contract.call(error)).not_to be_success }
+    end
+
+    context 'when not a string' do
+      before { error[:id] = 123 }
+
+      it { expect(contract.call(error)).not_to be_success }
+    end
+
+    context 'when empty' do
+      before { error[:id] = '' }
+
+      it { expect(contract.call(error)).not_to be_success }
+    end
+
+    context 'when valid uuid' do
+      before { error[:id] = SecureRandom.uuid }
+
+      it { expect(contract.call(error)).to be_success }
+    end
+  end
 
   context 'when validating schema_version' do
     context 'when missing' do

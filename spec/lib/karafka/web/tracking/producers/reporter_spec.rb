@@ -9,6 +9,7 @@ RSpec.describe_current do
   let(:valid_error) do
     {
       schema_version: '1.0.0',
+      id: SecureRandom.uuid,
       type: 'librdkafka.dispatch_error',
       error_class: 'StandardError',
       error_message: 'Raised',
