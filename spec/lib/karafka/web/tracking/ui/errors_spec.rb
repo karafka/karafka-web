@@ -35,7 +35,9 @@ RSpec.describe Karafka::Web::Tracking::Ui::Errors do
           expect(payload['backtrace']).to be_a(String)
           expect(payload['details']).to eq({})
           expect(payload['occurred_at']).to be_a(Float)
-          expect(payload['process']['id']).to include(':')
+          # Process ID format: hostname:pid:random_hex
+          expect(payload['process']['id'].split(':').size).to eq(3)
+          expect(payload['process']['id']).to match(/^.+:\d+:[a-f0-9]{12}$/)
         end
       end
     end

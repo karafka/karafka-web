@@ -55,7 +55,7 @@ module Karafka
 
           # @return [String] unique process identifier
           def process_id
-            @process_id ||= "#{Socket.gethostname}:#{::Process.pid}"
+            @process_id ||= Tracking::Sampler.new.process_id
           end
 
           # Dispatches error to Kafka
