@@ -85,4 +85,46 @@ RSpec.describe_current do
     it { expect(process[:threads]).not_to eq(0) }
     it { expect(process[:cpu_usage]).not_to eq([-1, -1, -1]) }
   end
+
+  describe 'system metrics collector selection' do
+    context 'when running outside container (real behavior)' do
+      it 'instantiates Os metrics collector as cgroups are not available' do
+        sampler = described_class.new
+        # Test through public API - memory_size should work (from Os class)
+        expect(sampler.to_report[:process][:memory_size]).to be > 0
+      end
+    end
+
+    context 'when cgroups are available (simulated)' do
+      it 'instantiates Container metrics collector' do
+        allow(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container)
+          .to receive(:active?)
+          .and_return(true)
+        allow(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container)
+          .to receive(:new)
+          .and_call_original
+
+        described_class.new
+
+        expect(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container)
+          .to have_received(:new)
+      end
+    end
+
+    context 'when cgroups are not available (simulated)' do
+      it 'instantiates Os metrics collector' do
+        allow(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container)
+          .to receive(:active?)
+          .and_return(false)
+        allow(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os)
+          .to receive(:new)
+          .and_call_original
+
+        described_class.new
+
+        expect(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os)
+          .to have_received(:new)
+      end
+    end
+  end
 end
