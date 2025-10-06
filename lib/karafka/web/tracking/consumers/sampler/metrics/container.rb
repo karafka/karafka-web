@@ -60,8 +60,6 @@ module Karafka
                                       :v2
                                     elsif File.exist?(CGROUP_V1_MEMORY_LIMIT)
                                       :v1
-                                    else
-                                      nil
                                     end
                 end
 
