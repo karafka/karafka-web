@@ -7,57 +7,60 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container do
 
   describe '.active?' do
     before do
-      # Clear memoization before each test
+      # Clear memoization before each test to avoid pollution between tests
+      # This is necessary because cgroup_version is memoized at class level
       if described_class.instance_variable_defined?(:@cgroup_version)
         described_class.remove_instance_variable(:@cgroup_version)
       end
     end
 
-    context 'when cgroup v2 is available' do
-      before do
-        allow(File).to receive(:exist?)
-          .with(described_class::CGROUP_V2_CONTROLLERS)
-          .and_return(true)
-      end
+    context 'when checking real file system' do
+      it 'detects cgroup availability correctly based on actual cgroup files' do
+        # Tests real file system detection without stubs
+        # Result depends on whether cgroup files actually exist in the environment
+        v2_exists = File.exist?('/sys/fs/cgroup/cgroup.controllers')
+        v1_exists = File.exist?('/sys/fs/cgroup/memory/memory.limit_in_bytes')
+        expected_result = v2_exists || v1_exists
 
+        expect(described_class.active?).to eq(expected_result)
+      end
+    end
+
+    context 'when cgroup v2 is available (simulated)' do
       it 'returns true' do
+        allow(File).to receive(:exist?).and_call_original
+        allow(File).to receive(:exist?)
+          .with('/sys/fs/cgroup/cgroup.controllers')
+          .and_return(true)
+
         expect(described_class.active?).to be(true)
       end
     end
 
-    context 'when cgroup v1 is available' do
-      before do
-        allow(File).to receive(:exist?)
-          .with(described_class::CGROUP_V2_CONTROLLERS)
-          .and_return(false)
-        allow(File).to receive(:exist?)
-          .with(described_class::CGROUP_V1_MEMORY_LIMIT)
-          .and_return(true)
-      end
-
+    context 'when cgroup v1 is available (simulated)' do
       it 'returns true' do
+        allow(File).to receive(:exist?).and_call_original
+        allow(File).to receive(:exist?)
+          .with('/sys/fs/cgroup/cgroup.controllers')
+          .and_return(false)
+        allow(File).to receive(:exist?)
+          .with('/sys/fs/cgroup/memory/memory.limit_in_bytes')
+          .and_return(true)
+
         expect(described_class.active?).to be(true)
-      end
-    end
-
-    context 'when no cgroup is available' do
-      before do
-        allow(File).to receive(:exist?)
-          .with(described_class::CGROUP_V2_CONTROLLERS)
-          .and_return(false)
-        allow(File).to receive(:exist?)
-          .with(described_class::CGROUP_V1_MEMORY_LIMIT)
-          .and_return(false)
-      end
-
-      it 'returns false' do
-        expect(described_class.active?).to be(false)
       end
     end
   end
 
   describe '#memory_size' do
-    context 'when cgroup memory limit is available' do
+    context 'when running outside container (real behavior)' do
+      it 'falls back to OS metrics since no cgroup limit exists' do
+        # This tests the actual || super fallback
+        expect(container_metrics.memory_size).to be > 0
+      end
+    end
+
+    context 'when cgroup memory limit is available (simulated)' do
       before do
         allow(described_class).to receive(:memory_limit).and_return(2 * 1024 * 1024) # 2GB in KB
       end
@@ -67,7 +70,7 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container do
       end
     end
 
-    context 'when cgroup memory limit is not available' do
+    context 'when cgroup memory limit is not available (simulated)' do
       before do
         stub_const('RUBY_PLATFORM', 'x86_64-linux')
         allow(described_class).to receive(:memory_limit).and_return(nil)

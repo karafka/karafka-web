@@ -30,6 +30,12 @@ module Karafka
               # Path to cgroup v2 CPU weight file
               CGROUP_V2_CPU_WEIGHT = '/sys/fs/cgroup/cpu.weight'
 
+              private_constant(
+                :CGROUP_V2_MAX, :CGROUP_V2_CONTROLLERS, :CGROUP_V1_MEMORY_LIMIT,
+                :CGROUP_V2_MEMORY_LIMIT, :CGROUP_V1_CPU_SHARES, :CGROUP_V2_CPU_MAX,
+                :CGROUP_V2_CPU_WEIGHT
+              )
+
               class << self
                 # Checks if running in a containerized environment with cgroups
                 # @return [Boolean] true if cgroups are available, false otherwise
