@@ -7,6 +7,10 @@
     "enabled": true,
     "pinDigests": true
   },
+  "dockerfile": {
+    "enabled": true,
+    "fileMatch": ["(^|/)Dockerfile$", "spec/integrations/Dockerfile"]
+  },
   "packageRules": [
     {
       "matchManagers": [
@@ -20,6 +24,12 @@
         "github-actions"
       ],
       "minimumReleaseAge": "7 days"
+    },
+    {
+      "matchManagers": [
+        "dockerfile"
+      ],
+      "minimumReleaseAge": "3 days"
     }
   ]
 }

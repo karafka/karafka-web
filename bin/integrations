@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# Integration test runner for container metrics
+# Runs tests inside Docker containers with various memory/CPU configurations
+
+set -e
+
+echo "================================================"
+echo "Container Metrics Integration Tests"
+echo "================================================"
+echo ""
+
+# Build the test image first
+echo "Building integration test Docker image..."
+docker compose -f spec/integrations/docker-compose.yml build
+
+echo ""
+echo "Running integration tests in containers..."
+echo ""
+
+# Run all test scenarios
+# Note: Each container runs independently and exits after tests complete
+docker compose -f spec/integrations/docker-compose.yml up --abort-on-container-exit --exit-code-from test-container-limited test-container-limited
+docker compose -f spec/integrations/docker-compose.yml up --abort-on-container-exit --exit-code-from test-container-unlimited test-container-unlimited
+docker compose -f spec/integrations/docker-compose.yml up --abort-on-container-exit --exit-code-from test-container-strict test-container-strict
+
+echo ""
+echo "================================================"
+echo "All integration tests completed successfully!"
+echo "================================================"
+
+# Clean up
+docker compose -f spec/integrations/docker-compose.yml down
