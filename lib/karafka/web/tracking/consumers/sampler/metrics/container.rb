@@ -23,8 +23,10 @@ module Karafka
               CGROUP_V2_MEMORY_LIMIT = '/sys/fs/cgroup/memory.max'
 
               private_constant(
-                :CGROUP_V2_MAX, :CGROUP_V2_CONTROLLERS,
-                :CGROUP_V1_MEMORY_LIMIT, :CGROUP_V2_MEMORY_LIMIT
+                :CGROUP_V2_MAX,
+                :CGROUP_V2_CONTROLLERS,
+                :CGROUP_V1_MEMORY_LIMIT,
+                :CGROUP_V2_MEMORY_LIMIT
               )
 
               class << self
