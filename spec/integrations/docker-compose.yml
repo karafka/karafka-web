@@ -22,8 +22,8 @@ services:
     command: >
       bash -c "
         echo 'Running integration tests with memory limit (512MB)...' &&
-        bundle exec ruby spec/integrations/container_metrics_limited.rb &&
-        bundle exec ruby spec/integrations/os_metrics.rb
+        bundle exec ruby spec/integrations/container_metrics_limited_spec.rb &&
+        bundle exec ruby spec/integrations/os_metrics_spec.rb
       "
 
   # Test container without memory limits
@@ -42,8 +42,8 @@ services:
     command: >
       bash -c "
         echo 'Running integration tests without memory limit...' &&
-        bundle exec ruby spec/integrations/container_metrics_unlimited.rb &&
-        bundle exec ruby spec/integrations/os_metrics.rb
+        bundle exec ruby spec/integrations/container_metrics_unlimited_spec.rb &&
+        bundle exec ruby spec/integrations/os_metrics_spec.rb
       "
 
   # Test container with strict memory limit (for testing low memory scenarios)
@@ -64,6 +64,6 @@ services:
     command: >
       bash -c "
         echo 'Running integration tests with strict memory limit (256MB)...' &&
-        bundle exec ruby spec/integrations/container_metrics_strict.rb &&
-        bundle exec ruby spec/integrations/os_metrics.rb
+        bundle exec ruby spec/integrations/container_metrics_strict_spec.rb &&
+        bundle exec ruby spec/integrations/os_metrics_spec.rb
       "
