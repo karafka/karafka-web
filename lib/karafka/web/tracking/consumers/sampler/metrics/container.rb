@@ -60,6 +60,8 @@ module Karafka
                                       :v2
                                     elsif File.exist?(CGROUP_V1_MEMORY_LIMIT)
                                       :v1
+                                    else
+                                      nil
                                     end
                 end
 
@@ -100,8 +102,9 @@ module Karafka
               # @return [Integer] total amount of memory in kilobytes
               # In containerized environments, returns the container's memory limit from cgroups.
               # Falls back to host memory if no limit is set.
+              # @note Memoized at instance level to avoid repeated class method calls
               def memory_size
-                self.class.memory_limit || super
+                @memory_size ||= self.class.memory_limit || super
               end
             end
           end

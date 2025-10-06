@@ -142,7 +142,9 @@ module Karafka
               # - macOS: Uses `ps -A` to get all processes
               # - Containers: Due to PID namespaces, only sees processes within the container
               #
-              # @note This is called once per sample cycle and cached to avoid redundant system calls
+              # @note Sampler calls this once per sample cycle (every ~5 seconds) and caches the result
+              #   in @memory_threads_ps to ensure consistent data within a single sample snapshot
+              # @note The cache is refreshed on EVERY sample cycle, so data stays current
               # @note On Linux, thread count is only extracted for the current process to optimize performance
               def memory_threads_ps
                 case RUBY_PLATFORM
