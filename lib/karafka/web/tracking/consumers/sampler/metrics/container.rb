@@ -22,18 +22,9 @@ module Karafka
               # Path to cgroup v2 memory limit file
               CGROUP_V2_MEMORY_LIMIT = '/sys/fs/cgroup/memory.max'
 
-              # CPU paths (for future use)
-              # Path to cgroup v1 CPU shares file
-              CGROUP_V1_CPU_SHARES = '/sys/fs/cgroup/cpu/cpu.shares'
-              # Path to cgroup v2 CPU max file (contains quota and period)
-              CGROUP_V2_CPU_MAX = '/sys/fs/cgroup/cpu.max'
-              # Path to cgroup v2 CPU weight file
-              CGROUP_V2_CPU_WEIGHT = '/sys/fs/cgroup/cpu.weight'
-
               private_constant(
-                :CGROUP_V2_MAX, :CGROUP_V2_CONTROLLERS, :CGROUP_V1_MEMORY_LIMIT,
-                :CGROUP_V2_MEMORY_LIMIT, :CGROUP_V1_CPU_SHARES, :CGROUP_V2_CPU_MAX,
-                :CGROUP_V2_CPU_WEIGHT
+                :CGROUP_V2_MAX, :CGROUP_V2_CONTROLLERS,
+                :CGROUP_V1_MEMORY_LIMIT, :CGROUP_V2_MEMORY_LIMIT
               )
 
               class << self
@@ -46,12 +37,14 @@ module Karafka
                 # Gets the memory limit for the container
                 # @return [Integer, nil] memory limit in kilobytes, or nil if not available
                 def memory_limit
-                  case cgroup_version
-                  when :v2
-                    read_cgroup_v2_memory_limit
-                  when :v1
-                    read_cgroup_v1_memory_limit
-                  end
+                  return @memory_limit if instance_variable_defined?(:@memory_limit)
+
+                  @memory_limit = case cgroup_version
+                                  when :v2
+                                    read_cgroup_v2_memory_limit
+                                  when :v1
+                                    read_cgroup_v1_memory_limit
+                                  end
                 end
 
                 private

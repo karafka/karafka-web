@@ -50,23 +50,25 @@ module Karafka
 
               # @return [Integer] total amount of memory in kilobytes
               def memory_size
-                case RUBY_PLATFORM
-                when /linux/
-                  mem_info = File.read('/proc/meminfo')
-                  mem_total_line = mem_info.match(/MemTotal:\s*(?<total>\d+)/)
-                  mem_total_line['total'].to_i
-                when /darwin|bsd/
-                  shell
-                    .call('sysctl -a')
-                    .split("\n")
-                    .find { |line| line.start_with?('hw.memsize:') }
-                    .to_s
-                    .split(' ')
-                    .last
-                    .to_i
-                else
-                  0
-                end
+                return @memory_size if instance_variable_defined?(:@memory_size)
+
+                @memory_size = case RUBY_PLATFORM
+                               when /linux/
+                                 mem_info = File.read('/proc/meminfo')
+                                 mem_total_line = mem_info.match(/MemTotal:\s*(?<total>\d+)/)
+                                 mem_total_line['total'].to_i
+                               when /darwin|bsd/
+                                 shell
+                               .call('sysctl -a')
+                               .split("\n")
+                               .find { |line| line.start_with?('hw.memsize:') }
+                               .to_s
+                               .split(' ')
+                               .last
+                               .to_i
+                               else
+                                 0
+                               end
               end
 
               # @return [Array<Float>] load averages for last 1, 5 and 15 minutes
@@ -92,7 +94,7 @@ module Karafka
 
               # @return [Integer] CPU count
               def cpus
-                Etc.nprocessors
+                @cpus ||= Etc.nprocessors
               end
 
               # @param memory_threads_ps [Array, false] parsed ps output
