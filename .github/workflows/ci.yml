@@ -186,8 +186,8 @@ jobs:
       - diffend
       - coditsu
       - specs
-      - assets
       - integrations
+      - assets
     steps:
       - name: Check all jobs passed
         if: |

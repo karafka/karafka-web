@@ -20,9 +20,20 @@ echo ""
 
 # Run all test scenarios
 # Note: Each container runs independently and exits after tests complete
-docker compose -f spec/integrations/docker-compose.yml up --abort-on-container-exit --exit-code-from test-container-limited test-container-limited
-docker compose -f spec/integrations/docker-compose.yml up --abort-on-container-exit --exit-code-from test-container-unlimited test-container-unlimited
-docker compose -f spec/integrations/docker-compose.yml up --abort-on-container-exit --exit-code-from test-container-strict test-container-strict
+docker compose -f spec/integrations/docker-compose.yml up \
+  --abort-on-container-exit \
+  --exit-code-from test-container-limited \
+  test-container-limited
+
+docker compose -f spec/integrations/docker-compose.yml up \
+  --abort-on-container-exit \
+  --exit-code-from test-container-unlimited \
+  test-container-unlimited
+
+docker compose -f spec/integrations/docker-compose.yml up \
+  --abort-on-container-exit \
+  --exit-code-from test-container-strict \
+  test-container-strict
 
 echo ""
 echo "================================================"
