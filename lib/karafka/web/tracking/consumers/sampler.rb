@@ -75,7 +75,7 @@ module Karafka
 
             # Select and instantiate appropriate system metrics collector based on environment
             # Use container-aware collector if cgroups are available, otherwise use OS-based
-            metrics_class = if Cgroup.version
+            metrics_class = if Metrics::Container.active?
                               Metrics::Container
                             else
                               Metrics::Os

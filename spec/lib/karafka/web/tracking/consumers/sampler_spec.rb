@@ -89,9 +89,9 @@ RSpec.describe_current do
   describe 'system metrics collector selection' do
     context 'when cgroups are available' do
       before do
-        allow(Karafka::Web::Tracking::Consumers::Sampler::Cgroup)
-          .to receive(:version)
-          .and_return(:v2)
+        allow(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container)
+          .to receive(:active?)
+          .and_return(true)
       end
 
       it 'instantiates Container metrics collector' do
@@ -103,9 +103,9 @@ RSpec.describe_current do
 
     context 'when cgroups are not available' do
       before do
-        allow(Karafka::Web::Tracking::Consumers::Sampler::Cgroup)
-          .to receive(:version)
-          .and_return(nil)
+        allow(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container)
+          .to receive(:active?)
+          .and_return(false)
       end
 
       it 'instantiates Os metrics collector' do
