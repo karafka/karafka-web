@@ -85,4 +85,34 @@ RSpec.describe_current do
     it { expect(process[:threads]).not_to eq(0) }
     it { expect(process[:cpu_usage]).not_to eq([-1, -1, -1]) }
   end
+
+  describe 'system metrics collector selection' do
+    context 'when cgroups are available' do
+      before do
+        allow(Karafka::Web::Tracking::Consumers::Sampler::Cgroup)
+          .to receive(:version)
+          .and_return(:v2)
+      end
+
+      it 'instantiates Container metrics collector' do
+        new_sampler = described_class.new
+        expect(new_sampler.instance_variable_get(:@system_metrics))
+          .to be_a(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container)
+      end
+    end
+
+    context 'when cgroups are not available' do
+      before do
+        allow(Karafka::Web::Tracking::Consumers::Sampler::Cgroup)
+          .to receive(:version)
+          .and_return(nil)
+      end
+
+      it 'instantiates Os metrics collector' do
+        new_sampler = described_class.new
+        expect(new_sampler.instance_variable_get(:@system_metrics))
+          .to be_a(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os)
+      end
+    end
+  end
 end

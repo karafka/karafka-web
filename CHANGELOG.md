@@ -4,6 +4,8 @@
 - [Enhancement] Track and report UI errors originating from Roda/Puma web processes directly to Kafka errors topic for visibility and debugging. UI errors are dispatched asynchronously from web processes using a dedicated listener.
 - [Enhancement] Require Karafka 2.5.1 at minimum and migrate from string-based execution mode comparisons to the new ExecutionMode object API.
 - [Enhancement] Add unique `id` field to error reports to track duplicate error occurrences. Error schema version bumped to 1.2.0 while maintaining backward compatibility with older error formats (1.0.0, 1.1.0) in the Web UI.
+- [Enhancement] Add container-aware metrics collection for Docker/Kubernetes environments. The Web UI now reports accurate container memory limits from cgroups (v1 and v2) instead of misleading host metrics, while maintaining full backward compatibility with non-containerized deployments.
+- [Refactor] Extract metrics collection logic from monolithic Sampler into focused, single-responsibility classes (Metrics::Base, Metrics::Os, Metrics::Container, Metrics::Network, Metrics::Server, Metrics::Jobs) and consumer groups enrichment into dedicated enricher (Enrichers::Base, Enrichers::ConsumerGroups) for improved maintainability and testability.
 
 ## 0.11.3 (2025-09-29)
 - [Enhancement] Upgrade DaisyUI to 5.1.
