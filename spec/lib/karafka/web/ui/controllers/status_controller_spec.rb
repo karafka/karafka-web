@@ -22,8 +22,8 @@ RSpec.describe_current do
         expect(body).to include('Topic Name')
 
         # Version badges should be present
-        expect(body).to include("karafka #{::Karafka::VERSION}")
-        expect(body).to include("karafka-web #{::Karafka::Web::VERSION}")
+        expect(body).to include("karafka #{Karafka::VERSION}")
+        expect(body).to include("karafka-web #{Karafka::Web::VERSION}")
         expect(body).to include('badge-primary')
 
         # Status should show topic names in data table
@@ -70,7 +70,7 @@ RSpec.describe_current do
         expect(body).to include('Errors')
 
         # Version info should still be present
-        expect(body).to include("karafka #{::Karafka::VERSION}")
+        expect(body).to include("karafka #{Karafka::VERSION}")
         expect(body).to include('badge-primary')
 
         # Alert boxes should still be present
@@ -179,8 +179,8 @@ RSpec.describe_current do
 
       it 'shows Karafka and Web UI versions' do
         expect(response).to be_ok
-        expect(body).to include(::Karafka::VERSION)
-        expect(body).to include(::Karafka::Web::VERSION)
+        expect(body).to include(Karafka::VERSION)
+        expect(body).to include(Karafka::Web::VERSION)
       end
     end
   end

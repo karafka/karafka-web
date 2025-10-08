@@ -247,7 +247,7 @@ module Karafka
               else
                 name = attribute.to_s.tr('_', ' ').tr('?', '')
                 # Always capitalize the name
-                name = name.split(' ').map(&:capitalize).join(' ')
+                name = name.split.map(&:capitalize).join(' ')
               end
             end
 

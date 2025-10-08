@@ -1,4 +1,3 @@
-
 # Dockerfile for integration testing container metrics
 # This container runs integration tests inside Docker to verify cgroup detection
 

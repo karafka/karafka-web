@@ -36,11 +36,11 @@ module Karafka
                 end
 
                 # Extract the lag stored only from all the data
-                per_topic = @data.to_h.map do |topic, metrics|
+                per_topic = @data.to_h.to_h do |topic, metrics|
                   extracted = metrics.map { |metric| [metric.first, metric.last[:lag_hybrid]] }
 
                   [topic, extracted]
-                end.to_h
+                end
 
                 # We name it with a space because someone may have a topic called "total" and we
                 # want to avoid collisions
