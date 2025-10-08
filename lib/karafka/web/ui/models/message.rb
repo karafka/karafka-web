@@ -215,11 +215,10 @@ module Karafka
 
             private
 
-            # @param args [Object] anything required by the admin `#read_topic`
             # @return [Array<Karafka::Messages::Message>, false] topic partition messages or false
             #   in case we hit a non-existing offset
-            def read_topic(*args)
-              Lib::Admin.read_topic(*args)
+            def read_topic(*)
+              Lib::Admin.read_topic(*)
             rescue Rdkafka::RdkafkaError => e
               return false if e.code == :auto_offset_reset
 

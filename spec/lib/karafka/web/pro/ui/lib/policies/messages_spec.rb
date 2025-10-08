@@ -16,13 +16,13 @@ RSpec.describe_current do
 
   describe '#payload?' do
     context 'when encryption is off' do
-      let(:message) { OpenStruct.new(headers: {}) }
+      let(:message) { Struct.new(:headers).new({}) }
 
       it { expect(policy.payload?(message)).to be(true) }
     end
 
     context 'when encryption is on' do
-      let(:message) { OpenStruct.new(headers: { 'encryption' => true }) }
+      let(:message) { Struct.new(:headers).new({ 'encryption' => true }) }
 
       it { expect(policy.payload?(message)).to be(false) }
     end
@@ -30,13 +30,13 @@ RSpec.describe_current do
 
   describe '#download?' do
     context 'when encryption is off' do
-      let(:message) { OpenStruct.new(headers: {}) }
+      let(:message) { Struct.new(:headers).new({}) }
 
       it { expect(policy.download?(message)).to be(true) }
     end
 
     context 'when encryption is on' do
-      let(:message) { OpenStruct.new(headers: { 'encryption' => true }) }
+      let(:message) { Struct.new(:headers).new({ 'encryption' => true }) }
 
       it { expect(policy.download?(message)).to be(false) }
     end
@@ -44,13 +44,13 @@ RSpec.describe_current do
 
   describe '#export?' do
     context 'when encryption is off' do
-      let(:message) { OpenStruct.new(headers: {}) }
+      let(:message) { Struct.new(:headers).new({}) }
 
       it { expect(policy.export?(message)).to be(true) }
     end
 
     context 'when encryption is on' do
-      let(:message) { OpenStruct.new(headers: { 'encryption' => true }) }
+      let(:message) { Struct.new(:headers).new({ 'encryption' => true }) }
 
       it { expect(policy.export?(message)).to be(false) }
     end

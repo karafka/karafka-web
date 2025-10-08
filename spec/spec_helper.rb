@@ -76,11 +76,11 @@ RSpec.configure do |config|
 
   # Restore them as some specs modify those
   config.after do
-    ::Karafka::Web.config.topics.consumers.states.name = TOPICS[0]
-    ::Karafka::Web.config.topics.consumers.metrics.name = TOPICS[1]
-    ::Karafka::Web.config.topics.consumers.reports.name = TOPICS[2]
-    ::Karafka::Web.config.topics.consumers.commands.name = TOPICS[3]
-    ::Karafka::Web.config.topics.errors.name = TOPICS[4]
+    Karafka::Web.config.topics.consumers.states.name = TOPICS[0]
+    Karafka::Web.config.topics.consumers.metrics.name = TOPICS[1]
+    Karafka::Web.config.topics.consumers.reports.name = TOPICS[2]
+    Karafka::Web.config.topics.consumers.commands.name = TOPICS[3]
+    Karafka::Web.config.topics.errors.name = TOPICS[4]
   end
 
   config.after(:suite) do
@@ -109,7 +109,7 @@ include TopicsManagerHelper
 # deserializer set always for each spec to simplify things. Otherwise we would have to re-draw
 # defaults in each spec after any of the web-ui topics alterations.
 def draw_defaults
-  ::Karafka::App.routes.draw do
+  Karafka::App.routes.draw do
     defaults do
       deserializers(
         payload: Karafka::Web::Deserializer.new
@@ -130,10 +130,10 @@ end
 
 # Alias for two producers that we need in specs. Regular one that is not transactional and the
 # other one that is transactional for transactional specs
-PRODUCERS = OpenStruct.new(
-  regular: Karafka.producer,
-  transactional: ::WaterDrop::Producer.new do |p_config|
-    p_config.kafka = ::Karafka::Setup::AttributesMap.producer(Karafka::App.config.kafka.dup)
+PRODUCERS = Struct.new(:regular, :transactional).new(
+  Karafka.producer,
+  WaterDrop::Producer.new do |p_config|
+    p_config.kafka = Karafka::Setup::AttributesMap.producer(Karafka::App.config.kafka.dup)
     p_config.kafka[:'transactional.id'] = SecureRandom.uuid
     p_config.logger = Karafka::App.config.logger
   end
@@ -145,11 +145,11 @@ TOPICS = Array.new(5) { create_topic }
 RSpec.configure do |config|
   # Set existing topics
   config.before do
-    ::Karafka::Web.config.topics.consumers.states.name = TOPICS[0]
-    ::Karafka::Web.config.topics.consumers.metrics.name = TOPICS[1]
-    ::Karafka::Web.config.topics.consumers.reports.name = TOPICS[2]
-    ::Karafka::Web.config.topics.consumers.commands.name = TOPICS[3]
-    ::Karafka::Web.config.topics.errors.name = TOPICS[4]
+    Karafka::Web.config.topics.consumers.states.name = TOPICS[0]
+    Karafka::Web.config.topics.consumers.metrics.name = TOPICS[1]
+    Karafka::Web.config.topics.consumers.reports.name = TOPICS[2]
+    Karafka::Web.config.topics.consumers.commands.name = TOPICS[3]
+    Karafka::Web.config.topics.errors.name = TOPICS[4]
   end
 end
 
@@ -172,7 +172,7 @@ produce(TOPICS[2], Fixtures.consumers_reports_file)
 produce(TOPICS[3], Fixtures.consumers_commands_file('consumers/current.json'))
 
 # Run the migrations so even if we use older fixtures, the data in Kafka is aligned
-::Karafka::Web::Management::Actions::MigrateStatesData.new.call
+Karafka::Web::Management::Actions::MigrateStatesData.new.call
 
 Karafka::Web.enable!
 
