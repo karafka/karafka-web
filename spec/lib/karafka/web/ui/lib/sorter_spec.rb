@@ -70,17 +70,17 @@ RSpec.describe_current do
   end
 
   context 'when sorting objects that respond to an attribute' do
-    let(:resource) { [Struct.new(:a).new(5), Struct.new(:a).new(4), Struct.new(:a).new(3)] }
+    let(:resource) { [OpenStruct.new(a: 5), OpenStruct.new(a: 4), OpenStruct.new(a: 3)] }
     let(:sort_query) { 'a asc' }
     let(:allowed_attributes) { %w[a] }
 
     it do
-      expect(sorting).to eq([Struct.new(:a).new(3), Struct.new(:a).new(4), Struct.new(:a).new(5)])
+      expect(sorting).to eq([OpenStruct.new(a: 3), OpenStruct.new(a: 4), OpenStruct.new(a: 5)])
     end
   end
 
   context 'when sorting objects that do not respond to an attribute' do
-    let(:resource) { [Struct.new(:x).new(5), Struct.new(:x).new(4), Struct.new(:x).new(3)] }
+    let(:resource) { [OpenStruct.new(x: 5), OpenStruct.new(x: 4), OpenStruct.new(x: 3)] }
     let(:sort_query) { 'a asc' }
     let(:allowed_attributes) { %w[a] }
 
