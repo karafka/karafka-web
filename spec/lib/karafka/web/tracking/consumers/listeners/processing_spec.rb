@@ -4,7 +4,7 @@ RSpec.describe_current do
   subject(:listener) { described_class.new }
 
   let(:caller) { build(:consumer) }
-  let(:sampler) { ::Karafka::Web.config.tracking.consumers.sampler }
+  let(:sampler) { Karafka::Web.config.tracking.consumers.sampler }
   let(:type) { rand.to_s }
   let(:error) { nil }
   let(:event) do

@@ -34,14 +34,14 @@ if ENV['SPECS_TYPE'] == 'pro'
     end
   end
 
-  Karafka.const_set('License', mod)
+  Karafka.const_set(:License, mod)
   require 'zeitwerk'
   require 'karafka/pro/loader'
 end
 
 require 'karafka/web'
 
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |f| require f }
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
 RSpec.configure do |config|
   config.disable_monkey_patching!
@@ -58,19 +58,19 @@ RSpec.configure do |config|
     # Prepare clean routing setup for each spec
     # We do this because some of the specs extend routing and we do not want them to interfere
     # with each other.
-    ::Karafka::App.routes.clear
+    Karafka::App.routes.clear
     draw_defaults
-    ::Karafka::Web::Management::Actions::Enable.new.send(:extend_routing)
+    Karafka::Web::Management::Actions::Enable.new.send(:extend_routing)
 
-    ::Karafka::Web.config.tracking.consumers.sampler.clear
-    ::Karafka::Web.config.tracking.producers.sampler.clear
-    ::Karafka::Web.config.ui.cache.clear
+    Karafka::Web.config.tracking.consumers.sampler.clear
+    Karafka::Web.config.tracking.producers.sampler.clear
+    Karafka::Web.config.ui.cache.clear
 
     # Enable all features in case they were disabled for the controllers specs
 
     if Karafka.pro? && described_class < Karafka::Web::Ui::Controllers::BaseController
-      ::Karafka::Web.config.commanding.active = true
-      ::Karafka::Web.config.ui.topics.management.active = true
+      Karafka::Web.config.commanding.active = true
+      Karafka::Web.config.ui.topics.management.active = true
     end
   end
 

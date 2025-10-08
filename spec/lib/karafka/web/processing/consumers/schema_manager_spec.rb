@@ -20,7 +20,7 @@ RSpec.describe_current do
   describe '#call' do
     context 'when manager is in compatible state' do
       context 'when it is the same version as in the process' do
-        let(:schema_version) { ::Karafka::Web::Tracking::Consumers::Sampler::SCHEMA_VERSION }
+        let(:schema_version) { Karafka::Web::Tracking::Consumers::Sampler::SCHEMA_VERSION }
 
         it 'returns :current' do
           expect(manager.call(message)).to eq(:current)
@@ -86,7 +86,7 @@ RSpec.describe_current do
     context 'when manager is in incompatible state' do
       before { manager.invalidate! }
 
-      let(:schema_version) { ::Karafka::Web::Tracking::Consumers::Sampler::SCHEMA_VERSION }
+      let(:schema_version) { Karafka::Web::Tracking::Consumers::Sampler::SCHEMA_VERSION }
 
       it 'still returns version comparison result' do
         result = manager.call(message)
@@ -147,7 +147,7 @@ RSpec.describe_current do
   end
 
   describe 'version comparison behavior' do
-    let(:current_version) { ::Karafka::Web::Tracking::Consumers::Sampler::SCHEMA_VERSION }
+    let(:current_version) { Karafka::Web::Tracking::Consumers::Sampler::SCHEMA_VERSION }
 
     context 'with semantic versioning' do
       it 'correctly identifies older major versions' do
@@ -227,7 +227,7 @@ RSpec.describe_current do
   describe 'state consistency' do
     it 'maintains consistent state across multiple calls' do
       current_version_message = OpenStruct.new(
-        payload: { schema_version: ::Karafka::Web::Tracking::Consumers::Sampler::SCHEMA_VERSION }
+        payload: { schema_version: Karafka::Web::Tracking::Consumers::Sampler::SCHEMA_VERSION }
       )
 
       5.times do
@@ -239,7 +239,7 @@ RSpec.describe_current do
     it 'maintains incompatible state after invalidation across calls' do
       manager.invalidate!
       current_version_message = OpenStruct.new(
-        payload: { schema_version: ::Karafka::Web::Tracking::Consumers::Sampler::SCHEMA_VERSION }
+        payload: { schema_version: Karafka::Web::Tracking::Consumers::Sampler::SCHEMA_VERSION }
       )
 
       5.times do
