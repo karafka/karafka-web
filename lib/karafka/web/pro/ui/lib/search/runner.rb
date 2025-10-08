@@ -83,6 +83,9 @@ module Karafka
               #     @topic ||= @search_criteria.fetch(:topic)
               #   end
               SEARCH_CRITERIA_FIELDS.each do |q|
+                # def topic
+                #   @topic ||= @search_criteria.fetch(:topic)
+                # end
                 class_eval <<~RUBY, __FILE__, __LINE__ + 1
                   def #{q}
                     @#{q} ||= @search_criteria.fetch(:#{q})

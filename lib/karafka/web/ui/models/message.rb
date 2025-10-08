@@ -146,9 +146,9 @@ module Karafka
             # @param page [Integer] which page we want to get
             def topic_page(topic_id, partitions_ids, page)
               # This is the bottleneck, for each partition we make one request :(
-              offsets = partitions_ids.map do |partition_id|
+              offsets = partitions_ids.to_h do |partition_id|
                 [partition_id, Models::WatermarkOffsets.find(topic_id, partition_id)]
-              end.to_h
+              end
 
               # Count number of elements we have in each partition
               # This assumes linear presence until low. If not, gaps will be filled like we fill
@@ -158,7 +158,7 @@ module Karafka
               # Establish initial offsets for the iterator (where to start) per partition
               # We do not use the negative lookup iterator because we already can compute starting
               # offsets. This saves a lot of calls to Kafka
-              ranges = Sets.call(counts, page).map do |partition_position, partition_range|
+              ranges = Sets.call(counts, page).to_h do |partition_position, partition_range|
                 partition_id = partitions_ids.to_a[partition_position]
                 watermarks = offsets[partition_id]
 
@@ -169,7 +169,7 @@ module Karafka
 
                 # This range represents offsets we want to fetch
                 [partition_id, lowest..highest]
-              end.to_h
+              end
 
               # We start on our topic from the lowest offset for each expected partition
               iterator = Karafka::Pro::Iterator.new(
@@ -215,11 +215,10 @@ module Karafka
 
             private
 
-            # @param args [Object] anything required by the admin `#read_topic`
             # @return [Array<Karafka::Messages::Message>, false] topic partition messages or false
             #   in case we hit a non-existing offset
-            def read_topic(*args)
-              Lib::Admin.read_topic(*args)
+            def read_topic(*)
+              Lib::Admin.read_topic(*)
             rescue Rdkafka::RdkafkaError => e
               return false if e.code == :auto_offset_reset
 

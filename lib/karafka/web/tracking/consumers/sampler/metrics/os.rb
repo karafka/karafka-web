@@ -26,7 +26,7 @@ module Karafka
                 case RUBY_PLATFORM
                 # Reading this that way is cheaper than running a shell command
                 when /linux/
-                  IO.readlines("/proc/#{pid}/status").each do |line|
+                  File.readlines("/proc/#{pid}/status").each do |line|
                     next unless line.start_with?('VmRSS:')
 
                     break line.split[1].to_i
@@ -79,7 +79,7 @@ module Karafka
                                .split("\n")
                                .find { |line| line.start_with?('hw.memsize:') }
                                .to_s
-                               .split(' ')
+                               .split
                                .last
                                .to_i
                                else
@@ -93,14 +93,14 @@ module Karafka
                 when /linux/
                   File
                     .read('/proc/loadavg')
-                    .split(' ')
+                    .split
                     .first(3)
                     .map(&:to_f)
                 when /darwin|bsd/
                   shell
                     .call('w | head -1')
                     .strip
-                    .split(' ')
+                    .split
                     .map(&:to_f)
                     .last(3)
                 else
@@ -187,7 +187,7 @@ module Karafka
                   shell
                     .call('ps -A -o rss=,pid=')
                     .split("\n")
-                    .map { |row| row.strip.split(' ').map(&:to_i) }
+                    .map { |row| row.strip.split.map(&:to_i) }
                     .map { |row| [row.first, 0, row.last] }
                 else
                   false

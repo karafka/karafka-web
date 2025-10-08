@@ -65,8 +65,6 @@ module Karafka
               'consumers metrics newer than supported'
             )
           end
-
-          true
         end
 
         # Applies migrations if needed and mutates the in-memory data

@@ -4,11 +4,11 @@ RSpec.describe_current do
   subject(:listener) { described_class.new }
 
   let(:caller) { build(:consumer) }
-  let(:sampler) { ::Karafka::Web.config.tracking.consumers.sampler }
+  let(:sampler) { Karafka::Web.config.tracking.consumers.sampler }
   let(:type) { rand.to_s }
   let(:error) { nil }
   let(:event) do
-    event = OpenStruct.new(type: type, error: error, caller: caller)
+    event = Struct.new(:type, :error, :caller, :payload, :time).new(type, error, caller, nil, nil)
     event.payload = event
     event
   end
@@ -131,7 +131,7 @@ RSpec.describe_current do
   end
 
   describe '#on_worker_processed' do
-    before { event[:time] = 123.456 }
+    before { event.time = 123.456 }
 
     it 'expect to track execution time in totals' do
       listener.on_worker_processed(event)

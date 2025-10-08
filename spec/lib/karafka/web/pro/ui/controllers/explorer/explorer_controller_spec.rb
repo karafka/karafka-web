@@ -32,7 +32,7 @@ RSpec.describe_current do
 
     context 'when there are no topics' do
       before do
-        allow(::Karafka::Web::Ui::Models::ClusterInfo).to receive(:topics).and_return([])
+        allow(Karafka::Web::Ui::Models::ClusterInfo).to receive(:topics).and_return([])
         get 'explorer/topics'
       end
 
@@ -47,7 +47,7 @@ RSpec.describe_current do
 
     context 'when internal topics should be displayed' do
       before do
-        allow(::Karafka::Web.config.ui.visibility)
+        allow(Karafka::Web.config.ui.visibility)
           .to receive(:internal_topics)
           .and_return(true)
 
@@ -509,7 +509,7 @@ RSpec.describe_current do
 
     context 'when requested message exists but should not be republishable' do
       before do
-        allow(::Karafka::Web.config.ui.policies.messages)
+        allow(Karafka::Web.config.ui.policies.messages)
           .to receive(:republish?)
           .and_return(false)
 
@@ -561,7 +561,7 @@ RSpec.describe_current do
 
     context 'when requested message exists, can be deserialized and raw download is off' do
       before do
-        allow(::Karafka::Web.config.ui.policies.messages)
+        allow(Karafka::Web.config.ui.policies.messages)
           .to receive(:download?)
           .and_return(false)
 
@@ -584,7 +584,7 @@ RSpec.describe_current do
 
     context 'when requested message exists, can be deserialized but export is off' do
       before do
-        allow(::Karafka::Web.config.ui.policies.messages)
+        allow(Karafka::Web.config.ui.policies.messages)
           .to receive(:export?)
           .and_return(false)
 
@@ -644,7 +644,7 @@ RSpec.describe_current do
         draw_routes do
           topic topic_name do
             active(false)
-            deserializers(payload: ::Karafka::Web::Deserializer.new)
+            deserializers(payload: Karafka::Web::Deserializer.new)
           end
         end
 
@@ -720,7 +720,7 @@ RSpec.describe_current do
           topic topic_name do
             active(false)
             # This will crash key deserialization, since it requires json
-            deserializers(key: ::Karafka::Web::Deserializer.new)
+            deserializers(key: Karafka::Web::Deserializer.new)
           end
         end
 

@@ -1,6 +1,26 @@
 # frozen_string_literal: true
 
 RSpec.describe_current do
+  # Simple test class that responds to attribute methods without being Enumerable
+  # (unlike Struct which is Enumerable and would interfere with sorter logic)
+  let(:test_object) do
+    Class.new do
+      def initialize(attrs)
+        @attrs = attrs
+        attrs.each do |key, value|
+          instance_variable_set("@#{key}", value)
+          self.class.define_method(key) { instance_variable_get("@#{key}") }
+        end
+      end
+
+      def ==(other)
+        return false unless other.is_a?(self.class)
+
+        @attrs == other.instance_variable_get(:@attrs)
+      end
+    end
+  end
+
   subject(:sorting) do
     described_class
       .new(sort_query, allowed_attributes: allowed_attributes)
@@ -70,17 +90,17 @@ RSpec.describe_current do
   end
 
   context 'when sorting objects that respond to an attribute' do
-    let(:resource) { [OpenStruct.new(a: 5), OpenStruct.new(a: 4), OpenStruct.new(a: 3)] }
+    let(:resource) { [test_object.new(a: 5), test_object.new(a: 4), test_object.new(a: 3)] }
     let(:sort_query) { 'a asc' }
     let(:allowed_attributes) { %w[a] }
 
     it do
-      expect(sorting).to eq([OpenStruct.new(a: 3), OpenStruct.new(a: 4), OpenStruct.new(a: 5)])
+      expect(sorting).to eq([test_object.new(a: 3), test_object.new(a: 4), test_object.new(a: 5)])
     end
   end
 
   context 'when sorting objects that do not respond to an attribute' do
-    let(:resource) { [OpenStruct.new(x: 5), OpenStruct.new(x: 4), OpenStruct.new(x: 3)] }
+    let(:resource) { [test_object.new(x: 5), test_object.new(x: 4), test_object.new(x: 3)] }
     let(:sort_query) { 'a asc' }
     let(:allowed_attributes) { %w[a] }
 
