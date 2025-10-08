@@ -26,12 +26,10 @@ module Karafka
             # Delegates any method call to the controller and wraps it with before/after hooks
             #
             # @param method_name [Symbol] the name of the method being called
-            # @param args [Array] arguments passed to the method
-            # @param block [Proc] optional block passed to the method
             # @return [Object] the result of the delegated controller method for Roda to operate on
-            def method_missing(method_name, *args, &block)
+            def method_missing(method_name, *, &)
               @controller.run_before_hooks(method_name)
-              result = @controller.public_send(method_name, *args, &block)
+              result = @controller.public_send(method_name, *, &)
               @controller.run_after_hooks(method_name)
               result
             end

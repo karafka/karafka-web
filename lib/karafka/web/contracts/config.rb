@@ -19,7 +19,7 @@ module Karafka
             required(:name) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
 
             required(:config) do |val|
-              val.is_a?(Hash) && !val.empty? && val.keys.all? { |key| key.is_a?(Symbol) }
+              val.is_a?(Hash) && !val.empty? && val.keys.all?(Symbol)
             end
           end
 
@@ -28,7 +28,7 @@ module Karafka
               required(:name) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
 
               required(:config) do |val|
-                val.is_a?(Hash) && !val.empty? && val.keys.all? { |key| key.is_a?(Symbol) }
+                val.is_a?(Hash) && !val.empty? && val.keys.all?(Symbol)
               end
             end
 
@@ -36,7 +36,7 @@ module Karafka
               required(:name) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
 
               required(:config) do |val|
-                val.is_a?(Hash) && !val.empty? && val.keys.all? { |key| key.is_a?(Symbol) }
+                val.is_a?(Hash) && !val.empty? && val.keys.all?(Symbol)
               end
             end
 
@@ -44,7 +44,7 @@ module Karafka
               required(:name) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
 
               required(:config) do |val|
-                val.is_a?(Hash) && !val.empty? && val.keys.all? { |key| key.is_a?(Symbol) }
+                val.is_a?(Hash) && !val.empty? && val.keys.all?(Symbol)
               end
             end
 
@@ -52,7 +52,7 @@ module Karafka
               required(:name) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
 
               required(:config) do |val|
-                val.is_a?(Hash) && !val.empty? && val.keys.all? { |key| key.is_a?(Symbol) }
+                val.is_a?(Hash) && !val.empty? && val.keys.all?(Symbol)
               end
             end
           end

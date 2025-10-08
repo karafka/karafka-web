@@ -53,7 +53,7 @@ module IntegrationHelper
   # @param max [Numeric] maximum value (inclusive)
   # @param message [String] error message to display if assertion fails
   def assert_in_range(value, min, max, message)
-    return if value >= min && value <= max
+    return if value.between?(min, max)
 
     puts <<~ERROR
       FAILED: #{message}

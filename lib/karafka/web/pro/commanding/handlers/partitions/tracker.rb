@@ -41,17 +41,16 @@ module Karafka
               # @param subscription_group_id [String] id of the subscription group for which we
               #   want to get all the requests. Subscription groups ids (not names) are unique
               #   within the application, so it is unique "enough".
-              # @param block [Proc]
               #
               # @yieldparam [Request] given command request for the requested subscription group
-              def each_for(subscription_group_id, &block)
+              def each_for(subscription_group_id, &)
                 requests = nil
 
                 @mutex.synchronize do
                   requests = @requests.delete(subscription_group_id)
                 end
 
-                (requests || EMPTY_ARRAY).each(&block)
+                (requests || EMPTY_ARRAY).each(&)
               end
             end
           end

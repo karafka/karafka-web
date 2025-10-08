@@ -28,8 +28,8 @@ RSpec.describe_current do
       topics_config.consumers.states.name = states_topic
       topics_config.consumers.metrics.name = metrics_topic
 
-      ::Karafka::Web::Management::Actions::CreateInitialStates.new.call
-      ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
+      Karafka::Web::Management::Actions::CreateInitialStates.new.call
+      Karafka::Web::Management::Actions::MigrateStatesData.new.call
 
       get 'dashboard'
     end
@@ -49,9 +49,9 @@ RSpec.describe_current do
       topics_config.consumers.states.name = states_topic
       topics_config.consumers.metrics.name = metrics_topic
 
-      ::Karafka::Web::Management::Actions::CreateInitialStates.new.call
+      Karafka::Web::Management::Actions::CreateInitialStates.new.call
       produce(metrics_topic, Fixtures.consumers_metrics_file('v1.0.0_single.json'))
-      ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
+      Karafka::Web::Management::Actions::MigrateStatesData.new.call
 
       get 'dashboard'
     end
@@ -126,9 +126,9 @@ RSpec.describe_current do
       topics_config.consumers.states.name = states_topic
       topics_config.consumers.metrics.name = metrics_topic
 
-      ::Karafka::Web::Management::Actions::CreateInitialStates.new.call
+      Karafka::Web::Management::Actions::CreateInitialStates.new.call
       produce(metrics_topic, Fixtures.consumers_metrics_file('v1.3.0_pace_gaps.json'))
-      ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
+      Karafka::Web::Management::Actions::MigrateStatesData.new.call
 
       get 'dashboard'
     end

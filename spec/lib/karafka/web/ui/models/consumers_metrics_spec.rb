@@ -11,7 +11,7 @@ RSpec.describe_current do
 
   context 'when no metrics' do
     it { expect(metrics.current).to be(false) }
-    it { expect { metrics.current! }.to raise_error(::Karafka::Web::Errors::Ui::NotFoundError) }
+    it { expect { metrics.current! }.to raise_error(Karafka::Web::Errors::Ui::NotFoundError) }
   end
 
   context 'when one metric exists but karafka-web is not enabled' do
@@ -19,7 +19,7 @@ RSpec.describe_current do
 
     before do
       allow(status.class).to receive(:new).and_return(status)
-      allow(status).to receive(:enabled).and_return(OpenStruct.new(success?: false))
+      allow(status).to receive(:enabled).and_return(Struct.new(:success?).new(false))
       produce(metrics_topic, Fixtures.consumers_metrics_file)
     end
 

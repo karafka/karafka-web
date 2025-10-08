@@ -24,7 +24,7 @@ module Karafka
             required(:processes) do |val|
               next false unless val.is_a?(Hash)
 
-              val.keys.all? { |key| key.is_a?(Symbol) }
+              val.keys.all?(Symbol)
             end
 
             virtual do |data, errors|

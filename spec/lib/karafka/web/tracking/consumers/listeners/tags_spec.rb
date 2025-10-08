@@ -3,7 +3,7 @@
 RSpec.describe_current do
   subject(:listener) { described_class.new }
 
-  let(:event) { OpenStruct.new(payload: { caller: consumer }) }
+  let(:event) { Struct.new(:payload).new({ caller: consumer }) }
   let(:coordinator) { build(:processing_coordinator, topic: topic) }
   let(:topic) { build(:routing_topic) }
   let(:consumer) do

@@ -81,14 +81,14 @@ module Karafka
                   r.get String, :partition_id, Integer do |topic_id, partition_id, offset|
                     # If when viewing given message we get an offset of different message, we should
                     # redirect there. This allows us to support pagination with the current engine
-                    if params.current_offset != -1
+                    if params.current_offset == -1
+                      controller.show(topic_id, partition_id, offset)
+                    else
                       r.redirect explorer_topics_path(
                         topic_id,
                         partition_id,
                         params.current_offset
                       )
-                    else
-                      controller.show(topic_id, partition_id, offset)
                     end
                   end
 

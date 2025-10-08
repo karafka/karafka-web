@@ -68,7 +68,7 @@ module Karafka
             #   care about what a stopped process was doing and we can also remove it from active
             #   reports.
             def evict_expired_processes
-              max_ttl = @aggregated_from - ::Karafka::Web.config.ttl / 1_000
+              max_ttl = @aggregated_from - (::Karafka::Web.config.ttl / 1_000)
 
               @active_reports.delete_if do |_id, report|
                 report[:dispatched_at] < max_ttl || report[:process][:status] == 'stopped'

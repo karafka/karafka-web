@@ -30,16 +30,14 @@ module Karafka
           end
 
           # Creates a new Jobs object with selected jobs
-          # @param block [Proc] select proc
           # @return [Jobs] selected jobs enclosed with the Jobs object
-          def select(&block)
-            self.class.new(super(&block))
+          def select(&)
+            self.class.new(super)
           end
 
           # Allows for iteration over jobs
-          # @param block [Proc] block to call for each job
-          def each(&block)
-            @jobs_array.each(&block)
+          def each(&)
+            @jobs_array.each(&)
           end
         end
       end

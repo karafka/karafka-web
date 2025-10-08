@@ -38,8 +38,7 @@ module Karafka
               # @return [String] JSON with data about all the charts we were interested in
               def with(*args)
                 args
-                  .map { |name| [name.to_sym, public_send(name)] }
-                  .to_h
+                  .to_h { |name| [name.to_sym, public_send(name)] }
                   .to_json
               end
 

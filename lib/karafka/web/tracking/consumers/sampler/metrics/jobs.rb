@@ -28,8 +28,7 @@ module Karafka
 
                 return 0 if totals.empty?
 
-                timefactor = float_now - started_at
-                timefactor = timefactor > 60 ? 60 : timefactor
+                timefactor = [float_now - started_at, 60].min
 
                 # We divide by 1_000 to convert from milliseconds
                 # We multiply by 100 to have it in % scale

@@ -4,7 +4,7 @@ RSpec.describe_current do
   subject(:listener) { described_class.new }
 
   let(:statistics) { Fixtures.json('emitted_statistics', symbolize_names: false) }
-  let(:sampler) { ::Karafka::Web.config.tracking.consumers.sampler }
+  let(:sampler) { Karafka::Web.config.tracking.consumers.sampler }
   let(:sg_details) { sampler.consumer_groups['cgid'][:subscription_groups] }
   let(:default_p0) { sg_details['sgid'][:topics]['default'][:partitions][0] }
   let(:test2_p0) { sg_details['sgid'][:topics]['test2'][:partitions][0] }

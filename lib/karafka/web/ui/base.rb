@@ -102,10 +102,7 @@ module Karafka
           when Errors::Ui::ForbiddenError
             response.status = 403
             view 'shared/exceptions/not_allowed'
-          when Errors::Ui::NotFoundError
-            response.status = 404
-            view 'shared/exceptions/not_found'
-          when ::Rdkafka::RdkafkaError
+          when Errors::Ui::NotFoundError, ::Rdkafka::RdkafkaError
             response.status = 404
             view 'shared/exceptions/not_found'
           else

@@ -22,7 +22,7 @@ module ControllerHelper
 
   # @return [Karafka::Core::Configurable::Node] topics config node
   def topics_config
-    ::Karafka::Web.config.topics
+    Karafka::Web.config.topics
   end
 
   # @return [Rack::MockResponse] mock rack response

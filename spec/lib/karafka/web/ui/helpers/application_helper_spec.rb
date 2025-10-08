@@ -58,7 +58,7 @@ RSpec.describe_current do
       let(:status) { 'unsupported_status' }
 
       it 'raises an UnsupportedCaseError' do
-        expect { result }.to raise_error(::Karafka::Errors::UnsupportedCaseError)
+        expect { result }.to raise_error(Karafka::Errors::UnsupportedCaseError)
       end
     end
   end

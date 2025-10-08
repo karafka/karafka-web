@@ -99,7 +99,7 @@ module Karafka
             def current_offset
               @current_offset ||= begin
                 offset = @request_params.fetch('offset', -1).to_i
-                offset < -1 ? -1 : offset
+                [offset, -1].max
               end
             end
 

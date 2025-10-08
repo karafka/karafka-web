@@ -65,9 +65,7 @@ module Karafka
                     topic_name,
                     partition_count
                   )
-                rescue Rdkafka::RdkafkaError => e
-                  @form_error = e
-                rescue Rdkafka::Config::ConfigError => e
+                rescue Rdkafka::RdkafkaError, Rdkafka::Config::ConfigError => e
                   @form_error = e
                 end
 

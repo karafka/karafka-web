@@ -6,7 +6,7 @@ RSpec.describe_current do
   let(:compatibility_error) { Karafka::Web::Errors::Management::IncompatibleSchemaError }
   let(:states_topic) { create_topic }
   let(:metrics_topic) { create_topic }
-  let(:topics_config) { ::Karafka::Web.config.topics }
+  let(:topics_config) { Karafka::Web.config.topics }
 
   let(:states_state) { Karafka::Web::Processing::Consumers::State.current! }
   let(:metrics_state) { Karafka::Web::Processing::Consumers::Metrics.current! }

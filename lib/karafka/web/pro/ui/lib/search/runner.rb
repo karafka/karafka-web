@@ -122,7 +122,7 @@ module Karafka
                         end
 
                 iterator_query = {
-                  @topic => partitions_to_search.map { |par| [par, start] }.to_h
+                  @topic => partitions_to_search.to_h { |par| [par, start] }
                 }
 
                 @iterator = Karafka::Pro::Iterator.new(iterator_query)

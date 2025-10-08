@@ -15,10 +15,8 @@ module Karafka
               # Makes sure, all the expected UI search config is defined as it should be
               class Config < ::Karafka::Contracts::Base
                 configure do |config|
-                  config.error_messages = YAML.safe_load(
-                    File.read(
-                      File.join(Karafka::Web.gem_root, 'config', 'locales', 'pro_errors.yml')
-                    )
+                  config.error_messages = YAML.safe_load_file(
+                    File.join(Karafka::Web.gem_root, 'config', 'locales', 'pro_errors.yml')
                   ).fetch('en').fetch('validations').fetch('config')
                 end
 
@@ -33,7 +31,7 @@ module Karafka
                     required(:limits) do |val|
                       next false unless val.is_a?(Array)
                       next false if val.empty?
-                      next false unless val.all? { |count| count.is_a?(Integer) }
+                      next false unless val.all?(Integer)
                       next false unless val.all?(&:positive?)
 
                       true
