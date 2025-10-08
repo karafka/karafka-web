@@ -96,6 +96,8 @@ module Karafka
                        # that is why it will not be reported as a separate job for the UI
                        when 'consumer.idle.error'
                          false
+                       else
+                         false
                        end
 
                 # job reference only exists for consumer work related operations.
