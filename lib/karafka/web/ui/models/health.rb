@@ -74,7 +74,7 @@ module Karafka
 
                 ages = consumer_group[:subscription_groups].values.map do |sub_group_details|
                   rebalance_age_ms = sub_group_details[:state][:rebalance_age] || 0
-                  dispatched_at - rebalance_age_ms / 1_000
+                  dispatched_at - (rebalance_age_ms / 1_000)
                 end
 
                 stats[cg_name][:rebalance_ages] ||= Set.new
@@ -120,14 +120,14 @@ module Karafka
                 topics = cg_data[:topics]
 
                 topics.each do |topic_name, t_data|
-                  topics[topic_name] = Hash[t_data.sort_by { |key, _| key }]
+                  topics[topic_name] = t_data.sort_by { |key, _| key }.to_h
                 end
 
-                cg_data[:topics] = Hash[topics.sort_by { |key, _| key }]
+                cg_data[:topics] = topics.sort_by { |key, _| key }.to_h
               end
 
               # Ensure that all consumer groups are always in the same order
-              Hash[stats.sort_by { |key, _| key }]
+              stats.sort_by { |key, _| key }.to_h
             end
           end
         end

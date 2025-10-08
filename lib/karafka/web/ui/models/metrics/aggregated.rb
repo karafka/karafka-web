@@ -103,10 +103,10 @@ module Karafka
                   base = sample.last.dup
 
                   DELTA_KEYS.each do |key|
-                    base[key] = previous.last[key] + (sample.last[key] - previous.last[key]) / 2
+                    base[key] = previous.last[key] + ((sample.last[key] - previous.last[key]) / 2)
                   end
 
-                  filled << [previous.first + (sample.first - previous.first) / 2, base]
+                  filled << [previous.first + ((sample.first - previous.first) / 2), base]
                 end
 
                 filled << sample
@@ -182,12 +182,12 @@ module Karafka
             # @param current [Hash]
             # @return [Hash] delta computed values
             def compute_deltas(previous, current)
-              DELTA_KEYS.map do |delta_key|
+              DELTA_KEYS.to_h do |delta_key|
                 [
                   delta_key,
                   current.fetch(delta_key) - previous.fetch(delta_key)
                 ]
-              end.to_h
+              end
             end
           end
         end

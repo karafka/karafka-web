@@ -25,6 +25,10 @@ module Karafka
               eofed
             ].each do |action|
               # Tracks the job that is going to be scheduled so we can also display pending jobs
+              # Dynamically creates methods like:
+              #   def on_consumer_before_schedule_consume(event)
+              #   def on_consumer_before_schedule_revoked(event)
+              #   etc.
               class_eval <<~RUBY, __FILE__, __LINE__ + 1
                 # @param event [Karafka::Core::Monitoring::Event]
                 def on_consumer_before_schedule_#{action}(event)
@@ -92,8 +96,6 @@ module Karafka
                        # that is why it will not be reported as a separate job for the UI
                        when 'consumer.idle.error'
                          false
-                       else
-                         false
                        end
 
                 # job reference only exists for consumer work related operations.
@@ -115,6 +117,10 @@ module Karafka
               [:tick, :ticked, 'tick'],
               [:eof, :eofed, 'eofed']
             ].each do |pre, post, action|
+              # Dynamically creates methods like:
+              #   def on_consumer_revoke(event)
+              #   def on_consumer_shutting_down(event)
+              #   etc.
               class_eval <<~METHOD, __FILE__, __LINE__ + 1
                 # Stores this job details
                 #

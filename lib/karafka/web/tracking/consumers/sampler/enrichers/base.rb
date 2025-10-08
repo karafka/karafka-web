@@ -8,7 +8,9 @@ module Karafka
           # Namespace for data enrichers that augment sampler data with additional details
           module Enrichers
             # Base class for data enrichers
+            # This is an abstract base class that can be extended to create custom enrichers
             class Base
+              # Placeholder for future common functionality
             end
           end
         end

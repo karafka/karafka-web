@@ -46,9 +46,9 @@ RSpec.describe_current do
         topics_config.consumers.reports.name = reports_topic
         topics_config.errors.name = errors_topic
 
-        ::Karafka::Web::Management::Actions::CreateInitialStates.new.call
+        Karafka::Web::Management::Actions::CreateInitialStates.new.call
         produce(metrics_topic, Fixtures.consumers_metrics_file)
-        ::Karafka::Web::Management::Actions::MigrateStatesData.new.call
+        Karafka::Web::Management::Actions::MigrateStatesData.new.call
 
         get 'status'
       end
@@ -71,8 +71,8 @@ RSpec.describe_current do
       end
 
       it 'shows version information' do
-        expect(body).to include(::Karafka::VERSION)
-        expect(body).to include(::Karafka::Web::VERSION)
+        expect(body).to include(Karafka::VERSION)
+        expect(body).to include(Karafka::Web::VERSION)
       end
     end
   end

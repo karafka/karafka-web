@@ -18,7 +18,7 @@ RSpec.describe_current do
 
     context 'when requests policy prevents us from visiting this page' do
       before do
-        allow(::Karafka::Web.config.ui.policies.requests)
+        allow(Karafka::Web.config.ui.policies.requests)
           .to receive(:allow?)
           .and_return(false)
 
