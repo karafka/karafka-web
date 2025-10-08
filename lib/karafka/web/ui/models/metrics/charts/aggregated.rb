@@ -14,7 +14,6 @@ module Karafka
               def initialize(aggregated, period)
                 @period = period
                 @data = aggregated.to_h.fetch(period)
-                super(@data)
               end
 
               # @return [String] JSON with bytes sent and bytes received metrics
