@@ -193,7 +193,7 @@ module Karafka
         def render_response(response)
           response.attributes.each do |key, value|
             instance_variable_set(
-              "@#{key}", value
+              :"@#{key}", value
             )
           end
 

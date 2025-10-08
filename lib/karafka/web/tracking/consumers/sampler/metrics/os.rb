@@ -55,7 +55,7 @@ module Karafka
               def memory_total_usage(memory_threads_ps)
                 return 0 unless memory_threads_ps
 
-                memory_threads_ps.sum { |entry| entry.first }
+                memory_threads_ps.sum(&:first)
               end
 
               # @return [Integer] total amount of available memory in kilobytes

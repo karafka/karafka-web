@@ -169,6 +169,7 @@ module Karafka
             end
 
             # @param report [Hash]
+            # @param block [Proc]
             # @yieldparam partition_stats [Hash] statistics for a single partition
             def iterate_partitions(report, &block)
               report[:consumer_groups].each_value do |consumer_group|

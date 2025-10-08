@@ -208,7 +208,7 @@ module Karafka
               end
 
               [
-                aggregated.values.map { |partition| partition.values.reverse }.sum([]),
+                aggregated.values.sum([]) { |partition| partition.values.reverse },
                 !Sets.call(counts, page + 1).empty?
               ]
             end
