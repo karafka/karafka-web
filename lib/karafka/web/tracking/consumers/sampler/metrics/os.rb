@@ -55,7 +55,7 @@ module Karafka
               def memory_total_usage(memory_threads_ps)
                 return 0 unless memory_threads_ps
 
-                memory_threads_ps.map(&:first).sum
+                memory_threads_ps.sum { |entry| entry.first }
               end
 
               # @return [Integer] total amount of available memory in kilobytes
@@ -153,7 +153,7 @@ module Karafka
                   current_pid = ::Process.pid
 
                   # Read all processes from /proc
-                  Dir.glob('/proc/[0-9]*/statm').map do |statm_file|
+                  Dir.glob('/proc/[0-9]*/statm').filter_map do |statm_file|
                     pid = statm_file.match(%r{/proc/(\d+)/statm})[1].to_i
                     status_file = "/proc/#{pid}/status"
 
@@ -179,7 +179,7 @@ module Karafka
                     rss_kb = (rss_pages * page_size) / 1024
 
                     [rss_kb, thcount, pid]
-                  end.compact
+                  end
                 # thcount is not available on macos ps
                 # because of that we inject 0 as threads count similar to how
                 # we do on windows
