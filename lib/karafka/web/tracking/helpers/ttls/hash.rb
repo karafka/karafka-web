@@ -18,13 +18,12 @@ module Karafka
             # interested in using for aggregated stats. Once filtered, builds a Stats object out
             # of the candidates
             #
-            # @param block [Proc] block for selection of elements for stats
             # @yieldparam [String] key
             # @yieldparam [Ttls::Array] samples
             # @return [Stats]
-            def stats_from(&block)
+            def stats_from(&)
               Stats.new(
-                select(&block)
+                select(&)
               )
             end
 

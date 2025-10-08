@@ -107,7 +107,7 @@ module Karafka
             #   stopped processes for extra time within the ttl limitations. This makes tracking of
             #   things from UX perspective nicer.
             def evict_expired_processes
-              max_ttl = @aggregated_from - ::Karafka::Web.config.ttl / 1_000
+              max_ttl = @aggregated_from - (::Karafka::Web.config.ttl / 1_000)
 
               state[:processes].delete_if do |_id, details|
                 details[:dispatched_at] < max_ttl
@@ -169,13 +169,11 @@ module Karafka
             end
 
             # @param report [Hash]
-            def iterate_partitions(report)
+            def iterate_partitions(report, &block)
               report[:consumer_groups].each_value do |consumer_group|
                 consumer_group[:subscription_groups].each_value do |subscription_group|
                   subscription_group[:topics].each_value do |topic|
-                    topic[:partitions].each_value do |partition|
-                      yield(partition)
-                    end
+                    topic[:partitions].each_value(&block)
                   end
                 end
               end

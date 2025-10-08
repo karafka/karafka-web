@@ -45,8 +45,8 @@ RSpec.describe_current do
       it 'caches the sampler instance' do
         allow(sampler).to receive(:track)
 
-        listener.track {}
-        listener.track {}
+        listener.track { nil }
+        listener.track { nil }
 
         # Should only call the config once due to memoization
         expect(Karafka::Web.config.tracking.consumers).to have_received(:sampler).once
@@ -148,7 +148,7 @@ RSpec.describe_current do
 
         # Test that delegation works with new configuration
         allow(new_sampler).to receive(:track)
-        new_listener.track {}
+        new_listener.track { nil }
         expect(new_sampler).to have_received(:track)
       end
     end

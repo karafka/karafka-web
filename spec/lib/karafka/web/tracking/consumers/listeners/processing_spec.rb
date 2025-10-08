@@ -4,11 +4,11 @@ RSpec.describe_current do
   subject(:listener) { described_class.new }
 
   let(:caller) { build(:consumer) }
-  let(:sampler) { ::Karafka::Web.config.tracking.consumers.sampler }
+  let(:sampler) { Karafka::Web.config.tracking.consumers.sampler }
   let(:type) { rand.to_s }
   let(:error) { nil }
   let(:event) do
-    event = OpenStruct.new(type: type, error: error, caller: caller)
+    event = Struct.new(:type, :error, :caller, :payload).new(type, error, caller, nil)
     event.payload = event
     event
   end

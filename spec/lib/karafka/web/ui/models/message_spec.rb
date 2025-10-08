@@ -17,21 +17,21 @@ RSpec.describe_current do
       let(:partition) { 0 }
       let(:offset) { 1 }
 
-      it { expect { message }.to raise_error(::Rdkafka::RdkafkaError) }
+      it { expect { message }.to raise_error(Rdkafka::RdkafkaError) }
     end
 
     context 'when partition does not exist' do
       let(:partition) { 1 }
       let(:offset) { 1 }
 
-      it { expect { message }.to raise_error(::Rdkafka::RdkafkaError) }
+      it { expect { message }.to raise_error(Rdkafka::RdkafkaError) }
     end
 
     context 'when offset does not exist' do
       let(:partition) { 0 }
       let(:offset) { 1 }
 
-      it { expect { message }.to raise_error(::Karafka::Web::Errors::Ui::NotFoundError) }
+      it { expect { message }.to raise_error(Karafka::Web::Errors::Ui::NotFoundError) }
     end
 
     context 'when message exists' do

@@ -20,10 +20,8 @@ module Karafka
               #   normalized to simplify the flow.
               class Form < Web::Contracts::Base
                 configure do |config|
-                  config.error_messages = YAML.safe_load(
-                    File.read(
-                      File.join(Karafka::Web.gem_root, 'config', 'locales', 'pro_errors.yml')
-                    )
+                  config.error_messages = YAML.safe_load_file(
+                    File.join(Karafka::Web.gem_root, 'config', 'locales', 'pro_errors.yml')
                   ).fetch('en').fetch('validations').fetch('search_form')
                 end
 
@@ -74,7 +72,7 @@ module Karafka
                   next false unless val.is_a?(Array)
                   next false if val.empty?
 
-                  val.all? { |ar_val| ar_val.is_a?(String) }
+                  val.all?(String)
                 end
 
                 # Special validation for timestamp to make sure it is not older than 2010

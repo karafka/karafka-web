@@ -49,7 +49,7 @@ RSpec.describe_current do
 
       it 'stops iterating over messages' do
         listener.stop
-        listener.each {}
+        listener.each { |_| nil }
 
         expect(iterator_double).to have_received(:stop)
       end

@@ -97,7 +97,7 @@ RSpec.describe_current do
         eof_offset committed_offset_fd poll_state_ch partition_id lag_hybrid lag_hybrid_d
         subscription_group_id transactional
       ].sort
-      expect(sg[:topics][:default][:partitions]['0'.to_sym].keys.sort).to eq(keys)
+      expect(sg[:topics][:default][:partitions][:'0'].keys.sort).to eq(keys)
     end
   end
 end

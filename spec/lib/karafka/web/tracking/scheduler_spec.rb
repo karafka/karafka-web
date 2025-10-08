@@ -3,8 +3,8 @@
 RSpec.describe_current do
   subject(:scheduler) { described_class.new }
 
-  let(:consumers_reporter) { ::Karafka::Web.config.tracking.consumers.reporter }
-  let(:producers_reporter) { ::Karafka::Web.config.tracking.producers.reporter }
+  let(:consumers_reporter) { Karafka::Web.config.tracking.consumers.reporter }
+  let(:producers_reporter) { Karafka::Web.config.tracking.producers.reporter }
 
   before do
     allow(consumers_reporter).to receive(:report)

@@ -29,7 +29,7 @@ RSpec.describe_current do
 
     context 'when there are no topics' do
       before do
-        allow(::Karafka::Web::Ui::Models::Topic).to receive(:all).and_return([])
+        allow(Karafka::Web::Ui::Models::Topic).to receive(:all).and_return([])
         get 'topics'
       end
 
@@ -44,7 +44,7 @@ RSpec.describe_current do
 
     context 'when internal topics should be displayed' do
       before do
-        allow(::Karafka::Web.config.ui.visibility)
+        allow(Karafka::Web.config.ui.visibility)
           .to receive(:internal_topics)
           .and_return(true)
 

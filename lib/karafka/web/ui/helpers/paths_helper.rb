@@ -87,27 +87,24 @@ module Karafka
 
           # Helps build topics paths
           #
-          # @param args [Array<String>] path params for the topics scope
           # @return [String] topics scope path
-          def topics_path(*args)
-            root_path('topics', *args)
+          def topics_path(*)
+            root_path('topics', *)
           end
 
           # Helps build consumers paths
           #
-          # @param args [Array<String>] path params for consumers scope
           # @return [String] consumers scope path
-          def consumers_path(*args)
-            root_path('consumers', *args)
+          def consumers_path(*)
+            root_path('consumers', *)
           end
 
           # Helps build per-consumer scope paths
           #
           # @param consumer_id [String] consumer process id
-          # @param args [Array<String>] other path components
           # @return [String] per consumer specific path
-          def consumer_path(consumer_id, *args)
-            consumers_path(consumer_id, *args)
+          def consumer_path(consumer_id, *)
+            consumers_path(consumer_id, *)
           end
 
           # Helps build scheduled messages paths.

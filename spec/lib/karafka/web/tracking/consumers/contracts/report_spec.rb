@@ -47,7 +47,7 @@ RSpec.describe_current do
       memory_size: 32_783_440,
       cpus: 8,
       cpu_usage: [2.9, 1.69, 1.47],
-      tags: ::Karafka::Core::Taggable::Tags.new
+      tags: Karafka::Core::Taggable::Tags.new
     }
   end
 

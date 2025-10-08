@@ -6,9 +6,8 @@ module Karafka
     class App
       class << self
         # @param env [Hash] Rack env
-        # @param block [Proc] Rack block
-        def call(env, &block)
-          engine.call(env, &block)
+        def call(env, &)
+          engine.call(env, &)
         end
 
         # @return [Class] regular or pro Web engine

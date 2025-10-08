@@ -26,8 +26,7 @@ module Karafka
       end
 
       # Sets up the whole configuration
-      # @param [Block] block configuration block
-      def setup(&block)
+      def setup(&)
         # You should never reconfigure Web UI after it has been enabled
         raise Errors::LateSetupError, 'Always call #setup before #enable!' if config.enabled
 
@@ -38,7 +37,7 @@ module Karafka
           Pro::Loader.pre_setup_all(config)
         end
 
-        Config.configure(&block)
+        Config.configure(&)
 
         Pro::Loader.post_setup_all(config) if Karafka.pro?
 

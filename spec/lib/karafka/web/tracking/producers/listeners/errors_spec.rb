@@ -3,7 +3,7 @@
 RSpec.describe_current do
   subject(:listener) { described_class.new }
 
-  let(:sampler) { ::Karafka::Web.config.tracking.producers.sampler }
+  let(:sampler) { Karafka::Web.config.tracking.producers.sampler }
 
   let(:error) do
     error = StandardError.new
@@ -35,7 +35,7 @@ RSpec.describe_current do
     it { expect(recorded_errors.size).to eq(1) }
 
     it 'expect the error to match the error contract' do
-      schema = ::Karafka::Web::Tracking::Contracts::Error.new
+      schema = Karafka::Web::Tracking::Contracts::Error.new
       expect(schema.call(recorded_errors.first)).to be_success
     end
 

@@ -3,7 +3,7 @@
 RSpec.describe_current do
   subject(:listener) { described_class.new }
 
-  let(:sampler) { ::Karafka::Web.config.tracking.consumers.sampler }
+  let(:sampler) { Karafka::Web.config.tracking.consumers.sampler }
   let(:error) { StandardError.new(-'This is an error') }
   let(:event) do
     {
@@ -132,7 +132,7 @@ RSpec.describe_current do
       end
 
       context 'when Karafka is pro version' do
-        let(:errors_tracker) { OpenStruct.new(trace_id: 'trace-123-abc') }
+        let(:errors_tracker) { Struct.new(:trace_id).new('trace-123-abc') }
 
         before do
           allow(Karafka).to receive(:pro?).and_return(true)

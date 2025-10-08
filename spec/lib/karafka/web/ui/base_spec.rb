@@ -3,7 +3,7 @@
 RSpec.describe Karafka::Web::Ui::Base, type: :controller do
   subject(:app) { Karafka::Web::Ui::App }
 
-  let(:monitor) { ::Karafka.monitor }
+  let(:monitor) { Karafka.monitor }
 
   describe 'error handling and reporting' do
     context 'when an unhandled error occurs in the UI' do

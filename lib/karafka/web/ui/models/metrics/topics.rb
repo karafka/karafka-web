@@ -43,9 +43,9 @@ module Karafka
 
                 # Always align the order of topics in hash based on their name so it is
                 # independent from the reported order
-                extracted[range] = range_extracted.keys.sort.map do |key|
+                extracted[range] = range_extracted.keys.sort.to_h do |key|
                   [key, range_extracted[key]]
-                end.to_h
+                end
               end
 
               extracted
@@ -67,8 +67,7 @@ module Karafka
                              .select { |val| val.is_a?(Hash) }
                              .flat_map(&:keys)
                              .uniq
-                             .map { |key| [key, nil] }
-                             .to_h
+                             .to_h { |key| [key, nil] }
                              .freeze
 
               # Normalize data in between topics reportings

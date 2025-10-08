@@ -24,7 +24,7 @@ RSpec.describe_current do
       expect(page_size1).to eq(page_size2)
     end
 
-    context 'when on Linux systems', if: RUBY_PLATFORM =~ /linux/ do
+    context 'when on Linux systems', if: RUBY_PLATFORM.include?('linux') do
       it 'uses the correct libc library and constant' do
         expect(described_class::SC_PAGESIZE).to eq(30)
       end
@@ -37,7 +37,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when on macOS systems', if: RUBY_PLATFORM =~ /darwin/ do
+    context 'when on macOS systems', if: RUBY_PLATFORM.include?('darwin') do
       it 'uses the correct system library and constant' do
         expect(described_class::SC_PAGESIZE).to eq(29)
       end

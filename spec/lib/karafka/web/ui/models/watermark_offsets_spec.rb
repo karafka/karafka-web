@@ -15,7 +15,7 @@ RSpec.describe_current do
     let(:low) { high - 10 }
 
     before do
-      allow(::Karafka::Admin).to receive(:read_watermark_offsets).and_return([low, high])
+      allow(Karafka::Admin).to receive(:read_watermark_offsets).and_return([low, high])
     end
 
     it { expect(watermarks.low).to eq(low) }

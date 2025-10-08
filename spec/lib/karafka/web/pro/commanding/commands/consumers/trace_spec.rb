@@ -8,7 +8,7 @@ RSpec.describe_current do
 
   let(:dispatcher) { Karafka::Web::Pro::Commanding::Dispatcher }
   let(:test_thread) { Thread.new { sleep(0.5) } }
-  let(:process_pid) { ::Karafka::Web.config.tracking.consumers.sampler.process_id }
+  let(:process_pid) { Karafka::Web.config.tracking.consumers.sampler.process_id }
 
   before do
     allow(dispatcher).to receive(:result)

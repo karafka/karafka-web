@@ -4,7 +4,7 @@ RSpec.describe_current do
   subject(:listener) { described_class.new }
 
   let(:consumer) { build(:consumer) }
-  let(:sampler) { ::Karafka::Web.config.tracking.consumers.sampler }
+  let(:sampler) { Karafka::Web.config.tracking.consumers.sampler }
   let(:subscription_group) { build(:routing_subscription_group) }
   let(:sg_id) { subscription_group.id }
   let(:topic_name) { consumer.topic.name }
@@ -13,7 +13,7 @@ RSpec.describe_current do
   let(:partition_details) { sampler.subscription_groups[sg_id][:topics][topic_name][partition_id] }
 
   let(:event) do
-    event = OpenStruct.new(type: 'consumer.consuming.transaction', caller: consumer)
+    event = Struct.new(:type, :caller, :payload).new('consumer.consuming.transaction', consumer, nil)
     event.payload = event
     event
   end

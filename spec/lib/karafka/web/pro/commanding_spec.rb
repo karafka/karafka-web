@@ -5,7 +5,7 @@
 
 RSpec.describe_current do
   describe '#post_setup' do
-    let(:config) { ::Karafka::Web.config }
+    let(:config) { Karafka::Web.config }
 
     context 'when commanding is enabled' do
       before do
