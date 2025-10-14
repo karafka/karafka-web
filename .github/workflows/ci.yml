@@ -98,7 +98,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@ab177d40ee5483edb974554986f56b33477e21d0 # v1.265.0
         with:
-          ruby-version: 3.4.6
+          ruby-version: 3.4.7
           bundler-cache: true
 
       - name: Install Diffend plugin
