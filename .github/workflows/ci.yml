@@ -21,7 +21,6 @@ jobs:
   specs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
-    needs: diffend
     strategy:
       fail-fast: false
       matrix:
@@ -85,28 +84,6 @@ jobs:
       - name: Check test topics naming convention
         run: bin/verify_topics_naming
 
-  diffend:
-    timeout-minutes: 5
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-    steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-        with:
-          fetch-depth: 0
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@ab177d40ee5483edb974554986f56b33477e21d0 # v1.265.0
-        with:
-          ruby-version: 3.4.7
-          bundler-cache: true
-
-      - name: Install Diffend plugin
-        run: bundle plugin install diffend
-
-      - name: Bundle Secure
-        run: bundle secure
-
   coditsu:
     timeout-minutes: 10
     runs-on: ubuntu-latest
@@ -167,7 +144,6 @@ jobs:
   integrations:
     timeout-minutes: 15
     runs-on: ubuntu-latest
-    needs: diffend
     steps:
       - name: Checkout code
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -183,7 +159,6 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     needs:
-      - diffend
       - coditsu
       - specs
       - integrations

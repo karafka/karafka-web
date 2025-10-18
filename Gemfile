@@ -2,8 +2,6 @@
 
 source 'https://rubygems.org'
 
-plugin 'diffend'
-
 gemspec
 
 group :test do
