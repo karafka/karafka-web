@@ -15,7 +15,7 @@ module Karafka
           # Current schema version
           # This is used for detecting incompatible changes and not using outdated data during
           # upgrades
-          SCHEMA_VERSION = '1.4.1'
+          SCHEMA_VERSION = '1.5.0'
 
           # Counters that count events occurrences during the given window
           COUNTERS_BASE = {

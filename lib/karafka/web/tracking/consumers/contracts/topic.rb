@@ -10,6 +10,7 @@ module Karafka
             configure
 
             required(:name) { |val| val.is_a?(String) && !val.empty? }
+            required(:partitions_cnt) { |val| val.is_a?(Integer) && val >= 0 }
             required(:partitions) { |val| val.is_a?(Hash) }
 
             virtual do |data, errors|

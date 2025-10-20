@@ -40,6 +40,7 @@ module Karafka
 
                     topic_details = topics_details[topic_name] ||= {
                       name: topic_name,
+                      partitions_cnt: partitions.keys.count { |k| k.to_i != -1 },
                       partitions: {}
                     }
 

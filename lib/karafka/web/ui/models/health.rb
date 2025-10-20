@@ -57,10 +57,15 @@ module Karafka
                 pt_id = partition.id
 
                 stats[cg_id] ||= { topics: {} }
-                stats[cg_id][:topics][t_name] ||= {}
-                stats[cg_id][:topics][t_name][pt_id] = partition
-                stats[cg_id][:topics][t_name][pt_id][:process] = process
-                stats[cg_id][:topics][t_name][pt_id][:subscription_group_id] = sg_id
+
+                stats[cg_id][:topics][t_name] ||= {
+                  partitions: {},
+                  partitions_count: topic.partitions_cnt
+                }
+
+                stats[cg_id][:topics][t_name][:partitions][pt_id] = partition
+                stats[cg_id][:topics][t_name][:partitions][pt_id][:process] = process
+                stats[cg_id][:topics][t_name][:partitions][pt_id][:subscription_group_id] = sg_id
               end
             end
 
@@ -119,8 +124,8 @@ module Karafka
               stats.each_value do |cg_data|
                 topics = cg_data[:topics]
 
-                topics.each do |topic_name, t_data|
-                  topics[topic_name] = t_data.sort_by { |key, _| key }.to_h
+                topics.each_value do |t_data|
+                  t_data[:partitions] = t_data[:partitions].sort_by { |key, _| key }.to_h
                 end
 
                 cg_data[:topics] = topics.sort_by { |key, _| key }.to_h
