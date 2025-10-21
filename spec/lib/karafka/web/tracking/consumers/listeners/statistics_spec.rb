@@ -72,4 +72,19 @@ RSpec.describe_current do
   it { expect(visits_p0[:lag_stored_d]).to eq(0) }
   it { expect(visits_p0[:poll_state]).to eq('active') }
   it { expect(visits_p0[:stored_offset]).to eq(-1_001) }
+
+  context 'when statistics contain -1 partition' do
+    it 'excludes -1 partition from partitions_cnt' do
+      # Fixture has partitions "0" and "-1" for each topic, so count should be 1
+      expect(sg_details['sgid'][:topics]['default'][:partitions_cnt]).to eq(1)
+      expect(sg_details['sgid'][:topics]['test2'][:partitions_cnt]).to eq(1)
+      expect(sg_details['sgid'][:topics]['visits'][:partitions_cnt]).to eq(1)
+    end
+
+    it 'does not include -1 partition in partitions hash' do
+      expect(sg_details['sgid'][:topics]['default'][:partitions].keys).not_to include(-1)
+      expect(sg_details['sgid'][:topics]['test2'][:partitions].keys).not_to include(-1)
+      expect(sg_details['sgid'][:topics]['visits'][:partitions].keys).not_to include(-1)
+    end
+  end
 end

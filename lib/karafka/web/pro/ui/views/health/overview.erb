@@ -10,11 +10,11 @@
     <%== partial 'health/no_data' %>
   <% end %>
 
-  <% @stats.each_with_index do |(cg_name, details), index| %>
+  <% @stats.each_with_index do |(cg_name, cg_details), index| %>
     <h2 class="h2"><%= cg_name %></h2>
 
-    <% topics = details[:topics] %>
-    <% topics.each_with_index do |(topic_name, partitions), index| %>
+    <% topics = cg_details[:topics] %>
+    <% topics.each_with_index do |(topic_name, topic_details), index| %>
       <div class="data-table-wrapper">
         <table class="data-table">
           <thead>
@@ -50,22 +50,21 @@
             </tr>
           </thead>
           <tbody>
-              <% partitions.each do |partition_id, details| %>
-                <%==
-                  partial(
-                    'health/partition',
-                    locals: {
-                      topic_name: topic_name,
-                      partition_id: partition_id,
-                      details: details
-                    }
-                  )
-                %>
-              <% end %>
+              <%==
+                partial(
+                  'health/partitions_with_fallback',
+                  locals: {
+                    topic_details: topic_details,
+                    topic_name: topic_name,
+                    partition_partial: 'health/partition',
+                    colspan: 7
+                  }
+                )
+              %>
           </tbody>
         </table>
 
-        <%== partial 'health/table_metadata', locals: { details: details } %>
+        <%== partial 'health/table_metadata', locals: { details: cg_details } %>
       </div>
     <% end %>
   <% end %>

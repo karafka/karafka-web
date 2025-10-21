@@ -182,7 +182,14 @@ RSpec.describe_current do
 
       it 'correctly identifies older patch versions' do
         parts = current_version.split('.')
-        older_patch = "#{parts[0]}.#{parts[1]}.#{parts[2].to_i - 1}"
+        # Use a known older patch version, handling the case where patch is 0
+        patch_version = parts[2].to_i
+        older_patch = if patch_version > 0
+                        "#{parts[0]}.#{parts[1]}.#{patch_version - 1}"
+                      else
+                        # If patch is 0, use previous minor version with high patch
+                        "#{parts[0]}.#{parts[1].to_i - 1}.9"
+                      end
 
         message = Struct.new(:payload).new({ schema_version: older_patch })
         expect(manager.call(message)).to eq(:older)

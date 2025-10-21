@@ -1,0 +1,41 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<%#
+  Renders partitions with fallback for missing partition data
+
+  Required locals:
+    - topic_details: Hash containing :partitions and :partitions_count
+    - topic_name: Name of the topic
+    - partition_partial: Path to the partition partial to render
+    - colspan: Number of columns for the "no data" message
+%>
+
+<% partitions = topic_details[:partitions] %>
+
+<% partitions.each do |partition_id, details| %>
+  <%==
+    partial(
+      partition_partial,
+      locals: {
+        topic_name: topic_name,
+        partition_id: partition_id,
+        details: details
+      }
+    )
+  %>
+<% end %>
+
+<% topic_details[:partitions_count].times do |partition_id| %>
+  <% next if partitions.include?(partition_id) %>
+
+  <%==
+    partial(
+      'health/no_partition_data',
+      locals: {
+        partition_id: partition_id,
+        colspan: colspan
+      }
+    )
+  %>
+<% end %>

@@ -6,6 +6,7 @@ RSpec.describe_current do
   let(:topic) do
     {
       name: 'topic1',
+      partitions_cnt: 1,
       partitions: {
         0 => {
           id: 0,
@@ -63,6 +64,24 @@ RSpec.describe_current do
 
   context 'when partitions is not a hash' do
     before { topic[:partitions] = 'not a hash' }
+
+    it { expect(contract.call(topic)).not_to be_success }
+  end
+
+  context 'when partitions_cnt is missing' do
+    before { topic.delete(:partitions_cnt) }
+
+    it { expect(contract.call(topic)).not_to be_success }
+  end
+
+  context 'when partitions_cnt is not an integer' do
+    before { topic[:partitions_cnt] = '5' }
+
+    it { expect(contract.call(topic)).not_to be_success }
+  end
+
+  context 'when partitions_cnt is negative' do
+    before { topic[:partitions_cnt] = -1 }
 
     it { expect(contract.call(topic)).not_to be_success }
   end

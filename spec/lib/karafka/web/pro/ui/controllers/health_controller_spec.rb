@@ -56,6 +56,49 @@ RSpec.describe_current do
       end
     end
 
+    context 'when some partitions have no data' do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        # Set partitions_cnt to 3 but only keep partition 0 data
+        topic_data = report.dig(*partition_scope[0..5])
+        topic_data['partitions_cnt'] = 3
+
+        produce(reports_topic, report.to_json)
+
+        get 'health/overview'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('No data available')
+        expect(body.scan('No data available').size).to eq(2) # partitions 1 and 2
+      end
+    end
+
+    context 'when all partitions data matches partitions_cnt' do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        # Ensure partitions_cnt matches actual partition count
+        topic_data = report.dig(*partition_scope[0..5])
+        topic_data['partitions_cnt'] = topic_data['partitions'].keys.length
+
+        produce(reports_topic, report.to_json)
+
+        get 'health/overview'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).not_to include('No data available')
+      end
+    end
+
     context 'when data is present but written in a transactional fashion' do
       before do
         topics_config.consumers.reports.name = reports_topic
@@ -104,6 +147,45 @@ RSpec.describe_current do
         expect(body).not_to include(support_message)
         expect(body).to include('213731273')
         expect(body).not_to include('badge-error')
+      end
+    end
+
+    context 'when some partitions have no data' do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+        topic_data = report.dig(*partition_scope[0..5])
+        topic_data['partitions_cnt'] = 3
+
+        produce(reports_topic, report.to_json)
+
+        get 'health/lags'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('No data available')
+        expect(body.scan('No data available').size).to eq(2)
+      end
+    end
+
+    context 'when all partitions data matches partitions_cnt' do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+        topic_data = report.dig(*partition_scope[0..5])
+        topic_data['partitions_cnt'] = topic_data['partitions'].keys.length
+
+        produce(reports_topic, report.to_json)
+
+        get 'health/lags'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).not_to include('No data available')
       end
     end
 
@@ -189,6 +271,45 @@ RSpec.describe_current do
         expect(body).to include('327355')
         expect(body).not_to include('badge-warning')
         expect(body).not_to include('badge-error')
+      end
+    end
+
+    context 'when some partitions have no data' do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+        topic_data = report.dig(*partition_scope[0..5])
+        topic_data['partitions_cnt'] = 3
+
+        produce(reports_topic, report.to_json)
+
+        get 'health/offsets'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('No data available')
+        expect(body.scan('No data available').size).to eq(2)
+      end
+    end
+
+    context 'when all partitions data matches partitions_cnt' do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+        topic_data = report.dig(*partition_scope[0..5])
+        topic_data['partitions_cnt'] = topic_data['partitions'].keys.length
+
+        produce(reports_topic, report.to_json)
+
+        get 'health/offsets'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).not_to include('No data available')
       end
     end
 
@@ -303,6 +424,45 @@ RSpec.describe_current do
         expect(body).to include('Pause state change')
         expect(body).to include('N/A')
         expect(body).to include('2690818656.575513')
+      end
+    end
+
+    context 'when some partitions have no data' do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+        topic_data = report.dig(*partition_scope[0..5])
+        topic_data['partitions_cnt'] = 3
+
+        produce(reports_topic, report.to_json)
+
+        get 'health/changes'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('No data available')
+        expect(body.scan('No data available').size).to eq(2)
+      end
+    end
+
+    context 'when all partitions data matches partitions_cnt' do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+        topic_data = report.dig(*partition_scope[0..5])
+        topic_data['partitions_cnt'] = topic_data['partitions'].keys.length
+
+        produce(reports_topic, report.to_json)
+
+        get 'health/changes'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).not_to include('No data available')
       end
     end
 

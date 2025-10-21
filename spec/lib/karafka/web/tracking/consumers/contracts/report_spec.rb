@@ -70,6 +70,7 @@ RSpec.describe_current do
             topics: {
               'karafka_consumers_reports' => {
                 name: 'karafka_consumers_reports',
+                partitions_cnt: 1,
                 partitions: {
                   0 => {
                     lag_stored: 0,
