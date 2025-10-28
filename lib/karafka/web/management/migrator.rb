@@ -74,6 +74,9 @@ module Karafka
           any_migrations = false
 
           Migrations::Base.sorted_descendants.each do |migration_class|
+            # Skip report migrations - they are applied per-message by ReportsMigrator
+            next if migration_class.type == :consumers_reports
+
             data = send(migration_class.type)
 
             next unless migration_class.applicable?(data[:schema_version])

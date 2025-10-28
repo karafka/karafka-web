@@ -49,6 +49,7 @@ RSpec.describe_current do
         instance_double(
           Karafka::Messages::Message,
           payload: {
+            schema_version: '1.5.0',
             type: 'consumer',
             process: { id: 'process-1' },
             dispatched_at: Time.now.to_f
@@ -61,6 +62,7 @@ RSpec.describe_current do
         instance_double(
           Karafka::Messages::Message,
           payload: {
+            schema_version: '1.5.0',
             type: 'consumer',
             process: { id: 'process-2' },
             dispatched_at: Time.now.to_f + 1
@@ -145,6 +147,63 @@ RSpec.describe_current do
           expect(state_aggregator).to have_received(:add_state).with(message2.payload, message2.offset)
           expect(state_aggregator).not_to have_received(:add)
           expect(metrics_aggregator).not_to have_received(:add_report)
+        end
+
+        context 'with old schema 1.2.x report using process[:name] instead of process[:id]' do
+          let(:old_schema_message) do
+            instance_double(
+              Karafka::Messages::Message,
+              payload: {
+                schema_version: '1.2.9',
+                type: 'consumer',
+                process: {
+                  name: 'old-process:1:1', # Old schema used :name
+                  status: 'running',
+                  started_at: Time.now.to_f
+                },
+                dispatched_at: Time.now.to_f,
+                stats: { busy: 0, enqueued: 0 }
+              },
+              offset: 200
+            )
+          end
+
+          let(:messages) { [old_schema_message] }
+
+          it 'migrates the report and processes it without crashing' do
+            allow(state_aggregator).to receive(:add_state)
+
+            expect { consumer.consume }.not_to raise_error
+          end
+
+          it 'migrates process[:name] to process[:id] before passing to aggregator' do
+            allow(state_aggregator).to receive(:add_state)
+
+            consumer.consume
+
+            # Verify the migrated report was passed to add_state
+            expect(state_aggregator).to have_received(:add_state) do |report, offset|
+              expect(report[:process][:id]).to eq('old-process:1:1')
+              expect(report[:process]).not_to have_key(:name)
+              expect(offset).to eq(200)
+            end
+          end
+
+          it 'fixes the exact issue from #851 where to_sym was called on nil' do
+            # This test ensures that the crash described in issue #851 is fixed:
+            # "undefined method 'to_sym' for nil" when processing old reports
+            # The migration system should prevent this by renaming :name to :id
+            allow(state_aggregator).to receive(:add_state) do |report, _offset|
+              # This would have crashed in v0.11.3 without the migration
+              # because report[:process][:id] would be nil
+              expect(report[:process][:id]).not_to be_nil
+              expect { report[:process][:id].to_sym }.not_to raise_error
+            end
+
+            consumer.consume
+
+            expect(state_aggregator).to have_received(:add_state)
+          end
         end
       end
     end
