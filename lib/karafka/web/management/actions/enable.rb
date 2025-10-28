@@ -61,7 +61,7 @@ module Karafka
                   # Since we materialize state in intervals, we can poll for half of this time
                   # without impacting the reporting responsiveness
                   max_wait_time ::Karafka::Web.config.processing.interval / 2
-                  max_messages 1_000
+                  max_messages 200
                   consumer ::Karafka::Web::Processing::Consumer
                   # This needs to be true in order not to reload the consumer in dev. This consumer
                   # should not be affected by the end user development process
