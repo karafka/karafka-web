@@ -35,6 +35,8 @@ module Karafka
             # since in most cases this is intermediate due to rolling upgrades, this should not
             # significantly impact the state tracking and processing.
             when :older
+              # Migrate old report format to current schema expectations (in-place)
+              @reports_migrator.call(message.payload)
               @state_aggregator.add_state(message.payload, message.offset)
 
               next
@@ -86,6 +88,7 @@ module Karafka
           @flush_interval = ::Karafka::Web.config.processing.interval
 
           @reports_schema_manager = Consumers::SchemaManager.new
+          @reports_migrator = Consumers::ReportsMigrator.new
           @state_aggregator = Consumers::Aggregators::State.new(@reports_schema_manager)
           @state_contract = Consumers::Contracts::State.new
 
