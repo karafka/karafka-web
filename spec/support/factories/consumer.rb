@@ -3,9 +3,9 @@
 FactoryBot.define do
   factory :consumer, class: 'Karafka::BaseConsumer' do
     messages do
-      OpenStruct.new(
-        size: 1,
-        metadata: batch_metadata
+      Struct.new(:size, :metadata).new(
+        1,
+        batch_metadata
       )
     end
 

@@ -3,7 +3,7 @@
 RSpec.describe_current do
   subject(:listener) { described_class.new }
 
-  let(:sampler) { ::Karafka::Web.config.tracking.consumers.sampler }
+  let(:sampler) { Karafka::Web.config.tracking.consumers.sampler }
   let(:error) { StandardError.new(-'This is an error') }
   let(:event) do
     {
@@ -43,6 +43,35 @@ RSpec.describe_current do
 
       it 'expect to process it without problems' do
         expect { listener.on_error_occurred(event) }.not_to raise_error
+      end
+    end
+
+    context 'when tracking error' do
+      let(:caller_ref) { nil }
+
+      it 'expect to include schema version 1.2.0' do
+        listener.on_error_occurred(event)
+        expect(sampler.errors.last[:schema_version]).to eq('1.2.0')
+      end
+
+      it 'expect to include a unique id' do
+        listener.on_error_occurred(event)
+        error_id = sampler.errors.last[:id]
+
+        expect(error_id).to be_a(String)
+        expect(error_id).not_to be_empty
+        # UUID format validation
+        expect(error_id).to match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
+      end
+
+      it 'expect each error to have a different id' do
+        listener.on_error_occurred(event)
+        first_id = sampler.errors.last[:id]
+
+        listener.on_error_occurred(event)
+        second_id = sampler.errors.last[:id]
+
+        expect(first_id).not_to eq(second_id)
       end
     end
 
@@ -103,7 +132,7 @@ RSpec.describe_current do
       end
 
       context 'when Karafka is pro version' do
-        let(:errors_tracker) { OpenStruct.new(trace_id: 'trace-123-abc') }
+        let(:errors_tracker) { Struct.new(:trace_id).new('trace-123-abc') }
 
         before do
           allow(Karafka).to receive(:pro?).and_return(true)

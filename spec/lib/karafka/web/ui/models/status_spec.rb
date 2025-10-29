@@ -34,7 +34,7 @@ RSpec.describe_current do
     it { expect(result.partial_namespace).to eq('successes') }
 
     context 'when routing does not include the web processing group' do
-      before { allow(::Karafka::Web.config).to receive(:group_id).and_return([]) }
+      before { allow(Karafka::Web.config).to receive(:group_id).and_return([]) }
 
       it { expect(result.success?).to be(false) }
       it { expect(result.to_s).to eq('failure') }
@@ -47,7 +47,7 @@ RSpec.describe_current do
     subject(:result) { status.connection }
 
     context 'when routing is not enabled' do
-      before { allow(::Karafka::Web.config).to receive(:group_id).and_return([]) }
+      before { allow(Karafka::Web.config).to receive(:group_id).and_return([]) }
 
       it { expect(result.success?).to be(false) }
       it { expect(result.to_s).to eq('halted') }
@@ -66,7 +66,7 @@ RSpec.describe_current do
       before do
         allow(Karafka::Web::Ui::Models::ClusterInfo)
           .to receive(:fetch)
-          .and_raise(::Rdkafka::RdkafkaError.new(0))
+          .and_raise(Rdkafka::RdkafkaError.new(0))
       end
 
       it { expect(result.success?).to be(false) }
@@ -83,7 +83,7 @@ RSpec.describe_current do
       before do
         allow(Karafka::Web::Ui::Models::ClusterInfo)
           .to receive(:fetch)
-          .and_raise(::Rdkafka::RdkafkaError.new(0))
+          .and_raise(Rdkafka::RdkafkaError.new(0))
       end
 
       it { expect(result.success?).to be(false) }
@@ -681,7 +681,7 @@ RSpec.describe_current do
         let(:non_existing_topic) { generate_topic_name }
 
         before do
-          allow(::Karafka::App.routes.first.topics.first)
+          allow(Karafka::App.routes.first.topics.first)
             .to receive(:name)
             .and_return(non_existing_topic)
         end

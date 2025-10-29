@@ -15,10 +15,8 @@ module Karafka
               # Makes sure, all the expected UI policies config is defined as it should be
               class Config < ::Karafka::Contracts::Base
                 configure do |config|
-                  config.error_messages = YAML.safe_load(
-                    File.read(
-                      File.join(Karafka::Web.gem_root, 'config', 'locales', 'pro_errors.yml')
-                    )
+                  config.error_messages = YAML.safe_load_file(
+                    File.join(Karafka::Web.gem_root, 'config', 'locales', 'pro_errors.yml')
                   ).fetch('en').fetch('validations').fetch('config')
                 end
 

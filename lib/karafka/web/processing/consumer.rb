@@ -19,6 +19,8 @@ module Karafka
 
           # If there is even one incompatible message, we need to stop
           consumers_messages.each do |message|
+            report = message.payload
+
             case @reports_schema_manager.call(message)
             when :current
               true
@@ -35,7 +37,9 @@ module Karafka
             # since in most cases this is intermediate due to rolling upgrades, this should not
             # significantly impact the state tracking and processing.
             when :older
-              @state_aggregator.add_state(message.payload, message.offset)
+              # Migrate old report format to current schema expectations (in-place)
+              @reports_migrator.call(report)
+              @state_aggregator.add_state(report, message.offset)
 
               next
             else
@@ -44,8 +48,8 @@ module Karafka
 
             # We need to run the aggregations on each message in order to compensate for
             # potential lags.
-            @state_aggregator.add(message.payload, message.offset)
-            @metrics_aggregator.add_report(message.payload)
+            @state_aggregator.add(report, message.offset)
+            @metrics_aggregator.add_report(report)
             @metrics_aggregator.add_stats(@state_aggregator.stats)
             # Indicates that we had at least one report we used to enrich data
             # If there were no state changes, there is no reason to flush data. This can occur
@@ -86,6 +90,7 @@ module Karafka
           @flush_interval = ::Karafka::Web.config.processing.interval
 
           @reports_schema_manager = Consumers::SchemaManager.new
+          @reports_migrator = Consumers::ReportsMigrator.new
           @state_aggregator = Consumers::Aggregators::State.new(@reports_schema_manager)
           @state_contract = Consumers::Contracts::State.new
 

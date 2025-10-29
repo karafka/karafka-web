@@ -77,8 +77,21 @@ module Karafka
 
               private
 
+              # Dynamically defines accessor methods for each search criteria field.
+              # For example, if SEARCH_CRITERIA_FIELDS includes :topic, this creates:
+              #   def topic
+              #     @topic ||= @search_criteria.fetch(:topic)
+              #   end
               SEARCH_CRITERIA_FIELDS.each do |q|
+                # Example for q = :topic:
+                # def topic
+                #   @topic ||= @search_criteria.fetch(:topic)
+                # end
                 class_eval <<~RUBY, __FILE__, __LINE__ + 1
+                  # def topic
+                  #   @topic ||= @search_criteria.fetch(:topic)
+                  # end
+
                   def #{q}
                     @#{q} ||= @search_criteria.fetch(:#{q})
                   end
@@ -122,7 +135,7 @@ module Karafka
                         end
 
                 iterator_query = {
-                  @topic => partitions_to_search.map { |par| [par, start] }.to_h
+                  @topic => partitions_to_search.to_h { |par| [par, start] }
                 }
 
                 @iterator = Karafka::Pro::Iterator.new(iterator_query)

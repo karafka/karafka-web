@@ -165,9 +165,12 @@ RSpec.describe_current do
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    %i[consumers producers].each do |entity|
+    keys = %i[consumers producers].freeze
+    sub_keys = %i[reporter sampler].freeze
+
+    keys.each do |entity|
       context "when checking #{entity} scoped data" do
-        %i[reporter sampler].each do |field|
+        sub_keys.each do |field|
           context "when #{field} is nil" do
             before { params[:tracking][entity][field] = nil }
 

@@ -122,7 +122,7 @@ RSpec.describe_current do
       let(:payload) { rand.to_s }
 
       before do
-        allow(::Karafka::Web.config.ui.policies.messages)
+        allow(Karafka::Web.config.ui.policies.messages)
           .to receive(:republish?)
           .and_return(false)
 
@@ -169,7 +169,7 @@ RSpec.describe_current do
       let(:payload) { rand.to_s }
 
       before do
-        allow(::Karafka::Web.config.ui.policies.messages)
+        allow(Karafka::Web.config.ui.policies.messages)
           .to receive(:download?)
           .and_return(false)
 
@@ -243,7 +243,7 @@ RSpec.describe_current do
       let(:payload) { rand.to_s }
 
       before do
-        allow(::Karafka::Web.config.ui.policies.messages)
+        allow(Karafka::Web.config.ui.policies.messages)
           .to receive(:export?)
           .and_return(false)
 

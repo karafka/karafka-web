@@ -50,7 +50,7 @@ module Karafka
                 new(candidate.payload)
               rescue Rdkafka::RdkafkaError => e
                 # If any of "topic missing" is raised, we return false but other errors we re-raise
-                raise(e) unless EXPECTED_RDKAFKA_ERRORS.any? { |code| e.code == code }
+                raise(e) unless EXPECTED_RDKAFKA_ERRORS.include?(e.code)
 
                 false
               end

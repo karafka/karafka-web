@@ -51,7 +51,11 @@ module Karafka
             # @param report [Hash]
             # @param offset [Integer]
             def add_state(report, offset)
-              process_id = report[:process][:id]
+              # When we deserialize the keys from the stored state, because we convert keys into
+              # symbols, we may have given process state already stored. This means that in order
+              # to update it, we do need to have the new report process id also as a symbol to
+              # act as the key
+              process_id = report[:process][:id].to_sym
 
               state[:processes][process_id] = {
                 dispatched_at: report[:dispatched_at],
@@ -103,7 +107,7 @@ module Karafka
             #   stopped processes for extra time within the ttl limitations. This makes tracking of
             #   things from UX perspective nicer.
             def evict_expired_processes
-              max_ttl = @aggregated_from - ::Karafka::Web.config.ttl / 1_000
+              max_ttl = @aggregated_from - (::Karafka::Web.config.ttl / 1_000)
 
               state[:processes].delete_if do |_id, details|
                 details[:dispatched_at] < max_ttl
@@ -165,13 +169,13 @@ module Karafka
             end
 
             # @param report [Hash]
-            def iterate_partitions(report)
+            # @param block [Proc]
+            # @yieldparam partition_stats [Hash] statistics for a single partition
+            def iterate_partitions(report, &block)
               report[:consumer_groups].each_value do |consumer_group|
                 consumer_group[:subscription_groups].each_value do |subscription_group|
                   subscription_group[:topics].each_value do |topic|
-                    topic[:partitions].each_value do |partition|
-                      yield(partition)
-                    end
+                    topic[:partitions].each_value(&block)
                   end
                 end
               end

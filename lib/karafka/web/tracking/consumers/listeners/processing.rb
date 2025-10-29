@@ -25,7 +25,29 @@ module Karafka
               eofed
             ].each do |action|
               # Tracks the job that is going to be scheduled so we can also display pending jobs
+              # Dynamically creates methods like:
+              #   def on_consumer_before_schedule_consume(event)
+              #   def on_consumer_before_schedule_revoked(event)
+              #   etc.
+              # Example for action = :consume:
+              # # @param event [Karafka::Core::Monitoring::Event]
+              # def on_consumer_before_schedule_consume(event)
+              #   consumer = event.payload[:caller]
+              #   jid = job_id(consumer, 'consume')
+              #   job_details = job_details(consumer, 'consume')
+              #   job_details[:status] = 'pending'
+              #   track { |sampler| sampler.jobs[jid] = job_details }
+              # end
               class_eval <<~RUBY, __FILE__, __LINE__ + 1
+                # @param event [Karafka::Core::Monitoring::Event]
+                # def on_consumer_before_schedule_consume(event)
+                #   consumer = event.payload[:caller]
+                #   jid = job_id(consumer, 'consume')
+                #   job_details = job_details(consumer, 'consume')
+                #   job_details[:status] = 'pending'
+                #   track { |sampler| sampler.jobs[jid] = job_details }
+                # end
+
                 # @param event [Karafka::Core::Monitoring::Event]
                 def on_consumer_before_schedule_#{action}(event)
                   consumer = event.payload[:caller]
@@ -115,7 +137,31 @@ module Karafka
               [:tick, :ticked, 'tick'],
               [:eof, :eofed, 'eofed']
             ].each do |pre, post, action|
+              # Dynamically creates methods like:
+              #   def on_consumer_revoke(event)
+              #   def on_consumer_shutting_down(event)
+              #   etc.
+              # Example for pre = :revoke, action = :revoked:
+              # # Stores this job details
+              # #
+              # # @param event [Karafka::Core::Monitoring::Event]
+              # def on_consumer_revoke(event)
+              #   consumer = event.payload[:caller]
+              #   jid = job_id(consumer, 'revoked')
+              #   job_details = job_details(consumer, 'revoked')
+              #   track { |sampler| sampler.counters[:jobs] += 1; sampler.jobs[jid] = job_details }
+              # end
               class_eval <<~METHOD, __FILE__, __LINE__ + 1
+                # Stores this job details
+                #
+                # @param event [Karafka::Core::Monitoring::Event]
+                # def on_consumer_revoke(event)
+                #   consumer = event.payload[:caller]
+                #   jid = job_id(consumer, 'revoked')
+                #   job_details = job_details(consumer, 'revoked')
+                #   track { |sampler| sampler.counters[:jobs] += 1; sampler.jobs[jid] = job_details }
+                # end
+
                 # Stores this job details
                 #
                 # @param event [Karafka::Core::Monitoring::Event]

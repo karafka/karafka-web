@@ -17,14 +17,14 @@ Gem::Specification.new do |spec|
   spec.licenses    = %w[LGPL-3.0-only Commercial]
 
   spec.add_dependency 'erubi', '~> 1.4'
-  spec.add_dependency 'karafka', '>= 2.5.0.rc2', '< 2.6.0'
+  spec.add_dependency 'karafka', '>= 2.5.1', '< 2.6.0'
   spec.add_dependency 'karafka-core', '>= 2.5.0', '< 2.6.0'
   spec.add_dependency 'roda', '~> 3.68', '>= 3.69'
   spec.add_dependency 'tilt', '~> 2.0'
 
   spec.add_development_dependency 'rackup', '~> 0.2'
 
-  spec.required_ruby_version = '>= 3.1.0'
+  spec.required_ruby_version = '>= 3.2.0'
 
   spec.executables   = %w[karafka-web]
   spec.require_paths = %w[lib]

@@ -4,7 +4,7 @@ RSpec.describe_current do
   subject(:listener) { described_class.new }
 
   let(:event) { {} }
-  let(:reporter) { ::Karafka::Web.config.tracking.consumers.reporter }
+  let(:reporter) { Karafka::Web.config.tracking.consumers.reporter }
 
   before do
     allow(reporter).to receive(:report)

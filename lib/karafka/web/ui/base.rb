@@ -91,13 +91,8 @@ module Karafka
           response.write result.content
         end
 
-        # Display appropriate error specific to a given error type
-        plugin :error_handler, classes: [
-          ::Rdkafka::RdkafkaError,
-          Errors::Ui::NotFoundError,
-          Errors::Ui::ProOnlyError,
-          Errors::Ui::ForbiddenError
-        ] do |e|
+        # Catch all unhandled exceptions, report them to Karafka monitoring, and display error page
+        plugin :error_handler do |e|
           @error = true
 
           case e
@@ -107,9 +102,24 @@ module Karafka
           when Errors::Ui::ForbiddenError
             response.status = 403
             view 'shared/exceptions/not_allowed'
-          else
+          when Errors::Ui::NotFoundError
             response.status = 404
             view 'shared/exceptions/not_found'
+          when ::Rdkafka::RdkafkaError
+            response.status = 404
+            view 'shared/exceptions/not_found'
+          else
+            # Report unhandled errors to Karafka monitoring
+            ::Karafka.monitor.instrument(
+              'error.occurred',
+              error: e,
+              caller: self,
+              type: 'web.ui.error'
+            )
+
+            # For all other unhandled errors, show a generic error page
+            response.status = 500
+            view 'shared/exceptions/unhandled_error'
           end
         end
 
@@ -183,7 +193,7 @@ module Karafka
         def render_response(response)
           response.attributes.each do |key, value|
             instance_variable_set(
-              "@#{key}", value
+              :"@#{key}", value
             )
           end
 

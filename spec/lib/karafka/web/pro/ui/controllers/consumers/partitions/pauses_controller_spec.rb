@@ -66,9 +66,14 @@ RSpec.describe_current do
 
     context 'when the process exists, is running but topic is lrj' do
       before do
-        topic = Karafka::App.routes.first.topics.to_a.first
-        allow(Karafka::App.routes).to receive_messages(flat_map: Karafka::App.routes, find: topic)
-        allow(topic).to receive(:long_running_job?).and_return(true)
+        # Instead of building the whole structure for the topic to be found, we just fake the
+        # sg and the name so first topic is found
+        Karafka::App.routes.each do |cg|
+          cg.topics.each do |topic|
+            allow(topic.subscription_group).to receive(:id).and_return(subscription_group_id)
+            allow(topic).to receive_messages(long_running_job?: true, name: topic_name)
+          end
+        end
 
         get(new_path)
       end
@@ -276,9 +281,12 @@ RSpec.describe_current do
 
     context 'when the process exists, is running but topic is lrj' do
       before do
-        topic = Karafka::App.routes.first.topics.to_a.first
-        allow(Karafka::App.routes).to receive_messages(flat_map: Karafka::App.routes, find: topic)
-        allow(topic).to receive(:long_running_job?).and_return(true)
+        Karafka::App.routes.each do |cg|
+          cg.topics.each do |topic|
+            allow(topic.subscription_group).to receive(:id).and_return(subscription_group_id)
+            allow(topic).to receive_messages(long_running_job?: true, name: topic_name)
+          end
+        end
 
         get(edit_path)
       end

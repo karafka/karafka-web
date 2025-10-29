@@ -53,7 +53,7 @@ module Karafka
         # @param existing [Hash] existing historical metrics (may be empty for the first state)
         def initialize(existing)
           # Builds an empty structure for potential time ranges we are interested in
-          @historicals = TIME_RANGES.keys.map { |name| [name, []] }.to_h
+          @historicals = TIME_RANGES.keys.to_h { |name| [name, []] }
 
           # Fetch the existing (if any) historical values that we already have
           import_existing(existing)

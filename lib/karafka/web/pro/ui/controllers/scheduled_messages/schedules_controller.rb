@@ -21,8 +21,7 @@ module Karafka
                 # cluster
                 candidates = Karafka::App
                              .routes
-                             .map(&:topics)
-                             .map(&:to_a)
+                             .map { |route| route.topics.to_a }
                              .flatten
                              .select(&:scheduled_messages?)
                              .reject { |topic| topic.name.end_with?(states_postfix) }

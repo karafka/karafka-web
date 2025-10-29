@@ -14,7 +14,7 @@ RSpec.describe_current do
       let(:sg_data) do
         {
           topics: {
-            'xda': {}
+            xda: {}
           }
         }
       end

@@ -70,7 +70,7 @@ RSpec.describe_current do
     end
 
     it 'removes processed commands after iteration' do
-      tracker.each_for(subscription_group_id) {}
+      tracker.each_for(subscription_group_id) { nil }
 
       commands = []
       tracker.each_for(subscription_group_id) do |cmd|
@@ -98,7 +98,7 @@ RSpec.describe_current do
           Thread.new do
             iterations.times do
               tracker << build_command(subscription_group_id)
-              tracker.each_for(subscription_group_id) {}
+              tracker.each_for(subscription_group_id) { nil }
             end
           end
         end

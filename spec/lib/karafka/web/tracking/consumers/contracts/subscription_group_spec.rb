@@ -9,6 +9,7 @@ RSpec.describe_current do
       topics: {
         'topic1' => {
           name: 'topic1',
+          partitions_cnt: 1,
           partitions: {
             0 => {
               id: 0,

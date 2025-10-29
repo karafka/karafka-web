@@ -4,11 +4,12 @@ RSpec.describe_current do
   subject(:reporter) { described_class.new }
 
   let(:producer) { WaterDrop::Producer.new }
-  let(:sampler) { ::Karafka::Web.config.tracking.producers.sampler }
+  let(:sampler) { Karafka::Web.config.tracking.producers.sampler }
   let(:errors_topic) { generate_topic_name }
   let(:valid_error) do
     {
       schema_version: '1.0.0',
+      id: SecureRandom.uuid,
       type: 'librdkafka.dispatch_error',
       error_class: 'StandardError',
       error_message: 'Raised',
@@ -31,8 +32,8 @@ RSpec.describe_current do
     it 'expect not to dispatch any messages' do
       reporter.report
 
-      expect(::Karafka::Web.producer).not_to have_received(:produce_many_sync)
-      expect(::Karafka::Web.producer).not_to have_received(:produce_many_async)
+      expect(Karafka::Web.producer).not_to have_received(:produce_many_sync)
+      expect(Karafka::Web.producer).not_to have_received(:produce_many_async)
     end
   end
 
@@ -45,8 +46,8 @@ RSpec.describe_current do
     it 'expect not to dispatch any messages yet' do
       reporter.report
 
-      expect(::Karafka::Web.producer).not_to have_received(:produce_many_sync)
-      expect(::Karafka::Web.producer).not_to have_received(:produce_many_async)
+      expect(Karafka::Web.producer).not_to have_received(:produce_many_sync)
+      expect(Karafka::Web.producer).not_to have_received(:produce_many_async)
     end
   end
 

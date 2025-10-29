@@ -1,0 +1,69 @@
+# Docker Compose configuration for integration testing
+# This sets up containers to test cgroup detection and container metrics
+# No Kafka needed - just testing metrics reading from cgroup files
+
+services:
+  # Test container with cgroup v2 and memory limit
+  # This tests container metrics detection with memory constraints
+  test-container-limited:
+    build:
+      context: ../..
+      dockerfile: spec/integrations/Dockerfile
+    container_name: karafka-web-test-limited
+    environment:
+      - TEST_SCENARIO=limited
+      - INTEGRATION_TEST=true
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 1.0
+    volumes:
+      - ../..:/app:ro
+    working_dir: /app
+    command: >
+      bash -c "
+        echo 'Running integration tests with memory limit (512MB)...' &&
+        bundle exec ruby spec/integrations/container_metrics_limited_spec.rb &&
+        bundle exec ruby spec/integrations/os_metrics_spec.rb
+      "
+
+  # Test container without memory limits
+  # This tests fallback to OS metrics when no cgroup limits are set
+  test-container-unlimited:
+    build:
+      context: ../..
+      dockerfile: spec/integrations/Dockerfile
+    container_name: karafka-web-test-unlimited
+    environment:
+      - TEST_SCENARIO=unlimited
+      - INTEGRATION_TEST=true
+    volumes:
+      - ../..:/app:ro
+    working_dir: /app
+    command: >
+      bash -c "
+        echo 'Running integration tests without memory limit...' &&
+        bundle exec ruby spec/integrations/container_metrics_unlimited_spec.rb &&
+        bundle exec ruby spec/integrations/os_metrics_spec.rb
+      "
+
+  # Test container with strict memory limit (for testing low memory scenarios)
+  test-container-strict:
+    build:
+      context: ../..
+      dockerfile: spec/integrations/Dockerfile
+    container_name: karafka-web-test-strict
+    environment:
+      - TEST_SCENARIO=strict
+      - INTEGRATION_TEST=true
+    mem_limit: 256m
+    mem_reservation: 128m
+    cpus: 0.5
+    volumes:
+      - ../..:/app:ro
+    working_dir: /app
+    command: >
+      bash -c "
+        echo 'Running integration tests with strict memory limit (256MB)...' &&
+        bundle exec ruby spec/integrations/container_metrics_strict_spec.rb &&
+        bundle exec ruby spec/integrations/os_metrics_spec.rb
+      "

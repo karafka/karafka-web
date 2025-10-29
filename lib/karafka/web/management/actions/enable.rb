@@ -61,7 +61,7 @@ module Karafka
                   # Since we materialize state in intervals, we can poll for half of this time
                   # without impacting the reporting responsiveness
                   max_wait_time ::Karafka::Web.config.processing.interval / 2
-                  max_messages 1_000
+                  max_messages 200
                   consumer ::Karafka::Web::Processing::Consumer
                   # This needs to be true in order not to reload the consumer in dev. This consumer
                   # should not be affected by the end user development process
@@ -73,6 +73,13 @@ module Karafka
                   # consumer group name would be renamed and we would start consuming all
                   # historical
                   initial_offset 'latest'
+                  # Increase backoff time on errors. Incompatible schema errors are not recoverable
+                  # until rolling upgrade completes, so we use a longer max timeout to prevent
+                  # spamming errors in logs.
+                  # We set this ourselves so user settings do not impact frequency of retrying
+                  pause_timeout 5_000
+                  pause_max_timeout 60_000
+                  pause_with_exponential_backoff true
                   # We use the defaults + our config alterations that may not align with what
                   # user wants for his topics.
                   kafka kafka_config
@@ -123,6 +130,12 @@ module Karafka
               next if ::Karafka.producer == ::Karafka::Web.producer
 
               ::Karafka::Web.producer.monitor.subscribe(listener)
+            end
+
+            # Installs all the UI related listeners for tracking errors from web processes
+            # These listen on Karafka monitor to catch instrumented UI errors
+            ::Karafka::Web.config.tracking.ui.listeners.each do |listener|
+              ::Karafka.monitor.subscribe(listener)
             end
           end
 

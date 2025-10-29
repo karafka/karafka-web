@@ -31,14 +31,10 @@ RSpec.describe_current do
   end
 
   describe '#on_app_stopped' do
-    before do
-      manager.instance_variable_set(:@thread, Thread.new {})
-      manager.instance_variable_get(:@thread).join(0.1) # Simulate thread finishing quickly
-    end
-
-    it 'expect to wait for the thread to finish' do
-      manager.on_app_stopped(nil)
-      # Test passes if no deadlocks occur and method executes correctly
+    it 'calls the method without errors' do
+      # Just ensure the method can be called without raising errors
+      # We cannot test thread joining without accessing internal state
+      expect { manager.on_app_stopped(nil) }.not_to raise_error
     end
   end
 

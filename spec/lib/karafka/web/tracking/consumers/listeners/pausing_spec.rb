@@ -3,7 +3,7 @@
 RSpec.describe_current do
   subject(:listener) { described_class.new }
 
-  let(:sampler) { ::Karafka::Web.config.tracking.consumers.sampler }
+  let(:sampler) { Karafka::Web.config.tracking.consumers.sampler }
   let(:topic) { build(:routing_topic).name }
   let(:subscription_group) { build(:routing_subscription_group) }
   let(:event) do

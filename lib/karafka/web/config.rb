@@ -171,6 +171,14 @@ module Karafka
             Tracking::Producers::Listeners::Errors.new
           ]
         end
+
+        setting :ui do
+          # Listeners needed for the Web UI to track errors from Roda/Puma
+          # These dispatch directly to Kafka since there's no background reporter in web processes
+          setting :listeners, default: [
+            Tracking::Ui::Errors.new
+          ]
+        end
       end
 
       # States processing related settings

@@ -36,10 +36,9 @@ module TopicsManagerHelper
     type = details.delete(:type) || :regular
 
     PRODUCERS.public_send(type).produce_sync(
-      **details.merge(
-        topic: topic,
-        payload: payload
-      )
+      **details,
+      topic: topic,
+      payload: payload
     )
   end
 
@@ -56,8 +55,7 @@ module TopicsManagerHelper
   end
 
   # Draws expected routes
-  # @param block [Proc] routes code we want to draw
-  def draw_routes(&block)
-    Karafka::App.routes.draw(&block)
+  def draw_routes(&)
+    Karafka::App.routes.draw(&)
   end
 end

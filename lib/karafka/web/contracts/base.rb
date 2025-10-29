@@ -13,10 +13,8 @@ module Karafka
             return super if block_given?
 
             super do |config|
-              config.error_messages = YAML.safe_load(
-                File.read(
-                  File.join(Karafka::Web.gem_root, 'config', 'locales', 'errors.yml')
-                )
+              config.error_messages = YAML.safe_load_file(
+                File.join(Karafka::Web.gem_root, 'config', 'locales', 'errors.yml')
               ).fetch('en').fetch('validations').fetch('web')
             end
           end

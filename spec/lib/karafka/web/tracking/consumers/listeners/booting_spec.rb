@@ -3,7 +3,7 @@
 RSpec.describe_current do
   subject(:listener) { described_class.new }
 
-  let(:scheduler) { ::Karafka::Web.config.tracking.scheduler }
+  let(:scheduler) { Karafka::Web.config.tracking.scheduler }
 
   let(:event) do
     Karafka::Core::Monitoring::Event.new(

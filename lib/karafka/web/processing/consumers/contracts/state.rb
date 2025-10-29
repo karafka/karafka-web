@@ -19,8 +19,13 @@ module Karafka
             required(:schema_version) { |val| val.is_a?(String) && !val.empty? }
             required(:dispatched_at) { |val| val.is_a?(Numeric) && val.positive? }
             required(:stats) { |val| val.is_a?(Hash) }
-            required(:processes) { |val| val.is_a?(Hash) }
             required(:schema_state) { |val| VALID_SCHEMA_STATES.include?(val) }
+
+            required(:processes) do |val|
+              next false unless val.is_a?(Hash)
+
+              val.keys.all?(Symbol)
+            end
 
             virtual do |data, errors|
               next unless errors.empty?

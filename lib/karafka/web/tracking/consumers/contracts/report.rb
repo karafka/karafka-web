@@ -38,7 +38,7 @@ module Karafka
 
               required(:cpu_usage) do |val|
                 val.is_a?(Array) &&
-                  val.all? { |key| key.is_a?(Numeric) } &&
+                  val.all?(Numeric) &&
                   val.all? { |key| key >= -1 } &&
                   val.size == 3
               end

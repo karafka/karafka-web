@@ -17,8 +17,7 @@ module Karafka
             def initialize(ttls_hash)
               @data = ttls_hash
                       .values
-                      .map(&:samples)
-                      .map(&:to_a)
+                      .map { |value| value.samples.to_a }
                       .delete_if { |samples| samples.size < 2 }
                       .map { |samples| samples.map(&:values) }
             end

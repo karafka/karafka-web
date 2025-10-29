@@ -16,7 +16,7 @@ RSpec.describe_current do
     context 'when process with given id does not exist in the state' do
       let(:process_id) { SecureRandom.uuid }
 
-      it { expect { lookup }.to raise_error(::Karafka::Web::Errors::Ui::NotFoundError) }
+      it { expect { lookup }.to raise_error(Karafka::Web::Errors::Ui::NotFoundError) }
     end
 
     context 'when process exists' do

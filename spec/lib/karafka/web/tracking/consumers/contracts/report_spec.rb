@@ -47,7 +47,7 @@ RSpec.describe_current do
       memory_size: 32_783_440,
       cpus: 8,
       cpu_usage: [2.9, 1.69, 1.47],
-      tags: ::Karafka::Core::Taggable::Tags.new
+      tags: Karafka::Core::Taggable::Tags.new
     }
   end
 
@@ -70,6 +70,7 @@ RSpec.describe_current do
             topics: {
               'karafka_consumers_reports' => {
                 name: 'karafka_consumers_reports',
+                partitions_cnt: 1,
                 partitions: {
                   0 => {
                     lag_stored: 0,

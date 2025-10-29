@@ -22,7 +22,7 @@ module Karafka
           #   we can sort on method invocations, this needs to be limited and provided on a per
           #   controller basis.
           def initialize(sort_query, allowed_attributes:)
-            field, order = sort_query.split(' ')
+            field, order = sort_query.split
 
             @order = order.to_s.downcase
             @order = ALLOWED_ORDERS.first unless ALLOWED_ORDERS.include?(@order)
