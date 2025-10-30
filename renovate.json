@@ -9,7 +9,10 @@
   },
   "dockerfile": {
     "enabled": true,
-    "fileMatch": ["(^|/)Dockerfile$", "spec/integrations/Dockerfile"]
+    "managerFilePatterns": [
+      "/(^|/)Dockerfile$/",
+      "/spec/integrations/Dockerfile/"
+    ]
   },
   "packageRules": [
     {
