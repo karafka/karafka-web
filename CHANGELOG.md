@@ -3,7 +3,7 @@
 ## 0.11.4 (Unreleased)
 - [Enhancement] Show placeholder rows for partitions with no data during rebalances in health view. The UI now displays all topic partitions (0 to N-1) with "No data available" indicators for partitions currently being rebalanced, preventing confusion from disappearing partitions. Consumer reports now include `partitions_cnt` field extracted from librdkafka statistics. Consumer schema version bumped to 1.5.0 (breaking change).
 - [Enhancement] Track and report UI errors originating from Roda/Puma web processes directly to Kafka errors topic for visibility and debugging. UI errors are dispatched asynchronously from web processes using a dedicated listener.
-- [Enhancement] Require Karafka 2.5.1 at minimum and migrate from string-based execution mode comparisons to the new ExecutionMode object API.
+- [Enhancement] Require Karafka 2.5.2 at minimum and migrate from string-based execution mode comparisons to the new ExecutionMode object API.
 - [Enhancement] Increase Web UI processing consumer backoff time to 30 seconds when encountering incompatible schema errors to prevent error spam during rolling upgrades.
 - [Enhancement] Add unique `id` field to error reports to track duplicate error occurrences. Error schema version bumped to 1.2.0 while maintaining backward compatibility with older error formats (1.0.0, 1.1.0) in the Web UI.
 - [Enhancement] Add container-aware metrics collection for Docker/Kubernetes environments. The Web UI now reports accurate container memory limits from cgroups (v1 and v2) instead of misleading host metrics, while maintaining full backward compatibility with non-containerized deployments.
