@@ -30,7 +30,7 @@ module Karafka
 
             # Displays selected broker configuration
             #
-            # @param broker_id [String] id of the broker
+            # @param broker_id [String]
             def show(broker_id)
               @broker = Models::Broker.find(broker_id)
 

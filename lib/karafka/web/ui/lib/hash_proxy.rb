@@ -30,7 +30,7 @@ module Karafka
             @results = {}
           end
 
-          # @return [Original hash]
+          # @return [Hash]
           def to_h
             @hash
           end

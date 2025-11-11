@@ -18,7 +18,7 @@ module Karafka
           # Helper method to flatten nested hashes and arrays
           # @param prefix [String] The prefix for nested keys, initially an empty string.
           # @param hash [Hash, Array] The nested hash or array to be flattened.
-          # @param [Hash] result The hash to store the flattened key-value pairs.
+          # @param result [Hash] The hash to store the flattened key-value pairs.
           # @return [Hash] The flattened hash with keys in bracket notation suitable for URL
           #   encoding.
           def flatten_params(prefix, hash, result = {})

@@ -15,7 +15,7 @@ module Karafka
               class << self
                 # @param counts [Array<Integer>] sets elements counts
                 # @param current_page [Integer] page number
-                # @return [Hash<Integer, Range>] hash with integer keys indicating the count
+                # @return [Hash{Integer => Range}] hash with integer keys indicating the count
                 #   location and the range needed to be taken of elements (counting backwards) for
                 #   each partition
                 def call(counts, current_page)

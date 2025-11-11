@@ -35,7 +35,7 @@ module Karafka
           # Otherwise, computes it via the provided block, stores it,
           # and updates metadata (timestamp + hash).
           #
-          # @param key [Object] key to retrieve
+          # @param key [Object]
           # @yield block to compute the value if key is not present
           # @return [Object] cached or computed value
           def fetch(key)
