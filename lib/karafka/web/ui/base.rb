@@ -32,7 +32,7 @@ module Karafka
           plugin(
             :sessions,
             key: '_karafka_session',
-            env_key: '_karafka_session',
+            env_key: 'karafka.session',
             secret: SecureRandom.hex(64)
           )
         end
