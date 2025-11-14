@@ -1,6 +1,6 @@
 # Karafka Web Changelog
 
-## 0.11.5 (Unreleased)
+## 0.11.5 (2025-11-14)
 - [Enhancement] Utilize newly released Roda session management `:env_key` to isolate Karafka Web session from the main application session.
 
 ## 0.11.4 (2025-11-01)
