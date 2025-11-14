@@ -15,8 +15,10 @@ module ControllerHelper
   # @return [Hash] sanitized flash messages hash or nil if none
   # @note We sanitize it because of auto-wrapping of some parts with bold
   def flash
+    env_key = Karafka::Web.config.ui.sessions.env_key
+
     last_request
-      .env['rack.session']['_flash']
+      .env[env_key]['_flash']
       .transform_values { |value| value.gsub('<strong>', '').gsub('</strong>', '') }
   end
 

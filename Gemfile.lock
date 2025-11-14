@@ -1,11 +1,11 @@
 PATH
   remote: .
   specs:
-    karafka-web (0.11.4)
+    karafka-web (0.11.5)
       erubi (~> 1.4)
       karafka (>= 2.5.2, < 2.6.0)
       karafka-core (>= 2.5.0, < 2.6.0)
-      roda (~> 3.68, >= 3.69)
+      roda (~> 3.69, >= 3.69)
       tilt (~> 2.0)
 
 GEM
@@ -125,7 +125,7 @@ GEM
       rack (>= 3.0.0.beta1)
       webrick
     rake (13.3.1)
-    roda (3.97.0)
+    roda (3.98.0)
       rack
     rspec (3.13.2)
       rspec-core (~> 3.13.0)
@@ -189,4 +189,4 @@ DEPENDENCIES
   yard-lint
 
 BUNDLED WITH
-   2.7.2
+   2.7.1
