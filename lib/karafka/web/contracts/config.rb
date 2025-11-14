@@ -91,6 +91,7 @@ module Karafka
         nested(:ui) do
           nested(:sessions) do
             required(:key) { |val| val.is_a?(String) && !val.empty? }
+            required(:env_key) { |val| val.is_a?(String) && !val.empty? }
             required(:secret) { |val| val.is_a?(String) && val.length >= 64 }
           end
 

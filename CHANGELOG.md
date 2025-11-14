@@ -1,5 +1,8 @@
 # Karafka Web Changelog
 
+## 0.11.5 (Unreleased)
+- [Enhancement] Utilize newly released Roda session management `:env_key` to isolate Karafka Web session from the main application session.
+
 ## 0.11.4 (2025-11-01)
 - [Enhancement] Show placeholder rows for partitions with no data during rebalances in health view. The UI now displays all topic partitions (0 to N-1) with "No data available" indicators for partitions currently being rebalanced, preventing confusion from disappearing partitions. Consumer reports now include `partitions_cnt` field extracted from librdkafka statistics. Consumer schema version bumped to 1.5.0 (breaking change).
 - [Enhancement] Track and report UI errors originating from Roda/Puma web processes directly to Kafka errors topic for visibility and debugging. UI errors are dispatched asynchronously from web processes using a dedicated listener.
