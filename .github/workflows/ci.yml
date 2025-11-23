@@ -41,7 +41,7 @@ jobs:
         run: "[ -e $APT_DEPS ] || sudo apt-get install -y --no-install-recommends $APT_DEPS"
 
       - name: Remove platform-specific entries for Ruby previews
-        if: contains(matrix.ruby, '3.5')
+        if: contains(matrix.ruby, 'preview')
         run: |
           ruby -i -ne 'puts $_ unless /^\s*ffi \(.*-.*\)$/' Gemfile.lock
           ruby -i -ne 'puts $_ unless /^\s*nokogiri \(.*-.*\)$/' Gemfile.lock
