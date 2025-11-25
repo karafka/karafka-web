@@ -16,23 +16,8 @@
   },
   "packageRules": [
     {
-      "matchManagers": [
-        "npm"
-      ],
-      "rangeStrategy": "bump",
-      "minimumReleaseAge": "3 days"
-    },
-    {
-      "matchManagers": [
-        "github-actions"
-      ],
+      "matchManagers": ["*"],
       "minimumReleaseAge": "7 days"
-    },
-    {
-      "matchManagers": [
-        "dockerfile"
-      ],
-      "minimumReleaseAge": "3 days"
     }
   ]
 }
