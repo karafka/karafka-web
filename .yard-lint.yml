@@ -17,7 +17,7 @@ AllValidators:
     - 'test/**/*'
 
   # Exit code behavior (error, warning, convention, never)
-  FailOnSeverity: error
+  FailOnSeverity: convention
 
 # Documentation validators
 Documentation/UndocumentedObjects:
