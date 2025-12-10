@@ -92,8 +92,6 @@ module Karafka
             # Clears the memoized topics_details cache.
             #
             # Call this if cluster_info is updated and you need fresh topic details.
-            #
-            # @return [nil]
             def clear_topics_details_cache
               @topics_details = nil
             end

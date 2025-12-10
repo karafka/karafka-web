@@ -52,8 +52,6 @@ module Karafka
               #
               # On success, stores cluster_info and connection_time.
               # On failure, sets connection_time to 1_000_000 (indicating failure).
-              #
-              # @return [void]
               def connect
                 started = Time.now.to_f
                 context.cluster_info = Models::ClusterInfo.fetch
