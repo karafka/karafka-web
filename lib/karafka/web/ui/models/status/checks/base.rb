@@ -83,24 +83,6 @@ module Karafka
                 def halted_details
                   {}
                 end
-
-                # Derives the check name from the class name.
-                #
-                # Converts CamelCase to snake_case.
-                #
-                # @return [Symbol] the check name
-                #
-                # @example
-                #   Connection.check_name        #=> :connection
-                #   InitialConsumersState.check_name #=> :initial_consumers_state
-                def check_name
-                  name
-                    .split('::')
-                    .last
-                    .gsub(/([a-z\d])([A-Z])/, '\1_\2')
-                    .downcase
-                    .to_sym
-                end
               end
 
               # Initializes the check with a shared context.
@@ -131,9 +113,9 @@ module Karafka
               # Helper method to create Step instances with less verbosity.
               #
               # @param status [Symbol] the status (:success, :warning, :failure, :halted)
-              # @param details [Hash, Array, nil] optional details about the check result
+              # @param details [Hash, Array] optional details about the check result
               # @return [Status::Step] a new Step instance
-              def step(status, details = nil)
+              def step(status, details = {})
                 Step.new(status, details)
               end
             end

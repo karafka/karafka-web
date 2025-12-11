@@ -3,6 +3,21 @@
 RSpec.describe_current do
   subject(:status) { described_class.new }
 
+  describe 'CHECKS registry' do
+    it 'has all dependency references pointing to existing checks' do
+      described_class::CHECKS.each do |name, check_class|
+        next if check_class.independent?
+
+        dependency = check_class.dependency
+        next unless dependency
+
+        expect(described_class::CHECKS).to have_key(
+          dependency
+        ), "Check #{name} depends on #{dependency.inspect} which is not registered in CHECKS"
+      end
+    end
+  end
+
   let(:errors_topic) { Karafka::Web.config.topics.errors.name = create_topic }
   let(:reports_topic) { Karafka::Web.config.topics.consumers.reports.name = create_topic }
   let(:metrics_topic) { Karafka::Web.config.topics.consumers.metrics.name = create_topic }
@@ -30,7 +45,7 @@ RSpec.describe_current do
 
     it { expect(result.success?).to be(true) }
     it { expect(result.to_s).to eq('success') }
-    it { expect(result.details).to be_nil }
+    it { expect(result.details).to eq({}) }
     it { expect(result.partial_namespace).to eq('successes') }
 
     context 'when routing does not include the web processing group' do
@@ -38,7 +53,7 @@ RSpec.describe_current do
 
       it { expect(result.success?).to be(false) }
       it { expect(result.to_s).to eq('failure') }
-      it { expect(result.details).to be_nil }
+      it { expect(result.details).to eq({}) }
       it { expect(result.partial_namespace).to eq('failures') }
     end
   end
@@ -419,7 +434,7 @@ RSpec.describe_current do
       it 'expect to halt' do
         expect(result.success?).to be(false)
         expect(result.to_s).to eq('halted')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('failures')
       end
     end
@@ -430,7 +445,7 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to be(true)
         expect(result.to_s).to eq('success')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('successes')
       end
     end
@@ -445,7 +460,7 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to be(true)
         expect(result.to_s).to eq('success')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('successes')
       end
     end
@@ -461,7 +476,7 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to be(false)
         expect(result.to_s).to eq('failure')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('failures')
       end
     end
@@ -480,7 +495,7 @@ RSpec.describe_current do
       it 'expect to halt' do
         expect(result.success?).to be(false)
         expect(result.to_s).to eq('halted')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('failures')
       end
     end
@@ -491,7 +506,7 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to be(true)
         expect(result.to_s).to eq('success')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('successes')
       end
     end
@@ -506,7 +521,7 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to be(false)
         expect(result.to_s).to eq('failure')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('failures')
       end
     end
@@ -643,7 +658,7 @@ RSpec.describe_current do
       it 'expect to halt' do
         expect(result.success?).to be(false)
         expect(result.to_s).to eq('halted')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('failures')
       end
     end
@@ -654,7 +669,7 @@ RSpec.describe_current do
       it 'expect to report failure' do
         expect(result.success?).to be(false)
         expect(result.to_s).to eq('failure')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('failures')
       end
     end
@@ -676,7 +691,7 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to be(true)
         expect(result.to_s).to eq('success')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('successes')
       end
     end
@@ -691,7 +706,7 @@ RSpec.describe_current do
       it 'expect to halt' do
         expect(result.success?).to be(false)
         expect(result.to_s).to eq('halted')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('failures')
       end
     end
@@ -713,7 +728,7 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to be(true)
         expect(result.to_s).to eq('success')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('successes')
       end
     end
@@ -739,7 +754,7 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to be(false)
         expect(result.to_s).to eq('failure')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('failures')
       end
     end
@@ -816,7 +831,7 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to be(true)
         expect(result.to_s).to eq('success')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('successes')
       end
     end
@@ -827,7 +842,7 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to be(true)
         expect(result.to_s).to eq('warning')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('warnings')
       end
     end

@@ -33,7 +33,7 @@ module Karafka
         #   result = status.enabled
         #   result.success?       #=> true or false
         #   result.status         #=> :success, :warning, :failure, or :halted
-        #   result.details        #=> { ... } or nil
+        #   result.details        #=> { ... } or []
         class Status
           # Registry of all check classes in execution order.
           #

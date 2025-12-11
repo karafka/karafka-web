@@ -31,7 +31,7 @@ RSpec.describe_current do
         result = check.call
 
         expect(result.status).to eq(:success)
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
       end
 
       it 'caches processes in context' do
@@ -52,7 +52,7 @@ RSpec.describe_current do
         result = check.call
 
         expect(result.status).to eq(:failure)
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
       end
     end
 

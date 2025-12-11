@@ -17,7 +17,7 @@ RSpec.describe_current do
 
         expect(result.status).to eq(:success)
         expect(result.success?).to be(true)
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
       end
     end
 
@@ -31,7 +31,7 @@ RSpec.describe_current do
 
         expect(result.status).to eq(:failure)
         expect(result.success?).to be(false)
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
       end
     end
   end

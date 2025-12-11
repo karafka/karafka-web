@@ -63,13 +63,6 @@ RSpec.describe_current do
       end
     end
 
-    describe '.check_name' do
-      it 'derives name from class name' do
-        stub_const('Karafka::Web::Ui::Models::Status::Checks::MyTestCheck', Class.new(described_class))
-
-        expect(Karafka::Web::Ui::Models::Status::Checks::MyTestCheck.check_name).to eq(:my_test_check)
-      end
-    end
   end
 
   describe '#initialize' do
@@ -99,11 +92,11 @@ RSpec.describe_current do
       expect(result.details).to eq({ key: 'value' })
     end
 
-    it 'creates a Step with nil details when not provided' do
+    it 'creates a Step with empty hash details when not provided' do
       result = check.send(:step, :failure)
 
       expect(result.status).to eq(:failure)
-      expect(result.details).to be_nil
+      expect(result.details).to eq({})
     end
   end
 end
