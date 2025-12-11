@@ -66,11 +66,16 @@ RSpec.describe_current do
 
       before do
         context.current_state = state
+        allow(Karafka::Web::Ui::Models::ConsumersState).to receive(:current)
       end
 
       it 'does not fetch again' do
-        expect(Karafka::Web::Ui::Models::ConsumersState).not_to receive(:current)
+        check.call
 
+        expect(Karafka::Web::Ui::Models::ConsumersState).not_to have_received(:current)
+      end
+
+      it 'returns success' do
         result = check.call
 
         expect(result.status).to eq(:success)

@@ -77,11 +77,16 @@ RSpec.describe_current do
     context 'when subscriptions are already cached' do
       before do
         context.subscriptions = [context.topics_consumers_reports]
+        allow(Karafka::Web::Ui::Models::Health).to receive(:current)
       end
 
       it 'does not fetch again' do
-        expect(Karafka::Web::Ui::Models::Health).not_to receive(:current)
+        check.call
 
+        expect(Karafka::Web::Ui::Models::Health).not_to have_received(:current)
+      end
+
+      it 'returns success' do
         result = check.call
 
         expect(result.status).to eq(:success)

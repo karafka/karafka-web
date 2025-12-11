@@ -22,19 +22,19 @@ RSpec.describe_current do
 
     context 'when all routed topics exist in cluster' do
       let(:topic) do
-        double('Topic', name: 'topic1', active?: true).tap do |t|
+        instance_double(Karafka::Routing::Topic, name: 'topic1', active?: true).tap do |t|
           allow(t).to receive(:respond_to?).with(:patterns?).and_return(false)
         end
       end
 
       let(:topics_collection) do
-        double('TopicsCollection').tap do |tc|
+        instance_double(Karafka::Routing::Topics).tap do |tc|
           allow(tc).to receive(:map).and_yield(topic).and_return([topic])
         end
       end
 
       let(:consumer_group) do
-        double('ConsumerGroup', topics: topics_collection)
+        instance_double(Karafka::Routing::ConsumerGroup, topics: topics_collection)
       end
 
       before do
@@ -51,19 +51,19 @@ RSpec.describe_current do
 
     context 'when some routed topics are missing from cluster' do
       let(:missing_topic) do
-        double('Topic', name: 'missing_topic', active?: true).tap do |t|
+        instance_double(Karafka::Routing::Topic, name: 'missing_topic', active?: true).tap do |t|
           allow(t).to receive(:respond_to?).with(:patterns?).and_return(false)
         end
       end
 
       let(:topics_collection) do
-        double('TopicsCollection').tap do |tc|
+        instance_double(Karafka::Routing::Topics).tap do |tc|
           allow(tc).to receive(:map).and_yield(missing_topic).and_return([missing_topic])
         end
       end
 
       let(:consumer_group) do
-        double('ConsumerGroup', topics: topics_collection)
+        instance_double(Karafka::Routing::ConsumerGroup, topics: topics_collection)
       end
 
       before do
@@ -85,20 +85,28 @@ RSpec.describe_current do
     end
 
     context 'when topic is a pattern topic' do
+      # patterns? is a Pro-only method not available in OSS, so we use plain double
+      # rubocop:disable RSpec/VerifiedDoubles
       let(:pattern_topic) do
-        double('Topic', name: 'pattern_topic', active?: true, patterns?: true).tap do |t|
+        double(
+          'Karafka::Routing::Topic',
+          name: 'pattern_topic',
+          active?: true,
+          patterns?: true
+        ).tap do |t|
           allow(t).to receive(:respond_to?).with(:patterns?).and_return(true)
         end
       end
+      # rubocop:enable RSpec/VerifiedDoubles
 
       let(:topics_collection) do
-        double('TopicsCollection').tap do |tc|
+        instance_double(Karafka::Routing::Topics).tap do |tc|
           allow(tc).to receive(:map).and_yield(pattern_topic).and_return([pattern_topic])
         end
       end
 
       let(:consumer_group) do
-        double('ConsumerGroup', topics: topics_collection)
+        instance_double(Karafka::Routing::ConsumerGroup, topics: topics_collection)
       end
 
       before do
@@ -115,19 +123,19 @@ RSpec.describe_current do
 
     context 'when topic is inactive' do
       let(:inactive_topic) do
-        double('Topic', name: 'inactive_topic', active?: false).tap do |t|
+        instance_double(Karafka::Routing::Topic, name: 'inactive_topic', active?: false).tap do |t|
           allow(t).to receive(:respond_to?).with(:patterns?).and_return(false)
         end
       end
 
       let(:topics_collection) do
-        double('TopicsCollection').tap do |tc|
+        instance_double(Karafka::Routing::Topics).tap do |tc|
           allow(tc).to receive(:map).and_yield(inactive_topic).and_return([inactive_topic])
         end
       end
 
       let(:consumer_group) do
-        double('ConsumerGroup', topics: topics_collection)
+        instance_double(Karafka::Routing::ConsumerGroup, topics: topics_collection)
       end
 
       before do

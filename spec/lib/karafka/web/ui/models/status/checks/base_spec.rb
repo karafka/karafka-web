@@ -62,7 +62,6 @@ RSpec.describe_current do
         end
       end
     end
-
   end
 
   describe '#initialize' do

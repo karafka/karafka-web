@@ -66,11 +66,16 @@ RSpec.describe_current do
 
       before do
         context.current_metrics = metrics
+        allow(Karafka::Web::Ui::Models::ConsumersMetrics).to receive(:current)
       end
 
       it 'does not fetch again' do
-        expect(Karafka::Web::Ui::Models::ConsumersMetrics).not_to receive(:current)
+        check.call
 
+        expect(Karafka::Web::Ui::Models::ConsumersMetrics).not_to have_received(:current)
+      end
+
+      it 'returns success' do
         result = check.call
 
         expect(result.status).to eq(:success)

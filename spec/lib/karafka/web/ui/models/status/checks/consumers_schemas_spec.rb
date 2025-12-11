@@ -13,8 +13,8 @@ RSpec.describe_current do
 
   describe '#call' do
     context 'when all processes have compatible schemas' do
-      let(:process1) { double('Process', schema_compatible?: true) }
-      let(:process2) { double('Process', schema_compatible?: true) }
+      let(:process1) { instance_double(Karafka::Web::Ui::Models::Process, schema_compatible?: true) }
+      let(:process2) { instance_double(Karafka::Web::Ui::Models::Process, schema_compatible?: true) }
 
       before do
         context.processes = [process1, process2]
@@ -29,8 +29,13 @@ RSpec.describe_current do
     end
 
     context 'when some processes have incompatible schemas' do
-      let(:compatible_process) { double('Process', schema_compatible?: true) }
-      let(:incompatible_process) { double('Process', schema_compatible?: false) }
+      let(:compatible_process) do
+        instance_double(Karafka::Web::Ui::Models::Process, schema_compatible?: true)
+      end
+
+      let(:incompatible_process) do
+        instance_double(Karafka::Web::Ui::Models::Process, schema_compatible?: false)
+      end
 
       before do
         context.processes = [compatible_process, incompatible_process]
@@ -51,8 +56,13 @@ RSpec.describe_current do
     end
 
     context 'when all processes have incompatible schemas' do
-      let(:incompatible1) { double('Process', schema_compatible?: false) }
-      let(:incompatible2) { double('Process', schema_compatible?: false) }
+      let(:incompatible1) do
+        instance_double(Karafka::Web::Ui::Models::Process, schema_compatible?: false)
+      end
+
+      let(:incompatible2) do
+        instance_double(Karafka::Web::Ui::Models::Process, schema_compatible?: false)
+      end
 
       before do
         context.processes = [incompatible1, incompatible2]

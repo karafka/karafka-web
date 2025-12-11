@@ -18,7 +18,8 @@ RSpec.describe_current do
     end
 
     context 'when processes can be loaded successfully' do
-      let(:processes) { [double('Process')] }
+      let(:process) { Karafka::Web::Ui::Models::Process.new(Fixtures.consumers_reports_json) }
+      let(:processes) { [process] }
 
       before do
         allow(Karafka::Web::Ui::Models::Processes)
@@ -57,15 +58,21 @@ RSpec.describe_current do
     end
 
     context 'when processes are already cached in context' do
-      let(:processes) { [double('Process')] }
+      let(:process) { Karafka::Web::Ui::Models::Process.new(Fixtures.consumers_reports_json) }
+      let(:processes) { [process] }
 
       before do
         context.processes = processes
+        allow(Karafka::Web::Ui::Models::Processes).to receive(:all)
       end
 
       it 'does not fetch again' do
-        expect(Karafka::Web::Ui::Models::Processes).not_to receive(:all)
+        check.call
 
+        expect(Karafka::Web::Ui::Models::Processes).not_to have_received(:all)
+      end
+
+      it 'returns success' do
         result = check.call
 
         expect(result.status).to eq(:success)
