@@ -3,6 +3,21 @@
 RSpec.describe_current do
   subject(:status) { described_class.new }
 
+  describe 'CHECKS registry' do
+    it 'has all dependency references pointing to existing checks' do
+      described_class::CHECKS.each do |name, check_class|
+        next if check_class.independent?
+
+        dependency = check_class.dependency
+        next unless dependency
+
+        expect(described_class::CHECKS).to have_key(
+          dependency
+        ), "Check #{name} depends on #{dependency.inspect} which is not registered in CHECKS"
+      end
+    end
+  end
+
   let(:errors_topic) { Karafka::Web.config.topics.errors.name = create_topic }
   let(:reports_topic) { Karafka::Web.config.topics.consumers.reports.name = create_topic }
   let(:metrics_topic) { Karafka::Web.config.topics.consumers.metrics.name = create_topic }
@@ -30,7 +45,7 @@ RSpec.describe_current do
 
     it { expect(result.success?).to be(true) }
     it { expect(result.to_s).to eq('success') }
-    it { expect(result.details).to be_nil }
+    it { expect(result.details).to eq({}) }
     it { expect(result.partial_namespace).to eq('successes') }
 
     context 'when routing does not include the web processing group' do
@@ -38,7 +53,7 @@ RSpec.describe_current do
 
       it { expect(result.success?).to be(false) }
       it { expect(result.to_s).to eq('failure') }
-      it { expect(result.details).to be_nil }
+      it { expect(result.details).to eq({}) }
       it { expect(result.partial_namespace).to eq('failures') }
     end
   end
@@ -213,6 +228,65 @@ RSpec.describe_current do
     end
   end
 
+  describe '#replication' do
+    subject(:result) { status.replication }
+
+    context 'when partitions check failed' do
+      before do
+        errors_topic
+        reports_topic
+        metrics_topic
+        Karafka::Web.config.topics.consumers.states.name = create_topic(partitions: 5)
+      end
+
+      it 'expect to halt' do
+        expect(result.success?).to be(false)
+        expect(result.to_s).to eq('halted')
+        expect(result.details).to eq({})
+        expect(result.partial_namespace).to eq('failures')
+      end
+    end
+
+    context 'when all topics have adequate replication' do
+      before { all_topics }
+
+      it 'expect all to be ok' do
+        expect(result.success?).to be(true)
+        expect(result.to_s).to eq('success')
+        expect(result.details).not_to be_empty
+        expect(result.partial_namespace).to eq('successes')
+      end
+    end
+
+    context 'when replication is low in production' do
+      before do
+        all_topics
+        allow(Karafka.env).to receive(:production?).and_return(true)
+      end
+
+      it 'expect to warn' do
+        expect(result.success?).to be(true)
+        expect(result.to_s).to eq('warning')
+        expect(result.details).not_to be_empty
+        expect(result.partial_namespace).to eq('warnings')
+      end
+    end
+
+    context 'when replication is low in non-production' do
+      before do
+        all_topics
+        allow(Karafka.env).to receive(:production?).and_return(false)
+      end
+
+      it 'expect all to be ok because non-production is acceptable' do
+        expect(result.success?).to be(true)
+        expect(result.to_s).to eq('success')
+        expect(result.details).not_to be_empty
+        expect(result.partial_namespace).to eq('successes')
+      end
+    end
+  end
+
   describe '#initial_consumers_state' do
     subject(:result) { status.initial_consumers_state }
 
@@ -360,7 +434,7 @@ RSpec.describe_current do
       it 'expect to halt' do
         expect(result.success?).to be(false)
         expect(result.to_s).to eq('halted')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('failures')
       end
     end
@@ -371,7 +445,7 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to be(true)
         expect(result.to_s).to eq('success')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('successes')
       end
     end
@@ -386,7 +460,7 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to be(true)
         expect(result.to_s).to eq('success')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('successes')
       end
     end
@@ -402,7 +476,7 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to be(false)
         expect(result.to_s).to eq('failure')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('failures')
       end
     end
@@ -421,7 +495,7 @@ RSpec.describe_current do
       it 'expect to halt' do
         expect(result.success?).to be(false)
         expect(result.to_s).to eq('halted')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('failures')
       end
     end
@@ -432,7 +506,7 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to be(true)
         expect(result.to_s).to eq('success')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('successes')
       end
     end
@@ -447,8 +521,60 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to be(false)
         expect(result.to_s).to eq('failure')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('failures')
+      end
+    end
+  end
+
+  describe '#consumers_schemas' do
+    subject(:result) { status.consumers_schemas }
+
+    context 'when consumers_reports check failed' do
+      before do
+        all_topics
+        produce(states_topic, state)
+        produce(metrics_topic, metrics)
+        produce(reports_topic, '{')
+      end
+
+      it 'expect to halt' do
+        expect(result.success?).to be(false)
+        expect(result.to_s).to eq('halted')
+        expect(result.details).to eq({ incompatible: [] })
+        expect(result.partial_namespace).to eq('failures')
+      end
+    end
+
+    context 'when all consumer schemas are compatible' do
+      before { ready_topics }
+
+      it 'expect all to be ok' do
+        expect(result.success?).to be(true)
+        expect(result.to_s).to eq('success')
+        expect(result.details[:incompatible]).to be_empty
+        expect(result.partial_namespace).to eq('successes')
+      end
+    end
+
+    context 'when some consumer schemas are incompatible' do
+      before do
+        all_topics
+        produce(states_topic, state)
+        produce(metrics_topic, metrics)
+
+        # Modify the report to have an incompatible schema version
+        parsed = JSON.parse(report)
+        parsed['schema_version'] = 'incompatible_version'
+
+        produce(reports_topic, parsed.to_json)
+      end
+
+      it 'expect to warn' do
+        expect(result.success?).to be(true)
+        expect(result.to_s).to eq('warning')
+        expect(result.details[:incompatible]).not_to be_empty
+        expect(result.partial_namespace).to eq('warnings')
       end
     end
   end
@@ -532,7 +658,7 @@ RSpec.describe_current do
       it 'expect to halt' do
         expect(result.success?).to be(false)
         expect(result.to_s).to eq('halted')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('failures')
       end
     end
@@ -543,7 +669,7 @@ RSpec.describe_current do
       it 'expect to report failure' do
         expect(result.success?).to be(false)
         expect(result.to_s).to eq('failure')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('failures')
       end
     end
@@ -565,7 +691,7 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to be(true)
         expect(result.to_s).to eq('success')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('successes')
       end
     end
@@ -580,7 +706,7 @@ RSpec.describe_current do
       it 'expect to halt' do
         expect(result.success?).to be(false)
         expect(result.to_s).to eq('halted')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('failures')
       end
     end
@@ -602,7 +728,7 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to be(true)
         expect(result.to_s).to eq('success')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('successes')
       end
     end
@@ -628,7 +754,7 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to be(false)
         expect(result.to_s).to eq('failure')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('failures')
       end
     end
@@ -705,7 +831,7 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to be(true)
         expect(result.to_s).to eq('success')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('successes')
       end
     end
@@ -716,7 +842,7 @@ RSpec.describe_current do
       it 'expect all to be ok' do
         expect(result.success?).to be(true)
         expect(result.to_s).to eq('warning')
-        expect(result.details).to be_nil
+        expect(result.details).to eq({})
         expect(result.partial_namespace).to eq('warnings')
       end
     end
