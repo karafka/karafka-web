@@ -15,7 +15,7 @@ module Karafka
           #   Step.new(:success, { time: 150 })
           #
           # @example Creating a halted step (dependency failed)
-          #   Step.new(:halted, nil)
+          #   Step.new(:halted, {})
           Step = Struct.new(:status, :details) do
             # Checks if the step completed successfully (allows chain to continue).
             #

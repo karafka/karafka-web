@@ -8,7 +8,7 @@ RSpec.describe_current do
   describe 'DSL configuration' do
     it { expect(described_class.independent?).to be(false) }
     it { expect(described_class.dependency).to eq(:state_calculation) }
-    it { expect(described_class.halted_details).to be_nil }
+    it { expect(described_class.halted_details).to eq({}) }
   end
 
   describe '#call' do

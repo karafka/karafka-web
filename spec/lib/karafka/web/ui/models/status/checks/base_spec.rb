@@ -44,8 +44,8 @@ RSpec.describe_current do
     end
 
     describe '.halted_details' do
-      it 'returns nil by default' do
-        expect(described_class.halted_details).to be_nil
+      it 'returns empty hash by default' do
+        expect(described_class.halted_details).to eq({})
       end
 
       context 'when overridden in subclass' do

@@ -79,9 +79,9 @@ module Karafka
                 # Override this method in subclasses to provide specific details
                 # when the check is halted due to dependency failure.
                 #
-                # @return [Hash, Array, nil] the default details for halted state
+                # @return [Hash, Array] the default details for halted state
                 def halted_details
-                  nil
+                  {}
                 end
 
                 # Derives the check name from the class name.
