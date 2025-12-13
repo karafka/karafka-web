@@ -19,7 +19,8 @@ RSpec.describe_current do
     )
     allow(subscription_group).to receive_messages(
       id: sg_id,
-      consumer_group: consumer_group
+      consumer_group: consumer_group,
+      kafka: {}
     )
     allow(consumer_group).to receive(:id).and_return(cg_id)
 
@@ -47,6 +48,7 @@ RSpec.describe_current do
         yielded_sampler = sampler
         block.call(sampler)
       end
+      allow(subscription_groups).to receive(:[]).with(sg_id).and_return({})
 
       listener.on_connection_listener_before_fetch_loop(event)
 
@@ -56,12 +58,40 @@ RSpec.describe_current do
 
     it 'accesses subscription group by id in the track block' do
       allow(sampler).to receive(:track).and_yield(sampler)
-      allow(subscription_groups).to receive(:[]).with(sg_id)
+      allow(subscription_groups).to receive(:[]).with(sg_id).and_return({})
 
       listener.on_connection_listener_before_fetch_loop(event)
 
       expect(sampler).to have_received(:track)
       expect(subscription_groups).to have_received(:[]).with(sg_id)
+    end
+
+    context 'when group.instance.id is configured' do
+      before do
+        allow(subscription_group).to receive(:kafka).and_return({ 'group.instance.id': 'my-static-instance' })
+        allow(sampler).to receive(:track).and_yield(sampler)
+        subscription_groups[sg_id] = {}
+      end
+
+      it 'stores the group_instance_id in subscription group data' do
+        listener.on_connection_listener_before_fetch_loop(event)
+
+        expect(subscription_groups[sg_id][:group_instance_id]).to eq('my-static-instance')
+      end
+    end
+
+    context 'when group.instance.id is not configured' do
+      before do
+        allow(subscription_group).to receive(:kafka).and_return({})
+        allow(sampler).to receive(:track).and_yield(sampler)
+        subscription_groups[sg_id] = {}
+      end
+
+      it 'stores false for group_instance_id in subscription group data' do
+        listener.on_connection_listener_before_fetch_loop(event)
+
+        expect(subscription_groups[sg_id][:group_instance_id]).to be(false)
+      end
     end
   end
 

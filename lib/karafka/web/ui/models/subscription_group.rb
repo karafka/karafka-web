@@ -7,6 +7,13 @@ module Karafka
       module Models
         # Representation of data of a Karafka subscription group
         class SubscriptionGroup < Lib::HashProxy
+          # @return [String, nil] the group.instance.id for static group membership, or nil if not
+          #   configured. We need an explicit method because HashProxy#deep_find returns nil for
+          #   both missing keys and keys with nil values, causing method_missing to raise.
+          def group_instance_id
+            self[:group_instance_id]
+          end
+
           # @return [Array<Topic>] Data of topics belonging to this subscription group
           def topics
             super.values.map do |topic_hash|
