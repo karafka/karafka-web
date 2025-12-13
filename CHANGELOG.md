@@ -1,6 +1,7 @@
 # Karafka Web Changelog
 
 ## 0.11.6 (Unreleased)
+- [Enhancement] Auto-tag processes with `group.instance.id` when static group membership is used. This improves debugging and allows tracking of processes despite different process IDs after deployment. Tags persist for the lifetime of the process to maintain historical debugging value, while current active state is available in the subscription group details.
 - [Refactor] Refactor Status model into a DSL-based architecture with individual check classes. Each status check is now a separate class in `Karafka::Web::Ui::Models::Status::Checks` that declares its dependencies using `depends_on :check_name` DSL. Shared state is managed through a `Context` class, and the `Step` struct has been extracted to its own file. This improves maintainability, testability, and makes it easier to add new status checks in the future.
 
 ## 0.11.5 (2025-11-14)
