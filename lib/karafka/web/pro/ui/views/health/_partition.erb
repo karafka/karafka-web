@@ -28,6 +28,12 @@
     <a href="<%= consumer_path(details.process.id, 'subscriptions') %>">
       <%== truncate(details.process.id, strategy: :middle) %>
     </a>
+    <% if details.instance_id %>
+      <br>
+      <small class="tooltip text-xs opacity-70" data-tip="Static Membership ID (group.instance.id)">
+        <%= details.instance_id %>
+      </small>
+    <% end %>
   </td>
   <td>
     <%== partial(
