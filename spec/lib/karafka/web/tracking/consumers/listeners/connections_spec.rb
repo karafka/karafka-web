@@ -73,10 +73,10 @@ RSpec.describe_current do
         subscription_groups[sg_id] = {}
       end
 
-      it 'stores the group_instance_id in subscription group data' do
+      it 'stores the instance_id in subscription group data' do
         listener.on_connection_listener_before_fetch_loop(event)
 
-        expect(subscription_groups[sg_id][:group_instance_id]).to eq('my-static-instance')
+        expect(subscription_groups[sg_id][:instance_id]).to eq('my-static-instance')
       end
     end
 
@@ -87,10 +87,10 @@ RSpec.describe_current do
         subscription_groups[sg_id] = {}
       end
 
-      it 'stores false for group_instance_id in subscription group data' do
+      it 'stores false for instance_id in subscription group data' do
         listener.on_connection_listener_before_fetch_loop(event)
 
-        expect(subscription_groups[sg_id][:group_instance_id]).to be(false)
+        expect(subscription_groups[sg_id][:instance_id]).to be(false)
       end
     end
   end

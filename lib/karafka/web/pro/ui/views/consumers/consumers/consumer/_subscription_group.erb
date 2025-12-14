@@ -4,8 +4,8 @@
 <h2 class="h2 mb-3" id="<%= subscription_group.id %>">
   <%= consumer_group.id %> /
   <%= subscription_group.id %>
-  <% if subscription_group.group_instance_id %>
-    <%== badge_secondary_sm("gid:#{subscription_group.group_instance_id}") %>
+  <% if subscription_group.instance_id %>
+    <%== badge_secondary_sm("gid:#{subscription_group.instance_id}") %>
   <% end %>
 </h2>
 

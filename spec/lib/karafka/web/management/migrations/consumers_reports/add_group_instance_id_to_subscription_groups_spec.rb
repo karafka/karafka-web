@@ -34,7 +34,7 @@ RSpec.describe Karafka::Web::Management::Migrations::ConsumersReports::AddGroupI
   end
 
   describe '#migrate' do
-    context 'when subscription groups do not have group_instance_id' do
+    context 'when subscription groups do not have instance_id' do
       let(:report) do
         {
           schema_version: '1.5.0',
@@ -62,10 +62,10 @@ RSpec.describe Karafka::Web::Management::Migrations::ConsumersReports::AddGroupI
         }
       end
 
-      it 'adds group_instance_id with false value to subscription group' do
+      it 'adds instance_id with false value to subscription group' do
         migration.migrate(report)
 
-        expect(report[:consumer_groups]['test_group'][:subscription_groups]['sg_0'][:group_instance_id]).to be(false)
+        expect(report[:consumer_groups]['test_group'][:subscription_groups]['sg_0'][:instance_id]).to be(false)
       end
 
       it 'preserves other subscription group fields' do
@@ -78,7 +78,7 @@ RSpec.describe Karafka::Web::Management::Migrations::ConsumersReports::AddGroupI
       end
     end
 
-    context 'when subscription groups already have group_instance_id' do
+    context 'when subscription groups already have instance_id' do
       let(:report) do
         {
           schema_version: '1.6.0',
@@ -88,7 +88,7 @@ RSpec.describe Karafka::Web::Management::Migrations::ConsumersReports::AddGroupI
               subscription_groups: {
                 'sg_0' => {
                   id: 'sg_0',
-                  group_instance_id: 'my-static-instance',
+                  instance_id: 'my-static-instance',
                   state: {
                     state: 'up',
                     join_state: 'steady'
@@ -102,10 +102,10 @@ RSpec.describe Karafka::Web::Management::Migrations::ConsumersReports::AddGroupI
         }
       end
 
-      it 'does not modify existing group_instance_id' do
+      it 'does not modify existing instance_id' do
         migration.migrate(report)
 
-        expect(report[:consumer_groups]['test_group'][:subscription_groups]['sg_0'][:group_instance_id]).to eq('my-static-instance')
+        expect(report[:consumer_groups]['test_group'][:subscription_groups]['sg_0'][:instance_id]).to eq('my-static-instance')
       end
     end
 
@@ -144,12 +144,12 @@ RSpec.describe Karafka::Web::Management::Migrations::ConsumersReports::AddGroupI
         }
       end
 
-      it 'adds group_instance_id to all subscription groups' do
+      it 'adds instance_id to all subscription groups' do
         migration.migrate(report)
 
-        expect(report[:consumer_groups]['cg_1'][:subscription_groups]['sg_0'][:group_instance_id]).to be(false)
-        expect(report[:consumer_groups]['cg_1'][:subscription_groups]['sg_1'][:group_instance_id]).to be(false)
-        expect(report[:consumer_groups]['cg_2'][:subscription_groups]['sg_2'][:group_instance_id]).to be(false)
+        expect(report[:consumer_groups]['cg_1'][:subscription_groups]['sg_0'][:instance_id]).to be(false)
+        expect(report[:consumer_groups]['cg_1'][:subscription_groups]['sg_1'][:instance_id]).to be(false)
+        expect(report[:consumer_groups]['cg_2'][:subscription_groups]['sg_2'][:instance_id]).to be(false)
       end
     end
 

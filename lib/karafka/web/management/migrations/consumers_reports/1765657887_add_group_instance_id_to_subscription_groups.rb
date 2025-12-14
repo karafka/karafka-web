@@ -5,13 +5,13 @@ module Karafka
     module Management
       module Migrations
         module ConsumersReports
-          # Adds the group_instance_id field to subscription groups
+          # Adds the instance_id field to subscription groups
           #
           # In schema versions before 1.6.0, subscription groups did not include the
-          # group_instance_id field which is used for static group membership tracking.
+          # instance_id field which is used for static group membership tracking.
           #
           # This migration ensures old reports can be processed by adding the field with
-          # nil value (indicating no static membership configured).
+          # false value (indicating no static membership configured).
           class AddGroupInstanceIdToSubscriptionGroups < Base
             self.versions_until = '1.6.0'
             self.type = :consumers_reports
@@ -28,9 +28,9 @@ module Karafka
                 next unless subscription_groups
 
                 subscription_groups.each_value do |sg_details|
-                  next if sg_details.key?(:group_instance_id)
+                  next if sg_details.key?(:instance_id)
 
-                  sg_details[:group_instance_id] = false
+                  sg_details[:instance_id] = false
                 end
               end
             end

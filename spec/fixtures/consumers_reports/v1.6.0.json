@@ -58,7 +58,7 @@
       "subscription_groups": {
         "c4ca4238a0b9_0": {
           "id": "c4ca4238a0b9_0",
-          "group_instance_id": false,
+          "instance_id": false,
           "state": {
             "state": "up",
             "join_state": "steady",
@@ -159,7 +159,7 @@
       "subscription_groups": {
         "c81e728d9d4c_1": {
           "id": "c81e728d9d4c_1",
-          "group_instance_id": "my-static-instance",
+          "instance_id": "my-static-instance",
           "state": {
             "state": "up",
             "join_state": "steady",
