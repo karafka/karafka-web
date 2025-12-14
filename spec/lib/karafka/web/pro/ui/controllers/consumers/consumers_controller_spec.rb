@@ -868,8 +868,11 @@ RSpec.describe_current do
         report = Fixtures.consumers_reports_json(symbolize_names: false)
 
         # Ensure instance_id is false (no static membership) on all subscription groups
-        report['consumer_groups']['example_app6_app']['subscription_groups'].each_value do |sg|
-          sg['instance_id'] = false
+        # across all consumer groups
+        report['consumer_groups'].each_value do |cg|
+          cg['subscription_groups'].each_value do |sg|
+            sg['instance_id'] = false
+          end
         end
 
         produce(reports_topic, report.to_json)
