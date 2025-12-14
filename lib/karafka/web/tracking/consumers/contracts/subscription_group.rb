@@ -12,6 +12,7 @@ module Karafka
 
             required(:id) { |val| val.is_a?(String) && !val.empty? }
             required(:topics) { |val| val.is_a?(Hash) }
+            required(:instance_id) { |val| val == false || val.is_a?(String) }
 
             nested(:state) do
               required(:state) { |val| val.is_a?(String) && !val.empty? }

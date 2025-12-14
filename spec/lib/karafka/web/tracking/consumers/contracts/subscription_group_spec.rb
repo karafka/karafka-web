@@ -36,6 +36,7 @@ RSpec.describe_current do
           }
         }
       },
+      instance_id: false,
       state: {
         state: 'up',
         join_state: 'steady',
@@ -152,5 +153,35 @@ RSpec.describe_current do
 
       it { expect(contract.call(subscription_group)).not_to be_success }
     end
+  end
+
+  context 'when instance_id is missing' do
+    before { subscription_group.delete(:instance_id) }
+
+    it { expect(contract.call(subscription_group)).not_to be_success }
+  end
+
+  context 'when instance_id is false' do
+    before { subscription_group[:instance_id] = false }
+
+    it { expect(contract.call(subscription_group)).to be_success }
+  end
+
+  context 'when instance_id is a string' do
+    before { subscription_group[:instance_id] = 'my-static-instance' }
+
+    it { expect(contract.call(subscription_group)).to be_success }
+  end
+
+  context 'when instance_id is not false or string' do
+    before { subscription_group[:instance_id] = 123 }
+
+    it { expect(contract.call(subscription_group)).not_to be_success }
+  end
+
+  context 'when instance_id is nil' do
+    before { subscription_group[:instance_id] = nil }
+
+    it { expect(contract.call(subscription_group)).not_to be_success }
   end
 end

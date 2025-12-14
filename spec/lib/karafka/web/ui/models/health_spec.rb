@@ -47,7 +47,7 @@ RSpec.describe_current do
       expect(partition_data[:hi_offset]).to eq(327_356)
       expect(partition_data[:id]).to eq(0)
       expect(partition_data[:poll_state]).to eq('active')
-      expect(partition_data[:process][:schema_version]).to eq('1.5.0')
+      expect(partition_data[:process][:schema_version]).to eq('1.6.0')
       expect(partition_data[:process][:type]).to eq('consumer')
       expect(partition_data[:process][:dispatched_at]).to eq(2_690_883_271.575_513)
       expect(partition_data[:process][:process][:concurrency]).to eq(2)
@@ -83,8 +83,9 @@ RSpec.describe_current do
       expect(cgs[:example_app6_app].keys).to eq(%i[id subscription_groups])
       expect(cgs[:example_app6_app][:id]).to eq('example_app6_app')
       expect(cgs[:example_app6_app][:subscription_groups].keys).to eq(%i[c4ca4238a0b9_0])
-      expect(sg.keys).to eq(%i[id state topics])
+      expect(sg.keys).to eq(%i[id instance_id state topics])
       expect(sg[:id]).to eq('c4ca4238a0b9_0')
+      expect(sg[:instance_id]).to be(false)
       expect(sg[:state][:join_state]).to eq('steady')
       expect(sg[:state][:rebalance_age]).to eq(64_615_986)
       expect(sg[:state][:rebalance_cnt]).to eq(1)
@@ -101,7 +102,7 @@ RSpec.describe_current do
         lag lag_d lag_stored lag_stored_d committed_offset stored_offset fetch_state hi_offset id
         poll_state process hi_offset_fd stored_offset_fd lo_offset ls_offset ls_offset_fd
         eof_offset committed_offset_fd poll_state_ch partition_id lag_hybrid lag_hybrid_d
-        subscription_group_id transactional
+        subscription_group_id instance_id transactional
       ].sort
       expect(sg[:topics][:default][:partitions][:'0'].keys.sort).to eq(keys)
     end

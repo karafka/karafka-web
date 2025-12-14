@@ -9,6 +9,7 @@ RSpec.describe_current do
       subscription_groups: {
         'c81e728d9d4c_1' => {
           id: 'c81e728d9d4c_1',
+          instance_id: false,
           state: {
             state: 'up',
             join_state: 'steady',

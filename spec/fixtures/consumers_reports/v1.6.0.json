@@ -1,0 +1,198 @@
+{
+  "schema_version": "1.6.0",
+  "type": "consumer",
+  "dispatched_at": 2690883271.575513,
+  "process": {
+    "started_at": 2690818651.82293,
+    "id": "shinra:1:1",
+    "status": "running",
+    "execution_mode": "standalone",
+    "listeners": {
+      "active": 2,
+      "standby": 0
+    },
+    "concurrency": 2,
+    "threads": 2,
+    "workers": 5,
+    "memory_usage": 123852,
+    "memory_total_usage": 26421728,
+    "memory_size": 32763220,
+    "cpus": 8,
+    "cpu_usage": [
+      1.33,
+      1.1,
+      1.1
+    ],
+    "tags": [
+      "#8cbff36"
+    ],
+    "bytes_received": 12450,
+    "bytes_sent": 3866
+  },
+  "versions": {
+    "ruby": "ruby 3.2.2-53 e51014",
+    "karafka": "2.1.8",
+    "karafka_core": "2.1.1",
+    "karafka_web": "0.7.0",
+    "waterdrop": "2.6.3",
+    "rdkafka": "0.13.2",
+    "librdkafka": "2.1.1"
+  },
+  "stats": {
+    "busy": 1,
+    "enqueued": 0,
+    "waiting": 0,
+    "utilization": 5.634919553399087,
+    "total": {
+      "batches": 9,
+      "messages": 22,
+      "errors": 0,
+      "retries": 0,
+      "dead": 0,
+      "jobs": 10
+    }
+  },
+  "consumer_groups": {
+    "example_app6_app": {
+      "id": "example_app6_app",
+      "subscription_groups": {
+        "c4ca4238a0b9_0": {
+          "id": "c4ca4238a0b9_0",
+          "instance_id": false,
+          "state": {
+            "state": "up",
+            "join_state": "steady",
+            "stateage": 64618193,
+            "rebalance_age": 64615986,
+            "rebalance_cnt": 1,
+            "rebalance_reason": "Metadata for subscribed topic(s) has changed",
+            "poll_age": 123
+          },
+          "topics": {
+            "default": {
+              "name": "default",
+              "partitions": {
+                "0": {
+                  "lag": 13,
+                  "lag_d": 2,
+                  "lag_stored": 213731273,
+                  "lag_stored_d": -3,
+                  "committed_offset": 327343,
+                  "committed_offset_fd": 5000,
+                  "stored_offset": 327355,
+                  "stored_offset_fd": 5,
+                  "fetch_state": "active",
+                  "hi_offset": 327356,
+                  "hi_offset_fd": 100,
+                  "lo_offset": 0,
+                  "eof_offset": 327356,
+                  "ls_offset": 200,
+                  "ls_offset_fd": 1000,
+                  "id": 0,
+                  "poll_state": "active",
+                  "poll_state_ch": 0,
+                  "transactional": false
+                }
+              },
+              "partitions_cnt": 1
+            },
+            "test2": {
+              "name": "test2",
+              "partitions": {
+                "0": {
+                  "lag": -1,
+                  "lag_d": 0,
+                  "lag_stored": -1,
+                  "lag_stored_d": 0,
+                  "committed_offset": -1001,
+                  "committed_offset_fd": 0,
+                  "stored_offset": -1001,
+                  "stored_offset_fd": 0,
+                  "fetch_state": "active",
+                  "hi_offset": 0,
+                  "hi_offset_fd": 100,
+                  "lo_offset": 0,
+                  "eof_offset": 0,
+                  "ls_offset": 0,
+                  "ls_offset_fd": 0,
+                  "id": 0,
+                  "poll_state": "active",
+                  "poll_state_ch": 0,
+                  "transactional": false
+                }
+              },
+              "partitions_cnt": 1
+            },
+            "visits": {
+              "name": "visits",
+              "partitions": {
+                "0": {
+                  "lag": 0,
+                  "lag_d": 0,
+                  "lag_stored": -1,
+                  "lag_stored_d": 0,
+                  "committed_offset": 27,
+                  "committed_offset_fd": 0,
+                  "stored_offset": -1001,
+                  "stored_offset_fd": 0,
+                  "fetch_state": "active",
+                  "hi_offset": 27,
+                  "hi_offset_fd": 100,
+                  "lo_offset": 0,
+                  "eof_offset": 0,
+                  "ls_offset": 0,
+                  "ls_offset_fd": 0,
+                  "id": 0,
+                  "poll_state": "active",
+                  "poll_state_ch": 0,
+                  "transactional": false
+                }
+              },
+              "partitions_cnt": 1
+            }
+          }
+        }
+      }
+    },
+    "example_app6_karafka_web": {
+      "id": "example_app6_karafka_web",
+      "subscription_groups": {
+        "c81e728d9d4c_1": {
+          "id": "c81e728d9d4c_1",
+          "instance_id": "my-static-instance",
+          "state": {
+            "state": "up",
+            "join_state": "steady",
+            "stateage": 64616206,
+            "rebalance_age": 64614000,
+            "rebalance_cnt": 1,
+            "rebalance_reason": "Metadata for subscribed topic(s) has changed",
+            "poll_age": 123
+          },
+          "topics": {}
+        }
+      }
+    }
+  },
+  "jobs": [
+    {
+      "updated_at": 1690883271.5342352,
+      "topic": "default",
+      "partition": 0,
+      "first_offset": 327359,
+      "last_offset": 327361,
+      "processing_lag": 0,
+      "consumption_lag": 250,
+      "committed_offset": 327358,
+      "messages": 3,
+      "consumer": "Karafka::Pro::ActiveJob::Consumer",
+      "consumer_group": "example_app6_app",
+      "type": "consume",
+      "status": "running",
+      "tags": [
+        "active_job",
+        "VisitorsJob"
+      ]
+    }
+  ]
+}
