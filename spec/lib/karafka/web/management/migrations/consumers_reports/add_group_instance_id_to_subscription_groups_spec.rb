@@ -105,7 +105,10 @@ RSpec.describe Karafka::Web::Management::Migrations::ConsumersReports::AddGroupI
       it 'does not modify existing instance_id' do
         migration.migrate(report)
 
-        expect(report[:consumer_groups]['test_group'][:subscription_groups]['sg_0'][:instance_id]).to eq('my-static-instance')
+        group = report[:consumer_groups]['test_group'][:subscription_groups]['sg_0']
+        instance_id = group[:instance_id]
+
+        expect(instance_id).to eq('my-static-instance')
       end
     end
 
