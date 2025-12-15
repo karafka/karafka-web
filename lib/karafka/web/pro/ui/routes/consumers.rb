@@ -72,31 +72,23 @@ module Karafka
                   end
                 end
 
-                r.on String, 'topics' do |process_id|
+                r.on 'topics', String, String, 'pause' do |cg_id, topic|
                   controller = build(Controllers::Consumers::Topics::PausesController)
 
-                  r.get(
-                    String, String, 'pause', 'new'
-                  ) do |subscription_group_id, topic|
-                    controller.new(process_id, subscription_group_id, topic)
+                  r.get 'new' do
+                    controller.new(cg_id, topic)
                   end
 
-                  r.post(
-                    String, String, 'pause'
-                  ) do |subscription_group_id, topic|
-                    controller.create(process_id, subscription_group_id, topic)
+                  r.post do
+                    controller.create(cg_id, topic)
                   end
 
-                  r.get(
-                    String, String, 'pause', 'edit'
-                  ) do |subscription_group_id, topic|
-                    controller.edit(process_id, subscription_group_id, topic)
+                  r.get 'edit' do
+                    controller.edit(cg_id, topic)
                   end
 
-                  r.delete(
-                    String, String, 'pause'
-                  ) do |subscription_group_id, topic|
-                    controller.delete(process_id, subscription_group_id, topic)
+                  r.delete do
+                    controller.delete(cg_id, topic)
                   end
                 end
 

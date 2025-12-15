@@ -4,33 +4,26 @@
 <%
   feature_class = features.commanding? ? '' : 'btn-disabled'
 
-  # Get partition data - we need subscription_group_id and a process_id for the form URL
-  # For topic commands that broadcast to all processes, the specific process_id doesn't matter
-  # but we need one for the URL structure
   partitions = topic_details[:partitions]
-  first_partition = partitions.values.first
 
   # Only show buttons if we have partition data
-  if first_partition
-    process_id = first_partition.process.id
-    subscription_group_id = first_partition.subscription_group_id
-
+  if partitions.any?
     # Check if any partition is paused (for showing Resume All button)
     has_paused = partitions.values.any? { |p| p.poll_state != 'active' }
 
-    pause_path = consumer_path(
-      process_id,
+    pause_path = root_path(
+      'consumers',
       'topics',
-      subscription_group_id,
+      consumer_group_name,
       topic_name,
       'pause',
       'new'
     )
 
-    resume_path = consumer_path(
-      process_id,
+    resume_path = root_path(
+      'consumers',
       'topics',
-      subscription_group_id,
+      consumer_group_name,
       topic_name,
       'pause',
       'edit'

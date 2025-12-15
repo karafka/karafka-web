@@ -24,9 +24,14 @@ module Karafka
               def on_connection_listener_fetch_loop(event)
                 listener = event[:caller]
                 client = event[:client]
+                subscription_group = listener.subscription_group
+                consumer_group_id = subscription_group.consumer_group.id
 
-                @tracker.each_for(listener.subscription_group.id) do |command|
-                  @executor.call(listener, client, command)
+                # Iterate over all topics in this subscription group and check for commands
+                subscription_group.topics.each do |topic|
+                  @tracker.each_for(consumer_group_id, topic.name) do |command|
+                    @executor.call(listener, client, command)
+                  end
                 end
               end
 
@@ -36,8 +41,13 @@ module Karafka
               # Rejects all the commands if there were any waiting.
               # @param event [Karafka::Core::Monitoring::Event]
               def on_rebalance_partitions_assigned(event)
-                @tracker.each_for(event[:subscription_group_id]) do |command|
-                  @executor.reject(command)
+                subscription_group = event[:subscription_group]
+                consumer_group_id = subscription_group.consumer_group.id
+
+                subscription_group.topics.each do |topic|
+                  @tracker.each_for(consumer_group_id, topic.name) do |command|
+                    @executor.reject(command)
+                  end
                 end
               end
 

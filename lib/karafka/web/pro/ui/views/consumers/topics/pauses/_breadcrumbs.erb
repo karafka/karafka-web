@@ -13,41 +13,23 @@
   </a>
 </li>
 
-<% if @subscription_group_id %>
+<li>
+  <a href="<%= root_path('health', 'overview') %>">
+    <%= @consumer_group_id %>
+  </a>
+</li>
+
+<li>
+  <a href="<%= root_path('health', 'overview') %>">
+    <%= @topic %>
+  </a>
+</li>
+
+<li>
   <%
-    action = current_path.include?('/new') ? 'new' : 'edit'
-
-    target_path = consumer_path(
-      @process.id,
-      'topics',
-      @subscription_group_id,
-      @topic,
-      'pause',
-      action
-    )
+    action = current_path.include?('/new') ? 'Pause' : 'Resume'
   %>
-
-  <li>
-    <a href="<%= target_path %>">
-      <%= @consumer_group.id %>
-    </a>
-  </li>
-
-  <li>
-    <a href="<%= target_path %>">
-      <%= @topic %>
-    </a>
-  </li>
-
-  <li>
-    <a href="<%= target_path %>">
-      Topic Pauses
-    </a>
-  </li>
-
-  <li>
-    <a href="<%= target_path %>">
-      <%= action.capitalize %>
-    </a>
-  </li>
-<% end %>
+  <a href="<%= current_path %>">
+    <%= action %>
+  </a>
+</li>

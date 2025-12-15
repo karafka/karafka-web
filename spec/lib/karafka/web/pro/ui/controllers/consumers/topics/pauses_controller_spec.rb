@@ -8,16 +8,15 @@ RSpec.describe_current do
 
   let(:states_topic) { create_topic }
   let(:reports_topic) { create_topic }
-  let(:process_id) { 'shinra:1:1' }
-  let(:subscription_group_id) { 'c4ca4238a0b9_0' }
+  let(:consumer_group_id) { 'example_app6_app' }
   let(:topic_name) { 'default' }
   let(:commands_topic) { create_topic }
   let(:lrj_warn1) { 'Manual pause/resume operations are not supported' }
   let(:lrj_warn2) { 'Cannot Manage Long-Running Job Partitions Pausing' }
   let(:cannot_perform) { 'This Operation Cannot Be Performed' }
-  let(:not_active) { 'Consumer pauses can only be managed using Web UI when' }
+  let(:not_active) { 'Topic pauses can only be managed using Web UI when' }
   let(:form) { '<form' }
-  let(:topic_pause) { 'Topic Pause' }
+  let(:topic_info) { 'Topic Information' }
 
   before do
     topics_config.consumers.states.name = states_topic
@@ -32,9 +31,8 @@ RSpec.describe_current do
     let(:new_path) do
       [
         'consumers',
-        process_id,
         'topics',
-        subscription_group_id,
+        consumer_group_id,
         topic_name,
         'pause',
         'new'
@@ -43,16 +41,15 @@ RSpec.describe_current do
 
     before { get(new_path) }
 
-    context 'when the process exists and is running' do
+    context 'when a process exists and is running' do
       it 'expect to include relevant details' do
         expect(response).to be_ok
-        expect(body).to include(process_id)
-        expect(body).to include(subscription_group_id)
+        expect(body).to include(consumer_group_id)
         expect(body).to include(topic_name)
         expect(body).to include('Pause Duration:')
         expect(body).to include('Safety Check:')
         expect(body).to include(form)
-        expect(body).to include(topic_pause)
+        expect(body).to include(topic_info)
         expect(body).not_to include(lrj_warn1)
         expect(body).not_to include(lrj_warn2)
         expect(body).not_to include(cannot_perform)
@@ -60,12 +57,15 @@ RSpec.describe_current do
       end
     end
 
-    context 'when the process exists, is running but topic is lrj' do
+    context 'when a process exists, is running but topic is lrj' do
       before do
         Karafka::App.routes.each do |cg|
+          next unless cg.id == consumer_group_id
+
           cg.topics.each do |topic|
-            allow(topic.subscription_group).to receive(:id).and_return(subscription_group_id)
-            allow(topic).to receive_messages(long_running_job?: true, name: topic_name)
+            next unless topic.name == topic_name
+
+            allow(topic).to receive(:long_running_job?).and_return(true)
           end
         end
 
@@ -74,12 +74,10 @@ RSpec.describe_current do
 
       it 'expect to include relevant details' do
         expect(response).to be_ok
-        expect(body).to include(process_id)
-        expect(body).to include(subscription_group_id)
+        expect(body).to include(consumer_group_id)
         expect(body).to include(topic_name)
         expect(body).to include(lrj_warn1)
         expect(body).to include(lrj_warn2)
-        expect(body).to include(topic_pause)
         expect(body).not_to include('Pause Duration:')
         expect(body).not_to include('Safety Check:')
         expect(body).not_to include(form)
@@ -88,14 +86,8 @@ RSpec.describe_current do
       end
     end
 
-    context 'when process does not exist' do
-      let(:process_id) { 'not-existing' }
-
-      it { expect(status).to eq(404) }
-    end
-
-    context 'when subscription_group is not correct' do
-      let(:subscription_group_id) { 'not-existing' }
+    context 'when consumer group does not exist' do
+      let(:consumer_group_id) { 'not-existing' }
 
       it { expect(status).to eq(404) }
     end
@@ -106,7 +98,7 @@ RSpec.describe_current do
       it { expect(status).to eq(404) }
     end
 
-    context 'when process exists but is not running' do
+    context 'when no process is running' do
       before do
         report = Fixtures.consumers_reports_json
         report[:process][:status] = 'stopped'
@@ -130,9 +122,8 @@ RSpec.describe_current do
     let(:post_path) do
       [
         'consumers',
-        process_id,
         'topics',
-        subscription_group_id,
+        consumer_group_id,
         topic_name,
         'pause'
       ].join('/')
@@ -146,7 +137,7 @@ RSpec.describe_current do
       )
     end
 
-    context 'when the process exists and is running' do
+    context 'when a process exists and is running' do
       it 'expect to redirect with success message' do
         expect(response.status).to eq(302)
         expect(response.location).to eq('/')
@@ -165,8 +156,7 @@ RSpec.describe_current do
 
         command = message.payload.fetch(:command)
 
-        expect(command[:subscription_group_id]).to eq(subscription_group_id)
-        expect(command[:consumer_group_id]).to eq('example_app6_app')
+        expect(command[:consumer_group_id]).to eq(consumer_group_id)
         expect(command[:topic]).to eq(topic_name)
         expect(command[:duration]).to eq(duration * 1_000)
         expect(command[:prevent_override]).to be(true)
@@ -174,14 +164,8 @@ RSpec.describe_current do
       end
     end
 
-    context 'when process does not exist' do
-      let(:process_id) { 'not-existing' }
-
-      it { expect(status).to eq(404) }
-    end
-
-    context 'when subscription_group is not correct' do
-      let(:subscription_group_id) { 'not-existing' }
+    context 'when consumer group does not exist' do
+      let(:consumer_group_id) { 'not-existing' }
 
       it { expect(status).to eq(404) }
     end
@@ -197,9 +181,8 @@ RSpec.describe_current do
     let(:edit_path) do
       [
         'consumers',
-        process_id,
         'topics',
-        subscription_group_id,
+        consumer_group_id,
         topic_name,
         'pause',
         'edit'
@@ -208,13 +191,12 @@ RSpec.describe_current do
 
     before { get(edit_path) }
 
-    context 'when the process exists and is running' do
+    context 'when a process exists and is running' do
       it 'expect to include relevant details' do
         expect(response).to be_ok
-        expect(body).to include(process_id)
-        expect(body).to include(subscription_group_id)
+        expect(body).to include(consumer_group_id)
         expect(body).to include(topic_name)
-        expect(body).to include(topic_pause)
+        expect(body).to include(topic_info)
         expect(body).to include('Reset Counter:')
         expect(body).to include('Resume All Paused Partitions')
         expect(body).to include(form)
@@ -225,12 +207,15 @@ RSpec.describe_current do
       end
     end
 
-    context 'when the process exists, is running but topic is lrj' do
+    context 'when a process exists, is running but topic is lrj' do
       before do
         Karafka::App.routes.each do |cg|
+          next unless cg.id == consumer_group_id
+
           cg.topics.each do |topic|
-            allow(topic.subscription_group).to receive(:id).and_return(subscription_group_id)
-            allow(topic).to receive_messages(long_running_job?: true, name: topic_name)
+            next unless topic.name == topic_name
+
+            allow(topic).to receive(:long_running_job?).and_return(true)
           end
         end
 
@@ -239,12 +224,10 @@ RSpec.describe_current do
 
       it 'expect to include relevant details' do
         expect(response).to be_ok
-        expect(body).to include(process_id)
-        expect(body).to include(subscription_group_id)
+        expect(body).to include(consumer_group_id)
         expect(body).to include(topic_name)
         expect(body).to include(lrj_warn1)
         expect(body).to include(lrj_warn2)
-        expect(body).to include(topic_pause)
         expect(body).not_to include('Reset Counter:')
         expect(body).not_to include('Resume All Paused Partitions')
         expect(body).not_to include(form)
@@ -253,14 +236,8 @@ RSpec.describe_current do
       end
     end
 
-    context 'when process does not exist' do
-      let(:process_id) { 'not-existing' }
-
-      it { expect(status).to eq(404) }
-    end
-
-    context 'when subscription_group is not correct' do
-      let(:subscription_group_id) { 'not-existing' }
+    context 'when consumer group does not exist' do
+      let(:consumer_group_id) { 'not-existing' }
 
       it { expect(status).to eq(404) }
     end
@@ -271,7 +248,7 @@ RSpec.describe_current do
       it { expect(status).to eq(404) }
     end
 
-    context 'when process exists but is not running' do
+    context 'when no process is running' do
       before do
         report = Fixtures.consumers_reports_json
         report[:process][:status] = 'stopped'
@@ -294,9 +271,8 @@ RSpec.describe_current do
     let(:delete_path) do
       [
         'consumers',
-        process_id,
         'topics',
-        subscription_group_id,
+        consumer_group_id,
         topic_name,
         'pause'
       ].join('/')
@@ -309,7 +285,7 @@ RSpec.describe_current do
       )
     end
 
-    context 'when the process exists and is running' do
+    context 'when a process exists and is running' do
       it 'expect to redirect with success message' do
         expect(response.status).to eq(302)
         expect(response.location).to eq('/')
@@ -328,22 +304,15 @@ RSpec.describe_current do
 
         command = message.payload.fetch(:command)
 
-        expect(command[:subscription_group_id]).to eq(subscription_group_id)
-        expect(command[:consumer_group_id]).to eq('example_app6_app')
+        expect(command[:consumer_group_id]).to eq(consumer_group_id)
         expect(command[:topic]).to eq(topic_name)
         expect(command[:reset_attempts]).to be(true)
         expect(command[:name]).to eq('topics.resume')
       end
     end
 
-    context 'when process does not exist' do
-      let(:process_id) { 'not-existing' }
-
-      it { expect(status).to eq(404) }
-    end
-
-    context 'when subscription_group is not correct' do
-      let(:subscription_group_id) { 'not-existing' }
+    context 'when consumer group does not exist' do
+      let(:consumer_group_id) { 'not-existing' }
 
       it { expect(status).to eq(404) }
     end

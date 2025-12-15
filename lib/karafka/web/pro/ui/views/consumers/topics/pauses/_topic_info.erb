@@ -1,6 +1,18 @@
 <%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
 <%# See LICENSE for details. %>
 
+<%
+  partitions = @topic_stats[:partitions]
+  total_partitions = @topic_stats[:partitions_count]
+  assigned_partitions = partitions.size
+
+  active_count = partitions.values.count { |p| p.poll_state == 'active' }
+  paused_count = partitions.values.count { |p| p.poll_state != 'active' }
+
+  # Get unique process count
+  process_count = partitions.values.map { |p| p[:process].id }.uniq.size
+%>
+
 <div class="card bg-base-100 mt-4">
   <div class="card-body">
     <h3 class="card-title text-lg">Topic Information</h3>
@@ -11,30 +23,31 @@
         <span class="font-mono"><%= @topic %></span>
       </div>
       <div>
-        <span class="text-gray-500">Subscription Group:</span>
-        <span class="font-mono"><%= @subscription_group.id %></span>
-      </div>
-      <div>
         <span class="text-gray-500">Consumer Group:</span>
-        <span class="font-mono"><%= @consumer_group.id %></span>
+        <span class="font-mono"><%= @consumer_group_id %></span>
       </div>
       <div>
-        <span class="text-gray-500">Partitions (this process):</span>
-        <span class="font-mono"><%= @topic_stats.partitions.count %></span>
+        <span class="text-gray-500">Total Partitions (cluster):</span>
+        <span class="font-mono"><%= total_partitions %></span>
+      </div>
+      <div>
+        <span class="text-gray-500">Assigned Partitions:</span>
+        <span class="font-mono"><%= assigned_partitions %></span>
+      </div>
+      <div>
+        <span class="text-gray-500">Active Processes:</span>
+        <span class="font-mono"><%= process_count %></span>
       </div>
     </div>
 
     <div class="mt-4">
-      <% active_count = @topic_stats.partitions.count { |p| p.poll_state == 'active' } %>
-      <% paused_count = @topic_stats.partitions.count { |p| p.poll_state != 'active' } %>
-
-      <span class="text-gray-500">Partition States (this process):</span>
+      <span class="text-gray-500">Partition States (across all processes):</span>
       <span class="badge badge-success badge-sm ml-2"><%= active_count %> active</span>
       <span class="badge badge-warning badge-sm ml-2"><%= paused_count %> paused</span>
     </div>
 
     <div class="mt-2 text-sm text-gray-500">
-      Note: This command will be broadcast to <strong>all consumer processes</strong> that have partitions of this topic assigned.
+      This command will be broadcast to <strong>all consumer processes</strong> that have partitions of this topic assigned within the '<%= @consumer_group_id %>' consumer group.
     </div>
   </div>
 </div>

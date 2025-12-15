@@ -1471,7 +1471,10 @@
       padding: calc(var(--spacing) * 2);
     }
     & td:has(.btn) {
-      text-align: center;
+      text-align: right;
+    }
+    & th:has(.btn) {
+      text-align: right;
     }
   }
   .indicator {
@@ -3462,6 +3465,13 @@
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
+  .card-title {
+    display: flex;
+    align-items: center;
+    gap: calc(0.25rem * 2);
+    font-size: var(--cardtitle-fs, 1.125rem);
+    font-weight: 600;
+  }
   .join {
     display: inline-flex;
     align-items: stretch;
@@ -3777,6 +3787,9 @@
   }
   .flex-col {
     flex-direction: column;
+  }
+  .flex-wrap {
+    flex-wrap: wrap;
   }
   .items-center {
     align-items: center;
@@ -4167,10 +4180,16 @@
   }
   .btn {
     .data-table td:has(&) {
-      text-align: center;
+      text-align: right;
     }
     .row-table td:has(&) {
-      text-align: center;
+      text-align: right;
+    }
+    .data-table th:has(&) {
+      text-align: right;
+    }
+    .row-table th:has(&) {
+      text-align: right;
     }
     --tw-font-weight: var(--font-weight-normal);
     font-weight: var(--font-weight-normal);
@@ -4186,6 +4205,9 @@
   }
   .text-right {
     text-align: right;
+  }
+  .font-mono {
+    font-family: var(--font-mono);
   }
   .text-3xl {
     font-size: var(--text-3xl);
@@ -4557,6 +4579,12 @@
 tr:not(:first-child) th[colspan]:not([colspan="1"]) {
   text-align: center;
 }
+table th.options,
+table td.options {
+  width: 1%;
+  white-space: nowrap;
+  text-align: right;
+}
 #controls {
   button {
     &:hover {
@@ -4679,10 +4707,16 @@ tr:not(:first-child) th[colspan]:not([colspan="1"]) {
     }
     cursor: pointer;
     .data-table td:has(&) {
-      text-align: center;
+      text-align: right;
     }
     .row-table td:has(&) {
-      text-align: center;
+      text-align: right;
+    }
+    .data-table th:has(&) {
+      text-align: right;
+    }
+    .row-table th:has(&) {
+      text-align: right;
     }
     --tw-font-weight: var(--font-weight-normal);
     font-weight: var(--font-weight-normal);

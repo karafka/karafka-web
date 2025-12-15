@@ -3,15 +3,14 @@
 
 <% alert_box_warning('Topic-Level Operation Across All Processes') do %>
   <p>
-    You are about to adjust pause for <strong>all partitions</strong> of this topic across <strong>all consumer processes</strong>. This operation:
+    You are about to adjust pause settings for <strong>all partitions</strong> of this topic across <strong>all consumer processes</strong> in the '<%= @consumer_group_id %>' consumer group. This operation:
   </p>
 
   <ul class="list-disc ml-6 mt-2 mb-2">
-    <li>Affects all partitions of this topic across all running consumer processes</li>
+    <li>Affects all assigned partitions of this topic across all running consumer processes</li>
     <li>Takes effect during the next poll operation on each process</li>
     <li>May affect message processing on multiple consumer instances</li>
     <li>Cannot be undone - you will need to resume partitions manually</li>
-    <li>Will override any existing pause settings on affected partitions</li>
   </ul>
 
   <hr/>

@@ -22,7 +22,7 @@
               <th colspan="7">
                 <%= topic_name %>
               </th>
-              <th colspan="1" rowspan="1">
+              <th colspan="1" rowspan="1" class="options">
                 Options
               </th>
             </tr>
@@ -42,7 +42,7 @@
               <th colspan="1" rowspan="2">
                <%== sort_link('Process ID', :id) %>
               </th>
-              <th colspan="1" rowspan="2">
+              <th colspan="1" rowspan="2" class="options">
                 <%==
                   partial(
                     'health/topic_edit_options',

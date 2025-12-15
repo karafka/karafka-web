@@ -2,10 +2,10 @@
 <%# See LICENSE for details. %>
 
 <%
-  resume_path = consumer_path(
-    @process.id,
+  resume_path = root_path(
+    'consumers',
     'topics',
-    @subscription_group.id,
+    @consumer_group_id,
     @topic,
     'pause'
   )
@@ -43,9 +43,7 @@
 
       <div class="fieldset text-center mt-6">
         <div class="flex gap-4 justify-end">
-          <a href="<%= root_path('health', 'overview') %>" class="btn btn-ghost">
-           Cancel
-          </a>
+          <a href="<%= root_path('health', 'overview') %>" class="btn btn-ghost">Cancel</a>
 
           <button type="submit" class="btn btn-success gap-2 btn-lockable">
             <%== icon(:play) %>

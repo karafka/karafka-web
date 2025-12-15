@@ -2,13 +2,13 @@
 <%# See LICENSE for details. %>
 
 <%
-  view_title "#{@process.id} - Topic Pause - #{@subscription_group_id} - #{@topic}"
+  view_title "Topic Pause - #{@consumer_group_id} - #{@topic}"
 %>
 
 <% if @topic_lrj %>
   <%== partial 'consumers/topics/pauses/lrj_not_manageable' %>
 <% else %>
-  <% if @process.status == 'running' %>
+  <% if @any_process_running %>
     <%== partial 'consumers/topics/pauses/adjusting_warning' %>
     <%== partial 'consumers/topics/pauses/topic_info' %>
     <%== partial 'consumers/topics/pauses/new_form' %>
