@@ -80,9 +80,9 @@ module Karafka
 
           path = case result.path
                  when :back
-                   session[:current_path]
+                   session['current_path']
                  when :previous
-                   session[:previous_path]
+                   session['previous_path']
                  else
                    root_path(result.path)
                  end
@@ -222,17 +222,17 @@ module Karafka
 
           requested_path = request.path
 
-          if session[:current_path].nil?
-            session[:current_path] = requested_path
+          if session['current_path'].nil?
+            session['current_path'] = requested_path
 
             return
           end
 
-          return if request.path == session[:current_path]
+          return if request.path == session['current_path']
 
           # When navigating to a different page
-          session[:previous_path] = session[:current_path]
-          session[:current_path] = requested_path
+          session['previous_path'] = session['current_path']
+          session['current_path'] = requested_path
         end
       end
     end

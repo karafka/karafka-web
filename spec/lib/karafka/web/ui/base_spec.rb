@@ -129,4 +129,36 @@ RSpec.describe Karafka::Web::Ui::Base, type: :controller do
       end
     end
   end
+
+  describe 'session path tracking' do
+    let(:env_key) { Karafka::Web.config.ui.sessions.env_key }
+
+    context 'when navigating between pages' do
+      before do
+        get 'dashboard'
+        get 'consumers'
+      end
+
+      it 'expect to store paths with string keys' do
+        session = last_request.env[env_key]
+
+        expect(session['current_path']).to eq('/consumers')
+        expect(session['previous_path']).to eq('/dashboard')
+        # Ensure symbol keys are not used
+        expect(session[:current_path]).to be_nil
+        expect(session[:previous_path]).to be_nil
+      end
+    end
+
+    context 'when visiting the first page' do
+      before { get 'dashboard' }
+
+      it 'expect to set current_path with string key' do
+        session = last_request.env[env_key]
+
+        expect(session['current_path']).to eq('/dashboard')
+        expect(session['previous_path']).to be_nil
+      end
+    end
+  end
 end

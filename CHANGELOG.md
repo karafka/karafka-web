@@ -1,9 +1,12 @@
 # Karafka Web Changelog
 
 ## 0.11.6 (Unreleased)
+- **[Feature]** Provide ability to pause/resume all partitions of a topic at once across all consumer processes via the Health Overview page (Pro). Topic-level commands are broadcast to all processes, and each process applies the command to partitions it owns within the specified consumer group. This simplifies bulk operations compared to pausing/resuming individual partitions one by one.
 - [Enhancement] Report `group.instance.id` (static membership ID) per subscription group in consumer reports. This enables identifying consumers using Kafka's static group membership feature. The ID is displayed in the per-consumer subscription view header and in Health Overview below each process ID, making it easy to find a process by its static membership ID. Consumer schema version bumped to 1.6.0.
 - [Enhancement] Display `min.insync.replicas` alongside replication factor on the topic replication page with fault tolerance indicators (Pro). Shows specific warnings for different resilience issues: no redundancy (RF=1), zero fault tolerance (RF ≤ minISR), and low durability (minISR=1). Each warning includes impact details, environment-aware severity messaging, and recommended actions. Helps users identify misconfigured topics that would cause outages or data loss.
+- [Enhancement] Add `.options` CSS class for table columns containing action buttons, providing consistent `width: 1%; white-space: nowrap` styling to prevent column width fluctuation.
 - [Refactor] Refactor Status model into a DSL-based architecture with individual check classes. Each status check is now a separate class in `Karafka::Web::Ui::Models::Status::Checks` that declares its dependencies using `depends_on :check_name` DSL. Shared state is managed through a `Context` class, and the `Step` struct has been extracted to its own file. This improves maintainability, testability, and makes it easier to add new status checks in the future.
+- [Fix] Fix session keys to use strings instead of symbols for compatibility with Roda's session management.
 
 ## 0.11.5 (2025-11-14)
 - [Enhancement] Utilize newly released Roda session management `:env_key` to isolate Karafka Web session from the main application session.
