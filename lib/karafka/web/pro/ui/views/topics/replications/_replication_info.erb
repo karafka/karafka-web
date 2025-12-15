@@ -27,7 +27,7 @@
       'topics/replications/metric_box',
       locals: {
         title: 'Fault Tolerance',
-        content: @has_resilience_issue ? badge_warning('0 brokers') : badge_success("#{@replication_factor - @min_isr} broker(s)")
+        content: @has_zero_fault_tolerance || @has_no_redundancy ? badge_warning('0 brokers') : badge_success("#{@replication_factor - @min_isr} broker(s)")
       }
     )
   %>
@@ -43,8 +43,12 @@
   %>
 </div>
 
-<% if @has_resilience_issue %>
-  <%== partial 'topics/replications/resilience_warning' %>
+<% if @has_no_redundancy %>
+  <%== partial 'topics/replications/warning_no_redundancy' %>
+<% elsif @has_zero_fault_tolerance %>
+  <%== partial 'topics/replications/warning_zero_fault_tolerance' %>
+<% elsif @has_low_durability %>
+  <%== partial 'topics/replications/warning_low_durability' %>
 <% else %>
   <%== partial 'topics/replications/resilience_success' %>
 <% end %>

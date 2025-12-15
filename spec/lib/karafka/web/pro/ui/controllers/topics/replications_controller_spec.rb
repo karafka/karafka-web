@@ -67,9 +67,9 @@ RSpec.describe_current do
       end
     end
 
-    context 'when replication factor equals min.insync.replicas' do
-      # In the test environment, RF=1 and minISR=1 by default (single broker setup)
-      # This triggers the resilience warning condition
+    context 'when replication factor is 1 (no redundancy)' do
+      # In the test environment, RF=1 by default (single broker setup)
+      # This triggers the no redundancy warning
 
       context 'when in production environment' do
         before do
@@ -77,14 +77,14 @@ RSpec.describe_current do
           get "topics/#{topic}/replication"
         end
 
-        it 'displays the resilience warning with production severity' do
+        it 'displays the no redundancy warning with production severity' do
           expect(response).to be_ok
-          expect(body).to include('Replication Resilience Issue Detected')
-          expect(body).to include('zero fault tolerance')
-          expect(body).to include('at least one less')
+          expect(body).to include('No Replication Redundancy')
+          expect(body).to include('replication factor of 1')
+          expect(body).to include('no redundant copies')
+          expect(body).to include('permanently lost')
           expect(body).to include('Broker Failures and Fault Tolerance')
           expect(body).to include('critical issue')
-          expect(body).to include('addressed immediately')
         end
 
         it 'shows fault tolerance as 0 brokers' do
@@ -98,12 +98,12 @@ RSpec.describe_current do
           get "topics/#{topic}/replication"
         end
 
-        it 'displays the resilience warning with development context' do
+        it 'displays the no redundancy warning with development context' do
           expect(response).to be_ok
-          expect(body).to include('Replication Resilience Issue Detected')
-          expect(body).to include('zero fault tolerance')
+          expect(body).to include('No Replication Redundancy')
+          expect(body).to include('replication factor of 1')
           expect(body).to include('acceptable for development')
-          expect(body).to include('would cause outages in production')
+          expect(body).to include('would cause data loss in production')
         end
 
         it 'still displays the replication settings cards' do

@@ -35,8 +35,15 @@ module Karafka
                 min_isr_config = @topic.configs.find { |c| c.name == 'min.insync.replicas' }
                 @min_isr = min_isr_config&.value&.to_i || 1
 
-                # Determine if there's a resilience issue (RF <= minISR means no fault tolerance)
-                @has_resilience_issue = @replication_factor.positive? && @replication_factor <= @min_isr
+                # Determine resilience issues (checked in priority order):
+                # 1. No redundancy: RF = 1 (single point of failure, most severe)
+                # 2. Zero write fault tolerance: RF > 1 but RF <= minISR (can't lose any broker)
+                # 3. Low durability: RF > 1 and minISR = 1 (data loss risk if leader fails)
+                @has_no_redundancy = @replication_factor == 1
+                @has_zero_fault_tolerance = @replication_factor > 1 && @replication_factor <= @min_isr
+                @has_low_durability = @replication_factor > 1 && @min_isr == 1
+
+                @has_resilience_issue = @has_zero_fault_tolerance || @has_low_durability || @has_no_redundancy
 
                 render
               end

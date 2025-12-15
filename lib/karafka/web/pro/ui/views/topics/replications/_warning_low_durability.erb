@@ -1,0 +1,53 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<div class="mb-6">
+<% alert_box_warning('Low Data Durability Configuration') do %>
+  <div class="space-y-4">
+    <p>
+      This topic has <code>min.insync.replicas</code> set to <strong>1</strong> with a
+      replication factor of <strong><%= @replication_factor %></strong>.
+    </p>
+
+    <p>
+      <strong>Impact:</strong> When using <code>acks=all</code>, messages are acknowledged as soon as
+      the leader replica receives them, <strong>before replication to followers completes</strong>.
+      If the leader broker fails immediately after acknowledging a write, that data may be
+      <strong>permanently lost</strong> even though the producer received a success confirmation.
+    </p>
+
+    <% if Karafka.env.production? %>
+      <p>
+        This configuration <strong>does not guarantee data durability</strong> and should be
+        reviewed for production workloads where data loss is unacceptable.
+      </p>
+    <% else %>
+      <p>
+        While this configuration may be acceptable for development and testing, be aware that
+        <strong>this setup risks data loss in production</strong>. Consider using production-like
+        settings in staging environments to catch such issues before deployment.
+      </p>
+    <% end %>
+
+    <p><strong>Recommended Actions:</strong></p>
+    <ul class="list-disc ml-6">
+      <li>
+        Increase <code>min.insync.replicas</code> to <strong>at least 2</strong> to ensure
+        messages are replicated to multiple brokers before acknowledgment.
+      </li>
+      <li>
+        Ensure your producers use <code>acks=all</code> to leverage the <code>min.insync.replicas</code>
+        guarantee for durable writes.
+      </li>
+    </ul>
+
+    <p class="mt-4 text-sm">
+      For more details, see the
+      <a href="https://karafka.io/docs/Broker-Failures-and-Fault-Tolerance/#critical-configuration-replication-factor-and-mininsyncreplicas" target="_blank" class="link">
+        Broker Failures and Fault Tolerance
+      </a>
+      documentation.
+    </p>
+  </div>
+<% end %>
+</div>
