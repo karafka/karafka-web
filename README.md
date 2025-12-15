@@ -4,31 +4,31 @@
 [![Gem Version](https://badge.fury.io/rb/karafka-web.svg)](http://badge.fury.io/rb/karafka-web)
 [![Join the chat at https://slack.karafka.io](https://raw.githubusercontent.com/karafka/misc/master/slack.svg)](https://slack.karafka.io)
 
-Karafka Web is a user interface for the [Karafka framework](https://github.com/karafka/karafka). The Web UI provides a convenient way for developers to monitor and manage their Karafka-based applications, without the need to use the command line or third party software.
+Karafka Web UI is a web-based interface for the [Karafka framework](https://github.com/karafka/karafka). The Web UI provides a convenient way for developers to monitor and manage their Kafka-based applications, eliminating the need to use command-line tools or third-party software.
 
-It allows for easy access to various metrics, such as the number of messages consumed, the number of errors, and the number of consumers operating. It also provides a way to view the different Kafka topics, consumers, and groups that are being used by the application.
+It provides easy access to various metrics, including the number of messages consumed, the number of errors, and the number of consumers in operation. It also provides a way to view the various Kafka topics, consumers, and groups used by the application.
 
 > [!IMPORTANT]
-> All of the Karafka ecosystem components' documentation, including the Web UI, can be found [here](https://karafka.io/docs/#web-ui).
+> Documentation for all ecosystem components, including the Web UI, is available in the [Karafka framework docs Wiki](https://karafka.io/docs/).
 
 ## Getting started
 
-The Karafka Web UI documentation is part of the Karafka framework documentation and can be found [here](https://karafka.io/docs).
+To get started with the Karafka Web UI, see the [Web UI](https://karafka.io/docs/#web-ui) chapter of the Karafka documentation Wiki.
 
 ![karafka web ui dashboard](https://raw.githubusercontent.com/karafka/misc/master/printscreens/web-ui.png)
 
 ## Karafka Pro Enhanced Web UI
 
-The Enhanced Web UI, aside from all the features of the OSS version, also offers additional features and capabilities not available in the free version, making it a better option for those looking for more robust monitoring and management capabilities for their Karafka applications. Some of the key benefits of the Enhanced Web UI version include the following:
+The Enhanced Web UI, in addition to all the features from the OSS version, also offers additional features and capabilities not available in the free version, making it a more robust option for those seeking enhanced monitoring and management capabilities for their Karafka applications. Some of the key benefits of the Enhanced Web UI version include the following:
 
-- Real-time and historical processing and utilization metrics.
-- Real-time topic lag awareness.
-- Enhanced consumer utilization metrics providing much better insights into process resource utilization.
-- Consumer process inspection to quickly analyze the state of a given consuming process.
-- Consumer job inspection to view currently running jobs on a per-process basis.
+- Real-time and historical processing and utilization metrics
+- Real-time topics lag awareness
+- Enhanced consumer utilization metrics providing much better insights into process and resource utilization
+- Consumer process inspection to quickly analyze the state of a given consuming process
+- Consumer jobs inspection to view currently running jobs on a per-process basis
 - A health dashboard containing general consumption overview information
-- A Data Explorer allowing for viewing and exploring the data produced to Kafka topics. It understands the routing table and can deserialize data before it is displayed.
-- Enhanced error reporting allowing for backtrace inspection and providing multi-partition support.
-- DLQ / Dead insights allowing you to navigate through DLQ topics and messages that were dispatched to them.
+- Data Explorer allowing for viewing and exploring the data produced to Kafka topics and understanding the routing table and deserializing data before it is displayed
+- Enhanced error reporting allowing for backtrace inspection and providing multi-partition support
+- DLQ / Dead insights allowing navigation through DLQ topics and messages dispatched
 
-Help me provide high-quality open-source software. Please see the Karafka [homepage](https://karafka.io) for more details.
+Help me provide high-quality open-source software. For more details, see the Karafka [homepage](https://karafka.io).
