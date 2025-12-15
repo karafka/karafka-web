@@ -37,7 +37,7 @@ module Karafka
                 def create(consumer_group_id, topic)
                   new(consumer_group_id, topic)
 
-                  # Broadcast to all processes (key='*')
+                  # Broadcast to all processes (key='*') with matchers to filter by consumer group
                   Commanding::Dispatcher.request(
                     Commanding::Commands::Topics::Pause.name,
                     '*',
@@ -47,7 +47,8 @@ module Karafka
                       # User provides this in seconds, we operate on ms in the system
                       duration: params.int(:duration) * 1_000,
                       prevent_override: params.bool(:prevent_override)
-                    }
+                    },
+                    matchers: { consumer_group_id: consumer_group_id }
                   )
 
                   redirect(
@@ -77,7 +78,7 @@ module Karafka
                 def delete(consumer_group_id, topic)
                   new(consumer_group_id, topic)
 
-                  # Broadcast to all processes (key='*')
+                  # Broadcast to all processes (key='*') with matchers to filter by consumer group
                   Commanding::Dispatcher.request(
                     Commanding::Commands::Topics::Resume.name,
                     '*',
@@ -85,7 +86,8 @@ module Karafka
                       consumer_group_id: consumer_group_id,
                       topic: topic,
                       reset_attempts: params.bool(:reset_attempts)
-                    }
+                    },
+                    matchers: { consumer_group_id: consumer_group_id }
                   )
 
                   redirect(

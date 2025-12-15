@@ -7,7 +7,7 @@ RSpec.describe_current do
   subject(:matcher) { described_class.new }
 
   let(:process_id) { '1234' }
-  let(:schema_version) { '1.0' }
+  let(:schema_version) { '1.2.0' }
   let(:message) do
     instance_double(
       Karafka::Messages::Message,
@@ -60,59 +60,203 @@ RSpec.describe_current do
     it { expect(matcher.matches?(message)).to be false }
   end
 
-  context 'when command has consumer_group_id' do
+  describe 'matchers filtering' do
     let(:message_key) { '*' }
-    let(:consumer_group) { instance_double('ConsumerGroup', id: 'my_consumer_group') }
+    let(:consumer_group) { instance_double(Karafka::Routing::ConsumerGroup, id: 'my_consumer_group') }
+    let(:topic) { instance_double(Karafka::Routing::Topic, name: 'my_topic', consumer_group: consumer_group) }
+    let(:assignments) { { topic => [0, 1, 2] } }
 
     before do
-      allow(Karafka::App).to receive(:routes).and_return([consumer_group])
+      allow(Karafka::App).to receive(:assignments).and_return(assignments)
     end
 
-    context 'when consumer_group_id matches a local consumer group' do
+    context 'when no matchers are specified' do
       let(:message_payload) do
-        {
-          type: 'request',
-          schema_version: schema_version,
-          command: { consumer_group_id: 'my_consumer_group' }
-        }
+        { type: 'request', schema_version: schema_version }
       end
 
       it { expect(matcher.matches?(message)).to be true }
     end
 
-    context 'when consumer_group_id does not match any local consumer group' do
+    context 'when matchers is empty hash' do
       let(:message_payload) do
-        {
-          type: 'request',
-          schema_version: schema_version,
-          command: { consumer_group_id: 'other_consumer_group' }
-        }
-      end
-
-      it { expect(matcher.matches?(message)).to be false }
-    end
-
-    context 'when command does not have consumer_group_id' do
-      let(:message_payload) do
-        {
-          type: 'request',
-          schema_version: schema_version,
-          command: { name: 'probe' }
-        }
+        { type: 'request', schema_version: schema_version, matchers: {} }
       end
 
       it { expect(matcher.matches?(message)).to be true }
     end
 
-    context 'when payload has no command key' do
+    context 'with consumer_group_id matcher' do
+      context 'when consumer_group_id matches an assignment' do
+        let(:message_payload) do
+          {
+            type: 'request',
+            schema_version: schema_version,
+            matchers: { consumer_group_id: 'my_consumer_group' }
+          }
+        end
+
+        it { expect(matcher.matches?(message)).to be true }
+      end
+
+      context 'when consumer_group_id does not match any assignment' do
+        let(:message_payload) do
+          {
+            type: 'request',
+            schema_version: schema_version,
+            matchers: { consumer_group_id: 'other_consumer_group' }
+          }
+        end
+
+        it { expect(matcher.matches?(message)).to be false }
+      end
+    end
+
+    context 'with topic matcher' do
+      context 'when topic matches an assignment' do
+        let(:message_payload) do
+          {
+            type: 'request',
+            schema_version: schema_version,
+            matchers: { topic: 'my_topic' }
+          }
+        end
+
+        it { expect(matcher.matches?(message)).to be true }
+      end
+
+      context 'when topic does not match any assignment' do
+        let(:message_payload) do
+          {
+            type: 'request',
+            schema_version: schema_version,
+            matchers: { topic: 'other_topic' }
+          }
+        end
+
+        it { expect(matcher.matches?(message)).to be false }
+      end
+    end
+
+    context 'with multiple matchers (AND logic)' do
+      context 'when all matchers match' do
+        let(:message_payload) do
+          {
+            type: 'request',
+            schema_version: schema_version,
+            matchers: {
+              consumer_group_id: 'my_consumer_group',
+              topic: 'my_topic'
+            }
+          }
+        end
+
+        it { expect(matcher.matches?(message)).to be true }
+      end
+
+      context 'when one matcher fails' do
+        let(:message_payload) do
+          {
+            type: 'request',
+            schema_version: schema_version,
+            matchers: {
+              consumer_group_id: 'my_consumer_group',
+              topic: 'other_topic'
+            }
+          }
+        end
+
+        it { expect(matcher.matches?(message)).to be false }
+      end
+
+      context 'when all matchers fail' do
+        let(:message_payload) do
+          {
+            type: 'request',
+            schema_version: schema_version,
+            matchers: {
+              consumer_group_id: 'other_consumer_group',
+              topic: 'other_topic'
+            }
+          }
+        end
+
+        it { expect(matcher.matches?(message)).to be false }
+      end
+    end
+
+    context 'with unknown matcher type' do
       let(:message_payload) do
         {
           type: 'request',
-          schema_version: schema_version
+          schema_version: schema_version,
+          matchers: { unknown_matcher: 'some_value' }
         }
       end
 
-      it { expect(matcher.matches?(message)).to be true }
+      it 'ignores unknown matchers for forward compatibility' do
+        expect(matcher.matches?(message)).to be true
+      end
+    end
+
+    context 'with unknown matcher combined with known matcher' do
+      context 'when known matcher passes' do
+        let(:message_payload) do
+          {
+            type: 'request',
+            schema_version: schema_version,
+            matchers: {
+              consumer_group_id: 'my_consumer_group',
+              unknown_matcher: 'some_value'
+            }
+          }
+        end
+
+        it { expect(matcher.matches?(message)).to be true }
+      end
+
+      context 'when known matcher fails' do
+        let(:message_payload) do
+          {
+            type: 'request',
+            schema_version: schema_version,
+            matchers: {
+              consumer_group_id: 'other_consumer_group',
+              unknown_matcher: 'some_value'
+            }
+          }
+        end
+
+        it { expect(matcher.matches?(message)).to be false }
+      end
+    end
+
+    context 'when no assignments exist' do
+      let(:assignments) { {} }
+
+      context 'with consumer_group_id matcher' do
+        let(:message_payload) do
+          {
+            type: 'request',
+            schema_version: schema_version,
+            matchers: { consumer_group_id: 'my_consumer_group' }
+          }
+        end
+
+        it { expect(matcher.matches?(message)).to be false }
+      end
+
+      context 'with topic matcher' do
+        let(:message_payload) do
+          {
+            type: 'request',
+            schema_version: schema_version,
+            matchers: { topic: 'my_topic' }
+          }
+        end
+
+        it { expect(matcher.matches?(message)).to be false }
+      end
     end
   end
 end

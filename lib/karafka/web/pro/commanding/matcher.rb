@@ -12,7 +12,19 @@ module Karafka
         #
         # Since we use the `assign`, each process listens to this topic and receives messages
         # with commands targeting all the processes, this is why it needs to be filtered.
+        #
+        # The matcher supports a `matchers` field in the payload that allows for granular filtering
+        # based on various criteria like consumer_group_id, topic, etc. Each criterion is checked
+        # by a dedicated sub-matcher class.
         class Matcher
+          # Maps matcher type symbols to their corresponding sub-matcher classes
+          MATCHER_CLASSES = {
+            consumer_group_id: Matchers::ConsumerGroupId,
+            topic: Matchers::Topic
+          }.freeze
+
+          private_constant :MATCHER_CLASSES
+
           # @param message [Karafka::Messages::Message] message with command
           # @return [Boolean] is this message dedicated to current process and is actionable
           def matches?(message)
@@ -23,10 +35,8 @@ module Karafka
             # Ignore messages that have different schema. This can happen in the middle of
             # upgrades of the framework. We ignore this not to risk compatibility issues
             return false unless message.payload[:schema_version] == Dispatcher::SCHEMA_VERSION
-            # For commands that target a specific consumer group (like topics.pause/resume),
-            # we can skip processing if this process doesn't have that consumer group in its routing.
-            # This prevents unnecessary processing when broadcasting to all processes.
-            return false unless consumer_group_matches?(message)
+            # Check if all matchers (if any) are satisfied by this process
+            return false unless matchers_match?(message)
 
             true
           end
@@ -38,28 +48,42 @@ module Karafka
             @process_id ||= ::Karafka::Web.config.tracking.consumers.sampler.process_id
           end
 
-          # Checks if the command's consumer_group_id (if present) matches any consumer group
-          # in this process's routing. This optimization prevents processing commands intended
-          # for consumer groups that this process doesn't manage.
+          # Checks if all matchers specified in the message payload are satisfied by this process.
+          # If no matchers are specified, returns true (matches all).
           #
           # @param message [Karafka::Messages::Message] message with command
-          # @return [Boolean] true if no consumer_group_id specified or if it matches routing
-          def consumer_group_matches?(message)
-            consumer_group_id = message.payload.dig(:command, :consumer_group_id)
+          # @return [Boolean] true if all matchers match or no matchers specified
+          def matchers_match?(message)
+            matchers = message.payload[:matchers]
 
-            # If no consumer_group_id in the command, allow it (backwards compatibility)
-            return true unless consumer_group_id
+            # No matchers means match all processes
+            return true unless matchers
+            return true if matchers.empty?
 
-            # Check if any of our consumer groups match the requested one
-            consumer_group_ids.include?(consumer_group_id)
+            # All matchers must match (AND logic)
+            matchers.all? do |matcher_type, matcher_value|
+              match_criterion?(matcher_type, matcher_value)
+            end
           end
 
-          # @return [Set<String>] set of consumer group IDs in this process's routing
-          def consumer_group_ids
-            @consumer_group_ids ||= ::Karafka::App.routes.map(&:id).to_set
+          # Checks if a single matcher criterion is satisfied using the appropriate sub-matcher
+          #
+          # @param matcher_type [Symbol] type of matcher (:consumer_group_id, :topic, etc.)
+          # @param matcher_value [String] value to match against
+          # @return [Boolean] true if the criterion matches
+          def match_criterion?(matcher_type, matcher_value)
+            matcher_class = MATCHER_CLASSES[matcher_type]
+
+            # Unknown matcher types are ignored (treated as matching)
+            # This allows forward compatibility - older consumers ignore new matcher types
+            return true unless matcher_class
+
+            matcher_class.new(matcher_value).matches?
           end
         end
       end
     end
   end
 end
+
+require_relative 'matcher/matchers'

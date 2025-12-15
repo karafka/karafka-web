@@ -25,9 +25,9 @@ RSpec.describe_current do
   describe '#on_connection_listener_fetch_loop' do
     let(:listener) { instance_double(Karafka::Connection::Listener) }
     let(:client) { instance_double(Karafka::Connection::Client) }
-    let(:subscription_group) { instance_double('SubscriptionGroup') }
-    let(:consumer_group) { instance_double('ConsumerGroup', id: consumer_group_id) }
-    let(:topic) { instance_double('Topic', name: topic_name) }
+    let(:subscription_group) { instance_double(Karafka::Routing::SubscriptionGroup) }
+    let(:consumer_group) { instance_double(Karafka::Routing::ConsumerGroup, id: consumer_group_id) }
+    let(:topic) { instance_double(Karafka::Routing::Topic, name: topic_name) }
     let(:event) { { caller: listener, client: client } }
 
     before do
@@ -46,7 +46,7 @@ RSpec.describe_current do
     end
 
     context 'when multiple topics exist in subscription group' do
-      let(:topic2) { instance_double('Topic', name: 'test_topic2') }
+      let(:topic2) { instance_double(Karafka::Routing::Topic, name: 'test_topic2') }
       let(:command2) { instance_double(Karafka::Web::Pro::Commanding::Request) }
 
       before do
@@ -66,9 +66,9 @@ RSpec.describe_current do
   end
 
   describe '#on_rebalance_partitions_assigned' do
-    let(:subscription_group) { instance_double('SubscriptionGroup') }
-    let(:consumer_group) { instance_double('ConsumerGroup', id: consumer_group_id) }
-    let(:topic) { instance_double('Topic', name: topic_name) }
+    let(:subscription_group) { instance_double(Karafka::Routing::SubscriptionGroup) }
+    let(:consumer_group) { instance_double(Karafka::Routing::ConsumerGroup, id: consumer_group_id) }
+    let(:topic) { instance_double(Karafka::Routing::Topic, name: topic_name) }
     let(:event) { { subscription_group: subscription_group } }
 
     before do
@@ -87,9 +87,9 @@ RSpec.describe_current do
   end
 
   describe '#on_rebalance_partitions_revoked' do
-    let(:subscription_group) { instance_double('SubscriptionGroup') }
-    let(:consumer_group) { instance_double('ConsumerGroup', id: consumer_group_id) }
-    let(:topic) { instance_double('Topic', name: topic_name) }
+    let(:subscription_group) { instance_double(Karafka::Routing::SubscriptionGroup) }
+    let(:consumer_group) { instance_double(Karafka::Routing::ConsumerGroup, id: consumer_group_id) }
+    let(:topic) { instance_double(Karafka::Routing::Topic, name: topic_name) }
     let(:event) { { subscription_group: subscription_group } }
 
     before do

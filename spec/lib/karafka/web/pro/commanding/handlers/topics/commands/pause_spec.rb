@@ -24,11 +24,11 @@ RSpec.describe_current do
   let(:coordinator1) { instance_double(Karafka::Processing::Coordinator) }
   let(:pause_tracker0) { instance_double(Karafka::TimeTrackers::Pause) }
   let(:pause_tracker1) { instance_double(Karafka::TimeTrackers::Pause) }
-  let(:subscription_group) { instance_double('SubscriptionGroup') }
-  let(:consumer_group) { instance_double('ConsumerGroup') }
+  let(:subscription_group) { instance_double(Karafka::Routing::SubscriptionGroup) }
+  let(:consumer_group) { instance_double(Karafka::Routing::ConsumerGroup) }
   let(:topic_partition_list) { { topic_name => [partition0, partition1] } }
-  let(:partition0) { instance_double('Partition', partition: 0) }
-  let(:partition1) { instance_double('Partition', partition: 1) }
+  let(:partition0) { instance_double(Rdkafka::Consumer::Partition, partition: 0) }
+  let(:partition1) { instance_double(Rdkafka::Consumer::Partition, partition: 1) }
 
   let(:topic_name) { 'test_topic' }
   let(:consumer_group_id) { 'test_consumer_group' }

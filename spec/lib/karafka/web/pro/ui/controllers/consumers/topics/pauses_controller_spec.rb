@@ -150,9 +150,13 @@ RSpec.describe_current do
 
         # Topic commands are broadcast to all processes
         expect(message.key).to eq('*')
-        expect(message.payload[:schema_version]).to eq('1.1.0')
+        expect(message.payload[:schema_version]).to eq('1.2.0')
         expect(message.payload[:type]).to eq('request')
         expect(message.payload[:dispatched_at]).not_to be_nil
+
+        # Matchers for filtering which processes handle this command
+        matchers = message.payload.fetch(:matchers)
+        expect(matchers[:consumer_group_id]).to eq(consumer_group_id)
 
         command = message.payload.fetch(:command)
 
@@ -298,9 +302,13 @@ RSpec.describe_current do
 
         # Topic commands are broadcast to all processes
         expect(message.key).to eq('*')
-        expect(message.payload[:schema_version]).to eq('1.1.0')
+        expect(message.payload[:schema_version]).to eq('1.2.0')
         expect(message.payload[:type]).to eq('request')
         expect(message.payload[:dispatched_at]).not_to be_nil
+
+        # Matchers for filtering which processes handle this command
+        matchers = message.payload.fetch(:matchers)
+        expect(matchers[:consumer_group_id]).to eq(consumer_group_id)
 
         command = message.payload.fetch(:command)
 
