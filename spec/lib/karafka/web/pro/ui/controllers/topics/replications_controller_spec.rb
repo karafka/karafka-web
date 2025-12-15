@@ -116,10 +116,11 @@ RSpec.describe_current do
 
     context 'when replication factor equals min.insync.replicas (zero fault tolerance)' do
       let(:partitions_data) { [{ replica_count: 2, leader: 1, in_sync_replica_brokers: '1,2' }] }
-      let(:mock_topic) { double('Topic', topic_name: topic) }
+      let(:mock_topic) { double('Topic').as_null_object }
       let(:mock_config) { double('Config', name: 'min.insync.replicas', value: '2') }
 
       before do
+        allow(mock_topic).to receive(:topic_name).and_return(topic)
         allow(mock_topic).to receive(:[]) do |key|
           case key
           when :partitions then partitions_data
@@ -147,10 +148,11 @@ RSpec.describe_current do
 
     context 'when min.insync.replicas is 1 with higher replication factor (low durability)' do
       let(:partitions_data) { [{ replica_count: 3, leader: 1, in_sync_replica_brokers: '1,2,3' }] }
-      let(:mock_topic) { double('Topic', topic_name: topic) }
+      let(:mock_topic) { double('Topic').as_null_object }
       let(:mock_config) { double('Config', name: 'min.insync.replicas', value: '1') }
 
       before do
+        allow(mock_topic).to receive(:topic_name).and_return(topic)
         allow(mock_topic).to receive(:[]) do |key|
           case key
           when :partitions then partitions_data
@@ -179,10 +181,11 @@ RSpec.describe_current do
 
     context 'when configuration is healthy (RF > minISR and minISR > 1)' do
       let(:partitions_data) { [{ replica_count: 3, leader: 1, in_sync_replica_brokers: '1,2,3' }] }
-      let(:mock_topic) { double('Topic', topic_name: topic) }
+      let(:mock_topic) { double('Topic').as_null_object }
       let(:mock_config) { double('Config', name: 'min.insync.replicas', value: '2') }
 
       before do
+        allow(mock_topic).to receive(:topic_name).and_return(topic)
         allow(mock_topic).to receive(:[]) do |key|
           case key
           when :partitions then partitions_data
