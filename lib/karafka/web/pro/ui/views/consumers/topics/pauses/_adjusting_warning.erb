@@ -1,0 +1,28 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<% alert_box_warning('Topic-Level Operation Across All Processes') do %>
+  <p>
+    You are about to adjust pause for <strong>all partitions</strong> of this topic across <strong>all consumer processes</strong>. This operation:
+  </p>
+
+  <ul class="list-disc ml-6 mt-2 mb-2">
+    <li>Affects all partitions of this topic across all running consumer processes</li>
+    <li>Takes effect during the next poll operation on each process</li>
+    <li>May affect message processing on multiple consumer instances</li>
+    <li>Cannot be undone - you will need to resume partitions manually</li>
+    <li>Will override any existing pause settings on affected partitions</li>
+  </ul>
+
+  <hr/>
+
+  <p class="mt-2">
+    During long pauses, lag reporting on this topic may stop as librdkafka freezes the last known high watermark.
+  </p>
+
+  <p class="mt-2">
+    Real-time, state-independent lag metrics can always be checked in the
+    <a href="<%= root_path('health', 'cluster_lags') %>">Cluster Lags</a> tab
+    of the <a href="<%= root_path('health') %>">Health</a> section.
+  </p>
+<% end %>

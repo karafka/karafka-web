@@ -1,0 +1,23 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<% alert_box_error 'Long Running Job Topic' do %>
+  <p>
+    This topic is configured for Long Running Jobs (LRJ). LRJ topics cannot have their pauses
+    managed via the Web UI because:
+  </p>
+
+  <ul class="list-disc ml-6 mt-2">
+    <li>LRJ topics use automatic pausing during job execution</li>
+    <li>Manual pause management could interfere with job coordination</li>
+    <li>Pause state is managed internally by the LRJ feature</li>
+  </ul>
+<% end %>
+
+<div class="fieldset text-center mt-6">
+  <div class="flex justify-end">
+    <a href="<%= root_path('health', 'overview') %>" class="btn btn-ghost">
+      Cancel
+    </a>
+  </div>
+</div>

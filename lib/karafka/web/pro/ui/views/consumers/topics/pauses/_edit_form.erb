@@ -1,0 +1,58 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<%
+  resume_path = consumer_path(
+    @process.id,
+    'topics',
+    @subscription_group.id,
+    @topic,
+    'pause'
+  )
+%>
+
+<div class="card bg-base-100 mt-4">
+  <div class="card-body">
+    <form
+      class="space-y-4 w-full"
+      method="post"
+      action="<%= resume_path %>"
+    >
+      <%== csrf_tag(resume_path, 'DELETE') %>
+      <input type="hidden" name="_method" value="delete">
+
+      <div class="flex items-center w-full">
+        <label class="w-1/4 text-gray-700">Reset Counter:</label>
+
+        <div class="w-3/4">
+          <label class="flex items-center gap-4 cursor-pointer">
+            <input type="hidden" name="reset_attempts" value="off">
+            <input type="checkbox" name="reset_attempts" class="checkbox checkbox-warning" />
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                Reset the processing attempts counter when resuming
+              </div>
+
+              <div class="text-sm text-gray-500">
+                Resets retries counter for features like DLQ dispatching. Does not affect message offset position.
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="fieldset text-center mt-6">
+        <div class="flex gap-4 justify-end">
+          <a href="<%= root_path('health', 'overview') %>" class="btn btn-ghost">
+           Cancel
+          </a>
+
+          <button type="submit" class="btn btn-success gap-2 btn-lockable">
+            <%== icon(:play) %>
+            Resume All Paused Partitions
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

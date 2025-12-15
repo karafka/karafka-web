@@ -19,8 +19,11 @@
         <table class="data-table">
           <thead>
             <tr>
-              <th colspan="100">
+              <th colspan="7">
                 <%= topic_name %>
+              </th>
+              <th colspan="1" rowspan="1">
+                Options
               </th>
             </tr>
             <tr>
@@ -40,7 +43,16 @@
                <%== sort_link('Process ID', :id) %>
               </th>
               <th colspan="1" rowspan="2">
-                Options
+                <%==
+                  partial(
+                    'health/topic_edit_options',
+                    locals: {
+                      consumer_group_name: cg_name,
+                      topic_name: topic_name,
+                      topic_details: topic_details
+                    }
+                  )
+                %>
               </th>
             </tr>
             <tr>
