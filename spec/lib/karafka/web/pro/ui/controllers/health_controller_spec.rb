@@ -99,6 +99,49 @@ RSpec.describe_current do
       end
     end
 
+    context 'when subscription group has a static membership instance_id' do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        # Set instance_id on the subscription group
+        sg = report.dig(*partition_scope[0..3])
+        sg['instance_id'] = 'my-static-member-id-123'
+
+        produce(reports_topic, report.to_json)
+
+        get 'health/overview'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('my-static-member-id-123')
+        expect(body).to include('Static Membership ID')
+      end
+    end
+
+    context 'when subscription group does not have static membership' do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        # Ensure instance_id is false (no static membership)
+        sg = report.dig(*partition_scope[0..3])
+        sg['instance_id'] = false
+
+        produce(reports_topic, report.to_json)
+
+        get 'health/overview'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).not_to include('Static Membership ID')
+      end
+    end
+
     context 'when data is present but written in a transactional fashion' do
       before do
         topics_config.consumers.reports.name = reports_topic

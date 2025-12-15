@@ -835,5 +835,58 @@ RSpec.describe_current do
         expect(status).to eq(404)
       end
     end
+
+    context 'when subscription group has a static membership instance_id' do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        # Set instance_id on the subscription group
+        sg = report['consumer_groups']['example_app6_app']['subscription_groups']['c4ca4238a0b9_0']
+        sg['instance_id'] = 'my-static-member-456'
+
+        produce(reports_topic, report.to_json)
+
+        get 'consumers/shinra:1:1/subscriptions'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('my-static-member-456')
+        expect(body).to include('Static Membership ID')
+        expect(body).to include('tooltip')
+        expect(body).to include('Consumer Group')
+        expect(body).to include('Subscription Group')
+      end
+    end
+
+    context 'when subscription group does not have static membership' do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        # Ensure instance_id is false (no static membership) on all subscription groups
+        # across all consumer groups
+        report['consumer_groups'].each_value do |cg|
+          cg['subscription_groups'].each_value do |sg|
+            sg['instance_id'] = false
+          end
+        end
+
+        produce(reports_topic, report.to_json)
+
+        get 'consumers/shinra:1:1/subscriptions'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).not_to include('Static Membership ID')
+        # Tooltips for consumer group and subscription group should still be present
+        expect(body).to include('Consumer Group')
+        expect(body).to include('Subscription Group')
+      end
+    end
   end
 end

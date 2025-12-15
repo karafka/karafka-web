@@ -16,7 +16,7 @@ module Karafka
 
             # Finds requested broker
             #
-            # @param broker_id [String, Integer] id of the broker
+            # @param broker_id [String, Integer]
             # @return [Broker]
             # @raise [::Karafka::Web::Errors::Ui::NotFoundError]
             def find(broker_id)

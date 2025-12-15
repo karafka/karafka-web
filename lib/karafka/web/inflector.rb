@@ -13,7 +13,7 @@ module Karafka
 
       private_constant :MIGRATION_ABSPATH_REGEXP, :MIGRATION_BASENAME_REGEXP
 
-      # @param [String] basename of the file to be loaded
+      # @param basename [String] basename of the file to be loaded
       # @param abspath [String] absolute path of the file to be loaded
       # @return [String] Constant name to be used for given file
       def camelize(basename, abspath)

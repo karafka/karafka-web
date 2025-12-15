@@ -2,8 +2,20 @@
 <%# See LICENSE for details. %>
 
 <h2 class="h2 mb-3" id="<%= subscription_group.id %>">
-  <%= consumer_group.id %> /
-  <%= subscription_group.id %>
+  <span class="tooltip" data-tip="Consumer Group">
+    <%= consumer_group.id %>
+  </span>
+  /
+  <span class="tooltip" data-tip="Subscription Group">
+    <%= subscription_group.id %>
+  </span>
+
+  <% if subscription_group.instance_id %>
+    /
+    <span class="tooltip" data-tip="Static Membership ID (group.instance.id)">
+      <%= subscription_group.instance_id %>
+    </span>
+  <% end %>
 </h2>
 
 <div class="card-detail-container">

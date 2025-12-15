@@ -25,7 +25,7 @@ jobs:
       fail-fast: false
       matrix:
         ruby:
-          - '3.5.0-preview1'
+          - '4.0.0-preview2'
           - '3.4'
           - '3.3'
           - '3.2'
@@ -33,7 +33,7 @@ jobs:
           - ruby: '3.4'
             coverage: 'true'
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
 
@@ -41,7 +41,7 @@ jobs:
         run: "[ -e $APT_DEPS ] || sudo apt-get install -y --no-install-recommends $APT_DEPS"
 
       - name: Remove platform-specific entries for Ruby previews
-        if: contains(matrix.ruby, '3.5')
+        if: contains(matrix.ruby, 'preview')
         run: |
           ruby -i -ne 'puts $_ unless /^\s*ffi \(.*-.*\)$/' Gemfile.lock
           ruby -i -ne 'puts $_ unless /^\s*nokogiri \(.*-.*\)$/' Gemfile.lock
@@ -52,7 +52,7 @@ jobs:
           docker compose up -d || (sleep 5 && docker compose up -d)
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@ab177d40ee5483edb974554986f56b33477e21d0 # v1.265.0
+        uses: ruby/setup-ruby@d697be2f83c6234b20877c3b5eac7a7f342f0d0c # v1.269.0
         with:
           ruby-version: ${{matrix.ruby}}
           bundler-cache: true
@@ -90,7 +90,7 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
       - name: Download Coditsu script
@@ -116,10 +116,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: Set up Node.js
-        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
           node-version: '17'
           cache: npm
@@ -146,13 +146,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
 
       - name: Run integration tests
         run: bin/integrations
 
+  yard-lint:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@d697be2f83c6234b20877c3b5eac7a7f342f0d0c # v1.269.0
+        with:
+          ruby-version: '3.4.7'
+          bundler-cache: true
+
+      - name: Run yard-lint
+        run: bundle exec yard-lint lib/
 
   ci-success:
     name: CI Success
@@ -163,6 +177,7 @@ jobs:
       - specs
       - integrations
       - assets
+      - yard-lint
     steps:
       - name: Check all jobs passed
         if: |

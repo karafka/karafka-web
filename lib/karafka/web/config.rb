@@ -210,6 +210,12 @@ module Karafka
           # Cookie key name
           setting :key, default: '_karafka_session'
 
+          # Rack middleware session env key. We use independent key from "rack.session" here to
+          # prevent our data from leaking to the main app (when mounted) and the other way around.
+          # This also prevents us from overloading the session object with extra data that could
+          # cause it to go beyond a cookie limit.
+          setting :env_key, default: 'karafka.session'
+
           # Secret for the session cookie
           setting :secret, default: SecureRandom.hex(32)
         end

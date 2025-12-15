@@ -1,9 +1,16 @@
 # Karafka Web Changelog
 
-## 0.11.4 (Unreleased)
+## 0.11.6 (Unreleased)
+- [Enhancement] Report `group.instance.id` (static membership ID) per subscription group in consumer reports. This enables identifying consumers using Kafka's static group membership feature. The ID is displayed in the per-consumer subscription view header and in Health Overview below each process ID, making it easy to find a process by its static membership ID. Consumer schema version bumped to 1.6.0.
+- [Refactor] Refactor Status model into a DSL-based architecture with individual check classes. Each status check is now a separate class in `Karafka::Web::Ui::Models::Status::Checks` that declares its dependencies using `depends_on :check_name` DSL. Shared state is managed through a `Context` class, and the `Step` struct has been extracted to its own file. This improves maintainability, testability, and makes it easier to add new status checks in the future.
+
+## 0.11.5 (2025-11-14)
+- [Enhancement] Utilize newly released Roda session management `:env_key` to isolate Karafka Web session from the main application session.
+
+## 0.11.4 (2025-11-01)
 - [Enhancement] Show placeholder rows for partitions with no data during rebalances in health view. The UI now displays all topic partitions (0 to N-1) with "No data available" indicators for partitions currently being rebalanced, preventing confusion from disappearing partitions. Consumer reports now include `partitions_cnt` field extracted from librdkafka statistics. Consumer schema version bumped to 1.5.0 (breaking change).
 - [Enhancement] Track and report UI errors originating from Roda/Puma web processes directly to Kafka errors topic for visibility and debugging. UI errors are dispatched asynchronously from web processes using a dedicated listener.
-- [Enhancement] Require Karafka 2.5.1 at minimum and migrate from string-based execution mode comparisons to the new ExecutionMode object API.
+- [Enhancement] Require Karafka 2.5.2 at minimum and migrate from string-based execution mode comparisons to the new ExecutionMode object API.
 - [Enhancement] Increase Web UI processing consumer backoff time to 30 seconds when encountering incompatible schema errors to prevent error spam during rolling upgrades.
 - [Enhancement] Add unique `id` field to error reports to track duplicate error occurrences. Error schema version bumped to 1.2.0 while maintaining backward compatibility with older error formats (1.0.0, 1.1.0) in the Web UI.
 - [Enhancement] Add container-aware metrics collection for Docker/Kubernetes environments. The Web UI now reports accurate container memory limits from cgroups (v1 and v2) instead of misleading host metrics, while maintaining full backward compatibility with non-containerized deployments.

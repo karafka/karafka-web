@@ -10,11 +10,16 @@ module Karafka
             # Initializes the subscription group with defaults so it is always available
             # @param event [Karafka::Core::Monitoring::Event]
             def on_connection_listener_before_fetch_loop(event)
-              sg_id = event[:subscription_group].id
+              subscription_group = event[:subscription_group]
+              sg_id = subscription_group.id
+              # Use false to explicitly indicate static membership is not configured
+              # vs nil which could be ambiguous
+              instance_id = subscription_group.kafka[:'group.instance.id'] || false
 
               track do |sampler|
                 # This will initialize the hash upon first request
-                sampler.subscription_groups[sg_id]
+                sg = sampler.subscription_groups[sg_id]
+                sg[:instance_id] = instance_id
               end
             end
 

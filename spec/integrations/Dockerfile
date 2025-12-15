@@ -7,6 +7,7 @@ FROM ruby:3.4-slim
 RUN apt-get update && apt-get install -y \
   build-essential \
   git \
+  libyaml-dev \
   && rm -rf /var/lib/apt/lists/*
 
 # Configure git to trust mounted volumes
@@ -20,8 +21,7 @@ COPY lib/karafka/web/version.rb ./lib/karafka/web/
 
 # Install Ruby dependencies
 # Remove diffend plugin line to avoid configuration validation issues in Docker
-RUN sed -i "/plugin 'diffend'/d" Gemfile && \
-    bundle config set without 'development tools benchmarks docs' && \
+RUN bundle config set without 'development tools benchmarks docs' && \
     bundle install --jobs 4 --retry 3
 
 # Copy the rest of the application

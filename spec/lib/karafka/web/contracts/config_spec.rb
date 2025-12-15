@@ -56,6 +56,7 @@ RSpec.describe_current do
       ui: {
         sessions: {
           key: 'some_key',
+          env_key: 'some_key',
           secret: 'a' * 64
         },
         visibility: {
@@ -217,6 +218,12 @@ RSpec.describe_current do
     context 'when validating sessions related settings' do
       context 'when key is empty' do
         before { params[:ui][:sessions][:key] = '' }
+
+        it { expect(contract.call(params)).not_to be_success }
+      end
+
+      context 'when env_key is empty' do
+        before { params[:ui][:sessions][:env_key] = '' }
 
         it { expect(contract.call(params)).not_to be_success }
       end
