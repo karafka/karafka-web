@@ -1,0 +1,55 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<div class="mb-6">
+<% alert_box_warning('No Replication Redundancy') do %>
+  <div class="space-y-4">
+    <p>
+      This topic has a replication factor of <strong>1</strong>, meaning each partition exists on
+      only a single broker with <strong>no</strong> redundant copies.
+    </p>
+
+    <p>
+      <strong>Impact:</strong> If the broker hosting a partition fails, that partition becomes
+      completely unavailable. Any data not yet consumed will be <strong>permanently lost</strong>
+      and producers will be unable to write to affected partitions until the broker recovers.
+    </p>
+
+    <% if Karafka.env.production? %>
+      <p>
+        This is a <strong>critical issue</strong> for production workloads where data durability
+        and availability are essential.
+      </p>
+    <% else %>
+      <p>
+        While this configuration may be acceptable for development and testing, be aware that
+        this setup <strong>can cause data loss in production</strong>. Consider using production-like
+        settings in staging environments to catch such issues before deployment.
+      </p>
+    <% end %>
+
+    <p><strong>Recommended Actions:</strong></p>
+    <ul class="list-disc ml-6">
+      <li>
+        Increase the replication factor to at least <strong>2</strong> (preferably 3) to ensure
+        partition data is replicated across multiple brokers.
+      </li>
+      <li>
+        Set <code>min.insync.replicas</code> to at least <strong>2</strong> when using
+        <code>acks=all</code> to ensure writes are durably replicated before acknowledgment.
+      </li>
+    </ul>
+
+    <p class="mt-4 text-sm">
+      For more details, see the
+      <a
+        href="https://karafka.io/docs/Broker-Failures-and-Fault-Tolerance/#critical-configuration-replication-factor-and-mininsyncreplicas"
+        target="_blank"
+        class="link"
+      >
+        Broker Failures and Fault Tolerance</a>
+      documentation.
+    </p>
+  </div>
+<% end %>
+</div>

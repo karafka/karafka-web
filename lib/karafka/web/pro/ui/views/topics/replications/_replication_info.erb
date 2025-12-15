@@ -1,0 +1,54 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<div class="flex flex-wrap justify-center gap-4 mb-6">
+  <%==
+    partial(
+      'topics/replications/metric_box',
+      locals: {
+        title: 'Replication Factor',
+        content: badge_info(@replication_factor)
+      }
+    )
+  %>
+
+  <%==
+    partial(
+      'topics/replications/metric_box',
+      locals: {
+        title: 'Min In-Sync Replicas',
+        content: badge_info(@min_isr)
+      }
+    )
+  %>
+
+  <%==
+    partial(
+      'topics/replications/metric_box',
+      locals: {
+        title: 'Fault Tolerance',
+        content: @has_zero_fault_tolerance || @has_no_redundancy ? badge_warning('0 brokers') : badge_success("#{@replication_factor - @min_isr} broker(s)")
+      }
+    )
+  %>
+
+  <%==
+    partial(
+      'topics/replications/metric_box',
+      locals: {
+        title: 'Environment',
+        content: Karafka.env.production? ? badge_error('production') : badge_info(Karafka.env.to_s)
+      }
+    )
+  %>
+</div>
+
+<% if @has_no_redundancy %>
+  <%== partial 'topics/replications/warning_no_redundancy' %>
+<% elsif @has_zero_fault_tolerance %>
+  <%== partial 'topics/replications/warning_zero_fault_tolerance' %>
+<% elsif @has_low_durability %>
+  <%== partial 'topics/replications/warning_low_durability' %>
+<% else %>
+  <%== partial 'topics/replications/resilience_success' %>
+<% end %>
