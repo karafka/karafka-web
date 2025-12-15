@@ -2,7 +2,7 @@
 
 ## 0.11.6 (Unreleased)
 - [Enhancement] Report `group.instance.id` (static membership ID) per subscription group in consumer reports. This enables identifying consumers using Kafka's static group membership feature. The ID is displayed in the per-consumer subscription view header and in Health Overview below each process ID, making it easy to find a process by its static membership ID. Consumer schema version bumped to 1.6.0.
-- [Enhancement] Display `min.insync.replicas` alongside replication factor on the topic replication page with fault tolerance indicators (Pro). Shows warning when RF ≤ minISR (zero fault tolerance) and success message when properly configured. Helps users identify misconfigured topics that would cause outages during broker maintenance.
+- [Enhancement] Display `min.insync.replicas` alongside replication factor on the topic replication page with fault tolerance indicators (Pro). Shows specific warnings for different resilience issues: no redundancy (RF=1), zero fault tolerance (RF ≤ minISR), and low durability (minISR=1). Each warning includes impact details, environment-aware severity messaging, and recommended actions. Helps users identify misconfigured topics that would cause outages or data loss.
 - [Refactor] Refactor Status model into a DSL-based architecture with individual check classes. Each status check is now a separate class in `Karafka::Web::Ui::Models::Status::Checks` that declares its dependencies using `depends_on :check_name` DSL. Shared state is managed through a `Context` class, and the `Step` struct has been extracted to its own file. This improves maintainability, testability, and makes it easier to add new status checks in the future.
 
 ## 0.11.5 (2025-11-14)
