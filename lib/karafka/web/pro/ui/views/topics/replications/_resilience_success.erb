@@ -4,7 +4,7 @@
 <div class="mb-6">
 <% alert_box_success('Replication Configuration is Fault Tolerant') do %>
   <p>
-    This topic can tolerate up to <strong><%= @replication_factor - @min_isr %> broker failure(s)</strong>
+    This topic can tolerate up to <strong><%= @replication_factor - @min_isr %></strong> broker failure(s)
     while maintaining write availability. With a replication factor of <strong><%= @replication_factor %></strong>
     and <code>min.insync.replicas</code> set to <strong><%= @min_isr %></strong>, your data remains
     available even during broker maintenance or unexpected outages.

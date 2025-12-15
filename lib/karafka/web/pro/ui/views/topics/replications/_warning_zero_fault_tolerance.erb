@@ -5,9 +5,9 @@
 <% alert_box_warning('Replication Resilience Issue Detected') do %>
   <div class="space-y-4">
     <p>
-      This topic has a <strong>replication factor of <%= @replication_factor %></strong> and
+      This topic has a replication factor of <strong><%= @replication_factor %></strong> and
       <code>min.insync.replicas</code> set to <strong><%= @min_isr %></strong>.
-      When these values are equal, your Kafka setup has <strong>zero fault tolerance</strong>.
+      When these values are equal, your Kafka setup has <strong>zero</strong> fault tolerance.
     </p>
 
     <p>
@@ -32,20 +32,23 @@
     <p><strong>Recommended Actions:</strong></p>
     <ul class="list-disc ml-6">
       <li>
-        <code>min.insync.replicas</code> should always be <strong>at least one less</strong>
+        <code>min.insync.replicas</code> should always be at least <strong>one</strong> less
         than the replication factor to maintain write availability during broker failures.
       </li>
       <li>
-        For production workloads, consider using a <strong>replication factor of 3 or higher</strong>
+        For production workloads, consider using a replication factor of <strong>3</strong> or higher
         with <code>min.insync.replicas</code> of <strong>2</strong>.
       </li>
     </ul>
 
     <p class="mt-4 text-sm">
       For more details, see the
-      <a href="https://karafka.io/docs/Broker-Failures-and-Fault-Tolerance/#critical-configuration-replication-factor-and-mininsyncreplicas" target="_blank" class="link">
-        Broker Failures and Fault Tolerance
-      </a>
+      <a
+        href="https://karafka.io/docs/Broker-Failures-and-Fault-Tolerance/#critical-configuration-replication-factor-and-mininsyncreplicas"
+        target="_blank"
+        class="link"
+      >
+        Broker Failures and Fault Tolerance</a>
       documentation.
     </p>
   </div>

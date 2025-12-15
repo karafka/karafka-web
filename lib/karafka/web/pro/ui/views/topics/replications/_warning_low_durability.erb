@@ -11,20 +11,20 @@
 
     <p>
       <strong>Impact:</strong> When using <code>acks=all</code>, messages are acknowledged as soon as
-      the leader replica receives them, <strong>before replication to followers completes</strong>.
+      the leader replica receives them, <strong>before</strong> replication to followers completes.
       If the leader broker fails immediately after acknowledging a write, that data may be
-      <strong>permanently lost</strong> even though the producer received a success confirmation.
+      <strong>permanently</strong> lost even though the producer received a success confirmation.
     </p>
 
     <% if Karafka.env.production? %>
       <p>
-        This configuration <strong>does not guarantee data durability</strong> and should be
+        This configuration <strong>does not</strong> guarantee data durability and should be
         reviewed for production workloads where data loss is unacceptable.
       </p>
     <% else %>
       <p>
         While this configuration may be acceptable for development and testing, be aware that
-        <strong>this setup risks data loss in production</strong>. Consider using production-like
+        this setup <strong>risks</strong> data loss in production. Consider using production-like
         settings in staging environments to catch such issues before deployment.
       </p>
     <% end %>
@@ -32,7 +32,7 @@
     <p><strong>Recommended Actions:</strong></p>
     <ul class="list-disc ml-6">
       <li>
-        Increase <code>min.insync.replicas</code> to <strong>at least 2</strong> to ensure
+        Increase <code>min.insync.replicas</code> to at least <strong>2</strong> to ensure
         messages are replicated to multiple brokers before acknowledgment.
       </li>
       <li>
@@ -43,9 +43,12 @@
 
     <p class="mt-4 text-sm">
       For more details, see the
-      <a href="https://karafka.io/docs/Broker-Failures-and-Fault-Tolerance/#critical-configuration-replication-factor-and-mininsyncreplicas" target="_blank" class="link">
-        Broker Failures and Fault Tolerance
-      </a>
+      <a
+        href="https://karafka.io/docs/Broker-Failures-and-Fault-Tolerance/#critical-configuration-replication-factor-and-mininsyncreplicas"
+        target="_blank"
+        class="link"
+      >
+        Broker Failures and Fault Tolerance</a>
       documentation.
     </p>
   </div>

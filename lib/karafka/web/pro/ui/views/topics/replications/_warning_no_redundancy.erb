@@ -5,8 +5,8 @@
 <% alert_box_warning('No Replication Redundancy') do %>
   <div class="space-y-4">
     <p>
-      This topic has a <strong>replication factor of 1</strong>, meaning each partition exists on
-      only a single broker with <strong>no redundant copies</strong>.
+      This topic has a replication factor of <strong>1</strong>, meaning each partition exists on
+      only a single broker with <strong>no</strong> redundant copies.
     </p>
 
     <p>
@@ -23,7 +23,7 @@
     <% else %>
       <p>
         While this configuration may be acceptable for development and testing, be aware that
-        <strong>this setup would cause data loss in production</strong>. Consider using production-like
+        this setup <strong>can cause data loss in production</strong>. Consider using production-like
         settings in staging environments to catch such issues before deployment.
       </p>
     <% end %>
@@ -31,20 +31,23 @@
     <p><strong>Recommended Actions:</strong></p>
     <ul class="list-disc ml-6">
       <li>
-        Increase the replication factor to <strong>at least 2</strong> (preferably 3) to ensure
+        Increase the replication factor to at least <strong>2</strong> (preferably 3) to ensure
         partition data is replicated across multiple brokers.
       </li>
       <li>
-        Set <code>min.insync.replicas</code> to <strong>at least 2</strong> when using
+        Set <code>min.insync.replicas</code> to at least <strong>2</strong> when using
         <code>acks=all</code> to ensure writes are durably replicated before acknowledgment.
       </li>
     </ul>
 
     <p class="mt-4 text-sm">
       For more details, see the
-      <a href="https://karafka.io/docs/Broker-Failures-and-Fault-Tolerance/#critical-configuration-replication-factor-and-mininsyncreplicas" target="_blank" class="link">
-        Broker Failures and Fault Tolerance
-      </a>
+      <a
+        href="https://karafka.io/docs/Broker-Failures-and-Fault-Tolerance/#critical-configuration-replication-factor-and-mininsyncreplicas"
+        target="_blank"
+        class="link"
+      >
+        Broker Failures and Fault Tolerance</a>
       documentation.
     </p>
   </div>
