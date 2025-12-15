@@ -41,8 +41,8 @@ module Karafka
               # Selects all incoming command requests that match the given consumer group and topic
               # and iterates over them. It removes selected requests during iteration.
               #
-              # @param consumer_group_id [String] id of the consumer group
-              # @param topic [String] name of the topic
+              # @param consumer_group_id [String]
+              # @param topic [String]
               #
               # @yieldparam [Request] given command request
               def each_for(consumer_group_id, topic, &)

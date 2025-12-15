@@ -46,7 +46,7 @@
     <%= process.lag_hybrid %>
   </td>
 
-  <td class="commands-inline-3">
+  <td class="options">
     <%
       trace_path = consumers_path('commanding', process.id, 'trace')
       disabled_class = process.status != 'stopped' ? '' : 'btn-disabled'
