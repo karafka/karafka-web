@@ -113,5 +113,96 @@ RSpec.describe_current do
         end
       end
     end
+
+    context 'when replication factor equals min.insync.replicas (zero fault tolerance)' do
+      let(:partitions_data) { [{ replica_count: 2, leader: 1, in_sync_replica_brokers: '1,2' }] }
+      let(:mock_topic) { double('Topic', topic_name: topic) }
+      let(:mock_config) { double('Config', name: 'min.insync.replicas', value: '2') }
+
+      before do
+        allow(mock_topic).to receive(:[]) do |key|
+          case key
+          when :partitions then partitions_data
+          when :topic_name then topic
+          end
+        end
+        allow(mock_topic).to receive(:configs).and_return([mock_config])
+        allow(Karafka::Web::Ui::Models::Topic).to receive(:find).with(topic).and_return(mock_topic)
+        allow(Karafka.env).to receive(:production?).and_return(true)
+        get "topics/#{topic}/replication"
+      end
+
+      it 'displays the zero fault tolerance warning' do
+        expect(response).to be_ok
+        expect(body).to include('Replication Resilience Issue Detected')
+        expect(body).to include('zero fault tolerance')
+        expect(body).to include('replication factor of 2')
+        expect(body).to include('at least one less')
+      end
+
+      it 'shows fault tolerance as 0 brokers' do
+        expect(body).to include('0 brokers')
+      end
+    end
+
+    context 'when min.insync.replicas is 1 with higher replication factor (low durability)' do
+      let(:partitions_data) { [{ replica_count: 3, leader: 1, in_sync_replica_brokers: '1,2,3' }] }
+      let(:mock_topic) { double('Topic', topic_name: topic) }
+      let(:mock_config) { double('Config', name: 'min.insync.replicas', value: '1') }
+
+      before do
+        allow(mock_topic).to receive(:[]) do |key|
+          case key
+          when :partitions then partitions_data
+          when :topic_name then topic
+          end
+        end
+        allow(mock_topic).to receive(:configs).and_return([mock_config])
+        allow(Karafka::Web::Ui::Models::Topic).to receive(:find).with(topic).and_return(mock_topic)
+        allow(Karafka.env).to receive(:production?).and_return(true)
+        get "topics/#{topic}/replication"
+      end
+
+      it 'displays the low durability warning' do
+        expect(response).to be_ok
+        expect(body).to include('Low Data Durability Configuration')
+        expect(body).to include('set to')
+        expect(body).to include('replication factor of')
+        expect(body).to include('before replication to followers completes')
+        expect(body).to include('permanently lost')
+      end
+
+      it 'shows positive fault tolerance' do
+        expect(body).to include('2 broker(s)')
+      end
+    end
+
+    context 'when configuration is healthy (RF > minISR and minISR > 1)' do
+      let(:partitions_data) { [{ replica_count: 3, leader: 1, in_sync_replica_brokers: '1,2,3' }] }
+      let(:mock_topic) { double('Topic', topic_name: topic) }
+      let(:mock_config) { double('Config', name: 'min.insync.replicas', value: '2') }
+
+      before do
+        allow(mock_topic).to receive(:[]) do |key|
+          case key
+          when :partitions then partitions_data
+          when :topic_name then topic
+          end
+        end
+        allow(mock_topic).to receive(:configs).and_return([mock_config])
+        allow(Karafka::Web::Ui::Models::Topic).to receive(:find).with(topic).and_return(mock_topic)
+        get "topics/#{topic}/replication"
+      end
+
+      it 'displays the success message' do
+        expect(response).to be_ok
+        expect(body).to include('Replication Configuration is Fault Tolerant')
+        expect(body).to include('1 broker failure')
+      end
+
+      it 'shows positive fault tolerance' do
+        expect(body).to include('1 broker(s)')
+      end
+    end
   end
 end
