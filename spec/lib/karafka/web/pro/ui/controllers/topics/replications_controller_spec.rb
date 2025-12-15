@@ -37,6 +37,12 @@ RSpec.describe_current do
         expect(body).to include('Leader')
         expect(body).to include('0') # First partition
       end
+
+      it 'displays replication settings cards' do
+        expect(body).to include('Replication Factor')
+        expect(body).to include('Min In-Sync Replicas')
+        expect(body).to include('Fault Tolerance')
+      end
     end
 
     context 'when topic has multiple partitions' do
@@ -58,6 +64,53 @@ RSpec.describe_current do
         expect(body).to include('Replica Count')
         expect(body).to include('In Sync Brokers')
         expect(body).to include('Leader')
+      end
+    end
+
+    context 'when replication factor equals min.insync.replicas' do
+      # In the test environment, RF=1 and minISR=1 by default (single broker setup)
+      # This triggers the resilience warning condition
+
+      context 'when in production environment' do
+        before do
+          allow(Karafka.env).to receive(:production?).and_return(true)
+          get "topics/#{topic}/replication"
+        end
+
+        it 'displays the resilience warning with production severity' do
+          expect(response).to be_ok
+          expect(body).to include('Replication Resilience Issue Detected')
+          expect(body).to include('zero fault tolerance')
+          expect(body).to include('at least one less')
+          expect(body).to include('Broker Failures and Fault Tolerance')
+          expect(body).to include('critical issue')
+          expect(body).to include('addressed immediately')
+        end
+
+        it 'shows fault tolerance as 0 brokers' do
+          expect(body).to include('0 brokers')
+        end
+      end
+
+      context 'when not in production environment' do
+        before do
+          allow(Karafka.env).to receive(:production?).and_return(false)
+          get "topics/#{topic}/replication"
+        end
+
+        it 'displays the resilience warning with development context' do
+          expect(response).to be_ok
+          expect(body).to include('Replication Resilience Issue Detected')
+          expect(body).to include('zero fault tolerance')
+          expect(body).to include('acceptable for development')
+          expect(body).to include('would cause outages in production')
+        end
+
+        it 'still displays the replication settings cards' do
+          expect(body).to include('Replication Factor')
+          expect(body).to include('Min In-Sync Replicas')
+          expect(body).to include('Fault Tolerance')
+        end
       end
     end
   end
