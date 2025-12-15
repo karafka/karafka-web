@@ -6,36 +6,41 @@
 RSpec.describe_current do
   subject(:tracker) { described_class.instance }
 
-  let(:subscription_group_id) { SecureRandom.uuid }
-  let(:command) { build_command(subscription_group_id) }
+  let(:consumer_group_id) { SecureRandom.uuid }
+  let(:topic) { SecureRandom.uuid }
+  let(:command) { build_command(consumer_group_id, topic) }
 
   # Helper to build command with proper structure
-  def build_command(group_id)
+  def build_command(group_id, topic_name)
     instance_double(
       Karafka::Web::Pro::Commanding::Request,
-      to_h: { subscription_group_id: group_id },
-      '[]': group_id
-    )
+      to_h: { consumer_group_id: group_id, topic: topic_name },
+      '[]': ->(key) { { consumer_group_id: group_id, topic: topic_name }[key] }
+    ).tap do |cmd|
+      allow(cmd).to receive(:[]) do |key|
+        { consumer_group_id: group_id, topic: topic_name }[key]
+      end
+    end
   end
 
   describe '#<<' do
     it 'adds command to the tracker' do
       tracker << command
 
-      tracker.each_for(subscription_group_id) do |stored_command|
+      tracker.each_for(consumer_group_id, topic) do |stored_command|
         expect(stored_command).to eq(command)
       end
     end
 
-    context 'when adding multiple commands for same group' do
-      let(:command2) { build_command(subscription_group_id) }
+    context 'when adding multiple commands for same group and topic' do
+      let(:command2) { build_command(consumer_group_id, topic) }
 
       it 'preserves order of commands' do
         commands = []
         tracker << command
         tracker << command2
 
-        tracker.each_for(subscription_group_id) do |stored_command|
+        tracker.each_for(consumer_group_id, topic) do |stored_command|
           commands << stored_command
         end
 
@@ -43,16 +48,33 @@ RSpec.describe_current do
       end
     end
 
-    context 'when adding commands for different groups' do
+    context 'when adding commands for different consumer groups' do
       let(:other_group_id) { SecureRandom.uuid }
-      let(:other_command) { build_command(other_group_id) }
+      let(:other_command) { build_command(other_group_id, topic) }
 
-      it 'keeps commands separated by group' do
+      it 'keeps commands separated by consumer group' do
         tracker << command
         tracker << other_command
 
         commands = []
-        tracker.each_for(subscription_group_id) do |stored_command|
+        tracker.each_for(consumer_group_id, topic) do |stored_command|
+          commands << stored_command
+        end
+
+        expect(commands).to eq([command])
+      end
+    end
+
+    context 'when adding commands for different topics' do
+      let(:other_topic) { SecureRandom.uuid }
+      let(:other_command) { build_command(consumer_group_id, other_topic) }
+
+      it 'keeps commands separated by topic' do
+        tracker << command
+        tracker << other_command
+
+        commands = []
+        tracker.each_for(consumer_group_id, topic) do |stored_command|
           commands << stored_command
         end
 
@@ -64,27 +86,33 @@ RSpec.describe_current do
   describe '#each_for' do
     before { tracker << command }
 
-    it 'yields each command for given subscription group' do
-      expect { |b| tracker.each_for(subscription_group_id, &b) }
+    it 'yields each command for given consumer group and topic' do
+      expect { |b| tracker.each_for(consumer_group_id, topic, &b) }
         .to yield_with_args(command)
     end
 
     it 'removes processed commands after iteration' do
-      tracker.each_for(subscription_group_id) { nil }
+      tracker.each_for(consumer_group_id, topic) { nil }
 
       commands = []
-      tracker.each_for(subscription_group_id) do |cmd|
+      tracker.each_for(consumer_group_id, topic) do |cmd|
         commands << cmd
       end
 
       expect(commands).to be_empty
     end
 
-    context 'when no commands exist for group' do
+    context 'when no commands exist for consumer group and topic' do
       let(:non_existent_group) { SecureRandom.uuid }
+      let(:non_existent_topic) { SecureRandom.uuid }
 
-      it 'yields nothing' do
-        expect { |b| tracker.each_for(non_existent_group, &b) }
+      it 'yields nothing for non-existent consumer group' do
+        expect { |b| tracker.each_for(non_existent_group, topic, &b) }
+          .not_to yield_control
+      end
+
+      it 'yields nothing for non-existent topic' do
+        expect { |b| tracker.each_for(consumer_group_id, non_existent_topic, &b) }
           .not_to yield_control
       end
     end
@@ -97,8 +125,8 @@ RSpec.describe_current do
         threads = Array.new(threads_count) do
           Thread.new do
             iterations.times do
-              tracker << build_command(subscription_group_id)
-              tracker.each_for(subscription_group_id) { nil }
+              tracker << build_command(consumer_group_id, topic)
+              tracker.each_for(consumer_group_id, topic) { nil }
             end
           end
         end

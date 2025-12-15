@@ -59,4 +59,60 @@ RSpec.describe_current do
 
     it { expect(matcher.matches?(message)).to be false }
   end
+
+  context 'when command has consumer_group_id' do
+    let(:message_key) { '*' }
+    let(:consumer_group) { instance_double('ConsumerGroup', id: 'my_consumer_group') }
+
+    before do
+      allow(Karafka::App).to receive(:routes).and_return([consumer_group])
+    end
+
+    context 'when consumer_group_id matches a local consumer group' do
+      let(:message_payload) do
+        {
+          type: 'request',
+          schema_version: schema_version,
+          command: { consumer_group_id: 'my_consumer_group' }
+        }
+      end
+
+      it { expect(matcher.matches?(message)).to be true }
+    end
+
+    context 'when consumer_group_id does not match any local consumer group' do
+      let(:message_payload) do
+        {
+          type: 'request',
+          schema_version: schema_version,
+          command: { consumer_group_id: 'other_consumer_group' }
+        }
+      end
+
+      it { expect(matcher.matches?(message)).to be false }
+    end
+
+    context 'when command does not have consumer_group_id' do
+      let(:message_payload) do
+        {
+          type: 'request',
+          schema_version: schema_version,
+          command: { name: 'probe' }
+        }
+      end
+
+      it { expect(matcher.matches?(message)).to be true }
+    end
+
+    context 'when payload has no command key' do
+      let(:message_payload) do
+        {
+          type: 'request',
+          schema_version: schema_version
+        }
+      end
+
+      it { expect(matcher.matches?(message)).to be true }
+    end
+  end
 end
