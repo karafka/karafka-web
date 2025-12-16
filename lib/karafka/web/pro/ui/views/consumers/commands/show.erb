@@ -9,9 +9,6 @@
 
     <%== partial 'consumers/consumers/tabs' %>
 
-    <% metadata_partial = command[:type] == 'request' ? 'metadata/request' : 'metadata/response' %>
-    <%== partial "consumers/commands/#{metadata_partial}", locals: { command: command } %>
-
     <%== partial "consumers/commands/details/#{command[:type]}", locals: { command: command } %>
   <% else %>
     <% view_title 'Incompatible Command Schema' %>

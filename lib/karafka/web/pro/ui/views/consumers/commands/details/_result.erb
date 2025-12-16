@@ -1,6 +1,8 @@
 <%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
 <%# See LICENSE for details. %>
 
+<%== partial 'consumers/commands/metadata/response', locals: { command: command } %>
+
 <% if command[:command][:name] == 'consumers.trace' %>
   <h2 class="h2">Backtraces</h2>
 
