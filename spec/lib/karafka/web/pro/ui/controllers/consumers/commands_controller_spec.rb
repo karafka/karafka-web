@@ -89,7 +89,7 @@ RSpec.describe_current do
             quiet
           ].each do |type|
             data = Fixtures.consumers_commands_json(
-              "consumers/v1.1.0_#{type}",
+              "consumers/v1.2.0_#{type}",
               symbolize_names: false
             )
             id = ['*', SecureRandom.uuid].sample
@@ -168,7 +168,7 @@ RSpec.describe_current do
           topics_config.consumers.commands.name = commands_topic
           produce(
             commands_topic,
-            Fixtures.consumers_commands_file("consumers/v1.1.0_#{command}.json")
+            Fixtures.consumers_commands_file("consumers/v1.2.0_#{command}.json")
           )
           get 'consumers/commands/0'
         end
@@ -213,7 +213,7 @@ RSpec.describe_current do
         topics_config.consumers.commands.name = commands_topic
         produce(
           commands_topic,
-          Fixtures.consumers_commands_file('consumers/v1.1.0_trace_result.json')
+          Fixtures.consumers_commands_file('consumers/v1.2.0_trace_result.json')
         )
         get 'consumers/commands/0'
       end
