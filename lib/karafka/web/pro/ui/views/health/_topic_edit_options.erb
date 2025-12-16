@@ -11,8 +11,7 @@
     # Check if any partition is paused (for showing Resume All button)
     has_paused = partitions.values.any? { |p| p.poll_state != 'active' }
 
-    pause_path = root_path(
-      'consumers',
+    pause_path = consumers_path(
       'topics',
       consumer_group_name,
       topic_name,
@@ -20,8 +19,7 @@
       'new'
     )
 
-    resume_path = root_path(
-      'consumers',
+    resume_path = consumers_path(
       'topics',
       consumer_group_name,
       topic_name,

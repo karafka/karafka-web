@@ -4,8 +4,7 @@
 <div class="card bg-base-100 mt-4">
   <div class="card-body">
     <%
-      update_path = root_path(
-        'consumers',
+      update_path = consumers_path(
         'partitions',
         @consumer_group_id,
         @topic,

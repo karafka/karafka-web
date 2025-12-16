@@ -95,7 +95,7 @@ module Karafka
                     controller.pending(process_id)
                   end
 
-                  r.redirect root_path("consumers/#{process_id}/jobs/running")
+                  r.redirect consumers_path(process_id, 'jobs/running')
                 end
 
                 r.get 'controls' do
@@ -146,7 +146,7 @@ module Karafka
                   end
                 end
 
-                r.redirect root_path('consumers/overview')
+                r.redirect consumers_path('overview')
               end
             end
           end
