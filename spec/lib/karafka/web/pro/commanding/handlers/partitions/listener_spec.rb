@@ -40,9 +40,8 @@ RSpec.describe_current do
   let(:client) { instance_double(Karafka::Connection::Client) }
   let(:command) { instance_double(Karafka::Web::Pro::Commanding::Request) }
 
-  # Mock rdkafka partition - using double since Rdkafka is external
   let(:rdkafka_partition) do
-    double(partition: partition_id)
+    instance_double(Rdkafka::Consumer::Partition, partition: partition_id)
   end
 
   let(:assignments) do
@@ -59,7 +58,7 @@ RSpec.describe_current do
       .and_return(executor)
 
     allow(client).to receive(:assignment).and_return(
-      double(to_h: assignments)
+      instance_double(Rdkafka::Consumer::TopicPartitionList, to_h: assignments)
     )
   end
 
@@ -97,7 +96,7 @@ RSpec.describe_current do
     context 'with multiple partitions assigned' do
       let(:partition2_id) { 1 }
       let(:rdkafka_partition2) do
-        double(partition: partition2_id)
+        instance_double(Rdkafka::Consumer::Partition, partition: partition2_id)
       end
 
       let(:assignments) do
