@@ -26,21 +26,22 @@
       <tr>
         <td>Matchers</td>
         <td>
-          <% if command[:type] == 'request' %>
-            <% matchers = command[:matchers] || {} %>
-            <% if matchers.empty? %>
-              <%== badge_secondary '*' %>
-            <% else %>
-              <% matchers.each do |key, value| %>
-                <% label = "#{key}:#{value}" %>
-                <%== badge_secondary label %>
-              <% end %>
-            <% end %>
+          <% matchers = command[:matchers] || {} %>
+          <% process_id = command[:process] && command[:process][:id] %>
+          <% if matchers.empty? && process_id.nil? %>
+            <%== badge_secondary '*' %>
           <% else %>
-            <% process_id = command[:process][:id] %>
-            <a href="<%= consumer_path(process_id, 'subscriptions') %>">
-              <%== badge_secondary "process_id:#{process_id}" %>
-            </a>
+            <% matchers.each do |key, value| %>
+              <% label = "#{key}:#{value}" %>
+              <%== badge_secondary label %>
+            <% end %>
+            <% if process_id && process_id != '*' %>
+              <a href="<%= consumer_path(process_id, 'subscriptions') %>">
+                <%== badge_secondary "process_id:#{process_id}" %>
+              </a>
+            <% elsif process_id == '*' && matchers.empty? %>
+              <%== badge_secondary '*' %>
+            <% end %>
           <% end %>
         </td>
       </tr>

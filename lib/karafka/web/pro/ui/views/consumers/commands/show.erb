@@ -9,7 +9,8 @@
 
     <%== partial 'consumers/consumers/tabs' %>
 
-    <%== partial 'consumers/commands/metadata', locals: { command: command } %>
+    <% metadata_partial = command[:type] == 'request' ? 'metadata/request' : 'metadata/response' %>
+    <%== partial "consumers/commands/#{metadata_partial}", locals: { command: command } %>
 
     <%== partial "consumers/commands/details/#{command[:type]}", locals: { command: command } %>
   <% else %>

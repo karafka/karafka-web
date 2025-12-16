@@ -1,0 +1,37 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<h2 class="h2">
+  Metadata
+</h2>
+
+<div class="data-table-wrapper">
+  <table class="data-table">
+    <tbody>
+      <tr>
+        <td>Type</td>
+        <td><%== command[:type] %></td>
+      </tr>
+
+      <tr>
+        <td>Name</td>
+        <td><%== command[:command][:name] %></td>
+      </tr>
+
+      <tr>
+        <td>Dispatched</td>
+        <td><%== relative_time command[:dispatched_at] %></td>
+      </tr>
+
+      <tr>
+        <td>Process</td>
+        <td>
+          <% process_id = command[:process][:id] %>
+          <a href="<%= consumer_path(process_id, 'subscriptions') %>">
+            <%== badge_secondary process_id %>
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
