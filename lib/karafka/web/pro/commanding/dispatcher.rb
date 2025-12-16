@@ -23,15 +23,14 @@ module Karafka
             #   process
             # @param params [Hash] hash with extra command params that some commands may use.
             # @param matchers [Hash] hash with matching criteria for filtering which processes
-            #   should handle this command. Supported keys:
-            #   - :process_id [String] - only this specific process
-            #   - :consumer_group_id [String] - only processes with this consumer group
-            #   - :topic [String] - only processes consuming this topic
+            #   should handle this command.
             def request(command_name, params = {}, matchers: {})
               produce_request(
                 {
                   schema_version: SCHEMA_VERSION,
                   type: 'request',
+                  # UUID to uniquely identify this command instance
+                  id: SecureRandom.uuid,
                   # Name is auto-generated and required. Should not be changed
                   command: params.merge(name: command_name),
                   dispatched_at: Time.now.to_f,

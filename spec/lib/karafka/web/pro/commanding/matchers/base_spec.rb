@@ -4,7 +4,16 @@
 # See LICENSE for details.
 
 RSpec.describe_current do
-  subject(:matcher) { described_class.new('test_value') }
+  subject(:matcher) { described_class.new(message) }
+
+  let(:message) do
+    instance_double(
+      Karafka::Messages::Message,
+      key: '*',
+      payload: { schema_version: '1.2.0', matchers: {} },
+      headers: { 'type' => 'request' }
+    )
+  end
 
   describe '#matches?' do
     it 'raises NotImplementedError' do

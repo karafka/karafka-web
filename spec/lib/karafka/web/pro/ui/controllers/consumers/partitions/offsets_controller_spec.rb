@@ -8,8 +8,7 @@ RSpec.describe_current do
 
   let(:states_topic) { create_topic }
   let(:reports_topic) { create_topic }
-  let(:process_id) { 'shinra:1:1' }
-  let(:subscription_group_id) { 'c4ca4238a0b9_0' }
+  let(:consumer_group_id) { 'example_app6_app' }
   let(:topic_name) { 'default' }
   let(:partition_id) { 0 }
   let(:commands_topic) { create_topic }
@@ -28,9 +27,8 @@ RSpec.describe_current do
     let(:edit_path) do
       [
         'consumers',
-        process_id,
         'partitions',
-        subscription_group_id,
+        consumer_group_id,
         topic_name,
         partition_id,
         'offset',
@@ -40,11 +38,10 @@ RSpec.describe_current do
 
     before { get(edit_path) }
 
-    context 'when the process exists and is running' do
+    context 'when a process exists and is running' do
       it 'expect to include relevant details' do
         expect(response).to be_ok
-        expect(body).to include(process_id)
-        expect(body).to include(subscription_group_id)
+        expect(body).to include(consumer_group_id)
         expect(body).to include(topic_name)
         expect(body).to include(partition_id.to_s)
         expect(body).to include('New Offset:')
@@ -52,10 +49,8 @@ RSpec.describe_current do
         expect(body).to include('Resume Immediately:')
         expect(body).to include('checkbox')
         expect(body).to include('Adjust Offset')
-        expect(body).to include('Consumers')
         expect(body).to include(form)
-        expect(body).to include('Offsets')
-        expect(body).to include('Edit')
+        expect(body).to include('Offset Edit')
         expect(body).to include('High Offset:')
         expect(body).to include('Low Offset:')
         expect(body).to include('EOF Offset:')
@@ -69,14 +64,8 @@ RSpec.describe_current do
       end
     end
 
-    context 'when process does not exist' do
-      let(:process_id) { 'not-existing' }
-
-      it { expect(status).to eq(404) }
-    end
-
-    context 'when subscription_group is not correct' do
-      let(:subscription_group_id) { 'not-existing' }
+    context 'when consumer group does not exist' do
+      let(:consumer_group_id) { 'not-existing' }
 
       it { expect(status).to eq(404) }
     end
@@ -87,13 +76,13 @@ RSpec.describe_current do
       it { expect(status).to eq(404) }
     end
 
-    context 'when partition is not assigned to this process' do
+    context 'when partition does not exist' do
       let(:partition_id) { 100 }
 
       it { expect(status).to eq(404) }
     end
 
-    context 'when process exists but is not running' do
+    context 'when no process is running' do
       before do
         report = Fixtures.consumers_reports_json
         report[:process][:status] = 'stopped'
@@ -118,9 +107,8 @@ RSpec.describe_current do
     let(:post_path) do
       [
         'consumers',
-        process_id,
         'partitions',
-        subscription_group_id,
+        consumer_group_id,
         topic_name,
         partition_id,
         'offset'
@@ -136,33 +124,38 @@ RSpec.describe_current do
       )
     end
 
-    it do
+    it 'expect to redirect with success message' do
       expect(response.status).to eq(302)
       # Taken from referer and referer is nil in specs
-      expect(response.location).to eq('/')
       expect(flash[:success]).to include("Initiated offset adjustment to #{offset}")
     end
 
-    it 'expect to create new command in the given topic with process_id reference' do
+    it 'expect to create new command in the given topic with matchers' do
       # Dispatch of commands is async, so we have to wait
       sleep(1)
       message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
 
-      expect(message.key).to eq(process_id)
-      expect(message.payload[:schema_version]).to eq('1.1.0')
+      # Commands are broadcast to all processes, so no key
+      expect(message.key).to be_nil
+      expect(message.payload[:schema_version]).to eq('1.2.0')
       expect(message.payload[:type]).to eq('request')
+      expect(message.payload[:id]).to match(/\A[0-9a-f-]{36}\z/)
       expect(message.payload[:dispatched_at]).not_to be_nil
 
       command = message.payload.fetch(:command)
 
-      expect(command[:subscription_group_id]).to eq(subscription_group_id)
-      expect(command[:consumer_group_id]).to eq('example_app6_app')
+      expect(command[:consumer_group_id]).to eq(consumer_group_id)
       expect(command[:topic]).to eq(topic_name)
       expect(command[:partition_id]).to eq(0)
       expect(command[:offset]).to eq(offset)
       expect(command[:prevent_overtaking]).to be(false)
       expect(command[:force_resume]).to be(true)
       expect(command[:name]).to eq('partitions.seek')
+
+      matchers = message.payload.fetch(:matchers)
+      expect(matchers[:consumer_group_id]).to eq(consumer_group_id)
+      expect(matchers[:topic]).to eq(topic_name)
+      expect(matchers[:partition_id]).to eq(partition_id)
     end
   end
 end

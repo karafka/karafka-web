@@ -59,13 +59,17 @@ RSpec.describe_current do
 
     context 'when a process exists, is running but topic is lrj' do
       before do
-        Karafka::App.routes.each do |cg|
-          next unless cg.id == consumer_group_id
+        # Capture let values for use inside routes.draw block
+        cg_id = consumer_group_id
+        t_name = topic_name
 
-          cg.topics.each do |topic|
-            next unless topic.name == topic_name
-
-            allow(topic).to receive(:long_running_job?).and_return(true)
+        # Add routing for the consumer group and topic so LRJ detection works
+        Karafka::App.routes.draw do
+          consumer_group cg_id do
+            topic t_name do
+              consumer Class.new(Karafka::BaseConsumer)
+              long_running_job true
+            end
           end
         end
 
@@ -148,10 +152,11 @@ RSpec.describe_current do
         sleep(1)
         message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
 
-        # Topic commands are broadcast to all processes
-        expect(message.key).to eq('*')
+        # Broadcast commands don't need a key
+        expect(message.key).to be_nil
         expect(message.payload[:schema_version]).to eq('1.2.0')
         expect(message.payload[:type]).to eq('request')
+        expect(message.payload[:id]).to match(/\A[0-9a-f-]{36}\z/)
         expect(message.payload[:dispatched_at]).not_to be_nil
 
         # Matchers for filtering which processes handle this command
@@ -213,13 +218,17 @@ RSpec.describe_current do
 
     context 'when a process exists, is running but topic is lrj' do
       before do
-        Karafka::App.routes.each do |cg|
-          next unless cg.id == consumer_group_id
+        # Capture let values for use inside routes.draw block
+        cg_id = consumer_group_id
+        t_name = topic_name
 
-          cg.topics.each do |topic|
-            next unless topic.name == topic_name
-
-            allow(topic).to receive(:long_running_job?).and_return(true)
+        # Add routing for the consumer group and topic so LRJ detection works
+        Karafka::App.routes.draw do
+          consumer_group cg_id do
+            topic t_name do
+              consumer Class.new(Karafka::BaseConsumer)
+              long_running_job true
+            end
           end
         end
 
@@ -300,10 +309,11 @@ RSpec.describe_current do
         sleep(1)
         message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
 
-        # Topic commands are broadcast to all processes
-        expect(message.key).to eq('*')
+        # Broadcast commands don't need a key
+        expect(message.key).to be_nil
         expect(message.payload[:schema_version]).to eq('1.2.0')
         expect(message.payload[:type]).to eq('request')
+        expect(message.payload[:id]).to match(/\A[0-9a-f-]{36}\z/)
         expect(message.payload[:dispatched_at]).not_to be_nil
 
         # Matchers for filtering which processes handle this command

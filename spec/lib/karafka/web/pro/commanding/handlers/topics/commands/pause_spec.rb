@@ -85,29 +85,6 @@ RSpec.describe_current do
       end
     end
 
-    context 'when consumer group does not match' do
-      before do
-        allow(consumer_group).to receive(:id).and_return('different_group')
-      end
-
-      it 'does not pause any partitions' do
-        command.call
-
-        expect(pause_tracker0).not_to have_received(:pause)
-        expect(pause_tracker1).not_to have_received(:pause)
-        expect(client).not_to have_received(:pause)
-      end
-
-      it 'reports skipped status' do
-        command.call
-
-        expect(Karafka::Web::Pro::Commanding::Dispatcher).to have_received(:result) do |_name, _pid, payload|
-          expect(payload[:status]).to eq('skipped')
-          expect(payload[:partitions_affected]).to be_empty
-        end
-      end
-    end
-
     context 'when duration is zero' do
       let(:duration) { 0 }
       let(:forever_ms) { 10 * 365 * 24 * 60 * 60 * 1000 }

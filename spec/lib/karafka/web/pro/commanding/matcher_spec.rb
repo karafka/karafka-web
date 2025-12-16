@@ -25,23 +25,27 @@ RSpec.describe_current do
     stub_const('Karafka::Web::Pro::Commanding::Dispatcher::SCHEMA_VERSION', schema_version)
   end
 
-  context 'when message is for all processes and is a command of current schema version' do
+  context 'when message is a command of current schema version without process_id filter' do
     let(:message_key) { '*' }
     let(:message_payload) { { type: 'request', schema_version: schema_version } }
 
     it { expect(matcher.matches?(message)).to be true }
   end
 
-  context 'when message is for this process and is a command of current schema version' do
-    let(:message_key) { process_id }
-    let(:message_payload) { { type: 'request', schema_version: schema_version } }
+  context 'when process_id in matchers matches current process' do
+    let(:message_key) { '*' }
+    let(:message_payload) do
+      { type: 'request', schema_version: schema_version, matchers: { process_id: process_id } }
+    end
 
     it { expect(matcher.matches?(message)).to be true }
   end
 
-  context 'when message key does not match current process id or "*"' do
-    let(:message_key) { 'other_process_id' }
-    let(:message_payload) { { type: 'request', schema_version: schema_version } }
+  context 'when process_id in matchers does not match current process' do
+    let(:message_key) { '*' }
+    let(:message_payload) do
+      { type: 'request', schema_version: schema_version, matchers: { process_id: 'other_process_id' } }
+    end
 
     it { expect(matcher.matches?(message)).to be false }
   end
