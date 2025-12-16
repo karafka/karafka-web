@@ -8,7 +8,15 @@
 
   <% if command[:schema_version] == @schema_version %>
     <% row_partial = command[:type] == 'request' ? 'rows/request' : 'rows/response' %>
-    <%== partial "consumers/commands/#{row_partial}", locals: { command: command, command_message: command_message } %>
+    <%==
+      partial(
+        "consumers/commands/#{row_partial}",
+        locals: {
+          command: command,
+          command_message: command_message
+        }
+      )
+    %>
   <% else %>
     <%== partial 'consumers/commands/incompatible_command' %>
   <% end %>

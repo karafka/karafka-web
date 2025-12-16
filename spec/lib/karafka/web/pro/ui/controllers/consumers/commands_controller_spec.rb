@@ -73,7 +73,7 @@ RSpec.describe_current do
         expect(body).to include('<span class="badge badge-primary">')
         expect(body).to include('command')
         expect(body).to include('quiet')
-        expect(body).to include('/consumers/shinra:1404842:f66b40c75f92/subscriptions')
+        expect(body).to include('process_id:')
         expect(body).to include('/commands/0')
       end
     end
@@ -92,9 +92,9 @@ RSpec.describe_current do
               "consumers/v1.2.0_#{type}",
               symbolize_names: false
             )
-            id = ['*', SecureRandom.uuid].sample
-            data['process']['id'] = id
-            produce(commands_topic, data.to_json, key: id)
+            id = SecureRandom.uuid
+            data['matchers']['process_id'] = id
+            produce(commands_topic, data.to_json)
           end
         end
       end
@@ -107,7 +107,6 @@ RSpec.describe_current do
           expect(body).to include(pagination)
           expect(body).not_to include(support_message)
           expect(body).to include('commands/99')
-          expect(body).to include('<a href="/consumers/')
           expect(body).to include('trace')
           expect(body).to include('quiet')
           expect(body).to include('stop')
@@ -123,7 +122,6 @@ RSpec.describe_current do
           expect(body).not_to include(support_message)
           expect(body).to include('commands/53')
           expect(body).not_to include('commands/99')
-          expect(body).to include('<a href="/consumers/')
           expect(body).to include('trace')
           expect(body).to include('quiet')
           expect(body).to include('stop')

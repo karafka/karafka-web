@@ -53,6 +53,7 @@ module Karafka
                 {
                   schema_version: SCHEMA_VERSION,
                   type: 'acceptance',
+                  id: SecureRandom.uuid,
                   command: params.merge(name: command_name),
                   dispatched_at: Time.now.to_f,
                   process: {
@@ -74,6 +75,7 @@ module Karafka
                 {
                   schema_version: SCHEMA_VERSION,
                   type: 'result',
+                  id: SecureRandom.uuid,
                   command: {
                     name: command_name
                   },
