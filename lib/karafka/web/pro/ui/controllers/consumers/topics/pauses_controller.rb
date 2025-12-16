@@ -41,7 +41,10 @@ module Karafka
                       duration: params.int(:duration) * 1_000,
                       prevent_override: params.bool(:prevent_override)
                     },
-                    matchers: { consumer_group_id: consumer_group_id, topic: topic }
+                    matchers: {
+                      consumer_group_id: consumer_group_id,
+                      topic: topic
+                    }
                   )
 
                   redirect(
@@ -78,7 +81,10 @@ module Karafka
                       topic: topic,
                       reset_attempts: params.bool(:reset_attempts)
                     },
-                    matchers: { consumer_group_id: consumer_group_id, topic: topic }
+                    matchers: {
+                      consumer_group_id: consumer_group_id,
+                      topic: topic
+                    }
                   )
 
                   redirect(

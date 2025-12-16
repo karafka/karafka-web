@@ -12,8 +12,7 @@ module Karafka
           module Topics
             # Delegates the topic pause request into the topic changes tracker and dispatches the
             # acceptance message back to Kafka. This command pauses all partitions of a given topic
-            # within a specific consumer group. It broadcasts to all processes (key='*') and each
-            # process determines which partitions it owns for the target consumer group.
+            # within a specific consumer group. Matchers filter which processes handle the command.
             class Pause < Base
               self.name = 'topics.pause'
 

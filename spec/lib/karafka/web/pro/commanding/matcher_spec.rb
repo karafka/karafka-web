@@ -26,14 +26,14 @@ RSpec.describe_current do
   end
 
   context 'when message is a command of current schema version without process_id filter' do
-    let(:message_key) { '*' }
+    let(:message_key) { nil }
     let(:message_payload) { { type: 'request', schema_version: schema_version } }
 
     it { expect(matcher.matches?(message)).to be true }
   end
 
   context 'when process_id in matchers matches current process' do
-    let(:message_key) { '*' }
+    let(:message_key) { nil }
     let(:message_payload) do
       { type: 'request', schema_version: schema_version, matchers: { process_id: process_id } }
     end
@@ -42,7 +42,7 @@ RSpec.describe_current do
   end
 
   context 'when process_id in matchers does not match current process' do
-    let(:message_key) { '*' }
+    let(:message_key) { nil }
     let(:message_payload) do
       { type: 'request', schema_version: schema_version, matchers: { process_id: 'other_process_id' } }
     end
@@ -51,21 +51,21 @@ RSpec.describe_current do
   end
 
   context 'when message type is not command' do
-    let(:message_key) { '*' }
+    let(:message_key) { nil }
     let(:message_payload) { { type: 'result', schema_version: schema_version } }
 
     it { expect(matcher.matches?(message)).to be false }
   end
 
   context 'when message schema version does not match' do
-    let(:message_key) { '*' }
+    let(:message_key) { nil }
     let(:message_payload) { { type: 'request', schema_version: '2.0' } }
 
     it { expect(matcher.matches?(message)).to be false }
   end
 
   describe 'matchers filtering' do
-    let(:message_key) { '*' }
+    let(:message_key) { nil }
     let(:consumer_group) { instance_double(Karafka::Routing::ConsumerGroup, id: 'my_consumer_group') }
     let(:topic) { instance_double(Karafka::Routing::Topic, name: 'my_topic', consumer_group: consumer_group) }
     let(:assignments) { { topic => [0, 1, 2] } }

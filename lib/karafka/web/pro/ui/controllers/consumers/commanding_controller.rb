@@ -67,10 +67,7 @@ module Karafka
               def quiet_all
                 features.commanding!
 
-                request(
-                  Commanding::Commands::Consumers::Quiet,
-                  '*'
-                )
+                broadcast_request(Commanding::Commands::Consumers::Quiet)
 
                 redirect(
                   :back,
@@ -82,10 +79,7 @@ module Karafka
               def stop_all
                 features.commanding!
 
-                request(
-                  Commanding::Commands::Consumers::Stop,
-                  '*'
-                )
+                broadcast_request(Commanding::Commands::Consumers::Stop)
 
                 redirect(
                   :back,
@@ -95,16 +89,24 @@ module Karafka
 
               private
 
-              # Dispatches given command
+              # Dispatches given command to a specific process
               # @param command [Class] command class
-              # @param process_id [String] process id or '*' for all processes
+              # @param process_id [String] process id
               def request(command, process_id)
-                matchers = process_id == '*' ? {} : { process_id: process_id }
-
                 Commanding::Dispatcher.request(
                   command.name,
                   {},
-                  matchers: matchers
+                  matchers: { process_id: process_id }
+                )
+              end
+
+              # Dispatches given command to all processes (no matchers)
+              # @param command [Class] command class
+              def broadcast_request(command)
+                Commanding::Dispatcher.request(
+                  command.name,
+                  {},
+                  matchers: {}
                 )
               end
 

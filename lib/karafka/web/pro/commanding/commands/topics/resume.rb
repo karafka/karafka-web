@@ -11,8 +11,7 @@ module Karafka
           module Topics
             # Delegates the topic resume request into the topic changes tracker and dispatches the
             # acceptance message back to Kafka. This command resumes all partitions of a given topic
-            # within a specific consumer group. It broadcasts to all processes (key='*') and each
-            # process determines which partitions it owns for the target consumer group.
+            # within a specific consumer group. Matchers filter which processes handle the command.
             class Resume < Base
               self.name = 'topics.resume'
 
