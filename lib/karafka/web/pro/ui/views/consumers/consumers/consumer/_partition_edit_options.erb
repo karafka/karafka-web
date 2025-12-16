@@ -7,7 +7,7 @@
 %>
 
 <a
-  href="<%= root_path('consumers', 'partitions', consumer_group_id, topic_name, partition.id, 'offset', 'edit') %>"
+  href="<%= consumers_path('partitions', consumer_group_id, topic_name, partition.id, 'offset', 'edit') %>"
   class="btn btn-info btn-sm <%= feature_class %>"
   title="Edit the offset position for this topic partition"
 >
@@ -16,7 +16,7 @@
 
 <% if partition.poll_state != 'active' %>
   <a
-    href="<%= root_path('consumers', 'partitions', consumer_group_id, topic_name, partition.id, 'pause', 'edit') %>"
+    href="<%= consumers_path('partitions', consumer_group_id, topic_name, partition.id, 'pause', 'edit') %>"
     class="btn btn-success btn-sm <%= feature_class %>"
     title="Resume processing of this topic partition"
   >
@@ -25,7 +25,7 @@
 <% end %>
 
 <a
-  href="<%= root_path('consumers', 'partitions', consumer_group_id, topic_name, partition.id, 'pause', 'new') %>"
+  href="<%= consumers_path('partitions', consumer_group_id, topic_name, partition.id, 'pause', 'new') %>"
   class="btn btn-warning btn-sm <%= feature_class %>"
   title="Setup or configure pause duration for this topic partition"
 >

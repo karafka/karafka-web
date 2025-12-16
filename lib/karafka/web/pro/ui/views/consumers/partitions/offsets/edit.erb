@@ -7,10 +7,10 @@
   view_title "Offset Edit - #{@consumer_group_id} - #{tpi}"
 %>
 
-<% if !@any_process_running %>
-  <%== partial 'consumers/partitions/offsets/not_running_error' %>
-<% else %>
+<% if @any_process_running %>
   <%== partial 'consumers/partitions/offsets/running_warning' %>
   <%== partial 'consumers/partitions/offsets/basics' %>
   <%== partial 'consumers/partitions/offsets/form' %>
+<% else %>
+  <%== partial 'consumers/partitions/offsets/not_running_error' %>
 <% end %>
