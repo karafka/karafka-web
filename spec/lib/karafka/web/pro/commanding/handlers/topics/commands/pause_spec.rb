@@ -36,13 +36,11 @@ RSpec.describe_current do
   let(:prevent_override) { false }
 
   before do
-    allow(listener).to receive(:coordinators).and_return(coordinators)
-    allow(listener).to receive(:subscription_group).and_return(subscription_group)
+    allow(listener).to receive_messages(coordinators: coordinators, subscription_group: subscription_group)
     allow(subscription_group).to receive(:consumer_group).and_return(consumer_group)
     allow(consumer_group).to receive(:id).and_return(consumer_group_id)
 
-    allow(client).to receive(:assignment).and_return(topic_partition_list)
-    allow(client).to receive(:pause)
+    allow(client).to receive_messages(assignment: topic_partition_list, pause: nil)
 
     allow(topic_partition_list).to receive(:to_h).and_return({ topic_name => [partition0, partition1] })
 
@@ -52,10 +50,8 @@ RSpec.describe_current do
     allow(coordinator0).to receive(:pause_tracker).and_return(pause_tracker0)
     allow(coordinator1).to receive(:pause_tracker).and_return(pause_tracker1)
 
-    allow(pause_tracker0).to receive(:pause)
-    allow(pause_tracker0).to receive(:paused?).and_return(false)
-    allow(pause_tracker1).to receive(:pause)
-    allow(pause_tracker1).to receive(:paused?).and_return(false)
+    allow(pause_tracker0).to receive_messages(pause: nil, paused?: false)
+    allow(pause_tracker1).to receive_messages(pause: nil, paused?: false)
 
     allow(Karafka::Web::Pro::Commanding::Dispatcher).to receive(:result)
     allow(Karafka::Web.config.tracking.consumers.sampler).to receive(:process_id).and_return('test-process')

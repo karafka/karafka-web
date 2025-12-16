@@ -34,8 +34,7 @@ RSpec.describe_current do
   let(:reset_attempts) { false }
 
   before do
-    allow(listener).to receive(:coordinators).and_return(coordinators)
-    allow(listener).to receive(:subscription_group).and_return(subscription_group)
+    allow(listener).to receive_messages(coordinators: coordinators, subscription_group: subscription_group)
     allow(subscription_group).to receive(:consumer_group).and_return(consumer_group)
     allow(consumer_group).to receive(:id).and_return(consumer_group_id)
 
@@ -49,10 +48,8 @@ RSpec.describe_current do
     allow(coordinator0).to receive(:pause_tracker).and_return(pause_tracker0)
     allow(coordinator1).to receive(:pause_tracker).and_return(pause_tracker1)
 
-    allow(pause_tracker0).to receive(:expire)
-    allow(pause_tracker0).to receive(:reset)
-    allow(pause_tracker1).to receive(:expire)
-    allow(pause_tracker1).to receive(:reset)
+    allow(pause_tracker0).to receive_messages(expire: nil, reset: nil)
+    allow(pause_tracker1).to receive_messages(expire: nil, reset: nil)
 
     allow(Karafka::Web::Pro::Commanding::Dispatcher).to receive(:result)
     allow(Karafka::Web.config.tracking.consumers.sampler).to receive(:process_id).and_return('test-process')

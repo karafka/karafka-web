@@ -54,6 +54,44 @@ RSpec.describe_current do
 
         it { expect(response).to be_ok }
       end
+
+      context 'when commanding is enabled' do
+        before do
+          Karafka::Web.config.commanding.active = true
+
+          get 'health/overview'
+        end
+
+        it 'expect to show topic pause controls without disabled state' do
+          expect(response).to be_ok
+          expect(body).to include('Pause All')
+          expect(body).not_to include('btn-warning btn-sm btn-disabled')
+        end
+
+        it 'expect to show partition edit options without disabled state' do
+          expect(body).not_to include('btn-info btn-sm btn-disabled')
+        end
+      end
+
+      context 'when commanding is disabled' do
+        before do
+          Karafka::Web.config.commanding.active = false
+
+          get 'health/overview'
+        end
+
+        after { Karafka::Web.config.commanding.active = true }
+
+        it 'expect to show topic pause controls in disabled state' do
+          expect(response).to be_ok
+          expect(body).to include('Pause All')
+          expect(body).to include('btn-warning btn-sm btn-disabled')
+        end
+
+        it 'expect to show partition edit options in disabled state' do
+          expect(body).to include('btn-info btn-sm btn-disabled')
+        end
+      end
     end
 
     context 'when some partitions have no data' do

@@ -32,8 +32,7 @@ RSpec.describe_current do
 
     before do
       allow(listener).to receive(:subscription_group).and_return(subscription_group)
-      allow(subscription_group).to receive(:consumer_group).and_return(consumer_group)
-      allow(subscription_group).to receive(:topics).and_return([topic])
+      allow(subscription_group).to receive_messages(consumer_group: consumer_group, topics: [topic])
       allow(tracker).to receive(:each_for).with(consumer_group_id, topic_name).and_yield(command)
       allow(executor).to receive(:call)
     end
@@ -72,8 +71,7 @@ RSpec.describe_current do
     let(:event) { { subscription_group: subscription_group } }
 
     before do
-      allow(subscription_group).to receive(:consumer_group).and_return(consumer_group)
-      allow(subscription_group).to receive(:topics).and_return([topic])
+      allow(subscription_group).to receive_messages(consumer_group: consumer_group, topics: [topic])
       allow(tracker).to receive(:each_for).with(consumer_group_id, topic_name).and_yield(command)
       allow(executor).to receive(:reject)
     end
@@ -93,8 +91,7 @@ RSpec.describe_current do
     let(:event) { { subscription_group: subscription_group } }
 
     before do
-      allow(subscription_group).to receive(:consumer_group).and_return(consumer_group)
-      allow(subscription_group).to receive(:topics).and_return([topic])
+      allow(subscription_group).to receive_messages(consumer_group: consumer_group, topics: [topic])
       allow(tracker).to receive(:each_for).with(consumer_group_id, topic_name).and_yield(command)
       allow(executor).to receive(:reject)
     end
