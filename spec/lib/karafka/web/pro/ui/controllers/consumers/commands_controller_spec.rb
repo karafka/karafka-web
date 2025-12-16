@@ -225,7 +225,7 @@ RSpec.describe_current do
         expect(body).to include('rb:539:in `rd_kafka_consumer_poll')
         expect(body).to include('Metadata')
         expect(body).to include('trace result')
-        expect(body).to include('/consumers/shinra:397793:6fa3f39acf46')
+        expect(body).to include('shinra:397793:6fa3f39acf46')
       end
     end
 

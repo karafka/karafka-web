@@ -17,10 +17,7 @@
 
   <td>
     <% process_id = command[:process][:id] %>
-    <% label = "process_id:#{truncate(process_id, strategy: :middle)}" %>
-    <a href="<%= consumer_path(process_id, 'subscriptions') %>">
-      <%== badge_secondary label %>
-    </a>
+    <%== badge_secondary "process_id:#{truncate(process_id, strategy: :middle)}" %>
   </td>
 
   <td>

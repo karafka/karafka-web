@@ -27,9 +27,7 @@
         <td>Process</td>
         <td>
           <% process_id = command[:process][:id] %>
-          <a href="<%= consumer_path(process_id, 'subscriptions') %>">
-            <%== badge_secondary process_id %>
-          </a>
+          <%== badge_secondary process_id %>
         </td>
       </tr>
     </tbody>
