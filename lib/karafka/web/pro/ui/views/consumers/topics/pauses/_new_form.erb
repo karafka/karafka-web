@@ -17,7 +17,7 @@
       <%== csrf_tag(pause_path) %>
 
       <div class="flex items-center w-full mb-8">
-        <label class="w-1/4 text-gray-700">Pause Duration:</label>
+        <label class="w-1/4 text-base-content/70">Pause Duration:</label>
         <div class="w-3/4">
           <input
             type="number"
@@ -29,14 +29,14 @@
             required
           />
 
-          <div class="text-sm text-gray-500 mt-1">
+          <div class="text-sm text-base-content/70 mt-1">
            Set to 0 for indefinite pause or specify time in seconds
           </div>
         </div>
       </div>
 
       <div class="flex items-center w-full">
-        <label class="w-1/4 text-gray-700">Safety Check:</label>
+        <label class="w-1/4 text-base-content/70">Safety Check:</label>
         <div class="w-3/4">
           <label class="flex items-center gap-4 cursor-pointer">
             <input type="hidden" name="prevent_override" value="off">
@@ -52,7 +52,7 @@
               <div class="flex items-center gap-2">
                 Only pause partitions that are not already paused
               </div>
-              <div class="text-sm text-gray-500">
+              <div class="text-sm text-base-content/70">
                 Prevents accidental override of existing pause settings on individual partitions
               </div>
             </div>

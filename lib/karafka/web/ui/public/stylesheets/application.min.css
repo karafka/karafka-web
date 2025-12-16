@@ -4265,8 +4265,11 @@
       color: var(--color-gray-500);
     }
   }
-  .\!text-gray-500 {
-    color: var(--color-gray-500) !important;
+  .\!text-base-content\/70 {
+    color: var(--color-base-content) !important;
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-base-content) 70%, transparent) !important;
+    }
   }
   .alert-error {
     color: var(--color-base-100);
@@ -4295,14 +4298,14 @@
   .card-summary-title {
     color: var(--color-gray-500);
   }
+  .text-base-content\/70 {
+    color: var(--color-base-content);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-base-content) 70%, transparent);
+    }
+  }
   .text-blue-500 {
     color: var(--color-blue-500);
-  }
-  .text-gray-500 {
-    color: var(--color-gray-500);
-  }
-  .text-gray-700 {
-    color: var(--color-gray-700);
   }
   .text-muted {
     color: var(--color-gray-500);

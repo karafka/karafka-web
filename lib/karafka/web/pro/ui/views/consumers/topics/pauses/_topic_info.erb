@@ -19,29 +19,29 @@
 
     <div class="grid grid-cols-2 gap-4 mt-2">
       <div>
-        <span class="text-gray-500">Topic:</span>
+        <span class="text-base-content/70">Topic:</span>
         <span class="font-mono"><%= @topic %></span>
       </div>
       <div>
-        <span class="text-gray-500">Consumer Group:</span>
+        <span class="text-base-content/70">Consumer Group:</span>
         <span class="font-mono"><%= @consumer_group_id %></span>
       </div>
       <div>
-        <span class="text-gray-500">Total Partitions (cluster):</span>
+        <span class="text-base-content/70">Total Partitions (cluster):</span>
         <span class="font-mono"><%= total_partitions %></span>
       </div>
       <div>
-        <span class="text-gray-500">Assigned Partitions:</span>
+        <span class="text-base-content/70">Assigned Partitions:</span>
         <span class="font-mono"><%= assigned_partitions %></span>
       </div>
       <div>
-        <span class="text-gray-500">Active Processes:</span>
+        <span class="text-base-content/70">Active Processes:</span>
         <span class="font-mono"><%= process_count %></span>
       </div>
     </div>
 
     <div class="mt-4">
-      <span class="text-gray-500">Partition States (across all processes):</span>
+      <span class="text-base-content/70">Partition States (across all processes):</span>
       <span class="badge badge-success badge-sm ml-2"><%= active_count %> active</span>
       <span class="badge badge-warning badge-sm ml-2"><%= paused_count %> paused</span>
     </div>
