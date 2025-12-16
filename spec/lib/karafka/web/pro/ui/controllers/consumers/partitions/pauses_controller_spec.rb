@@ -18,7 +18,7 @@ RSpec.describe_current do
   let(:not_active) { 'Consumer pauses can only be managed using Web UI when' }
   let(:not_paused) { 'Pause settings can only be configured for partitions' }
   let(:form) { '<form' }
-  let(:partition_info) { 'Partition Information' }
+  let(:card_detail) { 'card-detail-container' }
 
   before do
     topics_config.consumers.states.name = states_topic
@@ -53,7 +53,7 @@ RSpec.describe_current do
         expect(body).to include('Pause Duration:')
         expect(body).to include('Safety Check:')
         expect(body).to include(form)
-        expect(body).to include(partition_info)
+        expect(body).to include(card_detail)
         expect(body).not_to include(lrj_warn1)
         expect(body).not_to include(lrj_warn2)
         expect(body).not_to include(cannot_perform)

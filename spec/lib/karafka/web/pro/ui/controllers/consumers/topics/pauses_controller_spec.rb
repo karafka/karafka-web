@@ -16,7 +16,7 @@ RSpec.describe_current do
   let(:cannot_perform) { 'This Operation Cannot Be Performed' }
   let(:not_active) { 'Topic pauses can only be managed using Web UI when' }
   let(:form) { '<form' }
-  let(:topic_info) { 'Topic Information' }
+  let(:card_detail) { 'card-detail-container' }
 
   before do
     topics_config.consumers.states.name = states_topic
@@ -49,7 +49,7 @@ RSpec.describe_current do
         expect(body).to include('Pause Duration:')
         expect(body).to include('Safety Check:')
         expect(body).to include(form)
-        expect(body).to include(topic_info)
+        expect(body).to include(card_detail)
         expect(body).not_to include(lrj_warn1)
         expect(body).not_to include(lrj_warn2)
         expect(body).not_to include(cannot_perform)
@@ -206,7 +206,7 @@ RSpec.describe_current do
         expect(response).to be_ok
         expect(body).to include(consumer_group_id)
         expect(body).to include(topic_name)
-        expect(body).to include(topic_info)
+        expect(body).to include(card_detail)
         expect(body).to include('Reset Counter:')
         expect(body).to include('Resume All Paused Partitions')
         expect(body).to include(form)

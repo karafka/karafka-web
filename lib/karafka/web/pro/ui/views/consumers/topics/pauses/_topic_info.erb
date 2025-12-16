@@ -13,37 +13,49 @@
   process_count = partitions.values.map { |p| p[:process].id }.uniq.size
 %>
 
-<div class="card bg-base-100 mt-4">
-  <div class="card-body">
-    <h3 class="card-title text-lg">Topic Information</h3>
-
-    <div class="grid grid-cols-2 gap-4 mt-2">
-      <div>
-        <span class="text-base-content/70">Topic:</span>
-        <span class="font-mono"><%= @topic %></span>
-      </div>
-      <div>
-        <span class="text-base-content/70">Consumer Group:</span>
-        <span class="font-mono"><%= @consumer_group_id %></span>
-      </div>
-      <div>
-        <span class="text-base-content/70">Total Partitions (cluster):</span>
-        <span class="font-mono"><%= total_partitions %></span>
-      </div>
-      <div>
-        <span class="text-base-content/70">Assigned Partitions:</span>
-        <span class="font-mono"><%= assigned_partitions %></span>
-      </div>
-      <div>
-        <span class="text-base-content/70">Active Processes:</span>
-        <span class="font-mono"><%= process_count %></span>
-      </div>
+<div class="card-detail-container mt-4">
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Consumer Group
+      <%== badge_primary @consumer_group_id %>
     </div>
+  </div>
 
-    <div class="mt-4">
-      <span class="text-base-content/70">Partition States (across all processes):</span>
-      <span class="badge badge-success badge-sm ml-2"><%= active_count %> active</span>
-      <span class="badge badge-warning badge-sm ml-2"><%= paused_count %> paused</span>
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Topic
+      <%== badge_info @topic %>
+    </div>
+  </div>
+
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Total Partitions
+      <%== badge_secondary total_partitions %>
+    </div>
+  </div>
+
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Assigned Partitions
+      <%== badge_secondary assigned_partitions %>
+    </div>
+  </div>
+
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Active Processes
+      <%== badge_secondary process_count %>
+    </div>
+  </div>
+
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Partition States
+      <div class="flex gap-2">
+        <span class="badge badge-success badge-sm"><%= active_count %> active</span>
+        <span class="badge badge-warning badge-sm"><%= paused_count %> paused</span>
+      </div>
     </div>
   </div>
 </div>
