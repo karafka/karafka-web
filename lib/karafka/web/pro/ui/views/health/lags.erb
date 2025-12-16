@@ -43,6 +43,7 @@
                 partial(
                   'health/partitions_with_fallback',
                   locals: {
+                    consumer_group_id: cg_name,
                     topic_details: topic_details,
                     topic_name: topic_name,
                     partition_partial: 'health/partition_lags',
