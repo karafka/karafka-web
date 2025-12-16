@@ -21,29 +21,26 @@ module Karafka
             #
             # @param command_name [String, Symbol] name of the command we want to deal with in the
             #   process
-            # @param process_id [String] id of the process. We use name instead of id only
-            #   because in the web ui we work with the full name and it is easier.
+            # @param process_id [String] id of the process or '*' for all processes. Used as the
+            #   Kafka message key for routing.
             # @param params [Hash] hash with extra command params that some commands may use.
-            # @param matchers [Hash] optional hash with matching criteria for filtering which
-            #   processes should handle this command. Supported keys:
+            # @param matchers [Hash] hash with matching criteria for filtering which processes
+            #   should handle this command. Supported keys:
             #   - :consumer_group_id [String] - only processes with this consumer group
-            #   - :topic [String] - only processes consuming this topic (future use)
+            #   - :topic [String] - only processes consuming this topic
             def request(command_name, process_id, params = {}, matchers: {})
-              payload = {
-                schema_version: SCHEMA_VERSION,
-                type: 'request',
-                # Name is auto-generated and required. Should not be changed
-                command: params.merge(name: command_name),
-                dispatched_at: Time.now.to_f,
-                process: {
-                  id: process_id
+              produce(
+                process_id,
+                'request',
+                {
+                  schema_version: SCHEMA_VERSION,
+                  type: 'request',
+                  # Name is auto-generated and required. Should not be changed
+                  command: params.merge(name: command_name),
+                  dispatched_at: Time.now.to_f,
+                  matchers: matchers
                 }
-              }
-
-              # Only include matchers if there are any - keeps payload clean for simple commands
-              payload[:matchers] = matchers unless matchers.empty?
-
-              produce(process_id, 'request', payload)
+              )
             end
 
             # Dispatches the acceptance info. Indicates that a command was received and appropriate

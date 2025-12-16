@@ -20,6 +20,8 @@ module Karafka
           # Maps matcher type symbols to their corresponding sub-matcher classes
           MATCHER_CLASSES = {
             consumer_group_id: Matchers::ConsumerGroupId,
+            process_id: Matchers::ProcessId,
+            schema_version: Matchers::SchemaVersion,
             topic: Matchers::Topic
           }.freeze
 
@@ -31,10 +33,10 @@ module Karafka
             # We operate only on commands. Result and other messages should be ignored
             return false unless message.headers['type'] == 'request'
             # We want to work only with commands that target all processes or our current
-            return false unless message.key == '*' || message.key == process_id
+            return false unless Matchers::ProcessId.new(message.key).matches?
             # Ignore messages that have different schema. This can happen in the middle of
             # upgrades of the framework. We ignore this not to risk compatibility issues
-            return false unless message.payload[:schema_version] == Dispatcher::SCHEMA_VERSION
+            return false unless Matchers::SchemaVersion.new(message.payload[:schema_version]).matches?
             # Check if all matchers (if any) are satisfied by this process
             return false unless matchers_match?(message)
 
@@ -42,11 +44,6 @@ module Karafka
           end
 
           private
-
-          # @return [String] current process id
-          def process_id
-            @process_id ||= ::Karafka::Web.config.tracking.consumers.sampler.process_id
-          end
 
           # Checks if all matchers specified in the message payload are satisfied by this process.
           # If no matchers are specified, returns true (matches all).

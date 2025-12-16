@@ -26,11 +26,11 @@ RSpec.describe_current do
       sleep(1)
       message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
       expect(message.key).to eq(process_id)
-      expect(message.payload[:schema_version]).to eq('1.1.0')
+      expect(message.payload[:schema_version]).to eq('1.2.0')
       expect(message.payload[:type]).to eq('request')
       expect(message.payload[:dispatched_at]).not_to be_nil
       expect(message.payload[:command]).to eq(name: 'consumers.trace')
-      expect(message.payload[:process]).to eq(id: process_id)
+      expect(message.payload[:matchers]).to eq({})
     end
   end
 
@@ -49,11 +49,11 @@ RSpec.describe_current do
       sleep(1)
       message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
       expect(message.key).to eq(process_id)
-      expect(message.payload[:schema_version]).to eq('1.1.0')
+      expect(message.payload[:schema_version]).to eq('1.2.0')
       expect(message.payload[:type]).to eq('request')
       expect(message.payload[:dispatched_at]).not_to be_nil
       expect(message.payload[:command]).to eq(name: 'consumers.quiet')
-      expect(message.payload[:process]).to eq(id: process_id)
+      expect(message.payload[:matchers]).to eq({})
     end
   end
 
@@ -72,11 +72,11 @@ RSpec.describe_current do
       sleep(1)
       message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
       expect(message.key).to eq(process_id)
-      expect(message.payload[:schema_version]).to eq('1.1.0')
+      expect(message.payload[:schema_version]).to eq('1.2.0')
       expect(message.payload[:type]).to eq('request')
       expect(message.payload[:dispatched_at]).not_to be_nil
       expect(message.payload[:command]).to eq(name: 'consumers.stop')
-      expect(message.payload[:process]).to eq(id: process_id)
+      expect(message.payload[:matchers]).to eq({})
     end
   end
 
@@ -95,11 +95,11 @@ RSpec.describe_current do
       sleep(1)
       message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
       expect(message.key).to eq('*')
-      expect(message.payload[:schema_version]).to eq('1.1.0')
+      expect(message.payload[:schema_version]).to eq('1.2.0')
       expect(message.payload[:type]).to eq('request')
       expect(message.payload[:dispatched_at]).not_to be_nil
       expect(message.payload[:command]).to eq(name: 'consumers.quiet')
-      expect(message.payload[:process]).to eq(id: '*')
+      expect(message.payload[:matchers]).to eq({})
     end
   end
 
@@ -118,11 +118,11 @@ RSpec.describe_current do
       sleep(1)
       message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
       expect(message.key).to eq('*')
-      expect(message.payload[:schema_version]).to eq('1.1.0')
+      expect(message.payload[:schema_version]).to eq('1.2.0')
       expect(message.payload[:type]).to eq('request')
       expect(message.payload[:dispatched_at]).not_to be_nil
       expect(message.payload[:command]).to eq(name: 'consumers.stop')
-      expect(message.payload[:process]).to eq(id: '*')
+      expect(message.payload[:matchers]).to eq({})
     end
   end
 end
