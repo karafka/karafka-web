@@ -16,14 +16,6 @@ module Karafka
                 # Expires the pause on all partitions for the target topic so Karafka resumes
                 # processing of those partitions.
                 def call
-                  # Skip if this listener's subscription group doesn't belong to the target
-                  # consumer group. This is important when multiple consumer groups consume
-                  # the same topic - we only want to resume partitions for the specific group.
-                  unless matches_consumer_group?
-                    result('skipped', partitions_affected: [])
-                    return
-                  end
-
                   partitions_affected = []
 
                   owned_partition_ids.each do |partition_id|

@@ -37,10 +37,9 @@ module Karafka
                 def create(consumer_group_id, topic)
                   new(consumer_group_id, topic)
 
-                  # Broadcast to all processes (key='*') with matchers to filter by consumer group
+                  # Broadcast to all processes with matchers to filter by consumer group
                   Commanding::Dispatcher.request(
                     Commanding::Commands::Topics::Pause.name,
-                    '*',
                     {
                       consumer_group_id: consumer_group_id,
                       topic: topic,
@@ -78,10 +77,9 @@ module Karafka
                 def delete(consumer_group_id, topic)
                   new(consumer_group_id, topic)
 
-                  # Broadcast to all processes (key='*') with matchers to filter by consumer group
+                  # Broadcast to all processes with matchers to filter by consumer group
                   Commanding::Dispatcher.request(
                     Commanding::Commands::Topics::Resume.name,
-                    '*',
                     {
                       consumer_group_id: consumer_group_id,
                       topic: topic,

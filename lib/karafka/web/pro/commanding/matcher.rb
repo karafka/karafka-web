@@ -13,69 +13,36 @@ module Karafka
         # Since we use the `assign`, each process listens to this topic and receives messages
         # with commands targeting all the processes, this is why it needs to be filtered.
         #
-        # The matcher supports a `matchers` field in the payload that allows for granular filtering
-        # based on various criteria like consumer_group_id, topic, etc. Each criterion is checked
-        # by a dedicated sub-matcher class.
+        # The matcher uses a set of sub-matchers, each responsible for checking a specific
+        # criterion. Matchers have two methods:
+        # - `apply?` - returns true if the matcher's criterion is present in the message
+        # - `matches?` - returns true if the criterion matches (only checked if apply? is true)
+        #
+        # Matcher classes are auto-loaded from the Matchers namespace and sorted by priority.
+        # Required matchers (MessageType, SchemaVersion) have lower priority and are checked first.
         class Matcher
-          # Maps matcher type symbols to their corresponding sub-matcher classes
-          MATCHER_CLASSES = {
-            consumer_group_id: Matchers::ConsumerGroupId,
-            process_id: Matchers::ProcessId,
-            schema_version: Matchers::SchemaVersion,
-            topic: Matchers::Topic
-          }.freeze
-
-          private_constant :MATCHER_CLASSES
+          class << self
+            # @return [Array<Class>] all matcher classes sorted by priority
+            def matcher_classes
+              @matcher_classes ||= Matchers
+                                   .constants
+                                   .map { |name| Matchers.const_get(name) }
+                                   .select { |klass| klass.is_a?(Class) && klass < Matchers::Base }
+                                   .sort_by(&:priority)
+                                   .freeze
+            end
+          end
 
           # @param message [Karafka::Messages::Message] message with command
           # @return [Boolean] is this message dedicated to current process and is actionable
           def matches?(message)
-            # We operate only on commands. Result and other messages should be ignored
-            return false unless message.headers['type'] == 'request'
-            # We want to work only with commands that target all processes or our current
-            return false unless Matchers::ProcessId.new(message.key).matches?
-            # Ignore messages that have different schema. This can happen in the middle of
-            # upgrades of the framework. We ignore this not to risk compatibility issues
-            return false unless Matchers::SchemaVersion.new(message.payload[:schema_version]).matches?
-            # Check if all matchers (if any) are satisfied by this process
-            return false unless matchers_match?(message)
-
-            true
-          end
-
-          private
-
-          # Checks if all matchers specified in the message payload are satisfied by this process.
-          # If no matchers are specified, returns true (matches all).
-          #
-          # @param message [Karafka::Messages::Message] message with command
-          # @return [Boolean] true if all matchers match or no matchers specified
-          def matchers_match?(message)
-            matchers = message.payload[:matchers]
-
-            # No matchers means match all processes
-            return true unless matchers
-            return true if matchers.empty?
-
-            # All matchers must match (AND logic)
-            matchers.all? do |matcher_type, matcher_value|
-              match_criterion?(matcher_type, matcher_value)
-            end
-          end
-
-          # Checks if a single matcher criterion is satisfied using the appropriate sub-matcher
-          #
-          # @param matcher_type [Symbol] type of matcher (:consumer_group_id, :topic, etc.)
-          # @param matcher_value [String] value to match against
-          # @return [Boolean] true if the criterion matches
-          def match_criterion?(matcher_type, matcher_value)
-            matcher_class = MATCHER_CLASSES[matcher_type]
-
-            # Unknown matcher types are ignored (treated as matching)
-            # This allows forward compatibility - older consumers ignore new matcher types
-            return true unless matcher_class
-
-            matcher_class.new(matcher_value).matches?
+            self
+              .class
+              .matcher_classes
+              .lazy
+              .map { |klass| klass.new(message) }
+              .select(&:apply?)
+              .all?(&:matches?)
           end
         end
       end

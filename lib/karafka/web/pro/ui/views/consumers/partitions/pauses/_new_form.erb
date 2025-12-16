@@ -2,10 +2,10 @@
 <%# See LICENSE for details. %>
 
 <%
-  pause_path = consumer_path(
-    @process.id,
+  pause_path = root_path(
+    'consumers',
     'partitions',
-    @subscription_group.id,
+    @consumer_group_id,
     @topic,
     @partition_id,
     'pause'

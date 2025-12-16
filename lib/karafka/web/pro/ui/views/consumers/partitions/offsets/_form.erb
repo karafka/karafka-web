@@ -4,10 +4,10 @@
 <div class="card bg-base-100 mt-4">
   <div class="card-body">
     <%
-      update_path = consumer_path(
-        @process.id,
+      update_path = root_path(
+        'consumers',
         'partitions',
-        @subscription_group.id,
+        @consumer_group_id,
         @topic,
         @partition_id,
         'offset'

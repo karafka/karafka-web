@@ -2,57 +2,37 @@
 <%# See LICENSE for details. %>
 
 <li>
-  <a href="<%= consumers_path('overview') %>">
-    Consumers
+  <a href="<%= root_path('health', 'overview') %>">
+    Health
   </a>
 </li>
 
 <li>
-  <a href="<%= consumer_path(@process.id, 'subscriptions') %>">
-    <%== truncate(@process.id, strategy: :middle) %>
+  <a href="<%= root_path('health', 'overview') %>">
+    Overview
   </a>
 </li>
 
-<% if @subscription_group_id %>
-  <li>
-    <a href="<%= consumer_path(@process.id, "subscriptions##{@subscription_group_id}") %>">
-      <%= @subscription_group_id %>
-    </a>
-  </li>
+<li>
+  <a href="<%= root_path('health', 'overview') %>">
+    <%= @consumer_group_id %>
+  </a>
+</li>
 
-  <%
-    edit_path = consumer_path(
-      @process.id,
-      'partitions',
-      @subscription_group_id,
-      @topic,
-      @partition_id,
-      'offset',
-      'edit'
-    )
-  %>
+<li>
+  <a href="<%= root_path('health', 'overview') %>">
+    <%= @topic %>
+  </a>
+</li>
 
-  <li>
-    <a href="<%= edit_path %>">
-      <%= @topic %>
-    </a>
-  </li>
+<li>
+  <a href="<%= root_path('health', 'overview') %>">
+    Partition <%= @partition_id %>
+  </a>
+</li>
 
-  <li>
-    <a href="<%= edit_path %>">
-      <%= @partition_id %>
-    </a>
-  </li>
-
-  <li>
-    <a href="<%= edit_path %>">
-      Offsets
-    </a>
-  </li>
-
-  <li>
-    <a href="<%= edit_path %>">
-      Edit
-    </a>
-  </li>
-<% end %>
+<li>
+  <a href="<%= current_path %>">
+    Offset Edit
+  </a>
+</li>

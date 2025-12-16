@@ -47,11 +47,21 @@
       </td>
 
       <td>
-        <% if command[:process][:id] == '*' %>
-          *
+        <% if command[:type] == 'request' %>
+          <% matchers = command[:matchers] || {} %>
+          <% if matchers.empty? %>
+            <%== badge_secondary '*' %>
+          <% else %>
+            <% matchers.each do |key, value| %>
+              <% label = "#{key}:#{truncate(value.to_s, length: 20, strategy: :middle)}" %>
+              <%== badge_secondary label %>
+            <% end %>
+          <% end %>
         <% else %>
-          <a href="<%= consumer_path(command[:process][:id], 'subscriptions') %>">
-            <%= truncate(command[:process][:id], strategy: :middle) %>
+          <% process_id = command[:process][:id] %>
+          <% label = "process_id:#{truncate(process_id, strategy: :middle)}" %>
+          <a href="<%= consumer_path(process_id, 'subscriptions') %>">
+            <%== badge_secondary label %>
           </a>
         <% end %>
       </td>

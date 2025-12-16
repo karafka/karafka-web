@@ -27,27 +27,30 @@ module Karafka
               # Adds the given command into the tracker so it can be retrieved when needed.
               #
               # @param command [Request] command we want to schedule
-              # @note We accumulate requests per subscription group because this is the layer of
-              #   applicability of those even for partition related requests.
+              # @note Commands are indexed by consumer_group_id:topic:partition_id combination since
+              #   partition commands are dispatched without subscription_group_id.
               def <<(command)
+                key = "#{command[:consumer_group_id]}:#{command[:topic]}:#{command[:partition_id]}"
+
                 @mutex.synchronize do
-                  @requests[command[:subscription_group_id]] << command
+                  @requests[key] << command
                 end
               end
 
-              # Selects all incoming command requests for given subscription group and iterates
-              # over them. It removes selected requests during iteration.
+              # Selects all incoming command requests for given consumer group, topic, and partition
+              # and iterates over them. It removes selected requests during iteration.
               #
-              # @param subscription_group_id [String] id of the subscription group for which we
-              #   want to get all the requests. Subscription groups ids (not names) are unique
-              #   within the application, so it is unique "enough".
+              # @param consumer_group_id [String]
+              # @param topic [String]
+              # @param partition_id [Integer]
               #
-              # @yieldparam [Request] given command request for the requested subscription group
-              def each_for(subscription_group_id, &)
+              # @yieldparam [Request] given command request
+              def each_for(consumer_group_id, topic, partition_id, &)
+                key = "#{consumer_group_id}:#{topic}:#{partition_id}"
                 requests = nil
 
                 @mutex.synchronize do
-                  requests = @requests.delete(subscription_group_id)
+                  requests = @requests.delete(key)
                 end
 
                 (requests || EMPTY_ARRAY).each(&)

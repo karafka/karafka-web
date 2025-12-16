@@ -9,6 +9,8 @@
     - topic_name: Name of the topic
     - partition_partial: Path to the partition partial to render
     - colspan: Number of columns for the "no data" message
+  Optional locals:
+    - consumer_group_id: ID of the consumer group (required for partition action buttons)
 %>
 
 <% partitions = topic_details[:partitions] %>
@@ -18,6 +20,7 @@
     partial(
       partition_partial,
       locals: {
+        consumer_group_id: defined?(consumer_group_id) ? consumer_group_id : nil,
         topic_name: topic_name,
         partition_id: partition_id,
         details: details

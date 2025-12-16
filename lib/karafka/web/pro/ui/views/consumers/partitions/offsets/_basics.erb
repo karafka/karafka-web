@@ -6,8 +6,8 @@
     <h3>Basic Info</h3>
     <ul>
       <li>
-        Process ID:
-        <%== badge_primary @process.id %>
+        Consumer Group:
+        <%== badge_primary @consumer_group_id %>
       </li>
       <li>
         Topic:
@@ -21,19 +21,15 @@
   </div>
 
   <div class="card-metric">
-    <h3>Consumer Details</h3>
+    <h3>Partition State</h3>
     <ul>
-      <li>
-        Consumer Group:
-        <%== badge_secondary @consumer_group.id %>
-      </li>
-      <li>
-        Subscription Group:
-        <%== badge_secondary @subscription_group.id %>
-      </li>
       <li>
         Poll State:
         <%== poll_state_with_change_time_label(@partition_stats.poll_state, @partition_stats.poll_state_ch) %>
+      </li>
+      <li>
+        Long-Running Job:
+        <%== badge_secondary(@topic_lrj ? 'Yes' : 'No') %>
       </li>
     </ul>
   </div>

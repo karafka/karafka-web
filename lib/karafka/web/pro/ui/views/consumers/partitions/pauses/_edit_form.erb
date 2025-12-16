@@ -2,10 +2,10 @@
 <%# See LICENSE for details. %>
 
 <%
-  resume_path = consumer_path(
-    @process.id,
+  resume_path = root_path(
+    'consumers',
     'partitions',
-    @subscription_group.id,
+    @consumer_group_id,
     @topic,
     @partition_id,
     'pause'

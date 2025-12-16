@@ -10,93 +10,106 @@ module Karafka
         module Controllers
           module Consumers
             module Partitions
-              # Controller for managing partitions pauses in the context of the given consumer
-              # process
+              # Controller for managing partition pauses at the consumer group level.
+              #
+              # Partition-level pause/resume commands are broadcast to ALL consumer processes,
+              # and each process determines if it owns the specified partition and applies
+              # the command if it does.
               class PausesController < BaseController
                 self.sortable_attributes = %w[].freeze
 
-                # Displays the toggle (pause / resume)
+                # Displays the pause configuration form for a partition
                 #
-                # @param process_id [String] id of the process we're interested in
-                # @param subscription_group_id [String]
+                # @param consumer_group_id [String]
                 # @param topic [String]
                 # @param partition_id [Integer]
-                def new(process_id, subscription_group_id, topic, partition_id)
-                  bootstrap!(process_id, subscription_group_id, topic, partition_id)
+                def new(consumer_group_id, topic, partition_id)
+                  bootstrap!(consumer_group_id, topic, partition_id)
 
                   render
                 end
 
-                # @param process_id [String]
-                # @param subscription_group_id [String]
+                # Dispatches the partition pause command to all processes
+                #
+                # @param consumer_group_id [String]
                 # @param topic [String]
                 # @param partition_id [Integer]
-                def create(process_id, subscription_group_id, topic, partition_id)
-                  new(process_id, subscription_group_id, topic, partition_id)
+                def create(consumer_group_id, topic, partition_id)
+                  new(consumer_group_id, topic, partition_id)
 
+                  # Broadcast to all processes with matchers to filter by consumer group,
+                  # topic, and partition
                   Commanding::Dispatcher.request(
                     Commanding::Commands::Partitions::Pause.name,
-                    process_id,
                     {
-                      consumer_group_id: @consumer_group.id,
-                      subscription_group_id: @subscription_group.id,
+                      consumer_group_id: consumer_group_id,
                       topic: topic,
                       partition_id: partition_id,
                       # User provides this in seconds, we operate on ms in the system
                       duration: params.int(:duration) * 1_000,
                       prevent_override: params.bool(:prevent_override)
+                    },
+                    matchers: {
+                      consumer_group_id: consumer_group_id,
+                      topic: topic,
+                      partition_id: partition_id
                     }
                   )
 
                   redirect(
                     :previous,
                     success: format_flash(
-                      'Initiated partition ? for ?#? (subscription group: ?)',
-                      'pause',
+                      'Initiated pause for partition ?#? in consumer group ?',
                       topic,
                       partition_id,
-                      subscription_group_id
+                      consumer_group_id
                     )
                   )
                 end
 
-                # @param process_id [String]
-                # @param subscription_group_id [String]
+                # Displays the resume configuration form for a partition
+                #
+                # @param consumer_group_id [String]
                 # @param topic [String]
                 # @param partition_id [Integer]
-                def edit(process_id, subscription_group_id, topic, partition_id)
-                  new(process_id, subscription_group_id, topic, partition_id)
+                def edit(consumer_group_id, topic, partition_id)
+                  new(consumer_group_id, topic, partition_id)
 
                   render
                 end
 
-                # @param process_id [String]
-                # @param subscription_group_id [String]
+                # Dispatches the partition resume command to all processes
+                #
+                # @param consumer_group_id [String]
                 # @param topic [String]
                 # @param partition_id [Integer]
-                def delete(process_id, subscription_group_id, topic, partition_id)
-                  new(process_id, subscription_group_id, topic, partition_id)
+                def delete(consumer_group_id, topic, partition_id)
+                  new(consumer_group_id, topic, partition_id)
 
+                  # Broadcast to all processes with matchers to filter by consumer group,
+                  # topic, and partition
                   Commanding::Dispatcher.request(
                     Commanding::Commands::Partitions::Resume.name,
-                    process_id,
                     {
-                      consumer_group_id: @consumer_group.id,
-                      subscription_group_id: @subscription_group.id,
+                      consumer_group_id: consumer_group_id,
                       topic: topic,
                       partition_id: partition_id,
                       reset_attempts: params.bool(:reset_attempts)
+                    },
+                    matchers: {
+                      consumer_group_id: consumer_group_id,
+                      topic: topic,
+                      partition_id: partition_id
                     }
                   )
 
                   redirect(
                     :previous,
                     success: format_flash(
-                      'Initiated partition ? for ?#? (subscription group: ?)',
-                      'resume',
+                      'Initiated resume for partition ?#? in consumer group ?',
                       topic,
                       partition_id,
-                      subscription_group_id
+                      consumer_group_id
                     )
                   )
                 end

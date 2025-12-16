@@ -1,0 +1,36 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<div class="card bg-base-100 mt-4">
+  <div class="card-body">
+    <h3 class="card-title text-lg">Partition Information</h3>
+
+    <div class="grid grid-cols-2 gap-4 mt-2">
+      <div>
+        <span class="text-gray-500">Topic:</span>
+        <span class="font-mono"><%= @topic %></span>
+      </div>
+      <div>
+        <span class="text-gray-500">Partition:</span>
+        <span class="font-mono"><%= @partition_id %></span>
+      </div>
+      <div>
+        <span class="text-gray-500">Consumer Group:</span>
+        <span class="font-mono"><%= @consumer_group_id %></span>
+      </div>
+      <div>
+        <span class="text-gray-500">Poll State:</span>
+        <%== poll_state_with_change_time_label(@partition_stats.poll_state, @partition_stats.poll_state_ch) %>
+      </div>
+      <div>
+        <span class="text-gray-500">Committed Offset:</span>
+        <span class="font-mono"><%= normalized_metric(@partition_stats.committed_offset) %></span>
+      </div>
+      <div>
+        <span class="text-gray-500">Lag:</span>
+        <span class="font-mono"><%= normalized_metric(@partition_stats.lag_hybrid) %></span>
+      </div>
+    </div>
+
+  </div>
+</div>

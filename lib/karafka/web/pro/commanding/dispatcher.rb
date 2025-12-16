@@ -21,17 +21,14 @@ module Karafka
             #
             # @param command_name [String, Symbol] name of the command we want to deal with in the
             #   process
-            # @param process_id [String] id of the process or '*' for all processes. Used as the
-            #   Kafka message key for routing.
             # @param params [Hash] hash with extra command params that some commands may use.
             # @param matchers [Hash] hash with matching criteria for filtering which processes
             #   should handle this command. Supported keys:
+            #   - :process_id [String] - only this specific process
             #   - :consumer_group_id [String] - only processes with this consumer group
             #   - :topic [String] - only processes consuming this topic
-            def request(command_name, process_id, params = {}, matchers: {})
-              produce(
-                process_id,
-                'request',
+            def request(command_name, params = {}, matchers: {})
+              produce_request(
                 {
                   schema_version: SCHEMA_VERSION,
                   type: 'request',
@@ -51,7 +48,7 @@ module Karafka
             # @param process_id [String] related process id
             # @param params [Hash] input command params (or empty hash if none)
             def acceptance(command_name, process_id, params = {})
-              produce(
+              produce_reply(
                 process_id,
                 'acceptance',
                 {
@@ -72,7 +69,7 @@ module Karafka
             # @param process_id [String] related process id
             # @param result [Object] anything that can be the result of the command execution
             def result(command_name, process_id, result)
-              produce(
+              produce_reply(
                 process_id,
                 'result',
                 {
@@ -102,12 +99,29 @@ module Karafka
               ::Karafka::Web.config.topics.consumers.commands.name
             end
 
-            # Converts payload to json, compresses it and dispatches to Kafka
+            # Produces a command request message. Request messages are broadcast to all processes
+            # and do not require a specific process_id since filtering is done via matchers.
             #
-            # @param process_id [String]
-            # @param type [String] type of the request
             # @param payload [Hash] hash with payload
-            def produce(process_id, type, payload)
+            def produce_request(payload)
+              producer.produce_async(
+                topic: commands_topic,
+                partition: 0,
+                payload: ::Zlib::Deflate.deflate(payload.to_json),
+                headers: {
+                  'zlib' => 'true',
+                  'type' => 'request'
+                }
+              )
+            end
+
+            # Produces a reply message (acceptance or result). Reply messages include
+            # the process_id as the Kafka key for routing and identification.
+            #
+            # @param process_id [String] related process id
+            # @param type [String] type of the reply ('acceptance' or 'result')
+            # @param payload [Hash] hash with payload
+            def produce_reply(process_id, type, payload)
               producer.produce_async(
                 topic: commands_topic,
                 key: process_id,

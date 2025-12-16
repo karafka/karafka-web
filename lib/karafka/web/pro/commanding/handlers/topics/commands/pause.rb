@@ -20,16 +20,7 @@ module Karafka
 
                 # Triggers pausing of all partitions for the target topic that are owned by
                 # this process. Supports prevent_override to skip already paused partitions.
-                # Only applies to partitions belonging to the target consumer group.
                 def call
-                  # Skip if this listener's subscription group doesn't belong to the target
-                  # consumer group. This is important when multiple consumer groups consume
-                  # the same topic - we only want to pause partitions for the specific group.
-                  unless matches_consumer_group?
-                    result('skipped', partitions_affected: [], partitions_prevented: [])
-                    return
-                  end
-
                   partitions_affected = []
                   partitions_prevented = []
 

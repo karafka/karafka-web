@@ -37,21 +37,6 @@ module Karafka
                   @topic ||= request[:topic]
                 end
 
-                # @return [String] consumer group ID from the request
-                def consumer_group_id
-                  @consumer_group_id ||= request[:consumer_group_id]
-                end
-
-                # Checks if this listener's subscription group belongs to the target consumer group.
-                # This is important for topic-level commands that are broadcast to all processes,
-                # as we need to filter by consumer group to avoid affecting other consumer groups
-                # that may be consuming the same topic.
-                #
-                # @return [Boolean] true if this listener should process the command
-                def matches_consumer_group?
-                  listener.subscription_group.consumer_group.id == consumer_group_id
-                end
-
                 # Finds all partition IDs for the target topic that are currently assigned
                 # to this listener's subscription group.
                 #

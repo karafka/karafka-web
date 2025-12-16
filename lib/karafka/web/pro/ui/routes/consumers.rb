@@ -30,45 +30,37 @@ module Karafka
                   controller.performance
                 end
 
-                r.on String, 'partitions' do |process_id|
-                  controller = build(Controllers::Consumers::Partitions::PausesController)
+                r.on 'partitions', String, String, :partition_id do |consumer_group_id, topic, partition_id|
+                  r.on 'pause' do
+                    controller = build(Controllers::Consumers::Partitions::PausesController)
 
-                  r.get(
-                    String, String, :partition_id, 'pause', 'new'
-                  ) do |subscription_group_id, topic, partition_id|
-                    controller.new(process_id, subscription_group_id, topic, partition_id)
+                    r.get 'new' do
+                      controller.new(consumer_group_id, topic, partition_id)
+                    end
+
+                    r.post do
+                      controller.create(consumer_group_id, topic, partition_id)
+                    end
+
+                    r.get 'edit' do
+                      controller.edit(consumer_group_id, topic, partition_id)
+                    end
+
+                    r.delete do
+                      controller.delete(consumer_group_id, topic, partition_id)
+                    end
                   end
 
-                  r.post(
-                    String, String, :partition_id, 'pause'
-                  ) do |subscription_group_id, topic, partition_id|
-                    controller.create(process_id, subscription_group_id, topic, partition_id)
-                  end
+                  r.on 'offset' do
+                    controller = build(Controllers::Consumers::Partitions::OffsetsController)
 
-                  r.get(
-                    String, String, :partition_id, 'pause', 'edit'
-                  ) do |subscription_group_id, topic, partition_id|
-                    controller.edit(process_id, subscription_group_id, topic, partition_id)
-                  end
+                    r.get 'edit' do
+                      controller.edit(consumer_group_id, topic, partition_id)
+                    end
 
-                  r.delete(
-                    String, String, :partition_id, 'pause'
-                  ) do |subscription_group_id, topic, partition_id|
-                    controller.delete(process_id, subscription_group_id, topic, partition_id)
-                  end
-
-                  controller = build(Controllers::Consumers::Partitions::OffsetsController)
-
-                  r.get(
-                    String, String, :partition_id, 'offset', 'edit'
-                  ) do |subscription_group_id, topic, partition_id|
-                    controller.edit(process_id, subscription_group_id, topic, partition_id)
-                  end
-
-                  r.put(
-                    String, String, :partition_id, 'offset'
-                  ) do |subscription_group_id, topic, partition_id|
-                    controller.update(process_id, subscription_group_id, topic, partition_id)
+                    r.put do
+                      controller.update(consumer_group_id, topic, partition_id)
+                    end
                   end
                 end
 

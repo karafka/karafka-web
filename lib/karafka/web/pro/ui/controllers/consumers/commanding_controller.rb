@@ -97,11 +97,14 @@ module Karafka
 
               # Dispatches given command
               # @param command [Class] command class
-              # @param process_id [String] process id
+              # @param process_id [String] process id or '*' for all processes
               def request(command, process_id)
+                matchers = process_id == '*' ? {} : { process_id: process_id }
+
                 Commanding::Dispatcher.request(
                   command.name,
-                  process_id
+                  {},
+                  matchers: matchers
                 )
               end
 
