@@ -54,10 +54,8 @@ module Karafka
                 # On rebalance, reject any pending commands for all topics and partitions
                 # that were assigned to this subscription group
                 subscription_group.topics.each do |topic|
-                  # We can't know which partitions had pending commands, so we iterate
-                  # over a reasonable range. The tracker will simply return empty for
-                  # partitions without commands.
-                  (0..9_999).each do |partition_id|
+                  # Only iterate over partitions that actually have pending commands
+                  @tracker.partition_ids_for(consumer_group_id, topic.name).each do |partition_id|
                     @tracker.each_for(consumer_group_id, topic.name, partition_id) do |command|
                       @executor.reject(command)
                     end

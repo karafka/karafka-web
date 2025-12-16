@@ -10,11 +10,7 @@ module Karafka
         module Controllers
           module Consumers
             module Partitions
-              # Partition offset management controller at the consumer group level.
-              #
-              # Offset seek commands are broadcast to ALL consumer processes,
-              # and each process determines if it owns the specified partition and applies
-              # the command if it does.
+              # Partition offset management controller at the consumer group level
               class OffsetsController < BaseController
                 self.sortable_attributes = [].freeze
 

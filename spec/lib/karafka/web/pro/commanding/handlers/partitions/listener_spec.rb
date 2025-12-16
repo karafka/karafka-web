@@ -121,25 +121,49 @@ RSpec.describe_current do
     end
 
     before do
+      allow(tracker).to receive(:partition_ids_for).and_return([partition_id])
       allow(tracker).to receive(:each_for).and_yield(command)
       allow(executor).to receive(:reject)
     end
 
-    it 'rejects all pending commands for the subscription group topics' do
+    it 'queries partition_ids_for to get partitions with pending commands' do
       listener.on_rebalance_partitions_assigned(event)
 
-      # Should iterate through all possible partitions (0..999)
-      expect(tracker).to have_received(:each_for).at_least(:once)
-      expect(executor).to have_received(:reject).with(command).at_least(:once)
+      expect(tracker).to have_received(:partition_ids_for).with(consumer_group_id, topic_name)
     end
 
-    context 'when no commands exist' do
+    it 'rejects pending commands only for partitions returned by partition_ids_for' do
+      listener.on_rebalance_partitions_assigned(event)
+
+      expect(tracker).to have_received(:each_for).with(consumer_group_id, topic_name, partition_id)
+      expect(executor).to have_received(:reject).with(command)
+    end
+
+    context 'when multiple partitions have pending commands' do
+      let(:partition_id2) { 5 }
+
       before do
-        allow(tracker).to receive(:each_for)
+        allow(tracker).to receive(:partition_ids_for).and_return([partition_id, partition_id2])
       end
 
-      it 'does not reject anything' do
+      it 'iterates only over partitions with commands' do
         listener.on_rebalance_partitions_assigned(event)
+
+        expect(tracker).to have_received(:each_for).with(consumer_group_id, topic_name, partition_id)
+        expect(tracker).to have_received(:each_for).with(consumer_group_id, topic_name, partition_id2)
+        expect(tracker).to have_received(:each_for).twice
+      end
+    end
+
+    context 'when no partitions have pending commands' do
+      before do
+        allow(tracker).to receive(:partition_ids_for).and_return([])
+      end
+
+      it 'does not call each_for' do
+        listener.on_rebalance_partitions_assigned(event)
+
+        expect(tracker).not_to have_received(:each_for)
         expect(executor).not_to have_received(:reject)
       end
     end
@@ -153,6 +177,7 @@ RSpec.describe_current do
     end
 
     before do
+      allow(tracker).to receive(:partition_ids_for).and_return([partition_id])
       allow(tracker).to receive(:each_for).and_yield(command)
       allow(executor).to receive(:reject)
     end
@@ -160,12 +185,13 @@ RSpec.describe_current do
     it 'rejects all pending commands' do
       listener.on_rebalance_partitions_revoked(event)
 
-      expect(tracker).to have_received(:each_for).at_least(:once)
-      expect(executor).to have_received(:reject).with(command).at_least(:once)
+      expect(tracker).to have_received(:partition_ids_for).with(consumer_group_id, topic_name)
+      expect(tracker).to have_received(:each_for).with(consumer_group_id, topic_name, partition_id)
+      expect(executor).to have_received(:reject).with(command)
     end
 
     it 'behaves same as on_rebalance_partitions_assigned' do
-      allow(tracker).to receive(:each_for)
+      allow(tracker).to receive(:partition_ids_for).and_return([])
 
       assigned_result = listener.on_rebalance_partitions_assigned(event)
       revoked_result = listener.on_rebalance_partitions_revoked(event)
@@ -173,13 +199,15 @@ RSpec.describe_current do
       expect(revoked_result).to eq(assigned_result)
     end
 
-    context 'when no commands exist' do
+    context 'when no partitions have pending commands' do
       before do
-        allow(tracker).to receive(:each_for)
+        allow(tracker).to receive(:partition_ids_for).and_return([])
       end
 
       it 'does not reject anything' do
         listener.on_rebalance_partitions_revoked(event)
+
+        expect(tracker).not_to have_received(:each_for)
         expect(executor).not_to have_received(:reject)
       end
     end

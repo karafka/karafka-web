@@ -22,6 +22,8 @@ module Karafka
               def initialize
                 @mutex = Mutex.new
                 @requests = Hash.new { |h, k| h[k] = [] }
+                # Index tracking which partitions have pending commands per consumer_group:topic
+                @partition_index = Hash.new { |h, k| h[k] = Set.new }
               end
 
               # Adds the given command into the tracker so it can be retrieved when needed.
@@ -31,9 +33,11 @@ module Karafka
               #   partition commands are dispatched without subscription_group_id.
               def <<(command)
                 key = "#{command[:consumer_group_id]}:#{command[:topic]}:#{command[:partition_id]}"
+                index_key = "#{command[:consumer_group_id]}:#{command[:topic]}"
 
                 @mutex.synchronize do
                   @requests[key] << command
+                  @partition_index[index_key] << command[:partition_id]
                 end
               end
 
@@ -47,13 +51,37 @@ module Karafka
               # @yieldparam [Request] given command request
               def each_for(consumer_group_id, topic, partition_id, &)
                 key = "#{consumer_group_id}:#{topic}:#{partition_id}"
+                index_key = "#{consumer_group_id}:#{topic}"
                 requests = nil
 
                 @mutex.synchronize do
                   requests = @requests.delete(key)
+                  @partition_index[index_key].delete(partition_id) if requests
                 end
 
                 (requests || EMPTY_ARRAY).each(&)
+              end
+
+              # Returns partition IDs that have pending commands for the given consumer group and topic
+              #
+              # @param consumer_group_id [String]
+              # @param topic [String]
+              # @return [Array<Integer>] partition IDs with pending commands
+              def partition_ids_for(consumer_group_id, topic)
+                index_key = "#{consumer_group_id}:#{topic}"
+
+                @mutex.synchronize do
+                  @partition_index[index_key].to_a
+                end
+              end
+
+              # Clears all stored requests and partition index
+              # @note Primarily for testing purposes
+              def clear!
+                @mutex.synchronize do
+                  @requests.clear
+                  @partition_index.clear
+                end
               end
             end
           end

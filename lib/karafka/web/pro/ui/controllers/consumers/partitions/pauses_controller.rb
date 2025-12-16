@@ -11,10 +11,6 @@ module Karafka
           module Consumers
             module Partitions
               # Controller for managing partition pauses at the consumer group level.
-              #
-              # Partition-level pause/resume commands are broadcast to ALL consumer processes,
-              # and each process determines if it owns the specified partition and applies
-              # the command if it does.
               class PausesController < BaseController
                 self.sortable_attributes = %w[].freeze
 
