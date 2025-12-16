@@ -85,5 +85,3 @@ module Karafka
     end
   end
 end
-
-require_relative 'matcher/matchers'

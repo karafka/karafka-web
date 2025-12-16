@@ -16,7 +16,3 @@ module Karafka
     end
   end
 end
-
-require_relative 'matchers/base'
-require_relative 'matchers/consumer_group_id'
-require_relative 'matchers/topic'
