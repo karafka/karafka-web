@@ -54,6 +54,11 @@ RSpec.configure do |config|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
 
+  config.mock_with :rspec do |mocks|
+    # Prevents you from stubbing a method that does not exist on a real object
+    mocks.verify_partial_doubles = true
+  end
+
   config.before do
     # Prepare clean routing setup for each spec
     # We do this because some of the specs extend routing and we do not want them to interfere

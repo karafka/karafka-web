@@ -47,6 +47,13 @@ module Karafka
                   request.to_h.merge(status: 'rebalance_rejected')
                 )
               end
+
+              private
+
+              # @return [String] id of the current consumer process
+              def process_id
+                ::Karafka::Web.config.tracking.consumers.sampler.process_id
+              end
             end
           end
         end

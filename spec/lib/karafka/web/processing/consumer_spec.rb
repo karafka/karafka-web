@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe_current do
-  subject(:consumer) { described_class.new }
+  subject(:consumer) do
+    consumer = described_class.new
+    consumer.coordinator = coordinator
+    # Define mark_as_consumed since strategy modules are included at runtime
+    consumer.define_singleton_method(:mark_as_consumed) { |_message| nil }
+    consumer
+  end
 
   let(:messages) { [] }
   let(:coordinator) { build(:processing_coordinator) }
@@ -13,11 +19,7 @@ RSpec.describe_current do
   let(:metrics_contract) { instance_double(Karafka::Web::Processing::Consumers::Contracts::Metrics) }
 
   before do
-    allow(consumer).to receive_messages(
-      messages: messages,
-      coordinator: coordinator,
-      mark_as_consumed: nil
-    )
+    allow(consumer).to receive(:messages).and_return(messages)
 
     allow(Karafka::Web::Management::Migrator).to receive(:new).and_return(migrator)
     allow(migrator).to receive(:call)
