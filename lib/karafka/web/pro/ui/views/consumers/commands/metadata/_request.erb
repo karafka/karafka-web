@@ -35,6 +35,7 @@
               <% label = "#{key}:#{value}" %>
               <%== badge_secondary label %>
             <% end %>
+
             <% if process_id && process_id != '*' %>
               <a href="<%= consumer_path(process_id, 'subscriptions') %>">
                 <%== badge_secondary "process_id:#{process_id}" %>

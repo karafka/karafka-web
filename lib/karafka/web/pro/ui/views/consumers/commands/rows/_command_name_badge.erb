@@ -15,7 +15,11 @@
           when scope::Partitions::Pause.name
             'warning'
           when scope::Partitions::Resume.name
+            'success'
+          when scope::Topics::Pause.name
             'warning'
+          when scope::Topics::Resume.name
+            'success'
           else
             'secondary'
           end
