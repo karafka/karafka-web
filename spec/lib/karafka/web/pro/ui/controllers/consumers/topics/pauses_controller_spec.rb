@@ -162,6 +162,7 @@ RSpec.describe_current do
         # Matchers for filtering which processes handle this command
         matchers = message.payload.fetch(:matchers)
         expect(matchers[:consumer_group_id]).to eq(consumer_group_id)
+        expect(matchers[:topic]).to eq(topic_name)
 
         command = message.payload.fetch(:command)
 
@@ -319,6 +320,7 @@ RSpec.describe_current do
         # Matchers for filtering which processes handle this command
         matchers = message.payload.fetch(:matchers)
         expect(matchers[:consumer_group_id]).to eq(consumer_group_id)
+        expect(matchers[:topic]).to eq(topic_name)
 
         command = message.payload.fetch(:command)
 

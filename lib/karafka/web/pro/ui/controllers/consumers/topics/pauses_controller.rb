@@ -12,11 +12,6 @@ module Karafka
             # Namespace for controllers related to topic-level operations in the consumers context.
             module Topics
               # Controller for managing topic-level pauses at the consumer group level.
-              #
-              # Topic-level pause/resume commands are broadcast to ALL consumer processes
-              # (using key='*'), and each process determines which partitions of the target
-              # topic it owns and applies the command to those partitions within the specified
-              # consumer group.
               class PausesController < BaseController
                 self.sortable_attributes = %w[].freeze
 
@@ -37,7 +32,6 @@ module Karafka
                 def create(consumer_group_id, topic)
                   new(consumer_group_id, topic)
 
-                  # Broadcast to all processes with matchers to filter by consumer group
                   Commanding::Dispatcher.request(
                     Commanding::Commands::Topics::Pause.name,
                     {
@@ -47,7 +41,7 @@ module Karafka
                       duration: params.int(:duration) * 1_000,
                       prevent_override: params.bool(:prevent_override)
                     },
-                    matchers: { consumer_group_id: consumer_group_id }
+                    matchers: { consumer_group_id: consumer_group_id, topic: topic }
                   )
 
                   redirect(
@@ -77,7 +71,6 @@ module Karafka
                 def delete(consumer_group_id, topic)
                   new(consumer_group_id, topic)
 
-                  # Broadcast to all processes with matchers to filter by consumer group
                   Commanding::Dispatcher.request(
                     Commanding::Commands::Topics::Resume.name,
                     {
@@ -85,7 +78,7 @@ module Karafka
                       topic: topic,
                       reset_attempts: params.bool(:reset_attempts)
                     },
-                    matchers: { consumer_group_id: consumer_group_id }
+                    matchers: { consumer_group_id: consumer_group_id, topic: topic }
                   )
 
                   redirect(
