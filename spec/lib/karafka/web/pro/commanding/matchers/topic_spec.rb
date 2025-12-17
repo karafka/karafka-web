@@ -12,9 +12,17 @@ RSpec.describe_current do
       payload: { matchers: matchers }
     )
   end
+
   let(:matchers) { { topic: 'my_topic' } }
-  let(:consumer_group) { instance_double(Karafka::Routing::ConsumerGroup, id: 'my_consumer_group') }
-  let(:topic) { instance_double(Karafka::Routing::Topic, name: 'my_topic', consumer_group: consumer_group) }
+
+  let(:consumer_group) do
+    instance_double(Karafka::Routing::ConsumerGroup, id: 'my_consumer_group')
+  end
+
+  let(:topic) do
+    instance_double(Karafka::Routing::Topic, name: 'my_topic', consumer_group: consumer_group)
+  end
+
   let(:assignments) { { topic => [0, 1, 2] } }
 
   before do
@@ -56,7 +64,14 @@ RSpec.describe_current do
     end
 
     context 'when there are multiple topic assignments' do
-      let(:topic2) { instance_double(Karafka::Routing::Topic, name: 'second_topic', consumer_group: consumer_group) }
+      let(:topic2) do
+        instance_double(
+          Karafka::Routing::Topic,
+          name: 'second_topic',
+          consumer_group: consumer_group
+        )
+      end
+
       let(:assignments) { { topic => [0, 1], topic2 => [0] } }
 
       context 'when matching first topic' do
