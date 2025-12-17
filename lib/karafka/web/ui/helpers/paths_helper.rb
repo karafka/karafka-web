@@ -121,7 +121,15 @@ module Karafka
             action = nil
           )
             root_path(
-              *['scheduled_messages', 'explorer', 'topics', topic_name, partition_id, offset, action].compact
+              *[
+                'scheduled_messages',
+                'explorer',
+                'topics',
+                topic_name,
+                partition_id,
+                offset,
+                action
+              ].compact
             )
           end
         end

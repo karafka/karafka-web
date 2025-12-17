@@ -106,8 +106,13 @@ RSpec.describe_current do
       it 'iterates over all partitions' do
         listener.on_connection_listener_fetch_loop(event)
 
-        expect(tracker).to have_received(:each_for).with(consumer_group_id, topic_name, partition_id)
-        expect(tracker).to have_received(:each_for).with(consumer_group_id, topic_name, partition2_id)
+        expect(tracker)
+          .to have_received(:each_for)
+          .with(consumer_group_id, topic_name, partition_id)
+
+        expect(tracker)
+          .to have_received(:each_for)
+          .with(consumer_group_id, topic_name, partition2_id)
       end
     end
   end
@@ -148,8 +153,14 @@ RSpec.describe_current do
       it 'iterates only over partitions with commands' do
         listener.on_rebalance_partitions_assigned(event)
 
-        expect(tracker).to have_received(:each_for).with(consumer_group_id, topic_name, partition_id)
-        expect(tracker).to have_received(:each_for).with(consumer_group_id, topic_name, partition_id2)
+        expect(tracker)
+          .to have_received(:each_for)
+          .with(consumer_group_id, topic_name, partition_id)
+
+        expect(tracker)
+          .to have_received(:each_for)
+          .with(consumer_group_id, topic_name, partition_id2)
+
         expect(tracker).to have_received(:each_for).twice
       end
     end

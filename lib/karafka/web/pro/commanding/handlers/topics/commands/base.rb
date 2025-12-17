@@ -69,8 +69,8 @@ module Karafka
                 #
                 # @param status [String] execution status
                 # @param partitions_affected [Array<Integer>] partition IDs that were affected
-                # @param partitions_prevented [Array<Integer>] partition IDs that were skipped due to
-                #   prevent_override setting
+                # @param partitions_prevented [Array<Integer>] partition IDs that were skipped
+                #   due to prevent_override setting
                 def result(status, partitions_affected: [], partitions_prevented: [])
                   Commanding::Dispatcher.result(
                     request.name,

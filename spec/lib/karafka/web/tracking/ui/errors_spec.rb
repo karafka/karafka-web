@@ -20,6 +20,8 @@ RSpec.describe Karafka::Web::Tracking::Ui::Errors do
 
   describe '#on_error_occurred' do
     context 'when the event type is web.ui.error' do
+      let(:uuid_pattern) { /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i }
+
       it 'expect to dispatch error to Kafka' do
         listener.on_error_occurred(event)
 
@@ -31,8 +33,7 @@ RSpec.describe Karafka::Web::Tracking::Ui::Errors do
           expect(payload['schema_version']).to eq('1.2.0')
           expect(payload['id']).to be_a(String)
           expect(payload['id']).not_to be_empty
-          # UUID format validation
-          expect(payload['id']).to match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
+          expect(payload['id']).to match(uuid_pattern)
           expect(payload['type']).to eq('web.ui.error')
           expect(payload['error_class']).to eq('StandardError')
           expect(payload['error_message']).to eq('UI error message')

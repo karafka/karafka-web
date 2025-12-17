@@ -30,7 +30,12 @@ module Karafka
                   controller.performance
                 end
 
-                r.on 'partitions', String, String, :partition_id do |consumer_group_id, topic, partition_id|
+                r.on(
+                  'partitions',
+                  String,
+                  String,
+                  :partition_id
+                ) do |consumer_group_id, topic, partition_id|
                   r.on 'pause' do
                     controller = build(Controllers::Consumers::Partitions::PausesController)
 

@@ -12,11 +12,24 @@ RSpec.describe_current do
   let(:messages) { [] }
   let(:coordinator) { build(:processing_coordinator) }
   let(:migrator) { instance_double(Karafka::Web::Management::Migrator) }
-  let(:state_aggregator) { instance_double(Karafka::Web::Processing::Consumers::Aggregators::State) }
-  let(:metrics_aggregator) { instance_double(Karafka::Web::Processing::Consumers::Aggregators::Metrics) }
+
+  let(:state_aggregator) do
+    instance_double(Karafka::Web::Processing::Consumers::Aggregators::State)
+  end
+
+  let(:metrics_aggregator) do
+    instance_double(Karafka::Web::Processing::Consumers::Aggregators::Metrics)
+  end
+
   let(:schema_manager) { instance_double(Karafka::Web::Processing::Consumers::SchemaManager) }
-  let(:state_contract) { instance_double(Karafka::Web::Processing::Consumers::Contracts::State) }
-  let(:metrics_contract) { instance_double(Karafka::Web::Processing::Consumers::Contracts::Metrics) }
+
+  let(:state_contract) do
+    instance_double(Karafka::Web::Processing::Consumers::Contracts::State)
+  end
+
+  let(:metrics_contract) do
+    instance_double(Karafka::Web::Processing::Consumers::Contracts::Metrics)
+  end
 
   before do
     allow(consumer).to receive(:messages).and_return(messages)
@@ -24,11 +37,16 @@ RSpec.describe_current do
     allow(Karafka::Web::Management::Migrator).to receive(:new).and_return(migrator)
     allow(migrator).to receive(:call)
 
-    allow(Karafka::Web::Processing::Consumers::SchemaManager).to receive(:new).and_return(schema_manager)
-    allow(Karafka::Web::Processing::Consumers::Aggregators::State).to receive(:new).and_return(state_aggregator)
-    allow(Karafka::Web::Processing::Consumers::Aggregators::Metrics).to receive(:new).and_return(metrics_aggregator)
-    allow(Karafka::Web::Processing::Consumers::Contracts::State).to receive(:new).and_return(state_contract)
-    allow(Karafka::Web::Processing::Consumers::Contracts::Metrics).to receive(:new).and_return(metrics_contract)
+    allow(Karafka::Web::Processing::Consumers::SchemaManager)
+      .to receive(:new).and_return(schema_manager)
+    allow(Karafka::Web::Processing::Consumers::Aggregators::State)
+      .to receive(:new).and_return(state_aggregator)
+    allow(Karafka::Web::Processing::Consumers::Aggregators::Metrics)
+      .to receive(:new).and_return(metrics_aggregator)
+    allow(Karafka::Web::Processing::Consumers::Contracts::State)
+      .to receive(:new).and_return(state_contract)
+    allow(Karafka::Web::Processing::Consumers::Contracts::Metrics)
+      .to receive(:new).and_return(metrics_contract)
 
     allow(state_aggregator).to receive(:to_h).and_return({})
     allow(metrics_aggregator).to receive(:to_h).and_return({})
@@ -134,8 +152,12 @@ RSpec.describe_current do
 
       context 'when schema is older' do
         before do
-          allow(schema_manager).to receive(:call).and_return(:older)
-          allow(state_aggregator).to receive(:add_state)
+          allow(schema_manager)
+            .to receive(:call)
+            .and_return(:older)
+
+          allow(state_aggregator)
+            .to receive(:add_state)
         end
 
         it 'only tracks state without full processing' do
@@ -145,10 +167,19 @@ RSpec.describe_current do
 
           consumer.consume
 
-          expect(state_aggregator).to have_received(:add_state).with(message1.payload, message1.offset)
-          expect(state_aggregator).to have_received(:add_state).with(message2.payload, message2.offset)
-          expect(state_aggregator).not_to have_received(:add)
-          expect(metrics_aggregator).not_to have_received(:add_report)
+          expect(state_aggregator)
+            .to have_received(:add_state)
+            .with(message1.payload, message1.offset)
+
+          expect(state_aggregator)
+            .to have_received(:add_state)
+            .with(message2.payload, message2.offset)
+
+          expect(state_aggregator)
+            .not_to have_received(:add)
+
+          expect(metrics_aggregator)
+            .not_to have_received(:add_report)
         end
 
         context 'with old schema 1.2.x report using process[:name] instead of process[:id]' do

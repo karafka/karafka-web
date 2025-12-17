@@ -40,10 +40,13 @@ module Karafka
                 # 2. Zero write fault tolerance: RF > 1 but RF <= minISR (can't lose any broker)
                 # 3. Low durability: RF > 1 and minISR = 1 (data loss risk if leader fails)
                 @has_no_redundancy = @replication_factor == 1
-                @has_zero_fault_tolerance = @replication_factor > 1 && @replication_factor <= @min_isr
+                @has_zero_fault_tolerance = @replication_factor > 1 &&
+                                            @replication_factor <= @min_isr
                 @has_low_durability = @replication_factor > 1 && @min_isr == 1
 
-                @has_resilience_issue = @has_zero_fault_tolerance || @has_low_durability || @has_no_redundancy
+                @has_resilience_issue = @has_zero_fault_tolerance ||
+                                        @has_low_durability ||
+                                        @has_no_redundancy
 
                 render
               end

@@ -16,7 +16,9 @@ RSpec.describe_current do
     end
   end
 
-  Dir[Karafka::Web.gem_root.join('spec', 'lib', 'karafka', 'web', 'pro', '**/*.*')].each do |pro_file|
+  pro_path = Karafka::Web.gem_root.join('spec', 'lib', 'karafka', 'web', 'pro', '**/*.*')
+
+  Dir[pro_path].each do |pro_file|
     context "when checking #{pro_file}" do
       let(:content) { File.read(pro_file) }
 

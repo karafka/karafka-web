@@ -62,7 +62,8 @@ module Karafka
                 (requests || EMPTY_ARRAY).each(&)
               end
 
-              # Returns partition IDs that have pending commands for the given consumer group and topic
+              # Returns partition IDs that have pending commands for the given consumer group
+              # and topic
               #
               # @param consumer_group_id [String]
               # @param topic [String]

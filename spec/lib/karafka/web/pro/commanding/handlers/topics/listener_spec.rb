@@ -49,8 +49,14 @@ RSpec.describe_current do
       let(:command2) { instance_double(Karafka::Web::Pro::Commanding::Request) }
 
       before do
-        allow(subscription_group).to receive(:topics).and_return([topic, topic2])
-        allow(tracker).to receive(:each_for).with(consumer_group_id, 'test_topic2').and_yield(command2)
+        allow(subscription_group)
+          .to receive(:topics)
+          .and_return([topic, topic2])
+
+        allow(tracker)
+          .to receive(:each_for)
+          .with(consumer_group_id, 'test_topic2')
+          .and_yield(command2)
       end
 
       it 'checks for commands on all topics' do

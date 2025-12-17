@@ -12,17 +12,26 @@ RSpec.describe_current do
   let(:cg_id) { 'consumer_group_1' }
 
   before do
-    allow(Karafka::Web.config.tracking.consumers).to receive(:sampler).and_return(sampler)
-    allow(sampler).to receive_messages(
-      consumer_groups: consumer_groups,
-      subscription_groups: subscription_groups
-    )
-    allow(subscription_group).to receive_messages(
-      id: sg_id,
-      consumer_group: consumer_group,
-      kafka: {}
-    )
-    allow(consumer_group).to receive(:id).and_return(cg_id)
+    allow(Karafka::Web.config.tracking.consumers)
+      .to receive(:sampler)
+      .and_return(sampler)
+
+    allow(sampler)
+      .to receive_messages(
+        consumer_groups: consumer_groups,
+        subscription_groups: subscription_groups
+      )
+
+    allow(subscription_group)
+      .to receive_messages(
+        id: sg_id,
+        consumer_group: consumer_group,
+        kafka: {}
+      )
+
+    allow(consumer_group)
+      .to receive(:id)
+      .and_return(cg_id)
 
     # Mock the nested structure for consumer groups
     consumer_groups[cg_id] = { subscription_groups: {} }
@@ -44,10 +53,12 @@ RSpec.describe_current do
 
     it 'calls track with correct subscription group id' do
       yielded_sampler = nil
+
       allow(sampler).to receive(:track) do |&block|
         yielded_sampler = sampler
         block.call(sampler)
       end
+
       allow(subscription_groups).to receive(:[]).with(sg_id).and_return({})
 
       listener.on_connection_listener_before_fetch_loop(event)
@@ -68,8 +79,14 @@ RSpec.describe_current do
 
     context 'when group.instance.id is configured' do
       before do
-        allow(subscription_group).to receive(:kafka).and_return({ 'group.instance.id': 'my-static-instance' })
-        allow(sampler).to receive(:track).and_yield(sampler)
+        allow(subscription_group)
+          .to receive(:kafka)
+          .and_return({ 'group.instance.id': 'my-static-instance' })
+
+        allow(sampler)
+          .to receive(:track)
+          .and_yield(sampler)
+
         subscription_groups[sg_id] = {}
       end
 

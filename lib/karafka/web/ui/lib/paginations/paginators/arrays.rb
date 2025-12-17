@@ -13,9 +13,9 @@ module Karafka
               class << self
                 # @param array [Array] array we want to paginate
                 # @param current_page [Integer] page we want to be on
-                # @return [Array<Array, Boolean>] Array with two elements: first is the array with
-                #   data of the given page and second is a boolean flag with info if the elements we got
-                #   are from the last page
+                # @return [Array<Array, Boolean>] Array with two elements: first is the array
+                #   with data of the given page and second is a boolean flag with info if the
+                #   elements we got are from the last page
                 def call(array, current_page)
                   slices = array.each_slice(per_page).to_a
                   current_data = slices[current_page - 1] || []

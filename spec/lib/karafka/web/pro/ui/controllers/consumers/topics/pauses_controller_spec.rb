@@ -145,7 +145,8 @@ RSpec.describe_current do
       it 'expect to redirect with success message' do
         expect(response.status).to eq(302)
         expect(response.location).to eq('/')
-        expect(flash[:success]).to include("Initiated pause for all partitions of the #{topic_name}")
+        expected_message = "Initiated pause for all partitions of the #{topic_name}"
+        expect(flash[:success]).to include(expected_message)
       end
 
       it 'expect to create pause command with correct parameters' do
@@ -303,7 +304,8 @@ RSpec.describe_current do
       it 'expect to redirect with success message' do
         expect(response.status).to eq(302)
         expect(response.location).to eq('/')
-        expect(flash[:success]).to include("Initiated resume for all partitions of the #{topic_name}")
+        expected_message = "Initiated resume for all partitions of the #{topic_name}"
+        expect(flash[:success]).to include(expected_message)
       end
 
       it 'expect to create resume command with correct parameters' do

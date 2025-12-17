@@ -13,8 +13,13 @@ RSpec.describe_current do
 
   describe '#call' do
     context 'when all processes have compatible schemas' do
-      let(:process1) { instance_double(Karafka::Web::Ui::Models::Process, schema_compatible?: true) }
-      let(:process2) { instance_double(Karafka::Web::Ui::Models::Process, schema_compatible?: true) }
+      let(:process1) do
+        instance_double(Karafka::Web::Ui::Models::Process, schema_compatible?: true)
+      end
+
+      let(:process2) do
+        instance_double(Karafka::Web::Ui::Models::Process, schema_compatible?: true)
+      end
 
       before do
         context.processes = [process1, process2]

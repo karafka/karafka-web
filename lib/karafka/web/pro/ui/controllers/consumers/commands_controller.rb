@@ -72,8 +72,8 @@ module Karafka
 
               private
 
-              # @return [Array] Array with requested messages as well as pagination details and other
-              #   obtained metadata
+              # @return [Array] Array with requested messages as well as pagination details
+              #   and other obtained metadata
               def current_partition_data
                 Models::Message.offset_page(
                   commands_topic,

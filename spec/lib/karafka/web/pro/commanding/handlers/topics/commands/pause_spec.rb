@@ -36,25 +36,53 @@ RSpec.describe_current do
   let(:prevent_override) { false }
 
   before do
-    allow(listener).to receive_messages(coordinators: coordinators, subscription_group: subscription_group)
-    allow(subscription_group).to receive(:consumer_group).and_return(consumer_group)
-    allow(consumer_group).to receive(:id).and_return(consumer_group_id)
+    allow(listener)
+      .to receive_messages(coordinators: coordinators, subscription_group: subscription_group)
 
-    allow(client).to receive_messages(assignment: topic_partition_list, pause: nil)
+    allow(subscription_group)
+      .to receive(:consumer_group)
+      .and_return(consumer_group)
 
-    allow(topic_partition_list).to receive(:to_h).and_return({ topic_name => [partition0, partition1] })
+    allow(consumer_group)
+      .to receive(:id)
+      .and_return(consumer_group_id)
 
-    allow(coordinators).to receive(:find_or_create).with(topic_name, 0).and_return(coordinator0)
-    allow(coordinators).to receive(:find_or_create).with(topic_name, 1).and_return(coordinator1)
+    allow(client)
+      .to receive_messages(assignment: topic_partition_list, pause: nil)
 
-    allow(coordinator0).to receive(:pause_tracker).and_return(pause_tracker0)
-    allow(coordinator1).to receive(:pause_tracker).and_return(pause_tracker1)
+    allow(topic_partition_list)
+      .to receive(:to_h)
+      .and_return({ topic_name => [partition0, partition1] })
 
-    allow(pause_tracker0).to receive_messages(pause: nil, paused?: false)
-    allow(pause_tracker1).to receive_messages(pause: nil, paused?: false)
+    allow(coordinators)
+      .to receive(:find_or_create)
+      .with(topic_name, 0)
+      .and_return(coordinator0)
+    allow(coordinators)
+      .to receive(:find_or_create)
+      .with(topic_name, 1)
+      .and_return(coordinator1)
 
-    allow(Karafka::Web::Pro::Commanding::Dispatcher).to receive(:result)
-    allow(Karafka::Web.config.tracking.consumers.sampler).to receive(:process_id).and_return('test-process')
+    allow(coordinator0)
+      .to receive(:pause_tracker)
+      .and_return(pause_tracker0)
+
+    allow(coordinator1)
+      .to receive(:pause_tracker)
+      .and_return(pause_tracker1)
+
+    allow(pause_tracker0)
+      .to receive_messages(pause: nil, paused?: false)
+
+    allow(pause_tracker1)
+      .to receive_messages(pause: nil, paused?: false)
+
+    allow(Karafka::Web::Pro::Commanding::Dispatcher)
+      .to receive(:result)
+
+    allow(Karafka::Web.config.tracking.consumers.sampler)
+      .to receive(:process_id)
+      .and_return('test-process')
   end
 
   describe '#call' do
@@ -71,13 +99,14 @@ RSpec.describe_current do
       it 'reports applied status with affected partitions' do
         command.call
 
-        expect(Karafka::Web::Pro::Commanding::Dispatcher).to have_received(:result) do |name, pid, payload|
-          expect(name).to eq('topics.pause')
-          expect(pid).to eq('test-process')
-          expect(payload[:status]).to eq('applied')
-          expect(payload[:partitions_affected]).to contain_exactly(0, 1)
-          expect(payload[:partitions_prevented]).to be_empty
-        end
+        expect(Karafka::Web::Pro::Commanding::Dispatcher)
+          .to have_received(:result) do |name, pid, payload|
+            expect(name).to eq('topics.pause')
+            expect(pid).to eq('test-process')
+            expect(payload[:status]).to eq('applied')
+            expect(payload[:partitions_affected]).to contain_exactly(0, 1)
+            expect(payload[:partitions_prevented]).to be_empty
+          end
       end
     end
 
@@ -115,11 +144,12 @@ RSpec.describe_current do
       it 'reports affected and prevented partitions' do
         command.call
 
-        expect(Karafka::Web::Pro::Commanding::Dispatcher).to have_received(:result) do |_name, _pid, payload|
-          expect(payload[:status]).to eq('applied')
-          expect(payload[:partitions_affected]).to contain_exactly(1)
-          expect(payload[:partitions_prevented]).to contain_exactly(0)
-        end
+        expect(Karafka::Web::Pro::Commanding::Dispatcher)
+          .to have_received(:result) do |_name, _pid, payload|
+            expect(payload[:status]).to eq('applied')
+            expect(payload[:partitions_affected]).to contain_exactly(1)
+            expect(payload[:partitions_prevented]).to contain_exactly(0)
+          end
       end
     end
 
@@ -142,11 +172,12 @@ RSpec.describe_current do
       it 'reports all partitions as prevented' do
         command.call
 
-        expect(Karafka::Web::Pro::Commanding::Dispatcher).to have_received(:result) do |_name, _pid, payload|
-          expect(payload[:status]).to eq('applied')
-          expect(payload[:partitions_affected]).to be_empty
-          expect(payload[:partitions_prevented]).to contain_exactly(0, 1)
-        end
+        expect(Karafka::Web::Pro::Commanding::Dispatcher)
+          .to have_received(:result) do |_name, _pid, payload|
+            expect(payload[:status]).to eq('applied')
+            expect(payload[:partitions_affected]).to be_empty
+            expect(payload[:partitions_prevented]).to contain_exactly(0, 1)
+          end
       end
     end
 
@@ -158,10 +189,11 @@ RSpec.describe_current do
       it 'reports applied with no affected partitions' do
         command.call
 
-        expect(Karafka::Web::Pro::Commanding::Dispatcher).to have_received(:result) do |_name, _pid, payload|
-          expect(payload[:status]).to eq('applied')
-          expect(payload[:partitions_affected]).to be_empty
-        end
+        expect(Karafka::Web::Pro::Commanding::Dispatcher)
+          .to have_received(:result) do |_name, _pid, payload|
+            expect(payload[:status]).to eq('applied')
+            expect(payload[:partitions_affected]).to be_empty
+          end
       end
     end
   end

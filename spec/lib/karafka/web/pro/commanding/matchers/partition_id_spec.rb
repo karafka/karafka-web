@@ -7,14 +7,19 @@ RSpec.describe_current do
   subject(:matcher) { described_class.new(message) }
 
   let(:message) do
-    instance_double(
-      Karafka::Messages::Message,
-      payload: { matchers: matchers }
-    )
+    instance_double(Karafka::Messages::Message, payload: { matchers: matchers })
   end
+
   let(:matchers) { { partition_id: 0 } }
-  let(:consumer_group) { instance_double(Karafka::Routing::ConsumerGroup, id: 'my_consumer_group') }
-  let(:topic) { instance_double(Karafka::Routing::Topic, name: 'my_topic', consumer_group: consumer_group) }
+
+  let(:consumer_group) do
+    instance_double(Karafka::Routing::ConsumerGroup, id: 'my_consumer_group')
+  end
+
+  let(:topic) do
+    instance_double(Karafka::Routing::Topic, name: 'my_topic', consumer_group: consumer_group)
+  end
+
   let(:assignments) { { topic => [0, 1, 2] } }
 
   before do
