@@ -116,25 +116,32 @@ RSpec.describe_current do
 
     context 'when replication factor equals min.insync.replicas (zero fault tolerance)' do
       let(:partitions_data) { [{ replica_count: 2, leader: 1, in_sync_replica_brokers: '1,2' }] }
-      let(:mock_topic) { double('Topic').as_null_object }
-      let(:mock_synonym) { double('Synonym', name: 'default.replication.factor') }
+
+      let(:mock_synonym) do
+        instance_double(Karafka::Admin::Configs::Config, name: 'default.replication.factor')
+      end
 
       let(:mock_config) do
-        double('Config', name: 'min.insync.replicas', value: '2', synonyms: [mock_synonym])
+        instance_double(
+          Karafka::Admin::Configs::Config,
+          name: 'min.insync.replicas',
+          value: '2',
+          synonyms: [mock_synonym]
+        )
+      end
+
+      let(:topic_model) do
+        Karafka::Web::Ui::Models::Topic.new(
+          topic_name: topic,
+          partition_count: 2,
+          partitions: partitions_data
+        )
       end
 
       before do
-        allow(mock_topic).to receive(:topic_name).and_return(topic)
-        allow(mock_topic).to receive(:[]) do |key|
-          case key
-          when :partitions then partitions_data
-          when :topic_name then topic
-          end
-        end
-        allow(mock_topic).to receive(:configs).and_return([mock_config])
-        # Only mock for the specific topic we're testing
+        allow(topic_model).to receive(:configs).and_return([mock_config])
         allow(Karafka::Web::Ui::Models::Topic).to receive(:find).and_call_original
-        allow(Karafka::Web::Ui::Models::Topic).to receive(:find).with(topic).and_return(mock_topic)
+        allow(Karafka::Web::Ui::Models::Topic).to receive(:find).with(topic).and_return(topic_model)
         allow(Karafka.env).to receive(:production?).and_return(true)
         get "topics/#{topic}/replication"
       end
@@ -155,25 +162,54 @@ RSpec.describe_current do
 
     context 'when min.insync.replicas is 1 with higher replication factor (low durability)' do
       let(:partitions_data) { [{ replica_count: 3, leader: 1, in_sync_replica_brokers: '1,2,3' }] }
-      let(:mock_topic) { double('Topic').as_null_object }
-      let(:mock_synonym) { double('Synonym', name: 'default.replication.factor') }
+
+      let(:mock_synonym) do
+        instance_double(
+          Karafka::Admin::Configs::Config,
+          name: 'default.replication.factor',
+          value: '3',
+          default?: false,
+          read_only?: false,
+          sensitive?: false,
+          synonym?: true,
+          synonyms: []
+        )
+      end
 
       let(:mock_config) do
-        double('Config', name: 'min.insync.replicas', value: '1', synonyms: [mock_synonym])
+        instance_double(
+          Karafka::Admin::Configs::Config,
+          name: 'min.insync.replicas',
+          value: '1',
+          default?: false,
+          read_only?: false,
+          sensitive?: false,
+          synonym?: false,
+          synonyms: [mock_synonym]
+        )
+      end
+
+      let(:topic_model) do
+        Karafka::Web::Ui::Models::Topic.new(
+          topic_name: topic,
+          partition_count: 2,
+          partitions: partitions_data
+        )
+      end
+
+      let(:distribution_result) do
+        [
+          Karafka::Web::Ui::Lib::HashProxy.new(std_dev: 0, std_dev_rel: 0.0, sum: 0),
+          [Karafka::Web::Ui::Lib::HashProxy.new(count: 0, partition_id: 0, share: 0.0, diff: 0)]
+        ]
       end
 
       before do
-        allow(mock_topic).to receive(:topic_name).and_return(topic)
-        allow(mock_topic).to receive(:[]) do |key|
-          case key
-          when :partitions then partitions_data
-          when :topic_name then topic
-          end
-        end
-        allow(mock_topic).to receive(:configs).and_return([mock_config])
-        # Only mock for the specific topic we're testing
+        allow(topic_model).to receive(:configs).and_return([mock_config])
+        allow(topic_model).to receive(:distribution).and_return(distribution_result)
         allow(Karafka::Web::Ui::Models::Topic).to receive(:find).and_call_original
-        allow(Karafka::Web::Ui::Models::Topic).to receive(:find).with(topic).and_return(mock_topic)
+        allow(Karafka::Web::Ui::Models::Topic).to receive(:find).with(topic).and_return(topic_model)
+        allow(Karafka::Admin).to receive(:read_watermark_offsets).and_return([0, 100])
         allow(Karafka.env).to receive(:production?).and_return(true)
         get "topics/#{topic}/replication"
       end
@@ -194,25 +230,54 @@ RSpec.describe_current do
 
     context 'when configuration is healthy (RF > minISR and minISR > 1)' do
       let(:partitions_data) { [{ replica_count: 3, leader: 1, in_sync_replica_brokers: '1,2,3' }] }
-      let(:mock_topic) { double('Topic').as_null_object }
-      let(:mock_synonym) { double('Synonym', name: 'default.replication.factor') }
+
+      let(:mock_synonym) do
+        instance_double(
+          Karafka::Admin::Configs::Config,
+          name: 'default.replication.factor',
+          value: '3',
+          default?: false,
+          read_only?: false,
+          sensitive?: false,
+          synonym?: true,
+          synonyms: []
+        )
+      end
 
       let(:mock_config) do
-        double('Config', name: 'min.insync.replicas', value: '2', synonyms: [mock_synonym])
+        instance_double(
+          Karafka::Admin::Configs::Config,
+          name: 'min.insync.replicas',
+          value: '2',
+          default?: false,
+          read_only?: false,
+          sensitive?: false,
+          synonym?: false,
+          synonyms: [mock_synonym]
+        )
+      end
+
+      let(:topic_model) do
+        Karafka::Web::Ui::Models::Topic.new(
+          topic_name: topic,
+          partition_count: 2,
+          partitions: partitions_data
+        )
+      end
+
+      let(:distribution_result) do
+        [
+          Karafka::Web::Ui::Lib::HashProxy.new(std_dev: 0, std_dev_rel: 0.0, sum: 0),
+          [Karafka::Web::Ui::Lib::HashProxy.new(count: 0, partition_id: 0, share: 0.0, diff: 0)]
+        ]
       end
 
       before do
-        allow(mock_topic).to receive(:topic_name).and_return(topic)
-        allow(mock_topic).to receive(:[]) do |key|
-          case key
-          when :partitions then partitions_data
-          when :topic_name then topic
-          end
-        end
-        allow(mock_topic).to receive(:configs).and_return([mock_config])
-        # Only mock for the specific topic we're testing
+        allow(topic_model).to receive(:configs).and_return([mock_config])
+        allow(topic_model).to receive(:distribution).and_return(distribution_result)
         allow(Karafka::Web::Ui::Models::Topic).to receive(:find).and_call_original
-        allow(Karafka::Web::Ui::Models::Topic).to receive(:find).with(topic).and_return(mock_topic)
+        allow(Karafka::Web::Ui::Models::Topic).to receive(:find).with(topic).and_return(topic_model)
+        allow(Karafka::Admin).to receive(:read_watermark_offsets).and_return([0, 100])
         get "topics/#{topic}/replication"
       end
 

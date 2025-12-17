@@ -86,7 +86,6 @@ RSpec.describe_current do
 
     context 'when topic is a pattern topic' do
       # patterns? is a Pro-only method not available in OSS, so we use plain double
-      # rubocop:disable RSpec/VerifiedDoubles
       let(:pattern_topic) do
         double(
           'Karafka::Routing::Topic',
@@ -97,7 +96,6 @@ RSpec.describe_current do
           allow(t).to receive(:respond_to?).with(:patterns?).and_return(true)
         end
       end
-      # rubocop:enable RSpec/VerifiedDoubles
 
       let(:topics_collection) do
         instance_double(Karafka::Routing::Topics).tap do |tc|

@@ -6,14 +6,22 @@ RSpec.describe Karafka::Web::Ui::Base, type: :controller do
   let(:monitor) { Karafka.monitor }
 
   describe 'error handling and reporting' do
+    let(:controller) do
+      instance_double(
+        Karafka::Web::Ui::Controllers::DashboardController,
+        run_before_hooks: nil,
+        run_after_hooks: nil
+      )
+    end
+
+    before do
+      allow(Karafka::Web::Ui::Controllers::DashboardController)
+        .to receive(:new)
+        .and_return(controller)
+    end
+
     context 'when an unhandled error occurs in the UI' do
       before do
-        controller = instance_double(
-          Karafka::Web::Ui::Controllers::DashboardController
-        ).as_null_object
-        allow(Karafka::Web::Ui::Controllers::DashboardController)
-          .to receive(:new)
-          .and_return(controller)
         allow(controller)
           .to receive(:index)
           .and_raise(StandardError, 'Unexpected error in UI')
@@ -39,12 +47,6 @@ RSpec.describe Karafka::Web::Ui::Base, type: :controller do
 
     context 'when a UI::NotFoundError occurs' do
       before do
-        controller = instance_double(
-          Karafka::Web::Ui::Controllers::DashboardController
-        ).as_null_object
-        allow(Karafka::Web::Ui::Controllers::DashboardController)
-          .to receive(:new)
-          .and_return(controller)
         allow(controller)
           .to receive(:index)
           .and_raise(Karafka::Web::Errors::Ui::NotFoundError, 'Not found')
@@ -62,12 +64,6 @@ RSpec.describe Karafka::Web::Ui::Base, type: :controller do
 
     context 'when a UI::ProOnlyError occurs' do
       before do
-        controller = instance_double(
-          Karafka::Web::Ui::Controllers::DashboardController
-        ).as_null_object
-        allow(Karafka::Web::Ui::Controllers::DashboardController)
-          .to receive(:new)
-          .and_return(controller)
         allow(controller)
           .to receive(:index)
           .and_raise(Karafka::Web::Errors::Ui::ProOnlyError, 'Pro only')
@@ -85,12 +81,6 @@ RSpec.describe Karafka::Web::Ui::Base, type: :controller do
 
     context 'when a UI::ForbiddenError occurs' do
       before do
-        controller = instance_double(
-          Karafka::Web::Ui::Controllers::DashboardController
-        ).as_null_object
-        allow(Karafka::Web::Ui::Controllers::DashboardController)
-          .to receive(:new)
-          .and_return(controller)
         allow(controller)
           .to receive(:index)
           .and_raise(Karafka::Web::Errors::Ui::ForbiddenError, 'Forbidden')
@@ -108,12 +98,6 @@ RSpec.describe Karafka::Web::Ui::Base, type: :controller do
 
     context 'when a RdkafkaError occurs' do
       before do
-        controller = instance_double(
-          Karafka::Web::Ui::Controllers::DashboardController
-        ).as_null_object
-        allow(Karafka::Web::Ui::Controllers::DashboardController)
-          .to receive(:new)
-          .and_return(controller)
         allow(controller)
           .to receive(:index)
           .and_raise(Rdkafka::RdkafkaError.new(1, broker_message: 'Kafka error'))
