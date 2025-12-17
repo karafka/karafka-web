@@ -5,48 +5,50 @@
 
 <% @selector_path_method = :scheduled_messages_explorer_path %>
 
-<div class="col-span-4">
-  <section class="actions">
-    <% if @messages && !@messages.empty? %>
-      <a
-        href="<%= explorer_topics_path(@topic_id, @partition_id, 'recent') %>"
-        class="btn-action"
-        title="Display the most recent message for this partition with auto-refresh"
-      >
-        <%== icon(:play_circle) %>
-      </a>
+<div class="grid grid-cols-12">
+  <div class="col-span-4">
+    <section class="actions">
+      <% if @messages && !@messages.empty? %>
+        <a
+          href="<%= explorer_topics_path(@topic_id, @partition_id, 'recent') %>"
+          class="btn-action"
+          title="Display the most recent message for this partition with auto-refresh"
+        >
+          <%== icon(:play_circle) %>
+        </a>
 
-      <a
-        href="<%= explorer_path(@topic_id, 'search', "?partition=#{@partition_id}") %>"
-        class="btn-action"
-        title="Search in this topic"
-      >
-        <%== icon(:magnifying_glass) %>
-      </a>
+        <a
+          href="<%= explorer_path(@topic_id, 'search', "?partition=#{@partition_id}") %>"
+          class="btn-action"
+          title="Search in this topic"
+        >
+          <%== icon(:magnifying_glass) %>
+        </a>
 
-      <% closest_path = scheduled_messages_explorer_path(@topic_id, @partition_id, 'closest') %>
+        <% closest_path = scheduled_messages_explorer_path(@topic_id, @partition_id, 'closest') %>
 
-      <%==
-        partial(
-          'explorer/explorer/partition/time_selector',
-          locals: { target: closest_path }
-        )
-      %>
+        <%==
+          partial(
+            'explorer/explorer/partition/time_selector',
+            locals: { target: closest_path }
+          )
+        %>
 
-      <%==
-        partial(
-          'explorer/explorer/partition/timestamp_selector',
-          locals: { target: closest_path }
-        )
-      %>
-    <% end %>
-  </section>
-</div>
+        <%==
+          partial(
+            'explorer/explorer/partition/timestamp_selector',
+            locals: { target: closest_path }
+          )
+        %>
+      <% end %>
+    </section>
+  </div>
 
-<div class="col-span-8 mb-3">
-  <section class="actions">
-    <%== partial 'explorer/explorer/selector' %>
-  </section>
+  <div class="col-span-8 mb-3">
+    <section class="actions">
+      <%== partial 'explorer/explorer/selector' %>
+    </section>
+  </div>
 </div>
 
 <div class="col-span-12">
