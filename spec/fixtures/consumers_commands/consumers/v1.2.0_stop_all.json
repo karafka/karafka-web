@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.2.0",
+  "type": "request",
+  "id": "550e8400-e29b-41d4-a716-446655440003",
+  "command": {
+    "name": "consumers.stop"
+  },
+  "dispatched_at": 1712518283.748216,
+  "matchers": {}
+}

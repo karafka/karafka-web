@@ -37,7 +37,7 @@ module Karafka
                           .flat_map(&:topics)
                           .flat_map { |topics| topics.map(&:itself) }
                           .select(&:active?)
-                          .reject { |topic| topic.respond_to?(:patterns?) ? topic.patterns? : false }
+                          .reject { |topic| topic.respond_to?(:patterns?) ? topic.patterns? : nil }
                           .map(&:name)
                           .uniq
                           .then { |routed_topics| routed_topics - existing }

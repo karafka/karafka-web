@@ -9,7 +9,6 @@ RSpec.describe_current do
   let(:listener) { instance_double(Karafka::Connection::Listener) }
   let(:client) { instance_double(Karafka::Connection::Client) }
   let(:request) { instance_double(Karafka::Web::Pro::Commanding::Request) }
-  let(:process_id) { SecureRandom.uuid }
 
   describe '#call' do
     context 'when command is resume' do
@@ -86,11 +85,11 @@ RSpec.describe_current do
   describe '#reject' do
     let(:command_name) { 'test.command' }
     let(:request_hash) { { key: 'value' } }
+    let(:sampler) { Karafka::Web.config.tracking.consumers.sampler }
 
     before do
       allow(request).to receive_messages(name: command_name, to_h: request_hash)
       allow(Karafka::Web::Pro::Commanding::Dispatcher).to receive(:result)
-      allow(executor).to receive(:process_id).and_return(process_id)
     end
 
     it 'dispatches rejection result with rebalance status' do
@@ -100,7 +99,7 @@ RSpec.describe_current do
 
       expect(Karafka::Web::Pro::Commanding::Dispatcher)
         .to have_received(:result)
-        .with(command_name, process_id, expected_payload)
+        .with(command_name, sampler.process_id, expected_payload)
     end
   end
 end

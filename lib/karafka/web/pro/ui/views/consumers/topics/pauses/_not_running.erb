@@ -1,0 +1,16 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<% alert_box_error 'This Operation Cannot Be Performed' do %>
+  <p>
+    Topic pauses can only be managed using Web UI when at least one consumer process is in a running state.
+  </p>
+<% end %>
+
+<div class="fieldset text-center mt-6">
+  <div class="flex justify-end">
+    <a href="<%= root_path('health', 'overview') %>" class="btn btn-ghost">
+      Cancel
+    </a>
+  </div>
+</div>

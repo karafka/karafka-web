@@ -1,0 +1,29 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<%
+  scope = ::Karafka::Web::Pro::Commanding::Commands
+  color = case command[:command][:name]
+          when scope::Consumers::Trace.name
+            'info'
+          when scope::Consumers::Quiet.name
+            'warning'
+          when scope::Consumers::Stop.name
+            'error'
+          when scope::Partitions::Seek.name
+            'primary'
+          when scope::Partitions::Pause.name
+            'warning'
+          when scope::Partitions::Resume.name
+            'success'
+          when scope::Topics::Pause.name
+            'warning'
+          when scope::Topics::Resume.name
+            'success'
+          else
+            'secondary'
+          end
+%>
+<span class="badge badge-<%= color %>">
+  <%= command[:command][:name] %>
+</span>

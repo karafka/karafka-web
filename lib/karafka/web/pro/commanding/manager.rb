@@ -95,6 +95,10 @@ module Karafka
                        Commands::Partitions::Resume
                      when Commands::Partitions::Pause.name
                        Commands::Partitions::Pause
+                     when Commands::Topics::Pause.name
+                       Commands::Topics::Pause
+                     when Commands::Topics::Resume.name
+                       Commands::Topics::Resume
                      else
                        # We raise it and will be rescued, reported and ignored. We raise it as
                        # this should not happen unless there are version conflicts

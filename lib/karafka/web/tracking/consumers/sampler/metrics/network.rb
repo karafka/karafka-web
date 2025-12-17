@@ -14,10 +14,10 @@ module Karafka
                 @windows = windows
               end
 
-              # @return [Integer] number of bytes received per second out of a one minute time window
-              #   by all the consumers
-              # @note We use one minute window to compensate for cases where metrics would be reported
-              #   or recorded faster or slower. This normalizes data
+              # @return [Integer] number of bytes received per second out of a one minute time
+              #   window by all the consumers
+              # @note We use one minute window to compensate for cases where metrics would be
+              #   reported or recorded faster or slower. This normalizes data
               def bytes_received
                 windows
                   .m1

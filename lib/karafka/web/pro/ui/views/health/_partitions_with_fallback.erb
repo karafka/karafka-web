@@ -5,6 +5,7 @@
   Renders partitions with fallback for missing partition data
 
   Required locals:
+    - consumer_group_id: ID of the consumer group
     - topic_details: Hash containing :partitions and :partitions_count
     - topic_name: Name of the topic
     - partition_partial: Path to the partition partial to render
@@ -18,6 +19,7 @@
     partial(
       partition_partial,
       locals: {
+        consumer_group_id: consumer_group_id,
         topic_name: topic_name,
         partition_id: partition_id,
         details: details

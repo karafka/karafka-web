@@ -17,64 +17,48 @@ module Karafka
                 private
 
                 # Finds all the needed details and if not found raises a not found.
-                # This prevents most cases where something would change between visiting the pages
-                # and dispatching no longer valid data.
+                # Uses the aggregated health stats data instead of process-specific data.
                 #
-                # @param process_id [String]
-                # @param subscription_group_id [String]
+                # @param consumer_group_id [String]
                 # @param topic [String]
                 # @param partition_id [Integer]
-                def bootstrap!(
-                  process_id,
-                  subscription_group_id,
-                  topic,
-                  partition_id
-                )
-                  subscriptions(process_id)
-
-                  @subscription_group_id = subscription_group_id
+                def bootstrap!(consumer_group_id, topic, partition_id)
+                  @consumer_group_id = consumer_group_id
                   @topic = topic
-                  @partition_id = partition_id
-                  @consumer_group = nil
-                  @subscription_group = nil
-                  @partition_stats = nil
+                  @partition_id = partition_id.to_i
 
-                  # Looks for the appropriate details about given partition and so on in the
-                  # current process data. Since we operate in the context of the given process,
-                  # it must have those details. If not it means that assignment most likely have
-                  # changed and it is no longer valid anyhow.
-                  @process.consumer_groups.each do |consumer_group|
-                    consumer_group.subscription_groups.each do |subscription_group|
-                      next unless subscription_group.id == @subscription_group_id
+                  # Get aggregated stats from all processes
+                  current_state = Models::ConsumersState.current!
+                  @stats = Models::Health.current(current_state)
 
-                      @subscription_group = subscription_group
-                      @consumer_group = consumer_group
+                  # Find the consumer group
+                  cg_stats = @stats[@consumer_group_id]
+                  cg_stats || raise(Karafka::Web::Errors::Ui::NotFoundError)
 
-                      subscription_group.topics.each do |s_topic|
-                        next unless s_topic.name == @topic
+                  # Find the topic within the consumer group
+                  @topic_stats = cg_stats[:topics][@topic]
+                  @topic_stats || raise(Karafka::Web::Errors::Ui::NotFoundError)
 
-                        s_topic.partitions.each do |partition|
-                          next unless @partition_id.to_s == partition.partition_id.to_s
+                  # Find the partition within the topic
+                  @partition_stats = @topic_stats[:partitions][@partition_id]
+                  @partition_stats || raise(Karafka::Web::Errors::Ui::NotFoundError)
 
-                          @partition_stats = partition
-                        end
-                      end
-                    end
-                  end
-
-                  @subscription_group || raise(Karafka::Web::Errors::Ui::NotFoundError)
-
+                  # Check if topic is LRJ from routing
                   routing_topics = Karafka::App.routes.flat_map(&:topics).flat_map(&:to_a)
 
                   @routing_topic = routing_topics.find do |r_topic|
-                    r_topic.subscription_group.id == @subscription_group.id &&
+                    r_topic.consumer_group.id == @consumer_group_id &&
                       r_topic.name == @topic
                   end
 
-                  @partition_stats || raise(Karafka::Web::Errors::Ui::NotFoundError)
                   # May not be found when not all routing is available. In such cases we assume
                   # that topic is not LRJ and it's up to the end user to handle this correctly.
                   @topic_lrj = @routing_topic&.long_running_job?
+
+                  # Check if any active process is running (needed to issue commands)
+                  @any_process_running = Models::Processes.active(current_state).any? do |process|
+                    process.status == 'running'
+                  end
                 end
               end
             end

@@ -4,10 +4,9 @@
 <div class="card bg-base-100 mt-4">
   <div class="card-body">
     <%
-      update_path = consumer_path(
-        @process.id,
+      update_path = consumers_path(
         'partitions',
-        @subscription_group.id,
+        @consumer_group_id,
         @topic,
         @partition_id,
         'offset'
@@ -24,7 +23,7 @@
       <input type="hidden" name="referrer" value="<%= request.referrer %>">
 
       <div class="flex items-center w-full mb-8">
-        <label class="w-1/4 text-gray-700">New Offset:</label>
+        <label class="w-1/4 text-base-content/70">New Offset:</label>
         <div class="w-3/4">
           <input
             type="number"
@@ -39,7 +38,7 @@
       </div>
 
       <div class="flex items-center w-full">
-        <label class="w-1/4 text-gray-700">Prevent Overtaking:</label>
+        <label class="w-1/4 text-base-content/70">Prevent Overtaking:</label>
         <div class="w-3/4">
           <label class="flex items-center gap-4 cursor-pointer">
             <input type="hidden" name="prevent_overtaking" value="off">
@@ -55,7 +54,7 @@
               <div class="flex items-center gap-2">
                 Only adjust if consumer hasn't moved beyond requested offset already
               </div>
-              <div class="text-sm text-gray-500">
+              <div class="text-sm text-base-content/70">
                 Prevents seeking back in case the consumer moved forward
               </div>
             </div>
@@ -64,7 +63,7 @@
       </div>
 
       <div class="flex items-center w-full mt-4 <%= 'text-muted' if @topic_lrj %>">
-        <label class="w-1/4 text-gray-700">Resume Immediately:</label>
+        <label class="w-1/4 text-base-content/70">Resume Immediately:</label>
         <div class="w-3/4">
           <label class="flex items-center gap-4 cursor-pointer">
             <input type="hidden" name="force_resume" value="off">
@@ -78,7 +77,7 @@
               <div class="flex items-center gap-2">
                 If partition is currently paused, resume processing immediately
               </div>
-              <div class="text-sm text-gray-500">
+              <div class="text-sm text-base-content/70">
                 <% if @topic_lrj %>
                   Option not available for Long-Running Jobs topics
                 <% elsif @routing_topic %>

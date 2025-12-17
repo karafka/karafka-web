@@ -1,10 +1,6 @@
 <%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
 <%# See LICENSE for details. %>
 
-<%
-  process_id = command[:process][:id]
-%>
-
 <h2 class="h2">
   Metadata
 </h2>
@@ -26,16 +22,17 @@
         <td>Dispatched</td>
         <td><%== relative_time command[:dispatched_at] %></td>
       </tr>
+
       <tr>
-        <td>Process</td>
+        <td>Matchers</td>
         <td>
-          <% command = command %>
-          <% if process_id == '*' %>
-              <%= process_id %>
+          <% matchers = command[:matchers] || {} %>
+          <% if matchers.empty? %>
+            <%== badge_secondary '*' %>
           <% else %>
-            <a href="<%= consumer_path(process_id, 'subscriptions') %>">
-              <%= process_id %>
-            </a>
+            <% matchers.each do |key, value| %>
+              <%== badge_secondary "#{key}:#{value}" %>
+            <% end %>
           <% end %>
         </td>
       </tr>

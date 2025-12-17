@@ -42,13 +42,12 @@ module Karafka
                 @watermark_offsets
               )
 
-              paginate(
-                previous_offset,
-                @params.current_offset,
-                next_offset,
-                # If message is an array, it means it's a compacted dummy offset representation
-                @error_messages.map { |message| message.is_a?(Array) ? message.last : message.offset }
-              )
+              # If message is an array, it means it's a compacted dummy offset representation
+              mapped = @error_messages.map do |message|
+                message.is_a?(Array) ? message.last : message.offset
+              end
+
+              paginate(previous_offset, @params.current_offset, next_offset, mapped)
 
               render
             end

@@ -49,7 +49,8 @@ module Karafka
               # This represents system-wide (or container-wide) memory usage by summing RSS
               # across all processes.
               # On bare metal: sums memory for all processes on the host
-              # In containers: sums memory for all processes within the container (due to PID namespace)
+              # In containers: sums memory for all processes within the container
+              #   (due to PID namespace)
               # @note This is DIFFERENT from memory_usage which only shows current process memory
               # @note Used in Web UI to show "OS memory used" metric
               def memory_total_usage(memory_threads_ps)
@@ -124,10 +125,11 @@ module Karafka
               end
 
               # Loads process information for all running processes
-              # @return [Array<Array<Integer, Integer, Integer>>, false] array of [rss_kb, threads, pid]
-              #   for each process, or false if unavailable
+              # @return [Array<Array<Integer, Integer, Integer>>, false] array of
+              #   [rss_kb, threads, pid] for each process, or false if unavailable
               #
-              # This method reads information about ALL processes on the system (or in the container).
+              # This method reads information about ALL processes on the system
+              # (or in the container).
               # The data is used by multiple metrics:
               # - memory_total_usage: sums RSS across all processes
               # - threads: extracts thread count for current process
@@ -142,10 +144,12 @@ module Karafka
               # - macOS: Uses `ps -A` to get all processes
               # - Containers: Due to PID namespaces, only sees processes within the container
               #
-              # @note Sampler calls this once per sample cycle (every ~5 seconds) and caches the result
-              #   in @memory_threads_ps to ensure consistent data within a single sample snapshot
+              # @note Sampler calls this once per sample cycle (every ~5 seconds) and caches
+              #   the result in @memory_threads_ps to ensure consistent data within a single
+              #   sample snapshot
               # @note The cache is refreshed on EVERY sample cycle, so data stays current
-              # @note On Linux, thread count is only extracted for the current process to optimize performance
+              # @note On Linux, thread count is only extracted for the current process to
+              #   optimize performance
               def memory_threads_ps
                 case RUBY_PLATFORM
                 when /linux/

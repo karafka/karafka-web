@@ -350,7 +350,7 @@ RSpec.describe_current do
         all_topics
         produce(states_topic, state)
         # This will force a warning because in prod replication is expected to be > 1
-        allow(Karafka.env).to receive(:production).and_return(true)
+        allow(Karafka.env).to receive(:production?).and_return(true)
       end
 
       it 'expect all to be ok because replication is a warning' do

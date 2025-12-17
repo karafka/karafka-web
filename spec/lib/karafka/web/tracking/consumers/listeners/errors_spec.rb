@@ -76,34 +76,51 @@ RSpec.describe_current do
     end
 
     context 'when caller is a consumer' do
-      let(:messages_metadata) do
-        instance_double(Karafka::Messages::BatchMetadata, first_offset: 5, last_offset: 10)
+      let(:routing_consumer_group) do
+        build(:routing_consumer_group, name: 'group1')
+      end
+
+      let(:routing_subscription_group) do
+        Struct.new(:id, :consumer_group).new('sub1', routing_consumer_group)
+      end
+
+      let(:routing_topic) do
+        topic = build(
+          :routing_topic,
+          name: 'topic_name',
+          consumer_group: routing_consumer_group
+        )
+        topic.subscription_group = routing_subscription_group
+        topic
+      end
+
+      let(:coordinator) do
+        build(:processing_coordinator, topic: routing_topic, partition: 0, seek_offset: 100)
+      end
+
+      let(:batch_metadata) do
+        Karafka::Messages::BatchMetadata.new(
+          size: 10,
+          first_offset: 5,
+          last_offset: 10,
+          deserializers: nil,
+          partition: 0,
+          topic: 'topic_name',
+          created_at: Time.now,
+          scheduled_at: Time.now - 1,
+          processed_at: Time.now
+        )
       end
 
       let(:messages) do
-        instance_double(Karafka::Messages::Messages, metadata: messages_metadata)
+        Struct.new(:size, :metadata).new(1, batch_metadata)
       end
 
-      let(:topic) do
-        instance_double(
-          Karafka::Routing::Topic,
-          name: 'topic_name',
-          consumer_group: consumer_group,
-          subscription_group: subscription_group
-        )
-      end
-
-      let(:coordinator) { instance_double(Karafka::Processing::Coordinator, seek_offset: 100) }
-      let(:caller_ref) { Karafka::BaseConsumer.new }
-
-      before do
-        allow(caller_ref).to receive_messages(
-          topic: topic,
-          partition: 0,
-          messages: messages,
-          coordinator: coordinator,
-          tags: %w[tag1]
-        )
+      let(:caller_ref) do
+        consumer = build(:consumer, coordinator: coordinator)
+        consumer.messages = messages
+        consumer.tags.add(:test, 'tag1')
+        consumer
       end
 
       it 'expect to include consumer specific details' do
@@ -117,13 +134,16 @@ RSpec.describe_current do
           partition: 0,
           first_offset: 5,
           last_offset: 10,
-          committed_offset: 99,
-          tags: %w[tag1]
+          committed_offset: 99
         )
+
+        expect(error_details[:tags].to_a).to eq(['tag1'])
       end
 
       context 'when seek_offset is nil' do
-        let(:coordinator) { instance_double(Karafka::Processing::Coordinator, seek_offset: nil) }
+        let(:coordinator) do
+          build(:processing_coordinator, topic: routing_topic, partition: 0, seek_offset: nil)
+        end
 
         it 'expect to set committed_offset to -1001' do
           listener.on_error_occurred(event)
@@ -134,9 +154,18 @@ RSpec.describe_current do
       context 'when Karafka is pro version' do
         let(:errors_tracker) { Struct.new(:trace_id).new('trace-123-abc') }
 
+        let(:caller_ref) do
+          consumer = build(:consumer, coordinator: coordinator)
+          consumer.messages = messages
+          consumer.tags.add(:test, 'tag1')
+          # Define errors_tracker method for pro version testing
+          tracker = errors_tracker
+          consumer.define_singleton_method(:errors_tracker) { tracker }
+          consumer
+        end
+
         before do
           allow(Karafka).to receive(:pro?).and_return(true)
-          allow(caller_ref).to receive(:errors_tracker).and_return(errors_tracker)
         end
 
         it 'expect to include trace_id in details' do

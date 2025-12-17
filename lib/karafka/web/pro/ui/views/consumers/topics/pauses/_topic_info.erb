@@ -1,0 +1,61 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<%
+  partitions = @topic_stats[:partitions]
+  total_partitions = @topic_stats[:partitions_count]
+  assigned_partitions = partitions.size
+
+  active_count = partitions.values.count { |p| p.poll_state == 'active' }
+  paused_count = partitions.values.count { |p| p.poll_state != 'active' }
+
+  # Get unique process count
+  process_count = partitions.values.map { |p| p[:process].id }.uniq.size
+%>
+
+<div class="card-detail-container mt-4">
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Consumer Group
+      <%== badge_primary @consumer_group_id %>
+    </div>
+  </div>
+
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Topic
+      <%== badge_info @topic %>
+    </div>
+  </div>
+
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Total Partitions
+      <%== badge_secondary total_partitions %>
+    </div>
+  </div>
+
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Assigned Partitions
+      <%== badge_secondary assigned_partitions %>
+    </div>
+  </div>
+
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Active Processes
+      <%== badge_secondary process_count %>
+    </div>
+  </div>
+
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Partition States
+      <div class="flex gap-2">
+        <span class="badge badge-success badge-sm"><%= active_count %> active</span>
+        <span class="badge badge-warning badge-sm"><%= paused_count %> paused</span>
+      </div>
+    </div>
+  </div>
+</div>

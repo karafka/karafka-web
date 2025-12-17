@@ -4,15 +4,15 @@
 <%
   tpi = topics_partition_identifier(@topic, @partition_id)
 
-  view_title "#{@process.id} - Pause Adjustment - #{@subscription_group_id} - #{tpi}"
+  view_title "Partition Pause - #{@consumer_group_id} - #{tpi}"
 %>
 
 <% if @topic_lrj %>
   <%== partial 'consumers/partitions/pauses/lrj_not_manageable' %>
 <% else %>
-  <% if @process.status == 'running' %>
+  <% if @any_process_running %>
     <%== partial 'consumers/partitions/pauses/adjusting_warning' %>
-    <%== partial 'consumers/partitions/offsets/basics' %>
+    <%== partial 'consumers/partitions/pauses/partition_info' %>
     <%== partial 'consumers/partitions/pauses/new_form' %>
   <% else %>
     <%== partial 'consumers/partitions/pauses/not_running' %>

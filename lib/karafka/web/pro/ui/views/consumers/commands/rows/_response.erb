@@ -1,0 +1,35 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<%
+  type = command[:type]
+  color = type == 'result' ? 'success' : 'secondary'
+%>
+
+<tr>
+  <td>
+    <span class="badge badge-<%= color %>"><%= type %></span>
+  </td>
+
+  <td>
+    <%== partial 'consumers/commands/rows/command_name_badge', locals: { command: command } %>
+  </td>
+
+  <td>
+    <% process_id = command[:process][:id] %>
+    <%== badge_secondary "process_id:#{truncate(process_id, strategy: :middle)}" %>
+  </td>
+
+  <td>
+    <%== relative_time command[:dispatched_at] %>
+  </td>
+
+  <td class="options">
+    <a
+      href="<%= consumers_path('commands', command_message.offset) %>"
+      class="btn btn-sm btn-primary"
+    >
+      Details
+    </a>
+  </td>
+</tr>

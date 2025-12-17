@@ -43,8 +43,8 @@ module Karafka
             # @return [Hash] Statistics hash
             #
             # @note We materialize the consumers groups time series only here and not in real time,
-            #   because we materialize it based on the tracked active collective state. Materializing
-            #   on each update that would not be dispatched would be pointless.
+            #   because we materialize it based on the tracked active collective state.
+            #   Materializing on each update that would not be dispatched would be pointless.
             def to_h
               metrics[:schema_version] = SCHEMA_VERSION
               metrics[:dispatched_at] = float_now

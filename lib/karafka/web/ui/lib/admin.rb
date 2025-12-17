@@ -24,8 +24,8 @@ module Karafka
             # @param name [String, Symbol] topic name
             # @param partition [Integer] partition
             # @param count [Integer] how many messages we want to get at most
-            # @param start_offset [Integer, Time] offset from which we should start. If -1 is provided
-            #   (default) we will start from the latest offset. If time is provided, the appropriate
+            # @param start_offset [Integer, Time] offset from which we should start. If -1 is
+            #   provided (default) we will start from the latest offset. If time is provided, the
             #   offset will be resolved. If negative beyond -1 is provided, we move backwards more.
             # @param settings [Hash] kafka extra settings (optional)
             #

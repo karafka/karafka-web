@@ -9,21 +9,21 @@
       <input type="hidden" name="_method" value="put">
 
       <div class="flex items-center w-full mb-4">
-        <label class="w-1/4 text-gray-700">Property:</label>
+        <label class="w-1/4 text-base-content/70">Property:</label>
         <div class="w-3/4">
           <code class="bg-base-200 px-2 py-1 rounded-sm"><%= @property.name %></code>
         </div>
       </div>
 
       <div class="flex items-center w-full mb-4">
-        <label class="w-1/4 text-gray-700">Current Value:</label>
+        <label class="w-1/4 text-base-content/70">Current Value:</label>
         <div class="w-3/4">
           <code class="bg-base-200 px-2 py-1 rounded-sm"><%= @property.value %></code>
         </div>
       </div>
 
       <div class="flex items-center w-full mb-8">
-        <label class="w-1/4 text-gray-700">New Value:</label>
+        <label class="w-1/4 text-base-content/70">New Value:</label>
         <div class="w-3/4">
           <input
             type="<%= @property.sensitive? ? 'password' : 'text' %>"

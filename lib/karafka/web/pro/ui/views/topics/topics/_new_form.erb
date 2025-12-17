@@ -7,7 +7,7 @@
       <%== csrf_tag(topics_path) %>
 
       <div class="flex items-center w-full mb-8">
-        <label class="w-1/4 text-gray-700">Topic Name:</label>
+        <label class="w-1/4 text-base-content/70">Topic Name:</label>
         <div class="w-3/4">
           <input
             type="text"
@@ -20,14 +20,14 @@
             value="<%= params.fetch(:topic_name, '') %>"
             required
           />
-          <div class="text-sm text-gray-500 mt-1">
+          <div class="text-sm text-base-content/70 mt-1">
             Only alphanumeric characters, dots, underscores, and hyphens are allowed
           </div>
         </div>
       </div>
 
       <div class="flex items-center w-full mb-8">
-        <label class="w-1/4 text-gray-700">Number of Partitions:</label>
+        <label class="w-1/4 text-base-content/70">Number of Partitions:</label>
         <div class="w-3/4">
           <input
             type="number"
@@ -39,14 +39,14 @@
             value="<%= params.fetch(:partitions_count, 5) %>"
             required
           />
-          <div class="text-sm text-gray-500 mt-1">
+          <div class="text-sm text-base-content/70 mt-1">
             Minimum 1 partition, cannot be decreased after creation
           </div>
         </div>
       </div>
 
       <div class="flex items-center w-full">
-        <label class="w-1/4 text-gray-700">Replication Factor:</label>
+        <label class="w-1/4 text-base-content/70">Replication Factor:</label>
         <div class="w-3/4">
           <input
             type="number"
@@ -58,7 +58,7 @@
             value="<%= params.fetch(:replication_factor, 1) %>"
             required
           />
-          <div class="text-sm text-gray-500 mt-1">
+          <div class="text-sm text-base-content/70 mt-1">
             Number of replicas for each partition (minimum 1, recommended 3 for production)
           </div>
         </div>

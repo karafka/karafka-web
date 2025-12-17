@@ -16,10 +16,26 @@ RSpec.describe_current do
       before do
         context.cluster_info = Struct.new(:topics).new(
           [
-            { topic_name: context.topics_consumers_states, partition_count: 1, partitions: [{ replica_count: 1 }] },
-            { topic_name: context.topics_consumers_reports, partition_count: 1, partitions: [{ replica_count: 1 }] },
-            { topic_name: context.topics_consumers_metrics, partition_count: 1, partitions: [{ replica_count: 1 }] },
-            { topic_name: context.topics_errors, partition_count: 5, partitions: [{ replica_count: 1 }] }
+            {
+              topic_name: context.topics_consumers_states,
+              partition_count: 1,
+              partitions: [{ replica_count: 1 }]
+            },
+            {
+              topic_name: context.topics_consumers_reports,
+              partition_count: 1,
+              partitions: [{ replica_count: 1 }]
+            },
+            {
+              topic_name: context.topics_consumers_metrics,
+              partition_count: 1,
+              partitions: [{ replica_count: 1 }]
+            },
+            {
+              topic_name: context.topics_errors,
+              partition_count: 5,
+              partitions: [{ replica_count: 1 }]
+            }
           ]
         )
       end
@@ -36,10 +52,26 @@ RSpec.describe_current do
       before do
         context.cluster_info = Struct.new(:topics).new(
           [
-            { topic_name: context.topics_consumers_states, partition_count: 5, partitions: [{ replica_count: 1 }] },
-            { topic_name: context.topics_consumers_reports, partition_count: 1, partitions: [{ replica_count: 1 }] },
-            { topic_name: context.topics_consumers_metrics, partition_count: 1, partitions: [{ replica_count: 1 }] },
-            { topic_name: context.topics_errors, partition_count: 1, partitions: [{ replica_count: 1 }] }
+            {
+              topic_name: context.topics_consumers_states,
+              partition_count: 5,
+              partitions: [{ replica_count: 1 }]
+            },
+            {
+              topic_name: context.topics_consumers_reports,
+              partition_count: 1,
+              partitions: [{ replica_count: 1 }]
+            },
+            {
+              topic_name: context.topics_consumers_metrics,
+              partition_count: 1,
+              partitions: [{ replica_count: 1 }]
+            },
+            {
+              topic_name: context.topics_errors,
+              partition_count: 1,
+              partitions: [{ replica_count: 1 }]
+            }
           ]
         )
       end
@@ -56,10 +88,26 @@ RSpec.describe_current do
       before do
         context.cluster_info = Struct.new(:topics).new(
           [
-            { topic_name: context.topics_consumers_states, partition_count: 1, partitions: [{ replica_count: 1 }] },
-            { topic_name: context.topics_consumers_reports, partition_count: 3, partitions: [{ replica_count: 1 }] },
-            { topic_name: context.topics_consumers_metrics, partition_count: 1, partitions: [{ replica_count: 1 }] },
-            { topic_name: context.topics_errors, partition_count: 1, partitions: [{ replica_count: 1 }] }
+            {
+              topic_name: context.topics_consumers_states,
+              partition_count: 1,
+              partitions: [{ replica_count: 1 }]
+            },
+            {
+              topic_name: context.topics_consumers_reports,
+              partition_count: 3,
+              partitions: [{ replica_count: 1 }]
+            },
+            {
+              topic_name: context.topics_consumers_metrics,
+              partition_count: 1,
+              partitions: [{ replica_count: 1 }]
+            },
+            {
+              topic_name: context.topics_errors,
+              partition_count: 1,
+              partitions: [{ replica_count: 1 }]
+            }
           ]
         )
       end
@@ -75,10 +123,26 @@ RSpec.describe_current do
       before do
         context.cluster_info = Struct.new(:topics).new(
           [
-            { topic_name: context.topics_consumers_states, partition_count: 1, partitions: [{ replica_count: 1 }] },
-            { topic_name: context.topics_consumers_reports, partition_count: 1, partitions: [{ replica_count: 1 }] },
-            { topic_name: context.topics_consumers_metrics, partition_count: 2, partitions: [{ replica_count: 1 }] },
-            { topic_name: context.topics_errors, partition_count: 1, partitions: [{ replica_count: 1 }] }
+            {
+              topic_name: context.topics_consumers_states,
+              partition_count: 1,
+              partitions: [{ replica_count: 1 }]
+            },
+            {
+              topic_name: context.topics_consumers_reports,
+              partition_count: 1,
+              partitions: [{ replica_count: 1 }]
+            },
+            {
+              topic_name: context.topics_consumers_metrics,
+              partition_count: 2,
+              partitions: [{ replica_count: 1 }]
+            },
+            {
+              topic_name: context.topics_errors,
+              partition_count: 1,
+              partitions: [{ replica_count: 1 }]
+            }
           ]
         )
       end

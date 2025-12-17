@@ -1,0 +1,18 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<%
+  view_title "Topic Resume - #{@consumer_group_id} - #{@topic}"
+%>
+
+<% if @topic_lrj %>
+  <%== partial 'consumers/topics/pauses/lrj_not_manageable' %>
+<% else %>
+  <% if @any_process_running %>
+    <%== partial 'consumers/topics/pauses/adjusting_warning' %>
+    <%== partial 'consumers/topics/pauses/topic_info' %>
+    <%== partial 'consumers/topics/pauses/edit_form' %>
+  <% else %>
+    <%== partial 'consumers/topics/pauses/not_running' %>
+  <% end %>
+<% end %>

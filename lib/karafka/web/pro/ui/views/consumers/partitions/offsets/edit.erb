@@ -4,13 +4,13 @@
 <%
   tpi = topics_partition_identifier(@topic, @partition_id)
 
-  view_title "#{@process.id} - Offset Adjustment - #{@subscription_group_id} - #{tpi}"
+  view_title "Offset Edit - #{@consumer_group_id} - #{tpi}"
 %>
 
-<% if @process.status != 'running' %>
-  <%== partial 'consumers/partitions/offsets/not_running_error' %>
-<% else %>
+<% if @any_process_running %>
   <%== partial 'consumers/partitions/offsets/running_warning' %>
   <%== partial 'consumers/partitions/offsets/basics' %>
   <%== partial 'consumers/partitions/offsets/form' %>
+<% else %>
+  <%== partial 'consumers/partitions/offsets/not_running_error' %>
 <% end %>

@@ -6,15 +6,10 @@ RSpec.describe_current do
   let(:event) { Struct.new(:payload).new({ caller: consumer }) }
   let(:coordinator) { build(:processing_coordinator, topic: topic) }
   let(:topic) { build(:routing_topic) }
-  let(:consumer) do
-    consumer = Karafka::BaseConsumer.new
-    consumer.coordinator = coordinator
-    consumer
-  end
+  let(:consumer) { build(:consumer, coordinator: coordinator) }
 
   before do
     coordinator.pause_tracker.increment
-    allow(consumer).to receive(:coordinator).and_return(coordinator)
     listener.on_consumer_consume(event)
   end
 

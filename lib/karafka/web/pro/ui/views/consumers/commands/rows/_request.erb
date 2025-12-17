@@ -1,0 +1,36 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<tr>
+  <td>
+    <span class="badge badge-primary">request</span>
+  </td>
+
+  <td>
+    <%== partial 'consumers/commands/rows/command_name_badge', locals: { command: command } %>
+  </td>
+
+  <td>
+    <% matchers = command[:matchers] || {} %>
+    <% if matchers.empty? %>
+      <%== badge_secondary '*' %>
+    <% else %>
+      <% matchers.each do |key, value| %>
+        <%== badge_secondary "#{key}:#{truncate(value.to_s, length: 20, strategy: :middle)}" %>
+      <% end %>
+    <% end %>
+  </td>
+
+  <td>
+    <%== relative_time command[:dispatched_at] %>
+  </td>
+
+  <td class="options">
+    <a
+      href="<%= consumers_path('commands', command_message.offset) %>"
+      class="btn btn-sm btn-primary"
+    >
+      Details
+    </a>
+  </td>
+</tr>

@@ -64,6 +64,10 @@ RSpec.describe_current do
         expect(body).to include('Controls')
         expect(body).not_to include('Pro Feature')
       end
+
+      it 'expect to show Controls and Commands tabs in disabled state' do
+        expect(body).to include('disabled btn-disabled')
+      end
     end
 
     context 'when commanding is enabled' do
@@ -77,6 +81,10 @@ RSpec.describe_current do
         expect(response).to be_ok
         expect(body).to include('Controls')
         expect(body).to include('Commands')
+      end
+
+      it 'expect to show Controls and Commands tabs without disabled state' do
+        expect(body).not_to include('disabled btn-disabled')
       end
     end
 
@@ -886,6 +894,36 @@ RSpec.describe_current do
         # Tooltips for consumer group and subscription group should still be present
         expect(body).to include('Consumer Group')
         expect(body).to include('Subscription Group')
+      end
+    end
+
+    context 'when commanding is enabled' do
+      before do
+        Karafka::Web.config.commanding.active = true
+
+        get 'consumers/shinra:1:1/subscriptions'
+      end
+
+      it 'expect to show partition edit options without disabled state' do
+        expect(response).to be_ok
+        expect(body).not_to include('btn-info btn-sm btn-disabled')
+        expect(body).not_to include('btn-warning btn-sm btn-disabled')
+      end
+    end
+
+    context 'when commanding is disabled' do
+      before do
+        Karafka::Web.config.commanding.active = false
+
+        get 'consumers/shinra:1:1/subscriptions'
+      end
+
+      after { Karafka::Web.config.commanding.active = true }
+
+      it 'expect to show partition edit options in disabled state' do
+        expect(response).to be_ok
+        expect(body).to include('btn-info btn-sm btn-disabled')
+        expect(body).to include('btn-warning btn-sm btn-disabled')
       end
     end
   end

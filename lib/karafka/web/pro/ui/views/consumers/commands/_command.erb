@@ -7,70 +7,17 @@
   <% command = command_message.payload %>
 
   <% if command[:schema_version] == @schema_version %>
-    <tr>
-      <td>
-        <%
-          type = command[:type]
-          color = 'primary'
-          color = 'success' if type == 'result'
-          color = 'secondary' if type == 'acceptance'
-        %>
-
-        <span class="badge badge-<%= color %>">
-          <%= command[:type] %>
-        </span>
-      </td>
-
-      <td>
-        <%
-          scope = ::Karafka::Web::Pro::Commanding::Commands
-          color = case command[:command][:name]
-                  when scope::Consumers::Trace.name
-                    'info'
-                  when scope::Consumers::Quiet.name
-                    'warning'
-                  when scope::Consumers::Stop.name
-                    'error'
-                  when scope::Partitions::Seek.name
-                    'primary'
-                  when scope::Partitions::Pause.name
-                    'warning'
-                  when scope::Partitions::Resume.name
-                    'warning'
-                  else
-                    'secondary'
-                  end
-        %>
-        <span class="badge badge-<%= color %>">
-          <%= command[:command][:name] %>
-        </span>
-      </td>
-
-      <td>
-        <% if command[:process][:id] == '*' %>
-          *
-        <% else %>
-          <a href="<%= consumer_path(command[:process][:id], 'subscriptions') %>">
-            <%= truncate(command[:process][:id], strategy: :middle) %>
-          </a>
-        <% end %>
-      </td>
-
-      <td>
-        <%== relative_time command[:dispatched_at] %>
-      </td>
-
-      <td>
-        <a href="<%= consumers_path('commands', command_message.offset) %>" class="btn btn-sm btn-primary">
-          Details
-        </a>
-      </td>
-    </tr>
+    <% row_partial = command[:type] == 'request' ? 'rows/request' : 'rows/response' %>
+    <%==
+      partial(
+        "consumers/commands/#{row_partial}",
+        locals: {
+          command: command,
+          command_message: command_message
+        }
+      )
+    %>
   <% else %>
-    <tr>
-      <td colspan="100" class="text-center text-muted">
-       Incompatible command schema. This command message schema does not match the Karafka Web UI schema.
-      </td>
-    </tr>
+    <%== partial 'consumers/commands/incompatible_command' %>
   <% end %>
 <% end %>

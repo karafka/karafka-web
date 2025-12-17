@@ -36,7 +36,8 @@ module Karafka
           }
 
           setting :listeners, default: [
-            Handlers::Partitions::Listener.new
+            Handlers::Partitions::Listener.new,
+            Handlers::Topics::Listener.new
           ]
 
           configure

@@ -9,14 +9,14 @@
       <input type="hidden" name="_method" value="put">
 
       <div class="flex items-center w-full mb-8">
-        <label class="w-1/4 text-gray-700">Current Partitions:</label>
+        <label class="w-1/4 text-base-content/70">Current Partitions:</label>
         <div class="w-3/4">
           <code class="bg-base-200 px-2 py-1 rounded-sm"><%= @topic.partition_count %></code>
         </div>
       </div>
 
       <div class="flex items-center w-full mb-8">
-        <label class="w-1/4 text-gray-700">New Partition Count:</label>
+        <label class="w-1/4 text-base-content/70">New Partition Count:</label>
         <div class="w-3/4">
           <input
             type="number"
@@ -27,7 +27,7 @@
             min="<%= @topic.partition_count + 1 %>"
             required
           />
-          <div class="text-sm text-gray-500 mt-1">
+          <div class="text-sm text-base-content/70 mt-1">
             Must be greater than current partition count (<%= @topic.partition_count %>)
           </div>
         </div>

@@ -158,7 +158,10 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
     context 'when running on Linux' do
       before do
         stub_const('RUBY_PLATFORM', 'x86_64-linux')
-        allow(Karafka::Web::Tracking::Helpers::Sysconf).to receive(:page_size).and_return(4096)
+
+        allow(Karafka::Web::Tracking::Helpers::Sysconf)
+          .to receive(:page_size)
+          .and_return(4096)
 
         # Simulate multiple processes in /proc
         proc_files = [
@@ -166,16 +169,36 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
           "/proc/#{Process.pid}/statm",
           '/proc/9999/statm'
         ]
-        allow(Dir).to receive(:glob).with('/proc/[0-9]*/statm').and_return(proc_files)
+        allow(Dir)
+          .to receive(:glob)
+          .with('/proc/[0-9]*/statm')
+          .and_return(proc_files)
 
         # Stub file reads for all processes
-        allow(File).to receive(:read).and_call_original
-        allow(File).to receive(:read).with('/proc/1/statm').and_return("1000 500 100 0 0 400 0\n")
-        allow(File).to receive(:read).with("/proc/#{Process.pid}/statm").and_return("12345 6789 1234 0 0 5678 0\n")
-        allow(File).to receive(:read).with('/proc/9999/statm').and_return("2000 1000 200 0 0 800 0\n")
+        allow(File)
+          .to receive(:read)
+          .and_call_original
+
+        allow(File)
+          .to receive(:read)
+          .with('/proc/1/statm')
+          .and_return("1000 500 100 0 0 400 0\n")
+
+        allow(File)
+          .to receive(:read)
+          .with("/proc/#{Process.pid}/statm")
+          .and_return("12345 6789 1234 0 0 5678 0\n")
+
+        allow(File)
+          .to receive(:read)
+          .with('/proc/9999/statm')
+          .and_return("2000 1000 200 0 0 800 0\n")
 
         # Only current process needs thread count
-        allow(File).to receive(:read).with("/proc/#{Process.pid}/status").and_return("Threads:\t15\n")
+        allow(File)
+          .to receive(:read)
+          .with("/proc/#{Process.pid}/status")
+          .and_return("Threads:\t15\n")
       end
 
       it 'returns array with memory, threads, and pid for all processes' do

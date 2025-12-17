@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Karafka::Web::Management::Migrations::ConsumersReports::AddGroupInstanceIdToSubscriptionGroups do
+RSpec.describe_current do
   subject(:migration) { described_class.new }
 
   describe '.applicable?' do
@@ -65,7 +65,8 @@ RSpec.describe Karafka::Web::Management::Migrations::ConsumersReports::AddGroupI
       it 'adds instance_id with false value to subscription group' do
         migration.migrate(report)
 
-        expect(report[:consumer_groups]['test_group'][:subscription_groups]['sg_0'][:instance_id]).to be(false)
+        sg = report[:consumer_groups]['test_group'][:subscription_groups]['sg_0']
+        expect(sg[:instance_id]).to be(false)
       end
 
       it 'preserves other subscription group fields' do
@@ -150,9 +151,11 @@ RSpec.describe Karafka::Web::Management::Migrations::ConsumersReports::AddGroupI
       it 'adds instance_id to all subscription groups' do
         migration.migrate(report)
 
-        expect(report[:consumer_groups]['cg_1'][:subscription_groups]['sg_0'][:instance_id]).to be(false)
-        expect(report[:consumer_groups]['cg_1'][:subscription_groups]['sg_1'][:instance_id]).to be(false)
-        expect(report[:consumer_groups]['cg_2'][:subscription_groups]['sg_2'][:instance_id]).to be(false)
+        cg1_sgs = report[:consumer_groups]['cg_1'][:subscription_groups]
+        cg2_sgs = report[:consumer_groups]['cg_2'][:subscription_groups]
+        expect(cg1_sgs['sg_0'][:instance_id]).to be(false)
+        expect(cg1_sgs['sg_1'][:instance_id]).to be(false)
+        expect(cg2_sgs['sg_2'][:instance_id]).to be(false)
       end
     end
 

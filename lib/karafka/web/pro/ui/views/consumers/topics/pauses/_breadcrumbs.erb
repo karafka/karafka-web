@@ -1,0 +1,35 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<li>
+  <a href="<%= root_path('health', 'overview') %>">
+    Health
+  </a>
+</li>
+
+<li>
+  <a href="<%= root_path('health', 'overview') %>">
+    Overview
+  </a>
+</li>
+
+<li>
+  <a href="<%= root_path('health', 'overview') %>">
+    <%= @consumer_group_id %>
+  </a>
+</li>
+
+<li>
+  <a href="<%= root_path('health', 'overview') %>">
+    <%= @topic %>
+  </a>
+</li>
+
+<li>
+  <%
+    action = current_path.include?('/new') ? 'Pause' : 'Resume'
+  %>
+  <a href="<%= current_path %>">
+    <%= action %>
+  </a>
+</li>

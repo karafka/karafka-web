@@ -13,7 +13,9 @@ RSpec.describe_current do
   let(:partition_details) { sampler.subscription_groups[sg_id][:topics][topic_name][partition_id] }
 
   let(:event) do
-    event = Struct.new(:type, :caller, :payload).new('consumer.consuming.transaction', consumer, nil)
+    event = Struct
+            .new(:type, :caller, :payload)
+            .new('consumer.consuming.transaction', consumer, nil)
     event.payload = event
     event
   end

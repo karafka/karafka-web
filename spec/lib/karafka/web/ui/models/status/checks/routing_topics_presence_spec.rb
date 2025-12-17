@@ -85,19 +85,21 @@ RSpec.describe_current do
     end
 
     context 'when topic is a pattern topic' do
-      # patterns? is a Pro-only method not available in OSS, so we use plain double
-      # rubocop:disable RSpec/VerifiedDoubles
-      let(:pattern_topic) do
-        double(
-          'Karafka::Routing::Topic',
-          name: 'pattern_topic',
-          active?: true,
-          patterns?: true
-        ).tap do |t|
-          allow(t).to receive(:respond_to?).with(:patterns?).and_return(true)
+      # patterns? is a Pro-only method not available in OSS Karafka::Routing::Topic,
+      # so we create a Struct-based test object that responds to the required methods
+      let(:pattern_topic_class) do
+        Struct.new(:name, :active?, :patterns?, keyword_init: true) do
+          def respond_to?(method, *)
+            return true if method == :patterns?
+
+            super
+          end
         end
       end
-      # rubocop:enable RSpec/VerifiedDoubles
+
+      let(:pattern_topic) do
+        pattern_topic_class.new(name: 'pattern_topic', active?: true, patterns?: true)
+      end
 
       let(:topics_collection) do
         instance_double(Karafka::Routing::Topics).tap do |tc|

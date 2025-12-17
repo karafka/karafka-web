@@ -48,7 +48,8 @@ module Karafka
                 end
 
                 # Where should we start looking in the data
-                # - latest means we move back the needed per partition number of messages and we look
+                # - latest means we move back the needed per partition number of messages
+                #   and we look
                 # - offset means we start from the same offset on all the partitions
                 # - timestamp means we start from a given time moment on all the partitions
                 required(:offset_type) { |val| %w[latest offset timestamp].include?(val) }

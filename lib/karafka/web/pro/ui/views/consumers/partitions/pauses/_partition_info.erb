@@ -1,0 +1,46 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<div class="card-detail-container mt-4">
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Consumer Group
+      <%== badge_primary @consumer_group_id %>
+    </div>
+  </div>
+
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Topic
+      <%== badge_info @topic %>
+    </div>
+  </div>
+
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Partition
+      <%== badge_info @partition_id %>
+    </div>
+  </div>
+
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Poll State
+      <%== poll_state_with_change_time_label(@partition_stats.poll_state, @partition_stats.poll_state_ch) %>
+    </div>
+  </div>
+
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Committed Offset
+      <%== badge_secondary(normalized_metric(@partition_stats.committed_offset)) %>
+    </div>
+  </div>
+
+  <div class="card-detail">
+    <div class="card-detail-body">
+      Lag
+      <%== badge_secondary(normalized_metric(@partition_stats.lag_hybrid)) %>
+    </div>
+  </div>
+</div>

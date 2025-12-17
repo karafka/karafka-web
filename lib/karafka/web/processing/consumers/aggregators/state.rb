@@ -118,7 +118,8 @@ module Karafka
               end
             end
 
-            # Refreshes the counters that are computed based on incoming reports and not a total sum.
+            # Refreshes the counters that are computed based on incoming reports and not a
+            # total sum.
             # For this we use active reports we have in memory. It may not be accurate for the first
             # few seconds but it is much more optimal from performance perspective than computing
             # this fetching all data from Kafka for each view.

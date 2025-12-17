@@ -1,0 +1,19 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<% alert_box_error 'Cannot Manage Long-Running Job Partitions Pausing' do %>
+  <p>
+    Manual pause/resume operations are not supported for topics configured with Long-Running Job (LRJ) processing.
+  </p>
+  <p class="mt-2">
+    LRJ topics require specialized pause handling that is managed automatically by Karafka to ensure proper job completion and acknowledgment.
+  </p>
+<% end %>
+
+<div class="fieldset text-center mt-6">
+  <div class="flex justify-end">
+    <a href="<%= root_path('health', 'overview') %>" class="btn btn-ghost">
+      Cancel
+    </a>
+  </div>
+</div>

@@ -312,7 +312,11 @@
   }
 
   & td:has(.btn) {
-    @apply text-center;
+    @apply text-right;
+  }
+
+  & th:has(.btn) {
+    @apply text-right;
   }
 }
 
@@ -322,12 +326,21 @@
 
 @utility btn {
   .data-table td:has(&) {
-    @apply text-center;
+    @apply text-right;
   }
 
   .row-table td:has(&) {
-    @apply text-center;
+    @apply text-right;
   }
+
+  .data-table th:has(&) {
+    @apply text-right;
+  }
+
+  .row-table th:has(&) {
+    @apply text-right;
+  }
+
   @apply font-normal;
 }
 
@@ -746,6 +759,13 @@
 
 tr:not(:first-child) th[colspan]:not([colspan="1"]) {
   @apply text-center;
+}
+
+table th.options,
+table td.options {
+  width: 1%;
+  white-space: nowrap;
+  @apply text-right;
 }
 
 #controls {

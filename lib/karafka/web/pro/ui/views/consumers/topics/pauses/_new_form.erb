@@ -1,0 +1,74 @@
+<%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
+<%# See LICENSE for details. %>
+
+<%
+  pause_path = consumers_path(
+    'topics',
+    @consumer_group_id,
+    @topic,
+    'pause'
+  )
+%>
+
+<div class="card bg-base-100 mt-4">
+ <div class="card-body">
+    <form class="space-y-4 w-full" method="post" action="<%= pause_path %>">
+      <%== csrf_tag(pause_path) %>
+
+      <div class="flex items-center w-full mb-8">
+        <label class="w-1/4 text-base-content/70">Pause Duration:</label>
+        <div class="w-3/4">
+          <input
+            type="number"
+            min="0"
+            max="31536000"
+            name="duration"
+            class="block input input-bordered w-full"
+            placeholder="Enter pause duration in seconds (0 for indefinite)"
+            required
+          />
+
+          <div class="text-sm text-base-content/70 mt-1">
+           Set to 0 for indefinite pause or specify time in seconds
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center w-full">
+        <label class="w-1/4 text-base-content/70">Safety Check:</label>
+        <div class="w-3/4">
+          <label class="flex items-center gap-4 cursor-pointer">
+            <input type="hidden" name="prevent_override" value="off">
+
+            <input
+             type="checkbox"
+             name="prevent_override"
+             class="checkbox checkbox-warning"
+             checked
+            />
+
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                Only pause partitions that are not already paused
+              </div>
+              <div class="text-sm text-base-content/70">
+                Prevents accidental override of existing pause settings on individual partitions
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="fieldset text-center mt-6">
+        <div class="flex gap-4 justify-end">
+          <a href="<%= root_path('health', 'overview') %>" class="btn btn-ghost">Cancel</a>
+
+          <button type="submit" class="btn btn-warning gap-2 btn-lockable">
+            <%== icon(:pause) %>
+            Pause All Active Partitions
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

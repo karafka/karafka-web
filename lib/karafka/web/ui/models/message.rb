@@ -126,11 +126,11 @@ module Karafka
                   previous_offset
                 end
 
-                return [
-                  previous_offset,
-                  fill_compacted(messages, partition_id, context_offset, context_count, high_offset).reverse,
-                  next_offset
-                ]
+                filled = fill_compacted(
+                  messages, partition_id, context_offset, context_count, high_offset
+                )
+
+                return [previous_offset, filled.reverse, next_offset]
               end
 
               no_data_result

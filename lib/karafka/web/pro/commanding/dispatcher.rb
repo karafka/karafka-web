@@ -14,28 +14,27 @@ module Karafka
         # Dispatcher requires Web UI to have a producer
         class Dispatcher
           # What schema do we have in current Karafka version for commands dispatches
-          SCHEMA_VERSION = '1.1.0'
+          SCHEMA_VERSION = '1.2.0'
 
           class << self
             # Dispatches the command request
             #
-            # @param command_name [String, Symbol] name of the command we want to deal with in the process
-            # @param process_id [String] id of the process. We use name instead of id only
-            #   because in the web ui we work with the full name and it is easier. Since
+            # @param command_name [String, Symbol] name of the command we want to deal with in the
+            #   process
             # @param params [Hash] hash with extra command params that some commands may use.
-            def request(command_name, process_id, params = {})
-              produce(
-                process_id,
-                'request',
+            # @param matchers [Hash] hash with matching criteria for filtering which processes
+            #   should handle this command.
+            def request(command_name, params = {}, matchers: {})
+              produce_request(
                 {
                   schema_version: SCHEMA_VERSION,
                   type: 'request',
+                  # UUID to uniquely identify this command instance
+                  id: SecureRandom.uuid,
                   # Name is auto-generated and required. Should not be changed
                   command: params.merge(name: command_name),
                   dispatched_at: Time.now.to_f,
-                  process: {
-                    id: process_id
-                  }
+                  matchers: matchers
                 }
               )
             end
@@ -48,12 +47,13 @@ module Karafka
             # @param process_id [String] related process id
             # @param params [Hash] input command params (or empty hash if none)
             def acceptance(command_name, process_id, params = {})
-              produce(
+              produce_reply(
                 process_id,
                 'acceptance',
                 {
                   schema_version: SCHEMA_VERSION,
                   type: 'acceptance',
+                  id: SecureRandom.uuid,
                   command: params.merge(name: command_name),
                   dispatched_at: Time.now.to_f,
                   process: {
@@ -69,12 +69,13 @@ module Karafka
             # @param process_id [String] related process id
             # @param result [Object] anything that can be the result of the command execution
             def result(command_name, process_id, result)
-              produce(
+              produce_reply(
                 process_id,
                 'result',
                 {
                   schema_version: SCHEMA_VERSION,
                   type: 'result',
+                  id: SecureRandom.uuid,
                   command: {
                     name: command_name
                   },
@@ -99,12 +100,29 @@ module Karafka
               ::Karafka::Web.config.topics.consumers.commands.name
             end
 
-            # Converts payload to json, compresses it and dispatches to Kafka
+            # Produces a command request message. Request messages are broadcast to all processes
+            # and do not require a specific process_id since filtering is done via matchers.
             #
-            # @param process_id [String]
-            # @param type [String] type of the request
             # @param payload [Hash] hash with payload
-            def produce(process_id, type, payload)
+            def produce_request(payload)
+              producer.produce_async(
+                topic: commands_topic,
+                partition: 0,
+                payload: ::Zlib::Deflate.deflate(payload.to_json),
+                headers: {
+                  'zlib' => 'true',
+                  'type' => 'request'
+                }
+              )
+            end
+
+            # Produces a reply message (acceptance or result). Reply messages include
+            # the process_id as the Kafka key for routing and identification.
+            #
+            # @param process_id [String] related process id
+            # @param type [String] type of the reply ('acceptance' or 'result')
+            # @param payload [Hash] hash with payload
+            def produce_reply(process_id, type, payload)
               producer.produce_async(
                 topic: commands_topic,
                 key: process_id,

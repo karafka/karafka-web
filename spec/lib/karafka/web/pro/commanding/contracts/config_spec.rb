@@ -62,7 +62,12 @@ RSpec.describe_current do
 
     context 'when consumer_group does not match the topic regexp' do
       it 'expect to fail' do
-        invalid_params = valid_params.merge(commanding: { consumer_group: 'invalid consumer group' })
+        invalid_params = valid_params.merge(
+          commanding: {
+            consumer_group: 'invalid consumer group'
+          }
+        )
+
         expect(contract.call(invalid_params)).not_to be_success
       end
     end

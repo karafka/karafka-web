@@ -25,16 +25,16 @@ module Karafka
           # Detect that the state of the cache has changed
           before do
             cache.clear_if_needed(
-              session[:cache_hash],
-              session[:cache_timestamp].to_i
+              session['cache_hash'],
+              session['cache_timestamp'].to_i
             )
           end
 
           after do
             next unless cache.exist?
 
-            session[:cache_hash] = cache.hash
-            session[:cache_timestamp] = cache.timestamp.to_i
+            session['cache_hash'] = cache.hash
+            session['cache_timestamp'] = cache.timestamp.to_i
           end
 
           # @param params [Karafka::Web::Ui::Controllers::Requests::Params] request parameters

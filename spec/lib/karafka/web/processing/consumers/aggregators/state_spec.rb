@@ -48,8 +48,10 @@ RSpec.describe_current do
         state_aggregator.add_state(updated_report, 200)
 
         state = state_aggregator.to_h
-        expect(state[:processes][:'process-1234'][:offset]).to eq(200)
-        expect(state[:processes][:'process-1234'][:dispatched_at]).to eq(updated_report[:dispatched_at])
+        process = state[:processes][:'process-1234']
+
+        expect(process[:offset]).to eq(200)
+        expect(process[:dispatched_at]).to eq(updated_report[:dispatched_at])
       end
     end
 

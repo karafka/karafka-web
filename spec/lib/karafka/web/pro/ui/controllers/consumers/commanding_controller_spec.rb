@@ -21,16 +21,16 @@ RSpec.describe_current do
       expect(flash[:success]).to include('The Trace command has been dispatched to the')
     end
 
-    it 'expect to create new command in the given topic with process_id reference' do
+    it 'expect to create new command in the given topic with process_id matcher' do
       # Dispatch of commands is async, so we have to wait
       sleep(1)
       message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
-      expect(message.key).to eq(process_id)
-      expect(message.payload[:schema_version]).to eq('1.1.0')
+      expect(message.key).to be_nil
+      expect(message.payload[:schema_version]).to eq('1.2.0')
       expect(message.payload[:type]).to eq('request')
       expect(message.payload[:dispatched_at]).not_to be_nil
       expect(message.payload[:command]).to eq(name: 'consumers.trace')
-      expect(message.payload[:process]).to eq(id: process_id)
+      expect(message.payload[:matchers]).to eq(process_id: process_id)
     end
   end
 
@@ -44,16 +44,16 @@ RSpec.describe_current do
       expect(flash[:success]).to include('The Quiet command has been dispatched to the')
     end
 
-    it 'expect to create new command in the given topic with process_id reference' do
+    it 'expect to create new command in the given topic with process_id matcher' do
       # Dispatch of commands is async, so we have to wait
       sleep(1)
       message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
-      expect(message.key).to eq(process_id)
-      expect(message.payload[:schema_version]).to eq('1.1.0')
+      expect(message.key).to be_nil
+      expect(message.payload[:schema_version]).to eq('1.2.0')
       expect(message.payload[:type]).to eq('request')
       expect(message.payload[:dispatched_at]).not_to be_nil
       expect(message.payload[:command]).to eq(name: 'consumers.quiet')
-      expect(message.payload[:process]).to eq(id: process_id)
+      expect(message.payload[:matchers]).to eq(process_id: process_id)
     end
   end
 
@@ -67,16 +67,16 @@ RSpec.describe_current do
       expect(flash[:success]).to include('The Stop command has been dispatched to the')
     end
 
-    it 'expect to create new command in the given topic with process_id reference' do
+    it 'expect to create new command in the given topic with process_id matcher' do
       # Dispatch of commands is async, so we have to wait
       sleep(1)
       message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
-      expect(message.key).to eq(process_id)
-      expect(message.payload[:schema_version]).to eq('1.1.0')
+      expect(message.key).to be_nil
+      expect(message.payload[:schema_version]).to eq('1.2.0')
       expect(message.payload[:type]).to eq('request')
       expect(message.payload[:dispatched_at]).not_to be_nil
       expect(message.payload[:command]).to eq(name: 'consumers.stop')
-      expect(message.payload[:process]).to eq(id: process_id)
+      expect(message.payload[:matchers]).to eq(process_id: process_id)
     end
   end
 
@@ -90,16 +90,16 @@ RSpec.describe_current do
       expect(flash[:success]).to include('The Quiet command has been dispatched to all')
     end
 
-    it 'expect to create new command in the given topic with wildcard process reference' do
+    it 'expect to create new command in the given topic with no matchers' do
       # Dispatch of commands is async, so we have to wait
       sleep(1)
       message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
-      expect(message.key).to eq('*')
-      expect(message.payload[:schema_version]).to eq('1.1.0')
+      expect(message.key).to be_nil
+      expect(message.payload[:schema_version]).to eq('1.2.0')
       expect(message.payload[:type]).to eq('request')
       expect(message.payload[:dispatched_at]).not_to be_nil
       expect(message.payload[:command]).to eq(name: 'consumers.quiet')
-      expect(message.payload[:process]).to eq(id: '*')
+      expect(message.payload[:matchers]).to eq({})
     end
   end
 
@@ -113,16 +113,16 @@ RSpec.describe_current do
       expect(flash[:success]).to include('The Stop command has been dispatched to all')
     end
 
-    it 'expect to create new command in the given topic with wildcard process reference' do
+    it 'expect to create new command in the given topic with no matchers' do
       # Dispatch of commands is async, so we have to wait
       sleep(1)
       message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
-      expect(message.key).to eq('*')
-      expect(message.payload[:schema_version]).to eq('1.1.0')
+      expect(message.key).to be_nil
+      expect(message.payload[:schema_version]).to eq('1.2.0')
       expect(message.payload[:type]).to eq('request')
       expect(message.payload[:dispatched_at]).not_to be_nil
       expect(message.payload[:command]).to eq(name: 'consumers.stop')
-      expect(message.payload[:process]).to eq(id: '*')
+      expect(message.payload[:matchers]).to eq({})
     end
   end
 end

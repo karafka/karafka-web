@@ -22,7 +22,7 @@ RSpec.describe_current do
       it 'applies applicable migrations' do
         result = migrator.call(report)
 
-        # The Management::Migrations::ConsumersReports::RenameProcessNameToId migration should have run
+        # The RenameProcessNameToId migration should have run
         expect(result[:process][:id]).to eq('old-process:1:1')
         expect(result[:process]).not_to have_key(:name)
       end
