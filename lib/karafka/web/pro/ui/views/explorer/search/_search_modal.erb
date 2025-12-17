@@ -45,10 +45,10 @@
       <% end %>
 
       <div class="flex items-center w-full">
-        <label for="input-field" class="w-1/3 text-base-content/70">Matcher:</label>
+        <label for="input-field" class="w-1/4 text-base-content/70">Matcher:</label>
 
         <select
-          class="w-2/3 block select select-bordered"
+          class="w-3/4 block select select-bordered"
           id="matcher"
           name="search[matcher]"
           required
@@ -62,11 +62,11 @@
       </div>
 
       <div class="flex items-center w-full">
-        <label for="input-field" class="w-1/3 text-base-content/70">Phrase:</label>
+        <label for="input-field" class="w-1/4 text-base-content/70">Phrase:</label>
 
         <input
           type="text"
-          class="w-2/3 block input input-bordered"
+          class="w-3/4 block input input-bordered"
           id="phrase"
           name="search[phrase]"
           value="<%= phrase %>"
@@ -76,10 +76,10 @@
       </div>
 
       <div class="flex items-center w-full">
-        <label for="input-field" class="w-1/3 text-base-content/70">Partitions:</label>
+        <label for="input-field" class="w-1/4 text-base-content/70">Partitions:</label>
 
         <select
-          class="w-2/3 h-auto min-h-fit block bordered input p-4"
+          class="w-3/4 h-auto min-h-fit block bordered input p-4"
           id="partitions"
           name="search[partitions][]"
           multiple
@@ -99,9 +99,9 @@
       </div>
 
       <div class="flex items-center w-full">
-        <label for="input-field" class="w-1/3 text-base-content/70">Offset:</label>
+        <label for="input-field" class="w-1/4 text-base-content/70">Offset:</label>
 
-        <div class="flex flex-col space-y-2 w-2/3">
+        <div class="flex flex-col space-y-2 w-3/4">
           <label class="flex items-center space-x-2">
             <input type="radio" class="radio" name="search[offset_type]" id="offset-latest" value="latest" <%= 'checked' if offset_type == 'latest' || offset_type.empty? %>>
             <span>Latest</span>
@@ -120,9 +120,9 @@
       </div>
 
       <div class="flex items-center w-full">
-        <label for="input-field" class="w-1/3 text-base-content/70">Messages:</label>
+        <label for="input-field" class="w-1/4 text-base-content/70">Messages:</label>
 
-        <select class="w-2/3 block select select-bordered" id="limit" name="search[limit]" required>
+        <select class="w-3/4 block select select-bordered" id="limit" name="search[limit]" required>
           <% @limits.each do |available_limit| %>
             <option value="<%= available_limit %>" <%= 'selected' if limit == available_limit %>>
               <%= available_limit %>
