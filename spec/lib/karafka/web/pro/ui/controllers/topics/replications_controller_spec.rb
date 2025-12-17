@@ -118,7 +118,16 @@ RSpec.describe_current do
       let(:partitions_data) { [{ replica_count: 2, leader: 1, in_sync_replica_brokers: '1,2' }] }
 
       let(:mock_synonym) do
-        instance_double(Karafka::Admin::Configs::Config, name: 'default.replication.factor')
+        instance_double(
+          Karafka::Admin::Configs::Config,
+          name: 'default.replication.factor',
+          value: '2',
+          default?: false,
+          read_only?: false,
+          sensitive?: false,
+          synonym?: true,
+          synonyms: []
+        )
       end
 
       let(:mock_config) do
@@ -126,6 +135,10 @@ RSpec.describe_current do
           Karafka::Admin::Configs::Config,
           name: 'min.insync.replicas',
           value: '2',
+          default?: false,
+          read_only?: false,
+          sensitive?: false,
+          synonym?: false,
           synonyms: [mock_synonym]
         )
       end
@@ -138,11 +151,21 @@ RSpec.describe_current do
         )
       end
 
+      let(:distribution_result) do
+        [
+          Karafka::Web::Ui::Lib::HashProxy.new(std_dev: 0, std_dev_rel: 0.0, sum: 0),
+          [Karafka::Web::Ui::Lib::HashProxy.new(count: 0, partition_id: 0, share: 0.0, diff: 0)]
+        ]
+      end
+
       before do
-        allow(topic_model).to receive(:configs).and_return([mock_config])
+        allow(topic_model)
+          .to receive_messages(configs: [mock_config], distribution: distribution_result)
         allow(Karafka::Web::Ui::Models::Topic).to receive(:find).and_call_original
         allow(Karafka::Web::Ui::Models::Topic).to receive(:find).with(topic).and_return(topic_model)
+        allow(Karafka::Admin).to receive(:read_watermark_offsets).and_return([0, 100])
         allow(Karafka.env).to receive(:production?).and_return(true)
+
         get "topics/#{topic}/replication"
       end
 
@@ -205,8 +228,8 @@ RSpec.describe_current do
       end
 
       before do
-        allow(topic_model).to receive(:configs).and_return([mock_config])
-        allow(topic_model).to receive(:distribution).and_return(distribution_result)
+        allow(topic_model)
+          .to receive_messages(configs: [mock_config], distribution: distribution_result)
         allow(Karafka::Web::Ui::Models::Topic).to receive(:find).and_call_original
         allow(Karafka::Web::Ui::Models::Topic).to receive(:find).with(topic).and_return(topic_model)
         allow(Karafka::Admin).to receive(:read_watermark_offsets).and_return([0, 100])
@@ -273,8 +296,8 @@ RSpec.describe_current do
       end
 
       before do
-        allow(topic_model).to receive(:configs).and_return([mock_config])
-        allow(topic_model).to receive(:distribution).and_return(distribution_result)
+        allow(topic_model)
+          .to receive_messages(configs: [mock_config], distribution: distribution_result)
         allow(Karafka::Web::Ui::Models::Topic).to receive(:find).and_call_original
         allow(Karafka::Web::Ui::Models::Topic).to receive(:find).with(topic).and_return(topic_model)
         allow(Karafka::Admin).to receive(:read_watermark_offsets).and_return([0, 100])
