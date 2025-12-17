@@ -8,6 +8,7 @@
 - [Enhancement] Add `.options` CSS class for table columns containing action buttons, providing consistent `width: 1%; white-space: nowrap` styling to prevent column width fluctuation.
 - [Refactor] Refactor Status model into a DSL-based architecture with individual check classes. Each status check is now a separate class in `Karafka::Web::Ui::Models::Status::Checks` that declares its dependencies using `depends_on :check_name` DSL. Shared state is managed through a `Context` class, and the `Step` struct has been extracted to its own file. This improves maintainability, testability, and makes it easier to add new status checks in the future.
 - [Fix] Fix session keys to use strings instead of symbols for compatibility with Roda's session management.
+- [Fix] Fix actions and selector alignment in explorer and errors views by wrapping col-span elements in proper grid container.
 
 ## 0.11.5 (2025-11-14)
 - [Enhancement] Utilize newly released Roda session management `:env_key` to isolate Karafka Web session from the main application session.

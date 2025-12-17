@@ -1,30 +1,32 @@
 <%# This code is part of Karafka Pro, a commercial component not licensed under LGPL. %>
 <%# See LICENSE for details. %>
 
-<div class="col-span-4">
-  <section class="actions">
-    <% if @messages && !@messages.empty? %>
-      <a
-        href="<%= explorer_topics_path(@topic_id, 'recent') %>"
-        class="btn-action"
-        title="Display the most recent message for this topic with auto-refresh"
-      >
-        <%== icon(:play_circle) %>
-      </a>
+<div class="grid grid-cols-12">
+  <div class="col-span-4">
+    <section class="actions">
+      <% if @messages && !@messages.empty? %>
+        <a
+          href="<%= explorer_topics_path(@topic_id, 'recent') %>"
+          class="btn-action"
+          title="Display the most recent message for this topic with auto-refresh"
+        >
+          <%== icon(:play_circle) %>
+        </a>
 
-      <a
-        href="<%= explorer_path(@topic_id, 'search') %>"
-        class="btn-action"
-        title="Search in this topic"
-      >
-        <%== icon(:magnifying_glass) %>
-      </a>
-    <% end %>
-  </section>
-</div>
+        <a
+          href="<%= explorer_path(@topic_id, 'search') %>"
+          class="btn-action"
+          title="Search in this topic"
+        >
+          <%== icon(:magnifying_glass) %>
+        </a>
+      <% end %>
+    </section>
+  </div>
 
-<div class="col-span-8 mb-3">
-  <section class="actions">
-    <%== partial 'explorer/explorer/selector' %>
-  </section>
+  <div class="col-span-8 mb-3">
+    <section class="actions">
+      <%== partial 'explorer/explorer/selector' %>
+    </section>
+  </div>
 </div>

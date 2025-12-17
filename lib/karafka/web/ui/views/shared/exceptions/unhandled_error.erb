@@ -9,7 +9,7 @@
         <h1 class="text-8xl font-bold">500</h1>
 
         <p class="text-3xl mt-5">
-          <span class="text-red-500">Oops!</span> Internal Server Error.
+          <span class="text-error">Oops!</span> Internal Server Error.
         </p>
 
         <div class="mt-5">
@@ -20,8 +20,8 @@
           <p class="text-lg font-light mb-5">This error has been reported and logged. Please try the following:</p>
 
           <ul class="list-disc text-left text-lg mb-10 pl-5 font-light">
-            <li>Visit the <a href="<%= root_path('status') %>" class="text-blue-500 underline">Status</a> page to check if there are any system issues</li>
-            <li>Check the <a href="<%= root_path('errors') %>" class="text-blue-500 underline">Errors</a> page for details about this error</li>
+            <li>Visit the <a href="<%= root_path('status') %>" class="link link-primary">Status</a> page to check if there are any system issues</li>
+            <li>Check the <a href="<%= root_path('errors') %>" class="link link-primary">Errors</a> page for details about this error</li>
             <li>Verify that all required topics exist and are accessible</li>
             <li>Ensure you have a working connection with your Kafka cluster</li>
             <li>Try refreshing the page or navigating back to retry your action</li>
@@ -33,7 +33,7 @@
 
           <p>
             <a href="<%= root_path %>" class="btn btn-primary mr-2 rounded-md py-1">Go Home</a>
-            <a href="<%= root_path('status') %>" class="btn btn-success text-white rounded-md">Status page</a>
+            <a href="<%= root_path('status') %>" class="btn btn-success rounded-md">Status page</a>
           </p>
         </div>
       </div>
