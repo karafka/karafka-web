@@ -8,7 +8,7 @@ RSpec.describe_current do
 
     it do
       expect(response.status).to eq(402)
-      expect(body).to include('This Web UI feature is available only to')
+      expect(body).to include('This feature is available only to')
     end
   end
 end
