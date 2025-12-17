@@ -28,9 +28,9 @@ RSpec.describe_current do
       result = helper.relative_time(time_float)
       actual_stamp = Time.at(time_float).getutc.iso8601(3)
 
-      expect(result).to eq(
-        %(<time class="ltr" dir="ltr" title="#{actual_stamp}" datetime="#{actual_stamp}">#{time_float}</time>)
-      )
+      expected = %(<time class="ltr" dir="ltr" title="#{actual_stamp}" ) +
+                 %(datetime="#{actual_stamp}">#{time_float}</time>)
+      expect(result).to eq(expected)
     end
 
     it 'handles different time precision' do

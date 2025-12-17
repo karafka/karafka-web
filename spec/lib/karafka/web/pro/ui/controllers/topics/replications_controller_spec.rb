@@ -118,7 +118,10 @@ RSpec.describe_current do
       let(:partitions_data) { [{ replica_count: 2, leader: 1, in_sync_replica_brokers: '1,2' }] }
       let(:mock_topic) { double('Topic').as_null_object }
       let(:mock_synonym) { double('Synonym', name: 'default.replication.factor') }
-      let(:mock_config) { double('Config', name: 'min.insync.replicas', value: '2', synonyms: [mock_synonym]) }
+
+      let(:mock_config) do
+        double('Config', name: 'min.insync.replicas', value: '2', synonyms: [mock_synonym])
+      end
 
       before do
         allow(mock_topic).to receive(:topic_name).and_return(topic)
@@ -154,7 +157,10 @@ RSpec.describe_current do
       let(:partitions_data) { [{ replica_count: 3, leader: 1, in_sync_replica_brokers: '1,2,3' }] }
       let(:mock_topic) { double('Topic').as_null_object }
       let(:mock_synonym) { double('Synonym', name: 'default.replication.factor') }
-      let(:mock_config) { double('Config', name: 'min.insync.replicas', value: '1', synonyms: [mock_synonym]) }
+
+      let(:mock_config) do
+        double('Config', name: 'min.insync.replicas', value: '1', synonyms: [mock_synonym])
+      end
 
       before do
         allow(mock_topic).to receive(:topic_name).and_return(topic)
@@ -190,7 +196,10 @@ RSpec.describe_current do
       let(:partitions_data) { [{ replica_count: 3, leader: 1, in_sync_replica_brokers: '1,2,3' }] }
       let(:mock_topic) { double('Topic').as_null_object }
       let(:mock_synonym) { double('Synonym', name: 'default.replication.factor') }
-      let(:mock_config) { double('Config', name: 'min.insync.replicas', value: '2', synonyms: [mock_synonym]) }
+
+      let(:mock_config) do
+        double('Config', name: 'min.insync.replicas', value: '2', synonyms: [mock_synonym])
+      end
 
       before do
         allow(mock_topic).to receive(:topic_name).and_return(topic)

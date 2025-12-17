@@ -74,7 +74,8 @@ RSpec.describe_current do
     it 'returns correct format for empty array' do
       result = array.inspect
 
-      expect(result).to match(/^#<Karafka::Web::Tracking::Helpers::Ttls::Array:0x[0-9a-f]+ ttl=1000ms size=0>$/)
+      pattern = /^#<Karafka::Web::Tracking::Helpers::Ttls::Array:0x[0-9a-f]+ ttl=1000ms size=0>$/
+      expect(result).to match(pattern)
     end
 
     it 'returns correct format with items' do
@@ -83,7 +84,8 @@ RSpec.describe_current do
 
       result = array.inspect
 
-      expect(result).to match(/^#<Karafka::Web::Tracking::Helpers::Ttls::Array:0x[0-9a-f]+ ttl=1000ms size=2>$/)
+      pattern = /^#<Karafka::Web::Tracking::Helpers::Ttls::Array:0x[0-9a-f]+ ttl=1000ms size=2>$/
+      expect(result).to match(pattern)
     end
 
     it 'shows correct TTL value' do
