@@ -19,8 +19,8 @@
             maxlength="249"
             value="<%= params.fetch(:topic_name, '') %>"
             required
-            autocomplete="off"
->
+            autocomplete="on"
+          >
           <div class="text-sm text-base-content/70 mt-1">
             Only alphanumeric characters, dots, underscores, and hyphens are allowed
           </div>
@@ -39,8 +39,8 @@
             placeholder="Enter number of partitions"
             value="<%= params.fetch(:partitions_count, 5) %>"
             required
-            autocomplete="off"
->
+            autocomplete="on"
+          >
           <div class="text-sm text-base-content/70 mt-1">
             Minimum 1 partition, cannot be decreased after creation
           </div>
@@ -59,8 +59,8 @@
             placeholder="Enter replication factor"
             value="<%= params.fetch(:replication_factor, 1) %>"
             required
-            autocomplete="off"
->
+            autocomplete="on"
+          >
           <div class="text-sm text-base-content/70 mt-1">
             Number of replicas for each partition (minimum 1, recommended 3 for production)
           </div>
