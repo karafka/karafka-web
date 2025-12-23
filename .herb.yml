@@ -1,0 +1,39 @@
+# This file configures Herb for your project and team.
+# Settings here take precedence over individual editor preferences.
+#
+# Herb is a suite of tools for HTML+ERB templates including:
+# - Linter: Validates templates and enforcing best practices
+# - Formatter: Auto-formats templates with intelligent indentation
+# - Language Server: Provides IDE support (VS Code, Zed, Neovim, etc.)
+#
+# Website: https://herb-tools.dev
+# Configuration: https://herb-tools.dev/configuration
+# GitHub Repo: https://github.com/marcoroth/herb
+
+version: 0.8.5
+
+files:
+  # Include all .erb files in lib directory
+  include:
+    - 'lib/**/*.erb'
+
+  # Patterns to exclude
+  exclude:
+    - 'node_modules/**/*'
+    - 'vendor/**/*'
+    - 'coverage/**/*'
+    - 'tmp/**/*'
+
+linter:
+  enabled: true
+
+  rules:
+    erb-prefer-image-tag-helper:
+      enabled: false
+    html-no-underscores-in-attribute-names:
+      enabled: false
+
+formatter:
+  enabled: false
+  indentWidth: 2
+  maxLineLength: 80

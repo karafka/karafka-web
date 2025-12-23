@@ -168,6 +168,25 @@ jobs:
       - name: Run yard-lint
         run: bundle exec yard-lint lib/
 
+  herb-lint:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run herb-lint
+        run: npx herb-lint
+
   ci-success:
     name: CI Success
     runs-on: ubuntu-latest
@@ -178,6 +197,7 @@ jobs:
       - integrations
       - assets
       - yard-lint
+      - herb-lint
     steps:
       - name: Check all jobs passed
         if: |

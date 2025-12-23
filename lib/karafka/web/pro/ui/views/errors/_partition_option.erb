@@ -2,9 +2,11 @@
 <%# See LICENSE for details. %>
 
 <% if @partition_id == partition %>
-  <option value="<%= root_path('errors', partition) %>" selected=selected>
+  <option value="<%= root_path('errors', partition) %>" selected>
+    <%= partition || 'All' %>
+  </option>
 <% else %>
   <option value="<%= root_path('errors', partition) %>">
+    <%= partition || 'All' %>
+  </option>
 <% end %>
-  <%= partition || 'All' %>
-</option>

@@ -33,9 +33,8 @@
       <%= k %>
     </td>
     <td>
-      <% case k
-         when :occurred_at
-      %>
+      <% case k %>
+      <% when :occurred_at %>
         <%== relative_time v %>
       <% when :error_class %>
         <code><%= v %></code>

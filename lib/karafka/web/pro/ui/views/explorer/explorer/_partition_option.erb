@@ -10,9 +10,11 @@
 %>
 
 <% if @partition_id == partition %>
-  <option value="<%= path %>" selected=selected>
+  <option value="<%= path %>" selected>
+    <%= partition || 'All' %>
+  </option>
 <% else %>
   <option value="<%= path %>">
+    <%= partition || 'All' %>
+  </option>
 <% end %>
-  <%= partition || 'All' %>
-</option>

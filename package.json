@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "@herb-tools/linter": "^0.8.5",
     "@tailwindcss/postcss": "^4.1.17",
     "daisyui": "^5.5.5",
     "gulp": "^5.0.1",
