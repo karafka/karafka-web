@@ -6,7 +6,7 @@
     <% all_names = ([config.name] + config.synonyms.map(&:name)).uniq %>
     <% all_names.each do |name| %>
       <%= name %>
-      <br/>
+      <br>
     <% end %>
   </td>
   <td class="wrap-text"><%= config.value %></td>

@@ -26,7 +26,7 @@
 
     <h3 class="text-lg mb-3">Edit Search Parameters</h3>
 
-    <hr />
+    <hr>
 
     <form
       id="messages-search-form"
@@ -72,6 +72,7 @@
           value="<%= phrase %>"
           placeholder="Enter phrase to search for"
           required
+          autocomplete="off"
         >
       </div>
 
@@ -110,12 +111,12 @@
             <input type="radio" class="radio" name="search[offset_type]" id="offset-value" value="offset" <%= 'checked' if offset_type == 'offset' %>>
             <span>Offset</span>
           </label>
-          <input type="number" value="<%= offset %>" class="input input-bordered mt-2" id="offset-input" name="search[offset]" min="0" disabled>
+          <input type="number" value="<%= offset %>" class="input input-bordered mt-2" id="offset-input" name="search[offset]" min="0" disabled autocomplete="off">
           <label class="flex items-center space-x-2">
             <input type="radio" class="radio" name="search[offset_type]" id="offset-timestamp" value="timestamp" <%= 'checked' if offset_type == 'timestamp' %>>
             <span>Timestamp (in ms)</span>
           </label>
-          <input type="number" value="<%= timestamp %>" class="input input-bordered mt-2" id="offset-timestamp-input" name="search[timestamp]" min="0" max="<%= ((Time.now.to_f + 60 * 60 * 24 * 31) * 1_000).to_i %>" disabled>
+          <input type="number" value="<%= timestamp %>" class="input input-bordered mt-2" id="offset-timestamp-input" name="search[timestamp]" min="0" max="<%= ((Time.now.to_f + 60 * 60 * 24 * 31) * 1_000).to_i %>" disabled autocomplete="off">
         </div>
       </div>
 

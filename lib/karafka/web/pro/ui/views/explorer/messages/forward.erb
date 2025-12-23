@@ -3,7 +3,7 @@
 
 <% view_title "Republishing of message with offset #{@message.offset} from partition #{@message.partition}" %>
 
-<% alert_box_info('Message Republishing Operation') do  %>
+<% alert_box_info('Message Republishing Operation') do %>
   <p>
     You are about to republish a copy of this message to another topic. This operation:
   </p>
@@ -102,7 +102,8 @@
             max="10000"
             id="target_partition"
             value="<%= @target_partition %>"
-          />
+            autocomplete="off"
+>
           <div class="text-sm text-base-content/70 mt-1">
             Optional. If left empty, partition will be assigned based on key or round-robin strategy
           </div>
@@ -114,7 +115,7 @@
         <div class="w-3/4">
           <label class="flex items-center gap-4 cursor-pointer">
             <input type="hidden" name="include_source_headers" value="off">
-            <input type="checkbox" name="include_source_headers" class="checkbox checkbox-primary" checked />
+            <input type="checkbox" name="include_source_headers" class="checkbox checkbox-primary" checked>
             <div class="space-y-1">
               <div class="flex items-center gap-2">
                 Include source message headers
