@@ -2,9 +2,81 @@
 
 set -e
 
-SPECS_TYPE=regular bundle exec rspec \
-  spec/lib \
-  --exclude-pattern "**/pro/**/*_spec.rb"
+# Run specs in parallel or sequentially based on PARALLEL env var
+if [ "${PARALLEL:-false}" = "true" ]; then
+  echo "Running specs in parallel mode with independent processes..."
 
-SPECS_TYPE=pro bundle exec rspec \
-  spec/lib/karafka/web/pro
+  # Create temp directory for exit codes
+  TMPDIR=$(mktemp -d)
+  trap "rm -rf $TMPDIR" EXIT
+
+  # Define spec groups - each runs as an independent process
+  # Regular specs split by directory
+  SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/ui --format progress > "$TMPDIR/ui.log" 2>&1 &
+  PID1=$!
+  SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/tracking --format progress > "$TMPDIR/tracking.log" 2>&1 &
+  PID2=$!
+  SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/processing --format progress > "$TMPDIR/processing.log" 2>&1 &
+  PID3=$!
+  SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/management spec/lib/karafka/web/cli spec/lib/karafka/web/deserializer_spec.rb spec/lib/karafka/web/cli_spec.rb spec/lib/karafka/web/installer_spec.rb spec/lib/karafka/web/inflector_spec.rb spec/lib/karafka/web/errors_spec.rb --format progress > "$TMPDIR/other.log" 2>&1 &
+  PID4=$!
+
+  echo "Started 4 parallel regular spec processes: $PID1 $PID2 $PID3 $PID4"
+
+  # Wait for all regular spec processes and collect exit codes
+  FAILED=0
+  for PID in $PID1 $PID2 $PID3 $PID4; do
+    if ! wait $PID; then
+      FAILED=1
+    fi
+  done
+
+  # Show logs
+  echo "=== UI Specs ===" && cat "$TMPDIR/ui.log"
+  echo "=== Tracking Specs ===" && cat "$TMPDIR/tracking.log"
+  echo "=== Processing Specs ===" && cat "$TMPDIR/processing.log"
+  echo "=== Other Specs ===" && cat "$TMPDIR/other.log"
+
+  if [ $FAILED -eq 1 ]; then
+    echo "Some regular specs failed!"
+    exit 1
+  fi
+
+  echo "All regular specs passed! Running pro specs in parallel..."
+
+  # Pro specs also run in parallel
+  SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/ui --format progress > "$TMPDIR/pro_ui.log" 2>&1 &
+  PID_PRO1=$!
+  SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/commanding spec/lib/karafka/web/pro/commanding_spec.rb spec/lib/karafka/web/pro/loader_spec.rb --format progress > "$TMPDIR/pro_other.log" 2>&1 &
+  PID_PRO2=$!
+
+  echo "Started 2 parallel pro spec processes: $PID_PRO1 $PID_PRO2"
+
+  # Wait for pro spec processes
+  FAILED=0
+  for PID in $PID_PRO1 $PID_PRO2; do
+    if ! wait $PID; then
+      FAILED=1
+    fi
+  done
+
+  # Show pro logs
+  echo "=== Pro UI Specs ===" && cat "$TMPDIR/pro_ui.log"
+  echo "=== Pro Other Specs ===" && cat "$TMPDIR/pro_other.log"
+
+  if [ $FAILED -eq 1 ]; then
+    echo "Some pro specs failed!"
+    exit 1
+  fi
+
+  echo "All specs passed!"
+else
+  echo "Running specs in sequential mode..."
+
+  SPECS_TYPE=regular bundle exec rspec \
+    spec/lib \
+    --exclude-pattern "**/pro/**/*_spec.rb"
+
+  SPECS_TYPE=pro bundle exec rspec \
+    spec/lib/karafka/web/pro
+fi
