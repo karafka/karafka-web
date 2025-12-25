@@ -6,20 +6,19 @@ set -e
 if [ "${PARALLEL:-false}" = "true" ]; then
   echo "Running specs in parallel mode with independent processes..."
 
-  # Create temp directory for exit codes
+  # Create temp directory for logs
   TMPDIR=$(mktemp -d)
   trap "rm -rf $TMPDIR" EXIT
 
   # Define spec groups - each runs as an independent process
   # Regular specs split by directory
-  # SIMPLECOV_NO_MINIMUM=true disables coverage threshold for parallel runs
-  SIMPLECOV_NO_MINIMUM=true SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/ui --format progress > "$TMPDIR/ui.log" 2>&1 &
+  PARALLEL=true PARALLEL_GROUP=ui SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/ui --format progress > "$TMPDIR/ui.log" 2>&1 &
   PID1=$!
-  SIMPLECOV_NO_MINIMUM=true SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/tracking --format progress > "$TMPDIR/tracking.log" 2>&1 &
+  PARALLEL=true PARALLEL_GROUP=tracking SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/tracking --format progress > "$TMPDIR/tracking.log" 2>&1 &
   PID2=$!
-  SIMPLECOV_NO_MINIMUM=true SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/processing --format progress > "$TMPDIR/processing.log" 2>&1 &
+  PARALLEL=true PARALLEL_GROUP=processing SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/processing --format progress > "$TMPDIR/processing.log" 2>&1 &
   PID3=$!
-  SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/management spec/lib/karafka/web/cli spec/lib/karafka/web/deserializer_spec.rb spec/lib/karafka/web/cli_spec.rb spec/lib/karafka/web/installer_spec.rb spec/lib/karafka/web/inflector_spec.rb spec/lib/karafka/web/errors_spec.rb --format progress > "$TMPDIR/other.log" 2>&1 &
+  PARALLEL=true PARALLEL_GROUP=other SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/management spec/lib/karafka/web/cli spec/lib/karafka/web/deserializer_spec.rb spec/lib/karafka/web/cli_spec.rb spec/lib/karafka/web/installer_spec.rb spec/lib/karafka/web/inflector_spec.rb spec/lib/karafka/web/errors_spec.rb --format progress > "$TMPDIR/other.log" 2>&1 &
   PID4=$!
 
   echo "Started 4 parallel regular spec processes: $PID1 $PID2 $PID3 $PID4"
@@ -46,14 +45,13 @@ if [ "${PARALLEL:-false}" = "true" ]; then
   echo "All regular specs passed! Running pro specs in parallel..."
 
   # Pro specs split into 4 parallel processes
-  # SIMPLECOV_NO_MINIMUM=true disables coverage threshold for parallel runs
-  SIMPLECOV_NO_MINIMUM=true SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/ui/controllers --format progress > "$TMPDIR/pro_controllers.log" 2>&1 &
+  PARALLEL=true PARALLEL_GROUP=pro_controllers SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/ui/controllers --format progress > "$TMPDIR/pro_controllers.log" 2>&1 &
   PID_PRO1=$!
-  SIMPLECOV_NO_MINIMUM=true SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/ui/lib --format progress > "$TMPDIR/pro_lib.log" 2>&1 &
+  PARALLEL=true PARALLEL_GROUP=pro_lib SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/ui/lib --format progress > "$TMPDIR/pro_lib.log" 2>&1 &
   PID_PRO2=$!
-  SIMPLECOV_NO_MINIMUM=true SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/commanding --format progress > "$TMPDIR/pro_commanding.log" 2>&1 &
+  PARALLEL=true PARALLEL_GROUP=pro_commanding SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/commanding --format progress > "$TMPDIR/pro_commanding.log" 2>&1 &
   PID_PRO3=$!
-  SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/commanding_spec.rb spec/lib/karafka/web/pro/loader_spec.rb --format progress > "$TMPDIR/pro_other.log" 2>&1 &
+  PARALLEL=true PARALLEL_GROUP=pro_other SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/commanding_spec.rb spec/lib/karafka/web/pro/loader_spec.rb --format progress > "$TMPDIR/pro_other.log" 2>&1 &
   PID_PRO4=$!
 
   echo "Started 4 parallel pro spec processes: $PID_PRO1 $PID_PRO2 $PID_PRO3 $PID_PRO4"
@@ -78,6 +76,23 @@ if [ "${PARALLEL:-false}" = "true" ]; then
   fi
 
   echo "All specs passed!"
+
+  # Collate SimpleCov results and check minimum coverage
+  echo "Collating SimpleCov coverage results..."
+  bundle exec ruby -e "
+    require 'simplecov'
+
+    SimpleCov.collate Dir['coverage/.resultset.json'], 'rails' do
+      add_filter '/spec/'
+      add_filter '/vendor/'
+      add_filter '/gems/'
+      add_filter '/.bundle/'
+      add_filter '/doc/'
+      add_filter '/config/'
+      enable_coverage :branch
+      minimum_coverage 92
+    end
+  "
 else
   echo "Running specs in sequential mode..."
 

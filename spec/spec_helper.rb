@@ -10,6 +10,9 @@ require 'singleton'
 # Are we running regular specs or pro specs
 SPECS_TYPE = ENV.fetch('SPECS_TYPE', 'default')
 
+# Parallel group name for unique SimpleCov command names
+PARALLEL_GROUP = ENV.fetch('PARALLEL_GROUP', '')
+
 # Don't include unnecessary stuff into rcov
 SimpleCov.start do
   add_filter '/spec/'
@@ -19,13 +22,16 @@ SimpleCov.start do
   add_filter '/doc/'
   add_filter '/config/'
 
-  command_name SPECS_TYPE
+  # Use unique command name per parallel group for proper merging
+  cmd_name = PARALLEL_GROUP.empty? ? SPECS_TYPE : "#{SPECS_TYPE}-#{PARALLEL_GROUP}"
+  command_name cmd_name
   merge_timeout 3600
   enable_coverage :branch
 end
 
-# Skip minimum coverage for parallel runs where each process only runs a subset
-SimpleCov.minimum_coverage(92) if SPECS_TYPE == 'pro' && ENV['SIMPLECOV_NO_MINIMUM'].nil?
+# Only check minimum coverage when not running in parallel mode
+# Coverage is checked after merging all results in bin/rspecs
+SimpleCov.minimum_coverage(92) if SPECS_TYPE == 'pro' && ENV['PARALLEL'].nil?
 
 # Load Pro components when running pro specs
 if ENV['SPECS_TYPE'] == 'pro'
