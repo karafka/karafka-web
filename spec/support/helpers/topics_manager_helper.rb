@@ -40,6 +40,9 @@ module TopicsManagerHelper
       topic: topic,
       payload: payload
     )
+
+    # Transactional messages may need a moment to become visible under heavy load
+    sleep(0.1) if type == :transactional
   end
 
   # Sends multiple messages to kafka efficiently
