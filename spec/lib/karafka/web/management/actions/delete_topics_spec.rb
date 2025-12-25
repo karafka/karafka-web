@@ -25,7 +25,20 @@ RSpec.describe_current do
   end
 
   context 'when topics do not exist' do
-    it { expect { delete }.not_to(change { topics.call.count }) }
+    it 'does not create any of the configured topics' do
+      configured_topics = [
+        consumers_states_topic,
+        consumers_metrics_topic,
+        consumers_reports_topic,
+        consumers_commands_topic,
+        errors_topic
+      ]
+
+      delete
+
+      existing_topics = topics.call
+      expect(configured_topics.none? { |t| existing_topics.include?(t) }).to be(true)
+    end
   end
 
   context 'when consumers states topic exists' do

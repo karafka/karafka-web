@@ -76,6 +76,7 @@ jobs:
         env:
           GITHUB_COVERAGE: ${{matrix.coverage}}
           KARAFKA_PRO_LICENSE_TOKEN: ${{ secrets.KARAFKA_PRO_LICENSE_TOKEN }}
+          PARALLEL: 'true'
         run: bin/rspecs
 
       - name: Check Kafka logs for unexpected warnings
