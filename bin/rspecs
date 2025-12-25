@@ -44,24 +44,30 @@ if [ "${PARALLEL:-false}" = "true" ]; then
 
   echo "All regular specs passed! Running pro specs in parallel..."
 
-  # Pro specs also run in parallel
-  SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/ui --format progress > "$TMPDIR/pro_ui.log" 2>&1 &
+  # Pro specs split into 4 parallel processes
+  SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/ui/controllers --format progress > "$TMPDIR/pro_controllers.log" 2>&1 &
   PID_PRO1=$!
-  SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/commanding spec/lib/karafka/web/pro/commanding_spec.rb spec/lib/karafka/web/pro/loader_spec.rb --format progress > "$TMPDIR/pro_other.log" 2>&1 &
+  SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/ui/lib spec/lib/karafka/web/pro/ui/views --format progress > "$TMPDIR/pro_lib.log" 2>&1 &
   PID_PRO2=$!
+  SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/commanding --format progress > "$TMPDIR/pro_commanding.log" 2>&1 &
+  PID_PRO3=$!
+  SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/commanding_spec.rb spec/lib/karafka/web/pro/loader_spec.rb --format progress > "$TMPDIR/pro_other.log" 2>&1 &
+  PID_PRO4=$!
 
-  echo "Started 2 parallel pro spec processes: $PID_PRO1 $PID_PRO2"
+  echo "Started 4 parallel pro spec processes: $PID_PRO1 $PID_PRO2 $PID_PRO3 $PID_PRO4"
 
   # Wait for pro spec processes
   FAILED=0
-  for PID in $PID_PRO1 $PID_PRO2; do
+  for PID in $PID_PRO1 $PID_PRO2 $PID_PRO3 $PID_PRO4; do
     if ! wait $PID; then
       FAILED=1
     fi
   done
 
   # Show pro logs
-  echo "=== Pro UI Specs ===" && cat "$TMPDIR/pro_ui.log"
+  echo "=== Pro Controllers Specs ===" && cat "$TMPDIR/pro_controllers.log"
+  echo "=== Pro Lib Specs ===" && cat "$TMPDIR/pro_lib.log"
+  echo "=== Pro Commanding Specs ===" && cat "$TMPDIR/pro_commanding.log"
   echo "=== Pro Other Specs ===" && cat "$TMPDIR/pro_other.log"
 
   if [ $FAILED -eq 1 ]; then
