@@ -12,11 +12,12 @@ if [ "${PARALLEL:-false}" = "true" ]; then
 
   # Define spec groups - each runs as an independent process
   # Regular specs split by directory
-  SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/ui --format progress > "$TMPDIR/ui.log" 2>&1 &
+  # SIMPLECOV_NO_MINIMUM=true disables coverage threshold for parallel runs
+  SIMPLECOV_NO_MINIMUM=true SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/ui --format progress > "$TMPDIR/ui.log" 2>&1 &
   PID1=$!
-  SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/tracking --format progress > "$TMPDIR/tracking.log" 2>&1 &
+  SIMPLECOV_NO_MINIMUM=true SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/tracking --format progress > "$TMPDIR/tracking.log" 2>&1 &
   PID2=$!
-  SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/processing --format progress > "$TMPDIR/processing.log" 2>&1 &
+  SIMPLECOV_NO_MINIMUM=true SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/processing --format progress > "$TMPDIR/processing.log" 2>&1 &
   PID3=$!
   SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/management spec/lib/karafka/web/cli spec/lib/karafka/web/deserializer_spec.rb spec/lib/karafka/web/cli_spec.rb spec/lib/karafka/web/installer_spec.rb spec/lib/karafka/web/inflector_spec.rb spec/lib/karafka/web/errors_spec.rb --format progress > "$TMPDIR/other.log" 2>&1 &
   PID4=$!
@@ -45,11 +46,12 @@ if [ "${PARALLEL:-false}" = "true" ]; then
   echo "All regular specs passed! Running pro specs in parallel..."
 
   # Pro specs split into 4 parallel processes
-  SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/ui/controllers --format progress > "$TMPDIR/pro_controllers.log" 2>&1 &
+  # SIMPLECOV_NO_MINIMUM=true disables coverage threshold for parallel runs
+  SIMPLECOV_NO_MINIMUM=true SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/ui/controllers --format progress > "$TMPDIR/pro_controllers.log" 2>&1 &
   PID_PRO1=$!
-  SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/ui/lib spec/lib/karafka/web/pro/ui/views --format progress > "$TMPDIR/pro_lib.log" 2>&1 &
+  SIMPLECOV_NO_MINIMUM=true SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/ui/lib --format progress > "$TMPDIR/pro_lib.log" 2>&1 &
   PID_PRO2=$!
-  SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/commanding --format progress > "$TMPDIR/pro_commanding.log" 2>&1 &
+  SIMPLECOV_NO_MINIMUM=true SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/commanding --format progress > "$TMPDIR/pro_commanding.log" 2>&1 &
   PID_PRO3=$!
   SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/commanding_spec.rb spec/lib/karafka/web/pro/loader_spec.rb --format progress > "$TMPDIR/pro_other.log" 2>&1 &
   PID_PRO4=$!

@@ -24,7 +24,8 @@ SimpleCov.start do
   enable_coverage :branch
 end
 
-SimpleCov.minimum_coverage(92) if SPECS_TYPE == 'pro'
+# Skip minimum coverage for parallel runs where each process only runs a subset
+SimpleCov.minimum_coverage(92) if SPECS_TYPE == 'pro' && ENV['SIMPLECOV_NO_MINIMUM'].nil?
 
 # Load Pro components when running pro specs
 if ENV['SPECS_TYPE'] == 'pro'
