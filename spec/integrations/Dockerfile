@@ -1,7 +1,7 @@
 # Dockerfile for integration testing container metrics
 # This container runs integration tests inside Docker to verify cgroup detection
 
-FROM ruby:3.4-slim
+FROM ruby:4.0-slim
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
