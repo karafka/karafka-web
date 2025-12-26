@@ -25,7 +25,7 @@ jobs:
       fail-fast: false
       matrix:
         ruby:
-          - '4.0.0-preview2'
+          - '4.0'
           - '3.4'
           - '3.3'
           - '3.2'
@@ -40,8 +40,8 @@ jobs:
       - name: Install package dependencies
         run: "[ -e $APT_DEPS ] || sudo apt-get install -y --no-install-recommends $APT_DEPS"
 
-      - name: Remove platform-specific entries for Ruby previews
-        if: contains(matrix.ruby, 'preview')
+      - name: Remove platform-specific entries for Ruby 4.x
+        if: startsWith(matrix.ruby, '4.')
         run: |
           ruby -i -ne 'puts $_ unless /^\s*ffi \(.*-.*\)$/' Gemfile.lock
           ruby -i -ne 'puts $_ unless /^\s*nokogiri \(.*-.*\)$/' Gemfile.lock
@@ -168,7 +168,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@ae195bbe749a7cef685ac729197124a48305c1cb # v1.276.0
         with:
-          ruby-version: '4.0.0'
+          ruby-version: '4.0'
           bundler-cache: true
 
       - name: Run yard-lint
