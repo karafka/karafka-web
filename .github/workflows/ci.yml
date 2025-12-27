@@ -25,7 +25,7 @@ jobs:
       fail-fast: false
       matrix:
         ruby:
-          - '4.0.0-preview2'
+          - '4.0'
           - '3.4'
           - '3.3'
           - '3.2'
@@ -40,8 +40,8 @@ jobs:
       - name: Install package dependencies
         run: "[ -e $APT_DEPS ] || sudo apt-get install -y --no-install-recommends $APT_DEPS"
 
-      - name: Remove platform-specific entries for Ruby previews
-        if: contains(matrix.ruby, 'preview')
+      - name: Remove platform-specific entries for Ruby 4.x
+        if: startsWith(matrix.ruby, '4.')
         run: |
           ruby -i -ne 'puts $_ unless /^\s*ffi \(.*-.*\)$/' Gemfile.lock
           ruby -i -ne 'puts $_ unless /^\s*nokogiri \(.*-.*\)$/' Gemfile.lock
@@ -52,7 +52,7 @@ jobs:
           docker compose up -d || (sleep 5 && docker compose up -d)
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@d354de180d0c9e813cfddfcbdc079945d4be589b # v1.275.0
+        uses: ruby/setup-ruby@ae195bbe749a7cef685ac729197124a48305c1cb # v1.276.0
         with:
           ruby-version: ${{matrix.ruby}}
           bundler-cache: true
@@ -160,10 +160,16 @@ jobs:
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
+      - name: Remove platform-specific entries for Ruby 4.x
+        run: |
+          ruby -i -ne 'puts $_ unless /^\s*ffi \(.*-.*\)$/' Gemfile.lock
+          ruby -i -ne 'puts $_ unless /^\s*nokogiri \(.*-.*\)$/' Gemfile.lock
+          ruby -i -e 'prev = nil; $<.each { |line| puts line unless line == prev; prev = line }' Gemfile.lock
+
       - name: Set up Ruby
-        uses: ruby/setup-ruby@d354de180d0c9e813cfddfcbdc079945d4be589b # v1.275.0
+        uses: ruby/setup-ruby@ae195bbe749a7cef685ac729197124a48305c1cb # v1.276.0
         with:
-          ruby-version: '3.4.8'
+          ruby-version: '4.0'
           bundler-cache: true
 
       - name: Run yard-lint
