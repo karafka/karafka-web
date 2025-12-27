@@ -43,6 +43,24 @@ def parse_rspec_json(json_file, specs_type)
   timings
 end
 
+# Returns a sorted list of spec files for the given spec type
+#
+# @param specs_type [String] the type of specs ('regular' or 'pro')
+# @return [Array<String>] sorted array of spec file paths
+def get_spec_files(specs_type)
+  all_specs = Dir.glob('spec/lib/karafka/web/**/*_spec.rb').sort
+
+  case specs_type
+  when 'pro'
+    all_specs.select { |f| f.include?('/pro/') }
+  when 'regular'
+    all_specs.reject { |f| f.include?('/pro/') }
+  else
+    warn "Unknown specs type: #{specs_type}"
+    exit 1
+  end
+end
+
 # Collects timing data by running each spec file individually
 #
 # This is slower than parsing JSON output but works when you don't have
@@ -50,22 +68,14 @@ end
 # its execution time is recorded.
 #
 # @param specs_type [String] the type of specs ('regular' or 'pro')
-# @param spec_paths [Array<String>] list of directories or files to collect timings from
 # @return [Hash<String, Float>] hash mapping file paths to execution times in seconds
-def collect_timings(specs_type, spec_paths)
+def collect_timings(specs_type)
   puts "Collecting timings for #{specs_type} specs..."
 
   env = { 'SPECS_TYPE' => specs_type }
   env['KARAFKA_PRO_LICENSE_TOKEN'] = ENV['KARAFKA_PRO_LICENSE_TOKEN'] if specs_type == 'pro'
 
-  # First, get the list of all spec files
-  spec_files = spec_paths.flat_map do |path|
-    if File.directory?(path)
-      Dir.glob(File.join(path, '**', '*_spec.rb'))
-    else
-      [path]
-    end
-  end
+  spec_files = get_spec_files(specs_type)
 
   puts "Found #{spec_files.size} spec files"
 
@@ -172,46 +182,20 @@ target = ARGV[0] || 'all'
 
 case target
 when 'regular'
-  timings = collect_timings('regular', [
-    'spec/lib/karafka/web/ui',
-    'spec/lib/karafka/web/tracking',
-    'spec/lib/karafka/web/processing',
-    'spec/lib/karafka/web/management',
-    'spec/lib/karafka/web/cli',
-    'spec/lib/karafka/web/deserializer_spec.rb',
-    'spec/lib/karafka/web/cli_spec.rb',
-    'spec/lib/karafka/web/installer_spec.rb',
-    'spec/lib/karafka/web/inflector_spec.rb',
-    'spec/lib/karafka/web/errors_spec.rb'
-  ])
+  timings = collect_timings('regular')
   save_timings('regular', timings)
 
 when 'pro'
-  timings = collect_timings('pro', [
-    'spec/lib/karafka/web/pro'
-  ])
+  timings = collect_timings('pro')
   save_timings('pro', timings)
 
 when 'all'
   puts "=== Collecting Regular Specs Timings ==="
-  regular_timings = collect_timings('regular', [
-    'spec/lib/karafka/web/ui',
-    'spec/lib/karafka/web/tracking',
-    'spec/lib/karafka/web/processing',
-    'spec/lib/karafka/web/management',
-    'spec/lib/karafka/web/cli',
-    'spec/lib/karafka/web/deserializer_spec.rb',
-    'spec/lib/karafka/web/cli_spec.rb',
-    'spec/lib/karafka/web/installer_spec.rb',
-    'spec/lib/karafka/web/inflector_spec.rb',
-    'spec/lib/karafka/web/errors_spec.rb'
-  ])
+  regular_timings = collect_timings('regular')
   save_timings('regular', regular_timings)
 
   puts "\n=== Collecting Pro Specs Timings ==="
-  pro_timings = collect_timings('pro', [
-    'spec/lib/karafka/web/pro'
-  ])
+  pro_timings = collect_timings('pro')
   save_timings('pro', pro_timings)
 
 else

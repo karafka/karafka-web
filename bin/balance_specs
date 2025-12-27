@@ -35,36 +35,17 @@ end
 # @param specs_type [String] the type of specs ('regular' or 'pro')
 # @return [Array<String>] sorted array of spec file paths
 def get_spec_files(specs_type)
+  all_specs = Dir.glob('spec/lib/karafka/web/**/*_spec.rb').sort
+
   case specs_type
-  when 'regular'
-    paths = [
-      'spec/lib/karafka/web/ui',
-      'spec/lib/karafka/web/tracking',
-      'spec/lib/karafka/web/processing',
-      'spec/lib/karafka/web/management',
-      'spec/lib/karafka/web/cli',
-      'spec/lib/karafka/web/deserializer_spec.rb',
-      'spec/lib/karafka/web/cli_spec.rb',
-      'spec/lib/karafka/web/installer_spec.rb',
-      'spec/lib/karafka/web/inflector_spec.rb',
-      'spec/lib/karafka/web/errors_spec.rb'
-    ]
   when 'pro'
-    paths = ['spec/lib/karafka/web/pro']
+    all_specs.select { |f| f.include?('/pro/') }
+  when 'regular'
+    all_specs.reject { |f| f.include?('/pro/') }
   else
     warn "Unknown specs type: #{specs_type}"
     exit 1
   end
-
-  paths.flat_map do |path|
-    if File.directory?(path)
-      Dir.glob(File.join(path, '**', '*_spec.rb'))
-    elsif File.exist?(path)
-      [path]
-    else
-      []
-    end
-  end.sort
 end
 
 # Balances spec files across workers using greedy bin-packing algorithm
