@@ -16,6 +16,10 @@ require 'json'
 TIMINGS_DIR = File.expand_path('../spec/timings', __dir__)
 DEFAULT_TIME = 1.0 # Default time for files not in timing data
 
+# Loads timing data from a JSON file for the given spec type
+#
+# @param specs_type [String] the type of specs ('regular' or 'pro')
+# @return [Hash<String, Float>] hash mapping file paths to execution times in seconds
 def load_timings(specs_type)
   file_path = File.join(TIMINGS_DIR, "#{specs_type}.json")
 
@@ -26,6 +30,10 @@ def load_timings(specs_type)
   end
 end
 
+# Returns a sorted list of spec files for the given spec type
+#
+# @param specs_type [String] the type of specs ('regular' or 'pro')
+# @return [Array<String>] sorted array of spec file paths
 def get_spec_files(specs_type)
   case specs_type
   when 'regular'
@@ -59,6 +67,16 @@ def get_spec_files(specs_type)
   end.sort
 end
 
+# Balances spec files across workers using greedy bin-packing algorithm
+#
+# Files are sorted by execution time (descending) and each file is assigned
+# to the worker with the lowest total time. This minimizes the imbalance
+# between the slowest and fastest workers.
+#
+# @param files [Array<String>] list of spec file paths to balance
+# @param timings [Hash<String, Float>] hash mapping file paths to execution times
+# @param num_workers [Integer] number of workers to distribute files across
+# @return [Array<Hash>] array of worker hashes, each with :files and :total_time keys
 def balance_files(files, timings, num_workers)
   # Get timing for each file, using default if not found
   # Handle both "./spec/..." and "spec/..." path formats
@@ -84,6 +102,9 @@ def balance_files(files, timings, num_workers)
   workers
 end
 
+# Prints balance information to stderr for debugging/visibility
+#
+# @param workers [Array<Hash>] array of worker hashes with :files and :total_time keys
 def print_balance_info(workers)
   total_time = workers.sum { |w| w[:total_time] }
   max_time = workers.max_by { |w| w[:total_time] }[:total_time]

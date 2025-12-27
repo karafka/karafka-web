@@ -13,6 +13,14 @@ require 'fileutils'
 
 TIMINGS_DIR = File.expand_path('../spec/timings', __dir__)
 
+# Parses timing data from an RSpec JSON output file
+#
+# Extracts per-file execution times by summing the run_time of all examples
+# in each file.
+#
+# @param json_file [String] path to the RSpec JSON output file
+# @param specs_type [String] the type of specs ('regular' or 'pro'), used for logging
+# @return [Hash<String, Float>] hash mapping file paths to total execution times in seconds
 def parse_rspec_json(json_file, specs_type)
   puts "Parsing timings from #{json_file}..."
 
@@ -35,6 +43,15 @@ def parse_rspec_json(json_file, specs_type)
   timings
 end
 
+# Collects timing data by running each spec file individually
+#
+# This is slower than parsing JSON output but works when you don't have
+# a pre-existing RSpec run. Each spec file is executed separately and
+# its execution time is recorded.
+#
+# @param specs_type [String] the type of specs ('regular' or 'pro')
+# @param spec_paths [Array<String>] list of directories or files to collect timings from
+# @return [Hash<String, Float>] hash mapping file paths to execution times in seconds
 def collect_timings(specs_type, spec_paths)
   puts "Collecting timings for #{specs_type} specs..."
 
@@ -86,6 +103,10 @@ def collect_timings(specs_type, spec_paths)
   timings
 end
 
+# Saves timing data to a JSON file, sorted by execution time (descending)
+#
+# @param specs_type [String] the type of specs ('regular' or 'pro')
+# @param timings [Hash<String, Float>] hash mapping file paths to execution times
 def save_timings(specs_type, timings)
   FileUtils.mkdir_p(TIMINGS_DIR)
   file_path = File.join(TIMINGS_DIR, "#{specs_type}.json")
@@ -101,6 +122,7 @@ def save_timings(specs_type, timings)
   puts "Average: #{(total / timings.size).round(2)}s per file"
 end
 
+# Prints usage information to stdout
 def print_usage
   puts <<~USAGE
     Usage:
