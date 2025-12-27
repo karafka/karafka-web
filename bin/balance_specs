@@ -1,0 +1,129 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Balances spec files across N workers using timing data
+# Uses greedy bin-packing: assign each file to worker with lowest total time
+#
+# Usage: bin/balance_specs <type> <num_workers>
+# Output: JSON array of arrays, each inner array is a worker's file list
+#
+# Example:
+#   bin/balance_specs regular 4
+#   # => [["spec/a.rb", "spec/d.rb"], ["spec/b.rb"], ["spec/c.rb"], ["spec/e.rb"]]
+
+require 'json'
+
+TIMINGS_DIR = File.expand_path('../spec/timings', __dir__)
+DEFAULT_TIME = 1.0 # Default time for files not in timing data
+
+def load_timings(specs_type)
+  file_path = File.join(TIMINGS_DIR, "#{specs_type}.json")
+
+  if File.exist?(file_path)
+    JSON.parse(File.read(file_path))
+  else
+    {}
+  end
+end
+
+def get_spec_files(specs_type)
+  case specs_type
+  when 'regular'
+    paths = [
+      'spec/lib/karafka/web/ui',
+      'spec/lib/karafka/web/tracking',
+      'spec/lib/karafka/web/processing',
+      'spec/lib/karafka/web/management',
+      'spec/lib/karafka/web/cli',
+      'spec/lib/karafka/web/deserializer_spec.rb',
+      'spec/lib/karafka/web/cli_spec.rb',
+      'spec/lib/karafka/web/installer_spec.rb',
+      'spec/lib/karafka/web/inflector_spec.rb',
+      'spec/lib/karafka/web/errors_spec.rb'
+    ]
+  when 'pro'
+    paths = ['spec/lib/karafka/web/pro']
+  else
+    warn "Unknown specs type: #{specs_type}"
+    exit 1
+  end
+
+  paths.flat_map do |path|
+    if File.directory?(path)
+      Dir.glob(File.join(path, '**', '*_spec.rb'))
+    elsif File.exist?(path)
+      [path]
+    else
+      []
+    end
+  end.sort
+end
+
+def balance_files(files, timings, num_workers)
+  # Get timing for each file, using default if not found
+  # Handle both "./spec/..." and "spec/..." path formats
+  files_with_times = files.map do |file|
+    time = timings[file] || timings["./#{file}"] || DEFAULT_TIME
+    [file, time]
+  end
+
+  # Sort by time descending (largest first for better bin packing)
+  files_with_times.sort_by! { |_, time| -time }
+
+  # Initialize workers
+  workers = Array.new(num_workers) { { files: [], total_time: 0.0 } }
+
+  # Greedy assignment: assign each file to worker with lowest total time
+  files_with_times.each do |file, time|
+    # Find worker with minimum total time
+    min_worker = workers.min_by { |w| w[:total_time] }
+    min_worker[:files] << file
+    min_worker[:total_time] += time
+  end
+
+  workers
+end
+
+def print_balance_info(workers)
+  total_time = workers.sum { |w| w[:total_time] }
+  max_time = workers.max_by { |w| w[:total_time] }[:total_time]
+  min_time = workers.min_by { |w| w[:total_time] }[:total_time]
+
+  warn "Balance info:"
+  workers.each_with_index do |worker, i|
+    warn "  Worker #{i + 1}: #{worker[:files].size} files, #{worker[:total_time].round(1)}s"
+  end
+  warn "  Total: #{total_time.round(1)}s, Max: #{max_time.round(1)}s, Imbalance: #{(max_time - min_time).round(1)}s"
+end
+
+# Main
+specs_type = ARGV[0]
+num_workers = (ARGV[1] || '4').to_i
+output_format = ARGV[2] || 'json'
+
+unless specs_type
+  warn "Usage: bin/balance_specs <regular|pro> <num_workers> [json|bash]"
+  exit 1
+end
+
+timings = load_timings(specs_type)
+files = get_spec_files(specs_type)
+workers = balance_files(files, timings, num_workers)
+
+# Print balance info to stderr
+print_balance_info(workers)
+
+# Output based on format
+case output_format
+when 'json'
+  # Output just the file lists as JSON
+  puts JSON.generate(workers.map { |w| w[:files] })
+when 'bash'
+  # Output as bash-friendly format (one worker per line, files space-separated)
+  workers.each do |worker|
+    puts worker[:files].join(' ')
+  end
+else
+  warn "Unknown format: #{output_format}"
+  exit 1
+end

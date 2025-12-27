@@ -1,0 +1,199 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Collects timing data from RSpec runs and stores it in JSON files
+#
+# Usage:
+#   bin/collect_timings [regular|pro|all]              # Run specs and collect timings
+#   bin/collect_timings --from-json <file> <type>      # Parse timing from RSpec JSON output
+
+require 'json'
+require 'open3'
+require 'fileutils'
+
+TIMINGS_DIR = File.expand_path('../spec/timings', __dir__)
+
+def parse_rspec_json(json_file, specs_type)
+  puts "Parsing timings from #{json_file}..."
+
+  data = JSON.parse(File.read(json_file))
+  examples = data['examples'] || []
+
+  # Group examples by file and sum their run times
+  timings = {}
+  examples.each do |example|
+    file = example['file_path']
+    run_time = example['run_time'] || 0
+    timings[file] ||= 0
+    timings[file] += run_time
+  end
+
+  # Round to 3 decimal places
+  timings.transform_values! { |v| v.round(3) }
+
+  puts "Found timing data for #{timings.size} files"
+  timings
+end
+
+def collect_timings(specs_type, spec_paths)
+  puts "Collecting timings for #{specs_type} specs..."
+
+  env = { 'SPECS_TYPE' => specs_type }
+  env['KARAFKA_PRO_LICENSE_TOKEN'] = ENV['KARAFKA_PRO_LICENSE_TOKEN'] if specs_type == 'pro'
+
+  # First, get the list of all spec files
+  spec_files = spec_paths.flat_map do |path|
+    if File.directory?(path)
+      Dir.glob(File.join(path, '**', '*_spec.rb'))
+    else
+      [path]
+    end
+  end
+
+  puts "Found #{spec_files.size} spec files"
+
+  # Run each spec file individually to get accurate timing
+  # This is slow but gives us real timing data
+  timings = {}
+
+  spec_files.each_with_index do |spec_file, index|
+    print "\r  [#{index + 1}/#{spec_files.size}] #{File.basename(spec_file)}...".ljust(80)
+
+    cmd = ['bundle', 'exec', 'rspec', spec_file, '--format', 'json']
+    start_time = Time.now
+
+    stdout, _stderr, status = Open3.capture3(env, *cmd)
+
+    elapsed = Time.now - start_time
+
+    if status.success?
+      begin
+        result = JSON.parse(stdout)
+        # Use actual run time from RSpec summary
+        run_time = result.dig('summary', 'duration') || elapsed
+        timings[spec_file] = run_time.round(3)
+      rescue JSON::ParserError
+        # Fallback to elapsed time
+        timings[spec_file] = elapsed.round(3)
+      end
+    else
+      # Even failed specs give us timing info
+      timings[spec_file] = elapsed.round(3)
+    end
+  end
+
+  puts "\nDone!"
+  timings
+end
+
+def save_timings(specs_type, timings)
+  FileUtils.mkdir_p(TIMINGS_DIR)
+  file_path = File.join(TIMINGS_DIR, "#{specs_type}.json")
+
+  # Sort by time descending for readability
+  sorted = timings.sort_by { |_, time| -time }.to_h
+
+  File.write(file_path, JSON.pretty_generate(sorted))
+  puts "Saved timings to #{file_path}"
+
+  total = timings.values.sum
+  puts "Total time: #{total.round(1)}s across #{timings.size} files"
+  puts "Average: #{(total / timings.size).round(2)}s per file"
+end
+
+def print_usage
+  puts <<~USAGE
+    Usage:
+      bin/collect_timings [regular|pro|all]              Run specs and collect timings
+      bin/collect_timings --from-json <file> <type>      Parse timing from RSpec JSON output
+
+    Examples:
+      # Run regular specs and collect timing data
+      bin/collect_timings regular
+
+      # Parse timing from an existing RSpec JSON output file
+      bin/collect_timings --from-json spec/timings/regular_results.json regular
+
+      # Generate JSON output from a spec run, then parse it:
+      SPECS_TYPE=regular bundle exec rspec spec/lib --format json -o results.json
+      bin/collect_timings --from-json results.json regular
+  USAGE
+end
+
+# Main
+if ARGV.include?('--help') || ARGV.include?('-h')
+  print_usage
+  exit 0
+end
+
+if ARGV[0] == '--from-json'
+  json_file = ARGV[1]
+  specs_type = ARGV[2]
+
+  unless json_file && specs_type
+    puts "Error: --from-json requires <file> and <type> arguments"
+    print_usage
+    exit 1
+  end
+
+  unless File.exist?(json_file)
+    puts "Error: File not found: #{json_file}"
+    exit 1
+  end
+
+  timings = parse_rspec_json(json_file, specs_type)
+  save_timings(specs_type, timings)
+  exit 0
+end
+
+target = ARGV[0] || 'all'
+
+case target
+when 'regular'
+  timings = collect_timings('regular', [
+    'spec/lib/karafka/web/ui',
+    'spec/lib/karafka/web/tracking',
+    'spec/lib/karafka/web/processing',
+    'spec/lib/karafka/web/management',
+    'spec/lib/karafka/web/cli',
+    'spec/lib/karafka/web/deserializer_spec.rb',
+    'spec/lib/karafka/web/cli_spec.rb',
+    'spec/lib/karafka/web/installer_spec.rb',
+    'spec/lib/karafka/web/inflector_spec.rb',
+    'spec/lib/karafka/web/errors_spec.rb'
+  ])
+  save_timings('regular', timings)
+
+when 'pro'
+  timings = collect_timings('pro', [
+    'spec/lib/karafka/web/pro'
+  ])
+  save_timings('pro', timings)
+
+when 'all'
+  puts "=== Collecting Regular Specs Timings ==="
+  regular_timings = collect_timings('regular', [
+    'spec/lib/karafka/web/ui',
+    'spec/lib/karafka/web/tracking',
+    'spec/lib/karafka/web/processing',
+    'spec/lib/karafka/web/management',
+    'spec/lib/karafka/web/cli',
+    'spec/lib/karafka/web/deserializer_spec.rb',
+    'spec/lib/karafka/web/cli_spec.rb',
+    'spec/lib/karafka/web/installer_spec.rb',
+    'spec/lib/karafka/web/inflector_spec.rb',
+    'spec/lib/karafka/web/errors_spec.rb'
+  ])
+  save_timings('regular', regular_timings)
+
+  puts "\n=== Collecting Pro Specs Timings ==="
+  pro_timings = collect_timings('pro', [
+    'spec/lib/karafka/web/pro'
+  ])
+  save_timings('pro', pro_timings)
+
+else
+  puts "Unknown target: #{target}"
+  print_usage
+  exit 1
+end

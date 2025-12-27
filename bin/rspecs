@@ -2,63 +2,109 @@
 
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+
+# Number of workers per spec type
+REGULAR_WORKERS="${REGULAR_WORKERS:-4}"
+PRO_WORKERS="${PRO_WORKERS:-4}"
+
 # Run specs in parallel or sequentially based on PARALLEL env var
 if [ "${PARALLEL:-false}" = "true" ]; then
-  echo "Running specs in parallel mode with 8 independent processes..."
+  echo "Running specs in parallel mode..."
+  echo "  Regular workers: $REGULAR_WORKERS"
+  echo "  Pro workers: $PRO_WORKERS"
 
   # Create temp directory for logs
   TMPDIR=$(mktemp -d)
   trap "rm -rf $TMPDIR" EXIT
 
-  # Launch all 8 spec groups simultaneously
-  # Regular specs (4 processes)
-  PARALLEL=true PARALLEL_GROUP=ui SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/ui --format progress > "$TMPDIR/ui.log" 2>&1 &
-  PID1=$!
-  PARALLEL=true PARALLEL_GROUP=tracking SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/tracking --format progress > "$TMPDIR/tracking.log" 2>&1 &
-  PID2=$!
-  PARALLEL=true PARALLEL_GROUP=processing SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/processing --format progress > "$TMPDIR/processing.log" 2>&1 &
-  PID3=$!
-  PARALLEL=true PARALLEL_GROUP=other SPECS_TYPE=regular bundle exec rspec spec/lib/karafka/web/management spec/lib/karafka/web/cli spec/lib/karafka/web/deserializer_spec.rb spec/lib/karafka/web/cli_spec.rb spec/lib/karafka/web/installer_spec.rb spec/lib/karafka/web/inflector_spec.rb spec/lib/karafka/web/errors_spec.rb --format progress > "$TMPDIR/other.log" 2>&1 &
-  PID4=$!
+  # Get balanced file lists from the balancer
+  echo ""
+  echo "=== Balancing Regular Specs ==="
+  readarray -t REGULAR_GROUPS < <("$SCRIPT_DIR/balance_specs" regular "$REGULAR_WORKERS" bash)
 
-  # Pro specs (4 processes)
-  PARALLEL=true PARALLEL_GROUP=pro_controllers SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/ui/controllers --format progress > "$TMPDIR/pro_controllers.log" 2>&1 &
-  PID5=$!
-  PARALLEL=true PARALLEL_GROUP=pro_lib SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/ui/lib --format progress > "$TMPDIR/pro_lib.log" 2>&1 &
-  PID6=$!
-  PARALLEL=true PARALLEL_GROUP=pro_commanding SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/commanding --format progress > "$TMPDIR/pro_commanding.log" 2>&1 &
-  PID7=$!
-  PARALLEL=true PARALLEL_GROUP=pro_other SPECS_TYPE=pro bundle exec rspec spec/lib/karafka/web/pro/commanding_spec.rb spec/lib/karafka/web/pro/loader_spec.rb --format progress > "$TMPDIR/pro_other.log" 2>&1 &
-  PID8=$!
+  echo ""
+  echo "=== Balancing Pro Specs ==="
+  readarray -t PRO_GROUPS < <("$SCRIPT_DIR/balance_specs" pro "$PRO_WORKERS" bash)
 
-  echo "Started 8 parallel spec processes: $PID1 $PID2 $PID3 $PID4 $PID5 $PID6 $PID7 $PID8"
+  echo ""
+  echo "Starting parallel execution..."
+
+  # Launch regular spec workers
+  PIDS=()
+  for i in $(seq 0 $((REGULAR_WORKERS - 1))); do
+    if [ -n "${REGULAR_GROUPS[$i]}" ]; then
+      PARALLEL=true PARALLEL_GROUP="regular_$i" SPECS_TYPE=regular \
+        bundle exec rspec ${REGULAR_GROUPS[$i]} --format progress \
+        > "$TMPDIR/regular_$i.log" 2>&1 &
+      PIDS+=($!)
+      echo "  Started regular worker $((i + 1)) (PID ${PIDS[-1]}): $(echo ${REGULAR_GROUPS[$i]} | wc -w) files"
+    fi
+  done
+
+  # Launch pro spec workers
+  for i in $(seq 0 $((PRO_WORKERS - 1))); do
+    if [ -n "${PRO_GROUPS[$i]}" ]; then
+      PARALLEL=true PARALLEL_GROUP="pro_$i" SPECS_TYPE=pro \
+        bundle exec rspec ${PRO_GROUPS[$i]} --format progress \
+        > "$TMPDIR/pro_$i.log" 2>&1 &
+      PIDS+=($!)
+      echo "  Started pro worker $((i + 1)) (PID ${PIDS[-1]}): $(echo ${PRO_GROUPS[$i]} | wc -w) files"
+    fi
+  done
+
+  echo ""
+  echo "Waiting for ${#PIDS[@]} workers to complete..."
 
   # Wait for all processes and collect exit codes
   FAILED=0
-  for PID in $PID1 $PID2 $PID3 $PID4 $PID5 $PID6 $PID7 $PID8; do
-    if ! wait $PID; then
+  FAILED_WORKERS=()
+  for idx in "${!PIDS[@]}"; do
+    PID="${PIDS[$idx]}"
+    if ! wait "$PID"; then
       FAILED=1
+      FAILED_WORKERS+=("$idx")
     fi
   done
 
   # Show all logs
-  echo "=== Regular UI Specs ===" && cat "$TMPDIR/ui.log"
-  echo "=== Regular Tracking Specs ===" && cat "$TMPDIR/tracking.log"
-  echo "=== Regular Processing Specs ===" && cat "$TMPDIR/processing.log"
-  echo "=== Regular Other Specs ===" && cat "$TMPDIR/other.log"
-  echo "=== Pro Controllers Specs ===" && cat "$TMPDIR/pro_controllers.log"
-  echo "=== Pro Lib Specs ===" && cat "$TMPDIR/pro_lib.log"
-  echo "=== Pro Commanding Specs ===" && cat "$TMPDIR/pro_commanding.log"
-  echo "=== Pro Other Specs ===" && cat "$TMPDIR/pro_other.log"
+  echo ""
+  echo "=========================================="
+  echo "                 RESULTS                  "
+  echo "=========================================="
+
+  for i in $(seq 0 $((REGULAR_WORKERS - 1))); do
+    if [ -f "$TMPDIR/regular_$i.log" ]; then
+      echo ""
+      echo "=== Regular Worker $((i + 1)) ==="
+      cat "$TMPDIR/regular_$i.log"
+    fi
+  done
+
+  for i in $(seq 0 $((PRO_WORKERS - 1))); do
+    if [ -f "$TMPDIR/pro_$i.log" ]; then
+      echo ""
+      echo "=== Pro Worker $((i + 1)) ==="
+      cat "$TMPDIR/pro_$i.log"
+    fi
+  done
 
   if [ $FAILED -eq 1 ]; then
-    echo "Some specs failed!"
+    echo ""
+    echo "=========================================="
+    echo "         SOME SPECS FAILED!              "
+    echo "=========================================="
     exit 1
   fi
 
-  echo "All specs passed!"
+  echo ""
+  echo "=========================================="
+  echo "          ALL SPECS PASSED!               "
+  echo "=========================================="
 
   # Collate SimpleCov results and check minimum coverage
+  echo ""
   echo "Collating SimpleCov coverage results..."
   bundle exec ruby -e "
     require 'simplecov'
