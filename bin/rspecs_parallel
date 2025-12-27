@@ -41,7 +41,7 @@ echo "Starting parallel execution..."
 PIDS=()
 for i in $(seq 0 $((REGULAR_WORKERS - 1))); do
   if [ -n "${REGULAR_GROUPS[$i]}" ]; then
-    PARALLEL=true PARALLEL_GROUP="regular_$i" SPECS_TYPE=regular \
+    PARALLEL=true PARALLEL_GROUP_ID="regular_$i" SPECS_TYPE=regular \
       bundle exec rspec ${REGULAR_GROUPS[$i]} --format progress \
       > "$TMPDIR/regular_$i.log" 2>&1 &
     PIDS+=($!)
@@ -52,7 +52,7 @@ done
 # Launch pro spec workers
 for i in $(seq 0 $((PRO_WORKERS - 1))); do
   if [ -n "${PRO_GROUPS[$i]}" ]; then
-    PARALLEL=true PARALLEL_GROUP="pro_$i" SPECS_TYPE=pro \
+    PARALLEL=true PARALLEL_GROUP_ID="pro_$i" SPECS_TYPE=pro \
       bundle exec rspec ${PRO_GROUPS[$i]} --format progress \
       > "$TMPDIR/pro_$i.log" 2>&1 &
     PIDS+=($!)
