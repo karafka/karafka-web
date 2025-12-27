@@ -4,12 +4,14 @@
 # Balances spec files across N workers using timing data
 # Uses greedy bin-packing: assign each file to worker with lowest total time
 #
-# Usage: bin/balance_specs <type> <num_workers>
-# Output: JSON array of arrays, each inner array is a worker's file list
+# Usage: bin/balance_specs <regular|pro> <num_workers>
+#
+# Output: JSON array of arrays where each inner array contains the spec files
+#         assigned to that worker
 #
 # Example:
 #   bin/balance_specs regular 4
-#   # => [["spec/a.rb", "spec/d.rb"], ["spec/b.rb"], ["spec/c.rb"], ["spec/e.rb"]]
+#   [["spec/a.rb","spec/d.rb"],["spec/b.rb"],["spec/c.rb"],["spec/e.rb"]]
 
 require 'json'
 
@@ -101,10 +103,9 @@ end
 # Main
 specs_type = ARGV[0]
 num_workers = (ARGV[1] || '4').to_i
-output_format = ARGV[2] || 'json'
 
 unless specs_type
-  warn "Usage: bin/balance_specs <regular|pro> <num_workers> [json|bash]"
+  warn "Usage: bin/balance_specs <regular|pro> <num_workers>"
   exit 1
 end
 
@@ -115,17 +116,5 @@ workers = balance_files(files, timings, num_workers)
 # Print balance info to stderr
 print_balance_info(workers)
 
-# Output based on format
-case output_format
-when 'json'
-  # Output just the file lists as JSON
-  puts JSON.generate(workers.map { |w| w[:files] })
-when 'bash'
-  # Output as bash-friendly format (one worker per line, files space-separated)
-  workers.each do |worker|
-    puts worker[:files].join(' ')
-  end
-else
-  warn "Unknown format: #{output_format}"
-  exit 1
-end
+# Output file lists as JSON array of arrays
+puts JSON.generate(workers.map { |w| w[:files] })

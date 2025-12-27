@@ -23,14 +23,16 @@ echo "  Pro workers: $PRO_WORKERS"
 TMPDIR=$(mktemp -d)
 trap "rm -rf $TMPDIR" EXIT
 
-# Get balanced file lists from the balancer
+# Get balanced file lists from the balancer (JSON output parsed with jq)
 echo ""
 echo "=== Balancing Regular Specs ==="
-readarray -t REGULAR_GROUPS < <("$SCRIPT_DIR/balance_specs" regular "$REGULAR_WORKERS" bash)
+REGULAR_JSON=$("$SCRIPT_DIR/balance_specs" regular "$REGULAR_WORKERS")
+readarray -t REGULAR_GROUPS < <(echo "$REGULAR_JSON" | jq -r '.[] | join(" ")')
 
 echo ""
 echo "=== Balancing Pro Specs ==="
-readarray -t PRO_GROUPS < <("$SCRIPT_DIR/balance_specs" pro "$PRO_WORKERS" bash)
+PRO_JSON=$("$SCRIPT_DIR/balance_specs" pro "$PRO_WORKERS")
+readarray -t PRO_GROUPS < <(echo "$PRO_JSON" | jq -r '.[] | join(" ")')
 
 echo ""
 echo "Starting parallel execution..."
