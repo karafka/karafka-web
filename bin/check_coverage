@@ -5,18 +5,15 @@
 # This script should be run after bin/rspecs_parallel or bin/rspecs to verify
 # code coverage meets the minimum threshold.
 #
-# Environment variables:
-#   MINIMUM_COVERAGE - minimum coverage percentage (default: 92)
+# Coverage thresholds are defined in spec/support/coverage_config.rb
 
 set -e
 
-MINIMUM_COVERAGE="${MINIMUM_COVERAGE:-92}"
-
 echo "Collating SimpleCov coverage results..."
-echo "  Minimum coverage: ${MINIMUM_COVERAGE}%"
 
 bundle exec ruby -e "
   require 'simplecov'
+  require_relative 'spec/support/coverage_config'
 
   SimpleCov.collate Dir['coverage/.resultset.json'], 'rails' do
     add_filter '/spec/'
@@ -26,6 +23,9 @@ bundle exec ruby -e "
     add_filter '/doc/'
     add_filter '/config/'
     enable_coverage :branch
-    minimum_coverage ${MINIMUM_COVERAGE}
+    minimum_coverage(
+      line: CoverageConfig::LINE_COVERAGE,
+      branch: CoverageConfig::BRANCH_COVERAGE
+    )
   end
 "
