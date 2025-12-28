@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
+# Runs all specs sequentially (regular then pro)
+# For parallel execution, use bin/rspecs_parallel
+
 set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+echo "Running specs in sequential mode..."
 
 SPECS_TYPE=regular bundle exec rspec \
   spec/lib \
@@ -8,3 +15,6 @@ SPECS_TYPE=regular bundle exec rspec \
 
 SPECS_TYPE=pro bundle exec rspec \
   spec/lib/karafka/web/pro
+
+# Run coverage check
+"$SCRIPT_DIR/check_coverage"

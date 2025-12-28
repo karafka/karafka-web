@@ -1,0 +1,83 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Collects timing data from RSpec runs for both regular and pro specs.
+# Results are stored in spec/timings/{regular,pro}.json for use by bin/balance_specs.
+#
+# Usage: bin/collect_timings
+
+require 'json'
+require 'open3'
+require 'fileutils'
+
+TIMINGS_DIR = File.expand_path('../spec/timings', __dir__)
+
+# Returns spec files for the given type
+#
+# @param specs_type [String] 'regular' or 'pro'
+# @return [Array<String>] sorted array of spec file paths
+def spec_files(specs_type)
+  all_specs = Dir.glob('spec/lib/karafka/web/**/*_spec.rb').sort
+
+  case specs_type
+  when 'pro' then all_specs.select { |f| f.include?('/pro/') }
+  when 'regular' then all_specs.reject { |f| f.include?('/pro/') }
+  end
+end
+
+# Collects timing data by running specs with JSON output
+#
+# @param specs_type [String] 'regular' or 'pro'
+# @return [Hash<String, Float>] file paths to execution times in seconds
+def collect_timings(specs_type)
+  puts "Collecting #{specs_type} specs timings..."
+
+  env = { 'SPECS_TYPE' => specs_type }
+  files = spec_files(specs_type)
+
+  puts "  Running #{files.size} spec files..."
+
+  # Run all specs at once with JSON output
+  cmd = ['bundle', 'exec', 'rspec', *files, '--format', 'json']
+  stdout, _stderr, _status = Open3.capture3(env, *cmd)
+
+  # Parse timing from JSON output
+  data = JSON.parse(stdout)
+  timings = {}
+
+  data['examples'].each do |example|
+    file = example['file_path']
+    timings[file] ||= 0
+    timings[file] += example['run_time'] || 0
+  end
+
+  timings.transform_values! { |v| v.round(3) }
+  timings
+end
+
+# Saves timing data to JSON file
+#
+# @param specs_type [String] 'regular' or 'pro'
+# @param timings [Hash<String, Float>] timing data
+def save_timings(specs_type, timings)
+  FileUtils.mkdir_p(TIMINGS_DIR)
+  file_path = File.join(TIMINGS_DIR, "#{specs_type}.json")
+
+  sorted = timings.sort_by { |_, time| -time }.to_h
+  File.write(file_path, JSON.pretty_generate(sorted))
+
+  total = timings.values.sum
+  puts "  Saved #{file_path}: #{timings.size} files, #{total.round(1)}s total"
+end
+
+# Main
+puts '=== Collecting Spec Timings ==='
+puts
+
+%w[regular pro].each do |specs_type|
+  timings = collect_timings(specs_type)
+  save_timings(specs_type, timings)
+  puts
+end
+
+puts 'Done!'

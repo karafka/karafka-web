@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+
+# Runs all specs in parallel using timing-based load balancing
+# Uses bin/balance_specs to distribute files across workers
+#
+# Environment variables:
+#   REGULAR_WORKERS - number of workers for regular specs (default: 4)
+#   PRO_WORKERS     - number of workers for pro specs (default: 4)
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Number of workers per spec type
+REGULAR_WORKERS="${REGULAR_WORKERS:-4}"
+PRO_WORKERS="${PRO_WORKERS:-4}"
+
+echo "Running specs in parallel mode..."
+echo "  Regular workers: $REGULAR_WORKERS"
+echo "  Pro workers: $PRO_WORKERS"
+
+# Create temp directory for logs
+TMPDIR=$(mktemp -d)
+trap "rm -rf $TMPDIR" EXIT
+
+# Get balanced file lists from the balancer (JSON output parsed with jq)
+echo ""
+echo "=== Balancing Regular Specs ==="
+REGULAR_JSON=$("$SCRIPT_DIR/balance_specs" regular "$REGULAR_WORKERS")
+readarray -t REGULAR_GROUPS < <(echo "$REGULAR_JSON" | jq -r '.[] | join(" ")')
+
+echo ""
+echo "=== Balancing Pro Specs ==="
+PRO_JSON=$("$SCRIPT_DIR/balance_specs" pro "$PRO_WORKERS")
+readarray -t PRO_GROUPS < <(echo "$PRO_JSON" | jq -r '.[] | join(" ")')
+
+echo ""
+echo "Starting parallel execution..."
+
+# Launch regular spec workers
+PIDS=()
+for i in $(seq 0 $((REGULAR_WORKERS - 1))); do
+  if [ -n "${REGULAR_GROUPS[$i]}" ]; then
+    PARALLEL=true PARALLEL_GROUP_ID="regular_$i" SPECS_TYPE=regular \
+      bundle exec rspec ${REGULAR_GROUPS[$i]} --format progress \
+      > "$TMPDIR/regular_$i.log" 2>&1 &
+    PIDS+=($!)
+    echo "  Started regular worker $((i + 1)) (PID ${PIDS[-1]}): $(echo ${REGULAR_GROUPS[$i]} | wc -w) files"
+  fi
+done
+
+# Launch pro spec workers
+for i in $(seq 0 $((PRO_WORKERS - 1))); do
+  if [ -n "${PRO_GROUPS[$i]}" ]; then
+    PARALLEL=true PARALLEL_GROUP_ID="pro_$i" SPECS_TYPE=pro \
+      bundle exec rspec ${PRO_GROUPS[$i]} --format progress \
+      > "$TMPDIR/pro_$i.log" 2>&1 &
+    PIDS+=($!)
+    echo "  Started pro worker $((i + 1)) (PID ${PIDS[-1]}): $(echo ${PRO_GROUPS[$i]} | wc -w) files"
+  fi
+done
+
+echo ""
+echo "Waiting for ${#PIDS[@]} workers to complete..."
+
+# Wait for all processes and collect exit codes
+FAILED=0
+for idx in "${!PIDS[@]}"; do
+  PID="${PIDS[$idx]}"
+  if ! wait "$PID"; then
+    FAILED=1
+  fi
+done
+
+# Show all logs
+echo ""
+echo "=========================================="
+echo "                 RESULTS                  "
+echo "=========================================="
+
+for i in $(seq 0 $((REGULAR_WORKERS - 1))); do
+  if [ -f "$TMPDIR/regular_$i.log" ]; then
+    echo ""
+    echo "=== Regular Worker $((i + 1)) ==="
+    cat "$TMPDIR/regular_$i.log"
+  fi
+done
+
+for i in $(seq 0 $((PRO_WORKERS - 1))); do
+  if [ -f "$TMPDIR/pro_$i.log" ]; then
+    echo ""
+    echo "=== Pro Worker $((i + 1)) ==="
+    cat "$TMPDIR/pro_$i.log"
+  fi
+done
+
+if [ $FAILED -eq 1 ]; then
+  echo ""
+  echo "=========================================="
+  echo "         SOME SPECS FAILED!              "
+  echo "=========================================="
+  exit 1
+fi
+
+echo ""
+echo "=========================================="
+echo "          ALL SPECS PASSED!               "
+echo "=========================================="
+
+# Run coverage check
+"$SCRIPT_DIR/check_coverage"
