@@ -14,7 +14,6 @@ RSpec.describe 'Spec Timings' do
     let(:spec_files) do
       Dir[Karafka::Web.gem_root.join('spec', 'lib', 'karafka', 'web', '**', '*_spec.rb')]
         .reject { |f| f.include?('/pro/') }
-        .reject { |f| f.include?('spec_timings_spec.rb') } # Exclude this meta-spec
         .map { |f| f.sub("#{Karafka::Web.gem_root}/", '') }
     end
 
