@@ -3,7 +3,7 @@
 # Validates that all spec files have timing references in the spec/timings/*.json files.
 # This ensures the parallel test runner can properly balance spec execution.
 #
-# If this spec fails, run: bin/collect_timings all
+# If this spec fails, run: bin/collect_timings
 RSpec.describe 'Spec Timings' do
   let(:timings_dir) { Karafka::Web.gem_root.join('spec', 'timings') }
 
@@ -24,8 +24,8 @@ RSpec.describe 'Spec Timings' do
       missing = spec_files.reject { |f| timing_keys.include?(f) }
 
       expect(missing).to be_empty,
-        "Missing timing data for #{missing.size} files. Run: bin/collect_timings regular\n" \
-        "Missing files:\n  #{missing.join("\n  ")}"
+                         "Missing timing data for #{missing.size} files. Run: bin/collect_timings\n" \
+                         "Missing files:\n  #{missing.join("\n  ")}"
     end
   end
 
@@ -45,8 +45,8 @@ RSpec.describe 'Spec Timings' do
       missing = spec_files.reject { |f| timing_keys.include?(f) }
 
       expect(missing).to be_empty,
-        "Missing timing data for #{missing.size} files. Run: bin/collect_timings pro\n" \
-        "Missing files:\n  #{missing.join("\n  ")}"
+                         "Missing timing data for #{missing.size} files. Run: bin/collect_timings\n" \
+                         "Missing files:\n  #{missing.join("\n  ")}"
     end
   end
 end
