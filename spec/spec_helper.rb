@@ -31,7 +31,13 @@ end
 
 # Only check minimum coverage when not running in parallel mode
 # Coverage is checked after merging all results in bin/check_coverage
-SimpleCov.minimum_coverage(92) if SPECS_TYPE == 'pro' && ENV['PARALLEL'].nil?
+if SPECS_TYPE == 'pro' && ENV['PARALLEL'].nil?
+  require_relative 'support/coverage_config'
+  SimpleCov.minimum_coverage(
+    line: CoverageConfig::LINE_COVERAGE,
+    branch: CoverageConfig::BRANCH_COVERAGE
+  )
+end
 
 # Load Pro components when running pro specs
 if ENV['SPECS_TYPE'] == 'pro'
