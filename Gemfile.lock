@@ -26,7 +26,8 @@ GEM
       uri (>= 0.13.1)
     base64 (0.3.0)
     bigdecimal (3.3.1)
-    byebug (12.0.0)
+    byebug (13.0.0)
+      reline (>= 0.6.0)
     concurrent-ruby (1.3.5)
     connection_pool (2.5.4)
     diff-lcs (1.6.2)
@@ -53,6 +54,7 @@ GEM
       raabro (~> 1.4)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
+    io-console (0.8.2)
     json (2.16.0)
     karafka (2.5.2)
       base64 (~> 0.2)
@@ -125,6 +127,8 @@ GEM
       rack (>= 3.0.0.beta1)
       webrick
     rake (13.3.1)
+    reline (0.6.3)
+      io-console (~> 0.5)
     roda (3.98.0)
       rack
     rspec (3.13.2)
