@@ -74,6 +74,13 @@ module Karafka
               ::Karafka::Web.config.topics.errors.name
             end
 
+            # Returns the consumers commands topic name from configuration.
+            #
+            # @return [String] the configured consumers commands topic name
+            def topics_consumers_commands
+              ::Karafka::Web.config.topics.consumers.commands.name.to_s
+            end
+
             # Computes and returns details about all Web UI topics.
             #
             # For each topic, returns whether it exists, its partition count,

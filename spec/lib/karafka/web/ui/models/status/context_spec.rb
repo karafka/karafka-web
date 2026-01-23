@@ -48,6 +48,14 @@ RSpec.describe_current do
     end
   end
 
+  describe '#topics_consumers_commands' do
+    it 'returns the configured commands topic name' do
+      expect(context.topics_consumers_commands).to eq(
+        Karafka::Web.config.topics.consumers.commands.name.to_s
+      )
+    end
+  end
+
   describe '#topics_details' do
     context 'when cluster_info is nil' do
       it 'returns topics with default values' do

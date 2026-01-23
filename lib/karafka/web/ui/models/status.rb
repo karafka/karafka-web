@@ -54,6 +54,7 @@ module Karafka
             state_calculation: Checks::StateCalculation,
             consumers_reports_schema_state: Checks::ConsumersReportsSchemaState,
             routing_topics_presence: Checks::RoutingTopicsPresence,
+            commands_topic_presence: Checks::CommandsTopicPresence,
             pro_subscription: Checks::ProSubscription
           }.freeze
 

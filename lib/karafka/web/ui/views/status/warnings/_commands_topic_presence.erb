@@ -1,0 +1,14 @@
+<p class="mb-2">
+  The commands topic <code><%= details[:topic_name] %></code> does not exist.
+</p>
+
+<p class="mb-2">
+  This topic is required for Pro commanding features (pause, resume, trace consumers and partitions).
+  Without it, commanding features will not work.
+</p>
+
+<p>
+  Please run <code>bundle exec karafka-web install</code> to create the missing topic, or create it
+  manually following the
+  <a href="https://karafka.io/docs/Web-UI-Getting-Started/" target="_blank">setup instructions</a>.
+</p>

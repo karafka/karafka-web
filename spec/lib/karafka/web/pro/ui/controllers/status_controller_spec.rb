@@ -75,5 +75,21 @@ RSpec.describe_current do
         expect(body).to include(Karafka::Web::VERSION)
       end
     end
+
+    context 'when commands topic is missing' do
+      before do
+        topics_config.consumers.commands.name = generate_topic_name
+
+        get 'status'
+      end
+
+      it do
+        expect(response).to be_ok
+        expect(body).to include('Commands topic presence')
+        expect(body).to include('does not exist')
+        expect(body).to include('required for Pro commanding features')
+        expect(body).to include('alert-box-warning')
+      end
+    end
   end
 end

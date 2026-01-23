@@ -210,6 +210,21 @@
 
   <%==
     partial(
+      "status/#{@status.commands_topic_presence.to_s}",
+      locals: {
+        title: 'Commands topic presence',
+        description: partial(
+          'status/warnings/commands_topic_presence',
+          locals: {
+            details: @status.commands_topic_presence.details
+          }
+        )
+      }
+    )
+  %>
+
+  <%==
+    partial(
       "status/#{@status.pro_subscription.to_s}",
       locals: {
         title: 'Karafka Pro subscription',
