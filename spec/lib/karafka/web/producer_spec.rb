@@ -13,8 +13,7 @@ RSpec.describe_current do
   describe '#__getobj__' do
     context 'when default producer is not idempotent and not transactional' do
       before do
-        allow(default_producer).to receive(:idempotent?).and_return(false)
-        allow(default_producer).to receive(:transactional?).and_return(false)
+        allow(default_producer).to receive_messages(idempotent?: false, transactional?: false)
         allow(default_producer).to receive(:variant)
           .with(topic_config: { acks: 0 })
           .and_return(variant)
@@ -58,8 +57,7 @@ RSpec.describe_current do
 
     context 'when default producer is transactional' do
       before do
-        allow(default_producer).to receive(:idempotent?).and_return(false)
-        allow(default_producer).to receive(:transactional?).and_return(true)
+        allow(default_producer).to receive_messages(idempotent?: false, transactional?: true)
       end
 
       it 'returns the default producer unchanged' do
@@ -80,8 +78,7 @@ RSpec.describe_current do
 
     context 'when default producer is both idempotent and transactional' do
       before do
-        allow(default_producer).to receive(:idempotent?).and_return(true)
-        allow(default_producer).to receive(:transactional?).and_return(true)
+        allow(default_producer).to receive_messages(idempotent?: true, transactional?: true)
       end
 
       it 'returns the default producer unchanged' do
@@ -98,8 +95,7 @@ RSpec.describe_current do
 
   describe 'delegation' do
     before do
-      allow(default_producer).to receive(:idempotent?).and_return(false)
-      allow(default_producer).to receive(:transactional?).and_return(false)
+      allow(default_producer).to receive_messages(idempotent?: false, transactional?: false)
       allow(default_producer).to receive(:variant)
         .with(topic_config: { acks: 0 })
         .and_return(variant)
