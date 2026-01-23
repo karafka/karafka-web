@@ -110,6 +110,7 @@
   "./spec/lib/karafka/web/tracking/producers/listeners/errors_spec.rb": 0.008,
   "./spec/lib/karafka/web/tracking/consumers/contracts/consumer_group_spec.rb": 0.008,
   "./spec/lib/karafka/web/ui/models/recurring_tasks/schedule_spec.rb": 0.008,
+  "./spec/lib/karafka/web/ui/models/status/checks/commands_topic_presence_spec.rb": 0.01,
   "./spec/lib/karafka/web/ui/models/status/checks/connection_spec.rb": 0.008,
   "./spec/lib/karafka/web/ui/models/status/checks/replication_spec.rb": 0.008,
   "./spec/lib/karafka/web/ui/models/status/checks/topics_spec.rb": 0.007,
