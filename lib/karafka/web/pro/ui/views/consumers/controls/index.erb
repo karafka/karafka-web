@@ -9,10 +9,19 @@
   <div class="col-span-12 flex justify-end space-x-2 mb-6">
     <%
       quiet_all_path = consumers_path('commanding', 'quiet_all')
+      has_standalone = @processes.any? { |p| p.execution_mode == 'standalone' }
+
+      if has_standalone
+        quiet_all_disabled_class = ''
+        quiet_all_title = 'Quiet All'
+      else
+        quiet_all_disabled_class = 'btn-disabled'
+        quiet_all_title = 'Supported only with standalone consumer processes'
+      end
     %>
-    <form action="<%= quiet_all_path %>" method="post" class="inline-flex items-center">
+    <form action="<%= quiet_all_path %>" method="post" class="inline-flex items-center" title="<%= quiet_all_title %>">
       <%== csrf_tag(quiet_all_path) %>
-      <button type="submit" class="btn btn-warning btn-sm">
+      <button type="submit" class="btn btn-warning btn-sm <%= quiet_all_disabled_class %>">
         <%== icon(:pause) %>
         Quiet All
       </button>
@@ -20,10 +29,18 @@
 
     <%
       stop_all_path = consumers_path('commanding', 'stop_all')
+
+      if has_standalone
+        stop_all_disabled_class = ''
+        stop_all_title = 'Stop All'
+      else
+        stop_all_disabled_class = 'btn-disabled'
+        stop_all_title = 'Supported only with standalone consumer processes'
+      end
     %>
-    <form action="<%= stop_all_path %>" method="post" class="inline-flex items-center">
+    <form action="<%= stop_all_path %>" method="post" class="inline-flex items-center" title="<%= stop_all_title %>">
       <%== csrf_tag(stop_all_path) %>
-      <button type="submit" class="btn btn-error btn-sm">
+      <button type="submit" class="btn btn-error btn-sm <%= stop_all_disabled_class %>">
         <%== icon(:stop) %>
         Stop All
       </button>

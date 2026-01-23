@@ -99,6 +99,7 @@ RSpec.describe_current do
         expect(body).to include('Stop All')
         expect(body).to include('Trace')
         expect(body).to include('title="Supported only in standalone consumer processes"')
+        expect(body).to include('title="Supported only with standalone consumer processes"')
       end
 
       context 'when sorting' do
@@ -141,6 +142,7 @@ RSpec.describe_current do
         expect(body).to include('Stop All')
         expect(body).to include('Trace')
         expect(body).to include('title="Supported only in standalone consumer processes"')
+        expect(body).to include('title="Supported only with standalone consumer processes"')
       end
 
       context 'when sorting' do
