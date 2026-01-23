@@ -15,14 +15,22 @@ module Karafka
       # This is used both in the processing for eviction and in the UI
       setting :ttl, default: 30_000
 
-      # Producer for the Web UI. By default it is a `Karafka.producer`, however it may be
-      # overwritten if we want to use a separate instance in case of heavy usage of the
-      # transactional producer as a default. In cases like this, Karafka may not be able to report
-      # data because it uses this producer and it may be locked because of the transaction in a
-      # user space.
+      # Producer for the Web UI.
+      #
+      # By default it uses a low-intensity variant of `Karafka.producer` with reduced
+      # acknowledgment requirements (acks: 0) since Web UI reporting is not mission-critical
+      # and serves primarily analytical purposes. This minimizes overhead by using
+      # fire-and-forget semantics where occasional message loss is acceptable.
+      #
+      # For idempotent or transactional producers, the default producer is used unchanged
+      # since acks settings cannot be altered for these producer types.
+      #
+      # This setting may be overwritten if you want to use a completely separate producer
+      # instance, for example in case of heavy usage of the transactional producer as a default
+      # where Karafka may not be able to report data because it is locked in a user transaction.
       setting(
         :producer,
-        constructor: -> { ::Karafka.producer },
+        constructor: -> { Producer.new },
         lazy: true
       )
 

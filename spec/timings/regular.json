@@ -75,6 +75,7 @@
   "./spec/lib/karafka/web/management/migrations/consumers_metrics/1706607960_introduce_lag_total_spec.rb": 0.022,
   "./spec/lib/karafka/web/errors_spec.rb": 0.022,
   "./spec/lib/karafka/web/inflector_spec.rb": 0.021,
+  "./spec/lib/karafka/web/producer_spec.rb": 0.02,
   "./spec/lib/karafka/web/ui/lib/paginations/offset_based_spec.rb": 0.021,
   "./spec/lib/karafka/web/deserializer_spec.rb": 0.021,
   "./spec/lib/karafka/web/ui/models/status/checks/initial_consumers_state_spec.rb": 0.019,

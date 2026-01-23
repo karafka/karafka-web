@@ -8,6 +8,7 @@
 - [Enhancement] Add `.options` CSS class for table columns containing action buttons, providing consistent `width: 1%; white-space: nowrap` styling to prevent column width fluctuation.
 - [Enhancement] Add commands topic presence status check for Pro users. Warns when the `karafka_consumers_commands` topic is missing, which is required for commanding features (pause, resume, trace).
 - [Enhancement] Disable "Quiet All" and "Stop All" buttons when only swarm or embedded consumers are running (Pro). These commands only work on standalone consumer processes.
+- [Enhancement] Use low-ack producer variant (`acks: 0`) for Web UI reporting. Since Web UI reporting serves analytical purposes, fire-and-forget semantics minimize latency and overhead while occasional message loss is acceptable. Falls back to the original producer for idempotent/transactional producers.
 - [Refactor] Refactor Status model into a DSL-based architecture with individual check classes. Each status check is now a separate class in `Karafka::Web::Ui::Models::Status::Checks` that declares its dependencies using `depends_on :check_name` DSL. Shared state is managed through a `Context` class, and the `Step` struct has been extracted to its own file. This improves maintainability, testability, and makes it easier to add new status checks in the future.
 - [Fix] Fix session keys to use strings instead of symbols for compatibility with Roda's session management.
 - [Fix] Fix actions and selector alignment in explorer and errors views by wrapping col-span elements in proper grid container.
