@@ -16,8 +16,18 @@
   },
   "packageRules": [
     {
-      "matchManagers": ["*"],
+      "matchManagers": [
+        "*"
+      ],
       "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": "Group ruby/setup-ruby action with ruby version updates",
+      "matchPackageNames": [
+        "ruby/setup-ruby",
+        "ruby"
+      ],
+      "groupName": "ruby setup"
     }
   ]
 }
