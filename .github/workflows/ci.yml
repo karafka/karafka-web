@@ -156,14 +156,10 @@ jobs:
   yard-lint:
     timeout-minutes: 5
     runs-on: ubuntu-latest
+    env:
+      BUNDLE_GEMFILE: Gemfile.lint
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-      - name: Remove platform-specific entries for Ruby 4.x
-        run: |
-          ruby -i -ne 'puts $_ unless /^\s*ffi \(.*-.*\)$/' Gemfile.lock
-          ruby -i -ne 'puts $_ unless /^\s*nokogiri \(.*-.*\)$/' Gemfile.lock
-          ruby -i -e 'prev = nil; $<.each { |line| puts line unless line == prev; prev = line }' Gemfile.lock
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@708024e6c902387ab41de36e1669e43b5ee7085e # v1.283.0
