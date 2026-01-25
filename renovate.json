@@ -3,6 +3,11 @@
   "extends": [
     "config:recommended"
   ],
+  "includePaths": [
+    "Gemfile",
+    "Gemfile.lint",
+    ".github/workflows/**"
+  ],
   "github-actions": {
     "enabled": true,
     "pinDigests": true
