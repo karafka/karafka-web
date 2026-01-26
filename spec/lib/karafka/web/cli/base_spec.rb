@@ -3,7 +3,7 @@
 RSpec.describe_current do
   subject(:base_cli_class) { described_class }
 
-  describe '#commands' do
+  describe "#commands" do
     let(:expected_commands) do
       [
         Karafka::Web::Cli::Help,
@@ -14,7 +14,7 @@ RSpec.describe_current do
       ]
     end
 
-    it 'expect to include all supported commands' do
+    it "expect to include all supported commands" do
       expect(base_cli_class.commands).to eq(expected_commands)
     end
   end

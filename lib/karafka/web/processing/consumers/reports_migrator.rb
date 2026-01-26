@@ -39,8 +39,8 @@ module Karafka
           # Only computed when first needed to avoid memory overhead if no old reports exist
           def migrations
             @migrations ||= Management::Migrations::Base
-                            .sorted_descendants
-                            .select { |migration_class| migration_class.type == :consumers_reports }
+              .sorted_descendants
+              .select { |migration_class| migration_class.type == :consumers_reports }
           end
         end
       end

@@ -66,21 +66,21 @@ module Karafka
             def current_search
               return @current_search if @current_search
 
-              search = @request_params['search']
+              search = @request_params["search"]
 
               @current_search = search.is_a?(Hash) ? search : {}
             end
 
             # @return [String] sort query value
             def current_sort
-              @current_sort ||= @request_params['sort'].to_s.downcase
+              @current_sort ||= @request_params["sort"].to_s.downcase
             end
 
             # @return [Integer] current page for paginated views
             # @note It does basic sanitization
             def current_page
               @current_page ||= begin
-                page = @request_params['page'].to_i
+                page = @request_params["page"].to_i
 
                 page.positive? ? page : 1
               end
@@ -88,7 +88,7 @@ module Karafka
 
             # @return [String] Range type for charts we want to fetch
             def current_range
-              candidate = @request_params.fetch('range', 'seconds')
+              candidate = @request_params.fetch("range", "seconds")
               candidate = ALLOWED_RANGES.first unless ALLOWED_RANGES.include?(candidate)
               candidate.to_sym
             end
@@ -98,14 +98,14 @@ module Karafka
             #   is provided, we go with the high offset first page approach
             def current_offset
               @current_offset ||= begin
-                offset = @request_params.fetch('offset', -1).to_i
+                offset = @request_params.fetch("offset", -1).to_i
                 [offset, -1].max
               end
             end
 
             # @return [Integer] currently selected partition or -1 if nothing provided
             def current_partition
-              @current_partition ||= @request_params.fetch('partition', -1).to_i
+              @current_partition ||= @request_params.fetch("partition", -1).to_i
             end
           end
         end

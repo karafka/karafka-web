@@ -26,30 +26,30 @@ RSpec.describe_current do
   let(:message) do
     instance_double(
       Karafka::Messages::Message,
-      headers: { 'type' => message_type }
+      headers: { "type" => message_type }
     )
   end
 
-  describe '#matches?' do
-    context 'when message type is request' do
-      let(:message_type) { 'request' }
+  describe "#matches?" do
+    context "when message type is request" do
+      let(:message_type) { "request" }
 
       it { expect(matcher.matches?).to be true }
     end
 
-    context 'when message type is result' do
-      let(:message_type) { 'result' }
+    context "when message type is result" do
+      let(:message_type) { "result" }
 
       it { expect(matcher.matches?).to be false }
     end
 
-    context 'when message type is acceptance' do
-      let(:message_type) { 'acceptance' }
+    context "when message type is acceptance" do
+      let(:message_type) { "acceptance" }
 
       it { expect(matcher.matches?).to be false }
     end
 
-    context 'when message type is nil' do
+    context "when message type is nil" do
       let(:message_type) { nil }
 
       it { expect(matcher.matches?).to be false }

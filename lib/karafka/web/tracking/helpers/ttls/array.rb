@@ -64,7 +64,7 @@ module Karafka
               parts = ["ttl=#{@ttl}ms"]
               parts << "size=#{size}"
 
-              "#<#{self.class.name}:#{format('%#x', object_id)} #{parts.join(' ')}>"
+              "#<#{self.class.name}:#{format("%#x", object_id)} #{parts.join(" ")}>"
             end
 
             private

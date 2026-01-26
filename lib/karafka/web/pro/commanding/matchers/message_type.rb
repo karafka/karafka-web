@@ -33,13 +33,13 @@ module Karafka
             self.priority = 0
 
             # Expected message type for commands
-            COMMAND_TYPE = 'request'
+            COMMAND_TYPE = "request"
 
             private_constant :COMMAND_TYPE
 
             # @return [Boolean] true if message type is a command request
             def matches?
-              message.headers['type'] == COMMAND_TYPE
+              message.headers["type"] == COMMAND_TYPE
             end
           end
         end

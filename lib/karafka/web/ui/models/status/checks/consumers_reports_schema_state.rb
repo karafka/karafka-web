@@ -20,7 +20,7 @@ module Karafka
               #
               # @return [Status::Step] success if compatible, failure otherwise
               def call
-                compatible = context.current_state[:schema_state] == 'compatible'
+                compatible = context.current_state[:schema_state] == "compatible"
                 step(compatible ? :success : :failure)
               end
             end

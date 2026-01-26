@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 # Load status components
-require_relative 'status/step'
-require_relative 'status/context'
-require_relative 'status/checks/base'
+require_relative "status/step"
+require_relative "status/context"
+require_relative "status/checks/base"
 
 # Load all check classes
-Dir[File.join(__dir__, 'status', 'checks', '*.rb')].each { |file| require file }
+Dir[File.join(__dir__, "status", "checks", "*.rb")].each { |file| require file }
 
 module Karafka
   module Web

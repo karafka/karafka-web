@@ -14,20 +14,20 @@ module Karafka
       def install(replication_factor: 1)
         enable!
         puts
-        puts 'Installing Karafka Web UI...'
+        puts "Installing Karafka Web UI..."
         puts
         Management::Actions::ExtendBootFile.new.call
         puts
-        puts 'Creating necessary topics and populating state data...'
+        puts "Creating necessary topics and populating state data..."
         puts
         Management::Actions::CreateTopics.new.call(replication_factor)
         wait_for_topics
         Management::Actions::CreateInitialStates.new.call
         puts
-        puts 'Running data migrations...'
+        puts "Running data migrations..."
         Management::Actions::MigrateStatesData.new.call
         puts
-        puts("Installation #{green('completed')}. Have fun!")
+        puts("Installation #{green("completed")}. Have fun!")
         puts
       end
 
@@ -38,16 +38,16 @@ module Karafka
       def migrate(replication_factor: 1)
         enable!
         puts
-        puts 'Creating necessary topics and populating state data...'
+        puts "Creating necessary topics and populating state data..."
         puts
         Management::Actions::CreateTopics.new.call(replication_factor)
         wait_for_topics
         Management::Actions::CreateInitialStates.new.call
         puts
-        puts 'Running data migrations...'
+        puts "Running data migrations..."
         Management::Actions::MigrateStatesData.new.call
         puts
-        puts("Migration #{green('completed')}. Have fun!")
+        puts("Migration #{green("completed")}. Have fun!")
         puts
       end
 
@@ -56,7 +56,7 @@ module Karafka
       def reset(replication_factor: 1)
         enable!
         puts
-        puts 'Resetting Karafka Web UI...'
+        puts "Resetting Karafka Web UI..."
         puts
         Management::Actions::DeleteTopics.new.call
         puts
@@ -64,10 +64,10 @@ module Karafka
         wait_for_topics
         Management::Actions::CreateInitialStates.new.call
         puts
-        puts 'Running data migrations...'
+        puts "Running data migrations..."
         Management::Actions::MigrateStatesData.new.call
         puts
-        puts("Resetting #{green('completed')}. Have fun!")
+        puts("Resetting #{green("completed")}. Have fun!")
         puts
       end
 
@@ -75,12 +75,12 @@ module Karafka
       def uninstall
         enable!
         puts
-        puts 'Uninstalling Karafka Web UI...'
+        puts "Uninstalling Karafka Web UI..."
         puts
         Management::Actions::DeleteTopics.new.call
         Management::Actions::CleanBootFile.new.call
         puts
-        puts("Uninstalling #{green('completed')}. Goodbye!")
+        puts("Uninstalling #{green("completed")}. Goodbye!")
         puts
       end
 
@@ -97,7 +97,7 @@ module Karafka
       # bit of time just in case.
       def wait_for_topics
         puts
-        print 'Waiting for the topics to synchronize in the cluster'
+        print "Waiting for the topics to synchronize in the cluster"
         wait(5)
         puts
       end
@@ -107,7 +107,7 @@ module Karafka
       def wait(time_in_seconds)
         time_in_seconds.times do
           sleep(1)
-          print '.'
+          print "."
         end
 
         print "\n"

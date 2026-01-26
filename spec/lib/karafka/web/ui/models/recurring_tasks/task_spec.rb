@@ -7,12 +7,12 @@ RSpec.describe_current do
 
   it { expect(task.class).to be < Karafka::Web::Ui::Lib::HashProxy }
 
-  describe '#enabled?' do
-    context 'when enabled' do
+  describe "#enabled?" do
+    context "when enabled" do
       it { expect(task.enabled?).to be(true) }
     end
 
-    context 'when disabled' do
+    context "when disabled" do
       let(:attrs) { { enabled: false } }
 
       it { expect(task.enabled?).to be(false) }

@@ -48,7 +48,7 @@ module Karafka
           #   mounted in a sub-path and we need to make sure our all paths are relative to "our"
           #   root, not the root of the app in which it was mounted.
           def root_path(*args)
-            "#{env.fetch('SCRIPT_NAME')}/#{args.join('/')}"
+            "#{env.fetch("SCRIPT_NAME")}/#{args.join("/")}"
           end
 
           # Generates a full path to any asset with our web-ui version. We ship all assets with
@@ -66,7 +66,7 @@ module Karafka
           # @param args [Array<String>] sub-paths
           # @return [String] path to the expected location
           def explorer_path(*args)
-            root_path(*['explorer', args.compact].flatten)
+            root_path(*["explorer", args.compact].flatten)
           end
 
           # Generates routes for explorer topics paths
@@ -74,7 +74,7 @@ module Karafka
           # @param args [Array<String>] sub-paths
           # @return explorer topics path
           def explorer_topics_path(*args)
-            explorer_path(*['topics', args.compact].flatten)
+            explorer_path(*["topics", args.compact].flatten)
           end
 
           # Generates routes for explorer messages paths
@@ -82,21 +82,21 @@ module Karafka
           # @param args [Array<String>] sub-paths
           # @return [String] explorer messages path
           def explorer_messages_path(*args)
-            explorer_path(*['messages', args.compact].flatten)
+            explorer_path(*["messages", args.compact].flatten)
           end
 
           # Helps build topics paths
           #
           # @return [String] topics scope path
           def topics_path(*)
-            root_path('topics', *)
+            root_path("topics", *)
           end
 
           # Helps build consumers paths
           #
           # @return [String] consumers scope path
           def consumers_path(*)
-            root_path('consumers', *)
+            root_path("consumers", *)
           end
 
           # Helps build per-consumer scope paths
@@ -122,9 +122,9 @@ module Karafka
           )
             root_path(
               *[
-                'scheduled_messages',
-                'explorer',
-                'topics',
+                "scheduled_messages",
+                "explorer",
+                "topics",
                 topic_name,
                 partition_id,
                 offset,

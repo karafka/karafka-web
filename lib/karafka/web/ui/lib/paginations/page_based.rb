@@ -60,7 +60,7 @@ module Karafka
 
             # @return [String] for page pages pagination, always use page as the url value
             def offset_key
-              'page'
+              "page"
             end
           end
         end

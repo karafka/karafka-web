@@ -34,7 +34,7 @@ module Karafka
                   coordinator.pause_tracker.expire
                   coordinator.pause_tracker.reset if request[:reset_attempts]
 
-                  result('applied')
+                  result("applied")
                 end
               end
             end

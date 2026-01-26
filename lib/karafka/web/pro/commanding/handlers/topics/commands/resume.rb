@@ -44,7 +44,7 @@ module Karafka
                     partitions_affected << partition_id
                   end
 
-                  result('applied', partitions_affected: partitions_affected)
+                  result("applied", partitions_affected: partitions_affected)
                 end
               end
             end

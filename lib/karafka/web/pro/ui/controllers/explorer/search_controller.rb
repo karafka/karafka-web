@@ -53,10 +53,10 @@ module Karafka
 
                 # If there is search form filled, we validate it to make sure there are no errors
                 @errors = if @search_criteria
-                            Lib::Search::Contracts::Form.new.call(@current_search).errors
-                          else
-                            {}
-                          end
+                  Lib::Search::Contracts::Form.new.call(@current_search).errors
+                else
+                  {}
+                end
 
                 # If all good we run the search
                 if @search_criteria && @errors.empty?

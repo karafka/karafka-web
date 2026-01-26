@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :consumer, class: 'Karafka::BaseConsumer' do
+  factory :consumer, class: "Karafka::BaseConsumer" do
     messages do
       Struct.new(:size, :metadata).new(
         1,

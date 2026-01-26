@@ -10,16 +10,16 @@ RSpec.describe_current do
     produce(reports_topic, report.to_json)
   end
 
-  describe '#active' do
+  describe "#active" do
     subject(:processes) { described_class.active(state) }
 
-    context 'when the requested processes from states do not exist' do
-      before { state[:processes][:'shinra:1:1'][:offset] = 1_000 }
+    context "when the requested processes from states do not exist" do
+      before { state[:processes][:"shinra:1:1"][:offset] = 1_000 }
 
       it { expect(processes).to be_empty }
     end
 
-    context 'when requested processes are too old' do
+    context "when requested processes are too old" do
       let(:report) do
         report = Fixtures.consumers_reports_json
         report[:dispatched_at] = 1_690_883_271
@@ -29,33 +29,33 @@ RSpec.describe_current do
       it { expect(processes).to be_empty }
     end
 
-    context 'when requested processes are active' do
+    context "when requested processes are active" do
       it { expect(processes).not_to be_empty }
     end
 
-    context 'when there is a requested process with incompatible schema' do
+    context "when there is a requested process with incompatible schema" do
       let(:report) do
         report = Fixtures.consumers_reports_json
-        report[:schema_version] = '0.1'
+        report[:schema_version] = "0.1"
         report
       end
 
-      it 'expect not to include them' do
+      it "expect not to include them" do
         expect(processes).to be_empty
       end
     end
   end
 
-  describe '#all' do
+  describe "#all" do
     subject(:processes) { described_class.all(state) }
 
-    context 'when the requested processes from states do not exist' do
-      before { state[:processes][:'shinra:1:1'][:offset] = 1_000 }
+    context "when the requested processes from states do not exist" do
+      before { state[:processes][:"shinra:1:1"][:offset] = 1_000 }
 
       it { expect(processes).to be_empty }
     end
 
-    context 'when requested processes are too old' do
+    context "when requested processes are too old" do
       let(:report) do
         report = Fixtures.consumers_reports_json
         report[:dispatched_at] = 1_690_883_271
@@ -65,18 +65,18 @@ RSpec.describe_current do
       it { expect(processes).to be_empty }
     end
 
-    context 'when requested processes are alive' do
+    context "when requested processes are alive" do
       it { expect(processes).not_to be_empty }
     end
 
-    context 'when there is a requested process with incompatible schema' do
+    context "when there is a requested process with incompatible schema" do
       let(:report) do
         report = Fixtures.consumers_reports_json
-        report[:schema_version] = '0.1'
+        report[:schema_version] = "0.1"
         report
       end
 
-      it 'expect to include them' do
+      it "expect to include them" do
         expect(processes).not_to be_empty
       end
     end

@@ -39,10 +39,10 @@ module Karafka
             # @raise [Karafka::Errors::UnsupportedCaseError] if status is unknown
             def partial_namespace
               case status
-              when :success then 'successes'
-              when :warning then 'warnings'
-              when :failure then 'failures'
-              when :halted  then 'failures'
+              when :success then "successes"
+              when :warning then "warnings"
+              when :failure then "failures"
+              when :halted then "failures"
               else
                 raise ::Karafka::Errors::UnsupportedCaseError, status
               end

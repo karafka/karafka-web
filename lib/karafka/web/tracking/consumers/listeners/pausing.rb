@@ -38,7 +38,7 @@ module Karafka
               partition = event[:partition]
               subscription_group_id = event[:subscription_group].id
 
-              [subscription_group_id, topic, partition].join('-')
+              [subscription_group_id, topic, partition].join("-")
             end
           end
         end

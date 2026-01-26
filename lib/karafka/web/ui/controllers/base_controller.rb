@@ -25,16 +25,16 @@ module Karafka
           # Detect that the state of the cache has changed
           before do
             cache.clear_if_needed(
-              session['cache_hash'],
-              session['cache_timestamp'].to_i
+              session["cache_hash"],
+              session["cache_timestamp"].to_i
             )
           end
 
           after do
             next unless cache.exist?
 
-            session['cache_hash'] = cache.hash
-            session['cache_timestamp'] = cache.timestamp.to_i
+            session["cache_hash"] = cache.hash
+            session["cache_timestamp"] = cache.timestamp.to_i
           end
 
           # @param params [Karafka::Web::Ui::Controllers::Requests::Params] request parameters
@@ -58,31 +58,31 @@ module Karafka
           def render(attributes: {})
             attributes = attributes.dup
 
-            full_parts = self.class.to_s.split('::')
-            separator = full_parts.index('Controllers')
+            full_parts = self.class.to_s.split("::")
+            separator = full_parts.index("Controllers")
             base = full_parts[(separator + 1)..]
 
             base.map!.with_index do |path_part, index|
               if index == (base.size - 1)
-                path_part.gsub(/(.)([A-Z])/, '\1_\2').downcase.gsub('_controller', '')
+                path_part.gsub(/(.)([A-Z])/, '\1_\2').downcase.gsub("_controller", "")
               else
                 path_part.gsub(/(.)([A-Z])/, '\1_\2').downcase
               end
             end
 
-            scope = base.join('/')
-            action = caller_locations(1, 1)[0].label.split('#').last
+            scope = base.join("/")
+            action = caller_locations(1, 1)[0].label.split("#").last
 
             attributes[:breadcrums_scope] = scope
 
             @current_action_name = action.to_sym
-            @current_controller_name = base.join('-')
+            @current_controller_name = base.join("-")
 
             instance_variables.each do |iv|
-              next if iv.to_s.start_with?('@_')
-              next if iv.to_s.start_with?('@params')
+              next if iv.to_s.start_with?("@_")
+              next if iv.to_s.start_with?("@params")
 
-              attributes[iv.to_s.delete('@').to_sym] = instance_variable_get(iv)
+              attributes[iv.to_s.delete("@").to_sym] = instance_variable_get(iv)
             end
 
             Responses::Render.new(
@@ -108,7 +108,7 @@ module Karafka
           # @return [String] formatted string
           def format_flash(message, *args)
             args.each do |arg|
-              message = message.sub('?', "<strong>#{arg}</strong>")
+              message = message.sub("?", "<strong>#{arg}</strong>")
             end
 
             message
@@ -143,15 +143,15 @@ module Karafka
           # @param args Any arguments accepted by the selected pagination engine
           def paginate(*args)
             engine = case args.count
-                     when 2
-                       Ui::Lib::Paginations::PageBased
-                     when 3
-                       Ui::Lib::Paginations::WatermarkOffsetsBased
-                     when 4
-                       Ui::Lib::Paginations::OffsetBased
-                     else
-                       raise ::Karafka::Errors::UnsupportedCaseError, args.count
-                     end
+            when 2
+              Ui::Lib::Paginations::PageBased
+            when 3
+              Ui::Lib::Paginations::WatermarkOffsetsBased
+            when 4
+              Ui::Lib::Paginations::OffsetBased
+            else
+              raise ::Karafka::Errors::UnsupportedCaseError, args.count
+            end
 
             @pagination = engine.new(*args)
           end
@@ -160,7 +160,7 @@ module Karafka
           #
           # @param resource_id [String] resource id that was not found
           # @raise [::Karafka::Web::Errors::Ui::NotFoundError]
-          def not_found!(resource_id = '')
+          def not_found!(resource_id = "")
             raise(::Karafka::Web::Errors::Ui::NotFoundError, resource_id)
           end
         end

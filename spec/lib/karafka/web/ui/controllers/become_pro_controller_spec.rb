@@ -3,12 +3,12 @@
 RSpec.describe_current do
   subject(:app) { Karafka::Web::Ui::App }
 
-  describe '#show' do
-    before { get 'health/overview' }
+  describe "#show" do
+    before { get "health/overview" }
 
     it do
       expect(response.status).to eq(402)
-      expect(body).to include('This feature is available only to')
+      expect(body).to include("This feature is available only to")
     end
   end
 end

@@ -7,7 +7,7 @@ RSpec.describe_current do
 
   before { allow(Karafka).to receive(:boot_file).and_return(boot_file) }
 
-  context 'when the boot file contains the web setup code' do
+  context "when the boot file contains the web setup code" do
     let(:content) do
       <<~CODE
         some other stuff
@@ -18,13 +18,13 @@ RSpec.describe_current do
 
     before { File.write(boot_file, content) }
 
-    it 'expect not to change the content at all' do
+    it "expect not to change the content at all" do
       extend_boot_file
       expect(File.read(boot_file)).to eq(content)
     end
   end
 
-  context 'when boot file does not have the web setup code' do
+  context "when boot file does not have the web setup code" do
     let(:content) do
       <<~CODE
         some other stuff
@@ -34,16 +34,16 @@ RSpec.describe_current do
 
     before { File.write(boot_file, content) }
 
-    it 'expect to add the enabled' do
+    it "expect to add the enabled" do
       extend_boot_file
       expect(File.read(boot_file)).to include("\nKarafka::Web.enable!\n")
     end
 
-    it 'expect to add the configurator' do
+    it "expect to add the configurator" do
       extend_boot_file
       updated = File.read(boot_file)
-      expect(updated).to include('config.ui.sessions.secret')
-      expect(updated).to include('Karafka::Web.setup do |config|')
+      expect(updated).to include("config.ui.sessions.secret")
+      expect(updated).to include("Karafka::Web.setup do |config|")
     end
   end
 end

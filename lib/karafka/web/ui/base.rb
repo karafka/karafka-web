@@ -16,10 +16,10 @@ module Karafka
         CONTEXT_DETAILS = lambda do
           plugin(
             :public,
-            root: Karafka::Web.gem_root.join('lib/karafka/web/ui/public'),
+            root: Karafka::Web.gem_root.join("lib/karafka/web/ui/public"),
             # Cache all static files for the end user for as long as possible
             # We can do it because we ship per version assets so they invalidate with gem bumps
-            headers: { 'Cache-Control' => 'max-age=31536000, immutable' },
+            headers: { "Cache-Control" => "max-age=31536000, immutable" },
             gzip: true,
             brotli: true
           )
@@ -31,13 +31,13 @@ module Karafka
           # user to make the Web UI work.
           plugin(
             :sessions,
-            key: '_karafka_session',
-            env_key: 'karafka.session',
+            key: "_karafka_session",
+            env_key: "karafka.session",
             secret: SecureRandom.hex(64)
           )
         end
 
-        plugin :render, escape: true, engine: 'erb'
+        plugin :render, escape: true, engine: "erb"
         plugin :run_append_slash
         plugin :error_handler
         plugin :not_found
@@ -79,20 +79,20 @@ module Karafka
           result.flashes.each { |key, value| flash[key] = value }
 
           path = case result.path
-                 when :back
-                   session['current_path']
-                 when :previous
-                   session['previous_path']
-                 else
-                   root_path(result.path)
-                 end
+          when :back
+            session["current_path"]
+          when :previous
+            session["previous_path"]
+          else
+            root_path(result.path)
+          end
 
           response.redirect path || root_path
         end
 
         handle_block_result Controllers::Responses::File do |result|
-          response.headers['Content-Type'] = 'application/octet-stream'
-          response.headers['Content-Disposition'] = "attachment; filename=\"#{result.file_name}\""
+          response.headers["Content-Type"] = "application/octet-stream"
+          response.headers["Content-Disposition"] = "attachment; filename=\"#{result.file_name}\""
           response.write result.content
         end
 
@@ -103,35 +103,35 @@ module Karafka
           case e
           when Errors::Ui::ProOnlyError
             response.status = 402
-            view 'shared/exceptions/pro_only'
+            view "shared/exceptions/pro_only"
           when Errors::Ui::ForbiddenError
             response.status = 403
-            view 'shared/exceptions/not_allowed'
+            view "shared/exceptions/not_allowed"
           when Errors::Ui::NotFoundError
             response.status = 404
-            view 'shared/exceptions/not_found'
+            view "shared/exceptions/not_found"
           when ::Rdkafka::RdkafkaError
             response.status = 404
-            view 'shared/exceptions/not_found'
+            view "shared/exceptions/not_found"
           else
             # Report unhandled errors to Karafka monitoring
             ::Karafka.monitor.instrument(
-              'error.occurred',
+              "error.occurred",
               error: e,
               caller: self,
-              type: 'web.ui.error'
+              type: "web.ui.error"
             )
 
             # For all other unhandled errors, show a generic error page
             response.status = 500
-            view 'shared/exceptions/unhandled_error'
+            view "shared/exceptions/unhandled_error"
           end
         end
 
         not_found do
           @error = true
           response.status = 404
-          view 'shared/exceptions/not_found'
+          view "shared/exceptions/not_found"
         end
 
         before do
@@ -175,13 +175,13 @@ module Karafka
           merged_params = deep_merge(request.params, query_data)
 
           # Flatten the merged parameters
-          flattened_params = flatten_params('', merged_params)
+          flattened_params = flatten_params("", merged_params)
 
           # Build the query string from the flattened parameters
           query_string = URI.encode_www_form(flattened_params)
 
           # Construct the full path with query string
-          [request.path, query_string].compact.join('?')
+          [request.path, query_string].compact.join("?")
         end
 
         # Builds a consumer instance with all needed details
@@ -218,21 +218,21 @@ module Karafka
         def store_paths_history(request, session)
           # Code below tracks previous paths so we can use it to redirect users back
           return unless request.get?
-          return unless request.env['HTTP_ACCEPT']&.include?('text/html')
+          return unless request.env["HTTP_ACCEPT"]&.include?("text/html")
 
           requested_path = request.path
 
-          if session['current_path'].nil?
-            session['current_path'] = requested_path
+          if session["current_path"].nil?
+            session["current_path"] = requested_path
 
             return
           end
 
-          return if request.path == session['current_path']
+          return if request.path == session["current_path"]
 
           # When navigating to a different page
-          session['previous_path'] = session['current_path']
-          session['current_path'] = requested_path
+          session["previous_path"] = session["current_path"]
+          session["current_path"] = requested_path
         end
       end
     end

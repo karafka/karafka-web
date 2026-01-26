@@ -72,7 +72,7 @@ module Karafka
                   redirect(
                     :previous,
                     success: format_flash(
-                      'Initiated pause for partition ?#? in consumer group ?',
+                      "Initiated pause for partition ?#? in consumer group ?",
                       topic,
                       partition_id,
                       consumer_group_id
@@ -119,7 +119,7 @@ module Karafka
                   redirect(
                     :previous,
                     success: format_flash(
-                      'Initiated resume for partition ?#? in consumer group ?',
+                      "Initiated resume for partition ?#? in consumer group ?",
                       topic,
                       partition_id,
                       consumer_group_id

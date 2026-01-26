@@ -88,7 +88,7 @@ module Karafka
                 redirect(
                   "topics/#{topic_name}/config",
                   success: format_flash(
-                    'Topic ? property ? successfully altered',
+                    "Topic ? property ? successfully altered",
                     topic_name,
                     property_name
                   )

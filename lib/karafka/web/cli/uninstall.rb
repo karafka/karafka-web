@@ -5,7 +5,7 @@ module Karafka
     class Cli
       # Uninstalls the Web UI
       class Uninstall < Base
-        desc 'Removes all the Web UI topics and the enabled code'
+        desc "Removes all the Web UI topics and the enabled code"
 
         # Uninstalls Karafka Web
         def call

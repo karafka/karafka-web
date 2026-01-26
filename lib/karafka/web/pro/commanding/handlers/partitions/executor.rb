@@ -36,15 +36,15 @@ module Karafka
               # @param request [Request]
               def call(listener, client, request)
                 command = case request.name
-                          when Commanding::Commands::Partitions::Resume.name
-                            Commands::Resume
-                          when Commanding::Commands::Partitions::Pause.name
-                            Commands::Pause
-                          when Commanding::Commands::Partitions::Seek.name
-                            Commands::Seek
-                          else
-                            raise ::Karafka::Errors::UnsupportedCaseError, request.name
-                          end
+                when Commanding::Commands::Partitions::Resume.name
+                  Commands::Resume
+                when Commanding::Commands::Partitions::Pause.name
+                  Commands::Pause
+                when Commanding::Commands::Partitions::Seek.name
+                  Commands::Seek
+                else
+                  raise ::Karafka::Errors::UnsupportedCaseError, request.name
+                end
 
                 command.new(
                   listener,
@@ -61,7 +61,7 @@ module Karafka
                 Dispatcher.result(
                   request.name,
                   process_id,
-                  request.to_h.merge(status: 'rebalance_rejected')
+                  request.to_h.merge(status: "rebalance_rejected")
                 )
               end
 

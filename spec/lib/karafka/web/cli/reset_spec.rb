@@ -10,7 +10,7 @@ RSpec.describe_current do
     allow(installer).to receive(:reset)
   end
 
-  it 'expect to reset using installer' do
+  it "expect to reset using installer" do
     cli.call
     expect(installer).to have_received(:reset)
   end

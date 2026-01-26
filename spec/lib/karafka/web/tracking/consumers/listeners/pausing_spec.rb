@@ -15,16 +15,16 @@ RSpec.describe_current do
     }
   end
 
-  describe '#on_client_pause' do
-    it 'expect to add pause reference' do
+  describe "#on_client_pause" do
+    it "expect to add pause reference" do
       listener.on_client_pause(event)
 
       expect(sampler.pauses.keys).to include("#{subscription_group.id}-#{topic}-1")
     end
   end
 
-  describe '#on_client_resume' do
-    it 'expect to remove added reference' do
+  describe "#on_client_resume" do
+    it "expect to remove added reference" do
       listener.on_client_pause(event)
       listener.on_client_resume(event)
 

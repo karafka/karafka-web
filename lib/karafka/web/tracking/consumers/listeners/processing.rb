@@ -68,8 +68,8 @@ module Karafka
             def on_consumer_consume(event)
               consumer = event.payload[:caller]
               messages_count = consumer.messages.size
-              jid = job_id(consumer, 'consume')
-              job_details = job_details(consumer, 'consume')
+              jid = job_id(consumer, "consume")
+              job_details = job_details(consumer, "consume")
 
               track do |sampler|
                 # We count batches and messages prior to the execution, so they are tracked even
@@ -87,7 +87,7 @@ module Karafka
             # @param event [Karafka::Core::Monitoring::Event]
             def on_consumer_consumed(event)
               consumer = event.payload[:caller]
-              jid = job_id(consumer, 'consume')
+              jid = job_id(consumer, "consume")
 
               track do |sampler|
                 sampler.jobs.delete(jid)
@@ -100,23 +100,23 @@ module Karafka
             def on_error_occurred(event)
               track do |sampler|
                 type = case event[:type]
-                       when 'consumer.consume.error'
-                         'consume'
-                       when 'consumer.revoked.error'
-                         'revoked'
-                       when 'consumer.shutdown.error'
-                         'shutdown'
-                       when 'consumer.tick.error'
-                         'tick'
-                       when 'consumer.eofed.error'
-                         'eofed'
-                       # This is not a user facing execution flow, but internal system one
-                       # that is why it will not be reported as a separate job for the UI
-                       when 'consumer.idle.error'
-                         false
-                       else
-                         false
-                       end
+                when "consumer.consume.error"
+                  "consume"
+                when "consumer.revoked.error"
+                  "revoked"
+                when "consumer.shutdown.error"
+                  "shutdown"
+                when "consumer.tick.error"
+                  "tick"
+                when "consumer.eofed.error"
+                  "eofed"
+                # This is not a user facing execution flow, but internal system one
+                # that is why it will not be reported as a separate job for the UI
+                when "consumer.idle.error"
+                  false
+                else
+                  false
+                end
 
                 # job reference only exists for consumer work related operations.
                 # Only for them we need to deregister the job reference.
@@ -132,10 +132,10 @@ module Karafka
             # Consume has a bit different reporting flow than other jobs because it bumps certain
             # counters that other jobs do not. This is why it is defined above separately
             [
-              [:revoke, :revoked, 'revoked'],
-              [:shutting_down, :shutdown, 'shutdown'],
-              [:tick, :ticked, 'tick'],
-              [:eof, :eofed, 'eofed']
+              [:revoke, :revoked, "revoked"],
+              [:shutting_down, :shutdown, "shutdown"],
+              [:tick, :ticked, "tick"],
+              [:eof, :eofed, "eofed"]
             ].each do |pre, post, action|
               # Dynamically creates methods like:
               #   def on_consumer_revoke(event)
@@ -227,7 +227,7 @@ module Karafka
                 consumer_group: consumer.topic.consumer_group.id,
                 type: type,
                 tags: consumer.tags,
-                status: 'running'
+                status: "running"
               }
             end
           end

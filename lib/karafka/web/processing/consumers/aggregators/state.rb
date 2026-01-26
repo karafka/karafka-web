@@ -20,7 +20,7 @@ module Karafka
             # Current schema version
             # This can be used in the future for detecting incompatible changes and writing
             # migrations
-            SCHEMA_VERSION = '1.4.0'
+            SCHEMA_VERSION = "1.4.0"
 
             # @param schema_manager [Karafka::Web::Processing::Consumers::SchemaManager] schema
             #   manager that tracks the compatibility of schemas.
@@ -139,7 +139,7 @@ module Karafka
 
               @active_reports
                 .values
-                .reject { |report| report[:process][:status] == 'stopped' }
+                .reject { |report| report[:process][:status] == "stopped" }
                 .each do |report|
                   report_stats = report[:stats]
                   report_process = report[:process]

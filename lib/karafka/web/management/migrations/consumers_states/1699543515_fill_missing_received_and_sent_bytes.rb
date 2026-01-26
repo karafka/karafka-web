@@ -9,7 +9,7 @@ module Karafka
           # present as expected
           class FillMissingReceivedAndSentBytes < Base
             # Network metrics were introduced with schema 1.2.0
-            self.versions_until = '1.2.0'
+            self.versions_until = "1.2.0"
             self.type = :consumers_states
 
             # @param state [Hash]

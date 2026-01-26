@@ -82,8 +82,8 @@ module Karafka
 
                 # If nothing found, lets redirect user back to the commands list
                 redirect(
-                  'commands',
-                  warning: 'No recent commands available'
+                  "commands",
+                  warning: "No recent commands available"
                 )
               end
 

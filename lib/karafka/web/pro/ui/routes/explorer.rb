@@ -28,67 +28,67 @@ module Karafka
           # Manages the explorer related routes
           class Explorer < Base
             route do |r|
-              r.on 'explorer' do
-                r.get String, 'search' do |topic_id|
+              r.on "explorer" do
+                r.get String, "search" do |topic_id|
                   # Search has it's own controller but we want to have this in the explorer routing
                   # namespace because topic search is conceptually part of the explorer
                   controller = build(Controllers::Explorer::SearchController)
                   controller.index(topic_id)
                 end
 
-                r.on 'messages' do
+                r.on "messages" do
                   controller = build(Controllers::Explorer::MessagesController)
 
                   r.get(
-                    String, :partition_id, Integer, 'forward'
+                    String, :partition_id, Integer, "forward"
                   ) do |topic_id, partition_id, offset|
                     controller.forward(topic_id, partition_id, offset)
                   end
 
                   r.post(
-                    String, :partition_id, Integer, 'republish'
+                    String, :partition_id, Integer, "republish"
                   ) do |topic_id, partition_id, offset|
                     controller.republish(topic_id, partition_id, offset)
                   end
 
                   r.get(
-                    String, :partition_id, Integer, 'download'
+                    String, :partition_id, Integer, "download"
                   ) do |topic_id, partition_id, offset|
                     controller.download(topic_id, partition_id, offset)
                   end
 
                   r.get(
-                    String, :partition_id, Integer, 'export'
+                    String, :partition_id, Integer, "export"
                   ) do |topic_id, partition_id, offset|
                     controller.export(topic_id, partition_id, offset)
                   end
                 end
 
-                r.on 'topics' do
+                r.on "topics" do
                   controller = build(Controllers::Explorer::ExplorerController)
 
-                  r.get String, :partition_id, 'recent' do |topic_id, partition_id|
+                  r.get String, :partition_id, "recent" do |topic_id, partition_id|
                     controller.recent(topic_id, partition_id)
                   end
 
                   r.get(
-                    String, :partition_id, Integer, 'surrounding'
+                    String, :partition_id, Integer, "surrounding"
                   ) do |topic_id, partition_id, offset|
                     controller.surrounding(topic_id, partition_id, offset)
                   end
 
-                  r.get String, 'recent' do |topic_id|
+                  r.get String, "recent" do |topic_id|
                     controller.recent(topic_id, nil)
                   end
 
                   # Jumps to offset matching the expected time
-                  r.get String, :partition_id, 'closest', Time do |topic_id, partition_id, time|
+                  r.get String, :partition_id, "closest", Time do |topic_id, partition_id, time|
                     controller.closest(topic_id, partition_id, time)
                   end
 
                   # Jumps to the offset matching the expected timestamp
                   r.get(
-                    String, :partition_id, 'closest', Integer
+                    String, :partition_id, "closest", Integer
                   ) do |topic_id, partition_id, timestamp|
                     # To simplify we just convert timestamp to time with ms precision
                     time = Time.at(timestamp / 1_000.0)
@@ -123,7 +123,7 @@ module Karafka
                 end
 
                 r.get do
-                  r.redirect root_path('explorer/topics')
+                  r.redirect root_path("explorer/topics")
                 end
               end
             end

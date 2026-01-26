@@ -37,13 +37,13 @@ module Karafka
                 # They may not exist (yet) so we filter them based on the existing topics in the
                 # cluster
                 candidates = Karafka::App
-                             .routes
-                             .map { |route| route.topics.to_a }
-                             .flatten
-                             .select(&:scheduled_messages?)
-                             .reject { |topic| topic.name.end_with?(states_postfix) }
-                             .map(&:name)
-                             .sort
+                  .routes
+                  .map { |route| route.topics.to_a }
+                  .flatten
+                  .select(&:scheduled_messages?)
+                  .reject { |topic| topic.name.end_with?(states_postfix) }
+                  .map(&:name)
+                  .sort
 
                 @topics = topics.select { |topic| candidates.include?(topic.topic_name) }
 

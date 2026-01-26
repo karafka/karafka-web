@@ -37,7 +37,7 @@ module Karafka
 
             loader = Zeitwerk::Loader.new
             loader.push_dir(
-              File.join(Karafka::Web.gem_root, 'lib/karafka/web/pro'),
+              File.join(Karafka::Web.gem_root, "lib/karafka/web/pro"),
               namespace: Karafka::Web::Pro
             )
 

@@ -28,7 +28,7 @@ module Karafka
           module Partitions
             # Topic partition seek command request handler
             class Seek < Base
-              self.name = 'partitions.seek'
+              self.name = "partitions.seek"
 
               # Dispatches the seek request into the appropriate filter and indicates that the
               # seeking is in an acceptance state

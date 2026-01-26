@@ -21,7 +21,7 @@ module Karafka
               def bytes_received
                 windows
                   .m1
-                  .stats_from { |k, _v| k.end_with?('rxbytes') }
+                  .stats_from { |k, _v| k.end_with?("rxbytes") }
                   .rps
                   .round
               end
@@ -31,7 +31,7 @@ module Karafka
               def bytes_sent
                 windows
                   .m1
-                  .stats_from { |k, _v| k.end_with?('txbytes') }
+                  .stats_from { |k, _v| k.end_with?("txbytes") }
                   .rps
                   .round
               end

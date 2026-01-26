@@ -52,7 +52,7 @@ module Karafka
           #
           # @param _event [Karafka::Core::Monitoring::Event]
           def on_app_running(_event)
-            async_call('karafka.web.pro.commanding.manager')
+            async_call("karafka.web.pro.commanding.manager")
           end
 
           # When app stops, we stop the manager
@@ -84,12 +84,12 @@ module Karafka
               )
             end
           # This should not happen, if this is happening, please report this as a bug
-          rescue StandardError => e
+          rescue => e
             ::Karafka.monitor.instrument(
-              'error.occurred',
+              "error.occurred",
               error: e,
               caller: self,
-              type: 'web.commanding.manager.error'
+              type: "web.commanding.manager.error"
             )
 
             raise e
@@ -100,27 +100,27 @@ module Karafka
           # @param command [Request] command request
           def control(command)
             action = case command.name
-                     when Commands::Consumers::Trace.name
-                       Commands::Consumers::Trace
-                     when Commands::Consumers::Stop.name
-                       Commands::Consumers::Stop
-                     when Commands::Consumers::Quiet.name
-                       Commands::Consumers::Quiet
-                     when Commands::Partitions::Seek.name
-                       Commands::Partitions::Seek
-                     when Commands::Partitions::Resume.name
-                       Commands::Partitions::Resume
-                     when Commands::Partitions::Pause.name
-                       Commands::Partitions::Pause
-                     when Commands::Topics::Pause.name
-                       Commands::Topics::Pause
-                     when Commands::Topics::Resume.name
-                       Commands::Topics::Resume
-                     else
-                       # We raise it and will be rescued, reported and ignored. We raise it as
-                       # this should not happen unless there are version conflicts
-                       raise ::Karafka::Errors::UnsupportedCaseError, command.name
-                     end
+            when Commands::Consumers::Trace.name
+              Commands::Consumers::Trace
+            when Commands::Consumers::Stop.name
+              Commands::Consumers::Stop
+            when Commands::Consumers::Quiet.name
+              Commands::Consumers::Quiet
+            when Commands::Partitions::Seek.name
+              Commands::Partitions::Seek
+            when Commands::Partitions::Resume.name
+              Commands::Partitions::Resume
+            when Commands::Partitions::Pause.name
+              Commands::Partitions::Pause
+            when Commands::Topics::Pause.name
+              Commands::Topics::Pause
+            when Commands::Topics::Resume.name
+              Commands::Topics::Resume
+            else
+              # We raise it and will be rescued, reported and ignored. We raise it as
+              # this should not happen unless there are version conflicts
+              raise ::Karafka::Errors::UnsupportedCaseError, command.name
+            end
 
             action.new(command).call
           end

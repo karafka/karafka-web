@@ -4,10 +4,10 @@ RSpec.describe_current do
   subject(:listener) { described_class.new }
 
   let(:sampler) { Karafka::Web.config.tracking.consumers.sampler }
-  let(:error) { StandardError.new(-'This is an error') }
+  let(:error) { StandardError.new(-"This is an error") }
   let(:event) do
     {
-      type: 'error.occurred',
+      type: "error.occurred",
       error: error,
       caller: caller_ref
     }
@@ -16,45 +16,45 @@ RSpec.describe_current do
   let(:consumer_group) do
     instance_double(
       Karafka::Routing::ConsumerGroup,
-      id: 'group1'
+      id: "group1"
     )
   end
 
   let(:subscription_group) do
     instance_double(
       Karafka::Routing::SubscriptionGroup,
-      id: 'sub1',
+      id: "sub1",
       consumer_group: consumer_group
     )
   end
 
-  describe '#on_error_occurred' do
+  describe "#on_error_occurred" do
     let(:topic) do
       instance_double(
         Karafka::Routing::Topic,
-        name: 'topic_name',
+        name: "topic_name",
         consumer_group: consumer_group,
         subscription_group: subscription_group
       )
     end
 
-    context 'when error message string is frozen' do
+    context "when error message string is frozen" do
       let(:caller_ref) { nil }
 
-      it 'expect to process it without problems' do
+      it "expect to process it without problems" do
         expect { listener.on_error_occurred(event) }.not_to raise_error
       end
     end
 
-    context 'when tracking error' do
+    context "when tracking error" do
       let(:caller_ref) { nil }
 
-      it 'expect to include schema version 1.2.0' do
+      it "expect to include schema version 1.2.0" do
         listener.on_error_occurred(event)
-        expect(sampler.errors.last[:schema_version]).to eq('1.2.0')
+        expect(sampler.errors.last[:schema_version]).to eq("1.2.0")
       end
 
-      it 'expect to include a unique id' do
+      it "expect to include a unique id" do
         listener.on_error_occurred(event)
         error_id = sampler.errors.last[:id]
 
@@ -64,7 +64,7 @@ RSpec.describe_current do
         expect(error_id).to match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
       end
 
-      it 'expect each error to have a different id' do
+      it "expect each error to have a different id" do
         listener.on_error_occurred(event)
         first_id = sampler.errors.last[:id]
 
@@ -75,19 +75,19 @@ RSpec.describe_current do
       end
     end
 
-    context 'when caller is a consumer' do
+    context "when caller is a consumer" do
       let(:routing_consumer_group) do
-        build(:routing_consumer_group, name: 'group1')
+        build(:routing_consumer_group, name: "group1")
       end
 
       let(:routing_subscription_group) do
-        Struct.new(:id, :consumer_group).new('sub1', routing_consumer_group)
+        Struct.new(:id, :consumer_group).new("sub1", routing_consumer_group)
       end
 
       let(:routing_topic) do
         topic = build(
           :routing_topic,
-          name: 'topic_name',
+          name: "topic_name",
           consumer_group: routing_consumer_group
         )
         topic.subscription_group = routing_subscription_group
@@ -105,7 +105,7 @@ RSpec.describe_current do
           last_offset: 10,
           deserializers: nil,
           partition: 0,
-          topic: 'topic_name',
+          topic: "topic_name",
           created_at: Time.now,
           scheduled_at: Time.now - 1,
           processed_at: Time.now
@@ -119,45 +119,45 @@ RSpec.describe_current do
       let(:caller_ref) do
         consumer = build(:consumer, coordinator: coordinator)
         consumer.messages = messages
-        consumer.tags.add(:test, 'tag1')
+        consumer.tags.add(:test, "tag1")
         consumer
       end
 
-      it 'expect to include consumer specific details' do
+      it "expect to include consumer specific details" do
         listener.on_error_occurred(event)
         error_details = sampler.errors.last[:details]
 
         expect(error_details).to include(
-          topic: 'topic_name',
-          consumer_group: 'group1',
-          subscription_group: 'sub1',
+          topic: "topic_name",
+          consumer_group: "group1",
+          subscription_group: "sub1",
           partition: 0,
           first_offset: 5,
           last_offset: 10,
           committed_offset: 99
         )
 
-        expect(error_details[:tags].to_a).to eq(['tag1'])
+        expect(error_details[:tags].to_a).to eq(["tag1"])
       end
 
-      context 'when seek_offset is nil' do
+      context "when seek_offset is nil" do
         let(:coordinator) do
           build(:processing_coordinator, topic: routing_topic, partition: 0, seek_offset: nil)
         end
 
-        it 'expect to set committed_offset to -1001' do
+        it "expect to set committed_offset to -1001" do
           listener.on_error_occurred(event)
           expect(sampler.errors.last[:details][:committed_offset]).to eq(-1001)
         end
       end
 
-      context 'when Karafka is pro version' do
-        let(:errors_tracker) { Struct.new(:trace_id).new('trace-123-abc') }
+      context "when Karafka is pro version" do
+        let(:errors_tracker) { Struct.new(:trace_id).new("trace-123-abc") }
 
         let(:caller_ref) do
           consumer = build(:consumer, coordinator: coordinator)
           consumer.messages = messages
-          consumer.tags.add(:test, 'tag1')
+          consumer.tags.add(:test, "tag1")
           # Define errors_tracker method for pro version testing
           tracker = errors_tracker
           consumer.define_singleton_method(:errors_tracker) { tracker }
@@ -168,20 +168,20 @@ RSpec.describe_current do
           allow(Karafka).to receive(:pro?).and_return(true)
         end
 
-        it 'expect to include trace_id in details' do
+        it "expect to include trace_id in details" do
           listener.on_error_occurred(event)
           error_details = sampler.errors.last[:details]
 
-          expect(error_details).to include(trace_id: 'trace-123-abc')
+          expect(error_details).to include(trace_id: "trace-123-abc")
         end
       end
 
-      context 'when Karafka is not pro version' do
+      context "when Karafka is not pro version" do
         before do
           allow(Karafka).to receive(:pro?).and_return(false)
         end
 
-        it 'expect trace_id to be nil' do
+        it "expect trace_id to be nil" do
           listener.on_error_occurred(event)
           error_details = sampler.errors.last[:details]
 
@@ -190,7 +190,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when caller is a client' do
+    context "when caller is a client" do
       let(:caller_ref) do
         Karafka::Connection::Client.new(
           subscription_group,
@@ -198,19 +198,19 @@ RSpec.describe_current do
         )
       end
 
-      it 'expect to include client specific details' do
+      it "expect to include client specific details" do
         listener.on_error_occurred(event)
         error_details = sampler.errors.last[:details]
 
         expect(error_details).to include(
-          consumer_group: 'group1',
-          subscription_group: 'sub1',
-          name: ''
+          consumer_group: "group1",
+          subscription_group: "sub1",
+          name: ""
         )
       end
     end
 
-    context 'when caller is a listener' do
+    context "when caller is a listener" do
       before { allow(subscription_group).to receive(:topics).and_return([topic]) }
 
       let(:caller_ref) do
@@ -221,36 +221,36 @@ RSpec.describe_current do
         )
       end
 
-      it 'expect to include listener specific details' do
+      it "expect to include listener specific details" do
         listener.on_error_occurred(event)
         error_details = sampler.errors.last[:details]
 
         expect(error_details).to include(
-          consumer_group: 'group1',
-          subscription_group: 'sub1'
+          consumer_group: "group1",
+          subscription_group: "sub1"
         )
       end
     end
 
-    context 'when caller is unknown' do
+    context "when caller is unknown" do
       let(:caller_ref) { Object.new }
 
-      it 'expect to include empty details' do
+      it "expect to include empty details" do
         listener.on_error_occurred(event)
         expect(sampler.errors.last[:details]).to eq({})
       end
     end
   end
 
-  describe '#on_dead_letter_queue_dispatched' do
-    it 'expect to increase the dlq counter' do
+  describe "#on_dead_letter_queue_dispatched" do
+    it "expect to increase the dlq counter" do
       listener.on_dead_letter_queue_dispatched(nil)
       expect(sampler.counters[:dead]).to eq(1)
     end
   end
 
-  describe '#on_consumer_consuming_retry' do
-    it 'expect to increase the retry counter' do
+  describe "#on_consumer_consuming_retry" do
+    it "expect to increase the retry counter" do
       listener.on_consumer_consuming_retry(nil)
       expect(sampler.counters[:retries]).to eq(1)
     end

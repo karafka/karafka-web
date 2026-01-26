@@ -1,0 +1,96 @@
+# frozen_string_literal: true
+
+plugins:
+  - rubocop-capybara
+  - rubocop-factory_bot
+  - rubocop-performance
+  - rubocop-rspec
+  - rubocop-rspec_rails
+  - rubocop-thread_safety
+
+inherit_gem:
+  standard: config/base.yml
+  standard-performance: config/base.yml
+  standard-rspec: config/base.yml
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.2
+  Include:
+    - Gemfile.lint
+  Exclude:
+    - bin/**/*
+    - db/schema.rb
+    - .gemspec/**/*
+    - "*.gemspec"
+    - .bundle/**/*
+    - vendor/**/*
+    - db/migrate/**/*
+    - "**/dummy**/*"
+
+Capybara:
+  Enabled: false
+
+FactoryBot:
+  Enabled: false
+
+RSpecRails:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 100
+
+Layout/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: space
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/IndexedLet:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: true
+  Max: 4
+
+RSpec/NoExpectationExample:
+  Enabled: false
+
+RSpec/SpecFilePathFormat:
+  CustomTransform:
+    RuboCop: rubo_cop
+    Rspec: r_spec
+  Exclude:
+    - spec/lib/karafka/web/management/migrations/**/*
+
+RSpec/DescribeClass:
+  Enabled: false
+
+RSpec/SubjectStub:
+  Enabled: false
+
+RSpec/VerifiedDoubles:
+  Enabled: false
+
+RSpec/Output:
+  Exclude:
+    - spec/integrations/**/*
+
+Style/MixinUsage:
+  Exclude:
+    - spec/**/*
+
+ThreadSafety/ClassAndModuleAttributes:
+  Enabled: false
+
+ThreadSafety/ClassInstanceVariable:
+  Enabled: false
+
+ThreadSafety/NewThread:
+  Enabled: false

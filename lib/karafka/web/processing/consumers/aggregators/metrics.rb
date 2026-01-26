@@ -11,7 +11,7 @@ module Karafka
           class Metrics < Base
             # Current schema version
             # This is used for detecting incompatible changes and writing migrations
-            SCHEMA_VERSION = '1.3.0'
+            SCHEMA_VERSION = "1.3.0"
 
             def initialize
               super
@@ -71,7 +71,7 @@ module Karafka
               max_ttl = @aggregated_from - (::Karafka::Web.config.ttl / 1_000)
 
               @active_reports.delete_if do |_id, report|
-                report[:dispatched_at] < max_ttl || report[:process][:status] == 'stopped'
+                report[:dispatched_at] < max_ttl || report[:process][:status] == "stopped"
               end
             end
 
@@ -93,15 +93,15 @@ module Karafka
 
               iterate_partitions_data do |group_name, topic_name, partitions_data|
                 lags_hybrid = partitions_data
-                              .map do |p_details|
-                                lag_stored = p_details.fetch(:lag_stored, -1)
-                                lag_stored.negative? ? p_details.fetch(:lag, -1) : lag_stored
-                              end
-                              .reject(&:negative?)
+                  .map do |p_details|
+                    lag_stored = p_details.fetch(:lag_stored, -1)
+                    lag_stored.negative? ? p_details.fetch(:lag, -1) : lag_stored
+                end
+                  .reject(&:negative?)
 
                 offsets_hi = partitions_data
-                             .map { |p_details| p_details.fetch(:hi_offset, -1) }
-                             .reject(&:negative?)
+                  .map { |p_details| p_details.fetch(:hi_offset, -1) }
+                  .reject(&:negative?)
 
                 # Last stable offsets freeze durations - we pick the max freeze to indicate
                 # the longest open transaction that potentially may be hanging

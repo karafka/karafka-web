@@ -55,14 +55,14 @@ module Karafka
           if consumers_states[:schema_version] > State::SCHEMA_VERSION
             raise(
               Errors::Management::IncompatibleSchemaError,
-              'consumers state newer than supported'
+              "consumers state newer than supported"
             )
           end
 
           if consumers_metrics[:schema_version] > Metrics::SCHEMA_VERSION
             raise(
               Errors::Management::IncompatibleSchemaError,
-              'consumers metrics newer than supported'
+              "consumers metrics newer than supported"
             )
           end
         end

@@ -10,7 +10,7 @@ class Fixtures
     def path(file_name)
       File
         .dirname(__FILE__)
-        .then { |location| File.join(location, '../', 'fixtures', file_name) }
+        .then { |location| File.join(location, "../", "fixtures", file_name) }
     end
 
     # Fetches fixture content
@@ -44,15 +44,15 @@ class Fixtures
       scheduled_messages_states
       scheduled_messages
     ].each do |type|
-      define_method :"#{type}_file" do |name = 'current.json'|
+      define_method :"#{type}_file" do |name = "current.json"|
         file("#{type}/#{name}")
       end
 
-      define_method :"#{type}_msg" do |name = 'current'|
+      define_method :"#{type}_msg" do |name = "current"|
         file("#{type}/#{name}.msg")
       end
 
-      define_method :"#{type}_json" do |name = 'current', symbolize_names: true|
+      define_method :"#{type}_json" do |name = "current", symbolize_names: true|
         json("#{type}/#{name}", symbolize_names: symbolize_names)
       end
     end

@@ -36,12 +36,12 @@ module Karafka
                 connect unless context.connection_time
 
                 level = if context.connection_time < 1_000
-                          :success
-                        elsif context.connection_time < 1_000_000
-                          :warning
-                        else
-                          :failure
-                        end
+                  :success
+                elsif context.connection_time < 1_000_000
+                  :warning
+                else
+                  :failure
+                end
 
                 step(level, { time: context.connection_time })
               end

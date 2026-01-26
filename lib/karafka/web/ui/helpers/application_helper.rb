@@ -11,22 +11,22 @@ module Karafka
           # Default attribute names mapped from the attributes themselves
           # It makes it easier as we do not have to declare those all the time
           SORT_NAMES = {
-            id: 'ID',
-            partition_id: 'Partition',
-            memory_usage: 'RSS',
-            started_at: 'Started',
-            committed_offset: 'Committed',
-            last_offset: 'Last',
-            first_offset: 'First',
-            lo_offset: 'Low',
-            hi_offset: 'High',
-            ls_offset: 'LSO',
-            lag_hybrid: 'Lag',
-            lag_stored: 'Stored',
-            stored_offset: 'Stored',
-            fetch_state: 'Fetch',
-            poll_state: 'Poll',
-            lso_risk_state: 'LSO'
+            id: "ID",
+            partition_id: "Partition",
+            memory_usage: "RSS",
+            started_at: "Started",
+            committed_offset: "Committed",
+            last_offset: "Last",
+            first_offset: "First",
+            lo_offset: "Low",
+            hi_offset: "High",
+            ls_offset: "LSO",
+            lag_hybrid: "Lag",
+            lag_stored: "Stored",
+            stored_offset: "Stored",
+            fetch_state: "Fetch",
+            poll_state: "Poll",
+            lso_risk_state: "LSO"
           }.freeze
 
           private_constant :SORT_NAMES
@@ -36,8 +36,8 @@ module Karafka
           def nav_class(location)
             comparator, value = location.to_a.first
 
-            local_location = request.path.gsub(env.fetch('SCRIPT_NAME'), '')
-            local_location.public_send(:"#{comparator}?", value) ? 'active' : ''
+            local_location = request.path.gsub(env.fetch("SCRIPT_NAME"), "")
+            local_location.public_send(:"#{comparator}?", value) ? "active" : ""
           end
 
           # Converts object into a string and for objects that would anyhow return their
@@ -47,7 +47,7 @@ module Karafka
           # @param object [Object]
           # @return [String]
           def object_value_to_s(object)
-            object.to_s.include?('#<') ? object.class.to_s : object.to_s
+            object.to_s.include?("#<") ? object.class.to_s : object.to_s
           end
 
           # Takes a status and recommends background style color
@@ -56,14 +56,14 @@ module Karafka
           # @return [String] background style
           def status_badge(status)
             case status
-            when 'initialized' then 'badge-success'
-            when 'supervising' then 'badge-success'
-            when 'running' then 'badge-success'
-            when 'quieting' then 'badge-warning'
-            when 'quiet' then 'badge-warning'
-            when 'stopping' then 'badge-warning'
-            when 'stopped' then 'badge-error'
-            when 'terminated' then 'badge-error'
+            when "initialized" then "badge-success"
+            when "supervising" then "badge-success"
+            when "running" then "badge-success"
+            when "quieting" then "badge-warning"
+            when "quiet" then "badge-warning"
+            when "stopping" then "badge-warning"
+            when "stopped" then "badge-error"
+            when "terminated" then "badge-error"
             else
               raise ::Karafka::Errors::UnsupportedCaseError, status
             end
@@ -74,9 +74,9 @@ module Karafka
           # @param trend [Numeric] lag trend
           # @return [String] bg classes
           def lag_trend_badge(trend)
-            bg = 'badge-success' if trend.negative?
-            bg ||= 'badge-warning' if trend.positive?
-            bg ||= 'badge-secondary'
+            bg = "badge-success" if trend.negative?
+            bg ||= "badge-warning" if trend.positive?
+            bg ||= "badge-secondary"
             bg
           end
 
@@ -87,7 +87,7 @@ module Karafka
           def tags(tags_array)
             tags_array
               .map { |tag| %(<span class="badge badge-info">#{tag}</span>) }
-              .join(' ')
+              .join(" ")
           end
 
           # Takes a kafka report state and recommends background style color
@@ -95,18 +95,18 @@ module Karafka
           # @return [String] background style
           def kafka_state_badge(state)
             case state
-            when 'up' then 'badge-success'
-            when 'active' then 'badge-success'
-            when 'steady' then 'badge-success'
+            when "up" then "badge-success"
+            when "active" then "badge-success"
+            when "steady" then "badge-success"
             else
-              'badge-warning'
+              "badge-warning"
             end
           end
 
           # @param mem_kb [Integer] memory used in KB
           # @return [String] formatted memory usage
           def format_memory(mem_kb)
-            return '0' if !mem_kb || mem_kb.zero?
+            return "0" if !mem_kb || mem_kb.zero?
 
             if mem_kb < 10_240
               "#{number_with_delimiter(mem_kb.round(4))} KB"
@@ -121,12 +121,12 @@ module Karafka
           # @param number [Numeric]
           # @param delimiter [String] delimiter (comma by default)
           # @return [String] number with delimiter
-          def number_with_delimiter(number, delimiter = ',')
-            return '' unless number
+          def number_with_delimiter(number, delimiter = ",")
+            return "" unless number
 
-            parts = number.to_s.to_str.split('.')
+            parts = number.to_s.to_str.split(".")
             parts[0].gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1#{delimiter}")
-            parts.join('.')
+            parts.join(".")
           end
 
           # @param lag [Integer] lag
@@ -134,7 +134,7 @@ module Karafka
           # @see #offset_with_label
           def lag_with_label(lag)
             if lag.negative?
-              title = 'Not available until first offset commit'
+              title = "Not available until first offset commit"
               %(<span class="badge badge-secondary" title="#{title}">N/A</span>)
             else
               lag.to_s
@@ -150,7 +150,7 @@ module Karafka
           #   yet committed and there is no value we know of
           def offset_with_label(topic_name, partition_id, offset, explore: false)
             if offset.negative?
-              title = 'Not available until first offset commit'
+              title = "Not available until first offset commit"
               %(<span class="badge badge-secondary" title="#{title}">N/A</span>)
             elsif explore
               path = explorer_topics_path(topic_name, partition_id, offset)
@@ -166,7 +166,7 @@ module Karafka
           # @param value [Integer]
           # @return [String] input value if not negative or N/A
           def normalized_metric(value)
-            value.negative? ? 'N/A' : value.to_s
+            value.negative? ? "N/A" : value.to_s
           end
 
           # @param details [::Karafka::Web::Ui::Models::Partition] partition information with
@@ -175,11 +175,11 @@ module Karafka
           def lso_risk_state_bg(details)
             case details.lso_risk_state
             when :active
-              ''
+              ""
             when :at_risk
-              'bg-warning bg-opacity-25'
+              "bg-warning bg-opacity-25"
             when :stopped
-              'bg-error bg-opacity-25'
+              "bg-error bg-opacity-25"
             else
               raise ::Karafka::Errors::UnsupportedCaseError
             end
@@ -191,11 +191,11 @@ module Karafka
           def lso_risk_state_badge(details)
             case details.lso_risk_state
             when :active
-              ''
+              ""
             when :at_risk
-              'badge-warning'
+              "badge-warning"
             when :stopped
-              'badge-error'
+              "badge-error"
             else
               raise ::Karafka::Errors::UnsupportedCaseError
             end
@@ -245,15 +245,15 @@ module Karafka
               if SORT_NAMES[attribute]
                 name = SORT_NAMES[attribute]
               else
-                name = attribute.to_s.tr('_', ' ').tr('?', '')
+                name = attribute.to_s.tr("_", " ").tr("?", "")
                 # Always capitalize the name
-                name = name.split.map(&:capitalize).join(' ')
+                name = name.split.map(&:capitalize).join(" ")
               end
             end
 
-            arrow_both = '&#x21D5;'
-            arrow_down = '&#9662;'
-            arrow_up = '&#9652;'
+            arrow_both = "&#x21D5;"
+            arrow_down = "&#9662;"
+            arrow_up = "&#9652;"
 
             desc = "#{attribute} desc"
             asc = "#{attribute} asc"
@@ -286,7 +286,7 @@ module Karafka
           # @param omission [String] truncation omission
           # @param strategy [Symbol] `:default` or `:middle` how should we truncate
           # @return [String] HTML span tag with truncated content and full content title
-          def truncate(string, length: 50, omission: '...', strategy: :default)
+          def truncate(string, length: 50, omission: "...", strategy: :default)
             return string if string.length <= length
 
             case strategy
@@ -321,10 +321,10 @@ module Karafka
               tv = merged_hash[k]
 
               merged_hash[k] = if tv.is_a?(Hash) && v.is_a?(Hash)
-                                 deep_merge(tv, v)
-                               else
-                                 v
-                               end
+                deep_merge(tv, v)
+              else
+                v
+              end
             end
 
             merged_hash

@@ -21,12 +21,12 @@ module Karafka
 
           # @return [Jobs] running jobs
           def running
-            select { |job| job.status == 'running' }
+            select { |job| job.status == "running" }
           end
 
           # @return [Jobs] pending jobs
           def pending
-            select { |job| job.status == 'pending' }
+            select { |job| job.status == "pending" }
           end
 
           # Creates a new Jobs object with selected jobs

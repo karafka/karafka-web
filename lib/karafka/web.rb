@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'karafka'
-require 'roda'
-require 'etc'
-require 'open3'
-require 'zlib'
-require 'securerandom'
-require 'cgi'
-require 'uri'
+require "karafka"
+require "roda"
+require "etc"
+require "open3"
+require "zlib"
+require "securerandom"
+require "cgi"
+require "uri"
 
 module Karafka
   # Karafka Web UI + Karafka web monitoring
@@ -22,16 +22,16 @@ module Karafka
 
       # @return [String] root path of this gem
       def gem_root
-        Pathname.new(File.expand_path('../..', __dir__))
+        Pathname.new(File.expand_path("../..", __dir__))
       end
 
       # Sets up the whole configuration
       def setup(&)
         # You should never reconfigure Web UI after it has been enabled
-        raise Errors::LateSetupError, 'Always call #setup before #enable!' if config.enabled
+        raise Errors::LateSetupError, "Always call #setup before #enable!" if config.enabled
 
         if Karafka.pro?
-          require_relative 'web/pro/loader'
+          require_relative "web/pro/loader"
 
           Pro::Loader.load_on_late_setup
           Pro::Loader.pre_setup_all(config)
@@ -70,28 +70,28 @@ module Karafka
       # @return [Array<String>] Web UI slogans we use to encourage people to support Karafka
       def slogans
         @slogans ||= YAML.load_file(
-          gem_root.join('config', 'locales', 'slogans.yml')
-        ).dig('en', 'slogans')
+          gem_root.join("config", "locales", "slogans.yml")
+        ).dig("en", "slogans")
       end
     end
   end
 end
 
-require_relative 'web/inflector'
+require_relative "web/inflector"
 
 loader = Zeitwerk::Loader.new
 
 # Make sure pro is not loaded unless Pro
-loader.ignore(Karafka::Web.gem_root.join('lib/karafka/web/pro'))
+loader.ignore(Karafka::Web.gem_root.join("lib/karafka/web/pro"))
 
 # If license is detected, we can use loader without limitations
 Karafka::Licenser.detect do
   loader = Zeitwerk::Loader.new
 end
 
-loader.tag = 'karafka-web'
+loader.tag = "karafka-web"
 # Use our custom inflector to support migrations
-root = File.expand_path('..', __dir__)
+root = File.expand_path("..", __dir__)
 loader.inflector = Karafka::Web::Inflector.new("#{root}/karafka/web.rb")
 loader.push_dir(root)
 

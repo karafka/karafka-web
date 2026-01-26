@@ -7,7 +7,7 @@ module Karafka
         # Manages the routing related routes
         class Routing < Base
           route do |r|
-            r.on 'routing' do
+            r.on "routing" do
               controller = build(Controllers::RoutingController)
 
               r.get String do |topic_id|

@@ -54,11 +54,11 @@ module Karafka
                 redirect(
                   :back,
                   success: format_flash(
-                    'A scheduled message with offset ? from ?#? had a ? successfully created',
+                    "A scheduled message with offset ? from ?#? had a ? successfully created",
                     message_offset,
                     topic_id,
                     partition_id,
-                    'cancel request'
+                    "cancel request"
                   )
                 )
               end

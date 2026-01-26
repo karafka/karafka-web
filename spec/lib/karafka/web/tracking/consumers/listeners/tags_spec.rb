@@ -15,7 +15,7 @@ RSpec.describe_current do
 
   it { expect(consumer.tags.to_a).to eq([]) }
 
-  context 'when it is active job work' do
+  context "when it is active job work" do
     before do
       allow(topic).to receive(:active_job?).and_return(true)
       listener.on_consumer_consume(event)
@@ -24,16 +24,16 @@ RSpec.describe_current do
     it { expect(consumer.tags.to_a).to eq(%w[active_job]) }
   end
 
-  context 'when it is the first attempt' do
-    it { expect(consumer.tags.to_a).not_to include('attempt: 1') }
+  context "when it is the first attempt" do
+    it { expect(consumer.tags.to_a).not_to include("attempt: 1") }
   end
 
-  context 'when it is another attempt' do
+  context "when it is another attempt" do
     before do
       coordinator.pause_tracker.increment
       listener.on_consumer_consume(event)
     end
 
-    it { expect(consumer.tags.to_a).to include('attempt: 2') }
+    it { expect(consumer.tags.to_a).to include("attempt: 2") }
   end
 end

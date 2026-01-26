@@ -31,7 +31,7 @@ module Karafka
             # acceptance message back to Kafka. This command pauses all partitions of a given topic
             # within a specific consumer group. Matchers filter which processes handle the command.
             class Pause < Base
-              self.name = 'topics.pause'
+              self.name = "topics.pause"
 
               # Delegates the pause request to async handling
               def call

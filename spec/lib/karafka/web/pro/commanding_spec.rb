@@ -21,17 +21,17 @@
 # Contact: contact@karafka.io
 
 RSpec.describe_current do
-  describe '#post_setup' do
+  describe "#post_setup" do
     let(:config) { Karafka::Web.config }
 
-    context 'when commanding is enabled' do
+    context "when commanding is enabled" do
       before do
         config.commanding.active = true
 
         allow(Karafka.monitor).to receive(:subscribe)
       end
 
-      it 'subscribes the Commanding Manager to the Karafka monitor' do
+      it "subscribes the Commanding Manager to the Karafka monitor" do
         described_class.post_setup(config)
 
         expect(Karafka.monitor)
@@ -40,7 +40,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when commanding is not enabled' do
+    context "when commanding is not enabled" do
       before do
         config.commanding.active = false
 
@@ -50,7 +50,7 @@ RSpec.describe_current do
 
       after { config.commanding.active = true }
 
-      it 'does not subscribe the Commanding Manager to the Karafka monitor' do
+      it "does not subscribe the Commanding Manager to the Karafka monitor" do
         described_class.post_setup(config)
 
         expect(Karafka::Web::Pro::Commanding::Contracts::Config).not_to have_received(:new)
@@ -58,12 +58,12 @@ RSpec.describe_current do
       end
     end
 
-    context 'when commanding config is invalid' do
-      before { config.commanding.active = 'invalid' }
+    context "when commanding config is invalid" do
+      before { config.commanding.active = "invalid" }
 
       after { config.commanding.active = true }
 
-      it 'raises an error' do
+      it "raises an error" do
         expect do
           described_class.post_setup(config)
         end.to raise_error(Karafka::Errors::InvalidConfigurationError)

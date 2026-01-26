@@ -3,8 +3,8 @@
 RSpec.describe_current do
   subject(:app) { Karafka::Web::Ui::App }
 
-  describe '#show' do
-    before { get 'ux' }
+  describe "#show" do
+    before { get "ux" }
 
     it do
       expect(response).to be_ok

@@ -18,8 +18,8 @@ RSpec.describe_current do
     sampler.windows.clear
   end
 
-  describe '#on_error_occurred' do
-    let(:error) { StandardError.new(-'This is an error') }
+  describe "#on_error_occurred" do
+    let(:error) { StandardError.new(-"This is an error") }
 
     before do
       listener.on_consumer_consume(event)
@@ -28,137 +28,137 @@ RSpec.describe_current do
       listener.on_consumer_shutting_down(event)
     end
 
-    context 'when type is none of the consumer related' do
-      let(:type) { 'librdkafka.error' }
+    context "when type is none of the consumer related" do
+      let(:type) { "librdkafka.error" }
 
       it { expect { listener.on_error_occurred(event) }.not_to raise_error }
     end
 
-    context 'when type is consumer.consume.error' do
-      let(:type) { 'consumer.consume.error' }
+    context "when type is consumer.consume.error" do
+      let(:type) { "consumer.consume.error" }
 
-      it 'expect to remove the running job from tracked jobs' do
+      it "expect to remove the running job from tracked jobs" do
         listener.on_error_occurred(event)
         expect(sampler.jobs).not_to include("#{caller.id}-consume")
       end
 
-      it 'expect not to remove revoke job for same consumer' do
+      it "expect not to remove revoke job for same consumer" do
         listener.on_error_occurred(event)
         expect(sampler.jobs).to include("#{caller.id}-revoked")
       end
 
-      it 'expect not to remove shutdown job for same consumer' do
+      it "expect not to remove shutdown job for same consumer" do
         listener.on_error_occurred(event)
         expect(sampler.jobs).to include("#{caller.id}-shutdown")
       end
     end
 
-    context 'when type is consumer.revoked.error' do
-      let(:type) { 'consumer.revoked.error' }
+    context "when type is consumer.revoked.error" do
+      let(:type) { "consumer.revoked.error" }
 
-      it 'expect not to remove the running job from tracked jobs' do
+      it "expect not to remove the running job from tracked jobs" do
         listener.on_error_occurred(event)
         expect(sampler.jobs).to include("#{caller.id}-consume")
       end
 
-      it 'expect to remove revoke job for same consumer' do
+      it "expect to remove revoke job for same consumer" do
         listener.on_error_occurred(event)
         expect(sampler.jobs).not_to include("#{caller.id}-revoked")
       end
 
-      it 'expect not to remove shutdown job for same consumer' do
+      it "expect not to remove shutdown job for same consumer" do
         listener.on_error_occurred(event)
         expect(sampler.jobs).to include("#{caller.id}-shutdown")
       end
     end
 
-    context 'when type is consumer.shutdown.error' do
-      let(:type) { 'consumer.shutdown.error' }
+    context "when type is consumer.shutdown.error" do
+      let(:type) { "consumer.shutdown.error" }
 
-      it 'expect not to remove the running job from tracked jobs' do
+      it "expect not to remove the running job from tracked jobs" do
         listener.on_error_occurred(event)
         expect(sampler.jobs).to include("#{caller.id}-consume")
       end
 
-      it 'expect not to remove revoke job for same consumer' do
+      it "expect not to remove revoke job for same consumer" do
         listener.on_error_occurred(event)
         expect(sampler.jobs).to include("#{caller.id}-revoked")
       end
 
-      it 'expect to remove shutdown job for same consumer' do
+      it "expect to remove shutdown job for same consumer" do
         listener.on_error_occurred(event)
         expect(sampler.jobs).not_to include("#{caller.id}-shutdown")
       end
     end
 
-    context 'when type is consumer.idle.error' do
-      let(:type) { 'consumer.idle.error' }
+    context "when type is consumer.idle.error" do
+      let(:type) { "consumer.idle.error" }
 
-      it 'expect not to remove the running job from tracked jobs' do
+      it "expect not to remove the running job from tracked jobs" do
         listener.on_error_occurred(event)
         expect(sampler.jobs).to include("#{caller.id}-consume")
       end
 
-      it 'expect not to remove revoke job for same consumer' do
+      it "expect not to remove revoke job for same consumer" do
         listener.on_error_occurred(event)
         expect(sampler.jobs).to include("#{caller.id}-revoked")
       end
 
-      it 'expect not to remove shutdown job for same consumer' do
+      it "expect not to remove shutdown job for same consumer" do
         listener.on_error_occurred(event)
         expect(sampler.jobs).to include("#{caller.id}-shutdown")
       end
     end
 
-    context 'when type is consumer.eofed.error' do
-      let(:type) { 'consumer.eofed.error' }
+    context "when type is consumer.eofed.error" do
+      let(:type) { "consumer.eofed.error" }
 
-      it 'expect not to remove the running job from tracked jobs' do
+      it "expect not to remove the running job from tracked jobs" do
         listener.on_error_occurred(event)
         expect(sampler.jobs).to include("#{caller.id}-consume")
       end
 
-      it 'expect not to remove revoke job for same consumer' do
+      it "expect not to remove revoke job for same consumer" do
         listener.on_error_occurred(event)
         expect(sampler.jobs).to include("#{caller.id}-revoked")
       end
 
-      it 'expect not to remove shutdown job for same consumer' do
+      it "expect not to remove shutdown job for same consumer" do
         listener.on_error_occurred(event)
         expect(sampler.jobs).to include("#{caller.id}-shutdown")
       end
     end
   end
 
-  describe '#on_worker_processed' do
+  describe "#on_worker_processed" do
     before { event.time = 123.456 }
 
-    it 'expect to track execution time in totals' do
+    it "expect to track execution time in totals" do
       listener.on_worker_processed(event)
       expect(sampler.windows.m1[:processed_total_time]).to include(123.456)
     end
   end
 
-  describe '#on_consumer_consume' do
+  describe "#on_consumer_consume" do
     before { listener.on_consumer_consume(event) }
 
-    it 'expect to increase batches count' do
+    it "expect to increase batches count" do
       expect(sampler.counters[:batches]).to eq(1)
     end
 
-    it 'expect to increase messages count' do
+    it "expect to increase messages count" do
       expect(sampler.counters[:messages]).to eq(1)
     end
 
-    it 'expect to register the job execution' do
+    it "expect to register the job execution" do
       expect(sampler.jobs).not_to be_empty
     end
 
-    it 'expect to have job details' do
+    it "expect to have job details" do
       job = sampler.jobs.values.first
 
       expect(job.keys).to include(:updated_at)
-      expect(job[:topic]).to eq('test')
+      expect(job[:topic]).to eq("test")
       expect(job[:partition]).to eq(0)
       expect(job[:first_offset]).to eq(0)
       expect(job[:last_offset]).to eq(1)
@@ -168,42 +168,42 @@ RSpec.describe_current do
       expect(job[:messages]).to eq(1)
       expect(job[:consumer]).to eq(caller.class.to_s)
       expect(job[:consumer_group]).to eq(caller.topic.consumer_group.id)
-      expect(job[:type]).to eq('consume')
+      expect(job[:type]).to eq("consume")
       expect(job[:tags]).to eq(caller.tags)
     end
   end
 
-  describe '#on_consumer_consumed' do
+  describe "#on_consumer_consumed" do
     before do
       listener.on_consumer_consume(event)
       listener.on_consumer_consumed(event)
     end
 
-    it 'expect to remove job from running' do
+    it "expect to remove job from running" do
       expect(sampler.jobs).to be_empty
     end
   end
 
-  describe '#on_consumer_eof' do
+  describe "#on_consumer_eof" do
     before { listener.on_consumer_eof(event) }
 
-    it 'expect not to increase batches count' do
+    it "expect not to increase batches count" do
       expect(sampler.counters[:batches]).to eq(0)
     end
 
-    it 'expect not to increase messages count' do
+    it "expect not to increase messages count" do
       expect(sampler.counters[:messages]).to eq(0)
     end
 
-    it 'expect to register the job execution' do
+    it "expect to register the job execution" do
       expect(sampler.jobs).not_to be_empty
     end
 
-    it 'expect to have job details' do
+    it "expect to have job details" do
       job = sampler.jobs.values.first
 
       expect(job.keys).to include(:updated_at)
-      expect(job[:topic]).to eq('test')
+      expect(job[:topic]).to eq("test")
       expect(job[:partition]).to eq(0)
       expect(job[:first_offset]).to eq(0)
       expect(job[:last_offset]).to eq(1)
@@ -214,42 +214,42 @@ RSpec.describe_current do
       expect(job[:messages]).to eq(1)
       expect(job[:consumer]).to eq(caller.class.to_s)
       expect(job[:consumer_group]).to eq(caller.topic.consumer_group.id)
-      expect(job[:type]).to eq('eofed')
+      expect(job[:type]).to eq("eofed")
       expect(job[:tags]).to eq(caller.tags)
     end
   end
 
-  describe '#on_consumer_eofed' do
+  describe "#on_consumer_eofed" do
     before do
       listener.on_consumer_eof(event)
       listener.on_consumer_eofed(event)
     end
 
-    it 'expect to remove job from running' do
+    it "expect to remove job from running" do
       expect(sampler.jobs).to be_empty
     end
   end
 
-  describe '#on_consumer_revoke' do
+  describe "#on_consumer_revoke" do
     before { listener.on_consumer_revoke(event) }
 
-    it 'expect not to increase batches count' do
+    it "expect not to increase batches count" do
       expect(sampler.counters[:batches]).to eq(0)
     end
 
-    it 'expect not to increase messages count' do
+    it "expect not to increase messages count" do
       expect(sampler.counters[:messages]).to eq(0)
     end
 
-    it 'expect to register the job execution' do
+    it "expect to register the job execution" do
       expect(sampler.jobs).not_to be_empty
     end
 
-    it 'expect to have job details' do
+    it "expect to have job details" do
       job = sampler.jobs.values.first
 
       expect(job.keys).to include(:updated_at)
-      expect(job[:topic]).to eq('test')
+      expect(job[:topic]).to eq("test")
       expect(job[:partition]).to eq(0)
       expect(job[:first_offset]).to eq(0)
       expect(job[:last_offset]).to eq(1)
@@ -259,42 +259,42 @@ RSpec.describe_current do
       expect(job[:messages]).to eq(1)
       expect(job[:consumer]).to eq(caller.class.to_s)
       expect(job[:consumer_group]).to eq(caller.topic.consumer_group.id)
-      expect(job[:type]).to eq('revoked')
+      expect(job[:type]).to eq("revoked")
       expect(job[:tags]).to eq(caller.tags)
     end
   end
 
-  describe '#on_consumer_revoked' do
+  describe "#on_consumer_revoked" do
     before do
       listener.on_consumer_revoke(event)
       listener.on_consumer_revoked(event)
     end
 
-    it 'expect to remove job from running' do
+    it "expect to remove job from running" do
       expect(sampler.jobs).to be_empty
     end
   end
 
-  describe '#on_consumer_shutting_down' do
+  describe "#on_consumer_shutting_down" do
     before { listener.on_consumer_shutting_down(event) }
 
-    it 'expect not to increase batches count' do
+    it "expect not to increase batches count" do
       expect(sampler.counters[:batches]).to eq(0)
     end
 
-    it 'expect not to increase messages count' do
+    it "expect not to increase messages count" do
       expect(sampler.counters[:messages]).to eq(0)
     end
 
-    it 'expect to register the job execution' do
+    it "expect to register the job execution" do
       expect(sampler.jobs).not_to be_empty
     end
 
-    it 'expect to have job details' do
+    it "expect to have job details" do
       job = sampler.jobs.values.first
 
       expect(job.keys).to include(:updated_at)
-      expect(job[:topic]).to eq('test')
+      expect(job[:topic]).to eq("test")
       expect(job[:partition]).to eq(0)
       expect(job[:first_offset]).to eq(0)
       expect(job[:last_offset]).to eq(1)
@@ -304,18 +304,18 @@ RSpec.describe_current do
       expect(job[:messages]).to eq(1)
       expect(job[:consumer]).to eq(caller.class.to_s)
       expect(job[:consumer_group]).to eq(caller.topic.consumer_group.id)
-      expect(job[:type]).to eq('shutdown')
+      expect(job[:type]).to eq("shutdown")
       expect(job[:tags]).to eq(caller.tags)
     end
   end
 
-  describe '#on_consumer_shutdown' do
+  describe "#on_consumer_shutdown" do
     before do
       listener.on_consumer_shutting_down(event)
       listener.on_consumer_shutdown(event)
     end
 
-    it 'expect to remove job from running' do
+    it "expect to remove job from running" do
       expect(sampler.jobs).to be_empty
     end
   end

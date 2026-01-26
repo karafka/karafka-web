@@ -32,7 +32,7 @@ RSpec.describe_current do
     instance_double(
       Karafka::Web::Pro::Commanding::Request,
       to_h: { consumer_group_id: group_id, topic: topic_name },
-      '[]': ->(key) { { consumer_group_id: group_id, topic: topic_name }[key] }
+      "[]": ->(key) { { consumer_group_id: group_id, topic: topic_name }[key] }
     ).tap do |cmd|
       allow(cmd).to receive(:[]) do |key|
         { consumer_group_id: group_id, topic: topic_name }[key]
@@ -40,8 +40,8 @@ RSpec.describe_current do
     end
   end
 
-  describe '#<<' do
-    it 'adds command to the tracker' do
+  describe "#<<" do
+    it "adds command to the tracker" do
       tracker << command
 
       tracker.each_for(consumer_group_id, topic) do |stored_command|
@@ -49,10 +49,10 @@ RSpec.describe_current do
       end
     end
 
-    context 'when adding multiple commands for same group and topic' do
+    context "when adding multiple commands for same group and topic" do
       let(:command2) { build_command(consumer_group_id, topic) }
 
-      it 'preserves order of commands' do
+      it "preserves order of commands" do
         commands = []
         tracker << command
         tracker << command2
@@ -65,11 +65,11 @@ RSpec.describe_current do
       end
     end
 
-    context 'when adding commands for different consumer groups' do
+    context "when adding commands for different consumer groups" do
       let(:other_group_id) { SecureRandom.uuid }
       let(:other_command) { build_command(other_group_id, topic) }
 
-      it 'keeps commands separated by consumer group' do
+      it "keeps commands separated by consumer group" do
         tracker << command
         tracker << other_command
 
@@ -82,11 +82,11 @@ RSpec.describe_current do
       end
     end
 
-    context 'when adding commands for different topics' do
+    context "when adding commands for different topics" do
       let(:other_topic) { SecureRandom.uuid }
       let(:other_command) { build_command(consumer_group_id, other_topic) }
 
-      it 'keeps commands separated by topic' do
+      it "keeps commands separated by topic" do
         tracker << command
         tracker << other_command
 
@@ -100,15 +100,15 @@ RSpec.describe_current do
     end
   end
 
-  describe '#each_for' do
+  describe "#each_for" do
     before { tracker << command }
 
-    it 'yields each command for given consumer group and topic' do
+    it "yields each command for given consumer group and topic" do
       expect { |b| tracker.each_for(consumer_group_id, topic, &b) }
         .to yield_with_args(command)
     end
 
-    it 'removes processed commands after iteration' do
+    it "removes processed commands after iteration" do
       tracker.each_for(consumer_group_id, topic) { nil }
 
       commands = []
@@ -119,26 +119,26 @@ RSpec.describe_current do
       expect(commands).to be_empty
     end
 
-    context 'when no commands exist for consumer group and topic' do
+    context "when no commands exist for consumer group and topic" do
       let(:non_existent_group) { SecureRandom.uuid }
       let(:non_existent_topic) { SecureRandom.uuid }
 
-      it 'yields nothing for non-existent consumer group' do
+      it "yields nothing for non-existent consumer group" do
         expect { |b| tracker.each_for(non_existent_group, topic, &b) }
           .not_to yield_control
       end
 
-      it 'yields nothing for non-existent topic' do
+      it "yields nothing for non-existent topic" do
         expect { |b| tracker.each_for(consumer_group_id, non_existent_topic, &b) }
           .not_to yield_control
       end
     end
 
-    context 'when called concurrently' do
+    context "when called concurrently" do
       let(:threads_count) { 10 }
       let(:iterations) { 100 }
 
-      it 'handles concurrent access without racing conditions' do
+      it "handles concurrent access without racing conditions" do
         threads = Array.new(threads_count) do
           Thread.new do
             iterations.times do
@@ -153,8 +153,8 @@ RSpec.describe_current do
     end
   end
 
-  describe '.instance' do
-    it 'is a singleton' do
+  describe ".instance" do
+    it "is a singleton" do
       expect { described_class.new }.to raise_error(NoMethodError)
     end
   end

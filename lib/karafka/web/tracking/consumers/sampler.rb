@@ -10,12 +10,12 @@ module Karafka
           include ::Karafka::Core::Helpers::Time
 
           attr_reader :counters, :consumer_groups, :subscription_groups, :errors,
-                      :pauses, :jobs, :windows
+            :pauses, :jobs, :windows
 
           # Current schema version
           # This is used for detecting incompatible changes and not using outdated data during
           # upgrades
-          SCHEMA_VERSION = '1.6.0'
+          SCHEMA_VERSION = "1.6.0"
 
           # Counters that count events occurrences during the given window
           COUNTERS_BASE = {
@@ -76,10 +76,10 @@ module Karafka
             # Select and instantiate appropriate system metrics collector based on environment
             # Use container-aware collector if cgroups are available, otherwise use OS-based
             metrics_class = if Metrics::Container.active?
-                              Metrics::Container
-                            else
-                              Metrics::Os
-                            end
+              Metrics::Container
+            else
+              Metrics::Os
+            end
             @system_metrics = metrics_class.new(@shell)
             @network_metrics = Metrics::Network.new(@windows)
             @server_metrics = Metrics::Server.new
@@ -97,7 +97,7 @@ module Karafka
           def to_report
             {
               schema_version: SCHEMA_VERSION,
-              type: 'consumer',
+              type: "consumer",
               dispatched_at: float_now,
 
               process: {

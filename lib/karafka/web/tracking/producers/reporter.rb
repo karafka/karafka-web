@@ -87,8 +87,8 @@ module Karafka
           # and we can just safely ignore this
           rescue WaterDrop::Errors::ProducerClosedError
             nil
-          rescue StandardError => e
-            p '------------------------------------------------'
+          rescue => e
+            p "------------------------------------------------"
             p e
           end
         end

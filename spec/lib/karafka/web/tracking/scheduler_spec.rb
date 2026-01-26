@@ -13,13 +13,13 @@ RSpec.describe_current do
     allow(scheduler).to receive(:sleep).and_raise(StandardError)
   end
 
-  describe '#call' do
+  describe "#call" do
     before do
       allow(consumers_reporter).to receive(:active?).and_return(true)
       allow(producers_reporter).to receive(:active?).and_return(false)
     end
 
-    it 'executes only active reporters' do
+    it "executes only active reporters" do
       expect { scheduler.send(:call) }.to raise_error(StandardError)
 
       expect(consumers_reporter).to have_received(:report).once

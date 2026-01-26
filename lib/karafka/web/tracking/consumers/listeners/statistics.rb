@@ -12,8 +12,8 @@ module Karafka
             # @param event [Karafka::Core::Monitoring::Event]
             def on_statistics_emitted(event)
               statistics = event[:statistics]
-              topics = statistics.fetch('topics')
-              cgrp = statistics.fetch('cgrp')
+              topics = statistics.fetch("topics")
+              cgrp = statistics.fetch("cgrp")
               cg_id = event[:consumer_group_id]
               sg_id = event[:subscription_group_id]
               sg_details = extract_sg_details(sg_id, cgrp)
@@ -25,7 +25,7 @@ module Karafka
               # in track as we merge data from multiple subscription groups
               track do |sampler|
                 topics.each do |topic_name, topic_values|
-                  partitions = topic_values.fetch('partitions')
+                  partitions = topic_values.fetch("partitions")
 
                   partitions.each do |pt_name, pt_stats|
                     pt_id = pt_name.to_i
@@ -64,18 +64,18 @@ module Karafka
             #
             # @param statistics [Hash] statistics hash
             def track_transfers(statistics)
-              brokers = statistics.fetch('brokers', {})
+              brokers = statistics.fetch("brokers", {})
 
               return if brokers.empty?
 
               track do |sampler|
-                client_name = statistics.fetch('name')
+                client_name = statistics.fetch("name")
 
                 brokers.each do |broker_name, values|
                   scope_name = "#{client_name}-#{broker_name}"
 
-                  sampler.windows.m1["#{scope_name}-rxbytes"] << values.fetch('rxbytes', 0)
-                  sampler.windows.m1["#{scope_name}-txbytes"] << values.fetch('txbytes', 0)
+                  sampler.windows.m1["#{scope_name}-rxbytes"] << values.fetch("rxbytes", 0)
+                  sampler.windows.m1["#{scope_name}-txbytes"] << values.fetch("txbytes", 0)
                 end
               end
             end
@@ -88,12 +88,12 @@ module Karafka
               {
                 id: sg_id,
                 state: sg_stats.slice(
-                  'state',
-                  'join_state',
-                  'stateage',
-                  'rebalance_age',
-                  'rebalance_cnt',
-                  'rebalance_reason'
+                  "state",
+                  "join_state",
+                  "stateage",
+                  "rebalance_age",
+                  "rebalance_cnt",
+                  "rebalance_reason"
                 ).transform_keys(&:to_sym),
                 topics: {}
               }
@@ -108,11 +108,11 @@ module Karafka
 
               # Collect information only about what we are subscribed to and what we fetch or
               # work in any way. Stopped means, we stopped working with it
-              return false if pt_stats['fetch_state'] == 'stopped'
+              return false if pt_stats["fetch_state"] == "stopped"
 
               # Return if we no longer fetch this partition in a particular process. None means
               # that we no longer have this subscription assigned and we do not fetch
-              return false if pt_stats['fetch_state'] == 'none'
+              return false if pt_stats["fetch_state"] == "none"
 
               true
             end
@@ -123,29 +123,29 @@ module Karafka
             # @return [Hash] extracted partition metrics
             def extract_partition_metrics(pt_stats)
               metrics = pt_stats.slice(
-                'consumer_lag',
-                'consumer_lag_d',
-                'consumer_lag_stored',
-                'consumer_lag_stored_d',
-                'committed_offset',
+                "consumer_lag",
+                "consumer_lag_d",
+                "consumer_lag_stored",
+                "consumer_lag_stored_d",
+                "committed_offset",
                 # Can be useful to track the frequency of flushes when there is progress
-                'committed_offset_fd',
-                'stored_offset',
+                "committed_offset_fd",
+                "stored_offset",
                 # Can be useful to track the frequency of flushes when there is progress
-                'stored_offset_fd',
-                'fetch_state',
-                'hi_offset',
-                'hi_offset_fd',
-                'lo_offset',
-                'eof_offset',
-                'ls_offset',
+                "stored_offset_fd",
+                "fetch_state",
+                "hi_offset",
+                "hi_offset_fd",
+                "lo_offset",
+                "eof_offset",
+                "ls_offset",
                 # Two below can be useful for detection of hanging transactions
-                'ls_offset_d',
-                'ls_offset_fd'
+                "ls_offset_d",
+                "ls_offset_fd"
               )
 
               # Rename as we do not need `consumer_` prefix
-              metrics.transform_keys! { |key| key.gsub('consumer_', '') }
+              metrics.transform_keys! { |key| key.gsub("consumer_", "") }
               metrics.transform_keys!(&:to_sym)
 
               metrics
@@ -156,16 +156,16 @@ module Karafka
             # @param pt_id [Integer] partition id
             # @return [String] poll state / is partition paused or not
             def poll_details(sg_id, topic_name, pt_id)
-              pause_id = [sg_id, topic_name, pt_id].join('-')
+              pause_id = [sg_id, topic_name, pt_id].join("-")
 
-              details = { poll_state: 'active', poll_state_ch: 0 }
+              details = { poll_state: "active", poll_state_ch: 0 }
 
               pause_details = sampler.pauses[pause_id]
 
               return details unless pause_details
 
               {
-                poll_state: 'paused',
+                poll_state: "paused",
                 poll_state_ch: [(pause_details.fetch(:paused_till) - monotonic_now).round, 0].max
               }
             end

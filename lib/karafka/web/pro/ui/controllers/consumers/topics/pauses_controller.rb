@@ -67,7 +67,7 @@ module Karafka
                   redirect(
                     :previous,
                     success: format_flash(
-                      'Initiated pause for all partitions of the ? topic in consumer group ?',
+                      "Initiated pause for all partitions of the ? topic in consumer group ?",
                       topic,
                       consumer_group_id
                     )
@@ -107,7 +107,7 @@ module Karafka
                   redirect(
                     :previous,
                     success: format_flash(
-                      'Initiated resume for all partitions of the ? topic in consumer group ?',
+                      "Initiated resume for all partitions of the ? topic in consumer group ?",
                       topic,
                       consumer_group_id
                     )
@@ -151,7 +151,7 @@ module Karafka
 
                   # Check if any active process is running (needed to issue commands)
                   @any_process_running = Models::Processes.active(current_state).any? do |process|
-                    process.status == 'running'
+                    process.status == "running"
                   end
                 end
               end

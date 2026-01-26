@@ -16,7 +16,7 @@ module Karafka
           # expect the :id field.
           class RenameProcessNameToId < Base
             # Apply to all schema versions before 1.3.0
-            self.versions_until = '1.3.0'
+            self.versions_until = "1.3.0"
             self.type = :consumers_reports
 
             # @param report [Hash] consumer report to migrate

@@ -30,7 +30,7 @@ module Karafka
             # acceptance message back to Kafka. This command resumes all partitions of a given topic
             # within a specific consumer group. Matchers filter which processes handle the command.
             class Resume < Base
-              self.name = 'topics.resume'
+              self.name = "topics.resume"
 
               # Dispatches the resume request into the appropriate handler and indicates that the
               # resuming is in an acceptance state

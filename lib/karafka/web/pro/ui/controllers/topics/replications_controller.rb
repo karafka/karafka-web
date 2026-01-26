@@ -49,7 +49,7 @@ module Karafka
                 @replication_factor = first_partition&.fetch(:replica_count, 0) || 0
 
                 # Fetch min.insync.replicas from topic config
-                min_isr_config = @topic.configs.find { |c| c.name == 'min.insync.replicas' }
+                min_isr_config = @topic.configs.find { |c| c.name == "min.insync.replicas" }
                 @min_isr = min_isr_config&.value&.to_i || 1
 
                 # Determine resilience issues (checked in priority order):
@@ -58,12 +58,12 @@ module Karafka
                 # 3. Low durability: RF > 1 and minISR = 1 (data loss risk if leader fails)
                 @has_no_redundancy = @replication_factor == 1
                 @has_zero_fault_tolerance = @replication_factor > 1 &&
-                                            @replication_factor <= @min_isr
+                  @replication_factor <= @min_isr
                 @has_low_durability = @replication_factor > 1 && @min_isr == 1
 
                 @has_resilience_issue = @has_zero_fault_tolerance ||
-                                        @has_low_durability ||
-                                        @has_no_redundancy
+                  @has_low_durability ||
+                  @has_no_redundancy
 
                 render
               end

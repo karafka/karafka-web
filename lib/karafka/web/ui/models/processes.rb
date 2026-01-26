@@ -48,9 +48,9 @@ module Karafka
               return [] if processes.empty?
 
               offsets = processes
-                        .values
-                        .map { |process| process[:offset] }
-                        .sort
+                .values
+                .map { |process| process[:offset] }
+                .sort
 
               Lib::Admin.read_topic(
                 ::Karafka::Web.config.topics.consumers.reports.name,

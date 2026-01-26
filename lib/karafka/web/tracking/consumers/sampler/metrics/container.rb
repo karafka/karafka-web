@@ -11,16 +11,16 @@ module Karafka
             # Supports both cgroups v1 and v2
             class Container < Os
               # Maximum value that represents "no limit" in cgroup v2
-              CGROUP_V2_MAX = 'max'
+              CGROUP_V2_MAX = "max"
 
               # Paths for cgroup detection and reading
-              CGROUP_V2_CONTROLLERS = '/sys/fs/cgroup/cgroup.controllers'
+              CGROUP_V2_CONTROLLERS = "/sys/fs/cgroup/cgroup.controllers"
 
               # Memory paths
               # Path to cgroup v1 memory limit file
-              CGROUP_V1_MEMORY_LIMIT = '/sys/fs/cgroup/memory/memory.limit_in_bytes'
+              CGROUP_V1_MEMORY_LIMIT = "/sys/fs/cgroup/memory/memory.limit_in_bytes"
               # Path to cgroup v2 memory limit file
-              CGROUP_V2_MEMORY_LIMIT = '/sys/fs/cgroup/memory.max'
+              CGROUP_V2_MEMORY_LIMIT = "/sys/fs/cgroup/memory.max"
 
               private_constant(
                 :CGROUP_V2_MAX,
@@ -42,11 +42,11 @@ module Karafka
                   return @memory_limit if instance_variable_defined?(:@memory_limit)
 
                   @memory_limit = case cgroup_version
-                                  when :v2
-                                    read_cgroup_v2_memory_limit
-                                  when :v1
-                                    read_cgroup_v1_memory_limit
-                                  end
+                  when :v2
+                    read_cgroup_v2_memory_limit
+                  when :v1
+                    read_cgroup_v1_memory_limit
+                  end
                 end
 
                 private
@@ -57,10 +57,10 @@ module Karafka
                   return @cgroup_version if instance_variable_defined?(:@cgroup_version)
 
                   @cgroup_version = if File.exist?(CGROUP_V2_CONTROLLERS)
-                                      :v2
-                                    elsif File.exist?(CGROUP_V1_MEMORY_LIMIT)
-                                      :v1
-                                    end
+                    :v2
+                  elsif File.exist?(CGROUP_V1_MEMORY_LIMIT)
+                    :v1
+                  end
                 end
 
                 # Reads memory limit from cgroup v2
@@ -75,7 +75,7 @@ module Karafka
 
                   # Convert from bytes to kilobytes
                   limit.to_i / 1024
-                rescue StandardError
+                rescue
                   nil
                 end
 
@@ -92,7 +92,7 @@ module Karafka
 
                   # Convert from bytes to kilobytes
                   limit / 1024
-                rescue StandardError
+                rescue
                   nil
                 end
               end

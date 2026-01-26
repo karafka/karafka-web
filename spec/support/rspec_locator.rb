@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'karafka/core/helpers/rspec_locator'
+require "karafka/core/helpers/rspec_locator"
 
 # We need a slightly special locator because of Pro
 class RSpecLocator < Karafka::Core::Helpers::RSpecLocator
@@ -17,7 +17,7 @@ class RSpecLocator < Karafka::Core::Helpers::RSpecLocator
     rspec.define_singleton_method :describe_current do |&block|
       full_name = this.inherited.to_s
 
-      if full_name.include?('::Controllers') && full_name.end_with?('Controller')
+      if full_name.include?("::Controllers") && full_name.end_with?("Controller")
         describe(this.inherited, type: :controller, &block)
       else
         describe(this.inherited, type: :regular, &block)

@@ -7,7 +7,7 @@ module Karafka
         # Manages the ux related routes
         class Ux < Base
           route do |r|
-            r.get 'ux' do
+            r.get "ux" do
               controller = build(Controllers::UxController)
               controller.show
             end

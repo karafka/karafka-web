@@ -58,7 +58,7 @@ module Karafka
                 def build_matchable_payload(message)
                   raw_payload = message.raw_payload
 
-                  return raw_payload unless message.raw_headers.key?('zlib')
+                  return raw_payload unless message.raw_headers.key?("zlib")
 
                   Zlib::Inflate.inflate(raw_payload)
                 rescue Zlib::Error

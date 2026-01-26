@@ -23,22 +23,22 @@
 RSpec.describe_current do
   subject(:app) { Karafka::Web::Pro::Ui::App }
 
-  describe 'scheduled_messages/ path redirect' do
-    context 'when visiting the scheduled_messages/ path without type indicator' do
-      before { get 'scheduled_messages' }
+  describe "scheduled_messages/ path redirect" do
+    context "when visiting the scheduled_messages/ path without type indicator" do
+      before { get "scheduled_messages" }
 
-      it 'expect to redirect to running schedules page' do
+      it "expect to redirect to running schedules page" do
         expect(response.status).to eq(302)
-        expect(response.headers['location']).to include('scheduled_messages/schedules')
+        expect(response.headers["location"]).to include("scheduled_messages/schedules")
       end
     end
   end
 
-  describe '#index' do
-    let(:no_groups) { 'We are unable to display data related to scheduled messages' }
+  describe "#index" do
+    let(:no_groups) { "We are unable to display data related to scheduled messages" }
 
-    context 'when there are no schedules in routes nor any topics' do
-      before { get 'scheduled_messages/schedules' }
+    context "when there are no schedules in routes nor any topics" do
+      before { get "scheduled_messages/schedules" }
 
       it do
         expect(response).to be_ok
@@ -49,13 +49,13 @@ RSpec.describe_current do
       end
     end
 
-    context 'when there are schedules in routes but not created' do
+    context "when there are schedules in routes but not created" do
       before do
         draw_routes do
-          scheduled_messages('not_existing')
+          scheduled_messages("not_existing")
         end
 
-        get 'scheduled_messages/schedules'
+        get "scheduled_messages/schedules"
       end
 
       it do
@@ -67,7 +67,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when there is one schedule and routes exist' do
+    context "when there is one schedule and routes exist" do
       let(:messages_topic) { create_topic }
       let(:states_topic) { create_topic(topic_name: "#{messages_topic}_states") }
 
@@ -79,7 +79,7 @@ RSpec.describe_current do
           scheduled_messages(messages_topic_ref)
         end
 
-        get 'scheduled_messages/schedules'
+        get "scheduled_messages/schedules"
       end
 
       it do
@@ -92,7 +92,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when there are many schedules and routes exist' do
+    context "when there are many schedules and routes exist" do
       let(:messages_topic1) { create_topic }
       let(:states_topic1) { create_topic(topic_name: "#{messages_topic1}_states") }
       let(:messages_topic2) { create_topic }
@@ -109,7 +109,7 @@ RSpec.describe_current do
           scheduled_messages(messages_topic_ref2)
         end
 
-        get 'scheduled_messages/schedules'
+        get "scheduled_messages/schedules"
       end
 
       it do
@@ -124,10 +124,10 @@ RSpec.describe_current do
     end
   end
 
-  describe '#show' do
+  describe "#show" do
     let(:messages_topic) { create_topic }
     let(:states_topic) { create_topic(topic_name: "#{messages_topic}_states") }
-    let(:no_states) { 'No state information for this partition is available.' }
+    let(:no_states) { "No state information for this partition is available." }
 
     before do
       states_topic
@@ -138,7 +138,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when there are no states for any of the partitions' do
+    context "when there are no states for any of the partitions" do
       before { get "scheduled_messages/schedules/#{messages_topic}" }
 
       it do
@@ -151,9 +151,9 @@ RSpec.describe_current do
       end
     end
 
-    context 'when there are state reports for partitions' do
+    context "when there are state reports for partitions" do
       before do
-        state = Fixtures.scheduled_messages_states_msg('current')
+        state = Fixtures.scheduled_messages_states_msg("current")
         produce(states_topic, state)
 
         get "scheduled_messages/schedules/#{messages_topic}"
@@ -163,7 +163,7 @@ RSpec.describe_current do
         expect(response).to be_ok
         expect(body).to include(messages_topic)
         expect(body).to include(breadcrumbs)
-        expect(body).to include('2024-09-02')
+        expect(body).to include("2024-09-02")
         expect(body).not_to include(no_states)
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)

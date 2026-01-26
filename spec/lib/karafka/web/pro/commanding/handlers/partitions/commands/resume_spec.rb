@@ -35,7 +35,7 @@ RSpec.describe_current do
   let(:coordinators) { instance_double(Karafka::Processing::CoordinatorsBuffer) }
   let(:coordinator) { instance_double(Karafka::Processing::Coordinator) }
   let(:pause_tracker) { instance_double(Karafka::TimeTrackers::Pause) }
-  let(:topic) { 'topic_name' }
+  let(:topic) { "topic_name" }
   let(:partition_id) { 1 }
   let(:should_reset_attempts) { false }
 
@@ -55,28 +55,28 @@ RSpec.describe_current do
     allow(command).to receive_messages(topic: topic, partition_id: partition_id, result: nil)
   end
 
-  describe '#call' do
-    context 'when reset_attempts is false' do
+  describe "#call" do
+    context "when reset_attempts is false" do
       let(:should_reset_attempts) { false }
 
-      it 'expires the pause without resetting attempts' do
+      it "expires the pause without resetting attempts" do
         command.call
 
         expect(pause_tracker).to have_received(:expire)
         expect(pause_tracker).not_to have_received(:reset)
-        expect(command).to have_received(:result).with('applied')
+        expect(command).to have_received(:result).with("applied")
       end
     end
 
-    context 'when reset_attempts is true' do
+    context "when reset_attempts is true" do
       let(:should_reset_attempts) { true }
 
-      it 'expires the pause and resets attempts' do
+      it "expires the pause and resets attempts" do
         command.call
 
         expect(pause_tracker).to have_received(:expire)
         expect(pause_tracker).to have_received(:reset)
-        expect(command).to have_received(:result).with('applied')
+        expect(command).to have_received(:result).with("applied")
       end
     end
   end

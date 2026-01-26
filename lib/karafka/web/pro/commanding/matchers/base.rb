@@ -73,7 +73,7 @@ module Karafka
             #
             # @return [Boolean] true if matches
             def matches?
-              raise NotImplementedError, 'Implement in a subclass'
+              raise NotImplementedError, "Implement in a subclass"
             end
 
             private

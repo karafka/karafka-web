@@ -39,14 +39,14 @@ module Karafka
               # requested offset is within the range and if so, it means it has been cleaned or
               # is a system entry. In such cases we do display user an info message.
               return nil if watermark_offsets &&
-                            offset >= watermark_offsets.low &&
-                            offset < watermark_offsets.high
+                offset >= watermark_offsets.low &&
+                offset < watermark_offsets.high
 
               # If beyond the watermark offsets, we raise 404 as user should not reach such
               # non-existent messages as we cannot reason about them
               raise(
                 ::Karafka::Web::Errors::Ui::NotFoundError,
-                [topic_id, partition_id, offset].join(', ')
+                [topic_id, partition_id, offset].join(", ")
               )
             end
 
@@ -111,7 +111,7 @@ module Karafka
                   # We do not reset the offset here because we are not interested in seeking from
                   # any offset. We are interested in the indication, that there is no offset of a
                   # given value so we can try with a more recent one
-                  'auto.offset.reset': 'error'
+                  "auto.offset.reset": "error"
                 )
 
                 next unless messages

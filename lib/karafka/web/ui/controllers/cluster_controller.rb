@@ -63,12 +63,12 @@ module Karafka
           #   order
           def displayable_topics(cluster_info)
             all = cluster_info
-                  .topics
-                  .sort_by { |topic| topic[:topic_name] }
+              .topics
+              .sort_by { |topic| topic[:topic_name] }
 
             return all if ::Karafka::Web.config.ui.visibility.internal_topics
 
-            all.reject { |topic| topic[:topic_name].start_with?('__') }
+            all.reject { |topic| topic[:topic_name].start_with?("__") }
           end
         end
       end

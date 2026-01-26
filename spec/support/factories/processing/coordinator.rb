@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :processing_coordinator, class: 'Karafka::Processing::Coordinator' do
+  factory :processing_coordinator, class: "Karafka::Processing::Coordinator" do
     skip_create
 
     topic { build(:routing_topic) }

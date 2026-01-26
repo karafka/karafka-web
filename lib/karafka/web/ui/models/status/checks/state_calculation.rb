@@ -22,9 +22,9 @@ module Karafka
               # @return [Status::Step] success if subscribed, failure otherwise
               def call
                 context.subscriptions ||= Models::Health
-                                          .current(context.current_state)
-                                          .values.map { |consumer_group| consumer_group[:topics] }
-                                          .flat_map(&:keys)
+                  .current(context.current_state)
+                  .values.map { |consumer_group| consumer_group[:topics] }
+                  .flat_map(&:keys)
 
                 subscribed = context.subscriptions.include?(context.topics_consumers_reports)
 

@@ -28,7 +28,7 @@ RSpec.describe_current do
 
   let(:request) do
     Karafka::Web::Pro::Commanding::Request.new(
-      name: 'topics.pause',
+      name: "topics.pause",
       topic: topic_name,
       consumer_group_id: consumer_group_id,
       duration: duration,
@@ -47,8 +47,8 @@ RSpec.describe_current do
   let(:partition0) { instance_double(Rdkafka::Consumer::Partition, partition: 0) }
   let(:partition1) { instance_double(Rdkafka::Consumer::Partition, partition: 1) }
 
-  let(:topic_name) { 'test_topic' }
-  let(:consumer_group_id) { 'test_consumer_group' }
+  let(:topic_name) { "test_topic" }
+  let(:consumer_group_id) { "test_consumer_group" }
   let(:duration) { 60_000 }
   let(:prevent_override) { false }
 
@@ -99,12 +99,12 @@ RSpec.describe_current do
 
     allow(Karafka::Web.config.tracking.consumers.sampler)
       .to receive(:process_id)
-      .and_return('test-process')
+      .and_return("test-process")
   end
 
-  describe '#call' do
-    context 'when consumer group matches' do
-      it 'pauses all partitions of the topic' do
+  describe "#call" do
+    context "when consumer group matches" do
+      it "pauses all partitions of the topic" do
         command.call
 
         expect(pause_tracker0).to have_received(:pause).with(duration)
@@ -113,25 +113,25 @@ RSpec.describe_current do
         expect(client).to have_received(:pause).with(topic_name, 1, nil, duration)
       end
 
-      it 'reports applied status with affected partitions' do
+      it "reports applied status with affected partitions" do
         command.call
 
         expect(Karafka::Web::Pro::Commanding::Dispatcher)
           .to have_received(:result) do |name, pid, payload|
-            expect(name).to eq('topics.pause')
-            expect(pid).to eq('test-process')
-            expect(payload[:status]).to eq('applied')
+            expect(name).to eq("topics.pause")
+            expect(pid).to eq("test-process")
+            expect(payload[:status]).to eq("applied")
             expect(payload[:partitions_affected]).to contain_exactly(0, 1)
             expect(payload[:partitions_prevented]).to be_empty
           end
       end
     end
 
-    context 'when duration is zero' do
+    context "when duration is zero" do
       let(:duration) { 0 }
       let(:forever_ms) { 10 * 365 * 24 * 60 * 60 * 1000 }
 
-      it 'converts to forever duration' do
+      it "converts to forever duration" do
         command.call
 
         expect(pause_tracker0).to have_received(:pause).with(forever_ms)
@@ -141,7 +141,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when prevent_override is true and some partitions are already paused' do
+    context "when prevent_override is true and some partitions are already paused" do
       let(:prevent_override) { true }
 
       before do
@@ -149,7 +149,7 @@ RSpec.describe_current do
         allow(pause_tracker1).to receive(:paused?).and_return(false)
       end
 
-      it 'only pauses non-paused partitions' do
+      it "only pauses non-paused partitions" do
         command.call
 
         expect(pause_tracker0).not_to have_received(:pause)
@@ -158,19 +158,19 @@ RSpec.describe_current do
         expect(client).to have_received(:pause).with(topic_name, 1, nil, duration)
       end
 
-      it 'reports affected and prevented partitions' do
+      it "reports affected and prevented partitions" do
         command.call
 
         expect(Karafka::Web::Pro::Commanding::Dispatcher)
           .to have_received(:result) do |_name, _pid, payload|
-            expect(payload[:status]).to eq('applied')
+            expect(payload[:status]).to eq("applied")
             expect(payload[:partitions_affected]).to contain_exactly(1)
             expect(payload[:partitions_prevented]).to contain_exactly(0)
           end
       end
     end
 
-    context 'when prevent_override is true and all partitions are already paused' do
+    context "when prevent_override is true and all partitions are already paused" do
       let(:prevent_override) { true }
 
       before do
@@ -178,7 +178,7 @@ RSpec.describe_current do
         allow(pause_tracker1).to receive(:paused?).and_return(true)
       end
 
-      it 'does not pause any partitions' do
+      it "does not pause any partitions" do
         command.call
 
         expect(pause_tracker0).not_to have_received(:pause)
@@ -186,29 +186,29 @@ RSpec.describe_current do
         expect(client).not_to have_received(:pause)
       end
 
-      it 'reports all partitions as prevented' do
+      it "reports all partitions as prevented" do
         command.call
 
         expect(Karafka::Web::Pro::Commanding::Dispatcher)
           .to have_received(:result) do |_name, _pid, payload|
-            expect(payload[:status]).to eq('applied')
+            expect(payload[:status]).to eq("applied")
             expect(payload[:partitions_affected]).to be_empty
             expect(payload[:partitions_prevented]).to contain_exactly(0, 1)
           end
       end
     end
 
-    context 'when no partitions are owned for the topic' do
+    context "when no partitions are owned for the topic" do
       before do
         allow(topic_partition_list).to receive(:to_h).and_return({})
       end
 
-      it 'reports applied with no affected partitions' do
+      it "reports applied with no affected partitions" do
         command.call
 
         expect(Karafka::Web::Pro::Commanding::Dispatcher)
           .to have_received(:result) do |_name, _pid, payload|
-            expect(payload[:status]).to eq('applied')
+            expect(payload[:status]).to eq("applied")
             expect(payload[:partitions_affected]).to be_empty
           end
       end

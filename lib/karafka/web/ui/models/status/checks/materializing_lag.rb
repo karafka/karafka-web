@@ -36,7 +36,7 @@ module Karafka
                 max_lag = (Web.config.tracking.interval * 2) / 1_000
                 lag = Time.now.to_f - context.current_state.dispatched_at
 
-                status = lag > max_lag ? :failure : :success
+                status = (lag > max_lag) ? :failure : :success
 
                 step(status, { lag: lag, max_lag: max_lag })
               end

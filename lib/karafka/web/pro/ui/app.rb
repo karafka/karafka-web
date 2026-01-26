@@ -28,17 +28,17 @@ module Karafka
       module Ui
         # Main Roda Web App that servers all the metrics and stats
         class App < Web::Ui::Base
-          opts[:root] = Karafka::Web.gem_root.join('lib/karafka/web/pro/ui')
+          opts[:root] = Karafka::Web.gem_root.join("lib/karafka/web/pro/ui")
 
           instance_exec(&CONTEXT_DETAILS)
 
-          plugin :render, escape: true, engine: 'erb', allowed_paths: [
-            Karafka::Web.gem_root.join('lib/karafka/web/pro/ui/views'),
-            Karafka::Web.gem_root.join('lib/karafka/web/ui/views')
+          plugin :render, escape: true, engine: "erb", allowed_paths: [
+            Karafka::Web.gem_root.join("lib/karafka/web/pro/ui/views"),
+            Karafka::Web.gem_root.join("lib/karafka/web/ui/views")
           ]
 
           plugin :additional_view_directories, [
-            Karafka::Web.gem_root.join('lib/karafka/web/ui/views')
+            Karafka::Web.gem_root.join("lib/karafka/web/ui/views")
           ]
 
           before do
@@ -78,7 +78,7 @@ module Karafka
           private_constant :SUB_ROUTES
 
           route do |r|
-            r.root { r.redirect root_path('dashboard') }
+            r.root { r.redirect root_path("dashboard") }
 
             SUB_ROUTES.each { |sub_route| sub_route.bind(self, r) }
 

@@ -80,12 +80,12 @@ module Karafka
             def current_label
               first = @visible_offsets.first
               last = @visible_offsets.last
-              [first, last].compact.uniq.join(' - ').to_s
+              [first, last].compact.uniq.join(" - ").to_s
             end
 
             # @return [String] for offset based pagination we use the offset param name
             def offset_key
-              'offset'
+              "offset"
             end
           end
         end

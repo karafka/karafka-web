@@ -10,7 +10,7 @@ module Karafka
           # This is the basic of metrics as they were when they were introduced.
           class SetInitial < Base
             # Always migrate from empty up
-            self.versions_until = '0.0.1'
+            self.versions_until = "0.0.1"
             self.type = :consumers_metrics
 
             # @param state [Hash] initial empty state

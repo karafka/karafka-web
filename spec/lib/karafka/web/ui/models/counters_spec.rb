@@ -8,8 +8,8 @@ RSpec.describe_current do
 
   before { Karafka::Web.config.topics.errors.name = errors_topic }
 
-  context 'when errors topic does not exist' do
-    it 'expect to have zero errors and loaded other stats' do
+  context "when errors topic does not exist" do
+    it "expect to have zero errors and loaded other stats" do
       expect(stats[:errors]).to eq(0)
       expect(stats.errors).to eq(0)
       expect(stats.batches).to eq(16_351)
@@ -18,13 +18,13 @@ RSpec.describe_current do
     end
   end
 
-  describe '#pending' do
+  describe "#pending" do
     before do
       state[:stats][:enqueued] = 5
       state[:stats][:waiting] = 7
     end
 
-    it 'expect to sum enqueued and waiting' do
+    it "expect to sum enqueued and waiting" do
       expect(stats.pending).to eq(12)
     end
   end

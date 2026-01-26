@@ -7,7 +7,7 @@ module Karafka
         module ConsumersMetrics
           # Introduce waiting in consumers metrics to complement busy and enqueued for jobs metrics
           class IntroduceWaiting < Base
-            self.versions_until = '1.1.1'
+            self.versions_until = "1.1.1"
             self.type = :consumers_metrics
 
             # @param state [Hash]

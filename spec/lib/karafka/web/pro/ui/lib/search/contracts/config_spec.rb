@@ -37,25 +37,25 @@ RSpec.describe_current do
     }
   end
 
-  context 'when all values are valid' do
-    it 'is valid' do
+  context "when all values are valid" do
+    it "is valid" do
       expect(contract.call(params)).to be_success
     end
   end
 
-  context 'when matchers is not an array' do
-    before { params[:ui][:search][:matchers] = 'not_an_array' }
+  context "when matchers is not an array" do
+    before { params[:ui][:search][:matchers] = "not_an_array" }
 
     it { expect(contract.call(params)).not_to be_success }
   end
 
-  context 'when matchers is an empty array' do
+  context "when matchers is an empty array" do
     before { params[:ui][:search][:matchers] = [] }
 
     it { expect(contract.call(params)).not_to be_success }
   end
 
-  context 'when a matcher does not respond to name' do
+  context "when a matcher does not respond to name" do
     let(:invalid_matcher) do
       Class.new do
         def call
@@ -69,11 +69,11 @@ RSpec.describe_current do
     it { expect(contract.call(params)).not_to be_success }
   end
 
-  context 'when a matcher does not respond to call' do
+  context "when a matcher does not respond to call" do
     let(:invalid_matcher) do
       Class.new do
         def self.name
-          'ExampleMatcher'
+          "ExampleMatcher"
         end
       end
     end
@@ -83,11 +83,11 @@ RSpec.describe_current do
     it { expect(contract.call(params)).not_to be_success }
   end
 
-  context 'when matchers have duplicate names' do
+  context "when matchers have duplicate names" do
     let(:duplicate_matcher) do
       Class.new do
         def self.name
-          'ExampleMatcher'
+          "ExampleMatcher"
         end
 
         def self.call
@@ -101,37 +101,37 @@ RSpec.describe_current do
     it { expect(contract.call(params)).not_to be_success }
   end
 
-  context 'when limits is not an array' do
-    before { params[:ui][:search][:limits] = 'not_an_array' }
+  context "when limits is not an array" do
+    before { params[:ui][:search][:limits] = "not_an_array" }
 
     it { expect(contract.call(params)).not_to be_success }
   end
 
-  context 'when limits is an empty array' do
+  context "when limits is an empty array" do
     before { params[:ui][:search][:limits] = [] }
 
     it { expect(contract.call(params)).not_to be_success }
   end
 
-  context 'when limits contains negative numbers' do
+  context "when limits contains negative numbers" do
     before { params[:ui][:search][:limits] = [-100] }
 
     it { expect(contract.call(params)).not_to be_success }
   end
 
-  context 'when limits contains non-numbers' do
-    before { params[:ui][:search][:limits] = ['na'] }
+  context "when limits contains non-numbers" do
+    before { params[:ui][:search][:limits] = ["na"] }
 
     it { expect(contract.call(params)).not_to be_success }
   end
 
-  context 'when timeout is not an integer' do
+  context "when timeout is not an integer" do
     before { params[:ui][:search][:timeout] = [] }
 
     it { expect(contract.call(params)).not_to be_success }
   end
 
-  context 'when timeout is not positive' do
+  context "when timeout is not positive" do
     before { params[:ui][:search][:timeout] = 0 }
 
     it { expect(contract.call(params)).not_to be_success }

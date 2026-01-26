@@ -3,9 +3,9 @@
 RSpec.describe_current do
   let(:consumers_state) do
     {
-      schema_version: '1.4.0',
+      schema_version: "1.4.0",
       dispatched_at: Time.now.to_f,
-      schema_state: 'compatible',
+      schema_state: "compatible",
       stats: { messages: 100 },
       processes: {}
     }
@@ -13,7 +13,7 @@ RSpec.describe_current do
 
   let(:consumers_metrics) do
     {
-      schema_version: '1.3.0',
+      schema_version: "1.3.0",
       dispatched_at: Time.now.to_f,
       aggregated: { days: [], hours: [], minutes: [], seconds: [] },
       consumer_groups: { days: [], hours: [], minutes: [], seconds: [] }
@@ -26,8 +26,8 @@ RSpec.describe_current do
     allow(Karafka::Web).to receive(:producer).and_return(producer)
   end
 
-  describe '.publish' do
-    it 'publishes data asynchronously' do
+  describe ".publish" do
+    it "publishes data asynchronously" do
       allow(producer).to receive(:produce_many_async)
 
       described_class.publish(consumers_state, consumers_metrics)
@@ -37,7 +37,7 @@ RSpec.describe_current do
       )
     end
 
-    it 'compresses the state payload with zlib' do
+    it "compresses the state payload with zlib" do
       expected_messages = []
 
       allow(producer).to receive(:produce_many_async) do |messages|
@@ -47,13 +47,13 @@ RSpec.describe_current do
       described_class.publish(consumers_state, consumers_metrics)
 
       state_message = expected_messages[0]
-      expect(state_message[:headers]).to eq({ 'zlib' => 'true' })
+      expect(state_message[:headers]).to eq({ "zlib" => "true" })
 
       decompressed = Zlib::Inflate.inflate(state_message[:payload])
       expect(JSON.parse(decompressed, symbolize_names: true)).to eq(consumers_state)
     end
 
-    it 'compresses the metrics payload with zlib' do
+    it "compresses the metrics payload with zlib" do
       expected_messages = []
 
       allow(producer).to receive(:produce_many_async) do |messages|
@@ -63,13 +63,13 @@ RSpec.describe_current do
       described_class.publish(consumers_state, consumers_metrics)
 
       metrics_message = expected_messages[1]
-      expect(metrics_message[:headers]).to eq({ 'zlib' => 'true' })
+      expect(metrics_message[:headers]).to eq({ "zlib" => "true" })
 
       decompressed = Zlib::Inflate.inflate(metrics_message[:payload])
       expect(JSON.parse(decompressed, symbolize_names: true)).to eq(consumers_metrics)
     end
 
-    it 'uses correct topics' do
+    it "uses correct topics" do
       expected_messages = []
 
       allow(producer).to receive(:produce_many_async) do |messages|
@@ -82,7 +82,7 @@ RSpec.describe_current do
       expect(expected_messages[1][:topic]).to eq(Karafka::Web.config.topics.consumers.metrics.name)
     end
 
-    it 'uses topic names as keys for compaction' do
+    it "uses topic names as keys for compaction" do
       expected_messages = []
 
       allow(producer).to receive(:produce_many_async) do |messages|
@@ -95,7 +95,7 @@ RSpec.describe_current do
       expect(expected_messages[1][:key]).to eq(Karafka::Web.config.topics.consumers.metrics.name)
     end
 
-    it 'publishes to partition 0' do
+    it "publishes to partition 0" do
       expected_messages = []
 
       allow(producer).to receive(:produce_many_async) do |messages|
@@ -109,8 +109,8 @@ RSpec.describe_current do
     end
   end
 
-  describe '.publish!' do
-    it 'publishes data synchronously' do
+  describe ".publish!" do
+    it "publishes data synchronously" do
       allow(producer).to receive(:produce_many_sync)
 
       described_class.publish!(consumers_state, consumers_metrics)
@@ -120,7 +120,7 @@ RSpec.describe_current do
       )
     end
 
-    it 'compresses the payloads with zlib' do
+    it "compresses the payloads with zlib" do
       expected_messages = []
 
       allow(producer).to receive(:produce_many_sync) do |messages|
@@ -132,11 +132,11 @@ RSpec.describe_current do
       state_message = expected_messages[0]
       metrics_message = expected_messages[1]
 
-      expect(state_message[:headers]).to eq({ 'zlib' => 'true' })
-      expect(metrics_message[:headers]).to eq({ 'zlib' => 'true' })
+      expect(state_message[:headers]).to eq({ "zlib" => "true" })
+      expect(metrics_message[:headers]).to eq({ "zlib" => "true" })
     end
 
-    it 'uses correct topics and keys' do
+    it "uses correct topics and keys" do
       expected_messages = []
 
       allow(producer).to receive(:produce_many_sync) do |messages|
@@ -152,7 +152,7 @@ RSpec.describe_current do
     end
   end
 
-  context 'when handling large state data' do
+  context "when handling large state data" do
     let(:large_processes) do
       100.times.each_with_object({}) do |i, hash|
         hash[:"process_#{i}"] = {
@@ -164,15 +164,15 @@ RSpec.describe_current do
 
     let(:consumers_state) do
       {
-        schema_version: '1.4.0',
+        schema_version: "1.4.0",
         dispatched_at: Time.now.to_f,
-        schema_state: 'compatible',
+        schema_state: "compatible",
         stats: { messages: 100_000 },
         processes: large_processes
       }
     end
 
-    it 'compresses large payloads efficiently' do
+    it "compresses large payloads efficiently" do
       expected_messages = []
 
       allow(producer).to receive(:produce_many_async) do |messages|

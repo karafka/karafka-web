@@ -5,14 +5,14 @@ RSpec.describe_current do
 
   let(:context) { Karafka::Web::Ui::Models::Status::Context.new }
 
-  describe 'DSL configuration' do
+  describe "DSL configuration" do
     it { expect(described_class.independent?).to be(false) }
     it { expect(described_class.dependency).to eq(:partitions) }
     it { expect(described_class.halted_details).to eq({}) }
   end
 
-  describe '#call' do
-    context 'when replication factor is adequate' do
+  describe "#call" do
+    context "when replication factor is adequate" do
       before do
         context.cluster_info = Struct.new(:topics).new(
           [
@@ -40,7 +40,7 @@ RSpec.describe_current do
         )
       end
 
-      it 'returns success' do
+      it "returns success" do
         result = check.call
 
         expect(result.status).to eq(:success)
@@ -48,7 +48,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when replication factor is low in production' do
+    context "when replication factor is low in production" do
       before do
         allow(Karafka.env).to receive(:production?).and_return(true)
         context.cluster_info = Struct.new(:topics).new(
@@ -77,7 +77,7 @@ RSpec.describe_current do
         )
       end
 
-      it 'returns warning' do
+      it "returns warning" do
         result = check.call
 
         expect(result.status).to eq(:warning)
@@ -85,7 +85,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when replication factor is low in non-production' do
+    context "when replication factor is low in non-production" do
       before do
         allow(Karafka.env).to receive(:production?).and_return(false)
         context.cluster_info = Struct.new(:topics).new(
@@ -114,7 +114,7 @@ RSpec.describe_current do
         )
       end
 
-      it 'returns success (non-production allows low replication)' do
+      it "returns success (non-production allows low replication)" do
         result = check.call
 
         expect(result.status).to eq(:success)

@@ -7,7 +7,7 @@ module Karafka
         # Manages the support related routes
         class Support < Base
           route do |r|
-            r.get 'support' do
+            r.get "support" do
               controller = build(Controllers::SupportController)
               controller.show
             end

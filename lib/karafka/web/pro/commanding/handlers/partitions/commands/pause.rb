@@ -38,7 +38,7 @@ module Karafka
                 def call
                   # If pause is already there and we don't want to change the way it is, we skip
                   if coordinator.pause_tracker.paused? && request[:prevent_override]
-                    result('prevented')
+                    result("prevented")
 
                     return
                   end
@@ -49,7 +49,7 @@ module Karafka
                   coordinator.pause_tracker.pause(duration)
                   client.pause(topic, partition_id, nil, duration)
 
-                  result('applied')
+                  result("applied")
                 end
               end
             end

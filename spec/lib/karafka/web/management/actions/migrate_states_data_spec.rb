@@ -10,7 +10,7 @@ RSpec.describe_current do
     allow(migrator).to receive(:call)
   end
 
-  it 'expect to run the migrator' do
+  it "expect to run the migrator" do
     migrate
     expect(migrator).to have_received(:call)
   end

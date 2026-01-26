@@ -5,13 +5,13 @@ module Karafka
     class Cli
       # Resets the Web UI
       class Reset < Base
-        desc 'Resets the Web UI by removing all the Web topics and creating them again'
+        desc "Resets the Web UI by removing all the Web topics and creating them again"
 
         option(
           :replication_factor,
-          'Replication factor for created topics',
+          "Replication factor for created topics",
           Integer,
-          ['--replication_factor [FACTOR]']
+          ["--replication_factor [FACTOR]"]
         )
 
         # Resets Karafka Web. Removes the topics, creates them again and populates the initial

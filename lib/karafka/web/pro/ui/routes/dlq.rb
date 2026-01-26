@@ -28,7 +28,7 @@ module Karafka
           # Manages the dlq related routes
           class Dlq < Base
             route do |r|
-              r.get 'dlq' do
+              r.get "dlq" do
                 controller = build(Controllers::DlqController)
                 controller.index
               end

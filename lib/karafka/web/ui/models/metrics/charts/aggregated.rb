@@ -19,9 +19,9 @@ module Karafka
               # @return [String] JSON with bytes sent and bytes received metrics
               def data_transfers
                 scale_factor = Processing::TimeSeriesTracker::TIME_RANGES
-                               .fetch(@period)
-                               .fetch(:resolution)
-                               .then { |factor| factor / 1_024.to_f }
+                  .fetch(@period)
+                  .fetch(:resolution)
+                  .then { |factor| factor / 1_024.to_f }
 
                 received = bytes_received.map do |element|
                   [element[0], element[1] * scale_factor]

@@ -8,14 +8,14 @@ RSpec.describe_current do
   let(:event) do
     Karafka::Core::Monitoring::Event.new(
       rand,
-      type: 'test_type'
+      type: "test_type"
     )
   end
 
-  describe '#on_app_running' do
+  describe "#on_app_running" do
     before { allow(scheduler).to receive(:async_call) }
 
-    it 'expect to trigger async call' do
+    it "expect to trigger async call" do
       listener.on_app_running(event)
 
       expect(scheduler).to have_received(:async_call)

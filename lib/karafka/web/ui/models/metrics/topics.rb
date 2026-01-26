@@ -61,14 +61,14 @@ module Karafka
               # Hash with all potential keys that a single sample metric can have
               # This allows us to fill gaps not only in times but also in values
               base_samples = topics_metrics
-                             .values
-                             .map(&:values)
-                             .flatten
-                             .select { |val| val.is_a?(Hash) }
-                             .flat_map(&:keys)
-                             .uniq
-                             .to_h { |key| [key, nil] }
-                             .freeze
+                .values
+                .map(&:values)
+                .flatten
+                .select { |val| val.is_a?(Hash) }
+                .flat_map(&:keys)
+                .uniq
+                .to_h { |key| [key, nil] }
+                .freeze
 
               # Normalize data in between topics reportings
               # One topic may have a sample in a time moment when a different one does not

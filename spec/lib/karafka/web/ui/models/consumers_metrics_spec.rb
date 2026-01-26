@@ -9,12 +9,12 @@ RSpec.describe_current do
 
   before { Karafka::Web.config.topics.consumers.metrics.name = metrics_topic }
 
-  context 'when no metrics' do
+  context "when no metrics" do
     it { expect(metrics.current).to be(false) }
     it { expect { metrics.current! }.to raise_error(Karafka::Web::Errors::Ui::NotFoundError) }
   end
 
-  context 'when one metric exists but karafka-web is not enabled' do
+  context "when one metric exists but karafka-web is not enabled" do
     let(:status) { Karafka::Web::Ui::Models::Status.new }
 
     before do
@@ -26,16 +26,16 @@ RSpec.describe_current do
     it { expect(metrics.current).to be(false) }
   end
 
-  context 'when one metric exists and karafka-web is enabled' do
+  context "when one metric exists and karafka-web is enabled" do
     before { produce(metrics_topic, fixture) }
 
-    it 'expect to load data correctly' do
+    it "expect to load data correctly" do
       expect(metrics.current).to be_a(described_class)
       expect(metrics.current.to_h).to eq(fixture_hash)
     end
   end
 
-  context 'when there are more metrics and karafka-web is enabled' do
+  context "when there are more metrics and karafka-web is enabled" do
     let(:fixture1) { Fixtures.consumers_metrics_file }
     let(:fixture2) { Fixtures.consumers_metrics_file }
     let(:fixture_hash1) { Fixtures.consumers_metrics_json }
@@ -48,7 +48,7 @@ RSpec.describe_current do
       produce(metrics_topic, fixture_hash2.to_json)
     end
 
-    it 'expect to load data correctly' do
+    it "expect to load data correctly" do
       expect(metrics.current).to be_a(described_class)
       expect(metrics.current.dispatched_at).to eq(1)
       expect(metrics.current!.dispatched_at).to eq(1)

@@ -7,7 +7,7 @@ module Karafka
         # Manages the dashboard related routes
         class Dashboard < Base
           route do |r|
-            r.get 'dashboard' do
+            r.get "dashboard" do
               @breadcrumbs = false
               controller = build(Controllers::DashboardController)
               controller.index

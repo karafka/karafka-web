@@ -38,18 +38,18 @@ module Karafka
       # Karafka Web UI uses the Admin API for many operations, but there are few
       # (like states materialization) where a distinct consumer group is needed. In cases like that
       # this group id will be used
-      setting :group_id, default: 'karafka_web'
+      setting :group_id, default: "karafka_web"
 
       # Topics naming - used for processing and UI
       setting :topics do
         # All the errors encountered will be dispatched to this topic for inspection
         setting :errors do
-          setting :name, default: 'karafka_errors'
+          setting :name, default: "karafka_errors"
 
           # Remove really old errors (older than 3 months just to preserve space)
           setting :config, default: {
-            'cleanup.policy': 'delete',
-            'retention.ms': 3 * 31 * 24 * 60 * 60 * 1_000 # 3 months
+            "cleanup.policy": "delete",
+            "retention.ms": 3 * 31 * 24 * 60 * 60 * 1_000 # 3 months
           }
         end
 
@@ -58,7 +58,7 @@ module Karafka
           # information sent from each consumer process.
           setting :reports do
             # Name of the topic
-            setting :name, default: 'karafka_consumers_reports'
+            setting :name, default: "karafka_consumers_reports"
 
             # We do not need to to store this data for longer than 1 day as this data is only
             # used to materialize the end states
@@ -69,36 +69,36 @@ module Karafka
             # In case its not consumed because no processes are running, it also usually means
             # there's no data to consume because no karafka servers report
             setting :config, default: {
-              'cleanup.policy': 'delete',
-              'retention.ms': 24 * 60 * 60 * 1_000 # 1 day
+              "cleanup.policy": "delete",
+              "retention.ms": 24 * 60 * 60 * 1_000 # 1 day
             }
           end
 
           # Topic for storing states aggregated info
           setting :states do
-            setting :name, default: 'karafka_consumers_states'
+            setting :name, default: "karafka_consumers_states"
 
             # We care only about the most recent state, previous are irrelevant. So we can
             # easily compact after one minute. We do not use this beyond the most recent
             # collective state, hence it all can easily go away. We also limit the segment
             # size to at most 100MB not to use more space ever.
             setting :config, default: {
-              'cleanup.policy': 'compact',
-              'retention.ms': 60 * 60 * 1_000,
-              'segment.ms': 24 * 60 * 60 * 1_000, # 1 day
-              'segment.bytes': 104_857_600 # 100MB
+              "cleanup.policy": "compact",
+              "retention.ms": 60 * 60 * 1_000,
+              "segment.ms": 24 * 60 * 60 * 1_000, # 1 day
+              "segment.bytes": 104_857_600 # 100MB
             }
           end
 
           # Topic for storing consumers historical metrics info
           setting :metrics do
-            setting :name, default: 'karafka_consumers_metrics'
+            setting :name, default: "karafka_consumers_metrics"
 
             setting :config, default: {
-              'cleanup.policy': 'compact',
-              'retention.ms': 24 * 60 * 60 * 1_000, # 1 day
-              'segment.ms': 24 * 60 * 60 * 1_000, # 1 day
-              'segment.bytes': 104_857_600 # 100MB
+              "cleanup.policy": "compact",
+              "retention.ms": 24 * 60 * 60 * 1_000, # 1 day
+              "segment.ms": 24 * 60 * 60 * 1_000, # 1 day
+              "segment.bytes": 104_857_600 # 100MB
             }
           end
 
@@ -107,13 +107,13 @@ module Karafka
           # transition from one to another is smooth. Otherwise upgrade would require changes
           # to topics (migration) which may be more complex
           setting :commands do
-            setting :name, default: 'karafka_consumers_commands'
+            setting :name, default: "karafka_consumers_commands"
 
             setting :config, default: {
-              'cleanup.policy': 'delete',
-              'retention.ms': 7 * 24 * 60 * 60 * 1_000, # 7 days
-              'segment.ms': 24 * 60 * 60 * 1_000, # 1 day
-              'segment.bytes': 104_857_600 # 100MB
+              "cleanup.policy": "delete",
+              "retention.ms": 7 * 24 * 60 * 60 * 1_000, # 7 days
+              "segment.ms": 24 * 60 * 60 * 1_000, # 1 day
+              "segment.bytes": 104_857_600 # 100MB
             }
           end
         end
@@ -207,7 +207,7 @@ module Karafka
         setting :kafka, default: {
           # We do not use at the moment the `#eofed` flag for anything, thus there is no point in
           # having it set to true if user users it.
-          'enable.partition.eof': false
+          "enable.partition.eof": false
         }.freeze
       end
 
@@ -216,13 +216,13 @@ module Karafka
         # Should be set per ENV.
         setting :sessions do
           # Cookie key name
-          setting :key, default: '_karafka_session'
+          setting :key, default: "_karafka_session"
 
           # Rack middleware session env key. We use independent key from "rack.session" here to
           # prevent our data from leaking to the main app (when mounted) and the other way around.
           # This also prevents us from overloading the session object with extra data that could
           # cause it to go beyond a cookie limit.
-          setting :env_key, default: 'karafka.session'
+          setting :env_key, default: "karafka.session"
 
           # Secret for the session cookie
           setting :secret, default: SecureRandom.hex(32)
@@ -307,7 +307,7 @@ module Karafka
           # that might have been committed via transactional producer, we would wait for 1 second
           # to get needed data. If you are experiencing timeouts or other issues with the Web IU
           # interface, you can increase this.
-          'fetch.wait.max.ms': 100
+          "fetch.wait.max.ms": 100
         }
       end
     end

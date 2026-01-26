@@ -23,9 +23,9 @@
 RSpec.describe_current do
   subject(:app) { Karafka::Web::Pro::Ui::App }
 
-  describe '#show' do
-    context 'when all that is needed is there' do
-      before { get 'status' }
+  describe "#show" do
+    context "when all that is needed is there" do
+      before { get "status" }
 
       it do
         expect(response).to be_ok
@@ -34,14 +34,14 @@ RSpec.describe_current do
       end
     end
 
-    context 'when topics are missing' do
+    context "when topics are missing" do
       before do
         topics_config.consumers.states.name = generate_topic_name
         topics_config.consumers.metrics.name = generate_topic_name
         topics_config.consumers.reports.name = generate_topic_name
         topics_config.errors.name = generate_topic_name
 
-        get 'status'
+        get "status"
       end
 
       it do
@@ -51,7 +51,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when topics exist with data' do
+    context "when topics exist with data" do
       let(:states_topic) { create_topic }
       let(:metrics_topic) { create_topic }
       let(:reports_topic) { create_topic }
@@ -67,12 +67,12 @@ RSpec.describe_current do
         produce(metrics_topic, Fixtures.consumers_metrics_file)
         Karafka::Web::Management::Actions::MigrateStatesData.new.call
 
-        get 'status'
+        get "status"
       end
 
-      it 'displays successful status with topic information' do
+      it "displays successful status with topic information" do
         expect(response).to be_ok
-        expect(body).to include('Status')
+        expect(body).to include("Status")
         expect(body).not_to include(support_message)
         expect(body).to include(breadcrumbs)
         expect(body).to include(states_topic)
@@ -81,31 +81,31 @@ RSpec.describe_current do
         expect(body).to include(errors_topic)
       end
 
-      it 'shows connection details' do
-        expect(body).to include('Components info')
-        expect(body).to include('rdkafka')
-        expect(body).to include('karafka')
+      it "shows connection details" do
+        expect(body).to include("Components info")
+        expect(body).to include("rdkafka")
+        expect(body).to include("karafka")
       end
 
-      it 'shows version information' do
+      it "shows version information" do
         expect(body).to include(Karafka::VERSION)
         expect(body).to include(Karafka::Web::VERSION)
       end
     end
 
-    context 'when commands topic is missing' do
+    context "when commands topic is missing" do
       before do
         topics_config.consumers.commands.name = generate_topic_name
 
-        get 'status'
+        get "status"
       end
 
       it do
         expect(response).to be_ok
-        expect(body).to include('Commands topic presence')
-        expect(body).to include('does not exist')
-        expect(body).to include('required for Pro commanding features')
-        expect(body).to include('alert-box-warning')
+        expect(body).to include("Commands topic presence")
+        expect(body).to include("does not exist")
+        expect(body).to include("required for Pro commanding features")
+        expect(body).to include("alert-box-warning")
       end
     end
   end

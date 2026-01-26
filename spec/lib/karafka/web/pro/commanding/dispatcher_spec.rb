@@ -27,11 +27,11 @@ RSpec.describe_current do
 
   before { allow(Karafka::Web.producer).to receive(:produce_async) }
 
-  describe '.request' do
-    let(:command_name) { 'quiet' }
+  describe ".request" do
+    let(:command_name) { "quiet" }
 
-    context 'without matchers' do
-      it 'dispatches a request message without key (filtering via matchers)' do
+    context "without matchers" do
+      it "dispatches a request message without key (filtering via matchers)" do
         described_class.request(command_name)
 
         expect(Karafka::Web.producer).to have_received(:produce_async).with(
@@ -43,10 +43,10 @@ RSpec.describe_current do
       end
     end
 
-    context 'with process_id in matchers' do
-      let(:process_id) { 'process123' }
+    context "with process_id in matchers" do
+      let(:process_id) { "process123" }
 
-      it 'dispatches request with matchers for filtering' do
+      it "dispatches request with matchers for filtering" do
         described_class.request(command_name, {}, matchers: { process_id: process_id })
 
         expect(Karafka::Web.producer).to have_received(:produce_async).with(
@@ -59,12 +59,12 @@ RSpec.describe_current do
     end
   end
 
-  describe '.result' do
-    let(:process_id) { 'process123' }
-    let(:command_name) { 'pause' }
+  describe ".result" do
+    let(:process_id) { "process123" }
+    let(:command_name) { "pause" }
     let(:result) { { success: true } }
 
-    it 'dispatches a result message with the correct structure' do
+    it "dispatches a result message with the correct structure" do
       described_class.result(command_name, process_id, result)
 
       expect(Karafka::Web.producer).to have_received(:produce_async).with(

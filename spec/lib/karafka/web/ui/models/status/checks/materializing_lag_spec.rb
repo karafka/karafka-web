@@ -6,11 +6,11 @@ RSpec.describe_current do
   let(:context) { Karafka::Web::Ui::Models::Status::Context.new }
   let(:max_lag) { (Karafka::Web.config.tracking.interval * 2) / 1_000 }
 
-  describe 'DSL configuration' do
+  describe "DSL configuration" do
     it { expect(described_class.independent?).to be(false) }
     it { expect(described_class.dependency).to eq(:live_reporting) }
 
-    it 'returns halted details with max_lag' do
+    it "returns halted details with max_lag" do
       details = described_class.halted_details
 
       expect(details[:lag]).to eq(0)
@@ -18,8 +18,8 @@ RSpec.describe_current do
     end
   end
 
-  describe '#call' do
-    context 'when lag is within acceptable range' do
+  describe "#call" do
+    context "when lag is within acceptable range" do
       let(:current_state) do
         Struct.new(:dispatched_at).new(Time.now.to_f - 1)
       end
@@ -28,7 +28,7 @@ RSpec.describe_current do
         context.current_state = current_state
       end
 
-      it 'returns success' do
+      it "returns success" do
         result = check.call
 
         expect(result.status).to eq(:success)
@@ -37,7 +37,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when lag exceeds acceptable range' do
+    context "when lag exceeds acceptable range" do
       let(:current_state) do
         Struct.new(:dispatched_at).new(Time.now.to_f - (max_lag + 5))
       end
@@ -46,7 +46,7 @@ RSpec.describe_current do
         context.current_state = current_state
       end
 
-      it 'returns failure' do
+      it "returns failure" do
         result = check.call
 
         expect(result.status).to eq(:failure)

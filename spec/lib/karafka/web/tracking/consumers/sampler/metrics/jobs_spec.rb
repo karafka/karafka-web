@@ -7,18 +7,18 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
   let(:started_at) { Time.now.to_f }
   let(:workers) { 5 }
 
-  describe '#utilization' do
-    context 'when there are no processed totals' do
+  describe "#utilization" do
+    context "when there are no processed totals" do
       before do
         allow(jobs_metrics).to receive(:float_now).and_return(started_at + 120)
       end
 
-      it 'returns 0' do
+      it "returns 0" do
         expect(jobs_metrics.utilization).to eq(0)
       end
     end
 
-    context 'when process has been running for less than 60 seconds' do
+    context "when process has been running for less than 60 seconds" do
       before do
         windows.m1[:processed_total_time] << 15_000
         windows.m1[:processed_total_time] << 20_000
@@ -26,7 +26,7 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
         allow(jobs_metrics).to receive(:float_now).and_return(started_at + 30)
       end
 
-      it 'uses actual runtime as timefactor' do
+      it "uses actual runtime as timefactor" do
         # Total time: 60,000ms = 60s
         # Workers: 5
         # Timefactor: 30s (actual runtime)
@@ -35,14 +35,14 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
       end
     end
 
-    context 'when calculating utilization with processed time' do
+    context "when calculating utilization with processed time" do
       before do
         windows.m1[:processed_total_time] << 15_000
         windows.m1[:processed_total_time] << 20_000
         allow(jobs_metrics).to receive(:float_now).and_return(started_at + 60)
       end
 
-      it 'calculates utilization percentage based on worker time' do
+      it "calculates utilization percentage based on worker time" do
         # Utilization should be between 0 and 100
         utilization = jobs_metrics.utilization
         expect(utilization).to be >= 0
@@ -50,7 +50,7 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
         expect(utilization).to be > 0 # We added work, so it should not be 0
       end
 
-      it 'rounds to 2 decimal places' do
+      it "rounds to 2 decimal places" do
         utilization = jobs_metrics.utilization
         # Check that it's rounded to at most 2 decimal places
         expect((utilization * 100).round).to eq((utilization * 100).to_i)
@@ -58,8 +58,8 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
     end
   end
 
-  describe '#jobs_queue_statistics' do
-    context 'when jobs queue is available with all statistics' do
+  describe "#jobs_queue_statistics" do
+    context "when jobs queue is available with all statistics" do
       let(:queue) { instance_double(Karafka::Processing::JobsQueue) }
 
       before do
@@ -72,7 +72,7 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
         )
       end
 
-      it 'returns only relevant statistics' do
+      it "returns only relevant statistics" do
         expect(jobs_metrics.jobs_queue_statistics).to eq(
           busy: 3,
           enqueued: 5,
@@ -81,7 +81,7 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
       end
     end
 
-    context 'when jobs queue is available without waiting stat' do
+    context "when jobs queue is available without waiting stat" do
       let(:queue) { instance_double(Karafka::Processing::JobsQueue) }
 
       before do
@@ -92,7 +92,7 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
         )
       end
 
-      it 'defaults waiting to 0' do
+      it "defaults waiting to 0" do
         expect(jobs_metrics.jobs_queue_statistics).to eq(
           busy: 3,
           enqueued: 5,
@@ -101,12 +101,12 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
       end
     end
 
-    context 'when jobs queue is not available' do
+    context "when jobs queue is not available" do
       before do
         allow(Karafka::Server).to receive(:jobs_queue).and_return(nil)
       end
 
-      it 'returns default statistics' do
+      it "returns default statistics" do
         expect(jobs_metrics.jobs_queue_statistics).to eq(
           busy: 0,
           enqueued: 0,
@@ -115,7 +115,7 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
       end
     end
 
-    context 'when jobs queue is available but statistics is nil' do
+    context "when jobs queue is available but statistics is nil" do
       let(:queue) { instance_double(Karafka::Processing::JobsQueue) }
 
       before do
@@ -123,7 +123,7 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
         allow(queue).to receive(:statistics).and_return(nil)
       end
 
-      it 'returns default statistics' do
+      it "returns default statistics" do
         expect(jobs_metrics.jobs_queue_statistics).to eq(
           busy: 0,
           enqueued: 0,

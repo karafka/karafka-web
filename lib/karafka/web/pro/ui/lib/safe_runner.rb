@@ -82,7 +82,7 @@ module Karafka
               @success = true
 
               @result
-            rescue StandardError => e
+            rescue => e
               @error = e
               @success = false
             ensure

@@ -55,14 +55,14 @@ module Karafka
               next unless message
 
               yield(message)
-            rescue StandardError => e
+            rescue => e
               report_error(e)
 
               sleep(c_config.pause_timeout / 1_000)
 
               next
             end
-          rescue StandardError => e
+          rescue => e
             report_error(e)
 
             return if done?
@@ -93,10 +93,10 @@ module Karafka
           # @param error [StandardError] any error that occurred in the manager
           def report_error(error)
             ::Karafka.monitor.instrument(
-              'error.occurred',
+              "error.occurred",
               error: error,
               caller: self,
-              type: 'web.commanding.listener.error'
+              type: "web.commanding.listener.error"
             )
           end
         end

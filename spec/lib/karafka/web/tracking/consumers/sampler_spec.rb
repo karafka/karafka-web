@@ -3,19 +3,19 @@
 RSpec.describe_current do
   subject(:sampler) { described_class.new }
 
-  context 'when we do not run system sampling and start with empty state' do
+  context "when we do not run system sampling and start with empty state" do
     let(:process) { sampler.to_report[:process] }
     let(:stats) { sampler.to_report[:stats] }
     let(:versions) { sampler.to_report[:versions] }
 
     it { expect(sampler.to_report.keys).to include(:schema_version) }
-    it { expect(sampler.to_report[:type]).to eq('consumer') }
+    it { expect(sampler.to_report[:type]).to eq("consumer") }
     it { expect(sampler.to_report[:dispatched_at]).not_to be_nil }
     it { expect(sampler.to_report[:jobs]).to be_empty }
     it { expect(sampler.to_report[:consumer_groups]).to be_empty }
     it { expect(process[:started_at]).not_to be_nil }
     it { expect(process[:id]).to include(Socket.gethostname) }
-    it { expect(process[:status]).to eq('initialized') }
+    it { expect(process[:status]).to eq("initialized") }
     it { expect(process[:listeners]).to eq(active: 0, standby: 0) }
     it { expect(process[:workers]).to eq(5) }
     it { expect(process[:memory_usage]).to eq(0) }
@@ -25,7 +25,7 @@ RSpec.describe_current do
     it { expect(process[:threads]).to eq(0) }
     it { expect(process[:cpu_usage]).to eq([-1, -1, -1]) }
     it { expect(process[:tags]).to eq(Karafka::Process.tags) }
-    it { expect(versions[:ruby]).to include('ruby') }
+    it { expect(versions[:ruby]).to include("ruby") }
     it { expect(versions[:karafka]).to eq(Karafka::VERSION) }
     it { expect(versions[:karafka_core]).to eq(Karafka::Core::VERSION) }
     it { expect(versions[:waterdrop]).to eq(WaterDrop::VERSION) }
@@ -41,7 +41,7 @@ RSpec.describe_current do
     it { expect(stats[:total][:retries]).to eq(0) }
   end
 
-  describe '#clear' do
+  describe "#clear" do
     before do
       sampler.track do |sampler|
         sampler.counters[:messages] += 1
@@ -54,28 +54,28 @@ RSpec.describe_current do
       sampler.clear
     end
 
-    it 'expect to clear counters' do
+    it "expect to clear counters" do
       expect(sampler.counters[:messages]).to eq(0)
     end
 
-    it 'expect not to clear jobs' do
+    it "expect not to clear jobs" do
       expect(sampler.jobs).not_to be_empty
     end
 
-    it 'expect not to clear pauses' do
+    it "expect not to clear pauses" do
       expect(sampler.pauses).not_to be_empty
     end
 
-    it 'expect not to clear consumer_groups' do
+    it "expect not to clear consumer_groups" do
       expect(sampler.consumer_groups).not_to be_empty
     end
 
-    it 'expect to clear errors' do
+    it "expect to clear errors" do
       expect(sampler.errors).to be_empty
     end
   end
 
-  describe '#sample' do
+  describe "#sample" do
     let(:process) { sampler.to_report[:process] }
 
     before { sampler.sample }
@@ -86,17 +86,17 @@ RSpec.describe_current do
     it { expect(process[:cpu_usage]).not_to eq([-1, -1, -1]) }
   end
 
-  describe 'system metrics collector selection' do
-    context 'when running outside container (real behavior)' do
-      it 'instantiates Os metrics collector as cgroups are not available' do
+  describe "system metrics collector selection" do
+    context "when running outside container (real behavior)" do
+      it "instantiates Os metrics collector as cgroups are not available" do
         sampler = described_class.new
         # Test through public API - memory_size should work (from Os class)
         expect(sampler.to_report[:process][:memory_size]).to be > 0
       end
     end
 
-    context 'when cgroups are available (simulated)' do
-      it 'instantiates Container metrics collector' do
+    context "when cgroups are available (simulated)" do
+      it "instantiates Container metrics collector" do
         allow(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container)
           .to receive(:active?)
           .and_return(true)
@@ -111,8 +111,8 @@ RSpec.describe_current do
       end
     end
 
-    context 'when cgroups are not available (simulated)' do
-      it 'instantiates Os metrics collector' do
+    context "when cgroups are not available (simulated)" do
+      it "instantiates Os metrics collector" do
         allow(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container)
           .to receive(:active?)
           .and_return(false)

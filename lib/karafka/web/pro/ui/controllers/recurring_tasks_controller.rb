@@ -70,7 +70,7 @@ module Karafka
               disable
             ].each do |action|
               define_method :"#{action}_all" do
-                command(action, '*')
+                command(action, "*")
 
                 redirect(
                   :back,
@@ -122,7 +122,7 @@ module Karafka
               command_name = command.to_s.capitalize
 
               format_flash(
-                'The ? command has been dispatched to the ? task',
+                "The ? command has been dispatched to the ? task",
                 command_name,
                 task_id
               )
@@ -135,7 +135,7 @@ module Karafka
               command_name = command.to_s.capitalize
 
               format_flash(
-                'The ? command has been dispatched to all tasks',
+                "The ? command has been dispatched to all tasks",
                 command_name
               )
             end

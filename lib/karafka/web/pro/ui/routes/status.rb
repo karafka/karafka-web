@@ -28,7 +28,7 @@ module Karafka
           # Manages the status related routes
           class Status < Base
             route do |r|
-              r.get 'status' do
+              r.get "status" do
                 controller = build(Controllers::StatusController)
                 controller.show
               end

@@ -16,11 +16,11 @@ module Karafka
             required(:dispatched_at) { |val| val.is_a?(Numeric) && val.positive? }
             # We have consumers and producer reports and need to ensure that each is handled
             # in an expected fashion
-            required(:type) { |val| val == 'consumer' }
+            required(:type) { |val| val == "consumer" }
 
             nested(:process) do
               required(:started_at) { |val| val.is_a?(Numeric) && val.positive? }
-              required(:id) { |val| val.is_a?(String) && val.count(':') >= 2 }
+              required(:id) { |val| val.is_a?(String) && val.count(":") >= 2 }
               required(:cpus) { |val| val.is_a?(Integer) && val >= 1 }
               required(:memory_usage) { |val| val.is_a?(Integer) && val >= 0 }
               required(:memory_total_usage) { |val| val.is_a?(Integer) && val >= 0 }

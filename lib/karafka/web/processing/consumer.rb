@@ -15,7 +15,7 @@ module Karafka
         def consume
           bootstrap!
 
-          consumers_messages = messages.select { |message| message.payload[:type] == 'consumer' }
+          consumers_messages = messages.select { |message| message.payload[:type] == "consumer" }
 
           # If there is even one incompatible message, we need to stop
           consumers_messages.each do |message|

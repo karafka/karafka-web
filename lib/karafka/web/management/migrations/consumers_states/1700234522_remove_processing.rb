@@ -7,7 +7,7 @@ module Karafka
         module ConsumersStates
           # Moves unused "processing" that was used instead of "busy" in older versions
           class RemoveProcessing < Base
-            self.versions_until = '1.2.1'
+            self.versions_until = "1.2.1"
             self.type = :consumers_states
 
             # @param state [Hash]

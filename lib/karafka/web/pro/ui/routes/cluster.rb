@@ -28,10 +28,10 @@ module Karafka
           # Manages the cluster related routes
           class Cluster < Base
             route do |r|
-              r.on 'cluster' do
+              r.on "cluster" do
                 controller = build(Controllers::ClusterController)
 
-                r.get 'replication' do
+                r.get "replication" do
                   # We use the non-pro controller here because this action is the same
                   controller = build(Ui::Controllers::ClusterController)
                   controller.replication

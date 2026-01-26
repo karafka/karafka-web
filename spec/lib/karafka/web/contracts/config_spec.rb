@@ -7,28 +7,28 @@ RSpec.describe_current do
     {
       enabled: true,
       ttl: 5000,
-      group_id: 'consumer-group-topic',
+      group_id: "consumer-group-topic",
       topics: {
         errors: {
-          name: 'errors-topic',
-          config: { 'cleanup.policy': 'delete' }
+          name: "errors-topic",
+          config: { "cleanup.policy": "delete" }
         },
         consumers: {
           reports: {
-            name: 'reports-topic',
-            config: { 'cleanup.policy': 'delete' }
+            name: "reports-topic",
+            config: { "cleanup.policy": "delete" }
           },
           states: {
-            name: 'states-topic',
-            config: { 'cleanup.policy': 'delete' }
+            name: "states-topic",
+            config: { "cleanup.policy": "delete" }
           },
           metrics: {
-            name: 'metrics-topic',
-            config: { 'cleanup.policy': 'delete' }
+            name: "metrics-topic",
+            config: { "cleanup.policy": "delete" }
           },
           commands: {
-            name: 'commands-topic',
-            config: { 'cleanup.policy': 'delete' }
+            name: "commands-topic",
+            config: { "cleanup.policy": "delete" }
           }
         }
       },
@@ -55,9 +55,9 @@ RSpec.describe_current do
       },
       ui: {
         sessions: {
-          key: 'some_key',
-          env_key: 'some_key',
-          secret: 'a' * 64
+          key: "some_key",
+          env_key: "some_key",
+          secret: "a" * 64
         },
         visibility: {
           internal_topics: true,
@@ -76,32 +76,32 @@ RSpec.describe_current do
     }
   end
 
-  context 'when all values are valid' do
-    it 'is valid' do
+  context "when all values are valid" do
+    it "is valid" do
       expect(contract.call(params)).to be_success
     end
   end
 
-  context 'when enabled is not boolean' do
-    before { params[:enabled] = 'string_value' }
+  context "when enabled is not boolean" do
+    before { params[:enabled] = "string_value" }
 
     it { expect(contract.call(params)).not_to be_success }
   end
 
-  context 'when ttl is not numeric' do
-    before { params[:ttl] = 'string_value' }
+  context "when ttl is not numeric" do
+    before { params[:ttl] = "string_value" }
 
     it { expect(contract.call(params)).not_to be_success }
   end
 
-  context 'when validating topics topics' do
-    context 'when errors topic does not match the regexp' do
-      before { params[:topics][:errors][:name] = 'invalid topic!' }
+  context "when validating topics topics" do
+    context "when errors topic does not match the regexp" do
+      before { params[:topics][:errors][:name] = "invalid topic!" }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when validating consumer scoped fields' do
+    context "when validating consumer scoped fields" do
       %i[
         reports
         states
@@ -109,13 +109,13 @@ RSpec.describe_current do
         commands
       ].each do |field|
         context "when #{field} name does not match the regexp" do
-          before { params[:topics][:consumers][field][:name] = 'invalid topic!' }
+          before { params[:topics][:consumers][field][:name] = "invalid topic!" }
 
           it { expect(contract.call(params)).not_to be_success }
         end
 
         context "when #{field} config contains non-symbol keys" do
-          before { params[:topics][:consumers][field][:config] = { 'a' => 'b' } }
+          before { params[:topics][:consumers][field][:config] = { "a" => "b" } }
 
           it { expect(contract.call(params)).not_to be_success }
         end
@@ -129,38 +129,38 @@ RSpec.describe_current do
     end
   end
 
-  context 'when validating tracking related settings' do
-    context 'when interval is less than 1000' do
+  context "when validating tracking related settings" do
+    context "when interval is less than 1000" do
       before { params[:tracking][:interval] = 999 }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when interval is not an integer' do
+    context "when interval is not an integer" do
       before { params[:tracking][:interval] = 1000.5 }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when consumers sync_threshold is less than 0' do
+    context "when consumers sync_threshold is less than 0" do
       before { params[:tracking][:consumers][:sync_threshold] = -1 }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when consumers sync_threshold is not an integer' do
+    context "when consumers sync_threshold is not an integer" do
       before { params[:tracking][:consumers][:sync_threshold] = 1.1 }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when producers sync_threshold is less than 0' do
+    context "when producers sync_threshold is less than 0" do
       before { params[:tracking][:producers][:sync_threshold] = -1 }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when producers sync_threshold is not an integer' do
+    context "when producers sync_threshold is not an integer" do
       before { params[:tracking][:producers][:sync_threshold] = 1.1 }
 
       it { expect(contract.call(params)).not_to be_success }
@@ -179,8 +179,8 @@ RSpec.describe_current do
           end
         end
 
-        context 'when listeners is not an array' do
-          before { params[:tracking][entity][:listeners] = 'not_an_array' }
+        context "when listeners is not an array" do
+          before { params[:tracking][entity][:listeners] = "not_an_array" }
 
           it { expect(contract.call(params)).not_to be_success }
         end
@@ -188,141 +188,141 @@ RSpec.describe_current do
     end
   end
 
-  context 'when validating processing related settings' do
-    context 'when active is not a boolean' do
-      before { params[:processing][:active] = 'maybe' }
+  context "when validating processing related settings" do
+    context "when active is not a boolean" do
+      before { params[:processing][:active] = "maybe" }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when group_id does not match the regexp' do
-      before { params[:group_id] = 'invalid topic!' }
+    context "when group_id does not match the regexp" do
+      before { params[:group_id] = "invalid topic!" }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when interval is less than 1000' do
+    context "when interval is less than 1000" do
       before { params[:processing][:interval] = 999 }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when kafka is nil' do
+    context "when kafka is nil" do
       before { params[:processing][:kafka] = nil }
 
       it { expect(contract.call(params)).not_to be_success }
     end
   end
 
-  context 'when validating ui related settings' do
-    context 'when validating sessions related settings' do
-      context 'when key is empty' do
-        before { params[:ui][:sessions][:key] = '' }
+  context "when validating ui related settings" do
+    context "when validating sessions related settings" do
+      context "when key is empty" do
+        before { params[:ui][:sessions][:key] = "" }
 
         it { expect(contract.call(params)).not_to be_success }
       end
 
-      context 'when env_key is empty' do
-        before { params[:ui][:sessions][:env_key] = '' }
+      context "when env_key is empty" do
+        before { params[:ui][:sessions][:env_key] = "" }
 
         it { expect(contract.call(params)).not_to be_success }
       end
 
-      context 'when secret is less than 64 characters long' do
-        before { params[:ui][:sessions][:secret] = 'short' }
+      context "when secret is less than 64 characters long" do
+        before { params[:ui][:sessions][:secret] = "short" }
 
         it { expect(contract.call(params)).not_to be_success }
       end
     end
 
-    context 'when kafka is nil' do
+    context "when kafka is nil" do
       before { params[:ui][:kafka] = nil }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when per_page is more than 100' do
+    context "when per_page is more than 100" do
       before { params[:ui][:per_page] = 101 }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when per_page is less than 1' do
+    context "when per_page is less than 1" do
       before { params[:ui][:per_page] = 0 }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when internal_topics is nil' do
+    context "when internal_topics is nil" do
       before { params[:ui][:visibility][:internal_topics] = nil }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when internal_topics is not boolean' do
-      before { params[:ui][:visibility][:internal_topics] = '1' }
+    context "when internal_topics is not boolean" do
+      before { params[:ui][:visibility][:internal_topics] = "1" }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when active_topics_cluster_lags_only is nil' do
+    context "when active_topics_cluster_lags_only is nil" do
       before { params[:ui][:visibility][:active_topics_cluster_lags_only] = nil }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when active_topics_cluster_lags_only is not boolean' do
-      before { params[:ui][:visibility][:active_topics_cluster_lags_only] = '1' }
+    context "when active_topics_cluster_lags_only is not boolean" do
+      before { params[:ui][:visibility][:active_topics_cluster_lags_only] = "1" }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when max_visible_payload_size is not an integer' do
-      before { params[:ui][:max_visible_payload_size] = '1' }
+    context "when max_visible_payload_size is not an integer" do
+      before { params[:ui][:max_visible_payload_size] = "1" }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when max_visible_payload_size is less than 1' do
+    context "when max_visible_payload_size is less than 1" do
       before { params[:ui][:max_visible_payload_size] = 0 }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when dlq_patterns is not an array' do
-      before { params[:ui][:dlq_patterns] = '1' }
+    context "when dlq_patterns is not an array" do
+      before { params[:ui][:dlq_patterns] = "1" }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when dlq_patterns is array with things other than string or regexp' do
+    context "when dlq_patterns is array with things other than string or regexp" do
       before { params[:ui][:dlq_patterns] = [1, 2, 3] }
 
       it { expect(contract.call(params)).not_to be_success }
     end
 
-    context 'when validating custom UI config options' do
+    context "when validating custom UI config options" do
       %i[js css nav_erb].each do |key|
         context "when checking custom.#{key}" do
-          context 'when set to false' do
+          context "when set to false" do
             before { params[:ui][:custom][key] = false }
 
             it { expect(contract.call(params)).to be_success }
           end
 
-          context 'when set to an empty string' do
-            before { params[:ui][:custom][key] = '' }
+          context "when set to an empty string" do
+            before { params[:ui][:custom][key] = "" }
 
             it { expect(contract.call(params)).not_to be_success }
           end
 
-          context 'when set to a non-empty string' do
-            before { params[:ui][:custom][key] = 'something.valid' }
+          context "when set to a non-empty string" do
+            before { params[:ui][:custom][key] = "something.valid" }
 
             it { expect(contract.call(params)).to be_success }
           end
 
-          context 'when set to an invalid type' do
+          context "when set to an invalid type" do
             before { params[:ui][:custom][key] = 123 }
 
             it { expect(contract.call(params)).not_to be_success }
