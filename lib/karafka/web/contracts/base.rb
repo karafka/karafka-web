@@ -14,8 +14,8 @@ module Karafka
 
             super do |config|
               config.error_messages = YAML.safe_load_file(
-                File.join(Karafka::Web.gem_root, 'config', 'locales', 'errors.yml')
-              ).fetch('en').fetch('validations').fetch('web')
+                File.join(Karafka::Web.gem_root, "config", "locales", "errors.yml")
+              ).fetch("en").fetch("validations").fetch("web")
             end
           end
         end

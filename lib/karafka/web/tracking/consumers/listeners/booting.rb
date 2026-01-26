@@ -15,7 +15,7 @@ module Karafka
             # @param _event [Karafka::Core::Monitoring::Event]
             def on_app_running(_event)
               ::Karafka::Web.config.tracking.scheduler.async_call(
-                'karafka.web.tracking.scheduler'
+                "karafka.web.tracking.scheduler"
               )
             end
 

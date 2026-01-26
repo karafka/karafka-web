@@ -22,8 +22,8 @@ RSpec.describe_current do
     }
   end
 
-  context 'when all values are valid' do
-    it 'is valid' do
+  context "when all values are valid" do
+    it "is valid" do
       expect(contract.call(stats)).to be_success
     end
   end
@@ -38,7 +38,7 @@ RSpec.describe_current do
     end
 
     context "when #{key} is not a number" do
-      before { stats[key] = 'test' }
+      before { stats[key] = "test" }
 
       it { expect(contract.call(stats)).not_to be_success }
     end
@@ -61,26 +61,26 @@ RSpec.describe_current do
     end
 
     context "when #{key} is not a number" do
-      before { stats[key] = 'test' }
+      before { stats[key] = "test" }
 
       it { expect(contract.call(stats)).not_to be_success }
     end
   end
 
-  context 'when lag_hybrid is not a number' do
-    before { stats[:lag_hybrid] = 'test' }
+  context "when lag_hybrid is not a number" do
+    before { stats[:lag_hybrid] = "test" }
 
     it { expect(contract.call(stats)).not_to be_success }
   end
 
-  context 'when checking listeners' do
-    context 'when active below 0' do
+  context "when checking listeners" do
+    context "when active below 0" do
       before { stats[:listeners][:active] = -1 }
 
       it { expect(contract.call(stats)).not_to be_success }
     end
 
-    context 'when standby below 0' do
+    context "when standby below 0" do
       before { stats[:listeners][:standby] = -1 }
 
       it { expect(contract.call(stats)).not_to be_success }

@@ -13,7 +13,7 @@ module Karafka
           # This migration ensures old reports can be processed by adding the field with
           # false value (indicating no static membership configured).
           class AddGroupInstanceIdToSubscriptionGroups < Base
-            self.versions_until = '1.6.0'
+            self.versions_until = "1.6.0"
             self.type = :consumers_reports
 
             # @param report [Hash] consumer report to migrate

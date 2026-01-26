@@ -26,7 +26,7 @@ RSpec.describe_current do
   let(:tracker) { Karafka::Web::Pro::Commanding::Handlers::Topics::Tracker.instance }
   let(:executor) { instance_double(Karafka::Web::Pro::Commanding::Handlers::Topics::Executor) }
   let(:consumer_group_id) { SecureRandom.uuid }
-  let(:topic_name) { 'test_topic' }
+  let(:topic_name) { "test_topic" }
   let(:command) { instance_double(Karafka::Web::Pro::Commanding::Request) }
 
   before do
@@ -39,7 +39,7 @@ RSpec.describe_current do
       .and_return(executor)
   end
 
-  describe '#on_connection_listener_fetch_loop' do
+  describe "#on_connection_listener_fetch_loop" do
     let(:listener) { instance_double(Karafka::Connection::Listener) }
     let(:client) { instance_double(Karafka::Connection::Client) }
     let(:subscription_group) { instance_double(Karafka::Routing::SubscriptionGroup) }
@@ -54,15 +54,15 @@ RSpec.describe_current do
       allow(executor).to receive(:call)
     end
 
-    it 'executes queued commands for each topic in the subscription group' do
+    it "executes queued commands for each topic in the subscription group" do
       topic_listener.on_connection_listener_fetch_loop(event)
 
       expect(tracker).to have_received(:each_for).with(consumer_group_id, topic_name)
       expect(executor).to have_received(:call).with(listener, client, command)
     end
 
-    context 'when multiple topics exist in subscription group' do
-      let(:topic2) { instance_double(Karafka::Routing::Topic, name: 'test_topic2') }
+    context "when multiple topics exist in subscription group" do
+      let(:topic2) { instance_double(Karafka::Routing::Topic, name: "test_topic2") }
       let(:command2) { instance_double(Karafka::Web::Pro::Commanding::Request) }
 
       before do
@@ -72,22 +72,22 @@ RSpec.describe_current do
 
         allow(tracker)
           .to receive(:each_for)
-          .with(consumer_group_id, 'test_topic2')
+          .with(consumer_group_id, "test_topic2")
           .and_yield(command2)
       end
 
-      it 'checks for commands on all topics' do
+      it "checks for commands on all topics" do
         topic_listener.on_connection_listener_fetch_loop(event)
 
         expect(tracker).to have_received(:each_for).with(consumer_group_id, topic_name)
-        expect(tracker).to have_received(:each_for).with(consumer_group_id, 'test_topic2')
+        expect(tracker).to have_received(:each_for).with(consumer_group_id, "test_topic2")
         expect(executor).to have_received(:call).with(listener, client, command)
         expect(executor).to have_received(:call).with(listener, client, command2)
       end
     end
   end
 
-  describe '#on_rebalance_partitions_assigned' do
+  describe "#on_rebalance_partitions_assigned" do
     let(:subscription_group) { instance_double(Karafka::Routing::SubscriptionGroup) }
     let(:consumer_group) { instance_double(Karafka::Routing::ConsumerGroup, id: consumer_group_id) }
     let(:topic) { instance_double(Karafka::Routing::Topic, name: topic_name) }
@@ -99,7 +99,7 @@ RSpec.describe_current do
       allow(executor).to receive(:reject)
     end
 
-    it 'rejects pending commands due to rebalance' do
+    it "rejects pending commands due to rebalance" do
       topic_listener.on_rebalance_partitions_assigned(event)
 
       expect(tracker).to have_received(:each_for).with(consumer_group_id, topic_name)
@@ -107,7 +107,7 @@ RSpec.describe_current do
     end
   end
 
-  describe '#on_rebalance_partitions_revoked' do
+  describe "#on_rebalance_partitions_revoked" do
     let(:subscription_group) { instance_double(Karafka::Routing::SubscriptionGroup) }
     let(:consumer_group) { instance_double(Karafka::Routing::ConsumerGroup, id: consumer_group_id) }
     let(:topic) { instance_double(Karafka::Routing::Topic, name: topic_name) }
@@ -119,7 +119,7 @@ RSpec.describe_current do
       allow(executor).to receive(:reject)
     end
 
-    it 'rejects pending commands due to revocation' do
+    it "rejects pending commands due to revocation" do
       topic_listener.on_rebalance_partitions_revoked(event)
 
       expect(tracker).to have_received(:each_for).with(consumer_group_id, topic_name)

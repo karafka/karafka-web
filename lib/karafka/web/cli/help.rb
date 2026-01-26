@@ -5,14 +5,14 @@ module Karafka
     class Cli
       # Displays help
       class Help < Base
-        desc 'Describes available commands'
+        desc "Describes available commands"
 
         # Print available commands
         def call
           # Find the longest command for alignment purposes
           max_command_length = self.class.commands.map { |command| command.name.size }.max
 
-          puts 'Karafka Web UI commands:'
+          puts "Karafka Web UI commands:"
 
           # Print each command formatted with its description
           self.class.commands.each do |command|

@@ -28,14 +28,14 @@ module Karafka
           # Manages the errors related routes
           class Errors < Base
             route do |r|
-              r.on 'errors' do
+              r.on "errors" do
                 controller = build(Controllers::ErrorsController)
 
                 r.get :partition_id, Integer do |partition_id, offset|
                   if params.current_offset == -1
                     controller.show(partition_id, offset)
                   else
-                    r.redirect root_path('errors', partition_id, params.current_offset)
+                    r.redirect root_path("errors", partition_id, params.current_offset)
                   end
                 end
 

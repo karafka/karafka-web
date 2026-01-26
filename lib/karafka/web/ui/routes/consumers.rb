@@ -7,7 +7,7 @@ module Karafka
         # Manages the consumers related routes
         class Consumers < Base
           route do |r|
-            r.on 'consumers' do
+            r.on "consumers" do
               %w[
                 performance
                 controls
@@ -18,7 +18,7 @@ module Karafka
                 end
               end
 
-              r.get String, 'subscriptions' do |_process_id|
+              r.get String, "subscriptions" do |_process_id|
                 raise ::Karafka::Web::Errors::Ui::ProOnlyError
               end
 

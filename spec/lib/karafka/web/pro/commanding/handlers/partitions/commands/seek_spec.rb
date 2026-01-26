@@ -36,7 +36,7 @@ RSpec.describe_current do
   let(:coordinators) { instance_double(Karafka::Processing::CoordinatorsBuffer) }
   let(:coordinator) { instance_double(Karafka::Processing::Coordinator) }
   let(:pause_tracker) { instance_double(Karafka::TimeTrackers::Pause) }
-  let(:topic) { 'topic_name' }
+  let(:topic) { "topic_name" }
   let(:partition_id) { 1 }
   let(:desired_offset) { 100 }
   let(:prevent_overtaking) { false }
@@ -56,7 +56,7 @@ RSpec.describe_current do
     allow(coordinator).to receive_messages(
       pause_tracker: pause_tracker,
       seek_offset: current_seek_offset,
-      'seek_offset=': nil
+      "seek_offset=": nil
     )
 
     allow(pause_tracker).to receive_messages(
@@ -73,71 +73,71 @@ RSpec.describe_current do
     )
   end
 
-  describe '#call' do
+  describe "#call" do
     let(:current_seek_offset) { nil }
     let(:marking_success) { true }
 
-    context 'when prevent_overtaking is true' do
+    context "when prevent_overtaking is true" do
       let(:prevent_overtaking) { true }
 
-      context 'when current offset exists and is ahead' do
+      context "when current offset exists and is ahead" do
         let(:current_seek_offset) { desired_offset + 1 }
 
-        it 'prevents the seek operation' do
+        it "prevents the seek operation" do
           command.call
-          expect(command).to have_received(:result).with('prevented')
+          expect(command).to have_received(:result).with("prevented")
           expect(client).not_to have_received(:mark_as_consumed!)
         end
       end
 
-      context 'when current offset exists but is behind' do
+      context "when current offset exists but is behind" do
         let(:current_seek_offset) { desired_offset - 1 }
 
-        it 'executes seek operation' do
+        it "executes seek operation" do
           command.call
           expect(client).to have_received(:mark_as_consumed!)
-          expect(command).to have_received(:result).with('applied')
+          expect(command).to have_received(:result).with("applied")
         end
       end
     end
 
-    context 'when marking as consumed fails' do
+    context "when marking as consumed fails" do
       let(:marking_success) { false }
 
-      it 'stops with lost partition result' do
+      it "stops with lost partition result" do
         command.call
-        expect(command).to have_received(:result).with('lost_partition')
+        expect(command).to have_received(:result).with("lost_partition")
         expect(client).not_to have_received(:seek)
       end
     end
 
-    context 'when force_resume is true' do
+    context "when force_resume is true" do
       let(:force_resume) { true }
 
-      it 'expires the pause tracker' do
+      it "expires the pause tracker" do
         command.call
         expect(pause_tracker).to have_received(:expire)
       end
     end
 
-    context 'when force_resume is false' do
+    context "when force_resume is false" do
       let(:force_resume) { false }
 
-      it 'does not expire the pause tracker' do
+      it "does not expire the pause tracker" do
         command.call
         expect(pause_tracker).not_to have_received(:expire)
       end
     end
 
-    context 'when all operations succeed' do
-      it 'executes the seek operation fully' do
+    context "when all operations succeed" do
+      it "executes the seek operation fully" do
         command.call
 
         expect(client).to have_received(:mark_as_consumed!)
         expect(client).to have_received(:seek)
         expect(coordinator).to have_received(:seek_offset=).with(desired_offset)
         expect(pause_tracker).to have_received(:reset)
-        expect(command).to have_received(:result).with('applied')
+        expect(command).to have_received(:result).with("applied")
       end
     end
   end

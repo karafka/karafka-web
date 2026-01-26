@@ -138,18 +138,18 @@ module Karafka
 
                 # Establish starting point
                 start = case offset_type
-                        when 'latest'
-                          (limit / partitions_to_search.size) * -1
-                        when 'offset'
-                          offset
-                        when 'timestamp'
-                          # Kafka timestamp of message is in ms, we need a second precision for
-                          # `Time#at`
-                          Time.at(timestamp / 1_000.to_f)
-                        else
-                          # This should never happen. Contact us if you see this.
-                          raise ::Karafka::Errors::UnsupportedCaseError, offset_type
-                        end
+                when "latest"
+                  (limit / partitions_to_search.size) * -1
+                when "offset"
+                  offset
+                when "timestamp"
+                  # Kafka timestamp of message is in ms, we need a second precision for
+                  # `Time#at`
+                  Time.at(timestamp / 1_000.to_f)
+                else
+                  # This should never happen. Contact us if you see this.
+                  raise ::Karafka::Errors::UnsupportedCaseError, offset_type
+                end
 
                 iterator_query = {
                   @topic => partitions_to_search.to_h { |par| [par, start] }
@@ -192,7 +192,7 @@ module Karafka
                   # the lookup started to prevent endless lookups on partitions that have a lot
                   # of messages being written to them in real time
                   if current_stats[:checked] >= per_partition ||
-                     message.timestamp > started_at_time
+                      message.timestamp > started_at_time
                     iterator.stop_current_partition
                     next
                   end
@@ -234,7 +234,7 @@ module Karafka
 
                 # If in the search query there is no "all", we pick only partitions that do exist
                 # in the topic that were part of the requested search scope
-                unless partitions.include?('all')
+                unless partitions.include?("all")
                   @partitions_to_search &= partitions.map(&:to_i)
                   # and just in case someone would provide really weird data, we fallback to
                   # partition 0

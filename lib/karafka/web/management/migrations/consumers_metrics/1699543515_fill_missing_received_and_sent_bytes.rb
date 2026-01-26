@@ -8,7 +8,7 @@ module Karafka
           # Adds bytes_sent and bytes_received to all the aggregated metrics samples, so we have
           # charts that do not have to fill gaps or check anything
           class FillMissingReceivedAndSentBytes < Base
-            self.versions_until = '1.1.0'
+            self.versions_until = "1.1.0"
             self.type = :consumers_metrics
 
             # @param state [Hash] metrics state

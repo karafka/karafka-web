@@ -6,18 +6,18 @@ RSpec.describe_current do
   let(:context) { Karafka::Web::Ui::Models::Status::Context.new }
   let(:current_state) { { dispatched_at: Time.now.to_f } }
 
-  describe 'DSL configuration' do
+  describe "DSL configuration" do
     it { expect(described_class.independent?).to be(false) }
     it { expect(described_class.dependency).to eq(:initial_consumers_metrics) }
     it { expect(described_class.halted_details).to eq({}) }
   end
 
-  describe '#call' do
+  describe "#call" do
     before do
       context.current_state = current_state
     end
 
-    context 'when processes can be loaded successfully' do
+    context "when processes can be loaded successfully" do
       let(:process) { Karafka::Web::Ui::Models::Process.new(Fixtures.consumers_reports_json) }
       let(:processes) { [process] }
 
@@ -28,28 +28,28 @@ RSpec.describe_current do
           .and_return(processes)
       end
 
-      it 'returns success' do
+      it "returns success" do
         result = check.call
 
         expect(result.status).to eq(:success)
         expect(result.details).to eq({})
       end
 
-      it 'caches processes in context' do
+      it "caches processes in context" do
         check.call
 
         expect(context.processes).to eq(processes)
       end
     end
 
-    context 'when processes data is corrupted (JSON parse error)' do
+    context "when processes data is corrupted (JSON parse error)" do
       before do
         allow(Karafka::Web::Ui::Models::Processes)
           .to receive(:all)
           .and_raise(JSON::ParserError)
       end
 
-      it 'returns failure' do
+      it "returns failure" do
         result = check.call
 
         expect(result.status).to eq(:failure)
@@ -57,7 +57,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when processes are already cached in context' do
+    context "when processes are already cached in context" do
       let(:process) { Karafka::Web::Ui::Models::Process.new(Fixtures.consumers_reports_json) }
       let(:processes) { [process] }
 
@@ -66,13 +66,13 @@ RSpec.describe_current do
         allow(Karafka::Web::Ui::Models::Processes).to receive(:all)
       end
 
-      it 'does not fetch again' do
+      it "does not fetch again" do
         check.call
 
         expect(Karafka::Web::Ui::Models::Processes).not_to have_received(:all)
       end
 
-      it 'returns success' do
+      it "returns success" do
         result = check.call
 
         expect(result.status).to eq(:success)

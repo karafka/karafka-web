@@ -61,7 +61,7 @@ module Karafka
                   end
 
                   result(
-                    'applied',
+                    "applied",
                     partitions_affected: partitions_affected,
                     partitions_prevented: partitions_prevented
                   )

@@ -37,7 +37,7 @@ module Karafka
                 @topics = Models::Topic.all.sort_by(&:topic_name)
 
                 unless ::Karafka::Web.config.ui.visibility.internal_topics
-                  @topics.delete_if { |topic| topic[:topic_name].start_with?('__') }
+                  @topics.delete_if { |topic| topic[:topic_name].start_with?("__") }
                 end
 
                 render
@@ -71,9 +71,9 @@ module Karafka
                 return new if @form_error
 
                 redirect(
-                  'topics',
+                  "topics",
                   success: format_flash(
-                    'Topic ? successfully created',
+                    "Topic ? successfully created",
                     params[:topic_name]
                   )
                 )
@@ -102,9 +102,9 @@ module Karafka
                 Karafka::Admin.delete_topic(topic_name)
 
                 redirect(
-                  'topics',
+                  "topics",
                   success: format_flash(
-                    'Topic ? successfully deleted',
+                    "Topic ? successfully deleted",
                     topic_name
                   )
                 )

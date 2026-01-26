@@ -10,38 +10,38 @@ module Karafka
           # Whole default empty state
           # This will be further migrated by the migrator
           DEFAULT_STATE = {
-            schema_version: '0.0.0'
+            schema_version: "0.0.0"
           }.freeze
 
           # Default metrics state
           DEFAULT_METRICS = {
-            schema_version: '0.0.0'
+            schema_version: "0.0.0"
           }.freeze
 
           # Creates the initial states for the Web-UI if needed (if they don't exist)
           def call
             if exists?(Karafka::Web.config.topics.consumers.states.name)
-              exists('consumers state')
+              exists("consumers state")
             else
-              creating('consumers state')
+              creating("consumers state")
               ::Karafka::Web.producer.produce_sync(
                 topic: Karafka::Web.config.topics.consumers.states.name,
                 key: Karafka::Web.config.topics.consumers.states.name,
                 payload: DEFAULT_STATE.to_json
               )
-              created('consumers state')
+              created("consumers state")
             end
 
             if exists?(Karafka::Web.config.topics.consumers.metrics.name)
-              exists('consumers metrics')
+              exists("consumers metrics")
             else
-              creating('consumers metrics')
+              creating("consumers metrics")
               ::Karafka::Web.producer.produce_sync(
                 topic: Karafka::Web.config.topics.consumers.metrics.name,
                 key: Karafka::Web.config.topics.consumers.metrics.name,
                 payload: DEFAULT_METRICS.to_json
               )
-              created('consumers metrics')
+              created("consumers metrics")
             end
           end
 

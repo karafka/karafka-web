@@ -76,7 +76,7 @@ module Karafka
                   redirect(
                     :previous,
                     success: format_flash(
-                      'Initiated offset adjustment to ? for ?#? in consumer group ?',
+                      "Initiated offset adjustment to ? for ?#? in consumer group ?",
                       offset,
                       topic,
                       partition_id,

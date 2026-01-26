@@ -10,7 +10,7 @@ module Karafka
           # This is the basic of state as they were when they were introduced.
           class SetInitial < Base
             # Run this only on the first setup
-            self.versions_until = '0.0.1'
+            self.versions_until = "0.0.1"
             self.type = :consumers_states
 
             # @param state [Hash]
@@ -34,7 +34,7 @@ module Karafka
                   lag_stored: 0,
                   lag: 0
                 },
-                schema_state: 'accepted',
+                schema_state: "accepted",
                 dispatched_at: float_now
               )
             end

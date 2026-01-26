@@ -35,9 +35,9 @@ module Karafka
                   # If user enabled overtaking prevention and we're already ahead of the requested
                   # offset, we should ditch such a request
                   if prevent_overtaking? &&
-                     coordinator.seek_offset &&
-                     coordinator.seek_offset >= desired_offset
-                    result('prevented')
+                      coordinator.seek_offset &&
+                      coordinator.seek_offset >= desired_offset
+                    result("prevented")
 
                     return
                   end
@@ -52,7 +52,7 @@ module Karafka
                   # If we were not able to mark as consumed it means that the assignment was lost
                   # We should signal this and stop
                   unless assigned
-                    result('lost_partition')
+                    result("lost_partition")
 
                     return
                   end
@@ -67,7 +67,7 @@ module Karafka
                   # can reset it so the work starts immediately.
                   coordinator.pause_tracker.expire if force_resume?
 
-                  result('applied')
+                  result("applied")
                 end
 
                 private

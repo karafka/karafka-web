@@ -23,17 +23,17 @@
 RSpec.describe_current do
   subject(:manager) { described_class.send(:new) }
 
-  describe '#on_app_running' do
+  describe "#on_app_running" do
     before { allow(manager).to receive(:async_call) }
 
-    it 'expect to start listening for commands asynchronously' do
+    it "expect to start listening for commands asynchronously" do
       manager.on_app_running(nil)
 
-      expect(manager).to have_received(:async_call).with('karafka.web.pro.commanding.manager')
+      expect(manager).to have_received(:async_call).with("karafka.web.pro.commanding.manager")
     end
   end
 
-  describe '#on_app_stopping' do
+  describe "#on_app_stopping" do
     let(:listener) { Karafka::Web::Pro::Commanding::Listener.new }
 
     before do
@@ -41,24 +41,24 @@ RSpec.describe_current do
       allow(listener).to receive(:stop)
     end
 
-    it 'expect to stop the listener' do
+    it "expect to stop the listener" do
       manager.on_app_stopping(nil)
       expect(listener).to have_received(:stop)
     end
   end
 
-  describe '#on_app_stopped' do
-    it 'calls the method without errors' do
+  describe "#on_app_stopped" do
+    it "calls the method without errors" do
       # Just ensure the method can be called without raising errors
       # We cannot test thread joining without accessing internal state
       expect { manager.on_app_stopped(nil) }.not_to raise_error
     end
   end
 
-  describe 'integration with commands' do
+  describe "integration with commands" do
     let(:listener) { Karafka::Web::Pro::Commanding::Listener.new }
     let(:matcher) { Karafka::Web::Pro::Commanding::Matcher.new }
-    let(:unsupported_command_name) { 'unsupported_command' }
+    let(:unsupported_command_name) { "unsupported_command" }
 
     let(:message) do
       instance_double(
@@ -78,7 +78,7 @@ RSpec.describe_current do
       allow(matcher).to receive(:matches?).with(message).and_return(true)
     end
 
-    context 'when command is trace' do
+    context "when command is trace" do
       let(:trace_command) { Karafka::Web::Pro::Commanding::Commands::Consumers::Trace.new({}) }
       let(:command_name) { trace_command.class.name }
 
@@ -87,13 +87,13 @@ RSpec.describe_current do
         allow(trace_command).to receive(:call)
       end
 
-      it 'executes trace command' do
+      it "executes trace command" do
         manager.send(:call)
         expect(trace_command).to have_received(:call)
       end
     end
 
-    context 'when command is quiet' do
+    context "when command is quiet" do
       let(:quiet_command) { Karafka::Web::Pro::Commanding::Commands::Consumers::Quiet.new({}) }
       let(:command_name) { quiet_command.class.name }
 
@@ -102,13 +102,13 @@ RSpec.describe_current do
         allow(quiet_command).to receive(:call)
       end
 
-      it 'executes quiet command' do
+      it "executes quiet command" do
         manager.send(:call)
         expect(quiet_command).to have_received(:call)
       end
     end
 
-    context 'when command is stop' do
+    context "when command is stop" do
       let(:stop_command) { Karafka::Web::Pro::Commanding::Commands::Consumers::Stop.new({}) }
       let(:command_name) { stop_command.class.name }
 
@@ -117,13 +117,13 @@ RSpec.describe_current do
         allow(stop_command).to receive(:call)
       end
 
-      it 'executes stop command' do
+      it "executes stop command" do
         manager.send(:call)
         expect(stop_command).to have_received(:call)
       end
     end
 
-    context 'when command is seek' do
+    context "when command is seek" do
       let(:seek_command) { Karafka::Web::Pro::Commanding::Commands::Partitions::Seek.new({}) }
       let(:command_name) { seek_command.class.name }
 
@@ -132,13 +132,13 @@ RSpec.describe_current do
         allow(seek_command).to receive(:call)
       end
 
-      it 'executes stop command' do
+      it "executes stop command" do
         manager.send(:call)
         expect(seek_command).to have_received(:call)
       end
     end
 
-    context 'when command is pause' do
+    context "when command is pause" do
       let(:pause_command) { Karafka::Web::Pro::Commanding::Commands::Partitions::Pause.new({}) }
       let(:command_name) { pause_command.class.name }
 
@@ -147,13 +147,13 @@ RSpec.describe_current do
         allow(pause_command).to receive(:call)
       end
 
-      it 'executes stop command' do
+      it "executes stop command" do
         manager.send(:call)
         expect(pause_command).to have_received(:call)
       end
     end
 
-    context 'when command is resume' do
+    context "when command is resume" do
       let(:resume_command) { Karafka::Web::Pro::Commanding::Commands::Partitions::Resume.new({}) }
       let(:command_name) { resume_command.class.name }
 
@@ -162,16 +162,16 @@ RSpec.describe_current do
         allow(resume_command).to receive(:call)
       end
 
-      it 'executes stop command' do
+      it "executes stop command" do
         manager.send(:call)
         expect(resume_command).to have_received(:call)
       end
     end
 
-    context 'when command is unsupported' do
+    context "when command is unsupported" do
       let(:command_name) { unsupported_command_name }
 
-      it 'raises UnsupportedCaseError' do
+      it "raises UnsupportedCaseError" do
         expect { manager.send(:call) }.to raise_error(Karafka::Errors::UnsupportedCaseError)
       end
     end

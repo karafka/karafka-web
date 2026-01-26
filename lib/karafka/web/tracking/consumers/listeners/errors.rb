@@ -10,7 +10,7 @@ module Karafka
             include Tracking::Helpers::ErrorInfo
 
             # Schema used by consumers error reporting
-            SCHEMA_VERSION = '1.2.0'
+            SCHEMA_VERSION = "1.2.0"
 
             private_constant :SCHEMA_VERSION
 
@@ -23,15 +23,15 @@ module Karafka
               # Collect extra info if it was a consumer related error.
               # Those come from user code
               details = case caller_ref
-                        when Karafka::BaseConsumer
-                          extract_consumer_info(caller_ref)
-                        when Karafka::Connection::Client
-                          extract_client_info(caller_ref)
-                        when Karafka::Connection::Listener
-                          extract_listener_info(caller_ref)
-                        else
-                          {}
-                        end
+              when Karafka::BaseConsumer
+                extract_consumer_info(caller_ref)
+              when Karafka::Connection::Client
+                extract_client_info(caller_ref)
+              when Karafka::Connection::Listener
+                extract_listener_info(caller_ref)
+              else
+                {}
+              end
 
               error_class, error_message, backtrace = extract_error_info(event[:error])
 

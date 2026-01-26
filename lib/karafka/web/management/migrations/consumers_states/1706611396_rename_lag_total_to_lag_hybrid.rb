@@ -7,7 +7,7 @@ module Karafka
         module ConsumersStates
           # Renames total lag to hybrid to better represent what it is
           class RenameLagTotalToLagHybrid < Base
-            self.versions_until = '1.3.1'
+            self.versions_until = "1.3.1"
             self.type = :consumers_states
 
             # @param state [Hash]

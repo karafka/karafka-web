@@ -14,7 +14,7 @@ module Karafka
               sg_id = subscription_group.id
               # Use false to explicitly indicate static membership is not configured
               # vs nil which could be ambiguous
-              instance_id = subscription_group.kafka[:'group.instance.id'] || false
+              instance_id = subscription_group.kafka[:"group.instance.id"] || false
 
               track do |sampler|
                 # This will initialize the hash upon first request

@@ -7,6 +7,45 @@
 @config '../../../../../../../tailwind.config.js';
 
 /*
+  Safelist using @source inline() - Tailwind v4.1+ feature
+  Uses brace expansion syntax for patterns
+  Note: Regex patterns in tailwind.config.js safelist do NOT work with @tailwindcss/postcss
+  Reference: https://tailwindcss.com/docs/detecting-classes-in-source-files#safelisting-specific-utilities
+*/
+@source inline('badge{,-xs,-sm,-lg,-outline,-ghost,-info,-error,-warning,-success,-primary,-secondary,-neutral,-accent}');
+@source inline('alert{,-info,-error,-warning,-success,-primary,-secondary}');
+@source inline('btn{,-xs,-sm,-md,-lg,-square,-circle,-ghost,-outline,-link,-active,-disabled,-info,-error,-warning,-success,-primary,-secondary,-neutral,-accent}');
+@source inline('bg-{base-100,base-200,base-300,info,error,warning,success,primary,secondary,neutral,accent}');
+@source inline('status-row-{warning,error,success,info,quiet,quieting,running,stopped,stopping,pending}');
+@source inline('menu{,-xs,-sm,-md,-lg,-horizontal,-vertical,-compact,-active}');
+@source inline('card{,-body,-title,-actions,-compact,-bordered,-side}');
+@source inline('toggle{,-xs,-sm,-md,-lg,-primary,-secondary,-accent,-success,-warning,-error,-info}');
+@source inline('input{,-xs,-sm,-md,-lg,-bordered,-ghost,-primary,-secondary,-accent,-success,-warning,-error,-info}');
+@source inline('textarea{,-xs,-sm,-md,-lg,-bordered,-ghost,-primary,-secondary,-accent,-success,-warning,-error,-info}');
+@source inline('select{,-xs,-sm,-md,-lg,-bordered,-ghost,-primary,-secondary,-accent,-success,-warning,-error,-info}');
+@source inline('checkbox{,-xs,-sm,-md,-lg,-primary,-secondary,-accent,-success,-warning,-error,-info}');
+@source inline('radio{,-xs,-sm,-md,-lg,-primary,-secondary,-accent,-success,-warning,-error,-info}');
+@source inline('link{,-primary,-secondary,-accent,-success,-warning,-error,-info,-hover}');
+@source inline('table{,-xs,-sm,-md,-lg,-zebra,-pin-rows,-pin-cols}');
+@source inline('tooltip{,-open,-top,-bottom,-left,-right,-primary,-secondary,-accent,-success,-warning,-error,-info}');
+@source inline('modal{,-open,-top,-bottom,-middle}');
+@source inline('dropdown{,-open,-top,-bottom,-left,-right,-end,-hover}');
+@source inline('tabs{,-boxed,-bordered,-lifted}');
+@source inline('tab{,-active,-disabled,-bordered,-lifted}');
+@source inline('collapse{,-open,-close,-arrow,-plus}');
+@source inline('progress{,-primary,-secondary,-accent,-success,-warning,-error,-info}');
+@source inline('radial-progress');
+@source inline('loading{,-spinner,-dots,-ring,-ball,-bars,-infinity}');
+@source inline('divider{,-horizontal,-vertical,-start,-end,-neutral,-primary,-secondary,-accent,-success,-warning,-error,-info}');
+@source inline('drawer{,-open,-end,-side}');
+@source inline('navbar{,-start,-center,-end}');
+@source inline('breadcrumbs');
+@source inline('steps{,-horizontal,-vertical}');
+@source inline('step{,-primary,-secondary,-accent,-success,-warning,-error,-info,-neutral}');
+@source inline('form-control');
+@source inline('label{,-text,-text-alt}');
+
+/*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
   looks the same as it did with Tailwind CSS v3.

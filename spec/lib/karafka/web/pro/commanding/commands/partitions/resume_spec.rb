@@ -35,8 +35,8 @@ RSpec.describe_current do
     allow(command).to receive(:acceptance)
   end
 
-  describe '#call' do
-    it 'delegates the command to tracker and sends acceptance' do
+  describe "#call" do
+    it "delegates the command to tracker and sends acceptance" do
       command.call
 
       expect(tracker).to have_received(:<<).with(command_request)

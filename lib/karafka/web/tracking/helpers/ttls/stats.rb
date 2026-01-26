@@ -16,10 +16,10 @@ module Karafka
             # @param ttls_hash [Ttls::Hash, Hash] hash with window based samples
             def initialize(ttls_hash)
               @data = ttls_hash
-                      .values
-                      .map { |value| value.samples.to_a }
-                      .delete_if { |samples| samples.size < 2 }
-                      .map { |samples| samples.map(&:values) }
+                .values
+                .map { |value| value.samples.to_a }
+                .delete_if { |samples| samples.size < 2 }
+                .map { |samples| samples.map(&:values) }
             end
 
             # Computes the rate out of the samples provided on a per second basis. The samples need

@@ -23,17 +23,17 @@
 RSpec.describe_current do
   subject(:runner) { described_class.new(topic, partitions_count, search_criteria) }
 
-  context 'when using mocked specs' do
-    let(:topic) { 'test_topic' }
+  context "when using mocked specs" do
+    let(:topic) { "test_topic" }
     let(:partitions_count) { 3 }
     let(:search_criteria) do
       {
         matcher: Karafka::Web::Pro::Ui::Lib::Search::Matchers::RawPayloadIncludes.name,
         limit: 10,
         offset: 0,
-        offset_type: 'latest',
+        offset_type: "latest",
         partitions: %w[0 1],
-        phrase: 'test phrase',
+        phrase: "test phrase",
         timestamp: (Time.now.to_f * 1_000).to_i
       }
     end
@@ -49,7 +49,7 @@ RSpec.describe_current do
           offset: i,
           timestamp: Time.now - 10,
           clean!: nil,
-          raw_payload: '',
+          raw_payload: "",
           raw_headers: {}
         )
       end
@@ -77,8 +77,8 @@ RSpec.describe_current do
         .to receive(:stop_current_partition)
     end
 
-    describe '#call' do
-      it 'returns the matched results and metrics' do
+    describe "#call" do
+      it "returns the matched results and metrics" do
         results, metrics = runner.call
 
         expect(results).to be_an(Array)
@@ -87,43 +87,43 @@ RSpec.describe_current do
         expect(metrics[:partitions]).to be_a(Hash)
       end
 
-      it 'collects the correct metrics' do
+      it "collects the correct metrics" do
         _results, metrics = runner.call
 
         expect(metrics[:totals][:checked]).to eq(4)
         expect(metrics[:totals][:matched]).to eq(0)
       end
 
-      context 'when a message matches the phrase' do
+      context "when a message matches the phrase" do
         before do
           allow(matcher_instance).to receive(:call).and_return(true)
         end
 
-        it 'adds the message to the matched results' do
+        it "adds the message to the matched results" do
           results, = runner.call
 
           expect(results.size).to eq(4)
         end
       end
 
-      context 'when the total checked limit reach the limit' do
+      context "when the total checked limit reach the limit" do
         let(:search_criteria) { super().merge(limit: 1) }
 
         before { allow(iterator_instance).to receive(:stop) }
 
-        it 'stops the iterator' do
+        it "stops the iterator" do
           runner.call
 
           expect(iterator_instance).to have_received(:stop).at_least(:once)
         end
       end
 
-      context 'when the checked limit for a partition reach the limit' do
+      context "when the checked limit for a partition reach the limit" do
         let(:search_criteria) { super().merge(limit: 3) }
 
         before { allow(iterator_instance).to receive(:stop_current_partition) }
 
-        it 'stops the current partition in the iterator' do
+        it "stops the current partition in the iterator" do
           runner.call
 
           expect(iterator_instance).to have_received(:stop_current_partition).at_least(:once)
@@ -133,7 +133,7 @@ RSpec.describe_current do
   end
 
   # Search is also covered with controller specs
-  context 'when runningend to end search integrations' do
+  context "when runningend to end search integrations" do
     let(:partitions_count) { 1 }
 
     let(:search_criteria) do
@@ -141,48 +141,48 @@ RSpec.describe_current do
         matcher: Karafka::Web::Pro::Ui::Lib::Search::Matchers::RawPayloadIncludes.name,
         limit: 100,
         offset: 0,
-        offset_type: 'latest',
+        offset_type: "latest",
         partitions: %w[0 1],
-        phrase: 'test phrase',
+        phrase: "test phrase",
         timestamp: Time.now.to_i
       }
     end
 
-    context 'when requested topic does not exist' do
+    context "when requested topic does not exist" do
       let(:topic) { generate_topic_name }
 
       it { expect { runner.call }.to raise_error(Rdkafka::RdkafkaError) }
     end
 
-    context 'when topic exists but we want to search in a higher partition' do
+    context "when topic exists but we want to search in a higher partition" do
       let(:topic) { create_topic }
       let(:partitions_count) { 1 }
 
       it { expect(runner.call.first).to eq([]) }
     end
 
-    context 'when we want to search in many partitions and all include some data' do
+    context "when we want to search in many partitions and all include some data" do
       let(:topic) { create_topic(partitions: 2) }
       let(:partitions_count) { 2 }
 
       before do
-        produce(topic, '12 test phrase 12', partition: 0)
-        produce(topic, '12 test phrase 12', partition: 1)
-        produce(topic, 'na', partition: 0)
-        produce(topic, 'na', partition: 1)
+        produce(topic, "12 test phrase 12", partition: 0)
+        produce(topic, "12 test phrase 12", partition: 1)
+        produce(topic, "na", partition: 0)
+        produce(topic, "na", partition: 1)
       end
 
       it { expect(runner.call.first.size).to eq(2) }
     end
 
-    context 'when we want to search in one partition and others have data' do
+    context "when we want to search in one partition and others have data" do
       let(:topic) { create_topic(partitions: 2) }
       let(:partitions_count) { 2 }
 
       before do
-        produce(topic, '12 test phrase 12', partition: 1)
-        produce(topic, 'na', partition: 0)
-        produce(topic, 'na', partition: 1)
+        produce(topic, "12 test phrase 12", partition: 1)
+        produce(topic, "na", partition: 0)
+        produce(topic, "na", partition: 1)
 
         search_criteria[:partitions][0]
       end
@@ -190,34 +190,34 @@ RSpec.describe_current do
       it { expect(runner.call.first.size).to eq(1) }
     end
 
-    context 'when we want to search from beginning but what we want is ahead of our limits' do
+    context "when we want to search from beginning but what we want is ahead of our limits" do
       let(:topic) { create_topic }
 
       before do
-        20.times { produce(topic, 'na') }
+        20.times { produce(topic, "na") }
 
-        produce(topic, '12 test phrase 12', partition: 0)
+        produce(topic, "12 test phrase 12", partition: 0)
 
         search_criteria[:limit] = 10
-        search_criteria[:offset_type] = 'offset'
+        search_criteria[:offset_type] = "offset"
         search_criteria[:offset] = 0
       end
 
       it { expect(runner.call.first.size).to eq(0) }
     end
 
-    context 'when we want to search from beginning on many and divided does not reach' do
+    context "when we want to search from beginning on many and divided does not reach" do
       let(:topic) { create_topic(partitions: 10) }
       let(:partitions_count) { 10 }
 
       before do
         10.times do |partition|
-          12.times { produce(topic, 'na', partition: partition) }
-          produce(topic, '12 test phrase 12', partition: partition)
+          12.times { produce(topic, "na", partition: partition) }
+          produce(topic, "12 test phrase 12", partition: partition)
         end
 
         search_criteria[:limit] = 100
-        search_criteria[:offset_type] = 'offset'
+        search_criteria[:offset_type] = "offset"
         search_criteria[:offset] = 0
         search_criteria[:partitions] = %w[all]
       end
@@ -225,17 +225,17 @@ RSpec.describe_current do
       it { expect(runner.call.first.size).to eq(0) }
     end
 
-    context 'when we want to search from beginning on many and divided reaches' do
+    context "when we want to search from beginning on many and divided reaches" do
       let(:topic) { create_topic(partitions: 10) }
       let(:partitions_count) { 10 }
 
       before do
         10.times do |partition|
-          produce(topic, '12 test phrase 12', partition: partition)
+          produce(topic, "12 test phrase 12", partition: partition)
         end
 
         search_criteria[:limit] = 100
-        search_criteria[:offset_type] = 'offset'
+        search_criteria[:offset_type] = "offset"
         search_criteria[:offset] = 0
         search_criteria[:partitions] = %w[all]
       end
@@ -243,19 +243,19 @@ RSpec.describe_current do
       it { expect(runner.call.first.size).to eq(10) }
     end
 
-    context 'when searching with offset ahead of searched limit' do
+    context "when searching with offset ahead of searched limit" do
       let(:topic) { create_topic(partitions: 10) }
       let(:partitions_count) { 10 }
 
       before do
         10.times do |partition|
-          produce(topic, '12 test phrase 12', partition: partition)
+          produce(topic, "12 test phrase 12", partition: partition)
         end
 
         sleep(1)
 
         search_criteria[:limit] = 100
-        search_criteria[:offset_type] = 'timestamp'
+        search_criteria[:offset_type] = "timestamp"
         search_criteria[:timestamp] = (Time.now.to_f * 1_000).to_i
         search_criteria[:partitions] = %w[all]
       end
@@ -263,19 +263,19 @@ RSpec.describe_current do
       it { expect(runner.call.first.size).to eq(0) }
     end
 
-    context 'when searching with offset behind of searched limit' do
+    context "when searching with offset behind of searched limit" do
       let(:topic) { create_topic(partitions: 10) }
       let(:partitions_count) { 10 }
 
       before do
         10.times do |partition|
-          produce(topic, '12 test phrase 12', partition: partition)
+          produce(topic, "12 test phrase 12", partition: partition)
         end
 
         sleep(1)
 
         search_criteria[:limit] = 100
-        search_criteria[:offset_type] = 'timestamp'
+        search_criteria[:offset_type] = "timestamp"
         search_criteria[:timestamp] = ((Time.now.to_f - 100) * 1_000).to_i
         search_criteria[:partitions] = %w[all]
       end

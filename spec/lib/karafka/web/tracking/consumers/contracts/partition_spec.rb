@@ -14,8 +14,8 @@ RSpec.describe_current do
       committed_offset_fd: 0,
       stored_offset: 0,
       stored_offset_fd: 0,
-      fetch_state: 'active',
-      poll_state: 'active',
+      fetch_state: "active",
+      poll_state: "active",
       poll_state_ch: 0,
       hi_offset: 1,
       hi_offset_fd: 0,
@@ -28,11 +28,11 @@ RSpec.describe_current do
     }
   end
 
-  context 'when config is valid' do
+  context "when config is valid" do
     it { expect(contract.call(config)).to be_success }
   end
 
-  context 'when id is less than 0' do
+  context "when id is less than 0" do
     before { config[:id] = -1 }
 
     it { expect(contract.call(config)).not_to be_success }
@@ -55,7 +55,7 @@ RSpec.describe_current do
     end
 
     context "when #{state} is empty" do
-      before { config[state] = '' }
+      before { config[state] = "" }
 
       it { expect(contract.call(config)).not_to be_success }
     end
@@ -82,7 +82,7 @@ RSpec.describe_current do
     transactional
   ].each do |key|
     context "when #{key} is not numeric" do
-      before { config[key] = '2' }
+      before { config[key] = "2" }
 
       it { expect(contract.call(config)).not_to be_success }
     end

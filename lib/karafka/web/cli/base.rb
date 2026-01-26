@@ -13,7 +13,7 @@ module Karafka
             ObjectSpace
               .each_object(Class)
               .select { |klass| klass.superclass == Karafka::Web::Cli::Base }
-              .reject { |klass| klass.to_s.end_with?('::Base') }
+              .reject { |klass| klass.to_s.end_with?("::Base") }
               .sort_by(&:name)
           end
         end
@@ -27,7 +27,7 @@ module Karafka
         #   if we are supposed to compute the factor automatically
         # @return [Integer] replication factor for Karafka Web UI topics
         def compute_replication_factor(cli_replication_factor)
-          cli_replication_factor || (Ui::Models::ClusterInfo.fetch.brokers.size > 1 ? 2 : 1)
+          cli_replication_factor || ((Ui::Models::ClusterInfo.fetch.brokers.size > 1) ? 2 : 1)
         end
       end
     end

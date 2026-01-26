@@ -30,16 +30,16 @@ RSpec.describe_current do
     allow(Karafka.monitor).to receive(:instrument)
   end
 
-  describe '#each' do
-    context 'when all good' do
+  describe "#each" do
+    context "when all good" do
       before { allow(iterator_double).to receive(:each).and_yield(message) }
 
-      it 'yields messages from the iterator' do
+      it "yields messages from the iterator" do
         expect { |b| listener.each(&b) }.to yield_with_args(message)
       end
     end
 
-    context 'when an error occurs' do
+    context "when an error occurs" do
       before do
         allow(iterator_double)
           .to receive(:each)
@@ -49,7 +49,7 @@ RSpec.describe_current do
         allow(Karafka.monitor).to receive(:instrument)
       end
 
-      it 'reports the error and retries' do
+      it "reports the error and retries" do
         listener.each do
           listener.stop
         end
@@ -58,15 +58,15 @@ RSpec.describe_current do
       end
     end
 
-    context 'when stop is requested' do
+    context "when stop is requested" do
       before do
         allow(iterator_double).to receive(:each).and_yield(message)
         allow(iterator_double).to receive(:stop)
       end
 
-      it 'stops iterating over messages' do
+      it "stops iterating over messages" do
         listener.stop
-        listener.each { |_| nil }
+        listener.each { |_| }
 
         expect(iterator_double).to have_received(:stop)
       end

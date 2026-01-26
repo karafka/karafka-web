@@ -10,7 +10,7 @@ RSpec.describe_current do
     allow(installer).to receive(:uninstall)
   end
 
-  it 'expect to uninstall using installer' do
+  it "expect to uninstall using installer" do
     cli.call
     expect(installer).to have_received(:uninstall)
   end

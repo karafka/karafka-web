@@ -31,11 +31,11 @@ module Karafka
               # Lists all the topics we can explore
               def index
                 @topics = Models::ClusterInfo
-                          .topics
-                          .sort_by { |topic| topic[:topic_name] }
+                  .topics
+                  .sort_by { |topic| topic[:topic_name] }
 
                 unless ::Karafka::Web.config.ui.visibility.internal_topics
-                  @topics.reject! { |topic| topic[:topic_name].start_with?('__') }
+                  @topics.reject! { |topic| topic[:topic_name].start_with?("__") }
                 end
 
                 render

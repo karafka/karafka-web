@@ -43,7 +43,7 @@ module Karafka
 
                 # Runs the command
                 def call
-                  raise NotImplementedError, 'Implement in a subclass'
+                  raise NotImplementedError, "Implement in a subclass"
                 end
 
                 private

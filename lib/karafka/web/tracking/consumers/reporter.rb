@@ -71,7 +71,7 @@ module Karafka
                   payload: Zlib::Deflate.deflate(report.to_json),
                   key: process_id,
                   partition: 0,
-                  headers: { 'zlib' => 'true' }
+                  headers: { "zlib" => "true" }
                 }
               ]
 
@@ -84,7 +84,7 @@ module Karafka
                   payload: Zlib::Deflate.deflate(error.to_json),
                   # Always dispatch errors from the same process to the same partition
                   key: process_id,
-                  headers: { 'zlib' => 'true' }
+                  headers: { "zlib" => "true" }
                 }
               end
 

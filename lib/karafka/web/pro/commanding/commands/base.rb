@@ -42,7 +42,7 @@ module Karafka
 
             # Executes the command after receiving it.
             def call
-              raise NotImlementedError, 'Please implement in a subclass'
+              raise NotImlementedError, "Please implement in a subclass"
             end
 
             private

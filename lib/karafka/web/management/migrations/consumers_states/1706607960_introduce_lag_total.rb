@@ -7,7 +7,7 @@ module Karafka
         module ConsumersStates
           # Moves to using lag total as a normalization for both lags
           class IntroduceLagTotal < Base
-            self.versions_until = '1.3.0'
+            self.versions_until = "1.3.0"
             self.type = :consumers_states
 
             # @param state [Hash]

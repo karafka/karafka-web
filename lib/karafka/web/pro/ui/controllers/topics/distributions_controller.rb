@@ -91,7 +91,7 @@ module Karafka
                 redirect(
                   "topics/#{topic_name}/distribution",
                   success: format_flash(
-                    'Topic ? repartitioning to ? partitions successfully started',
+                    "Topic ? repartitioning to ? partitions successfully started",
                     topic_name,
                     partition_count
                   )

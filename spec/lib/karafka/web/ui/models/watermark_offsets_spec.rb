@@ -6,7 +6,7 @@ RSpec.describe_current do
   let(:high) { 0 }
   let(:low) { 0 }
 
-  describe '.find' do
+  describe ".find" do
     subject(:watermarks) { described_class.find(topic_id, partition_id) }
 
     let(:topic_id) { rand.to_s }
@@ -22,37 +22,37 @@ RSpec.describe_current do
     it { expect(watermarks.high).to eq(high) }
   end
 
-  describe '#empty?' do
-    context 'when both watermark offsets are zero' do
+  describe "#empty?" do
+    context "when both watermark offsets are zero" do
       it { expect(watermarks.empty?).to be(true) }
     end
 
-    context 'when when low is not zero' do
+    context "when when low is not zero" do
       let(:low) { 1 }
 
       it { expect(watermarks.empty?).to be(false) }
     end
 
-    context 'when high is not zero' do
+    context "when high is not zero" do
       let(:high) { 1 }
 
       it { expect(watermarks.empty?).to be(false) }
     end
   end
 
-  describe '#cleaned?' do
-    context 'when partition is empty' do
+  describe "#cleaned?" do
+    context "when partition is empty" do
       it { expect(watermarks.cleaned?).to be(false) }
     end
 
-    context 'when there is some data' do
+    context "when there is some data" do
       let(:high) { 100 }
       let(:low) { 80 }
 
       it { expect(watermarks.cleaned?).to be(false) }
     end
 
-    context 'when there was some data but no more' do
+    context "when there was some data but no more" do
       let(:high) { 100 }
       let(:low) { 100 }
 
@@ -60,22 +60,22 @@ RSpec.describe_current do
     end
   end
 
-  context 'when Kafka topic does not exist' do
+  context "when Kafka topic does not exist" do
     it do
       expect { described_class.find(SecureRandom.uuid, 0) }.to raise_error(Rdkafka::RdkafkaError)
     end
   end
 
-  context 'when Kafka partition does not exist' do
+  context "when Kafka partition does not exist" do
     let(:topic) { create_topic }
 
     it { expect { described_class.find(topic, 2) }.to raise_error(Rdkafka::RdkafkaError) }
   end
 
-  context 'when topic and partition and there is no data' do
+  context "when topic and partition and there is no data" do
     let(:topic) { create_topic }
 
-    it 'expect to return correct values' do
+    it "expect to return correct values" do
       result = described_class.find(topic, 0)
       expect(result.low).to eq(0)
       expect(result.high).to eq(0)
@@ -84,12 +84,12 @@ RSpec.describe_current do
     end
   end
 
-  context 'when topic and partition and there is some no data' do
+  context "when topic and partition and there is some no data" do
     let(:topic) { create_topic }
 
     before { 2.times { produce(topic) } }
 
-    it 'expect to return correct values' do
+    it "expect to return correct values" do
       result = described_class.find(topic, 0)
       expect(result.low).to eq(0)
       expect(result.high).to eq(2)

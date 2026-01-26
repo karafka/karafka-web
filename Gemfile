@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
 gemspec
 
 group :test do
-  gem 'byebug'
-  gem 'factory_bot'
-  gem 'fugit'
+  gem "byebug"
+  gem "factory_bot"
+  gem "fugit"
   # Needed for links extraction for visits verification
-  gem 'nokogiri'
-  gem 'ostruct'
-  gem 'rack-test'
-  gem 'rspec'
-  gem 'simplecov'
+  gem "nokogiri"
+  gem "ostruct"
+  gem "rack-test"
+  gem "rspec"
+  gem "simplecov"
 end

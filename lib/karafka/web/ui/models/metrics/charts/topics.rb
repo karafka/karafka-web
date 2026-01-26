@@ -44,7 +44,7 @@ module Karafka
 
                 # We name it with a space because someone may have a topic called "total" and we
                 # want to avoid collisions
-                per_topic.merge('total sum' => total.to_a).to_json
+                per_topic.merge("total sum" => total.to_a).to_json
               end
 
               # @return [String] JSON with per-topic, highest LSO freeze duration. Useful for
@@ -53,7 +53,7 @@ module Karafka
                 topics = Hash.new { |h, k| h[k] = Hash.new { |h2, k2| h2[k2] = [] } }
 
                 @data.to_h.each do |topic, metrics|
-                  topic_without_cg = topic.split('[').first
+                  topic_without_cg = topic.split("[").first
 
                   metrics.each do |current|
                     ls_offset_fd = current.last[:ls_offset_fd] || 0
@@ -86,7 +86,7 @@ module Karafka
                 topics = {}
 
                 @data.to_h.each do |topic, metrics|
-                  topic_without_cg = topic.split('[').first
+                  topic_without_cg = topic.split("[").first
 
                   # If we've already seen this topic data, we can skip
                   next if topics.include?(topic_without_cg)

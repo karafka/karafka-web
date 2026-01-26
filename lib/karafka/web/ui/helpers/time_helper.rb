@@ -51,7 +51,7 @@ module Karafka
             state_ch_in_seconds = state_ch / 1_000.0
 
             # If state is active, there is no date of change
-            if state == 'active'
+            if state == "active"
               %(
                 <span class="badge #{kafka_state_badge(state)}">#{state}</span>
               )

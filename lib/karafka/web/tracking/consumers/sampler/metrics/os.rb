@@ -27,7 +27,7 @@ module Karafka
                 # Reading this that way is cheaper than running a shell command
                 when /linux/
                   File.readlines("/proc/#{pid}/status").each do |line|
-                    next unless line.start_with?('VmRSS:')
+                    next unless line.start_with?("VmRSS:")
 
                     break line.split[1].to_i
                   end
@@ -70,22 +70,22 @@ module Karafka
                 return @memory_size if instance_variable_defined?(:@memory_size)
 
                 @memory_size = case RUBY_PLATFORM
-                               when /linux/
-                                 mem_info = File.read('/proc/meminfo')
-                                 mem_total_line = mem_info.match(/MemTotal:\s*(?<total>\d+)/)
-                                 mem_total_line['total'].to_i
-                               when /darwin|bsd/
-                                 shell
-                               .call('sysctl -a')
-                               .split("\n")
-                               .find { |line| line.start_with?('hw.memsize:') }
-                               .to_s
-                               .split
-                               .last
-                               .to_i
-                               else
-                                 0
-                               end
+                when /linux/
+                  mem_info = File.read("/proc/meminfo")
+                  mem_total_line = mem_info.match(/MemTotal:\s*(?<total>\d+)/)
+                  mem_total_line["total"].to_i
+                when /darwin|bsd/
+                  shell
+                    .call("sysctl -a")
+                    .split("\n")
+                    .find { |line| line.start_with?("hw.memsize:") }
+                    .to_s
+                    .split
+                    .last
+                    .to_i
+                else
+                  0
+                end
               end
 
               # @return [Array<Float>] load averages for last 1, 5 and 15 minutes
@@ -93,13 +93,13 @@ module Karafka
                 case RUBY_PLATFORM
                 when /linux/
                   File
-                    .read('/proc/loadavg')
+                    .read("/proc/loadavg")
                     .split
                     .first(3)
                     .map(&:to_f)
                 when /darwin|bsd/
                   shell
-                    .call('w | head -1')
+                    .call("w | head -1")
                     .strip
                     .split
                     .map(&:to_f)
@@ -157,27 +157,27 @@ module Karafka
                   current_pid = ::Process.pid
 
                   # Read all processes from /proc
-                  Dir.glob('/proc/[0-9]*/statm').filter_map do |statm_file|
+                  Dir.glob("/proc/[0-9]*/statm").filter_map do |statm_file|
                     pid = statm_file.match(%r{/proc/(\d+)/statm})[1].to_i
                     status_file = "/proc/#{pid}/status"
 
                     # Extract RSS from /proc/<pid>/statm (second field)
                     rss_pages = begin
                       File.read(statm_file).split[1].to_i
-                    rescue StandardError
+                    rescue
                       next # Process may have exited
                     end
 
                     # Extract thread count from /proc/<pid>/status (only for current process)
                     thcount = if pid == current_pid
-                                begin
-                                  File.read(status_file)[/^Threads:\s+(\d+)/, 1].to_i
-                                rescue StandardError
-                                  0
-                                end
-                              else
-                                0
-                              end
+                      begin
+                        File.read(status_file)[/^Threads:\s+(\d+)/, 1].to_i
+                      rescue
+                        0
+                      end
+                    else
+                      0
+                    end
 
                     # Convert RSS from pages to kilobytes
                     rss_kb = (rss_pages * page_size) / 1024
@@ -189,7 +189,7 @@ module Karafka
                 # we do on windows
                 when /darwin|bsd/
                   shell
-                    .call('ps -A -o rss=,pid=')
+                    .call("ps -A -o rss=,pid=")
                     .split("\n")
                     .map { |row| row.strip.split.map(&:to_i) }
                     .map { |row| [row.first, 0, row.last] }

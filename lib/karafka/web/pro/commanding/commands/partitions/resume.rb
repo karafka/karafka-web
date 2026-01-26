@@ -28,7 +28,7 @@ module Karafka
           module Partitions
             # Delegates the resuming of the processing
             class Resume < Base
-              self.name = 'partitions.resume'
+              self.name = "partitions.resume"
 
               # Dispatches the seek request into the appropriate filter and indicates that the
               # seeking is in an acceptance state

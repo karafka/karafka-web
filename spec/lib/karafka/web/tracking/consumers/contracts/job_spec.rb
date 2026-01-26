@@ -5,232 +5,232 @@ RSpec.describe_current do
 
   let(:job) do
     {
-      consumer: 'consumer1',
-      consumer_group: 'consumer_group1',
+      consumer: "consumer1",
+      consumer_group: "consumer_group1",
       updated_at: 1_624_301_554.123,
-      topic: 'topic1',
+      topic: "topic1",
       partition: 0,
       first_offset: 0,
       last_offset: 100,
       committed_offset: 50,
-      type: 'consume',
+      type: "consume",
       tags: Karafka::Core::Taggable::Tags.new,
       consumption_lag: 0,
       processing_lag: 0,
       messages: 2,
-      status: 'running'
+      status: "running"
     }
   end
 
-  context 'when config is valid' do
+  context "when config is valid" do
     it { expect(contract.call(job)).to be_success }
   end
 
-  context 'when status is missing' do
+  context "when status is missing" do
     before { job.delete(:status) }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when status is not running nor pending' do
+  context "when status is not running nor pending" do
     before { job[:status] = rand.to_s }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when consumer is missing' do
+  context "when consumer is missing" do
     before { job.delete(:consumer) }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when consumer is not a string' do
+  context "when consumer is not a string" do
     before { job[:consumer] = 123 }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when consumer_group is missing' do
+  context "when consumer_group is missing" do
     before { job.delete(:consumer_group) }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when consumer_group is not a string' do
+  context "when consumer_group is not a string" do
     before { job[:consumer_group] = 123 }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when updated_at is missing' do
+  context "when updated_at is missing" do
     before { job.delete(:updated_at) }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when updated_at is not a float' do
-    before { job[:updated_at] = 'not a float' }
+  context "when updated_at is not a float" do
+    before { job[:updated_at] = "not a float" }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when updated_at is less than 0' do
+  context "when updated_at is less than 0" do
     before { job[:updated_at] = -1.0 }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when topic is missing' do
+  context "when topic is missing" do
     before { job.delete(:topic) }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when topic is not a string' do
+  context "when topic is not a string" do
     before { job[:topic] = 123 }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when messages is missing' do
+  context "when messages is missing" do
     before { job.delete(:messages) }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when messages is not a number' do
-    before { job[:messages] = 'xda' }
+  context "when messages is not a number" do
+    before { job[:messages] = "xda" }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when partition is missing' do
+  context "when partition is missing" do
     before { job.delete(:partition) }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when partition is not an integer' do
-    before { job[:partition] = 'not an integer' }
+  context "when partition is not an integer" do
+    before { job[:partition] = "not an integer" }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when partition is less than 0' do
+  context "when partition is less than 0" do
     before { job[:partition] = -1 }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when first_offset is missing' do
+  context "when first_offset is missing" do
     before { job.delete(:first_offset) }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when first_offset is not an integer' do
-    before { job[:first_offset] = 'not an integer' }
+  context "when first_offset is not an integer" do
+    before { job[:first_offset] = "not an integer" }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when first_offset is less than 0 and not equal to -1001' do
+  context "when first_offset is less than 0 and not equal to -1001" do
     before { job[:first_offset] = -2 }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when last_offset is missing' do
+  context "when last_offset is missing" do
     before { job.delete(:last_offset) }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when last_offset is not an integer' do
-    before { job[:last_offset] = 'not an integer' }
+  context "when last_offset is not an integer" do
+    before { job[:last_offset] = "not an integer" }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when last_offset is less than 0 and not equal to -1001' do
+  context "when last_offset is less than 0 and not equal to -1001" do
     before { job[:last_offset] = -2 }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when committed_offset is missing' do
+  context "when committed_offset is missing" do
     before { job.delete(:committed_offset) }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when committed_offset is not an integer' do
-    before { job[:committed_offset] = 'not an integer' }
+  context "when committed_offset is not an integer" do
+    before { job[:committed_offset] = "not an integer" }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when type is missing' do
+  context "when type is missing" do
     before { job.delete(:type) }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when type is not a string' do
+  context "when type is not a string" do
     before { job[:type] = 123 }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when type is not within allowed types' do
-    before { job[:type] = 'unknown_type' }
+  context "when type is not within allowed types" do
+    before { job[:type] = "unknown_type" }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when tags is missing' do
+  context "when tags is missing" do
     before { job.delete(:tags) }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when tags is not a Karafka::Core::Taggable::Tags' do
+  context "when tags is not a Karafka::Core::Taggable::Tags" do
     before { job[:tags] = 123 }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when consumption_lag is missing' do
+  context "when consumption_lag is missing" do
     before { job.delete(:consumption_lag) }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when consumption_lag is not an integer' do
-    before { job[:consumption_lag] = 'not an integer' }
+  context "when consumption_lag is not an integer" do
+    before { job[:consumption_lag] = "not an integer" }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when consumption_lag is less than 0 and not equal to -1' do
+  context "when consumption_lag is less than 0 and not equal to -1" do
     before { job[:consumption_lag] = -2 }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when processing_lag is missing' do
+  context "when processing_lag is missing" do
     before { job.delete(:processing_lag) }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when processing_lag is not an integer' do
-    before { job[:processing_lag] = 'not an integer' }
+  context "when processing_lag is not an integer" do
+    before { job[:processing_lag] = "not an integer" }
 
     it { expect(contract.call(job)).not_to be_success }
   end
 
-  context 'when processing_lag is less than 0 and not equal to -1' do
+  context "when processing_lag is less than 0 and not equal to -1" do
     before { job[:processing_lag] = -2 }
 
     it { expect(contract.call(job)).not_to be_success }

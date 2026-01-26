@@ -48,11 +48,11 @@ module Karafka
                 @target_partition = @partition_id
 
                 @topics = Models::ClusterInfo
-                          .topics
-                          .sort_by { |topic| topic[:topic_name] }
+                  .topics
+                  .sort_by { |topic| topic[:topic_name] }
 
                 unless ::Karafka::Web.config.ui.visibility.internal_topics
-                  @topics.reject! { |topic| topic[:topic_name].start_with?('__') }
+                  @topics.reject! { |topic| topic[:topic_name].start_with?("__") }
                 end
 
                 render
@@ -82,9 +82,9 @@ module Karafka
                 # Include source headers for enhanced debuggability
                 if params.bool(:include_source_headers)
                   dispatch_message[:headers].merge!(
-                    'source_topic' => @message.topic,
-                    'source_partition' => @message.partition.to_s,
-                    'source_offset' => @message.offset.to_s
+                    "source_topic" => @message.topic,
+                    "source_partition" => @message.partition.to_s,
+                    "source_offset" => @message.offset.to_s
                   )
                 end
 
@@ -141,7 +141,7 @@ module Karafka
               # @return [String] flash message about message reproducing
               def republished(message, delivery)
                 format_flash(
-                  'Message with offset ? has been sent to ?#? and received offset ?',
+                  "Message with offset ? has been sent to ?#? and received offset ?",
                   message.offset,
                   delivery.topic,
                   delivery.partition,

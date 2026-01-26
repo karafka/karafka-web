@@ -30,7 +30,7 @@ module Karafka
             # Collects all backtraces from the available Ruby threads and publishes their details
             #   back to Kafka for debug.
             class Trace < Base
-              self.name = 'consumers.trace'
+              self.name = "consumers.trace"
 
               # Runs tracing and publishes result back to Kafka
               def call
@@ -40,7 +40,7 @@ module Karafka
                   tid = (thread.object_id ^ ::Process.pid).to_s(36)
                   t_d = threads[tid] = {}
                   t_d[:label] = "Thread TID-#{tid} #{thread.name}"
-                  t_d[:backtrace] = (thread.backtrace || ['<no backtrace available>']).join("\n")
+                  t_d[:backtrace] = (thread.backtrace || ["<no backtrace available>"]).join("\n")
                 end
 
                 result(threads)

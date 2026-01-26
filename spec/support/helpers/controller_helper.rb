@@ -18,8 +18,8 @@ module ControllerHelper
     env_key = Karafka::Web.config.ui.sessions.env_key
 
     last_request
-      .env[env_key]['_flash']
-      .transform_values { |value| value.gsub('<strong>', '').gsub('</strong>', '') }
+      .env[env_key]["_flash"]
+      .transform_values { |value| value.gsub("<strong>", "").gsub("</strong>", "") }
   end
 
   # @return [Karafka::Core::Configurable::Node] topics config node
@@ -39,12 +39,12 @@ module ControllerHelper
 
   # @return [String]
   def only_pro_feature
-    'This feature is available only to'
+    "This feature is available only to"
   end
 
   # @return [String] Message we display for offsets without user data
   def compacted_or_transactional_offset
-    <<~MSG.tr("\n", ' ').strip
+    <<~MSG.tr("\n", " ").strip
       This offset does not contain any data.
       The message may have been compacted or is a system entry.
     MSG
@@ -67,6 +67,6 @@ module ControllerHelper
 
   # @return [String] no results on pagination string
   def no_meaningful_results
-    'first page to get meaningful results'
+    "first page to get meaningful results"
   end
 end

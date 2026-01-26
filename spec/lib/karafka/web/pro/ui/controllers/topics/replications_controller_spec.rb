@@ -26,8 +26,8 @@ RSpec.describe_current do
   let(:topic) { create_topic(partitions: partitions) }
   let(:partitions) { 1 }
 
-  describe '#show' do
-    context 'when trying to read configs of a non-existing topic' do
+  describe "#show" do
+    context "when trying to read configs of a non-existing topic" do
       before { get "topics/#{generate_topic_name}/replication" }
 
       it do
@@ -36,7 +36,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when getting replication of an existing topic with single partition' do
+    context "when getting replication of an existing topic with single partition" do
       before { get "topics/#{topic}/replication" }
 
       it do
@@ -45,100 +45,100 @@ RSpec.describe_current do
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
         expect(body).to include(topic)
-        expect(body).to include('Replica Count')
-        expect(body).to include('In Sync Brokers')
+        expect(body).to include("Replica Count")
+        expect(body).to include("In Sync Brokers")
       end
 
-      it 'shows partition details' do
-        expect(body).to include('Partition')
-        expect(body).to include('Leader')
-        expect(body).to include('0') # First partition
+      it "shows partition details" do
+        expect(body).to include("Partition")
+        expect(body).to include("Leader")
+        expect(body).to include("0") # First partition
       end
 
-      it 'displays replication settings cards' do
-        expect(body).to include('Replication Factor')
-        expect(body).to include('Min In-Sync Replicas')
-        expect(body).to include('Fault Tolerance')
+      it "displays replication settings cards" do
+        expect(body).to include("Replication Factor")
+        expect(body).to include("Min In-Sync Replicas")
+        expect(body).to include("Fault Tolerance")
       end
     end
 
-    context 'when topic has multiple partitions' do
+    context "when topic has multiple partitions" do
       let(:partitions) { 5 }
 
       before { get "topics/#{topic}/replication" }
 
-      it 'displays all partitions' do
+      it "displays all partitions" do
         expect(response).to be_ok
         expect(body).to include(topic)
-        expect(body).to include('0')
-        expect(body).to include('1')
-        expect(body).to include('2')
-        expect(body).to include('3')
-        expect(body).to include('4')
+        expect(body).to include("0")
+        expect(body).to include("1")
+        expect(body).to include("2")
+        expect(body).to include("3")
+        expect(body).to include("4")
       end
 
-      it 'shows replication details for each partition' do
-        expect(body).to include('Replica Count')
-        expect(body).to include('In Sync Brokers')
-        expect(body).to include('Leader')
+      it "shows replication details for each partition" do
+        expect(body).to include("Replica Count")
+        expect(body).to include("In Sync Brokers")
+        expect(body).to include("Leader")
       end
     end
 
-    context 'when replication factor is 1 (no redundancy)' do
+    context "when replication factor is 1 (no redundancy)" do
       # In the test environment, RF=1 by default (single broker setup)
       # This triggers the no redundancy warning
 
-      context 'when in production environment' do
+      context "when in production environment" do
         before do
           allow(Karafka.env).to receive(:production?).and_return(true)
           get "topics/#{topic}/replication"
         end
 
-        it 'displays the no redundancy warning with production severity' do
+        it "displays the no redundancy warning with production severity" do
           expect(response).to be_ok
-          expect(body).to include('No Replication Redundancy')
-          expect(body).to include('replication factor of')
-          expect(body).to include('redundant copies')
-          expect(body).to include('permanently lost')
-          expect(body).to include('Broker Failures and Fault Tolerance')
-          expect(body).to include('critical issue')
+          expect(body).to include("No Replication Redundancy")
+          expect(body).to include("replication factor of")
+          expect(body).to include("redundant copies")
+          expect(body).to include("permanently lost")
+          expect(body).to include("Broker Failures and Fault Tolerance")
+          expect(body).to include("critical issue")
         end
 
-        it 'shows fault tolerance as 0 brokers' do
-          expect(body).to include('0 brokers')
+        it "shows fault tolerance as 0 brokers" do
+          expect(body).to include("0 brokers")
         end
       end
 
-      context 'when not in production environment' do
+      context "when not in production environment" do
         before do
           allow(Karafka.env).to receive(:production?).and_return(false)
           get "topics/#{topic}/replication"
         end
 
-        it 'displays the no redundancy warning with development context' do
+        it "displays the no redundancy warning with development context" do
           expect(response).to be_ok
-          expect(body).to include('No Replication Redundancy')
-          expect(body).to include('replication factor of')
-          expect(body).to include('acceptable for development')
-          expect(body).to include('can cause data loss in production')
+          expect(body).to include("No Replication Redundancy")
+          expect(body).to include("replication factor of")
+          expect(body).to include("acceptable for development")
+          expect(body).to include("can cause data loss in production")
         end
 
-        it 'still displays the replication settings cards' do
-          expect(body).to include('Replication Factor')
-          expect(body).to include('Min In-Sync Replicas')
-          expect(body).to include('Fault Tolerance')
+        it "still displays the replication settings cards" do
+          expect(body).to include("Replication Factor")
+          expect(body).to include("Min In-Sync Replicas")
+          expect(body).to include("Fault Tolerance")
         end
       end
     end
 
-    context 'when replication factor equals min.insync.replicas (zero fault tolerance)' do
-      let(:partitions_data) { [{ replica_count: 2, leader: 1, in_sync_replica_brokers: '1,2' }] }
+    context "when replication factor equals min.insync.replicas (zero fault tolerance)" do
+      let(:partitions_data) { [{ replica_count: 2, leader: 1, in_sync_replica_brokers: "1,2" }] }
 
       let(:mock_synonym) do
         instance_double(
           Karafka::Admin::Configs::Config,
-          name: 'default.replication.factor',
-          value: '2',
+          name: "default.replication.factor",
+          value: "2",
           default?: false,
           read_only?: false,
           sensitive?: false,
@@ -150,8 +150,8 @@ RSpec.describe_current do
       let(:mock_config) do
         instance_double(
           Karafka::Admin::Configs::Config,
-          name: 'min.insync.replicas',
-          value: '2',
+          name: "min.insync.replicas",
+          value: "2",
           default?: false,
           read_only?: false,
           sensitive?: false,
@@ -186,28 +186,28 @@ RSpec.describe_current do
         get "topics/#{topic}/replication"
       end
 
-      it 'displays the zero fault tolerance warning' do
+      it "displays the zero fault tolerance warning" do
         expect(response).to be_ok
-        expect(body).to include('Replication Resilience Issue Detected')
-        expect(body).to include('zero')
-        expect(body).to include('fault tolerance')
-        expect(body).to include('replication factor of')
-        expect(body).to include('one')
+        expect(body).to include("Replication Resilience Issue Detected")
+        expect(body).to include("zero")
+        expect(body).to include("fault tolerance")
+        expect(body).to include("replication factor of")
+        expect(body).to include("one")
       end
 
-      it 'shows fault tolerance as 0 brokers' do
-        expect(body).to include('0 brokers')
+      it "shows fault tolerance as 0 brokers" do
+        expect(body).to include("0 brokers")
       end
     end
 
-    context 'when min.insync.replicas is 1 with higher replication factor (low durability)' do
-      let(:partitions_data) { [{ replica_count: 3, leader: 1, in_sync_replica_brokers: '1,2,3' }] }
+    context "when min.insync.replicas is 1 with higher replication factor (low durability)" do
+      let(:partitions_data) { [{ replica_count: 3, leader: 1, in_sync_replica_brokers: "1,2,3" }] }
 
       let(:mock_synonym) do
         instance_double(
           Karafka::Admin::Configs::Config,
-          name: 'default.replication.factor',
-          value: '3',
+          name: "default.replication.factor",
+          value: "3",
           default?: false,
           read_only?: false,
           sensitive?: false,
@@ -219,8 +219,8 @@ RSpec.describe_current do
       let(:mock_config) do
         instance_double(
           Karafka::Admin::Configs::Config,
-          name: 'min.insync.replicas',
-          value: '1',
+          name: "min.insync.replicas",
+          value: "1",
           default?: false,
           read_only?: false,
           sensitive?: false,
@@ -254,28 +254,28 @@ RSpec.describe_current do
         get "topics/#{topic}/replication"
       end
 
-      it 'displays the low durability warning' do
+      it "displays the low durability warning" do
         expect(response).to be_ok
-        expect(body).to include('Low Data Durability Configuration')
-        expect(body).to include('min.insync.replicas')
-        expect(body).to include('replication factor of')
-        expect(body).to include('replication to followers completes')
-        expect(body).to include('permanently')
+        expect(body).to include("Low Data Durability Configuration")
+        expect(body).to include("min.insync.replicas")
+        expect(body).to include("replication factor of")
+        expect(body).to include("replication to followers completes")
+        expect(body).to include("permanently")
       end
 
-      it 'shows positive fault tolerance' do
-        expect(body).to include('2 broker(s)')
+      it "shows positive fault tolerance" do
+        expect(body).to include("2 broker(s)")
       end
     end
 
-    context 'when configuration is healthy (RF > minISR and minISR > 1)' do
-      let(:partitions_data) { [{ replica_count: 3, leader: 1, in_sync_replica_brokers: '1,2,3' }] }
+    context "when configuration is healthy (RF > minISR and minISR > 1)" do
+      let(:partitions_data) { [{ replica_count: 3, leader: 1, in_sync_replica_brokers: "1,2,3" }] }
 
       let(:mock_synonym) do
         instance_double(
           Karafka::Admin::Configs::Config,
-          name: 'default.replication.factor',
-          value: '3',
+          name: "default.replication.factor",
+          value: "3",
           default?: false,
           read_only?: false,
           sensitive?: false,
@@ -287,8 +287,8 @@ RSpec.describe_current do
       let(:mock_config) do
         instance_double(
           Karafka::Admin::Configs::Config,
-          name: 'min.insync.replicas',
-          value: '2',
+          name: "min.insync.replicas",
+          value: "2",
           default?: false,
           read_only?: false,
           sensitive?: false,
@@ -321,14 +321,14 @@ RSpec.describe_current do
         get "topics/#{topic}/replication"
       end
 
-      it 'displays the success message' do
+      it "displays the success message" do
         expect(response).to be_ok
-        expect(body).to include('Replication Configuration is Fault Tolerant')
-        expect(body).to include('broker failure')
+        expect(body).to include("Replication Configuration is Fault Tolerant")
+        expect(body).to include("broker failure")
       end
 
-      it 'shows positive fault tolerance' do
-        expect(body).to include('1 broker(s)')
+      it "shows positive fault tolerance" do
+        expect(body).to include("1 broker(s)")
       end
     end
   end

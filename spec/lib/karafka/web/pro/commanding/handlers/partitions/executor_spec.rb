@@ -27,8 +27,8 @@ RSpec.describe_current do
   let(:client) { instance_double(Karafka::Connection::Client) }
   let(:request) { instance_double(Karafka::Web::Pro::Commanding::Request) }
 
-  describe '#call' do
-    context 'when command is resume' do
+  describe "#call" do
+    context "when command is resume" do
       let(:command_name) { Karafka::Web::Pro::Commanding::Commands::Partitions::Resume.name }
       let(:command_class) { Karafka::Web::Pro::Commanding::Handlers::Partitions::Commands::Resume }
       let(:command_instance) { instance_double(command_class) }
@@ -39,7 +39,7 @@ RSpec.describe_current do
         allow(command_class).to receive(:new).and_return(command_instance)
       end
 
-      it 'executes resume command' do
+      it "executes resume command" do
         executor.call(listener, client, request)
 
         expect(command_class).to have_received(:new).with(listener, client, request)
@@ -47,7 +47,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when command is pause' do
+    context "when command is pause" do
       let(:command_name) { Karafka::Web::Pro::Commanding::Commands::Partitions::Pause.name }
       let(:command_class) { Karafka::Web::Pro::Commanding::Handlers::Partitions::Commands::Pause }
       let(:command_instance) { instance_double(command_class) }
@@ -58,7 +58,7 @@ RSpec.describe_current do
         allow(command_class).to receive(:new).and_return(command_instance)
       end
 
-      it 'executes pause command' do
+      it "executes pause command" do
         executor.call(listener, client, request)
 
         expect(command_class).to have_received(:new).with(listener, client, request)
@@ -66,7 +66,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when command is seek' do
+    context "when command is seek" do
       let(:command_name) { Karafka::Web::Pro::Commanding::Commands::Partitions::Seek.name }
       let(:command_class) { Karafka::Web::Pro::Commanding::Handlers::Partitions::Commands::Seek }
       let(:command_instance) { instance_double(command_class) }
@@ -77,7 +77,7 @@ RSpec.describe_current do
         allow(command_class).to receive(:new).and_return(command_instance)
       end
 
-      it 'executes seek command' do
+      it "executes seek command" do
         executor.call(listener, client, request)
 
         expect(command_class).to have_received(:new).with(listener, client, request)
@@ -85,23 +85,23 @@ RSpec.describe_current do
       end
     end
 
-    context 'when command is not supported' do
-      let(:command_name) { 'unsupported.command' }
+    context "when command is not supported" do
+      let(:command_name) { "unsupported.command" }
 
       before do
         allow(request).to receive(:name).and_return(command_name)
       end
 
-      it 'raises UnsupportedCaseError' do
+      it "raises UnsupportedCaseError" do
         expect { executor.call(listener, client, request) }
           .to raise_error(Karafka::Errors::UnsupportedCaseError)
       end
     end
   end
 
-  describe '#reject' do
-    let(:command_name) { 'test.command' }
-    let(:request_hash) { { key: 'value' } }
+  describe "#reject" do
+    let(:command_name) { "test.command" }
+    let(:request_hash) { { key: "value" } }
     let(:sampler) { Karafka::Web.config.tracking.consumers.sampler }
 
     before do
@@ -109,10 +109,10 @@ RSpec.describe_current do
       allow(Karafka::Web::Pro::Commanding::Dispatcher).to receive(:result)
     end
 
-    it 'dispatches rejection result with rebalance status' do
+    it "dispatches rejection result with rebalance status" do
       executor.reject(request)
 
-      expected_payload = request_hash.merge(status: 'rebalance_rejected')
+      expected_payload = request_hash.merge(status: "rebalance_rejected")
 
       expect(Karafka::Web::Pro::Commanding::Dispatcher)
         .to have_received(:result)

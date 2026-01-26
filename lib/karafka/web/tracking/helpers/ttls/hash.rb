@@ -29,7 +29,7 @@ module Karafka
 
             # @return [String] thread-safe inspect of the ttls hash
             def inspect
-              "#<#{self.class.name}:#{format('%#x', object_id)} size=#{size} ttl=#{@ttl}ms>"
+              "#<#{self.class.name}:#{format("%#x", object_id)} size=#{size} ttl=#{@ttl}ms>"
             end
           end
         end

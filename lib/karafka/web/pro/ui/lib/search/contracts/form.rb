@@ -38,8 +38,8 @@ module Karafka
               class Form < Web::Contracts::Base
                 configure do |config|
                   config.error_messages = YAML.safe_load_file(
-                    File.join(Karafka::Web.gem_root, 'config', 'locales', 'pro_errors.yml')
-                  ).fetch('en').fetch('validations').fetch('search_form')
+                    File.join(Karafka::Web.gem_root, "config", "locales", "pro_errors.yml")
+                  ).fetch("en").fetch("validations").fetch("search_form")
                 end
 
                 # Minimum timestamp value when timestamps are used
@@ -103,7 +103,7 @@ module Karafka
                   next unless errors.empty?
                   # Validate only if we decide to go with timestamp. Otherwise this value is
                   # irrelevant
-                  next unless data[:offset_type] == 'timestamp'
+                  next unless data[:offset_type] == "timestamp"
 
                   next if data[:timestamp] >= MIN_TIMESTAMP
 

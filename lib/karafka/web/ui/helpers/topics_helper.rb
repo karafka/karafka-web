@@ -59,9 +59,9 @@ module Karafka
               # Apply limit if specified and partitions exceed it
               elsif limit && sorted_partitions.size > limit
                 displayed_partitions = sorted_partitions.first(limit)
-                "#{topic}-[#{displayed_partitions.join(',')}...]"
+                "#{topic}-[#{displayed_partitions.join(",")}...]"
               else
-                "#{topic}-[#{sorted_partitions.join(',')}]"
+                "#{topic}-[#{sorted_partitions.join(",")}]"
               end
             end
           end
@@ -97,9 +97,9 @@ module Karafka
             elsif sorted_partitions.size > limit
               displayed = sorted_partitions.first(limit)
               remaining = sorted_partitions.size - limit
-              "#{topic}-[#{displayed.join(',')}] (+#{remaining} more)"
+              "#{topic}-[#{displayed.join(",")}] (+#{remaining} more)"
             else
-              "#{topic}-[#{sorted_partitions.join(',')}]"
+              "#{topic}-[#{sorted_partitions.join(",")}]"
             end
           end
 

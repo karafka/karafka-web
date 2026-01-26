@@ -17,41 +17,41 @@ module Karafka
 
             # @return [Boolean] Should we show pagination at all
             def paginate?
-              raise NotImplementedError, 'Implement in a subclass'
+              raise NotImplementedError, "Implement in a subclass"
             end
 
             # @return [Boolean] Should first offset link be active. If false, the first offset link
             #   will be disabled
             def first_offset?
-              raise NotImplementedError, 'Implement in a subclass'
+              raise NotImplementedError, "Implement in a subclass"
             end
 
             # @return [String] first offset url value
             def first_offset
-              raise NotImplementedError, 'Implement in a subclass'
+              raise NotImplementedError, "Implement in a subclass"
             end
 
             # @return [Boolean] Should previous offset link be active. If false, the previous
             #   offset link will be disabled
             def previous_offset?
-              raise NotImplementedError, 'Implement in a subclass'
+              raise NotImplementedError, "Implement in a subclass"
             end
 
             # @return [Boolean] Should we show current offset. If false, the current offset link
             #   will not be visible at all. Useful for non-linear pagination.
             def current_offset?
-              raise NotImplementedError, 'Implement in a subclass'
+              raise NotImplementedError, "Implement in a subclass"
             end
 
             # @return [Boolean] Should we show next offset pagination. If false, next offset link
             #   will be disabled.
             def next_offset?
-              raise NotImplementedError, 'Implement in a subclass'
+              raise NotImplementedError, "Implement in a subclass"
             end
 
             # @return [String] the url offset key
             def offset_key
-              raise NotImplementedError, 'Implement in a subclass'
+              raise NotImplementedError, "Implement in a subclass"
             end
           end
         end

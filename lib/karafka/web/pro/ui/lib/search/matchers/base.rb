@@ -36,14 +36,14 @@ module Karafka
                 # @param message [Karafka::Messages::Message] message in which we search
                 # @return [Boolean] true if found, otherwise false
                 def call(phrase, message)
-                  raise NotImplementedError, 'Implement in a subclass'
+                  raise NotImplementedError, "Implement in a subclass"
                 end
 
                 class << self
                   # @return [String] name of the matcher based on the class name
                   def name
                     # Insert a space before each uppercase letter, except the first one
-                    spaced_string = to_s.split('::').last.gsub(/(?<!^)([A-Z])/, ' \1')
+                    spaced_string = to_s.split("::").last.gsub(/(?<!^)([A-Z])/, ' \1')
 
                     # Convert the first letter to uppercase and the rest to lowercase
                     spaced_string[0].upcase + spaced_string[1..].downcase

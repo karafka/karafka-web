@@ -28,11 +28,11 @@ module Karafka
           # Manages the topics related routes
           class Topics < Base
             route do |r|
-              r.on 'topics' do
-                r.on String, 'distribution' do |topic_id|
+              r.on "topics" do
+                r.on String, "distribution" do |topic_id|
                   controller = build(Controllers::Topics::DistributionsController)
 
-                  r.get 'edit' do
+                  r.get "edit" do
                     controller.edit(topic_id)
                   end
 
@@ -45,20 +45,20 @@ module Karafka
                   end
                 end
 
-                r.get String, 'replication' do |topic_id|
+                r.get String, "replication" do |topic_id|
                   controller = build(Controllers::Topics::ReplicationsController)
                   controller.show(topic_id)
                 end
 
-                r.get String, 'offsets' do |topic_id|
+                r.get String, "offsets" do |topic_id|
                   controller = build(Controllers::Topics::OffsetsController)
                   controller.show(topic_id)
                 end
 
-                r.on String, 'config' do |topic_id|
+                r.on String, "config" do |topic_id|
                   controller = build(Controllers::Topics::ConfigsController)
 
-                  r.get String, 'edit' do |property_name|
+                  r.get String, "edit" do |property_name|
                     controller.edit(topic_id, property_name)
                   end
 
@@ -73,7 +73,7 @@ module Karafka
 
                 controller = build(Controllers::Topics::TopicsController)
 
-                r.get 'new' do
+                r.get "new" do
                   controller.new
                 end
 
@@ -82,7 +82,7 @@ module Karafka
                 end
 
                 # Topic removal confirmation page since it's a sensitive operation
-                r.get String, 'delete' do |topic_id|
+                r.get String, "delete" do |topic_id|
                   controller.edit(topic_id)
                 end
 
@@ -95,7 +95,7 @@ module Karafka
                 end
 
                 r.get String do |topic_id|
-                  r.redirect root_path('topics', topic_id, 'config')
+                  r.redirect root_path("topics", topic_id, "config")
                 end
               end
             end

@@ -34,19 +34,19 @@ RSpec.describe_current do
     }
   end
 
-  context 'when all values are valid' do
-    it 'is valid' do
+  context "when all values are valid" do
+    it "is valid" do
       expect(contract.call(params)).to be_success
     end
   end
 
-  context 'when messages is nil' do
+  context "when messages is nil" do
     before { params[:ui][:policies][:messages] = nil }
 
     it { expect(contract.call(params)).not_to be_success }
   end
 
-  context 'when requests is nil' do
+  context "when requests is nil" do
     before { params[:ui][:policies][:requests] = nil }
 
     it { expect(contract.call(params)).not_to be_success }

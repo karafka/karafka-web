@@ -30,7 +30,7 @@ module Karafka
             # Normalize the key since we do not operate on capitalized values
             @field = field.to_s.downcase
 
-            @field = '' unless allowed_attributes.include?(@field)
+            @field = "" unless allowed_attributes.include?(@field)
 
             # Things we have already seen and sorted. Prevents crashing on the circular
             # dependencies sorting when same resources are present in different parts of the tree
@@ -135,7 +135,7 @@ module Karafka
 
           # @return [Boolean] true if we sort in desc, otherwise false
           def desc?
-            @order == 'desc'
+            @order == "desc"
           end
 
           # Extracts the attribute based on which we should sort (if present)

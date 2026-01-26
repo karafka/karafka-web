@@ -35,7 +35,7 @@ module Karafka
           def ensure_karafka_initialized!
             return unless Karafka::App.config.internal.status.initializing?
 
-            raise Web::Errors::KarafkaNotInitializedError, 'Please initialize Karafka first'
+            raise Web::Errors::KarafkaNotInitializedError, "Please initialize Karafka first"
           end
 
           # Enables tracking if it was not explicitly disabled by the user
@@ -72,7 +72,7 @@ module Karafka
                   # This prevents us from dealing with cases, where client id would be changed and
                   # consumer group name would be renamed and we would start consuming all
                   # historical
-                  initial_offset 'latest'
+                  initial_offset "latest"
                   # Increase backoff time on errors. Incompatible schema errors are not recoverable
                   # until rolling upgrade completes, so we use a longer max timeout to prevent
                   # spamming errors in logs.
@@ -145,7 +145,7 @@ module Karafka
           #
           # In other places, this producer anyhow should not be used.
           def subscribe_to_close_web_producer
-            ::Karafka::App.monitor.subscribe('app.terminated') do
+            ::Karafka::App.monitor.subscribe("app.terminated") do
               # If Web producer is the same as `Karafka.producer` it will do nothing as you can
               # call `#close` multiple times without side effects
               ::Karafka::Web.producer.close

@@ -47,7 +47,7 @@ module Karafka
               # @param message [::Karafka::Messages::Message]
               # @return [Boolean] should message payload be visible
               def payload?(message)
-                !message.headers.key?('encryption')
+                !message.headers.key?("encryption")
               end
 
               # Should it be allowed to download this message raw payload

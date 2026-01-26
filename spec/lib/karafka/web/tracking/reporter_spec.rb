@@ -3,20 +3,20 @@
 RSpec.describe_current do
   subject(:reporter) { described_class.new }
 
-  describe '#active?' do
-    context 'when producer is not yet created' do
+  describe "#active?" do
+    context "when producer is not yet created" do
       before { allow(Karafka::Web).to receive(:producer).and_return(nil) }
 
       it { expect(reporter.active?).to be(false) }
     end
 
-    context 'when producer is not active' do
+    context "when producer is not active" do
       before { allow(Karafka.producer.status).to receive(:active?).and_return(false) }
 
       it { expect(reporter.active?).to be(false) }
     end
 
-    context 'when producer exists and is active' do
+    context "when producer exists and is active" do
       it { expect(reporter.active?).to be(true) }
     end
   end

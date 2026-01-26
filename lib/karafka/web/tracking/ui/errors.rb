@@ -15,7 +15,7 @@ module Karafka
           include Tracking::Helpers::ErrorInfo
 
           # Schema used by UI error reporting
-          SCHEMA_VERSION = '1.2.0'
+          SCHEMA_VERSION = "1.2.0"
 
           private_constant :SCHEMA_VERSION
 
@@ -24,7 +24,7 @@ module Karafka
           # @param event [Karafka::Core::Monitoring::Event]
           def on_error_occurred(event)
             # Only process UI errors, ignore all other error types
-            return unless event[:type] == 'web.ui.error'
+            return unless event[:type] == "web.ui.error"
 
             error_class, error_message, backtrace = extract_error_info(event[:error])
 
@@ -47,7 +47,7 @@ module Karafka
 
             # Dispatch error to Kafka asynchronously
             dispatch(error_data)
-          rescue StandardError => e
+          rescue => e
             # If we fail to report an error, log it but don't raise to avoid error loops
             ::Karafka.logger.error("Failed to report UI error: #{e.message}")
           end
@@ -66,7 +66,7 @@ module Karafka
               topic: ::Karafka::Web.config.topics.errors.name,
               payload: Zlib::Deflate.deflate(error_data.to_json),
               key: process_id,
-              headers: { 'zlib' => 'true' }
+              headers: { "zlib" => "true" }
             )
           end
         end

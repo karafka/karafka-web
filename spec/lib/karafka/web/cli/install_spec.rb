@@ -10,7 +10,7 @@ RSpec.describe_current do
     allow(installer).to receive(:install)
   end
 
-  it 'expect to install using installer' do
+  it "expect to install using installer" do
     cli.call
     expect(installer).to have_received(:install)
   end

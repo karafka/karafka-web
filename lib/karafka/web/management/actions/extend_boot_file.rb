@@ -7,7 +7,7 @@ module Karafka
         # Extends the boot file with Web components
         class ExtendBootFile < Base
           # Code that is needed in the `karafka.rb` to connect Web UI to Karafka
-          ENABLER_CODE = 'Karafka::Web.enable!'
+          ENABLER_CODE = "Karafka::Web.enable!"
 
           # Template with initial Web UI configuration
           # Session secret needs to be set per user and per env
@@ -27,8 +27,8 @@ module Karafka
             if File.readlines(Karafka.boot_file).any? { |line| line.start_with?(ENABLER_CODE) }
               puts "Web UI #{already} installed."
             else
-              puts 'Updating the Karafka boot file...'
-              File.open(Karafka.boot_file, 'a') do |f|
+              puts "Updating the Karafka boot file..."
+              File.open(Karafka.boot_file, "a") do |f|
                 f << "\n#{SETUP_TEMPLATE}\n"
               end
               puts "Karafka boot file #{successfully} updated."

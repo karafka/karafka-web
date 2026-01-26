@@ -23,13 +23,13 @@ RSpec.describe_current do
     }
   end
 
-  describe '#lag_hybrid and #lag_hybrid_d' do
-    context 'when lag stored is negative' do
+  describe "#lag_hybrid and #lag_hybrid_d" do
+    context "when lag stored is negative" do
       it { expect(partition.lag_hybrid).to eq(100) }
       it { expect(partition.lag_hybrid_d).to eq(2) }
     end
 
-    context 'when lag stored is positive' do
+    context "when lag stored is positive" do
       let(:lag_stored) { 20 }
 
       it { expect(partition.lag_hybrid).to eq(20) }
@@ -37,14 +37,14 @@ RSpec.describe_current do
     end
   end
 
-  describe '#lso_risk_state' do
+  describe "#lso_risk_state" do
     let(:lso_risk_state) { partition.lso_risk_state }
 
-    context 'when ls_offset is not behind hi_offset' do
+    context "when ls_offset is not behind hi_offset" do
       it { expect(lso_risk_state).to eq(:active) }
     end
 
-    context 'when ls_offset behind hi_offset but within threshold' do
+    context "when ls_offset behind hi_offset but within threshold" do
       let(:hi_offset) { 100 }
       let(:ls_offset) { 60 }
       let(:ls_offset_fd) { 5 }
@@ -52,7 +52,7 @@ RSpec.describe_current do
       it { expect(lso_risk_state).to eq(:active) }
     end
 
-    context 'when ls_offset behind hi_offset behind threshold but we are not there' do
+    context "when ls_offset behind hi_offset behind threshold but we are not there" do
       let(:hi_offset) { 100 }
       let(:ls_offset) { 60 }
       let(:ls_offset_fd) { 10 * 60 * 1_000 }
@@ -61,7 +61,7 @@ RSpec.describe_current do
       it { expect(lso_risk_state).to eq(:at_risk) }
     end
 
-    context 'when ls_offset behind hi_offset behind threshold and we are there' do
+    context "when ls_offset behind hi_offset behind threshold and we are there" do
       let(:hi_offset) { 100 }
       let(:ls_offset) { 60 }
       let(:ls_offset_fd) { 10 * 60 * 1_000 }

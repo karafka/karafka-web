@@ -33,14 +33,14 @@ module Karafka
                 existing = context.cluster_info.topics.map { |topic| topic[:topic_name] }
 
                 missing = ::Karafka::App
-                          .routes
-                          .flat_map(&:topics)
-                          .flat_map { |topics| topics.map(&:itself) }
-                          .select(&:active?)
-                          .reject { |topic| topic.respond_to?(:patterns?) ? topic.patterns? : nil }
-                          .map(&:name)
-                          .uniq
-                          .then { |routed_topics| routed_topics - existing }
+                  .routes
+                  .flat_map(&:topics)
+                  .flat_map { |topics| topics.map(&:itself) }
+                  .select(&:active?)
+                  .reject { |topic| topic.respond_to?(:patterns?) ? topic.patterns? : nil }
+                  .map(&:name)
+                  .uniq
+                  .then { |routed_topics| routed_topics - existing }
 
                 step(missing.empty? ? :success : :warning, missing)
               end

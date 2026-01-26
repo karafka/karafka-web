@@ -65,7 +65,7 @@ module Karafka
 
             # @return [String] params offset key
             def offset_key
-              'offset'
+              "offset"
             end
           end
         end

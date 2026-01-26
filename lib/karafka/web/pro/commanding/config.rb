@@ -48,8 +48,8 @@ module Karafka
           # The underlying iterator requires specific settings, do not change this unless you know
           # what you area doing
           setting :kafka, default: {
-            'enable.partition.eof': false,
-            'auto.offset.reset': 'latest'
+            "enable.partition.eof": false,
+            "auto.offset.reset": "latest"
           }
 
           setting :listeners, default: [

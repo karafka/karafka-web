@@ -10,27 +10,27 @@ RSpec.describe_current do
     produce(reports_topic, report.to_json)
   end
 
-  describe '.find' do
+  describe ".find" do
     subject(:lookup) { described_class.find(state, process_id) }
 
-    context 'when process with given id does not exist in the state' do
+    context "when process with given id does not exist in the state" do
       let(:process_id) { SecureRandom.uuid }
 
       it { expect { lookup }.to raise_error(Karafka::Web::Errors::Ui::NotFoundError) }
     end
 
-    context 'when process exists' do
-      let(:process_id) { 'shinra:1:1' }
+    context "when process exists" do
+      let(:process_id) { "shinra:1:1" }
 
       it { expect(lookup).to be_a(described_class) }
     end
   end
 
-  describe 'process attributes' do
-    subject(:process) { described_class.find(state, 'shinra:1:1') }
+  describe "process attributes" do
+    subject(:process) { described_class.find(state, "shinra:1:1") }
 
-    it 'expect to have valid attributes configured' do
-      expect(process.id).to eq('shinra:1:1')
+    it "expect to have valid attributes configured" do
+      expect(process.id).to eq("shinra:1:1")
       expect(process.consumer_groups.size).to eq(2)
       cgs = %w[example_app6_app example_app6_karafka_web]
       expect(process.consumer_groups.map(&:id)).to eq(cgs)
@@ -43,21 +43,21 @@ RSpec.describe_current do
     end
   end
 
-  describe '#schema_compatible?' do
-    subject(:process) { described_class.find(state, 'shinra:1:1') }
+  describe "#schema_compatible?" do
+    subject(:process) { described_class.find(state, "shinra:1:1") }
 
-    context 'when schema matches the one in memory' do
+    context "when schema matches the one in memory" do
       it { expect(process.schema_compatible?).to be(true) }
     end
 
-    context 'when schema is newer than the one in memory' do
+    context "when schema is newer than the one in memory" do
       before { process[:schema_version] = "#{process[:schema_version]}1" }
 
       it { expect(process.schema_compatible?).to be(false) }
     end
 
-    context 'when schema is older than the one in memory' do
-      before { process[:schema_version] = '0.1' }
+    context "when schema is older than the one in memory" do
+      before { process[:schema_version] = "0.1" }
 
       it { expect(process.schema_compatible?).to be(false) }
     end

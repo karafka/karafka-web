@@ -50,8 +50,8 @@ RSpec.describe_current do
   end
 
   let(:subscription_group_id) { SecureRandom.uuid }
-  let(:consumer_group_id) { 'test_consumer_group' }
-  let(:topic_name) { 'test_topic' }
+  let(:consumer_group_id) { "test_consumer_group" }
+  let(:topic_name) { "test_topic" }
   let(:partition_id) { 0 }
 
   let(:client) { instance_double(Karafka::Connection::Client) }
@@ -79,7 +79,7 @@ RSpec.describe_current do
     )
   end
 
-  describe '#on_connection_listener_fetch_loop' do
+  describe "#on_connection_listener_fetch_loop" do
     let(:event) do
       {
         caller: connection_listener,
@@ -92,25 +92,25 @@ RSpec.describe_current do
       allow(executor).to receive(:call)
     end
 
-    it 'executes commands for each assigned partition' do
+    it "executes commands for each assigned partition" do
       listener.on_connection_listener_fetch_loop(event)
 
       expect(tracker).to have_received(:each_for).with(consumer_group_id, topic_name, partition_id)
       expect(executor).to have_received(:call).with(connection_listener, client, command)
     end
 
-    context 'when no commands exist' do
+    context "when no commands exist" do
       before do
         allow(tracker).to receive(:each_for)
       end
 
-      it 'does not execute anything' do
+      it "does not execute anything" do
         listener.on_connection_listener_fetch_loop(event)
         expect(executor).not_to have_received(:call)
       end
     end
 
-    context 'with multiple partitions assigned' do
+    context "with multiple partitions assigned" do
       let(:partition2_id) { 1 }
       let(:rdkafka_partition2) do
         instance_double(Rdkafka::Consumer::Partition, partition: partition2_id)
@@ -120,7 +120,7 @@ RSpec.describe_current do
         { topic_name => [rdkafka_partition, rdkafka_partition2] }
       end
 
-      it 'iterates over all partitions' do
+      it "iterates over all partitions" do
         listener.on_connection_listener_fetch_loop(event)
 
         expect(tracker)
@@ -134,7 +134,7 @@ RSpec.describe_current do
     end
   end
 
-  describe '#on_rebalance_partitions_assigned' do
+  describe "#on_rebalance_partitions_assigned" do
     let(:event) do
       {
         subscription_group: subscription_group
@@ -147,27 +147,27 @@ RSpec.describe_current do
       allow(executor).to receive(:reject)
     end
 
-    it 'queries partition_ids_for to get partitions with pending commands' do
+    it "queries partition_ids_for to get partitions with pending commands" do
       listener.on_rebalance_partitions_assigned(event)
 
       expect(tracker).to have_received(:partition_ids_for).with(consumer_group_id, topic_name)
     end
 
-    it 'rejects pending commands only for partitions returned by partition_ids_for' do
+    it "rejects pending commands only for partitions returned by partition_ids_for" do
       listener.on_rebalance_partitions_assigned(event)
 
       expect(tracker).to have_received(:each_for).with(consumer_group_id, topic_name, partition_id)
       expect(executor).to have_received(:reject).with(command)
     end
 
-    context 'when multiple partitions have pending commands' do
+    context "when multiple partitions have pending commands" do
       let(:partition_id2) { 5 }
 
       before do
         allow(tracker).to receive(:partition_ids_for).and_return([partition_id, partition_id2])
       end
 
-      it 'iterates only over partitions with commands' do
+      it "iterates only over partitions with commands" do
         listener.on_rebalance_partitions_assigned(event)
 
         expect(tracker)
@@ -182,12 +182,12 @@ RSpec.describe_current do
       end
     end
 
-    context 'when no partitions have pending commands' do
+    context "when no partitions have pending commands" do
       before do
         allow(tracker).to receive(:partition_ids_for).and_return([])
       end
 
-      it 'does not call each_for' do
+      it "does not call each_for" do
         listener.on_rebalance_partitions_assigned(event)
 
         expect(tracker).not_to have_received(:each_for)
@@ -196,7 +196,7 @@ RSpec.describe_current do
     end
   end
 
-  describe '#on_rebalance_partitions_revoked' do
+  describe "#on_rebalance_partitions_revoked" do
     let(:event) do
       {
         subscription_group: subscription_group
@@ -209,7 +209,7 @@ RSpec.describe_current do
       allow(executor).to receive(:reject)
     end
 
-    it 'rejects all pending commands' do
+    it "rejects all pending commands" do
       listener.on_rebalance_partitions_revoked(event)
 
       expect(tracker).to have_received(:partition_ids_for).with(consumer_group_id, topic_name)
@@ -217,7 +217,7 @@ RSpec.describe_current do
       expect(executor).to have_received(:reject).with(command)
     end
 
-    it 'behaves same as on_rebalance_partitions_assigned' do
+    it "behaves same as on_rebalance_partitions_assigned" do
       allow(tracker).to receive(:partition_ids_for).and_return([])
 
       assigned_result = listener.on_rebalance_partitions_assigned(event)
@@ -226,12 +226,12 @@ RSpec.describe_current do
       expect(revoked_result).to eq(assigned_result)
     end
 
-    context 'when no partitions have pending commands' do
+    context "when no partitions have pending commands" do
       before do
         allow(tracker).to receive(:partition_ids_for).and_return([])
       end
 
-      it 'does not reject anything' do
+      it "does not reject anything" do
         listener.on_rebalance_partitions_revoked(event)
 
         expect(tracker).not_to have_received(:each_for)

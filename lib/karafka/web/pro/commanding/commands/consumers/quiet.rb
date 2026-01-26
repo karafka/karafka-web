@@ -31,15 +31,15 @@ module Karafka
             # Sends a signal to quiet the consumer
             # @note Does not work in an embedded mode because we do not own the Ruby process.
             class Quiet < Base
-              self.name = 'consumers.quiet'
+              self.name = "consumers.quiet"
 
               # Performs the command if not in embedded mode
               def call
                 return unless standalone?
 
-                ::Process.kill('TSTP', ::Process.pid)
+                ::Process.kill("TSTP", ::Process.pid)
 
-                result(status: 'applied')
+                result(status: "applied")
               end
             end
           end

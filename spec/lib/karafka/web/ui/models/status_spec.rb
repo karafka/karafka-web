@@ -3,8 +3,8 @@
 RSpec.describe_current do
   subject(:status) { described_class.new }
 
-  describe 'CHECKS registry' do
-    it 'has all dependency references pointing to existing checks' do
+  describe "CHECKS registry" do
+    it "has all dependency references pointing to existing checks" do
       described_class::CHECKS.each do |name, check_class|
         next if check_class.independent?
 
@@ -40,44 +40,44 @@ RSpec.describe_current do
     produce(reports_topic, report)
   end
 
-  describe '#enabled' do
+  describe "#enabled" do
     subject(:result) { status.enabled }
 
     it { expect(result.success?).to be(true) }
-    it { expect(result.to_s).to eq('success') }
+    it { expect(result.to_s).to eq("success") }
     it { expect(result.details).to eq({}) }
-    it { expect(result.partial_namespace).to eq('successes') }
+    it { expect(result.partial_namespace).to eq("successes") }
 
-    context 'when routing does not include the web processing group' do
+    context "when routing does not include the web processing group" do
       before { allow(Karafka::Web.config).to receive(:group_id).and_return([]) }
 
       it { expect(result.success?).to be(false) }
-      it { expect(result.to_s).to eq('failure') }
+      it { expect(result.to_s).to eq("failure") }
       it { expect(result.details).to eq({}) }
-      it { expect(result.partial_namespace).to eq('failures') }
+      it { expect(result.partial_namespace).to eq("failures") }
     end
   end
 
-  describe '#connection' do
+  describe "#connection" do
     subject(:result) { status.connection }
 
-    context 'when routing is not enabled' do
+    context "when routing is not enabled" do
       before { allow(Karafka::Web.config).to receive(:group_id).and_return([]) }
 
       it { expect(result.success?).to be(false) }
-      it { expect(result.to_s).to eq('halted') }
+      it { expect(result.to_s).to eq("halted") }
       it { expect(result.details).to eq({ time: nil }) }
-      it { expect(result.partial_namespace).to eq('failures') }
+      it { expect(result.partial_namespace).to eq("failures") }
     end
 
-    context 'when we can connect fast' do
+    context "when we can connect fast" do
       it { expect(result.success?).to be(true) }
-      it { expect(result.to_s).to eq('success') }
+      it { expect(result.to_s).to eq("success") }
       it { expect(result.details[:time]).not_to be_nil }
-      it { expect(result.partial_namespace).to eq('successes') }
+      it { expect(result.partial_namespace).to eq("successes") }
     end
 
-    context 'when we cannot connect' do
+    context "when we cannot connect" do
       before do
         allow(Karafka::Web::Ui::Models::ClusterInfo)
           .to receive(:fetch)
@@ -85,16 +85,16 @@ RSpec.describe_current do
       end
 
       it { expect(result.success?).to be(false) }
-      it { expect(result.to_s).to eq('failure') }
+      it { expect(result.to_s).to eq("failure") }
       it { expect(result.details[:time]).not_to be_nil }
-      it { expect(result.partial_namespace).to eq('failures') }
+      it { expect(result.partial_namespace).to eq("failures") }
     end
   end
 
-  describe '#topics' do
+  describe "#topics" do
     subject(:result) { status.topics }
 
-    context 'when there is no connection' do
+    context "when there is no connection" do
       before do
         allow(Karafka::Web::Ui::Models::ClusterInfo)
           .to receive(:fetch)
@@ -102,23 +102,23 @@ RSpec.describe_current do
       end
 
       it { expect(result.success?).to be(false) }
-      it { expect(result.to_s).to eq('halted') }
+      it { expect(result.to_s).to eq("halted") }
       it { expect(result.details).to eq({}) }
-      it { expect(result.partial_namespace).to eq('failures') }
+      it { expect(result.partial_namespace).to eq("failures") }
     end
 
-    context 'when all topics exist' do
+    context "when all topics exist" do
       before { all_topics }
 
-      it 'expect all to be ok' do
+      it "expect all to be ok" do
         expect(result.success?).to be(true)
-        expect(result.to_s).to eq('success')
+        expect(result.to_s).to eq("success")
         expect(result.details).not_to be_nil
-        expect(result.partial_namespace).to eq('successes')
+        expect(result.partial_namespace).to eq("successes")
       end
     end
 
-    context 'when error topic is missing' do
+    context "when error topic is missing" do
       let(:na_topic) { generate_topic_name }
 
       before do
@@ -128,9 +128,9 @@ RSpec.describe_current do
         states_topic
       end
 
-      it 'expect not to be successful' do
+      it "expect not to be successful" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('failure')
+        expect(result.to_s).to eq("failure")
         expect(result.details[na_topic][:present]).to be(false)
         expect(result.details[reports_topic][:present]).to be(true)
         expect(result.details[reports_topic][:partitions]).to eq(1)
@@ -138,11 +138,11 @@ RSpec.describe_current do
         expect(result.details[metrics_topic][:partitions]).to eq(1)
         expect(result.details[states_topic][:present]).to be(true)
         expect(result.details[states_topic][:partitions]).to eq(1)
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.partial_namespace).to eq("failures")
       end
     end
 
-    context 'when metrics topic is missing' do
+    context "when metrics topic is missing" do
       let(:na_topic) { generate_topic_name }
 
       before do
@@ -152,9 +152,9 @@ RSpec.describe_current do
         states_topic
       end
 
-      it 'expect not to be successful' do
+      it "expect not to be successful" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('failure')
+        expect(result.to_s).to eq("failure")
         expect(result.details[na_topic][:present]).to be(false)
         expect(result.details[reports_topic][:present]).to be(true)
         expect(result.details[reports_topic][:partitions]).to eq(1)
@@ -162,24 +162,24 @@ RSpec.describe_current do
         expect(result.details[errors_topic][:partitions]).to eq(1)
         expect(result.details[states_topic][:present]).to be(true)
         expect(result.details[states_topic][:partitions]).to eq(1)
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.partial_namespace).to eq("failures")
       end
     end
   end
 
-  describe '#partitions' do
+  describe "#partitions" do
     subject(:result) { status.partitions }
 
-    context 'when not all topics are there' do
+    context "when not all topics are there" do
       before { Karafka::Web.config.topics.errors.name = generate_topic_name }
 
       it { expect(result.success?).to be(false) }
-      it { expect(result.to_s).to eq('halted') }
+      it { expect(result.to_s).to eq("halted") }
       it { expect(result.details).to eq({}) }
-      it { expect(result.partial_namespace).to eq('failures') }
+      it { expect(result.partial_namespace).to eq("failures") }
     end
 
-    context 'when all topics have required number of partitions' do
+    context "when all topics have required number of partitions" do
       before do
         errors_topic
         reports_topic
@@ -187,15 +187,15 @@ RSpec.describe_current do
         states_topic
       end
 
-      it 'expect to have everything in order' do
+      it "expect to have everything in order" do
         expect(result.success?).to be(true)
-        expect(result.to_s).to eq('success')
+        expect(result.to_s).to eq("success")
         expect(result.details).not_to be_empty
-        expect(result.partial_namespace).to eq('successes')
+        expect(result.partial_namespace).to eq("successes")
       end
     end
 
-    context 'when there are many error partitions' do
+    context "when there are many error partitions" do
       before do
         Karafka::Web.config.topics.errors.name = create_topic(partitions: 5)
         reports_topic
@@ -203,15 +203,15 @@ RSpec.describe_current do
         states_topic
       end
 
-      it 'expect to have everything in order' do
+      it "expect to have everything in order" do
         expect(result.success?).to be(true)
-        expect(result.to_s).to eq('success')
+        expect(result.to_s).to eq("success")
         expect(result.details).not_to be_empty
-        expect(result.partial_namespace).to eq('successes')
+        expect(result.partial_namespace).to eq("successes")
       end
     end
 
-    context 'when there are many states partitions' do
+    context "when there are many states partitions" do
       before do
         errors_topic
         reports_topic
@@ -219,19 +219,19 @@ RSpec.describe_current do
         Karafka::Web.config.topics.consumers.states.name = create_topic(partitions: 5)
       end
 
-      it 'expect to fail and report' do
+      it "expect to fail and report" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('failure')
+        expect(result.to_s).to eq("failure")
         expect(result.details).not_to be_empty
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.partial_namespace).to eq("failures")
       end
     end
   end
 
-  describe '#replication' do
+  describe "#replication" do
     subject(:result) { status.replication }
 
-    context 'when partitions check failed' do
+    context "when partitions check failed" do
       before do
         errors_topic
         reports_topic
@@ -239,58 +239,58 @@ RSpec.describe_current do
         Karafka::Web.config.topics.consumers.states.name = create_topic(partitions: 5)
       end
 
-      it 'expect to halt' do
+      it "expect to halt" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('halted')
+        expect(result.to_s).to eq("halted")
         expect(result.details).to eq({})
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.partial_namespace).to eq("failures")
       end
     end
 
-    context 'when all topics have adequate replication' do
+    context "when all topics have adequate replication" do
       before { all_topics }
 
-      it 'expect all to be ok' do
+      it "expect all to be ok" do
         expect(result.success?).to be(true)
-        expect(result.to_s).to eq('success')
+        expect(result.to_s).to eq("success")
         expect(result.details).not_to be_empty
-        expect(result.partial_namespace).to eq('successes')
+        expect(result.partial_namespace).to eq("successes")
       end
     end
 
-    context 'when replication is low in production' do
+    context "when replication is low in production" do
       before do
         all_topics
         allow(Karafka.env).to receive(:production?).and_return(true)
       end
 
-      it 'expect to warn' do
+      it "expect to warn" do
         expect(result.success?).to be(true)
-        expect(result.to_s).to eq('warning')
+        expect(result.to_s).to eq("warning")
         expect(result.details).not_to be_empty
-        expect(result.partial_namespace).to eq('warnings')
+        expect(result.partial_namespace).to eq("warnings")
       end
     end
 
-    context 'when replication is low in non-production' do
+    context "when replication is low in non-production" do
       before do
         all_topics
         allow(Karafka.env).to receive(:production?).and_return(false)
       end
 
-      it 'expect all to be ok because non-production is acceptable' do
+      it "expect all to be ok because non-production is acceptable" do
         expect(result.success?).to be(true)
-        expect(result.to_s).to eq('success')
+        expect(result.to_s).to eq("success")
         expect(result.details).not_to be_empty
-        expect(result.partial_namespace).to eq('successes')
+        expect(result.partial_namespace).to eq("successes")
       end
     end
   end
 
-  describe '#initial_consumers_state' do
+  describe "#initial_consumers_state" do
     subject(:result) { status.initial_consumers_state }
 
-    context 'when not all partitions are in order' do
+    context "when not all partitions are in order" do
       before do
         errors_topic
         reports_topic
@@ -298,54 +298,54 @@ RSpec.describe_current do
         Karafka::Web.config.topics.consumers.states.name = create_topic(partitions: 5)
       end
 
-      it 'expect to halt' do
+      it "expect to halt" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('halted')
+        expect(result.to_s).to eq("halted")
         expect(result.details).to eq({ issue_type: :presence })
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.partial_namespace).to eq("failures")
       end
     end
 
-    context 'when initial state is not present' do
+    context "when initial state is not present" do
       before { all_topics }
 
-      it 'expect to fail' do
+      it "expect to fail" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('failure')
+        expect(result.to_s).to eq("failure")
         expect(result.details).to eq({ issue_type: :presence })
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.partial_namespace).to eq("failures")
       end
     end
 
-    context 'when state is present' do
+    context "when state is present" do
       before do
         all_topics
         produce(states_topic, state)
       end
 
-      it 'expect all to be ok' do
+      it "expect all to be ok" do
         expect(result.success?).to be(true)
-        expect(result.to_s).to eq('success')
+        expect(result.to_s).to eq("success")
         expect(result.details).to eq({ issue_type: :presence })
-        expect(result.partial_namespace).to eq('successes')
+        expect(result.partial_namespace).to eq("successes")
       end
     end
 
-    context 'when state is present but corrupted' do
+    context "when state is present but corrupted" do
       before do
         all_topics
-        produce(states_topic, '{')
+        produce(states_topic, "{")
       end
 
-      it 'expect all to be ok' do
+      it "expect all to be ok" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('failure')
+        expect(result.to_s).to eq("failure")
         expect(result.details).to eq({ issue_type: :deserialization })
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.partial_namespace).to eq("failures")
       end
     end
 
-    context 'when state is present but replication factor is 1 in prod' do
+    context "when state is present but replication factor is 1 in prod" do
       before do
         all_topics
         produce(states_topic, state)
@@ -353,19 +353,19 @@ RSpec.describe_current do
         allow(Karafka.env).to receive(:production?).and_return(true)
       end
 
-      it 'expect all to be ok because replication is a warning' do
+      it "expect all to be ok because replication is a warning" do
         expect(result.success?).to be(true)
-        expect(result.to_s).to eq('success')
+        expect(result.to_s).to eq("success")
         expect(result.details).to eq({ issue_type: :presence })
-        expect(result.partial_namespace).to eq('successes')
+        expect(result.partial_namespace).to eq("successes")
       end
     end
   end
 
-  describe '#initial_consumers_metrics' do
+  describe "#initial_consumers_metrics" do
     subject(:result) { status.initial_consumers_metrics }
 
-    context 'when there is no initial consumers state' do
+    context "when there is no initial consumers state" do
       before do
         errors_topic
         reports_topic
@@ -373,191 +373,191 @@ RSpec.describe_current do
         states_topic
       end
 
-      it 'expect to halt' do
+      it "expect to halt" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('halted')
+        expect(result.to_s).to eq("halted")
         expect(result.details).to eq({ issue_type: :presence })
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.partial_namespace).to eq("failures")
       end
     end
 
-    context 'when initial consumers metrics are not present' do
+    context "when initial consumers metrics are not present" do
       before do
         all_topics
         produce(states_topic, state)
       end
 
-      it 'expect to fail' do
+      it "expect to fail" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('failure')
+        expect(result.to_s).to eq("failure")
         expect(result.details).to eq({ issue_type: :presence })
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.partial_namespace).to eq("failures")
       end
     end
 
-    context 'when initial consumers metrics are present but corrupted' do
+    context "when initial consumers metrics are present but corrupted" do
       before do
         all_topics
         produce(states_topic, state)
-        produce(metrics_topic, '{')
+        produce(metrics_topic, "{")
       end
 
-      it 'expect to fail' do
+      it "expect to fail" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('failure')
+        expect(result.to_s).to eq("failure")
         expect(result.details).to eq({ issue_type: :deserialization })
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.partial_namespace).to eq("failures")
       end
     end
 
-    context 'when state and metrics are present' do
+    context "when state and metrics are present" do
       before { ready_topics }
 
-      it 'expect all to be ok' do
+      it "expect all to be ok" do
         expect(result.success?).to be(true)
-        expect(result.to_s).to eq('success')
+        expect(result.to_s).to eq("success")
         expect(result.details).to eq({ issue_type: :presence })
-        expect(result.partial_namespace).to eq('successes')
+        expect(result.partial_namespace).to eq("successes")
       end
     end
   end
 
-  describe '#consumers_reports' do
+  describe "#consumers_reports" do
     subject(:result) { status.consumers_reports }
 
-    context 'when there is no initial consumers metrics state' do
+    context "when there is no initial consumers metrics state" do
       before do
         all_topics
         produce(states_topic, state)
       end
 
-      it 'expect to halt' do
+      it "expect to halt" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('halted')
+        expect(result.to_s).to eq("halted")
         expect(result.details).to eq({})
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.partial_namespace).to eq("failures")
       end
     end
 
-    context 'when at least one process is active' do
+    context "when at least one process is active" do
       before { ready_topics }
 
-      it 'expect all to be ok' do
+      it "expect all to be ok" do
         expect(result.success?).to be(true)
-        expect(result.to_s).to eq('success')
+        expect(result.to_s).to eq("success")
         expect(result.details).to eq({})
-        expect(result.partial_namespace).to eq('successes')
+        expect(result.partial_namespace).to eq("successes")
       end
     end
 
-    context 'when there are no processes' do
+    context "when there are no processes" do
       before do
         all_topics
         produce(states_topic, state)
         produce(metrics_topic, metrics)
       end
 
-      it 'expect all to be ok' do
+      it "expect all to be ok" do
         expect(result.success?).to be(true)
-        expect(result.to_s).to eq('success')
+        expect(result.to_s).to eq("success")
         expect(result.details).to eq({})
-        expect(result.partial_namespace).to eq('successes')
+        expect(result.partial_namespace).to eq("successes")
       end
     end
 
-    context 'when process data is corrupted' do
+    context "when process data is corrupted" do
       before do
         all_topics
         produce(states_topic, state)
         produce(metrics_topic, metrics)
-        produce(reports_topic, '{')
+        produce(reports_topic, "{")
       end
 
-      it 'expect all to be ok' do
+      it "expect all to be ok" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('failure')
+        expect(result.to_s).to eq("failure")
         expect(result.details).to eq({})
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.partial_namespace).to eq("failures")
       end
     end
   end
 
-  describe '#live_reporting' do
+  describe "#live_reporting" do
     subject(:result) { status.live_reporting }
 
-    context 'when initial metrics state is corrupted' do
+    context "when initial metrics state is corrupted" do
       before do
         all_topics
         produce(states_topic, state)
-        produce(metrics_topic, '{')
+        produce(metrics_topic, "{")
       end
 
-      it 'expect to halt' do
+      it "expect to halt" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('halted')
+        expect(result.to_s).to eq("halted")
         expect(result.details).to eq({})
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.partial_namespace).to eq("failures")
       end
     end
 
-    context 'when at least one process is active' do
+    context "when at least one process is active" do
       before { ready_topics }
 
-      it 'expect all to be ok' do
+      it "expect all to be ok" do
         expect(result.success?).to be(true)
-        expect(result.to_s).to eq('success')
+        expect(result.to_s).to eq("success")
         expect(result.details).to eq({})
-        expect(result.partial_namespace).to eq('successes')
+        expect(result.partial_namespace).to eq("successes")
       end
     end
 
-    context 'when there are no processes' do
+    context "when there are no processes" do
       before do
         all_topics
         produce(states_topic, state)
         produce(metrics_topic, metrics)
       end
 
-      it 'expect all to be ok' do
+      it "expect all to be ok" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('failure')
+        expect(result.to_s).to eq("failure")
         expect(result.details).to eq({})
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.partial_namespace).to eq("failures")
       end
     end
   end
 
-  describe '#consumers_schemas' do
+  describe "#consumers_schemas" do
     subject(:result) { status.consumers_schemas }
 
-    context 'when consumers_reports check failed' do
+    context "when consumers_reports check failed" do
       before do
         all_topics
         produce(states_topic, state)
         produce(metrics_topic, metrics)
-        produce(reports_topic, '{')
+        produce(reports_topic, "{")
       end
 
-      it 'expect to halt' do
+      it "expect to halt" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('halted')
+        expect(result.to_s).to eq("halted")
         expect(result.details).to eq({ incompatible: [] })
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.partial_namespace).to eq("failures")
       end
     end
 
-    context 'when all consumer schemas are compatible' do
+    context "when all consumer schemas are compatible" do
       before { ready_topics }
 
-      it 'expect all to be ok' do
+      it "expect all to be ok" do
         expect(result.success?).to be(true)
-        expect(result.to_s).to eq('success')
+        expect(result.to_s).to eq("success")
         expect(result.details[:incompatible]).to be_empty
-        expect(result.partial_namespace).to eq('successes')
+        expect(result.partial_namespace).to eq("successes")
       end
     end
 
-    context 'when some consumer schemas are incompatible' do
+    context "when some consumer schemas are incompatible" do
       before do
         all_topics
         produce(states_topic, state)
@@ -565,245 +565,245 @@ RSpec.describe_current do
 
         # Modify the report to have an incompatible schema version
         parsed = JSON.parse(report)
-        parsed['schema_version'] = 'incompatible_version'
+        parsed["schema_version"] = "incompatible_version"
 
         produce(reports_topic, parsed.to_json)
       end
 
-      it 'expect to warn' do
+      it "expect to warn" do
         expect(result.success?).to be(true)
-        expect(result.to_s).to eq('warning')
+        expect(result.to_s).to eq("warning")
         expect(result.details[:incompatible]).not_to be_empty
-        expect(result.partial_namespace).to eq('warnings')
+        expect(result.partial_namespace).to eq("warnings")
       end
     end
   end
 
-  describe '#materializing_lag' do
+  describe "#materializing_lag" do
     subject(:result) { status.materializing_lag }
 
-    context 'when there is no live reporting' do
+    context "when there is no live reporting" do
       before do
         all_topics
         produce(states_topic, state)
         produce(metrics_topic, metrics)
       end
 
-      it 'expect to halt' do
+      it "expect to halt" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('halted')
+        expect(result.to_s).to eq("halted")
         expect(result.details).to eq(lag: 0, max_lag: 10)
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.partial_namespace).to eq("failures")
       end
     end
 
-    context 'when there is live reporting and state calculation' do
+    context "when there is live reporting and state calculation" do
       before do
         all_topics
         produce(states_topic, state)
         produce(metrics_topic, metrics)
 
         parsed = JSON.parse(report)
-        cg = parsed['consumer_groups']['example_app6_app']['subscription_groups']['c4ca4238a0b9_0']
-        cg['topics'][reports_topic] = cg['topics']['default']
-        cg['topics'][reports_topic]['name'] = reports_topic
+        cg = parsed["consumer_groups"]["example_app6_app"]["subscription_groups"]["c4ca4238a0b9_0"]
+        cg["topics"][reports_topic] = cg["topics"]["default"]
+        cg["topics"][reports_topic]["name"] = reports_topic
 
         produce(reports_topic, parsed.to_json)
       end
 
-      it 'expect all to be ok' do
+      it "expect all to be ok" do
         expect(result.success?).to be(true)
-        expect(result.to_s).to eq('success')
-        expect(result.partial_namespace).to eq('successes')
+        expect(result.to_s).to eq("success")
+        expect(result.partial_namespace).to eq("successes")
       end
     end
 
-    context 'when there is live reporting but state computation is lagging' do
+    context "when there is live reporting but state computation is lagging" do
       before do
         all_topics
         produce(states_topic, state)
         produce(metrics_topic, metrics)
 
         parsed = JSON.parse(report)
-        cg = parsed['consumer_groups']['example_app6_app']['subscription_groups']['c4ca4238a0b9_0']
-        cg['topics'][reports_topic] = cg['topics']['default']
-        cg['topics'][reports_topic]['name'] = reports_topic
+        cg = parsed["consumer_groups"]["example_app6_app"]["subscription_groups"]["c4ca4238a0b9_0"]
+        cg["topics"][reports_topic] = cg["topics"]["default"]
+        cg["topics"][reports_topic]["name"] = reports_topic
         produce(reports_topic, parsed.to_json)
 
         parsed_state = JSON.parse(state)
         # simulate reporting lag
-        parsed_state['dispatched_at'] = Time.now.to_f - 15
+        parsed_state["dispatched_at"] = Time.now.to_f - 15
         produce(states_topic, parsed_state.to_json)
       end
 
-      it 'expect all to be ok' do
+      it "expect all to be ok" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('failure')
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.to_s).to eq("failure")
+        expect(result.partial_namespace).to eq("failures")
         expect(result[:details][:lag]).to be > 10
       end
     end
   end
 
-  describe '#state_calculation' do
+  describe "#state_calculation" do
     subject(:result) { status.state_calculation }
 
-    context 'when there is no live reporting' do
+    context "when there is no live reporting" do
       before do
         all_topics
         produce(states_topic, state)
         produce(metrics_topic, metrics)
       end
 
-      it 'expect to halt' do
+      it "expect to halt" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('halted')
+        expect(result.to_s).to eq("halted")
         expect(result.details).to eq({})
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.partial_namespace).to eq("failures")
       end
     end
 
-    context 'when there is live reporting and no state calculation' do
+    context "when there is live reporting and no state calculation" do
       before { ready_topics }
 
-      it 'expect to report failure' do
+      it "expect to report failure" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('failure')
+        expect(result.to_s).to eq("failure")
         expect(result.details).to eq({})
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.partial_namespace).to eq("failures")
       end
     end
 
-    context 'when there is live reporting and state calculation' do
+    context "when there is live reporting and state calculation" do
       before do
         all_topics
         produce(states_topic, state)
         produce(metrics_topic, metrics)
 
         parsed = JSON.parse(report)
-        cg = parsed['consumer_groups']['example_app6_app']['subscription_groups']['c4ca4238a0b9_0']
-        cg['topics'][reports_topic] = cg['topics']['default']
-        cg['topics'][reports_topic]['name'] = reports_topic
+        cg = parsed["consumer_groups"]["example_app6_app"]["subscription_groups"]["c4ca4238a0b9_0"]
+        cg["topics"][reports_topic] = cg["topics"]["default"]
+        cg["topics"][reports_topic]["name"] = reports_topic
 
         produce(reports_topic, parsed.to_json)
       end
 
-      it 'expect all to be ok' do
+      it "expect all to be ok" do
         expect(result.success?).to be(true)
-        expect(result.to_s).to eq('success')
+        expect(result.to_s).to eq("success")
         expect(result.details).to eq({})
-        expect(result.partial_namespace).to eq('successes')
+        expect(result.partial_namespace).to eq("successes")
       end
     end
   end
 
-  describe '#consumers_reports_schema_state' do
+  describe "#consumers_reports_schema_state" do
     subject(:result) { status.consumers_reports_schema_state }
 
-    context 'when there is no state computation' do
+    context "when there is no state computation" do
       before { ready_topics }
 
-      it 'expect to halt' do
+      it "expect to halt" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('halted')
+        expect(result.to_s).to eq("halted")
         expect(result.details).to eq({})
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.partial_namespace).to eq("failures")
       end
     end
 
-    context 'when the schema state is compatible' do
+    context "when the schema state is compatible" do
       before do
         all_topics
         produce(states_topic, state)
         produce(metrics_topic, metrics)
 
         parsed = JSON.parse(report)
-        cg = parsed['consumer_groups']['example_app6_app']['subscription_groups']['c4ca4238a0b9_0']
-        cg['topics'][reports_topic] = cg['topics']['default']
-        cg['topics'][reports_topic]['name'] = reports_topic
+        cg = parsed["consumer_groups"]["example_app6_app"]["subscription_groups"]["c4ca4238a0b9_0"]
+        cg["topics"][reports_topic] = cg["topics"]["default"]
+        cg["topics"][reports_topic]["name"] = reports_topic
 
         produce(reports_topic, parsed.to_json)
       end
 
-      it 'expect all to be ok' do
+      it "expect all to be ok" do
         expect(result.success?).to be(true)
-        expect(result.to_s).to eq('success')
+        expect(result.to_s).to eq("success")
         expect(result.details).to eq({})
-        expect(result.partial_namespace).to eq('successes')
+        expect(result.partial_namespace).to eq("successes")
       end
     end
 
-    context 'when the schema state is not compatible' do
+    context "when the schema state is not compatible" do
       before do
         all_topics
 
         parsed = JSON.parse(state)
-        parsed['schema_state'] = 'incompatible'
+        parsed["schema_state"] = "incompatible"
 
         produce(states_topic, parsed.to_json)
         produce(metrics_topic, metrics)
 
         parsed = JSON.parse(report)
-        cg = parsed['consumer_groups']['example_app6_app']['subscription_groups']['c4ca4238a0b9_0']
-        cg['topics'][reports_topic] = cg['topics']['default']
-        cg['topics'][reports_topic]['name'] = reports_topic
+        cg = parsed["consumer_groups"]["example_app6_app"]["subscription_groups"]["c4ca4238a0b9_0"]
+        cg["topics"][reports_topic] = cg["topics"]["default"]
+        cg["topics"][reports_topic]["name"] = reports_topic
 
         produce(reports_topic, parsed.to_json)
       end
 
-      it 'expect all to be ok' do
+      it "expect all to be ok" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('failure')
+        expect(result.to_s).to eq("failure")
         expect(result.details).to eq({})
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.partial_namespace).to eq("failures")
       end
     end
   end
 
-  describe '#routing_topics_presence' do
+  describe "#routing_topics_presence" do
     subject(:result) { status.routing_topics_presence }
 
-    context 'when there is no state computation' do
+    context "when there is no state computation" do
       before { ready_topics }
 
-      it 'expect to halt' do
+      it "expect to halt" do
         expect(result.success?).to be(false)
-        expect(result.to_s).to eq('halted')
+        expect(result.to_s).to eq("halted")
         expect(result.details).to eq([])
-        expect(result.partial_namespace).to eq('failures')
+        expect(result.partial_namespace).to eq("failures")
       end
     end
 
-    context 'when checks steps are satisfied' do
+    context "when checks steps are satisfied" do
       before do
         all_topics
         produce(states_topic, state)
         produce(metrics_topic, metrics)
 
         parsed = JSON.parse(report)
-        cg = parsed['consumer_groups']['example_app6_app']['subscription_groups']['c4ca4238a0b9_0']
-        cg['topics'][reports_topic] = cg['topics']['default']
-        cg['topics'][reports_topic]['name'] = reports_topic
+        cg = parsed["consumer_groups"]["example_app6_app"]["subscription_groups"]["c4ca4238a0b9_0"]
+        cg["topics"][reports_topic] = cg["topics"]["default"]
+        cg["topics"][reports_topic]["name"] = reports_topic
 
         produce(reports_topic, parsed.to_json)
       end
 
-      context 'when all topics are present' do
+      context "when all topics are present" do
         before do
           routes = Karafka::App.routes
           # We are interested only in stubbing the result on the last execution
           allow(Karafka::App).to receive(:routes).and_return(routes, routes, routes, [])
         end
 
-        it 'expect all to be ok' do
+        it "expect all to be ok" do
           expect(result.success?).to be(true)
-          expect(result.to_s).to eq('success')
+          expect(result.to_s).to eq("success")
           expect(result.details).to eq([])
-          expect(result.partial_namespace).to eq('successes')
+          expect(result.partial_namespace).to eq("successes")
         end
       end
 
-      context 'when some routing topics are missing' do
+      context "when some routing topics are missing" do
         let(:non_existing_topic) { generate_topic_name }
 
         before do
@@ -812,38 +812,38 @@ RSpec.describe_current do
             .and_return(non_existing_topic)
         end
 
-        it 'expect to warn' do
+        it "expect to warn" do
           expect(result.success?).to be(true)
-          expect(result.to_s).to eq('warning')
+          expect(result.to_s).to eq("warning")
           expect(result.details).to include(non_existing_topic)
-          expect(result.partial_namespace).to eq('warnings')
+          expect(result.partial_namespace).to eq("warnings")
         end
       end
     end
   end
 
-  describe '#pro_subscription' do
+  describe "#pro_subscription" do
     subject(:result) { status.pro_subscription }
 
-    context 'when pro is on' do
+    context "when pro is on" do
       before { allow(Karafka).to receive(:pro?).and_return(true) }
 
-      it 'expect all to be ok' do
+      it "expect all to be ok" do
         expect(result.success?).to be(true)
-        expect(result.to_s).to eq('success')
+        expect(result.to_s).to eq("success")
         expect(result.details).to eq({})
-        expect(result.partial_namespace).to eq('successes')
+        expect(result.partial_namespace).to eq("successes")
       end
     end
 
-    context 'when pro is off' do
+    context "when pro is off" do
       before { allow(Karafka).to receive(:pro?).and_return(false) }
 
-      it 'expect all to be ok' do
+      it "expect all to be ok" do
         expect(result.success?).to be(true)
-        expect(result.to_s).to eq('warning')
+        expect(result.to_s).to eq("warning")
         expect(result.details).to eq({})
-        expect(result.partial_namespace).to eq('warnings')
+        expect(result.partial_namespace).to eq("warnings")
       end
     end
   end

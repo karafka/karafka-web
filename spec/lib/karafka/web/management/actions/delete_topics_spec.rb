@@ -24,8 +24,8 @@ RSpec.describe_current do
     Karafka::Web.config.topics.errors.name = errors_topic
   end
 
-  context 'when topics do not exist' do
-    it 'does not create any of the configured topics' do
+  context "when topics do not exist" do
+    it "does not create any of the configured topics" do
       configured_topics = [
         consumers_states_topic,
         consumers_metrics_topic,
@@ -41,37 +41,37 @@ RSpec.describe_current do
     end
   end
 
-  context 'when consumers states topic exists' do
+  context "when consumers states topic exists" do
     let(:consumers_states_topic) { create_topic }
 
-    it 'expect to remove it' do
+    it "expect to remove it" do
       expect { delete }
         .to change { topics.call.include?(consumers_states_topic) }.from(true).to(false)
     end
   end
 
-  context 'when consumers metrics topic exists' do
+  context "when consumers metrics topic exists" do
     let(:consumers_metrics_topic) { create_topic }
 
-    it 'expect to remove it' do
+    it "expect to remove it" do
       expect { delete }
         .to change { topics.call.include?(consumers_metrics_topic) }.from(true).to(false)
     end
   end
 
-  context 'when consumers reports topic exists' do
+  context "when consumers reports topic exists" do
     let(:consumers_reports_topic) { create_topic }
 
-    it 'expect to remove it' do
+    it "expect to remove it" do
       expect { delete }
         .to change { topics.call.include?(consumers_reports_topic) }.from(true).to(false)
     end
   end
 
-  context 'when errors topic exists' do
+  context "when errors topic exists" do
     let(:errors_topic) { create_topic }
 
-    it 'expect to remove it' do
+    it "expect to remove it" do
       expect { delete }
         .to change { topics.call.include?(errors_topic) }.from(true).to(false)
     end

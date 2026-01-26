@@ -16,7 +16,7 @@ class LinksValidator
     %r{explorer/topics/\w+/\d+},
     %r{explorer/topics/it-[a-f0-9-]+/\d+},
     %r{consumers/[a-z0-9-]+:[a-z0-9]+(:[a-z0-9]+)?/subscriptions},
-    '/explorer/topics/test3',
+    "/explorer/topics/test3",
     %r{/consumers/[a-f0-9-]+/subscriptions}
   ].freeze
 
@@ -26,17 +26,17 @@ class LinksValidator
   # usage
   EXCLUDED_CONTROLLERS = {
     # Covers both oss and pro. On status since there are so many invalid we exclude all
-    'StatusController' => [/.*/],
+    "StatusController" => [/.*/],
     # Also deals with invalid state that affects dashboard
-    'RoutingController' => [%r{/dashboard}, %r{/jobs}, %r{/health}],
-    'ClusterController' => [%r{/explorer}]
+    "RoutingController" => [%r{/dashboard}, %r{/jobs}, %r{/health}],
+    "ClusterController" => [%r{/explorer}]
   }.freeze
 
   # Descriptions that indicate some features disabled
   # We do not track links on those as they may return 403 and other unexpected statuses
   EXCLUDED_DESCRIPTIONS = [
-    'is disabled',
-    'is not enabled'
+    "is disabled",
+    "is not enabled"
   ].freeze
 
   # There is no point in visiting same urls for different uuids (like topic views). We use those
@@ -58,7 +58,7 @@ class LinksValidator
   # Processes a response by extracting and validating all links
   # @param response [Rack::MockResponse] request response
   def validate_all!(response)
-    return unless response.content_type.include?('text/html')
+    return unless response.content_type.include?("text/html")
 
     html = Nokogiri::HTML(response.body)
     links = extract_links(html)
@@ -76,12 +76,12 @@ class LinksValidator
   # @return [Array<String>] list of links potentially to visit
   def extract_links(html)
     # Get all anchor tags with href attributes
-    links = html.css('a[href]').map { |a| a['href'] }
+    links = html.css("a[href]").map { |a| a["href"] }
     full_description = RSpec.current_example.metadata[:full_description]
 
     # Filter to only include internal links (not external or anchors)
     links.delete_if do |link|
-      next true if link.start_with?('#', 'http://', 'https://', 'mailto:', 'tel:')
+      next true if link.start_with?("#", "http://", "https://", "mailto:", "tel:")
       next true if link.empty?
       next true if EXCLUDED_DESCRIPTIONS.any? { |excluded| full_description.include?(excluded) }
 
@@ -127,7 +127,7 @@ class LinksValidator
       @context.get link
     # We ignore errors because some specs are designed to inject invalid data, etc, so other
     # views to which we reach out may in fact be corrupted
-    rescue StandardError
+    rescue
       return
     end
 
@@ -147,7 +147,7 @@ class LinksValidator
     final_key = link.dup
 
     KEY_TRANSFORMERS.each do |transformer|
-      final_key = final_key.gsub(transformer, 'KEY')
+      final_key = final_key.gsub(transformer, "KEY")
     end
 
     final_key

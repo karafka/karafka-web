@@ -54,7 +54,7 @@ module Karafka
 
           # @return [String] state that we can use in the materialized state for the UI reporting
           def to_s
-            @valid ? 'compatible' : 'incompatible'
+            @valid ? "compatible" : "incompatible"
           end
         end
       end

@@ -30,7 +30,7 @@ module Karafka
             # Delegates the pause request into the partition changes tracker and dispatches the
             # acceptance message back to Kafka
             class Pause < Base
-              self.name = 'partitions.pause'
+              self.name = "partitions.pause"
 
               # Delegates the pause request to async handling
               def call

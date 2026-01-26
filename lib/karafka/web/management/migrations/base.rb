@@ -27,7 +27,7 @@ module Karafka
 
             # @param state [Hash] deserialized state to be modified
             def migrate(state)
-              raise NotImplementedError, 'Implement in a subclass'
+              raise NotImplementedError, "Implement in a subclass"
             end
 
             # @return [Integer] index for sorting. Older migrations are always applied first
@@ -35,9 +35,9 @@ module Karafka
               instance_method(:migrate)
                 .source_location
                 .first
-                .split('/')
+                .split("/")
                 .last
-                .split('_')
+                .split("_")
                 .first
                 .to_i
             end

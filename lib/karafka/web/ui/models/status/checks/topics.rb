@@ -31,7 +31,7 @@ module Karafka
               # @return [Status::Step] result with topic details
               def call
                 details = context.topics_details
-                status = details.all? { |_, detail| detail[:present] } ? :success : :failure
+                status = (details.all? { |_, detail| detail[:present] }) ? :success : :failure
 
                 step(status, details)
               end

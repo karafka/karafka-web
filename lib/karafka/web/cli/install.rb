@@ -5,13 +5,13 @@ module Karafka
     class Cli
       # Installs Web UI
       class Install < Base
-        desc 'Installs the Web UI'
+        desc "Installs the Web UI"
 
         option(
           :replication_factor,
-          'Replication factor for created topics',
+          "Replication factor for created topics",
           Integer,
-          ['--replication_factor [FACTOR]']
+          ["--replication_factor [FACTOR]"]
         )
 
         # Installs Karafka Web. Creates all needed topics, populates the data and adds the needed

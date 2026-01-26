@@ -26,7 +26,7 @@ module Karafka
           # @param content [String] badge content
           # @param classes [String] extra css classes
           # @return [String] badge html
-          def badge(content, classes: '')
+          def badge(content, classes: "")
             %(<span class="badge #{classes}">#{content}</span>)
           end
 
@@ -36,26 +36,26 @@ module Karafka
           # @param classes [String] extra css classes
           # @param title [String, nil] title (if any)
           # @return [String] button link html
-          def link_button(name, path, classes: '', title: nil)
+          def link_button(name, path, classes: "", title: nil)
             %(<a href="#{path}" class="btn #{classes}" title="#{title}">#{name}</a>)
           end
 
           # Defines various methods for badges and links that simplify defining them without
           # having to provide whole classes scopes always.
           TYPES.each do |type|
-            define_method :"badge_#{type}" do |content, classes: ''|
+            define_method :"badge_#{type}" do |content, classes: ""|
               badge(content, classes: "#{classes} badge-#{type}")
             end
 
-            define_method :"badge_#{type}_sm" do |content, classes: ''|
+            define_method :"badge_#{type}_sm" do |content, classes: ""|
               badge(content, classes: "#{classes} badge-#{type} badge-sm")
             end
 
-            define_method :"link_button_#{type}" do |name, path, classes: ''|
+            define_method :"link_button_#{type}" do |name, path, classes: ""|
               link_button(name, path, classes: "#{classes} btn-#{type}")
             end
 
-            define_method :"link_button_#{type}_sm" do |name, path, classes: '', title: nil|
+            define_method :"link_button_#{type}_sm" do |name, path, classes: "", title: nil|
               link_button(name, path, classes: "#{classes} btn-#{type} btn-sm", title: title)
             end
 

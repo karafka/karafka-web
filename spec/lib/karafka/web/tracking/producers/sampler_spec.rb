@@ -3,13 +3,13 @@
 RSpec.describe_current do
   subject(:sampler) { described_class.new }
 
-  describe '#track' do
+  describe "#track" do
     before { sampler.track { |sam| sam.errors << 1 } }
 
     it { expect(sampler.errors).to eq([1]) }
   end
 
-  describe '#clear' do
+  describe "#clear" do
     before do
       sampler.track { |sam| sam.errors << 1 }
       sampler.clear

@@ -41,14 +41,14 @@ module Karafka
                 # This will ensure that the consumer states are compacted
                 key: Karafka::Web.config.topics.consumers.states.name,
                 partition: 0,
-                headers: { 'zlib' => 'true' }
+                headers: { "zlib" => "true" }
               },
               {
                 topic: Karafka::Web.config.topics.consumers.metrics.name,
                 payload: Zlib::Deflate.deflate(consumers_metrics.to_json),
                 key: Karafka::Web.config.topics.consumers.metrics.name,
                 partition: 0,
-                headers: { 'zlib' => 'true' }
+                headers: { "zlib" => "true" }
               }
             ]
           end

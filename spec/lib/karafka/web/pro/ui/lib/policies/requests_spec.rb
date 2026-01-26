@@ -23,7 +23,7 @@
 RSpec.describe_current do
   subject(:policy) { described_class.new }
 
-  describe '#allow?' do
+  describe "#allow?" do
     it { expect(policy.allow?({})).to be(true) }
   end
 end

@@ -27,14 +27,14 @@ RSpec.describe_current do
     instance_double(
       Karafka::Messages::Message,
       key: nil,
-      payload: { schema_version: '1.2.0', matchers: {} },
-      headers: { 'type' => 'request' }
+      payload: { schema_version: "1.2.0", matchers: {} },
+      headers: { "type" => "request" }
     )
   end
 
-  describe '#matches?' do
-    it 'raises NotImplementedError' do
-      expect { matcher.matches? }.to raise_error(NotImplementedError, 'Implement in a subclass')
+  describe "#matches?" do
+    it "raises NotImplementedError" do
+      expect { matcher.matches? }.to raise_error(NotImplementedError, "Implement in a subclass")
     end
   end
 end

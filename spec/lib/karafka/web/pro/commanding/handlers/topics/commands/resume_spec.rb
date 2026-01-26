@@ -28,7 +28,7 @@ RSpec.describe_current do
 
   let(:request) do
     Karafka::Web::Pro::Commanding::Request.new(
-      name: 'topics.resume',
+      name: "topics.resume",
       topic: topic_name,
       consumer_group_id: consumer_group_id,
       reset_attempts: reset_attempts
@@ -46,8 +46,8 @@ RSpec.describe_current do
   let(:partition0) { instance_double(Rdkafka::Consumer::Partition, partition: 0) }
   let(:partition1) { instance_double(Rdkafka::Consumer::Partition, partition: 1) }
 
-  let(:topic_name) { 'test_topic' }
-  let(:consumer_group_id) { 'test_consumer_group' }
+  let(:topic_name) { "test_topic" }
+  let(:consumer_group_id) { "test_consumer_group" }
   let(:reset_attempts) { false }
 
   before do
@@ -94,34 +94,34 @@ RSpec.describe_current do
 
     allow(Karafka::Web.config.tracking.consumers.sampler)
       .to receive(:process_id)
-      .and_return('test-process')
+      .and_return("test-process")
   end
 
-  describe '#call' do
-    context 'when consumer group matches' do
-      it 'expires pause on all partitions of the topic' do
+  describe "#call" do
+    context "when consumer group matches" do
+      it "expires pause on all partitions of the topic" do
         command.call
 
         expect(pause_tracker0).to have_received(:expire)
         expect(pause_tracker1).to have_received(:expire)
       end
 
-      it 'reports applied status with affected partitions' do
+      it "reports applied status with affected partitions" do
         command.call
 
         expect(Karafka::Web::Pro::Commanding::Dispatcher)
           .to have_received(:result) do |name, pid, payload|
-            expect(name).to eq('topics.resume')
-            expect(pid).to eq('test-process')
-            expect(payload[:status]).to eq('applied')
+            expect(name).to eq("topics.resume")
+            expect(pid).to eq("test-process")
+            expect(payload[:status]).to eq("applied")
             expect(payload[:partitions_affected]).to contain_exactly(0, 1)
           end
       end
 
-      context 'when reset_attempts is false' do
+      context "when reset_attempts is false" do
         let(:reset_attempts) { false }
 
-        it 'does not reset the pause tracker attempts' do
+        it "does not reset the pause tracker attempts" do
           command.call
 
           expect(pause_tracker0).not_to have_received(:reset)
@@ -129,10 +129,10 @@ RSpec.describe_current do
         end
       end
 
-      context 'when reset_attempts is true' do
+      context "when reset_attempts is true" do
         let(:reset_attempts) { true }
 
-        it 'resets the pause tracker attempts' do
+        it "resets the pause tracker attempts" do
           command.call
 
           expect(pause_tracker0).to have_received(:reset)
@@ -141,17 +141,17 @@ RSpec.describe_current do
       end
     end
 
-    context 'when no partitions are owned for the topic' do
+    context "when no partitions are owned for the topic" do
       before do
         allow(topic_partition_list).to receive(:to_h).and_return({})
       end
 
-      it 'reports applied with no affected partitions' do
+      it "reports applied with no affected partitions" do
         command.call
 
         expect(Karafka::Web::Pro::Commanding::Dispatcher)
           .to have_received(:result) do |_name, _pid, payload|
-            expect(payload[:status]).to eq('applied')
+            expect(payload[:status]).to eq("applied")
             expect(payload[:partitions_affected]).to be_empty
           end
       end

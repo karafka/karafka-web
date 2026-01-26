@@ -5,10 +5,10 @@ RSpec.describe_current do
 
   let(:subscription_group) do
     {
-      id: 'subscription_group1',
+      id: "subscription_group1",
       topics: {
-        'topic1' => {
-          name: 'topic1',
+        "topic1" => {
+          name: "topic1",
           partitions_cnt: 1,
           partitions: {
             0 => {
@@ -28,8 +28,8 @@ RSpec.describe_current do
               ls_offset: 0,
               ls_offset_d: 0,
               ls_offset_fd: 0,
-              fetch_state: 'active',
-              poll_state: 'active',
+              fetch_state: "active",
+              poll_state: "active",
               poll_state_ch: 0,
               transactional: false
             }
@@ -38,71 +38,71 @@ RSpec.describe_current do
       },
       instance_id: false,
       state: {
-        state: 'up',
-        join_state: 'steady',
+        state: "up",
+        join_state: "steady",
         stateage: 90_002,
         rebalance_age: 90_000,
         rebalance_cnt: 1,
-        rebalance_reason: 'Metadata for subscribed topic(s) has changed',
+        rebalance_reason: "Metadata for subscribed topic(s) has changed",
         poll_age: 12
       }
     }
   end
 
-  context 'when config is valid' do
+  context "when config is valid" do
     it { expect(contract.call(subscription_group)).to be_success }
   end
 
-  context 'when id is missing' do
+  context "when id is missing" do
     before { subscription_group.delete(:id) }
 
     it { expect(contract.call(subscription_group)).not_to be_success }
   end
 
-  context 'when id is not a string' do
+  context "when id is not a string" do
     before { subscription_group[:id] = 123 }
 
     it { expect(contract.call(subscription_group)).not_to be_success }
   end
 
-  context 'when id is empty' do
-    before { subscription_group[:id] = '' }
+  context "when id is empty" do
+    before { subscription_group[:id] = "" }
 
     it { expect(contract.call(subscription_group)).not_to be_success }
   end
 
-  context 'when topics is missing' do
+  context "when topics is missing" do
     before { subscription_group.delete(:topics) }
 
     it { expect(contract.call(subscription_group)).not_to be_success }
   end
 
-  context 'when topics is not a hash' do
-    before { subscription_group[:topics] = 'not a hash' }
+  context "when topics is not a hash" do
+    before { subscription_group[:topics] = "not a hash" }
 
     it { expect(contract.call(subscription_group)).not_to be_success }
   end
 
-  context 'when state is missing' do
+  context "when state is missing" do
     before { subscription_group.delete(:state) }
 
     it { expect(contract.call(subscription_group)).not_to be_success }
   end
 
-  context 'when rebalance_reason in state is missing' do
+  context "when rebalance_reason in state is missing" do
     before { subscription_group[:state].delete(:rebalance_reason) }
 
     it { expect(contract.call(subscription_group)).not_to be_success }
   end
 
-  context 'when rebalance_reason is not a string' do
+  context "when rebalance_reason is not a string" do
     before { subscription_group[:state][:rebalance_reason] = rand }
 
     it { expect(contract.call(subscription_group)).not_to be_success }
   end
 
-  context 'when rebalance_reason is empty' do
-    before { subscription_group[:state][:rebalance_reason] = '' }
+  context "when rebalance_reason is empty" do
+    before { subscription_group[:state][:rebalance_reason] = "" }
 
     it { expect(contract.call(subscription_group)).to be_success }
   end
@@ -124,7 +124,7 @@ RSpec.describe_current do
     end
 
     context "when #{key} is empty" do
-      before { subscription_group[:state][key] = '' }
+      before { subscription_group[:state][key] = "" }
 
       it { expect(contract.call(subscription_group)).not_to be_success }
     end
@@ -143,7 +143,7 @@ RSpec.describe_current do
     end
 
     context "when #{key} is not a numeric value" do
-      before { subscription_group[:state][key] = 'not a number' }
+      before { subscription_group[:state][key] = "not a number" }
 
       it { expect(contract.call(subscription_group)).not_to be_success }
     end
@@ -155,31 +155,31 @@ RSpec.describe_current do
     end
   end
 
-  context 'when instance_id is missing' do
+  context "when instance_id is missing" do
     before { subscription_group.delete(:instance_id) }
 
     it { expect(contract.call(subscription_group)).not_to be_success }
   end
 
-  context 'when instance_id is false' do
+  context "when instance_id is false" do
     before { subscription_group[:instance_id] = false }
 
     it { expect(contract.call(subscription_group)).to be_success }
   end
 
-  context 'when instance_id is a string' do
-    before { subscription_group[:instance_id] = 'my-static-instance' }
+  context "when instance_id is a string" do
+    before { subscription_group[:instance_id] = "my-static-instance" }
 
     it { expect(contract.call(subscription_group)).to be_success }
   end
 
-  context 'when instance_id is not false or string' do
+  context "when instance_id is not false or string" do
     before { subscription_group[:instance_id] = 123 }
 
     it { expect(contract.call(subscription_group)).not_to be_success }
   end
 
-  context 'when instance_id is nil' do
+  context "when instance_id is nil" do
     before { subscription_group[:instance_id] = nil }
 
     it { expect(contract.call(subscription_group)).not_to be_success }

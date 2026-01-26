@@ -10,7 +10,7 @@ module Karafka
             include Tracking::Helpers::ErrorInfo
 
             # Schema used by producers error reporting
-            SCHEMA_VERSION = '1.2.0'
+            SCHEMA_VERSION = "1.2.0"
 
             private_constant :SCHEMA_VERSION
 
@@ -53,7 +53,7 @@ module Karafka
             # @return [Hash] hash with details
             def build_details(type, payload)
               case type
-              when 'librdkafka.dispatch_error'
+              when "librdkafka.dispatch_error"
                 payload.slice(:topic, :partition, :offset)
               else
                 {}

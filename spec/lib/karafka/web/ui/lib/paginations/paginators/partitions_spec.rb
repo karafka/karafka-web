@@ -3,7 +3,7 @@
 RSpec.describe_current do
   subject(:pagination) { described_class.call(partitions_count, page) }
 
-  context 'when there is only one partition' do
+  context "when there is only one partition" do
     let(:partitions_count) { 1 }
     let(:page) { 1 }
 
@@ -12,7 +12,7 @@ RSpec.describe_current do
     it { expect(pagination[2]).to be(false) }
   end
 
-  context 'when there are 25 partitions (matching per page)' do
+  context "when there are 25 partitions (matching per page)" do
     let(:partitions_count) { 25 }
     let(:page) { 1 }
 
@@ -21,7 +21,7 @@ RSpec.describe_current do
     it { expect(pagination[2]).to be(false) }
   end
 
-  context 'when there are 26 partitions and first page' do
+  context "when there are 26 partitions and first page" do
     let(:partitions_count) { 26 }
     let(:page) { 1 }
 
@@ -30,7 +30,7 @@ RSpec.describe_current do
     it { expect(pagination[2]).to be(true) }
   end
 
-  context 'when there are 26 partitions and second page' do
+  context "when there are 26 partitions and second page" do
     let(:partitions_count) { 26 }
     let(:page) { 2 }
 
@@ -39,7 +39,7 @@ RSpec.describe_current do
     it { expect(pagination[2]).to be(true) }
   end
 
-  context 'when there are 26 partitions and a third page' do
+  context "when there are 26 partitions and a third page" do
     let(:partitions_count) { 26 }
     let(:page) { 3 }
 
@@ -48,7 +48,7 @@ RSpec.describe_current do
     it { expect(pagination[2]).to be(true) }
   end
 
-  context 'when there are 109 partitions and first page' do
+  context "when there are 109 partitions and first page" do
     let(:partitions_count) { 109 }
     let(:page) { 1 }
 
@@ -57,7 +57,7 @@ RSpec.describe_current do
     it { expect(pagination[2]).to be(true) }
   end
 
-  context 'when there are 109 partitions and second page' do
+  context "when there are 109 partitions and second page" do
     let(:partitions_count) { 109 }
     let(:page) { 2 }
 
@@ -66,7 +66,7 @@ RSpec.describe_current do
     it { expect(pagination[2]).to be(true) }
   end
 
-  context 'when there are 109 partitions and a third page' do
+  context "when there are 109 partitions and a third page" do
     let(:partitions_count) { 109 }
     let(:page) { 3 }
 

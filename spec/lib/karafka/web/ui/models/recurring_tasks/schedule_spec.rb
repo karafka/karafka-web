@@ -5,18 +5,18 @@ RSpec.describe_current do
 
   let(:attrs) { { tasks: {} } }
 
-  describe '#tasks' do
-    context 'when no tasks' do
+  describe "#tasks" do
+    context "when no tasks" do
       it { expect(schedule.tasks).to eq([]) }
     end
 
-    context 'when tasks are present' do
+    context "when tasks are present" do
       let(:attrs) do
         {
           tasks: {
             task1: {
-              id: 'task1',
-              cron: '* * * * *'
+              id: "task1",
+              cron: "* * * * *"
             }
           }
         }
@@ -24,7 +24,7 @@ RSpec.describe_current do
 
       it { expect(schedule.tasks.first).to be_a(Karafka::Web::Ui::Models::RecurringTasks::Task) }
       it { expect(schedule.tasks).to be_a(Array) }
-      it { expect(schedule.tasks.first.id).to eq('task1') }
+      it { expect(schedule.tasks.first.id).to eq("task1") }
     end
   end
 end

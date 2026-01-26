@@ -100,7 +100,7 @@ module Karafka
               # @return [Status::Step] the result of the check
               # @raise [NotImplementedError] if not implemented by subclass
               def call
-                raise NotImplementedError, 'Subclasses must implement #call'
+                raise NotImplementedError, "Subclasses must implement #call"
               end
 
               private

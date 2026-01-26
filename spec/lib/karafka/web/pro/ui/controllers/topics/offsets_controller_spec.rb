@@ -26,8 +26,8 @@ RSpec.describe_current do
   let(:topic) { create_topic(partitions: partitions) }
   let(:partitions) { 1 }
 
-  describe '#show' do
-    context 'when trying to read offsets of a non-existing topic' do
+  describe "#show" do
+    context "when trying to read offsets of a non-existing topic" do
       before { get "topics/#{generate_topic_name}/offsets" }
 
       it do
@@ -36,7 +36,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when getting offsets of an existing empty topic' do
+    context "when getting offsets of an existing empty topic" do
       before { get "topics/#{topic}/offsets" }
 
       it do
@@ -46,11 +46,11 @@ RSpec.describe_current do
         expect(body).not_to include(support_message)
         expect(body).to include(topic)
         expect(body).to include('<table class="data-table">')
-        expect(body.scan('<tr>').size).to eq(2)
+        expect(body.scan("<tr>").size).to eq(2)
       end
     end
 
-    context 'when getting offsets of an existing empty topic with multiple partitions' do
+    context "when getting offsets of an existing empty topic with multiple partitions" do
       let(:partitions) { 100 }
 
       before { get "topics/#{topic}/offsets" }
@@ -62,13 +62,13 @@ RSpec.describe_current do
         expect(body).not_to include(support_message)
         expect(body).to include(topic)
         expect(body).to include('<table class="data-table">')
-        expect(body.scan('<tr>').size).to eq(26)
+        expect(body.scan("<tr>").size).to eq(26)
       end
     end
 
-    context 'when getting offsets of an existing topic with one partition and data' do
+    context "when getting offsets of an existing topic with one partition and data" do
       before do
-        produce_many(topic, Array.new(100, ''))
+        produce_many(topic, Array.new(100, ""))
         get "topics/#{topic}/offsets"
       end
 
@@ -79,16 +79,16 @@ RSpec.describe_current do
         expect(body).not_to include(support_message)
         expect(body).to include('<table class="data-table">')
         expect(body).to include(topic)
-        expect(body.scan('<tr>').size).to eq(2)
-        expect(body.scan('<td>100</td>').size).to eq(2)
+        expect(body.scan("<tr>").size).to eq(2)
+        expect(body.scan("<td>100</td>").size).to eq(2)
       end
     end
 
-    context 'when getting offsets of a topic with many partitions and data page 2' do
+    context "when getting offsets of a topic with many partitions and data page 2" do
       let(:partitions) { 100 }
 
       before do
-        100.times { |i| produce_many(topic, Array.new(10, ''), partition: i) }
+        100.times { |i| produce_many(topic, Array.new(10, ""), partition: i) }
 
         get "topics/#{topic}/offsets?page=2"
       end
@@ -100,8 +100,8 @@ RSpec.describe_current do
         expect(body).not_to include(support_message)
         expect(body).to include('<table class="data-table">')
         expect(body).to include(topic)
-        expect(body.scan('<tr>').size).to eq(26)
-        expect(body.scan('<td>10</td>').size).to eq(50)
+        expect(body.scan("<tr>").size).to eq(26)
+        expect(body.scan("<td>10</td>").size).to eq(50)
       end
     end
   end

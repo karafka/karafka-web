@@ -13,37 +13,37 @@ RSpec.describe_current do
     Karafka::Web.config.topics.consumers.metrics.name = consumers_metrics_topic
   end
 
-  context 'when the consumers state already exists' do
+  context "when the consumers state already exists" do
     before { produce(consumers_states_topic, Fixtures.consumers_states_file) }
 
-    it 'expect not to overwrite it' do
+    it "expect not to overwrite it" do
       create
       expect(consumers_state[:dispatched_at]).to eq(2_690_818_670.782_473)
     end
   end
 
-  context 'when the consumers state is missing' do
-    let(:initial_state) { { schema_version: '0.0.0' } }
+  context "when the consumers state is missing" do
+    let(:initial_state) { { schema_version: "0.0.0" } }
 
-    it 'expect to create it with appropriate values' do
+    it "expect to create it with appropriate values" do
       create
       expect(consumers_state).to eq(initial_state)
     end
   end
 
-  context 'when the consumers metrics already exists' do
+  context "when the consumers metrics already exists" do
     before { produce(consumers_metrics_topic, Fixtures.consumers_metrics_file) }
 
-    it 'expect not to overwrite it' do
+    it "expect not to overwrite it" do
       create
       expect(consumers_metrics[:dispatched_at]).to eq(1_690_817_198.082_236)
     end
   end
 
-  context 'when the consumers metrics is missing' do
-    let(:initial_state) { { schema_version: '0.0.0' } }
+  context "when the consumers metrics is missing" do
+    let(:initial_state) { { schema_version: "0.0.0" } }
 
-    it 'expect to create it with appropriate values' do
+    it "expect to create it with appropriate values" do
       create
       expect(consumers_metrics).to eq(initial_state)
     end

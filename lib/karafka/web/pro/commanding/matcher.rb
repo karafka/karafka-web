@@ -42,11 +42,11 @@ module Karafka
             # @return [Array<Class>] all matcher classes sorted by priority
             def matcher_classes
               @matcher_classes ||= Matchers
-                                   .constants
-                                   .map { |name| Matchers.const_get(name) }
-                                   .select { |klass| klass.is_a?(Class) && klass < Matchers::Base }
-                                   .sort_by(&:priority)
-                                   .freeze
+                .constants
+                .map { |name| Matchers.const_get(name) }
+                .select { |klass| klass.is_a?(Class) && klass < Matchers::Base }
+                .sort_by(&:priority)
+                .freeze
             end
           end
 

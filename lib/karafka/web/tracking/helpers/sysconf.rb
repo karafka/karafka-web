@@ -11,10 +11,10 @@ module Karafka
 
           case RUBY_PLATFORM
           when /linux/
-            ffi_lib 'libc.so.6' # Standard C library on Linux
+            ffi_lib "libc.so.6" # Standard C library on Linux
             SC_PAGESIZE = 30 # _SC_PAGESIZE constant
           when /darwin/
-            ffi_lib 'libSystem.B.dylib' # Standard C library on macOS
+            ffi_lib "libSystem.B.dylib" # Standard C library on macOS
             SC_PAGESIZE = 29 # _SC_PAGESIZE constant
           end
 

@@ -5,14 +5,14 @@ RSpec.describe_current do
 
   let(:context) { Karafka::Web::Ui::Models::Status::Context.new }
 
-  describe 'DSL configuration' do
+  describe "DSL configuration" do
     it { expect(described_class.independent?).to be(false) }
     it { expect(described_class.dependency).to eq(:topics) }
     it { expect(described_class.halted_details).to eq({}) }
   end
 
-  describe '#call' do
-    context 'when all topics have correct partition count' do
+  describe "#call" do
+    context "when all topics have correct partition count" do
       before do
         context.cluster_info = Struct.new(:topics).new(
           [
@@ -40,7 +40,7 @@ RSpec.describe_current do
         )
       end
 
-      it 'returns success' do
+      it "returns success" do
         result = check.call
 
         expect(result.status).to eq(:success)
@@ -48,7 +48,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when states topic has wrong partition count' do
+    context "when states topic has wrong partition count" do
       before do
         context.cluster_info = Struct.new(:topics).new(
           [
@@ -76,7 +76,7 @@ RSpec.describe_current do
         )
       end
 
-      it 'returns failure' do
+      it "returns failure" do
         result = check.call
 
         expect(result.status).to eq(:failure)
@@ -84,7 +84,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when reports topic has wrong partition count' do
+    context "when reports topic has wrong partition count" do
       before do
         context.cluster_info = Struct.new(:topics).new(
           [
@@ -112,14 +112,14 @@ RSpec.describe_current do
         )
       end
 
-      it 'returns failure' do
+      it "returns failure" do
         result = check.call
 
         expect(result.status).to eq(:failure)
       end
     end
 
-    context 'when metrics topic has wrong partition count' do
+    context "when metrics topic has wrong partition count" do
       before do
         context.cluster_info = Struct.new(:topics).new(
           [
@@ -147,7 +147,7 @@ RSpec.describe_current do
         )
       end
 
-      it 'returns failure' do
+      it "returns failure" do
         result = check.call
 
         expect(result.status).to eq(:failure)

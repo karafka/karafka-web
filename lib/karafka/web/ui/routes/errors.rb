@@ -7,14 +7,14 @@ module Karafka
         # Manages the errors related routes
         class Errors < Base
           route do |r|
-            r.on 'errors' do
+            r.on "errors" do
               controller = build(Controllers::ErrorsController)
 
               r.get Integer do |offset|
                 if params.current_offset == -1
                   controller.show(offset)
                 else
-                  r.redirect root_path('errors', params.current_offset)
+                  r.redirect root_path("errors", params.current_offset)
                 end
               end
 

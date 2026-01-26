@@ -79,8 +79,8 @@ module Karafka
             end
 
             variance = counts
-                       .map { |part_stats| part_stats[:count] }
-                       .sum { |count| (count - avg)**2 } / counts.size
+              .map { |part_stats| part_stats[:count] }
+              .sum { |count| (count - avg)**2 } / counts.size
 
             std_dev = Math.sqrt(variance)
             std_dev_rel = ((std_dev / avg) * 100).round(2)

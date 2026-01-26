@@ -143,7 +143,7 @@ module Karafka
                 command_name = name.to_s.capitalize
 
                 format_flash(
-                  'The ? command has been dispatched to the ? process',
+                  "The ? command has been dispatched to the ? process",
                   command_name,
                   process_id
                 )
@@ -156,9 +156,9 @@ module Karafka
                 command_name = name.to_s.capitalize
 
                 format_flash(
-                  'The ? command has been dispatched to ? active processes',
+                  "The ? command has been dispatched to ? active processes",
                   command_name,
-                  'all'
+                  "all"
                 )
               end
             end

@@ -26,9 +26,9 @@ RSpec.describe_current do
   let(:topic) { create_topic }
   let(:target_topic) { create_topic }
 
-  describe '#forward' do
-    context 'when we want to republish message from a non-existing topic' do
-      before { get 'explorer/messages/non-existing/0/1/forward' }
+  describe "#forward" do
+    context "when we want to republish message from a non-existing topic" do
+      before { get "explorer/messages/non-existing/0/1/forward" }
 
       it do
         expect(response).not_to be_ok
@@ -36,7 +36,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when message exists' do
+    context "when message exists" do
       let(:payload) { rand.to_s }
 
       before do
@@ -47,16 +47,16 @@ RSpec.describe_current do
       it do
         expect(response).to be_ok
         expect(body).to include(topic)
-        expect(body).to include('message-republish-form')
+        expect(body).to include("message-republish-form")
         expect(body).not_to include(pagination)
         expect(body).not_to include(support_message)
       end
     end
   end
 
-  describe '#republish' do
-    context 'when we want to republish message from a non-existing topic' do
-      before { post 'explorer/messages/non-existing/0/1/republish' }
+  describe "#republish" do
+    context "when we want to republish message from a non-existing topic" do
+      before { post "explorer/messages/non-existing/0/1/republish" }
 
       it do
         expect(response).not_to be_ok
@@ -64,11 +64,11 @@ RSpec.describe_current do
       end
     end
 
-    context 'when message exists' do
+    context "when message exists" do
       let(:republished) { Karafka::Web::Ui::Models::Message.find(target_topic, 0, 0) }
       let(:payload) { rand.to_s }
       let(:target_partition) { 0 }
-      let(:include_source_headers) { 'on' }
+      let(:include_source_headers) { "on" }
       let(:params) do
         {
           target_topic: target_topic,
@@ -77,8 +77,8 @@ RSpec.describe_current do
         }
       end
 
-      context 'when we do not specify the target partition' do
-        let(:target_partition) { '' }
+      context "when we do not specify the target partition" do
+        let(:target_partition) { "" }
 
         before do
           produce(topic, payload)
@@ -88,15 +88,15 @@ RSpec.describe_current do
         it do
           expect(response.status).to eq(302)
           # Taken from referer and referer is nil in specs
-          expect(response.location).to eq('/')
+          expect(response.location).to eq("/")
           expect(republished.raw_payload).to eq(payload)
-          expect(republished.headers.keys).to include('source_topic')
-          expect(republished.headers.keys).to include('source_partition')
-          expect(republished.headers.keys).to include('source_offset')
+          expect(republished.headers.keys).to include("source_topic")
+          expect(republished.headers.keys).to include("source_partition")
+          expect(republished.headers.keys).to include("source_offset")
         end
       end
 
-      context 'when we do not want source headers' do
+      context "when we do not want source headers" do
         let(:include_source_headers) { false }
 
         before do
@@ -106,15 +106,15 @@ RSpec.describe_current do
 
         it do
           expect(response.status).to eq(302)
-          expect(response.location).to eq('/')
+          expect(response.location).to eq("/")
           expect(republished.raw_payload).to eq(payload)
-          expect(republished.headers.keys).not_to include('source_topic')
-          expect(republished.headers.keys).not_to include('source_partition')
-          expect(republished.headers.keys).not_to include('source_offset')
+          expect(republished.headers.keys).not_to include("source_topic")
+          expect(republished.headers.keys).not_to include("source_partition")
+          expect(republished.headers.keys).not_to include("source_offset")
         end
       end
 
-      context 'when we specify target partition' do
+      context "when we specify target partition" do
         let(:target_partition) { 1 }
         let(:republished) { Karafka::Web::Ui::Models::Message.find(target_topic, 1, 0) }
         let(:target_topic) { create_topic(partitions: 2) }
@@ -126,16 +126,16 @@ RSpec.describe_current do
 
         it do
           expect(response.status).to eq(302)
-          expect(response.location).to eq('/')
+          expect(response.location).to eq("/")
           expect(republished.raw_payload).to eq(payload)
-          expect(republished.headers.keys).to include('source_topic')
-          expect(republished.headers.keys).to include('source_partition')
-          expect(republished.headers.keys).to include('source_offset')
+          expect(republished.headers.keys).to include("source_topic")
+          expect(republished.headers.keys).to include("source_partition")
+          expect(republished.headers.keys).to include("source_offset")
         end
       end
     end
 
-    context 'when message exists but republishing is off' do
+    context "when message exists but republishing is off" do
       let(:payload) { rand.to_s }
 
       before do
@@ -154,9 +154,9 @@ RSpec.describe_current do
     end
   end
 
-  describe '#download' do
-    context 'when we want to download message from a non-existing topic' do
-      before { get 'explorer/messages/non-existing/0/1/download' }
+  describe "#download" do
+    context "when we want to download message from a non-existing topic" do
+      before { get "explorer/messages/non-existing/0/1/download" }
 
       it do
         expect(response).not_to be_ok
@@ -164,7 +164,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when message exists' do
+    context "when message exists" do
       let(:payload) { rand.to_s }
       let(:expected_file_name) { "#{topic}_0_0_payload.msg" }
       let(:expected_disposition) { "attachment; filename=\"#{expected_file_name}\"" }
@@ -176,13 +176,13 @@ RSpec.describe_current do
 
       it do
         expect(response).to be_ok
-        expect(response.headers['content-disposition']).to eq(expected_disposition)
-        expect(response.headers['content-type']).to eq('application/octet-stream')
+        expect(response.headers["content-disposition"]).to eq(expected_disposition)
+        expect(response.headers["content-type"]).to eq("application/octet-stream")
         expect(response.body).to eq(payload)
       end
     end
 
-    context 'when message exists but downloads are off' do
+    context "when message exists but downloads are off" do
       let(:payload) { rand.to_s }
 
       before do
@@ -201,9 +201,9 @@ RSpec.describe_current do
     end
   end
 
-  describe '#export' do
-    context 'when we want to export message from a non-existing topic' do
-      before { get 'explorer/messages/non-existing/0/1/export' }
+  describe "#export" do
+    context "when we want to export message from a non-existing topic" do
+      before { get "explorer/messages/non-existing/0/1/export" }
 
       it do
         expect(response).not_to be_ok
@@ -211,7 +211,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when message exists' do
+    context "when message exists" do
       let(:payload) { rand.to_s }
       let(:expected_file_name) { "#{topic}_0_0_payload.json" }
       let(:expected_disposition) { "attachment; filename=\"#{expected_file_name}\"" }
@@ -223,13 +223,13 @@ RSpec.describe_current do
 
       it do
         expect(response).to be_ok
-        expect(response.headers['content-disposition']).to eq(expected_disposition)
-        expect(response.headers['content-type']).to eq('application/octet-stream')
+        expect(response.headers["content-disposition"]).to eq(expected_disposition)
+        expect(response.headers["content-type"]).to eq("application/octet-stream")
         expect(response.body).to eq(payload)
       end
     end
 
-    context 'when message exists on a dynamic topic with custom deserializer' do
+    context "when message exists on a dynamic topic with custom deserializer" do
       let(:payload) { rand.to_s }
       let(:expected_file_name) { "#{topic}_0_0_payload.json" }
       let(:expected_disposition) { "attachment; filename=\"#{expected_file_name}\"" }
@@ -240,7 +240,7 @@ RSpec.describe_current do
         draw_routes do
           pattern(/#{topic_name}/) do
             active(false)
-            deserializer(->(_message) { '1' })
+            deserializer(->(_message) { "1" })
           end
         end
 
@@ -248,15 +248,15 @@ RSpec.describe_current do
         get "explorer/messages/#{topic}/0/0/export"
       end
 
-      it 'expect to use custom deserializer' do
+      it "expect to use custom deserializer" do
         expect(response).to be_ok
-        expect(response.headers['content-disposition']).to eq(expected_disposition)
-        expect(response.headers['content-type']).to eq('application/octet-stream')
+        expect(response.headers["content-disposition"]).to eq(expected_disposition)
+        expect(response.headers["content-type"]).to eq("application/octet-stream")
         expect(response.body).to eq('"1"')
       end
     end
 
-    context 'when message exists but exports are off' do
+    context "when message exists but exports are off" do
       let(:payload) { rand.to_s }
 
       before do

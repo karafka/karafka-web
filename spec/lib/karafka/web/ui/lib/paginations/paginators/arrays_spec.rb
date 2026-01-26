@@ -3,7 +3,7 @@
 RSpec.describe_current do
   subject(:pagination) { described_class.call(array, page) }
 
-  context 'when a bit of data and page 1' do
+  context "when a bit of data and page 1" do
     let(:array) { [1, 2, 3] }
     let(:page) { 1 }
 
@@ -11,7 +11,7 @@ RSpec.describe_current do
     it { expect(pagination[1]).to be(true) }
   end
 
-  context 'when a lot of data and page 1' do
+  context "when a lot of data and page 1" do
     let(:array) { (0..100).to_a }
     let(:page) { 1 }
 
@@ -19,7 +19,7 @@ RSpec.describe_current do
     it { expect(pagination[1]).to be(false) }
   end
 
-  context 'when a lot of data and last page' do
+  context "when a lot of data and last page" do
     let(:array) { (0..110).to_a }
     let(:page) { 5 }
 
@@ -27,7 +27,7 @@ RSpec.describe_current do
     it { expect(pagination[1]).to be(true) }
   end
 
-  context 'when no data and page 1' do
+  context "when no data and page 1" do
     let(:array) { [] }
     let(:page) { 1 }
 
@@ -35,7 +35,7 @@ RSpec.describe_current do
     it { expect(pagination[1]).to be(true) }
   end
 
-  context 'when no data and page 2' do
+  context "when no data and page 2" do
     let(:array) { [] }
     let(:page) { 2 }
 

@@ -31,7 +31,7 @@ module Karafka
         # Dispatcher requires Web UI to have a producer
         class Dispatcher
           # What schema do we have in current Karafka version for commands dispatches
-          SCHEMA_VERSION = '1.2.0'
+          SCHEMA_VERSION = "1.2.0"
 
           class << self
             # Dispatches the command request
@@ -45,7 +45,7 @@ module Karafka
               produce_request(
                 {
                   schema_version: SCHEMA_VERSION,
-                  type: 'request',
+                  type: "request",
                   # UUID to uniquely identify this command instance
                   id: SecureRandom.uuid,
                   # Name is auto-generated and required. Should not be changed
@@ -66,10 +66,10 @@ module Karafka
             def acceptance(command_name, process_id, params = {})
               produce_reply(
                 process_id,
-                'acceptance',
+                "acceptance",
                 {
                   schema_version: SCHEMA_VERSION,
-                  type: 'acceptance',
+                  type: "acceptance",
                   id: SecureRandom.uuid,
                   command: params.merge(name: command_name),
                   dispatched_at: Time.now.to_f,
@@ -88,10 +88,10 @@ module Karafka
             def result(command_name, process_id, result)
               produce_reply(
                 process_id,
-                'result',
+                "result",
                 {
                   schema_version: SCHEMA_VERSION,
-                  type: 'result',
+                  type: "result",
                   id: SecureRandom.uuid,
                   command: {
                     name: command_name
@@ -127,8 +127,8 @@ module Karafka
                 partition: 0,
                 payload: ::Zlib::Deflate.deflate(payload.to_json),
                 headers: {
-                  'zlib' => 'true',
-                  'type' => 'request'
+                  "zlib" => "true",
+                  "type" => "request"
                 }
               )
             end
@@ -146,8 +146,8 @@ module Karafka
                 partition: 0,
                 payload: ::Zlib::Deflate.deflate(payload.to_json),
                 headers: {
-                  'zlib' => 'true',
-                  'type' => type
+                  "zlib" => "true",
+                  "type" => type
                 }
               )
             end

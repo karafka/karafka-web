@@ -5,13 +5,13 @@ module Karafka
     class Cli
       # Migrates the Web UI topics and states if needed
       class Migrate < Base
-        desc 'Runs necessary migrations of Web UI topics and states'
+        desc "Runs necessary migrations of Web UI topics and states"
 
         option(
           :replication_factor,
-          'Replication factor for created topics',
+          "Replication factor for created topics",
           Integer,
-          ['--replication_factor [FACTOR]']
+          ["--replication_factor [FACTOR]"]
         )
 
         # Creates new topics (if any) and populates missing data.

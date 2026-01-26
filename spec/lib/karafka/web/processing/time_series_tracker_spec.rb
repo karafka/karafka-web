@@ -6,9 +6,9 @@ RSpec.describe_current do
   let(:existing) { {} }
   let(:current_time) { Time.now.to_f }
 
-  describe '#initialize' do
-    context 'when initialized with empty data' do
-      it 'creates empty arrays for all time ranges' do
+  describe "#initialize" do
+    context "when initialized with empty data" do
+      it "creates empty arrays for all time ranges" do
         expect(tracker.to_h).to eq(
           {
             days: [],
@@ -20,7 +20,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when initialized with existing data' do
+    context "when initialized with existing data" do
       let(:existing) do
         {
           days: [[100, { value: 1 }]],
@@ -30,7 +30,7 @@ RSpec.describe_current do
         }
       end
 
-      it 'imports the existing data' do
+      it "imports the existing data" do
         result = tracker.to_h
         expect(result[:days]).to eq(existing[:days])
         expect(result[:hours]).to eq(existing[:hours])
@@ -39,7 +39,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when there is existing data from fixtures' do
+    context "when there is existing data from fixtures" do
       let(:metrics) { Fixtures.consumers_metrics_json }
       let(:existing) { metrics.fetch(:aggregated) }
 
@@ -50,10 +50,10 @@ RSpec.describe_current do
     end
   end
 
-  describe '#add' do
+  describe "#add" do
     let(:metric_data) { { messages: 100, errors: 2 } }
 
-    it 'adds data to all time ranges' do
+    it "adds data to all time ranges" do
       tracker.add(metric_data, current_time)
       result = tracker.to_h
 
@@ -63,7 +63,7 @@ RSpec.describe_current do
       expect(result[:seconds].last).to eq([current_time.floor, metric_data])
     end
 
-    it 'floors the timestamp' do
+    it "floors the timestamp" do
       fractional_time = 123_456.789
       tracker.add(metric_data, fractional_time)
 
@@ -71,8 +71,8 @@ RSpec.describe_current do
       expect(result[:days].last[0]).to eq(123_456)
     end
 
-    context 'when adding multiple data points' do
-      it 'keeps all data points initially' do
+    context "when adding multiple data points" do
+      it "keeps all data points initially" do
         tracker.add({ value: 1 }, current_time)
         tracker.add({ value: 2 }, current_time + 10)
         tracker.add({ value: 3 }, current_time + 20)
@@ -83,7 +83,7 @@ RSpec.describe_current do
       end
     end
 
-    context 'when adding multiple metrics for the same time window' do
+    context "when adding multiple metrics for the same time window" do
       before do
         tracker.add({ a: 1 }, 1)
         tracker.add({ a: 2 }, 1.01)
@@ -91,7 +91,7 @@ RSpec.describe_current do
         tracker.add({ a: 4 }, 1_000_000.01)
       end
 
-      it 'expect to only keep the oldest one after materialization in a time window' do
+      it "expect to only keep the oldest one after materialization in a time window" do
         expect(tracker.to_h[:days]).to eq([[1, { a: 1 }], [1_000_000, { a: 4 }]])
         expect(tracker.to_h[:hours]).to eq([[1, { a: 1 }], [1_000_000, { a: 4 }]])
         expect(tracker.to_h[:minutes]).to eq([[1, { a: 1 }], [1_000_000, { a: 4 }]])
@@ -100,9 +100,9 @@ RSpec.describe_current do
     end
   end
 
-  describe '#to_h with eviction logic' do
-    context 'when data exceeds limits' do
-      it 'respects the limit for days range' do
+  describe "#to_h with eviction logic" do
+    context "when data exceeds limits" do
+      it "respects the limit for days range" do
         # Add more than 57 data points for days range
         60.times do |i|
           time = current_time + (i * 8 * 60 * 60) # 8 hours apart
@@ -113,7 +113,7 @@ RSpec.describe_current do
         expect(result[:days].size).to be <= 57
       end
 
-      it 'respects the limit for hours range' do
+      it "respects the limit for hours range" do
         # Add more than 49 data points for hours range
         55.times do |i|
           time = current_time + (i * 30 * 60) # 30 minutes apart
@@ -124,7 +124,7 @@ RSpec.describe_current do
         expect(result[:hours].size).to be <= 49
       end
 
-      it 'respects the limit for minutes range' do
+      it "respects the limit for minutes range" do
         # Add more than 61 data points for minutes range
         70.times do |i|
           time = current_time + (i * 60) # 1 minute apart
@@ -135,7 +135,7 @@ RSpec.describe_current do
         expect(result[:minutes].size).to be <= 61
       end
 
-      it 'respects the limit for seconds range' do
+      it "respects the limit for seconds range" do
         # Add more than 61 data points for seconds range
         70.times do |i|
           time = current_time + (i * 5) # 5 seconds apart
@@ -147,8 +147,8 @@ RSpec.describe_current do
       end
     end
 
-    context 'when multiple data points fall in same resolution window' do
-      it 'groups data by resolution for days' do
+    context "when multiple data points fall in same resolution window" do
+      it "groups data by resolution for days" do
         base_time = current_time
         # Add multiple points within same 8-hour window
         tracker.add({ value: 1 }, base_time)
@@ -163,21 +163,21 @@ RSpec.describe_current do
         expect(result[:days].size).to be >= 2
       end
 
-      it 'keeps the first data point within a resolution window' do
+      it "keeps the first data point within a resolution window" do
         base_time = current_time
-        tracker.add({ value: 'first' }, base_time)
-        tracker.add({ value: 'second' }, base_time + 1)
-        tracker.add({ value: 'third' }, base_time + 2)
+        tracker.add({ value: "first" }, base_time)
+        tracker.add({ value: "second" }, base_time + 1)
+        tracker.add({ value: "third" }, base_time + 2)
 
         result = tracker.to_h
         # For seconds resolution (5 seconds), all should be in same window
         # and we should keep the first one
-        expect(result[:seconds].first[1][:value]).to eq('first')
+        expect(result[:seconds].first[1][:value]).to eq("first")
       end
     end
 
-    context 'when data is added out of order' do
-      it 'sorts data by timestamp' do
+    context "when data is added out of order" do
+      it "sorts data by timestamp" do
         tracker.add({ value: 3 }, current_time + 300)
         tracker.add({ value: 1 }, current_time + 100)
         tracker.add({ value: 2 }, current_time + 200)
@@ -188,8 +188,8 @@ RSpec.describe_current do
       end
     end
 
-    context 'with the most recent value injection' do
-      it 'always includes the most recent value even if beyond normal range' do
+    context "with the most recent value injection" do
+      it "always includes the most recent value even if beyond normal range" do
         # Add old data
         10.times do |i|
           tracker.add({ value: i }, current_time + (i * 10))
@@ -209,22 +209,22 @@ RSpec.describe_current do
     end
   end
 
-  describe 'TIME_RANGES constant' do
-    it 'defines correct resolution for each range' do
+  describe "TIME_RANGES constant" do
+    it "defines correct resolution for each range" do
       expect(described_class::TIME_RANGES[:days][:resolution]).to eq(8 * 60 * 60)
       expect(described_class::TIME_RANGES[:hours][:resolution]).to eq(30 * 60)
       expect(described_class::TIME_RANGES[:minutes][:resolution]).to eq(60)
       expect(described_class::TIME_RANGES[:seconds][:resolution]).to eq(5)
     end
 
-    it 'defines correct limits for each range' do
+    it "defines correct limits for each range" do
       expect(described_class::TIME_RANGES[:days][:limit]).to eq(57)
       expect(described_class::TIME_RANGES[:hours][:limit]).to eq(49)
       expect(described_class::TIME_RANGES[:minutes][:limit]).to eq(61)
       expect(described_class::TIME_RANGES[:seconds][:limit]).to eq(61)
     end
 
-    it 'has all ranges frozen' do
+    it "has all ranges frozen" do
       expect(described_class::TIME_RANGES).to be_frozen
       described_class::TIME_RANGES.each_value do |config|
         expect(config).to be_frozen
@@ -232,8 +232,8 @@ RSpec.describe_current do
     end
   end
 
-  describe 'memory efficiency' do
-    it 'evicts data only when to_h is called' do
+  describe "memory efficiency" do
+    it "evicts data only when to_h is called" do
       # Add lots of data
       100.times do |i|
         tracker.add({ value: i }, current_time + i)
@@ -248,9 +248,9 @@ RSpec.describe_current do
     end
   end
 
-  describe 'edge cases' do
-    context 'when adding data with identical timestamps' do
-      it 'handles duplicate timestamps correctly' do
+  describe "edge cases" do
+    context "when adding data with identical timestamps" do
+      it "handles duplicate timestamps correctly" do
         tracker.add({ value: 1 }, 1000.0)
         tracker.add({ value: 2 }, 1000.0)
         tracker.add({ value: 3 }, 1000.0)
@@ -262,18 +262,18 @@ RSpec.describe_current do
       end
     end
 
-    context 'when working with very large timestamps' do
-      it 'handles large timestamps correctly' do
+    context "when working with very large timestamps" do
+      it "handles large timestamps correctly" do
         large_time = 9_999_999_999.99
-        tracker.add({ value: 'large' }, large_time)
+        tracker.add({ value: "large" }, large_time)
 
         result = tracker.to_h
         expect(result[:days].last[0]).to eq(9_999_999_999)
       end
     end
 
-    context 'when data is empty' do
-      it 'handles empty data gracefully' do
+    context "when data is empty" do
+      it "handles empty data gracefully" do
         result = tracker.to_h
         expect(result[:days]).to be_empty
         expect(result[:hours]).to be_empty
