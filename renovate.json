@@ -6,6 +6,7 @@
   "includePaths": [
     "Gemfile",
     "Gemfile.lint",
+    "package.json",
     ".github/workflows/**"
   ],
   "github-actions": {
