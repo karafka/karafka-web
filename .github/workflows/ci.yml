@@ -179,6 +179,23 @@ jobs:
       - name: Run herb-lint
         run: npx herb-lint
 
+  lostconf:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: '20'
+
+      - name: Run lostconf
+        run: npx lostconf --fail-on-stale
+
   ci-success:
     name: CI Success
     runs-on: ubuntu-latest
@@ -190,6 +207,7 @@ jobs:
       - assets
       - yard-lint
       - herb-lint
+      - lostconf
     steps:
       - name: Check all jobs passed
         if: |

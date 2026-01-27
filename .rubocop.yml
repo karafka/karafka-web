@@ -20,13 +20,9 @@ AllCops:
     - Gemfile.lint
   Exclude:
     - bin/**/*
-    - db/schema.rb
-    - .gemspec/**/*
     - "*.gemspec"
     - .bundle/**/*
     - vendor/**/*
-    - db/migrate/**/*
-    - "**/dummy**/*"
 
 Capybara:
   Enabled: false
