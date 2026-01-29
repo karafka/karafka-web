@@ -21,7 +21,6 @@ AllCops:
   Exclude:
     - bin/**/*
     - "*.gemspec"
-    - .bundle/**/*
     - vendor/**/*
 
 Capybara:
