@@ -1,6 +1,6 @@
 # Karafka Web Changelog
 
-## 0.11.6 (Unreleased)
+## 0.11.6 (2026-02-01)
 - **[Feature]** Provide ability to pause/resume all partitions of a topic at once across all consumer processes via the Health Overview page (Pro). Topic-level commands are broadcast to all processes, and each process applies the command to partitions it owns within the specified consumer group. This simplifies bulk operations compared to pausing/resuming individual partitions one by one.
 - [Enhancement] Optimize partition command tracker to use index-based lookup instead of iterating over 10,000 partitions during rebalance events. The tracker now maintains a partition index for O(n) lookups where n is the number of partitions with pending commands.
 - [Enhancement] Report `group.instance.id` (static membership ID) per subscription group in consumer reports. This enables identifying consumers using Kafka's static group membership feature. The ID is displayed in the per-consumer subscription view header and in Health Overview below each process ID, making it easy to find a process by its static membership ID. Consumer schema version bumped to 1.6.0.
