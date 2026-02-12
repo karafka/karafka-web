@@ -135,6 +135,7 @@ RSpec.describe_current do
         before do
           test_topic
           put "topics/#{topic_name}/config/#{property_name}", default_params
+          sleep(1)
         end
 
         it "updates config and redirects with success message" do
