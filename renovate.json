@@ -4,8 +4,10 @@
     "config:recommended"
   ],
   "includePaths": [
+    ".ruby-version",
     "Gemfile",
     "Gemfile.lint",
+    "karafka-web.gemspec",
     "package.json",
     ".github/workflows/**"
   ],
