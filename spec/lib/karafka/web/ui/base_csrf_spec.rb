@@ -97,4 +97,14 @@ RSpec.describe Karafka::Web::Ui::Base do
       end
     end
   end
+
+  # Sanity check for actual OSS app
+  describe "OSS App sanity check", type: :controller do
+    let(:app) { Karafka::Web::Ui::App }
+
+    it "allows GET requests to dashboard" do
+      get "dashboard"
+      expect(last_response.status).to eq(200)
+    end
+  end
 end

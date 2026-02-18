@@ -38,6 +38,7 @@
   "./spec/lib/karafka/web/pro/commanding/handlers/topics/commands/pause_spec.rb": 0.116,
   "./spec/lib/karafka/web/pro/ui/lib/search/contracts/form_spec.rb": 0.098,
   "./spec/lib/karafka/web/pro/ui/controllers/ux_controller_spec.rb": 0.078,
+  "./spec/lib/karafka/web/pro/ui/app_csrf_spec.rb": 0.77,
   "./spec/lib/karafka/web/pro/ui/lib/search/contracts/config_spec.rb": 0.075,
   "./spec/lib/karafka/web/pro/commanding/manager_spec.rb": 0.072,
   "./spec/lib/karafka/web/pro/ui/lib/search/matchers/raw_payload_includes_spec.rb": 0.072,
