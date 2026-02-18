@@ -195,8 +195,10 @@ Karafka::Web::Management::Actions::MigrateStatesData.new.call
 Karafka::Web.enable!
 
 # Disable CSRF checks for RSpec
-# Plugin is loaded on Base class, so we configure there
+# Must configure on all classes due to Roda's opts inheritance
 Karafka::Web::Ui::Base.plugin(:sec_fetch_site_csrf, check_request_methods: [])
+Karafka::Web::Ui::App.plugin(:sec_fetch_site_csrf, check_request_methods: [])
+Karafka::Web::Pro::Ui::App.plugin(:sec_fetch_site_csrf, check_request_methods: []) if Karafka.pro?
 
 # We need to clear argv because otherwise we would get reports on invalid options for CLI specs
 ARGV.clear
