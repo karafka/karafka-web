@@ -63,8 +63,6 @@
       disabled_class = process.status != 'stopped' ? '' : 'btn-disabled'
     %>
     <form action="<%= trace_path %>" method="post" class="inline" title="Trace">
-      <%== csrf_tag(trace_path) %>
-
       <button type="submit" class="btn btn-info btn-sm btn-lockable <%= disabled_class %>">
         <%== icon(:gear) %>
       </button>
@@ -82,7 +80,6 @@
       end
     %>
     <form action="<%= quiet_path %>" method="post" class="inline" title="<%= title %>">
-      <%== csrf_tag(quiet_path) %>
       <button type="submit" class="btn btn-warning btn-sm btn-lockable <%= disabled_class %>">
         <%== icon(:pause) %>
       </button>
@@ -100,7 +97,6 @@
       end
     %>
     <form action="<%= stop_path %>" method="post" class="inline" title="<%= title %>">
-      <%== csrf_tag(stop_path) %>
       <button type="submit" class="btn btn-error btn-sm btn-lockable <%= disabled_class %>">
         <%== icon(:stop) %>
       </button>

@@ -38,6 +38,7 @@
   "./spec/lib/karafka/web/contracts/config_spec.rb": 0.093,
   "./spec/lib/karafka/web/tracking/consumers/contracts/partition_spec.rb": 0.092,
   "./spec/lib/karafka/web/ui/base_spec.rb": 0.084,
+  "./spec/lib/karafka/web/ui/base_csrf_spec.rb": 0.064,
   "./spec/lib/karafka/web/tracking/consumers/listeners/processing_spec.rb": 0.084,
   "./spec/lib/karafka/web/processing/consumers/reports_migrator_spec.rb": 0.079,
   "./spec/lib/karafka/web/ui/helpers/paths_helper_spec.rb": 0.07,

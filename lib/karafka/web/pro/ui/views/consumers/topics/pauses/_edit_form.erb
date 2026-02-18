@@ -28,7 +28,6 @@
       method="post"
       action="<%= resume_path %>"
     >
-      <%== csrf_tag(resume_path, 'DELETE') %>
       <input type="hidden" name="_method" value="delete">
 
       <div class="flex items-center w-full">
