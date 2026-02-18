@@ -25,7 +25,7 @@ module Karafka
           )
           plugin :render_each
           plugin :partials
-          plugin :route_csrf
+          plugin :sec_fetch_site_csrf, csrf_failure: :raise
           # The secret here will be reconfigured after Web UI configuration setup
           # This is why we assign here a random value as it will have to be changed by the end
           # user to make the Web UI work.
@@ -104,7 +104,8 @@ module Karafka
           when Errors::Ui::ProOnlyError
             response.status = 402
             view "shared/exceptions/pro_only"
-          when Errors::Ui::ForbiddenError
+          when Errors::Ui::ForbiddenError,
+               Roda::RodaPlugins::SecFetchSiteCsrf::CsrfFailure
             response.status = 403
             view "shared/exceptions/not_allowed"
           when Errors::Ui::NotFoundError
@@ -135,7 +136,7 @@ module Karafka
         end
 
         before do
-          check_csrf!
+          check_sec_fetch_site!
           store_paths_history(request, session)
         end
 
