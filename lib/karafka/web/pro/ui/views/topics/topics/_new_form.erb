@@ -15,8 +15,6 @@
 <div class="card bg-base-100 mt-4">
   <div class="card-body border-error">
     <form class="space-y-4 w-full" method="post" action="<%= topics_path %>" data-turbo="false">
-      <%== csrf_tag(topics_path) %>
-
       <div class="flex items-center w-full mb-8">
         <label class="w-1/4 text-base-content/70">Topic Name:</label>
         <div class="w-3/4">

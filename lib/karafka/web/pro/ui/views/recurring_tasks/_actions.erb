@@ -21,7 +21,6 @@
   method="post"
   class="inline"
 >
-  <%== csrf_tag(trigger_path) %>
   <button
     type="submit"
     class="btn btn-primary btn-sm  "
@@ -41,7 +40,6 @@
   class="inline"
   title="Enable"
 >
-  <%== csrf_tag(enable_path) %>
   <button
     type="submit"
     class="btn btn-success btn-sm <%= disabled_class %>"
@@ -61,7 +59,6 @@
   title="Disable"
 
 >
-  <%== csrf_tag(disable_path) %>
   <button
     type="submit"
     class="btn btn-warning btn-sm <%= disabled_class %>"

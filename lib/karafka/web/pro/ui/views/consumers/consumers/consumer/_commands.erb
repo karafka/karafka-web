@@ -29,7 +29,6 @@
     method="post"
     class="inline-flex items-center"
   >
-    <%== csrf_tag(trace_path) %>
     <button
       type="submit"
       class="btn btn-info btn-sm btn-lockable <%= disabled_class %> <%= commanding_class %>"
@@ -54,7 +53,6 @@
     class="inline-flex items-center"
     title="<%= title %>"
   >
-    <%== csrf_tag(quiet_path) %>
     <button
       type="submit"
       class="btn btn-warning btn-sm btn-lockable <%= disabled_class %> <%= commanding_class %> <%= trace_class %>"
@@ -79,7 +77,6 @@
     class="inline-flex items-center"
     title="<%= title %>"
   >
-    <%== csrf_tag(stop_path) %>
     <button
       type="submit"
       class="btn btn-error btn-sm btn-lockable <%= disabled_class %> <%= commanding_class %> <%= trace_class %>"

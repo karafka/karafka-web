@@ -16,7 +16,6 @@
   <div class="card-body">
     <% form_path = topics_path(@topic.topic_name, 'config', @property.name) %>
     <form method="post" action="<%= form_path %>" data-turbo="false">
-      <%== csrf_tag(form_path, 'PUT') %>
       <input type="hidden" name="_method" value="put">
 
       <div class="flex items-center w-full mb-4">

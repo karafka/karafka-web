@@ -31,7 +31,6 @@
       end
     %>
     <form action="<%= quiet_all_path %>" method="post" class="inline-flex items-center" title="<%= quiet_all_title %>">
-      <%== csrf_tag(quiet_all_path) %>
       <button type="submit" class="btn btn-warning btn-sm <%= quiet_all_disabled_class %>">
         <%== icon(:pause) %>
         Quiet All
@@ -50,7 +49,6 @@
       end
     %>
     <form action="<%= stop_all_path %>" method="post" class="inline-flex items-center" title="<%= stop_all_title %>">
-      <%== csrf_tag(stop_all_path) %>
       <button type="submit" class="btn btn-error btn-sm <%= stop_all_disabled_class %>">
         <%== icon(:stop) %>
         Stop All

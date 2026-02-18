@@ -1,5 +1,9 @@
 # Karafka Web Changelog
 
+## 0.11.7 (Unreleased)
+- [Enhancement] Replace token-based CSRF protection (`route_csrf` plugin) with header-based protection using `Sec-Fetch-Site` header (`sec_fetch_site_csrf` plugin). This eliminates the need for CSRF tokens by leveraging browser-enforced headers that cannot be forged from cross-origin requests. Modern browsers automatically include this header, providing simpler and more robust CSRF protection.
+- [Change] Require Roda `>= 3.100` (previously `~> 3.69`).
+
 ## 0.11.6 (2026-02-01)
 - **[Feature]** Provide ability to pause/resume all partitions of a topic at once across all consumer processes via the Health Overview page (Pro). Topic-level commands are broadcast to all processes, and each process applies the command to partitions it owns within the specified consumer group. This simplifies bulk operations compared to pausing/resuming individual partitions one by one.
 - [Enhancement] Optimize partition command tracker to use index-based lookup instead of iterating over 10,000 partitions during rebalance events. The tracker now maintains a partition index for O(n) lookups where n is the number of partitions with pending commands.

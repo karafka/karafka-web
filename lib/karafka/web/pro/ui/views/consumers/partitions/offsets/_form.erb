@@ -29,7 +29,6 @@
       method="post"
       action="<%= update_path %>"
     >
-      <%== csrf_tag(update_path, 'PUT') %>
       <input type="hidden" name="_method" value="PUT">
       <input type="hidden" name="referrer" value="<%= request.referrer %>">
 
