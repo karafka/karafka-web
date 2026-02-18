@@ -195,8 +195,9 @@ Karafka::Web::Management::Actions::MigrateStatesData.new.call
 Karafka::Web.enable!
 
 # Disable CSRF checks for RSpec
-# Note: Plugin is already loaded in Base for the CsrfFailure constant.
-# Here we reconfigure on the actual App class to disable checks for tests.
+# Configure on both Base and the actual App class to ensure the before hook
+# (defined in Base) and the App class both have CSRF checks disabled.
+Karafka::Web::Ui::Base.plugin(:sec_fetch_site_csrf, check_request_methods: [])
 Karafka::Web::App.engine.plugin(:sec_fetch_site_csrf, check_request_methods: [])
 
 # We need to clear argv because otherwise we would get reports on invalid options for CLI specs
