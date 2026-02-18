@@ -25,7 +25,6 @@ module Karafka
           )
           plugin :render_each
           plugin :partials
-          plugin :sec_fetch_site_csrf, csrf_failure: :raise
           # The secret here will be reconfigured after Web UI configuration setup
           # This is why we assign here a random value as it will have to be changed by the end
           # user to make the Web UI work.
@@ -48,6 +47,7 @@ module Karafka
         plugin :content_for
         plugin :inject_erb
         plugin :all_verbs
+        plugin :sec_fetch_site_csrf, csrf_failure: :raise
 
         # Based on
         # https://github.com/sidekiq/sidekiq/blob/ae6ca119/lib/sidekiq/web/application.rb#L8
