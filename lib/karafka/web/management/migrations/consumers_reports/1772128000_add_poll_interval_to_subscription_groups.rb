@@ -13,9 +13,8 @@ module Karafka
           # This migration ensures old reports can be processed by adding the field with
           # the Kafka default value of 300000ms (5 minutes).
           class AddPollIntervalToSubscriptionGroups < Base
-            # Default max.poll.interval.ms value in milliseconds (5 minutes)
-            # This is the librdkafka default when not explicitly configured
-            DEFAULT_POLL_INTERVAL_MS = 300_000
+            # Reference the canonical default from Sampler to avoid duplication
+            DEFAULT_POLL_INTERVAL_MS = ::Karafka::Web::Tracking::Consumers::Sampler::DEFAULT_POLL_INTERVAL_MS
 
             self.versions_until = "1.7.0"
             self.type = :consumers_reports
