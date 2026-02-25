@@ -1,0 +1,64 @@
+name: Rebuild Assets
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'package.json'
+      - 'package-lock.json'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  rebuild:
+    if: github.repository_owner == 'karafka'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642195f6ac7585ec79eff46 # v4.4.0
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install system dependencies
+        run: sudo apt-get install -y brotli
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build assets
+        run: bin/build_assets
+        env:
+          KARAFKA_RELEASE: 'true'
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Pull Request
+        if: steps.changes.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Rebuild assets after dependency update"
+          title: "Rebuild assets after dependency update"
+          body: |
+            This PR was automatically created to rebuild assets after a dependency update.
+
+            Changes include rebuilt CSS and JavaScript bundles.
+          branch: chore/rebuild-assets-${{ github.sha }}
+          delete-branch: true
+          labels: dependencies
