@@ -22,6 +22,7 @@ module Karafka
               required(:rebalance_cnt) { |val| val.is_a?(Integer) && val >= 0 }
               required(:rebalance_reason) { |val| val.is_a?(String) }
               required(:poll_age) { |val| val.is_a?(Numeric) && val >= 0 }
+              required(:poll_interval) { |val| val.is_a?(Integer) && val.positive? }
             end
 
             virtual do |data, errors|

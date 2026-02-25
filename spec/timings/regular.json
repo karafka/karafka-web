@@ -89,6 +89,7 @@
   "./spec/lib/karafka/web/processing/publisher_spec.rb": 0.014,
   "./spec/lib/karafka/web/tracking/producers/reporter_spec.rb": 0.013,
   "./spec/lib/karafka/web/management/migrations/consumers_reports/add_group_instance_id_to_subscription_groups_spec.rb": 0.013,
+  "./spec/lib/karafka/web/management/migrations/consumers_reports/add_poll_interval_to_subscription_groups_spec.rb": 0.013,
   "./spec/lib/karafka/web/ui/models/status/checks/state_calculation_spec.rb": 0.013,
   "./spec/lib/karafka/web/tracking/consumers/sampler/metrics/jobs_spec.rb": 0.013,
   "./spec/lib/karafka/web/tracking/consumers/listeners/transactions_spec.rb": 0.012,

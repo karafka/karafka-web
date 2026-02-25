@@ -44,7 +44,8 @@ RSpec.describe_current do
         rebalance_age: 90_000,
         rebalance_cnt: 1,
         rebalance_reason: "Metadata for subscribed topic(s) has changed",
-        poll_age: 12
+        poll_age: 12,
+        poll_interval: 300_000
       }
     }
   end
@@ -153,6 +154,30 @@ RSpec.describe_current do
 
       it { expect(contract.call(subscription_group)).not_to be_success }
     end
+  end
+
+  context "when poll_interval in state is missing" do
+    before { subscription_group[:state].delete(:poll_interval) }
+
+    it { expect(contract.call(subscription_group)).not_to be_success }
+  end
+
+  context "when poll_interval is not an integer" do
+    before { subscription_group[:state][:poll_interval] = "not a number" }
+
+    it { expect(contract.call(subscription_group)).not_to be_success }
+  end
+
+  context "when poll_interval is zero" do
+    before { subscription_group[:state][:poll_interval] = 0 }
+
+    it { expect(contract.call(subscription_group)).not_to be_success }
+  end
+
+  context "when poll_interval is negative" do
+    before { subscription_group[:state][:poll_interval] = -1 }
+
+    it { expect(contract.call(subscription_group)).not_to be_success }
   end
 
   context "when instance_id is missing" do

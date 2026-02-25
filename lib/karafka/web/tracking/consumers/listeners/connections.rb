@@ -12,14 +12,19 @@ module Karafka
             def on_connection_listener_before_fetch_loop(event)
               subscription_group = event[:subscription_group]
               sg_id = subscription_group.id
+              kafka_config = subscription_group.kafka
               # Use false to explicitly indicate static membership is not configured
               # vs nil which could be ambiguous
-              instance_id = subscription_group.kafka[:"group.instance.id"] || false
+              instance_id = kafka_config[:"group.instance.id"] || false
+              # Track max.poll.interval.ms to help users monitor how close they are to the limit
+              # Value is in milliseconds, consistent with poll_age and other age metrics
+              poll_interval = kafka_config[:"max.poll.interval.ms"] || Sampler::DEFAULT_POLL_INTERVAL_MS
 
               track do |sampler|
                 # This will initialize the hash upon first request
                 sg = sampler.subscription_groups[sg_id]
                 sg[:instance_id] = instance_id
+                sg[:poll_interval] = poll_interval
               end
             end
 

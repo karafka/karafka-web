@@ -47,7 +47,7 @@ RSpec.describe_current do
       expect(partition_data[:hi_offset]).to eq(327_356)
       expect(partition_data[:id]).to eq(0)
       expect(partition_data[:poll_state]).to eq("active")
-      expect(partition_data[:process][:schema_version]).to eq("1.6.0")
+      expect(partition_data[:process][:schema_version]).to eq("1.7.0")
       expect(partition_data[:process][:type]).to eq("consumer")
       expect(partition_data[:process][:dispatched_at]).to eq(2_690_883_271.575_513)
       expect(partition_data[:process][:process][:concurrency]).to eq(2)
