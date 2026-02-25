@@ -15,7 +15,11 @@ module Karafka
           # Current schema version
           # This is used for detecting incompatible changes and not using outdated data during
           # upgrades
-          SCHEMA_VERSION = "1.6.0"
+          SCHEMA_VERSION = "1.7.0"
+
+          # Default max.poll.interval.ms value in milliseconds (5 minutes)
+          # This is the librdkafka default when not explicitly configured
+          DEFAULT_POLL_INTERVAL_MS = 300_000
 
           # Counters that count events occurrences during the given window
           COUNTERS_BASE = {
@@ -52,6 +56,7 @@ module Karafka
               h[sg_id] = {
                 id: sg_id,
                 polled_at: monotonic_now,
+                poll_interval: DEFAULT_POLL_INTERVAL_MS,
                 topics: Hash.new do |h1, topic|
                   h1[topic] = Hash.new do |h2, partition|
                     # We track those details in case we need to fill statistical gaps for

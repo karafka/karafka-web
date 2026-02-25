@@ -110,6 +110,40 @@ RSpec.describe_current do
         expect(subscription_groups[sg_id][:instance_id]).to be(false)
       end
     end
+
+    context "when max.poll.interval.ms is configured" do
+      before do
+        allow(subscription_group)
+          .to receive(:kafka)
+          .and_return({ "max.poll.interval.ms": 600_000 })
+
+        allow(sampler)
+          .to receive(:track)
+          .and_yield(sampler)
+
+        subscription_groups[sg_id] = {}
+      end
+
+      it "stores the poll_interval in subscription group data" do
+        listener.on_connection_listener_before_fetch_loop(event)
+
+        expect(subscription_groups[sg_id][:poll_interval]).to eq(600_000)
+      end
+    end
+
+    context "when max.poll.interval.ms is not configured" do
+      before do
+        allow(subscription_group).to receive(:kafka).and_return({})
+        allow(sampler).to receive(:track).and_yield(sampler)
+        subscription_groups[sg_id] = {}
+      end
+
+      it "stores the default poll_interval (300000ms) in subscription group data" do
+        listener.on_connection_listener_before_fetch_loop(event)
+
+        expect(subscription_groups[sg_id][:poll_interval]).to eq(300_000)
+      end
+    end
   end
 
   describe "#on_connection_listener_after_fetch_loop" do

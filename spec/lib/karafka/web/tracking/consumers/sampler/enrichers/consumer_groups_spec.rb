@@ -35,6 +35,7 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGr
         {
           "sg1" => {
             polled_at: polled_at,
+            poll_interval: 300_000,
             topics: {}
           }
         }
@@ -53,6 +54,28 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGr
         allow(enricher).to receive(:monotonic_now).and_return(polled_at + 1.2345)
         result = enricher.call
         expect(result["cg1"][:subscription_groups]["sg1"][:state][:poll_age]).to eq(1.23)
+      end
+
+      it "copies poll_interval from subscription group tracking" do
+        result = enricher.call
+        expect(result["cg1"][:subscription_groups]["sg1"][:state][:poll_interval]).to eq(300_000)
+      end
+
+      context "when poll_interval is custom configured" do
+        let(:subscription_groups) do
+          {
+            "sg1" => {
+              polled_at: polled_at,
+              poll_interval: 600_000,
+              topics: {}
+            }
+          }
+        end
+
+        it "preserves the custom poll_interval value" do
+          result = enricher.call
+          expect(result["cg1"][:subscription_groups]["sg1"][:state][:poll_interval]).to eq(600_000)
+        end
       end
     end
 
@@ -84,6 +107,7 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGr
         {
           "sg1" => {
             polled_at: 100.0,
+            poll_interval: 300_000,
             topics: {
               "topic1" => {
                 0 => {
@@ -146,6 +170,7 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGr
         {
           "sg1" => {
             polled_at: 100.0,
+            poll_interval: 300_000,
             topics: {
               "topic1" => {
                 0 => {
@@ -234,6 +259,7 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGr
           {
             "sg1" => {
               polled_at: 100.0,
+              poll_interval: 300_000,
               topics: {
                 "topic1" => {
                   0 => {
@@ -284,6 +310,7 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGr
         {
           "sg1" => {
             polled_at: 100.0,
+            poll_interval: 300_000,
             topics: {
               "topic1" => {
                 0 => {
@@ -339,6 +366,7 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGr
         {
           "sg1" => {
             polled_at: 100.0,
+            poll_interval: 300_000,
             topics: {}
           }
         }
@@ -386,6 +414,7 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGr
         {
           "sg1" => {
             polled_at: 100.0,
+            poll_interval: 300_000,
             topics: {
               "topic1" => {}
             }
@@ -433,8 +462,8 @@ RSpec.describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGr
 
       let(:subscription_groups) do
         {
-          "sg1" => { polled_at: 100.0, topics: {} },
-          "sg2" => { polled_at: 200.0, topics: {} }
+          "sg1" => { polled_at: 100.0, poll_interval: 300_000, topics: {} },
+          "sg2" => { polled_at: 200.0, poll_interval: 300_000, topics: {} }
         }
       end
 
