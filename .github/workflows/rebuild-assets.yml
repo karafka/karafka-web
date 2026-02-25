@@ -59,6 +59,6 @@ jobs:
             This PR was automatically created to rebuild assets after a dependency update.
 
             Changes include rebuilt CSS and JavaScript bundles.
-          branch: chore/rebuild-assets
+          branch: chore/rebuild-assets-${{ github.sha }}
           delete-branch: true
           labels: dependencies
