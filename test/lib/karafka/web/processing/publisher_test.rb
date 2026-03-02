@@ -47,9 +47,11 @@ describe_current do
       described_class.publish(consumers_state, consumers_metrics)
 
       state_message = expected_messages[0]
+
       assert_equal({ "zlib" => "true" }, state_message[:headers])
 
       decompressed = Zlib::Inflate.inflate(state_message[:payload])
+
       assert_equal(consumers_state, JSON.parse(decompressed, symbolize_names: true))
     end
 
@@ -63,9 +65,11 @@ describe_current do
       described_class.publish(consumers_state, consumers_metrics)
 
       metrics_message = expected_messages[1]
+
       assert_equal({ "zlib" => "true" }, metrics_message[:headers])
 
       decompressed = Zlib::Inflate.inflate(metrics_message[:payload])
+
       assert_equal(consumers_metrics, JSON.parse(decompressed, symbolize_names: true))
     end
 

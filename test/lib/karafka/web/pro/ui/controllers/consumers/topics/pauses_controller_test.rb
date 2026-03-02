@@ -163,6 +163,7 @@ describe_current do
         assert_equal(302, response.status)
         assert_equal("/", response.location)
         expected_message = "Initiated pause for all partitions of the #{topic_name}"
+
         assert_includes(flash[:success], expected_message)
       end
 
@@ -179,6 +180,7 @@ describe_current do
 
         # Matchers for filtering which processes handle this command
         matchers = message.payload.fetch(:matchers)
+
         assert_equal(consumer_group_id, matchers[:consumer_group_id])
         assert_equal(topic_name, matchers[:topic])
 
@@ -187,7 +189,7 @@ describe_current do
         assert_equal(consumer_group_id, command[:consumer_group_id])
         assert_equal(topic_name, command[:topic])
         assert_equal(duration * 1_000, command[:duration])
-        assert_equal(true, command[:prevent_override])
+        assert(command[:prevent_override])
         assert_equal("topics.pause", command[:name])
       end
     end
@@ -322,6 +324,7 @@ describe_current do
         assert_equal(302, response.status)
         assert_equal("/", response.location)
         expected_message = "Initiated resume for all partitions of the #{topic_name}"
+
         assert_includes(flash[:success], expected_message)
       end
 
@@ -338,6 +341,7 @@ describe_current do
 
         # Matchers for filtering which processes handle this command
         matchers = message.payload.fetch(:matchers)
+
         assert_equal(consumer_group_id, matchers[:consumer_group_id])
         assert_equal(topic_name, matchers[:topic])
 
@@ -345,7 +349,7 @@ describe_current do
 
         assert_equal(consumer_group_id, command[:consumer_group_id])
         assert_equal(topic_name, command[:topic])
-        assert_equal(true, command[:reset_attempts])
+        assert(command[:reset_attempts])
         assert_equal("topics.resume", command[:name])
       end
     end

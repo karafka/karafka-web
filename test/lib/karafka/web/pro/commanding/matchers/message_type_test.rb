@@ -34,25 +34,25 @@ describe_current do
     context "when message type is request" do
       let(:message_type) { "request" }
 
-      it { assert_equal(true, matcher.matches?) }
+      it { assert_predicate(matcher, :matches?) }
     end
 
     context "when message type is result" do
       let(:message_type) { "result" }
 
-      it { assert_equal(false, matcher.matches?) }
+      it { refute_predicate(matcher, :matches?) }
     end
 
     context "when message type is acceptance" do
       let(:message_type) { "acceptance" }
 
-      it { assert_equal(false, matcher.matches?) }
+      it { refute_predicate(matcher, :matches?) }
     end
 
     context "when message type is nil" do
       let(:message_type) { nil }
 
-      it { assert_equal(false, matcher.matches?) }
+      it { refute_predicate(matcher, :matches?) }
     end
   end
 end

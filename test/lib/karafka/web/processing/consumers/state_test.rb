@@ -30,10 +30,10 @@ describe_current do
 
       it "expect to get it with the data inside" do
         assert_kind_of(Hash, state)
-        assert_equal(true, state.key?(:processes))
-        assert_equal(true, state.key?(:stats))
-        assert_equal(true, state.key?(:schema_version))
-        assert_equal(true, state.key?(:dispatched_at))
+        assert(state.key?(:processes))
+        assert(state.key?(:stats))
+        assert(state.key?(:schema_version))
+        assert(state.key?(:dispatched_at))
       end
     end
   end

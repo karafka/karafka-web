@@ -24,39 +24,39 @@ describe_current do
 
   describe "#empty?" do
     context "when both watermark offsets are zero" do
-      it { assert_equal(true, watermarks.empty?) }
+      it { assert_empty(watermarks) }
     end
 
     context "when when low is not zero" do
       let(:low) { 1 }
 
-      it { assert_equal(false, watermarks.empty?) }
+      it { refute_empty(watermarks) }
     end
 
     context "when high is not zero" do
       let(:high) { 1 }
 
-      it { assert_equal(false, watermarks.empty?) }
+      it { refute_empty(watermarks) }
     end
   end
 
   describe "#cleaned?" do
     context "when partition is empty" do
-      it { assert_equal(false, watermarks.cleaned?) }
+      it { refute_predicate(watermarks, :cleaned?) }
     end
 
     context "when there is some data" do
       let(:high) { 100 }
       let(:low) { 80 }
 
-      it { assert_equal(false, watermarks.cleaned?) }
+      it { refute_predicate(watermarks, :cleaned?) }
     end
 
     context "when there was some data but no more" do
       let(:high) { 100 }
       let(:low) { 100 }
 
-      it { assert_equal(true, watermarks.cleaned?) }
+      it { assert_predicate(watermarks, :cleaned?) }
     end
   end
 
@@ -77,10 +77,11 @@ describe_current do
 
     it "expect to return correct values" do
       result = described_class.find(topic, 0)
+
       assert_equal(0, result.low)
       assert_equal(0, result.high)
-      assert_equal(true, result.empty?)
-      assert_equal(false, result.cleaned?)
+      assert_empty(result)
+      refute_predicate(result, :cleaned?)
     end
   end
 
@@ -91,10 +92,11 @@ describe_current do
 
     it "expect to return correct values" do
       result = described_class.find(topic, 0)
+
       assert_equal(0, result.low)
       assert_equal(2, result.high)
-      assert_equal(false, result.empty?)
-      assert_equal(false, result.cleaned?)
+      refute_empty(result)
+      refute_predicate(result, :cleaned?)
     end
   end
 end

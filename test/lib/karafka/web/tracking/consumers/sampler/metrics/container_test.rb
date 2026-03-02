@@ -33,7 +33,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container do
           .with("/sys/fs/cgroup/cgroup.controllers")
           .and_return(true)
 
-        assert_equal(true, described_class.active?)
+        assert_predicate(described_class, :active?)
       end
     end
 
@@ -47,7 +47,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container do
           .with("/sys/fs/cgroup/memory/memory.limit_in_bytes")
           .and_return(true)
 
-        assert_equal(true, described_class.active?)
+        assert_predicate(described_class, :active?)
       end
     end
   end

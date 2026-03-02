@@ -24,7 +24,7 @@ describe_current do
 
     it "expect to have proper consumer group and details" do
       assert_equal(%w[example_app6_app], stats.keys)
-      assert_equal(2_690_818_656.575_513, stats[cg][:rebalanced_at])
+      assert_in_delta(2_690_818_656.575_513, stats[cg][:rebalanced_at])
       assert_equal(%w[default test2 visits], stats[cg][:topics].keys)
 
       topic_data = stats[cg][:topics][topic]
@@ -49,14 +49,14 @@ describe_current do
       assert_equal("active", partition_data[:poll_state])
       assert_equal("1.7.0", partition_data[:process][:schema_version])
       assert_equal("consumer", partition_data[:process][:type])
-      assert_equal(2_690_883_271.575_513, partition_data[:process][:dispatched_at])
+      assert_in_delta(2_690_883_271.575_513, partition_data[:process][:dispatched_at])
       assert_equal(2, partition_data[:process][:process][:concurrency])
       assert_equal(8, partition_data[:process][:process][:cpus])
       assert_equal([1.33, 1.1, 1.1], partition_data[:process][:process][:cpu_usage])
-      assert_equal({active: 2, standby: 0}, partition_data[:process][:process][:listeners])
+      assert_equal({ active: 2, standby: 0 }, partition_data[:process][:process][:listeners])
       assert_equal(32_763_220, partition_data[:process][:process][:memory_size])
       assert_equal("shinra:1:1", partition_data[:process][:process][:id])
-      assert_equal(2_690_818_651.82_293, partition_data[:process][:process][:started_at])
+      assert_in_delta(2_690_818_651.82_293, partition_data[:process][:process][:started_at])
       assert_equal("running", partition_data[:process][:process][:status])
       assert_equal(%w[#8cbff36], partition_data[:process][:process][:tags])
       assert_equal("2.1.8", partition_data[:process][:versions][:karafka])
@@ -68,7 +68,7 @@ describe_current do
       assert_equal("2.6.3", partition_data[:process][:versions][:waterdrop])
       assert_equal(1, partition_data[:process][:stats][:busy])
       assert_equal(0, partition_data[:process][:stats][:enqueued])
-      assert_equal(5.634_919_553_399_087, partition_data[:process][:stats][:utilization])
+      assert_in_delta(5.634_919_553_399_087, partition_data[:process][:stats][:utilization])
       assert_equal(9, partition_data[:process][:stats][:total][:batches])
       assert_equal(0, partition_data[:process][:stats][:total][:dead])
       assert_equal(0, partition_data[:process][:stats][:total][:errors])
@@ -85,7 +85,7 @@ describe_current do
       assert_equal(%i[c4ca4238a0b9_0], cgs[:example_app6_app][:subscription_groups].keys)
       assert_equal(%i[id instance_id state topics], sg.keys)
       assert_equal("c4ca4238a0b9_0", sg[:id])
-      assert_equal(false, sg[:instance_id])
+      refute(sg[:instance_id])
       assert_equal("steady", sg[:state][:join_state])
       assert_equal(64_615_986, sg[:state][:rebalance_age])
       assert_equal(1, sg[:state][:rebalance_cnt])
@@ -104,6 +104,7 @@ describe_current do
         eof_offset committed_offset_fd poll_state_ch partition_id lag_hybrid lag_hybrid_d
         subscription_group_id instance_id transactional
       ].sort
+
       assert_equal(keys, sg[:topics][:default][:partitions][:"0"].keys.sort)
     end
   end

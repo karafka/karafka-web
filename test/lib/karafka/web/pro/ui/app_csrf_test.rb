@@ -34,7 +34,7 @@ describe Karafka::Web::Pro::Ui::App do
     end
 
     it "responds to check_sec_fetch_site! method" do
-      assert_equal(true, described_class.new({}).respond_to?(:check_sec_fetch_site!))
+      assert_respond_to(described_class.new({}), :check_sec_fetch_site!)
     end
   end
 
@@ -43,6 +43,7 @@ describe Karafka::Web::Pro::Ui::App do
 
     it "allows GET requests to dashboard" do
       get "dashboard"
+
       assert_equal(200, last_response.status)
     end
   end
@@ -60,12 +61,14 @@ describe Karafka::Web::Pro::Ui::App do
 
     it "blocks POST requests without Sec-Fetch-Site header" do
       post "ux"
+
       assert_equal(403, last_response.status)
     end
 
     it "blocks POST requests with cross-site header" do
       header "Sec-Fetch-Site", "cross-site"
       post "ux"
+
       assert_equal(403, last_response.status)
     end
   end

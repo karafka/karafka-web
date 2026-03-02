@@ -23,6 +23,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Network do
 
     it "rounds the result to integer" do
       allow(stats).to receive(:rps).and_return(999.999)
+
       assert_equal(1000, network_metrics.bytes_received)
     end
   end
@@ -39,6 +40,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Network do
 
     it "rounds the result to integer" do
       allow(stats).to receive(:rps).and_return(111.111)
+
       assert_equal(111, network_metrics.bytes_sent)
     end
   end

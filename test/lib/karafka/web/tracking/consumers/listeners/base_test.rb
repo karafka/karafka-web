@@ -39,6 +39,7 @@ describe_current do
         end
 
         expect(sampler).to have_received(:track)
+
         assert_equal(sampler, yielded_sampler)
       end
 
@@ -132,6 +133,7 @@ describe_current do
 
       # Instances should be different but use same delegation
       expect(listener1).not_to be(listener2)
+
       assert_respond_to(listener1, :track)
       assert_respond_to(listener2, :track)
     end

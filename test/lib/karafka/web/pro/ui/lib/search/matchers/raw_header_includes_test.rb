@@ -24,7 +24,7 @@ describe_current do
   let(:matcher) { described_class.new }
 
   describe ".active?" do
-    it { assert_equal(true, described_class.active?(rand.to_s)) }
+    it { assert(described_class.active?(rand.to_s)) }
   end
 
   describe "#call" do
@@ -35,7 +35,7 @@ describe_current do
       let(:raw_headers) { { "test phrase" => "some value" } }
 
       it "returns true" do
-        assert_equal(true, matcher.call(message, phrase))
+        assert(matcher.call(message, phrase))
       end
     end
 
@@ -43,7 +43,7 @@ describe_current do
       let(:raw_headers) { { "some key" => "test phrase" } }
 
       it "returns true" do
-        assert_equal(true, matcher.call(message, phrase))
+        assert(matcher.call(message, phrase))
       end
     end
 
@@ -51,7 +51,7 @@ describe_current do
       let(:raw_headers) { { "some key" => "some value" } }
 
       it "returns false" do
-        assert_equal(false, matcher.call(message, phrase))
+        refute(matcher.call(message, phrase))
       end
     end
 
@@ -59,7 +59,7 @@ describe_current do
       let(:raw_headers) { { "some key" => ["test phrase", "xda"] } }
 
       it "returns true" do
-        assert_equal(true, matcher.call(message, phrase))
+        assert(matcher.call(message, phrase))
       end
     end
 
@@ -67,7 +67,7 @@ describe_current do
       let(:raw_headers) { { "some key" => ["some value", "xda"] } }
 
       it "returns false" do
-        assert_equal(false, matcher.call(message, phrase))
+        refute(matcher.call(message, phrase))
       end
     end
 
@@ -76,7 +76,7 @@ describe_current do
       let(:phrase) { "test phrase-ó".encode("UTF-8") }
 
       it "returns false" do
-        assert_equal(false, matcher.call(message, phrase))
+        refute(matcher.call(message, phrase))
       end
     end
 
@@ -85,7 +85,7 @@ describe_current do
       let(:phrase) { "test phrase-ó".encode("UTF-8") }
 
       it "returns false" do
-        assert_equal(false, matcher.call(message, phrase))
+        refute(matcher.call(message, phrase))
       end
     end
   end

@@ -16,7 +16,7 @@ describe(
       times.each do |key_name|
         state[:aggregated][key_name].each do |sample|
           assert(sample.last[:lag_hybrid].between?(0, 5))
-          assert_equal(false, sample.last.key?(:lag_total))
+          refute(sample.last.key?(:lag_total))
         end
       end
     end
@@ -29,7 +29,7 @@ describe(
           metric_group.each_value do |samples|
             samples.each_value do |sample|
               assert(sample[:lag_hybrid].between?(0, 5))
-              assert_equal(false, sample.key?(:lag_total))
+              refute(sample.key?(:lag_total))
             end
           end
         end

@@ -15,7 +15,7 @@ describe(
     it "expect to add waiting to all aggregated" do
       times.each do |key_name|
         state[:aggregated][key_name].each do |sample|
-          assert_equal(false, sample.last.key?(:processing))
+          refute(sample.last.key?(:processing))
         end
       end
     end

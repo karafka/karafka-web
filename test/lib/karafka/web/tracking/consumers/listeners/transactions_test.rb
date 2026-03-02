@@ -68,7 +68,7 @@ describe_current do
       end
 
       it "does not mark partition as transactional" do
-        assert_equal(false, partition_details[:transactional])
+        refute(partition_details[:transactional])
       end
     end
 
@@ -77,8 +77,9 @@ describe_current do
 
       it "creates nested structure automatically" do
         partition_data = partition_details
+
         assert_kind_of(Hash, partition_data)
-        assert_equal(true, partition_data[:transactional])
+        assert(partition_data[:transactional])
         assert_equal(seek_offset, partition_data[:seek_offset])
       end
     end

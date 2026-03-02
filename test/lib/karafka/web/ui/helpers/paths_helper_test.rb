@@ -22,21 +22,21 @@ describe_current do
   describe "#action?" do
     context "when checking for single action" do
       it "returns true when current action matches" do
-        assert_equal(true, helper.action?(:show))
+        assert(helper.action?(:show))
       end
 
       it "returns false when current action does not match" do
-        assert_equal(false, helper.action?(:index))
+        refute(helper.action?(:index))
       end
     end
 
     context "when checking for multiple actions" do
       it "returns true when any action matches" do
-        assert_equal(true, helper.action?(:index, :show, :edit))
+        assert(helper.action?(:index, :show, :edit))
       end
 
       it "returns false when no actions match" do
-        assert_equal(false, helper.action?(:index, :edit, :delete))
+        refute(helper.action?(:index, :edit, :delete))
       end
     end
 
@@ -44,8 +44,8 @@ describe_current do
       let(:current_action_name) { :create }
 
       it "correctly identifies the current action" do
-        assert_equal(true, helper.action?(:create))
-        assert_equal(false, helper.action?(:show))
+        assert(helper.action?(:create))
+        refute(helper.action?(:show))
       end
     end
 
@@ -53,11 +53,11 @@ describe_current do
       let(:current_action_name) { nil }
 
       it "returns false for any action check" do
-        assert_equal(false, helper.action?(:show, :index))
+        refute(helper.action?(:show, :index))
       end
 
       it "returns true when checking for nil explicitly" do
-        assert_equal(true, helper.action?(nil))
+        assert(helper.action?(nil))
       end
     end
   end
@@ -243,17 +243,20 @@ describe_current do
     context "with empty structures" do
       it "handles empty hash" do
         result = helper.flatten_params("", {})
+
         assert_equal({}, result)
       end
 
       it "handles empty array" do
         result = helper.flatten_params("tags", [])
+
         assert_equal({}, result)
       end
 
       it "handles hash with empty values" do
         hash = { empty_hash: {}, empty_array: [] }
         result = helper.flatten_params("", hash)
+
         assert_equal({}, result)
       end
     end
@@ -263,16 +266,19 @@ describe_current do
     context "with basic usage" do
       it "generates path from script name and arguments" do
         result = helper.root_path("topics", "test-topic")
+
         assert_equal("/web-ui/topics/test-topic", result)
       end
 
       it "handles single argument" do
         result = helper.root_path("consumers")
+
         assert_equal("/web-ui/consumers", result)
       end
 
       it "handles multiple arguments" do
         result = helper.root_path("explorer", "topics", "test-topic", "0", "100")
+
         assert_equal("/web-ui/explorer/topics/test-topic/0/100", result)
       end
     end
@@ -282,12 +288,14 @@ describe_current do
 
       it "uses custom script name" do
         result = helper.root_path("topics")
+
         assert_equal("/custom/path/topics", result)
       end
 
       it "handles root path with empty script name" do
         empty_helper = helper.class.new({ "SCRIPT_NAME" => "" }, :show)
         result = empty_helper.root_path("topics")
+
         assert_equal("/topics", result)
       end
     end
@@ -295,6 +303,7 @@ describe_current do
     context "with no arguments" do
       it "returns just the script name with trailing slash" do
         result = helper.root_path
+
         assert_equal("/web-ui/", result)
       end
     end
@@ -302,6 +311,7 @@ describe_current do
     context "with numeric arguments" do
       it "handles numeric path components" do
         result = helper.root_path("partition", 0, "offset", 100)
+
         assert_equal("/web-ui/partition/0/offset/100", result)
       end
     end
@@ -334,21 +344,25 @@ describe_current do
   describe "#explorer_path" do
     it "builds basic explorer paths" do
       result = helper.explorer_path("topics")
+
       assert_equal("/web-ui/explorer/topics", result)
     end
 
     it "handles multiple path components" do
       result = helper.explorer_path("topics", "test-topic", "partition", "0")
+
       assert_equal("/web-ui/explorer/topics/test-topic/partition/0", result)
     end
 
     it "compacts nil values from arguments" do
       result = helper.explorer_path("topics", nil, "test-topic", nil, "0")
+
       assert_equal("/web-ui/explorer/topics/test-topic/0", result)
     end
 
     it "handles nested array arguments" do
       result = helper.explorer_path(%w[topics test-topic], %w[partition 0])
+
       assert_equal("/web-ui/explorer/topics/test-topic/partition/0", result)
     end
   end
@@ -356,16 +370,19 @@ describe_current do
   describe "#explorer_topics_path" do
     it "builds topics explorer paths" do
       result = helper.explorer_topics_path("test-topic")
+
       assert_equal("/web-ui/explorer/topics/test-topic", result)
     end
 
     it "handles multiple arguments" do
       result = helper.explorer_topics_path("test-topic", "partition", "0")
+
       assert_equal("/web-ui/explorer/topics/test-topic/partition/0", result)
     end
 
     it "compacts nil values" do
       result = helper.explorer_topics_path("test-topic", nil, "0")
+
       assert_equal("/web-ui/explorer/topics/test-topic/0", result)
     end
   end
@@ -373,16 +390,19 @@ describe_current do
   describe "#explorer_messages_path" do
     it "builds messages explorer paths" do
       result = helper.explorer_messages_path("test-topic", "0", "100")
+
       assert_equal("/web-ui/explorer/messages/test-topic/0/100", result)
     end
 
     it "handles topic and partition only" do
       result = helper.explorer_messages_path("test-topic", "0")
+
       assert_equal("/web-ui/explorer/messages/test-topic/0", result)
     end
 
     it "compacts nil values" do
       result = helper.explorer_messages_path("test-topic", nil, "100")
+
       assert_equal("/web-ui/explorer/messages/test-topic/100", result)
     end
   end
@@ -390,16 +410,19 @@ describe_current do
   describe "#topics_path" do
     it "builds basic topics path" do
       result = helper.topics_path
+
       assert_equal("/web-ui/topics", result)
     end
 
     it "builds topics path with arguments" do
       result = helper.topics_path("test-topic", "details")
+
       assert_equal("/web-ui/topics/test-topic/details", result)
     end
 
     it "handles single topic argument" do
       result = helper.topics_path("test-topic")
+
       assert_equal("/web-ui/topics/test-topic", result)
     end
   end
@@ -407,16 +430,19 @@ describe_current do
   describe "#consumers_path" do
     it "builds basic consumers path" do
       result = helper.consumers_path
+
       assert_equal("/web-ui/consumers", result)
     end
 
     it "builds consumers path with arguments" do
       result = helper.consumers_path("consumer-group", "details")
+
       assert_equal("/web-ui/consumers/consumer-group/details", result)
     end
 
     it "handles consumer group argument" do
       result = helper.consumers_path("consumer-group")
+
       assert_equal("/web-ui/consumers/consumer-group", result)
     end
   end
@@ -424,16 +450,19 @@ describe_current do
   describe "#consumer_path" do
     it "builds consumer-specific paths" do
       result = helper.consumer_path("consumer-123", "details")
+
       assert_equal("/web-ui/consumers/consumer-123/details", result)
     end
 
     it "builds consumer path with just consumer ID" do
       result = helper.consumer_path("consumer-123")
+
       assert_equal("/web-ui/consumers/consumer-123", result)
     end
 
     it "handles multiple path components" do
       result = helper.consumer_path("consumer-123", "subscriptions", "topic-1")
+
       assert_equal("/web-ui/consumers/consumer-123/subscriptions/topic-1", result)
     end
   end
@@ -457,16 +486,19 @@ describe_current do
     context "with partial parameters" do
       it "builds path with topic name only" do
         result = helper.scheduled_messages_explorer_path("scheduled-topic")
+
         assert_equal("/web-ui/scheduled_messages/explorer/topics/scheduled-topic", result)
       end
 
       it "builds path with topic and partition" do
         result = helper.scheduled_messages_explorer_path("scheduled-topic", "0")
+
         assert_equal("/web-ui/scheduled_messages/explorer/topics/scheduled-topic/0", result)
       end
 
       it "builds path with topic, partition, and offset" do
         result = helper.scheduled_messages_explorer_path("scheduled-topic", "0", "100")
+
         assert_equal("/web-ui/scheduled_messages/explorer/topics/scheduled-topic/0/100", result)
       end
     end
@@ -474,16 +506,19 @@ describe_current do
     context "with nil parameters" do
       it "compacts nil values correctly" do
         result = helper.scheduled_messages_explorer_path("topic", nil, "100", nil)
+
         assert_equal("/web-ui/scheduled_messages/explorer/topics/topic/100", result)
       end
 
       it "handles all nil parameters except topic" do
         result = helper.scheduled_messages_explorer_path("topic", nil, nil, nil)
+
         assert_equal("/web-ui/scheduled_messages/explorer/topics/topic", result)
       end
 
       it "handles completely nil parameters" do
         result = helper.scheduled_messages_explorer_path
+
         assert_equal("/web-ui/scheduled_messages/explorer/topics", result)
       end
     end
@@ -493,11 +528,13 @@ describe_current do
     context "with special characters in paths" do
       it "handles topic names with special characters" do
         result = helper.topics_path("test-topic_v1.0")
+
         assert_equal("/web-ui/topics/test-topic_v1.0", result)
       end
 
       it "handles consumer IDs with special characters" do
         result = helper.consumer_path("consumer-123_v2.0")
+
         assert_equal("/web-ui/consumers/consumer-123_v2.0", result)
       end
     end
@@ -507,6 +544,7 @@ describe_current do
 
       it "handles empty script name gracefully" do
         result = helper.root_path("topics")
+
         assert_equal("/topics", result)
       end
     end

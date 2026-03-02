@@ -24,6 +24,6 @@ describe_current do
   let(:policy) { described_class.new }
 
   describe "#allow?" do
-    it { assert_equal(true, policy.allow?({})) }
+    it { assert(policy.allow?({})) }
   end
 end

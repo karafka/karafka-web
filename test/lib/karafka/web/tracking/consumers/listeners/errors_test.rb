@@ -51,6 +51,7 @@ describe_current do
 
       it "expect to include schema version 1.2.0" do
         listener.on_error_occurred(event)
+
         assert_equal("1.2.0", sampler.errors.last[:schema_version])
       end
 
@@ -147,6 +148,7 @@ describe_current do
 
         it "expect to set committed_offset to -1001" do
           listener.on_error_occurred(event)
+
           assert_equal(-1001, sampler.errors.last[:details][:committed_offset])
         end
       end
@@ -237,6 +239,7 @@ describe_current do
 
       it "expect to include empty details" do
         listener.on_error_occurred(event)
+
         assert_equal({}, sampler.errors.last[:details])
       end
     end
@@ -245,6 +248,7 @@ describe_current do
   describe "#on_dead_letter_queue_dispatched" do
     it "expect to increase the dlq counter" do
       listener.on_dead_letter_queue_dispatched(nil)
+
       assert_equal(1, sampler.counters[:dead])
     end
   end
@@ -252,6 +256,7 @@ describe_current do
   describe "#on_consumer_consuming_retry" do
     it "expect to increase the retry counter" do
       listener.on_consumer_consuming_retry(nil)
+
       assert_equal(1, sampler.counters[:retries])
     end
   end

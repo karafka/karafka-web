@@ -28,6 +28,7 @@ describe_current do
   describe "#select" do
     it "expect to return selection enclosed in jobs collection" do
       result = jobs.select(&:nil?)
+
       assert_kind_of(jobs.class, result)
     end
   end

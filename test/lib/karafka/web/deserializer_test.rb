@@ -20,7 +20,7 @@ describe_current do
     end
 
     it "returns a hash with symbolized keys" do
-      assert_equal(true, parsing.keys.all?(Symbol))
+      assert(parsing.keys.all?(Symbol))
     end
 
     it "returns a hash with expected values" do
@@ -46,7 +46,7 @@ describe_current do
       end
 
       it "returns a hash with symbolized keys" do
-        assert_equal(true, parsing.keys.all?(Symbol))
+        assert(parsing.keys.all?(Symbol))
       end
 
       it "returns a hash with expected values" do
@@ -79,7 +79,7 @@ describe_current do
     end
 
     it "returns a hash with symbolized keys" do
-      assert_equal(true, parsing.keys.all?(Symbol))
+      assert(parsing.keys.all?(Symbol))
     end
 
     context "when duplicate keys exist at nested levels" do
@@ -111,12 +111,14 @@ describe_current do
 
       it "handles duplicate process IDs by keeping the last occurrence" do
         result = parsing
+
         assert_equal({ "worker-123": { offset: 200 } }, result[:processes])
         assert_equal(1, result[:processes].keys.count)
       end
 
       it "maintains other data intact" do
         result = parsing
+
         assert_equal({}, result[:stats])
       end
     end

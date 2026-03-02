@@ -18,7 +18,8 @@ describe_current do
 
     it "expect not to overwrite it" do
       create
-      assert_equal(2_690_818_670.782_473, consumers_state[:dispatched_at])
+
+      assert_in_delta(2_690_818_670.782_473, consumers_state[:dispatched_at])
     end
   end
 
@@ -27,6 +28,7 @@ describe_current do
 
     it "expect to create it with appropriate values" do
       create
+
       assert_equal(initial_state, consumers_state)
     end
   end
@@ -36,7 +38,8 @@ describe_current do
 
     it "expect not to overwrite it" do
       create
-      assert_equal(1_690_817_198.082_236, consumers_metrics[:dispatched_at])
+
+      assert_in_delta(1_690_817_198.082_236, consumers_metrics[:dispatched_at])
     end
   end
 
@@ -45,6 +48,7 @@ describe_current do
 
     it "expect to create it with appropriate values" do
       create
+
       assert_equal(initial_state, consumers_metrics)
     end
   end

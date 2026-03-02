@@ -10,7 +10,7 @@ describe_current do
   before { Karafka::Web.config.topics.consumers.metrics.name = metrics_topic }
 
   context "when no metrics" do
-    it { assert_equal(false, metrics.current) }
+    it { refute(metrics.current) }
     it { assert_raises(Karafka::Web::Errors::Ui::NotFoundError) { metrics.current! } }
   end
 
@@ -23,7 +23,7 @@ describe_current do
       produce(metrics_topic, Fixtures.consumers_metrics_file)
     end
 
-    it { assert_equal(false, metrics.current) }
+    it { refute(metrics.current) }
   end
 
   context "when one metric exists and karafka-web is enabled" do

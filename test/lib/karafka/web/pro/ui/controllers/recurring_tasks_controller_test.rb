@@ -362,6 +362,7 @@ describe_current do
       # Dispatch of commands is async, so we have to wait
       sleep(1)
       message = Karafka::Admin.read_topic(schedules_topic, 0, 1, -1).first
+
       assert_equal("command:trigger:*", message.key)
       assert_equal("command", message.payload[:type])
       assert_equal("trigger", message.payload[:command][:name])
@@ -382,6 +383,7 @@ describe_current do
       # Dispatch of commands is async, so we have to wait
       sleep(1)
       message = Karafka::Admin.read_topic(schedules_topic, 0, 1, -1).first
+
       assert_equal("command:disable:*", message.key)
       assert_equal("command", message.payload[:type])
       assert_equal("disable", message.payload[:command][:name])
@@ -402,6 +404,7 @@ describe_current do
       # Dispatch of commands is async, so we have to wait
       sleep(1)
       message = Karafka::Admin.read_topic(schedules_topic, 0, 1, -1).first
+
       assert_equal("command:enable:*", message.key)
       assert_equal("command", message.payload[:type])
       assert_equal("enable", message.payload[:command][:name])
@@ -422,6 +425,7 @@ describe_current do
       # Dispatch of commands is async, so we have to wait
       sleep(1)
       message = Karafka::Admin.read_topic(schedules_topic, 0, 1, -1).first
+
       assert_equal("command:enable:task1", message.key)
       assert_equal("command", message.payload[:type])
       assert_equal("enable", message.payload[:command][:name])
@@ -442,6 +446,7 @@ describe_current do
       # Dispatch of commands is async, so we have to wait
       sleep(1)
       message = Karafka::Admin.read_topic(schedules_topic, 0, 1, -1).first
+
       assert_equal("command:disable:task1", message.key)
       assert_equal("command", message.payload[:type])
       assert_equal("disable", message.payload[:command][:name])
@@ -462,6 +467,7 @@ describe_current do
       # Dispatch of commands is async, so we have to wait
       sleep(1)
       message = Karafka::Admin.read_topic(schedules_topic, 0, 1, -1).first
+
       assert_equal("command:trigger:task1", message.key)
       assert_equal("command", message.payload[:type])
       assert_equal("trigger", message.payload[:command][:name])

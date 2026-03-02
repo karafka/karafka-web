@@ -15,7 +15,7 @@ describe(
     it "expect to split listeners into active and standby" do
       times.each do |key_name|
         state[:aggregated][key_name].each do |sample|
-          assert_equal({active: 2, standby: 0}, sample.last[:listeners])
+          assert_equal({ active: 2, standby: 0 }, sample.last[:listeners])
         end
       end
     end

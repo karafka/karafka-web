@@ -195,10 +195,11 @@ describe_current do
         assert_equal(topic_name, command[:topic])
         assert_equal(partition_id, command[:partition_id])
         assert_equal(duration * 1_000, command[:duration])
-        assert_equal(true, command[:prevent_override])
+        assert(command[:prevent_override])
         assert_equal("partitions.pause", command[:name])
 
         matchers = message.payload.fetch(:matchers)
+
         assert_equal(consumer_group_id, matchers[:consumer_group_id])
         assert_equal(topic_name, matchers[:topic])
         assert_equal(partition_id, matchers[:partition_id])
@@ -398,10 +399,11 @@ describe_current do
         assert_equal(consumer_group_id, command[:consumer_group_id])
         assert_equal(topic_name, command[:topic])
         assert_equal(partition_id, command[:partition_id])
-        assert_equal(true, command[:reset_attempts])
+        assert(command[:reset_attempts])
         assert_equal("partitions.resume", command[:name])
 
         matchers = message.payload.fetch(:matchers)
+
         assert_equal(consumer_group_id, matchers[:consumer_group_id])
         assert_equal(topic_name, matchers[:topic])
         assert_equal(partition_id, matchers[:partition_id])

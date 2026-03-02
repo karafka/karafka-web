@@ -24,7 +24,7 @@ describe_current do
   let(:matcher) { described_class.new }
 
   describe ".active?" do
-    it { assert_equal(true, described_class.active?(rand.to_s)) }
+    it { assert(described_class.active?(rand.to_s)) }
   end
 
   describe "#call" do
@@ -43,7 +43,7 @@ describe_current do
       let(:raw_payload) { "This is a test phrase in the message." }
 
       it "returns true" do
-        assert_equal(true, matcher.call(message, phrase))
+        assert(matcher.call(message, phrase))
       end
     end
 
@@ -51,7 +51,7 @@ describe_current do
       let(:raw_payload) { nil }
 
       it "returns false" do
-        assert_equal(false, matcher.call(message, phrase))
+        refute(matcher.call(message, phrase))
       end
     end
 
@@ -59,7 +59,7 @@ describe_current do
       let(:raw_payload) { "This message does not contain the search term." }
 
       it "returns false" do
-        assert_equal(false, matcher.call(message, phrase))
+        refute(matcher.call(message, phrase))
       end
     end
 
@@ -68,7 +68,7 @@ describe_current do
       let(:phrase) { "test phrase-ó".encode("UTF-8") }
 
       it "returns false" do
-        assert_equal(false, matcher.call(message, phrase))
+        refute(matcher.call(message, phrase))
       end
     end
 
@@ -77,7 +77,7 @@ describe_current do
       let(:headers) { { "zlib" => "true" } }
 
       it "returns true on match" do
-        assert_equal(true, matcher.call(message, phrase))
+        assert(matcher.call(message, phrase))
       end
     end
 
@@ -86,7 +86,7 @@ describe_current do
       let(:headers) { { "zlib" => "true" } }
 
       it "returns true on match" do
-        assert_equal(true, matcher.call(message, phrase))
+        assert(matcher.call(message, phrase))
       end
     end
 
@@ -94,7 +94,7 @@ describe_current do
       let(:raw_payload) { Zlib.deflate("This is a test phrase in the message.") }
 
       it "returns false on match" do
-        assert_equal(false, matcher.call(message, phrase))
+        refute(matcher.call(message, phrase))
       end
     end
   end

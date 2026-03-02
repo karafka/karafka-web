@@ -67,7 +67,7 @@ describe_current do
         assert_includes(details.keys, context.topics_errors)
 
         details.each_value do |detail|
-          assert_equal(false, detail[:present])
+          refute(detail[:present])
           assert_equal(0, detail[:partitions])
           assert_equal(1, detail[:replication])
         end
@@ -94,7 +94,7 @@ describe_current do
       it "returns topics with actual values" do
         details = context.topics_details
 
-        assert_equal(true, details[context.topics_consumers_states][:present])
+        assert(details[context.topics_consumers_states][:present])
         assert_equal(1, details[context.topics_consumers_states][:partitions])
         assert_equal(3, details[context.topics_consumers_states][:replication])
       end

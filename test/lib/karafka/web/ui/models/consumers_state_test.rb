@@ -10,7 +10,7 @@ describe_current do
   before { Karafka::Web.config.topics.consumers.states.name = states_topic }
 
   context "when no state" do
-    it { assert_equal(false, state.current) }
+    it { refute(state.current) }
     it { assert_raises(Karafka::Web::Errors::Ui::NotFoundError) { state.current! } }
   end
 
@@ -23,7 +23,7 @@ describe_current do
       produce(states_topic, Fixtures.consumers_states_file)
     end
 
-    it { assert_equal(false, state.current) }
+    it { refute(state.current) }
   end
 
   context "when one state exists and karafka-web is enabled" do
@@ -90,6 +90,7 @@ describe_current do
 
     it "expect to sort it" do
       values = state.current.processes.keys.map(&:to_s)
+
       assert_equal(values.sort, values)
     end
   end

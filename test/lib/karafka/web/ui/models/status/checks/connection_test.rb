@@ -6,7 +6,7 @@ describe_current do
   let(:context) { Karafka::Web::Ui::Models::Status::Context.new }
 
   describe "DSL configuration" do
-    it { assert_equal(false, described_class.independent?) }
+    it { refute_predicate(described_class, :independent?) }
     it { assert_equal(:enabled, described_class.dependency) }
     it { assert_equal({ time: nil }, described_class.halted_details) }
   end

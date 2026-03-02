@@ -64,7 +64,7 @@ module MinitestDescribedClass
   def described_class
     klass = self.class
 
-    while klass && klass.respond_to?(:desc)
+    while klass&.respond_to?(:desc)
       return klass.desc if klass.desc.is_a?(Class) || klass.desc.is_a?(Module)
 
       klass = klass.superclass
@@ -153,7 +153,7 @@ Minitest::Spec.class_eval do
 
     # Enable all features in case they were disabled for the controllers tests
     if Karafka.pro? && described_class &&
-       described_class < Karafka::Web::Ui::Controllers::BaseController
+        described_class < Karafka::Web::Ui::Controllers::BaseController
       Karafka::Web.config.commanding.active = true
       Karafka::Web.config.ui.topics.management.active = true
     end

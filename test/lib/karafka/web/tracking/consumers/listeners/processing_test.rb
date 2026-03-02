@@ -39,16 +39,19 @@ describe_current do
 
       it "expect to remove the running job from tracked jobs" do
         listener.on_error_occurred(event)
+
         refute_includes(sampler.jobs, "#{caller.id}-consume")
       end
 
       it "expect not to remove revoke job for same consumer" do
         listener.on_error_occurred(event)
+
         assert_includes(sampler.jobs, "#{caller.id}-revoked")
       end
 
       it "expect not to remove shutdown job for same consumer" do
         listener.on_error_occurred(event)
+
         assert_includes(sampler.jobs, "#{caller.id}-shutdown")
       end
     end
@@ -58,16 +61,19 @@ describe_current do
 
       it "expect not to remove the running job from tracked jobs" do
         listener.on_error_occurred(event)
+
         assert_includes(sampler.jobs, "#{caller.id}-consume")
       end
 
       it "expect to remove revoke job for same consumer" do
         listener.on_error_occurred(event)
+
         refute_includes(sampler.jobs, "#{caller.id}-revoked")
       end
 
       it "expect not to remove shutdown job for same consumer" do
         listener.on_error_occurred(event)
+
         assert_includes(sampler.jobs, "#{caller.id}-shutdown")
       end
     end
@@ -77,16 +83,19 @@ describe_current do
 
       it "expect not to remove the running job from tracked jobs" do
         listener.on_error_occurred(event)
+
         assert_includes(sampler.jobs, "#{caller.id}-consume")
       end
 
       it "expect not to remove revoke job for same consumer" do
         listener.on_error_occurred(event)
+
         assert_includes(sampler.jobs, "#{caller.id}-revoked")
       end
 
       it "expect to remove shutdown job for same consumer" do
         listener.on_error_occurred(event)
+
         refute_includes(sampler.jobs, "#{caller.id}-shutdown")
       end
     end
@@ -96,16 +105,19 @@ describe_current do
 
       it "expect not to remove the running job from tracked jobs" do
         listener.on_error_occurred(event)
+
         assert_includes(sampler.jobs, "#{caller.id}-consume")
       end
 
       it "expect not to remove revoke job for same consumer" do
         listener.on_error_occurred(event)
+
         assert_includes(sampler.jobs, "#{caller.id}-revoked")
       end
 
       it "expect not to remove shutdown job for same consumer" do
         listener.on_error_occurred(event)
+
         assert_includes(sampler.jobs, "#{caller.id}-shutdown")
       end
     end
@@ -115,16 +127,19 @@ describe_current do
 
       it "expect not to remove the running job from tracked jobs" do
         listener.on_error_occurred(event)
+
         assert_includes(sampler.jobs, "#{caller.id}-consume")
       end
 
       it "expect not to remove revoke job for same consumer" do
         listener.on_error_occurred(event)
+
         assert_includes(sampler.jobs, "#{caller.id}-revoked")
       end
 
       it "expect not to remove shutdown job for same consumer" do
         listener.on_error_occurred(event)
+
         assert_includes(sampler.jobs, "#{caller.id}-shutdown")
       end
     end
@@ -135,6 +150,7 @@ describe_current do
 
     it "expect to track execution time in totals" do
       listener.on_worker_processed(event)
+
       assert_includes(sampler.windows.m1[:processed_total_time], 123.456)
     end
   end
@@ -209,6 +225,7 @@ describe_current do
       assert_equal(1, job[:last_offset])
       # CI hiccups can cause this to drift a bit
       expect(job[:processing_lag]).to be_within(10).of(1_000)
+
       assert_equal(0, job[:consumption_lag])
       assert_equal(0, job[:committed_offset])
       assert_equal(1, job[:messages])

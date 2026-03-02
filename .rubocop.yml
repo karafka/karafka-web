@@ -13,8 +13,6 @@ inherit_gem:
 AllCops:
   NewCops: enable
   TargetRubyVersion: 3.2
-  Include:
-    - Gemfile.lint
   Exclude:
     - bin/**/*
     - "*.gemspec"

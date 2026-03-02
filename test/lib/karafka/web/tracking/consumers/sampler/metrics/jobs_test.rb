@@ -31,7 +31,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
         # Workers: 5
         # Timefactor: 30s (actual runtime)
         # Utilization: (60,000 / 1,000 / 5 / 30) * 100 = 40%
-        assert_equal(40.0, jobs_metrics.utilization)
+        assert_in_delta(40.0, jobs_metrics.utilization)
       end
     end
 
@@ -45,6 +45,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
       it "calculates utilization percentage based on worker time" do
         # Utilization should be between 0 and 100
         utilization = jobs_metrics.utilization
+
         assert_operator(utilization, :>=, 0)
         assert_operator(utilization, :<=, 100)
         assert_operator(utilization, :>, 0) # We added work, so it should not be 0

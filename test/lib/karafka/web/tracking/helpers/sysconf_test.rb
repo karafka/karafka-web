@@ -62,6 +62,7 @@ describe_current do
       it "sysconf function accepts integer parameter and returns long" do
         # Test that the function is properly attached and callable
         result = described_class.sysconf(described_class::SC_PAGESIZE)
+
         assert_kind_of(Integer, result)
         assert_operator(result, :>, 0)
       end
@@ -80,9 +81,11 @@ describe_current do
         case RUBY_PLATFORM
         when /linux/
           expect(defined?(described_class::SC_PAGESIZE)).to be_truthy
+
           assert_equal(30, described_class::SC_PAGESIZE)
         when /darwin/
           expect(defined?(described_class::SC_PAGESIZE)).to be_truthy
+
           assert_equal(29, described_class::SC_PAGESIZE)
         else
           # For other platforms, the constant might not be defined

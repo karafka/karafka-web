@@ -26,6 +26,7 @@ describe_current do
 
         it "remains compatible after processing" do
           manager.call(message)
+
           assert_equal("compatible", manager.to_s)
         end
       end
@@ -39,6 +40,7 @@ describe_current do
 
         it "remains compatible after processing" do
           manager.call(message)
+
           assert_equal("compatible", manager.to_s)
         end
       end
@@ -52,6 +54,7 @@ describe_current do
 
         it "remains compatible after processing" do
           manager.call(message)
+
           assert_equal("compatible", manager.to_s)
         end
       end
@@ -88,11 +91,13 @@ describe_current do
 
       it "still returns version comparison result" do
         result = manager.call(message)
+
         assert_equal(:current, result)
       end
 
       it "remains incompatible after processing" do
         manager.call(message)
+
         assert_equal("incompatible", manager.to_s)
       end
     end
@@ -115,6 +120,7 @@ describe_current do
     it "is idempotent" do
       manager.invalidate!
       manager.invalidate!
+
       assert_equal("incompatible", manager.to_s)
     end
   end
@@ -126,6 +132,7 @@ describe_current do
 
     it "becomes incompatible after invalidation" do
       manager.invalidate!
+
       assert_equal("incompatible", manager.to_s)
     end
   end
@@ -153,6 +160,7 @@ describe_current do
         older_major = "#{major_parts[0].to_i - 1}.#{major_parts[1]}.#{major_parts[2]}"
 
         message = Struct.new(:payload).new({ schema_version: older_major })
+
         assert_equal(:older, manager.call(message))
       end
 
@@ -161,6 +169,7 @@ describe_current do
         newer_major = "#{major_parts[0].to_i + 1}.#{major_parts[1]}.#{major_parts[2]}"
 
         message = Struct.new(:payload).new({ schema_version: newer_major })
+
         assert_equal(:newer, manager.call(message))
       end
 
@@ -169,6 +178,7 @@ describe_current do
         older_minor = "#{parts[0]}.#{parts[1].to_i - 1}.#{parts[2]}"
 
         message = Struct.new(:payload).new({ schema_version: older_minor })
+
         assert_equal(:older, manager.call(message))
       end
 
@@ -177,6 +187,7 @@ describe_current do
         newer_minor = "#{parts[0]}.#{parts[1].to_i + 1}.#{parts[2]}"
 
         message = Struct.new(:payload).new({ schema_version: newer_minor })
+
         assert_equal(:newer, manager.call(message))
       end
 
@@ -192,6 +203,7 @@ describe_current do
         end
 
         message = Struct.new(:payload).new({ schema_version: older_patch })
+
         assert_equal(:older, manager.call(message))
       end
 
@@ -200,6 +212,7 @@ describe_current do
         newer_patch = "#{parts[0]}.#{parts[1]}.#{parts[2].to_i + 1}"
 
         message = Struct.new(:payload).new({ schema_version: newer_patch })
+
         assert_equal(:newer, manager.call(message))
       end
     end
@@ -207,23 +220,27 @@ describe_current do
     context "with edge case versions" do
       it "handles version 0.0.0" do
         message = Struct.new(:payload).new({ schema_version: "0.0.0" })
+
         assert_equal(:older, manager.call(message))
       end
 
       it "handles very high version numbers" do
         message = Struct.new(:payload).new({ schema_version: "999.999.999" })
+
         assert_equal(:newer, manager.call(message))
       end
 
       it "handles single digit versions" do
         message = Struct.new(:payload).new({ schema_version: "1" })
         result = manager.call(message)
+
         refute_empty(%i[older newer current] & [result])
       end
 
       it "handles two-part versions" do
         message = Struct.new(:payload).new({ schema_version: "1.0" })
         result = manager.call(message)
+
         refute_empty(%i[older newer current] & [result])
       end
     end
