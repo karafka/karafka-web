@@ -20,6 +20,7 @@ describe_current do
 
     it "expect not to change the content at all" do
       extend_boot_file
+
       assert_equal(content, File.read(boot_file))
     end
   end
@@ -36,12 +37,14 @@ describe_current do
 
     it "expect to add the enabled" do
       extend_boot_file
+
       assert_includes(File.read(boot_file), "\nKarafka::Web.enable!\n")
     end
 
     it "expect to add the configurator" do
       extend_boot_file
       updated = File.read(boot_file)
+
       assert_includes(updated, "config.ui.sessions.secret")
       assert_includes(updated, "Karafka::Web.setup do |config|")
     end

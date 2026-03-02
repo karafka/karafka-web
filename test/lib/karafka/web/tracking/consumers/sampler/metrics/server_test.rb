@@ -15,7 +15,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Server do
       end
 
       it "returns count of active and standby listeners" do
-        assert_equal({active: 2, standby: 1}, server_metrics.listeners)
+        assert_equal({ active: 2, standby: 1 }, server_metrics.listeners)
       end
     end
 
@@ -25,7 +25,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Server do
       end
 
       it "returns zero counts" do
-        assert_equal({active: 0, standby: 0}, server_metrics.listeners)
+        assert_equal({ active: 0, standby: 0 }, server_metrics.listeners)
       end
     end
 
@@ -39,7 +39,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Server do
       end
 
       it "returns all as active, none as standby" do
-        assert_equal({active: 2, standby: 0}, server_metrics.listeners)
+        assert_equal({ active: 2, standby: 0 }, server_metrics.listeners)
       end
     end
 
@@ -53,7 +53,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Server do
       end
 
       it "returns none as active, all as standby" do
-        assert_equal({active: 0, standby: 2}, server_metrics.listeners)
+        assert_equal({ active: 0, standby: 2 }, server_metrics.listeners)
       end
     end
 
@@ -63,7 +63,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Server do
       end
 
       it "returns zero counts" do
-        assert_equal({active: 0, standby: 0}, server_metrics.listeners)
+        assert_equal({ active: 0, standby: 0 }, server_metrics.listeners)
       end
     end
   end

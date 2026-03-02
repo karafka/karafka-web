@@ -58,6 +58,7 @@ describe Karafka::Web::Ui::Base do
         get "dashboard"
 
         expect(monitor).not_to have_received(:instrument)
+
         assert_equal(404, status)
       end
     end
@@ -75,6 +76,7 @@ describe Karafka::Web::Ui::Base do
         get "dashboard"
 
         expect(monitor).not_to have_received(:instrument)
+
         assert_equal(402, status)
       end
     end
@@ -92,6 +94,7 @@ describe Karafka::Web::Ui::Base do
         get "dashboard"
 
         expect(monitor).not_to have_received(:instrument)
+
         assert_equal(403, status)
       end
     end
@@ -109,6 +112,7 @@ describe Karafka::Web::Ui::Base do
         get "dashboard"
 
         expect(monitor).not_to have_received(:instrument)
+
         assert_equal(404, status)
       end
     end

@@ -9,8 +9,9 @@ describe_current do
     context "when key is not cached yet" do
       it "computes and caches the value" do
         value = cache.fetch(:foo) { "bar" }
+
         assert_equal("bar", value)
-        assert_equal(true, cache.exist?)
+        assert_predicate(cache, :exist?)
       end
     end
 
@@ -19,6 +20,7 @@ describe_current do
 
       it "returns the cached value without recomputing" do
         result = cache.fetch(:foo) { "second" }
+
         assert_equal("first", result)
       end
     end
@@ -30,12 +32,13 @@ describe_current do
 
   describe "#exist?" do
     it "returns false before any fetch" do
-      assert_equal(false, cache.exist?)
+      refute_predicate(cache, :exist?)
     end
 
     it "returns true after a fetch" do
       cache.fetch(:foo) { 1 }
-      assert_equal(true, cache.exist?)
+
+      assert_predicate(cache, :exist?)
     end
   end
 
@@ -46,6 +49,7 @@ describe_current do
 
     it "returns a Unix timestamp after fetch" do
       cache.fetch(:foo) { 123 }
+
       assert_kind_of(Numeric, cache.timestamp)
     end
   end
@@ -57,6 +61,7 @@ describe_current do
 
     it "returns a SHA256 digest after fetch" do
       cache.fetch(:a) { 1 }
+
       assert_match(/\A\h{64}\z/, cache.hash)
     end
   end
@@ -66,7 +71,8 @@ describe_current do
 
     it "clears values and metadata" do
       cache.clear
-      assert_equal(false, cache.exist?)
+
+      refute_predicate(cache, :exist?)
       assert_nil(cache.timestamp)
       assert_nil(cache.hash)
     end
@@ -79,6 +85,7 @@ describe_current do
       it "does not clear the cache" do
         value = cache.fetch(:foo) { "bar" }
         result = cache.clear_if_needed(cache.hash, cache.timestamp)
+
         assert_nil(result)
         assert_equal(value, cache.fetch(:foo) { "new" })
       end
@@ -90,7 +97,8 @@ describe_current do
         expect(
           cache.clear_if_needed("other", cache.timestamp + 10)
         ).to be_nil
-        assert_equal(false, cache.exist?)
+
+        refute_predicate(cache, :exist?)
       end
     end
 
@@ -108,7 +116,7 @@ describe_current do
 
         cache.clear_if_needed(cache.hash, initial_ts)
 
-        assert_equal(false, cache.exist?)
+        refute_predicate(cache, :exist?)
       end
     end
 
@@ -116,7 +124,8 @@ describe_current do
       it "clears the cache" do
         cache.fetch(:foo) { 123 }
         cache.clear_if_needed(nil, cache.timestamp)
-        assert_equal(false, cache.exist?)
+
+        refute_predicate(cache, :exist?)
       end
     end
 
@@ -124,7 +133,8 @@ describe_current do
       it "clears the cache" do
         cache.fetch(:foo) { 123 }
         cache.clear_if_needed(cache.hash, nil)
-        assert_equal(false, cache.exist?)
+
+        refute_predicate(cache, :exist?)
       end
     end
   end

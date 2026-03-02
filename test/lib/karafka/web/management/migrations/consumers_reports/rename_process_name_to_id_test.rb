@@ -6,29 +6,29 @@ describe_current do
   describe ".applicable?" do
     context "when schema version is less than 1.3.0" do
       it "returns true for 1.2.9" do
-        assert_equal(true, described_class.applicable?("1.2.9"))
+        assert(described_class.applicable?("1.2.9"))
       end
 
       it "returns true for 1.2.0" do
-        assert_equal(true, described_class.applicable?("1.2.0"))
+        assert(described_class.applicable?("1.2.0"))
       end
 
       it "returns true for 1.0.0" do
-        assert_equal(true, described_class.applicable?("1.0.0"))
+        assert(described_class.applicable?("1.0.0"))
       end
     end
 
     context "when schema version is 1.3.0 or higher" do
       it "returns false for 1.3.0" do
-        assert_equal(false, described_class.applicable?("1.3.0"))
+        refute(described_class.applicable?("1.3.0"))
       end
 
       it "returns false for 1.4.0" do
-        assert_equal(false, described_class.applicable?("1.4.0"))
+        refute(described_class.applicable?("1.4.0"))
       end
 
       it "returns false for 1.5.0" do
-        assert_equal(false, described_class.applicable?("1.5.0"))
+        refute(described_class.applicable?("1.5.0"))
       end
     end
   end

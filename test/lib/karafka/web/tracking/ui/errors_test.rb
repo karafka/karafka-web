@@ -27,9 +27,10 @@ describe Karafka::Web::Tracking::Ui::Errors do
 
         expect(producer).to have_received(:produce_async) do |params|
           assert_equal(Karafka::Web.config.topics.errors.name, params[:topic])
-          assert_equal({"zlib" => "true"}, params[:headers])
+          assert_equal({ "zlib" => "true" }, params[:headers])
 
           payload = JSON.parse(Zlib::Inflate.inflate(params[:payload]))
+
           assert_equal("1.2.0", payload["schema_version"])
           assert_kind_of(String, payload["id"])
           refute_empty(payload["id"])

@@ -27,6 +27,7 @@ describe_current do
 
     it "expect to create it" do
       create
+
       assert_includes(topics, consumers_states_topic)
     end
   end
@@ -52,6 +53,7 @@ describe_current do
 
     it "expect to create it" do
       create
+
       assert_includes(topics, consumers_metrics_topic)
     end
   end
@@ -66,6 +68,7 @@ describe_current do
 
     it "expect not to create it again" do
       create
+
       assert_equal(1, Karafka::Admin.read_topic(consumers_reports_topic, 0, 100).size)
     end
   end
@@ -77,6 +80,7 @@ describe_current do
 
     it "expect to create it" do
       create
+
       assert_includes(topics, consumers_reports_topic)
     end
   end
@@ -91,6 +95,7 @@ describe_current do
 
     it "expect not to create it again" do
       create
+
       assert_equal(1, Karafka::Admin.read_topic(errors_topic, 0, 100).size)
     end
   end
@@ -102,6 +107,7 @@ describe_current do
 
     it "expect to create it" do
       create
+
       assert_includes(topics, errors_topic)
     end
   end

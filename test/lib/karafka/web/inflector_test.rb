@@ -131,6 +131,7 @@ describe_current do
                                "1699543515_test_migration.rb"
 
         result = inflector.camelize(valid_migration_basename, valid_migration_path)
+
         assert_equal("TestMigration", result) # Should strip timestamp
       end
 
@@ -139,6 +140,7 @@ describe_current do
         non_migration_path = "/lib/karafka/web/processing/1699543515_not_migration.rb"
 
         result = inflector.camelize(timestamped_basename, non_migration_path)
+
         assert_equal("1699543515NotMigration", result) # Should not strip timestamp
       end
 
@@ -148,6 +150,7 @@ describe_current do
                      "1699543515_test_migration.rb"
 
         result = inflector.camelize(valid_basename, valid_path)
+
         assert_equal("TestMigration", result)
       end
 
@@ -157,6 +160,7 @@ describe_current do
                          "no_timestamp_migration.rb"
 
         result = inflector.camelize(invalid_basename, migration_path)
+
         assert_equal("NoTimestampMigration", result) # Should use default behavior
       end
     end

@@ -53,6 +53,7 @@ describe_current do
       sleep(0.05)
 
       samples = ttl_array.samples
+
       assert_equal(1, samples.size)
       assert_equal(2, samples.first[:value])
     end
@@ -63,6 +64,7 @@ describe_current do
       ttl_array << 3
 
       samples = ttl_array.samples
+
       assert_equal([1, 2, 3], samples.map { |s| s[:value] })
     end
   end
@@ -75,6 +77,7 @@ describe_current do
       result = array.inspect
 
       pattern = /^#<Karafka::Web::Tracking::Helpers::Ttls::Array:0x[0-9a-f]+ ttl=1000ms size=0>$/
+
       assert_match(pattern, result)
     end
 
@@ -85,6 +88,7 @@ describe_current do
       result = array.inspect
 
       pattern = /^#<Karafka::Web::Tracking::Helpers::Ttls::Array:0x[0-9a-f]+ ttl=1000ms size=2>$/
+
       assert_match(pattern, result)
     end
 
@@ -133,6 +137,7 @@ describe_current do
       inspector = Thread.new do
         20.times do
           result = array.inspect
+
           assert_kind_of(String, result)
           assert_includes(result, "ttl=1000ms")
         end
@@ -141,6 +146,7 @@ describe_current do
       end
 
       [writer, inspector].each(&:join)
+
       assert_empty(errors)
     end
   end

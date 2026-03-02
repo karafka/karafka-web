@@ -47,17 +47,20 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups d
 
       it "calculates poll_age correctly" do
         result = enricher.call
-        assert_equal(50.0, result["cg1"][:subscription_groups]["sg1"][:state][:poll_age])
+
+        assert_in_delta(50.0, result["cg1"][:subscription_groups]["sg1"][:state][:poll_age])
       end
 
       it "rounds poll_age to 2 decimal places" do
         allow(enricher).to receive(:monotonic_now).and_return(polled_at + 1.2345)
         result = enricher.call
-        assert_equal(1.23, result["cg1"][:subscription_groups]["sg1"][:state][:poll_age])
+
+        assert_in_delta(1.23, result["cg1"][:subscription_groups]["sg1"][:state][:poll_age])
       end
 
       it "copies poll_interval from subscription group tracking" do
         result = enricher.call
+
         assert_equal(300_000, result["cg1"][:subscription_groups]["sg1"][:state][:poll_interval])
       end
 
@@ -74,6 +77,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups d
 
         it "preserves the custom poll_interval value" do
           result = enricher.call
+
           assert_equal(600_000, result["cg1"][:subscription_groups]["sg1"][:state][:poll_interval])
         end
       end
@@ -129,7 +133,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups d
         partition = result["cg1"][:subscription_groups]["sg1"][:topics]["topic1"][:partitions][0]
 
         # Should only set transactional to false, not enrich
-        assert_equal(false, partition[:transactional])
+        refute(partition[:transactional])
         assert_equal(10, partition[:lag_stored])
         assert_equal(100, partition[:stored_offset])
       end
@@ -137,7 +141,8 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups d
       it "sets transactional to false by default" do
         result = enricher.call
         partition = result["cg1"][:subscription_groups]["sg1"][:topics]["topic1"][:partitions][0]
-        assert_equal(false, partition[:transactional])
+
+        refute(partition[:transactional])
       end
     end
 
@@ -190,12 +195,14 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups d
       it "enriches with transactional flag" do
         result = enricher.call
         partition = result["cg1"][:subscription_groups]["sg1"][:topics]["topic1"][:partitions][0]
-        assert_equal(true, partition[:transactional])
+
+        assert(partition[:transactional])
       end
 
       it "calculates stored_offset as seek_offset - 1" do
         result = enricher.call
         partition = result["cg1"][:subscription_groups]["sg1"][:topics]["topic1"][:partitions][0]
+
         assert_equal(149, partition[:stored_offset])
       end
 
@@ -209,24 +216,28 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups d
       it "sets lag_stored equal to lag" do
         result = enricher.call
         partition = result["cg1"][:subscription_groups]["sg1"][:topics]["topic1"][:partitions][0]
+
         assert_equal(50, partition[:lag_stored])
       end
 
       it "sets lag_d to 0" do
         result = enricher.call
         partition = result["cg1"][:subscription_groups]["sg1"][:topics]["topic1"][:partitions][0]
+
         assert_equal(0, partition[:lag_d])
       end
 
       it "sets lag_stored_d to 0" do
         result = enricher.call
         partition = result["cg1"][:subscription_groups]["sg1"][:topics]["topic1"][:partitions][0]
+
         assert_equal(0, partition[:lag_stored_d])
       end
 
       it "sets committed_offset equal to stored_offset" do
         result = enricher.call
         partition = result["cg1"][:subscription_groups]["sg1"][:topics]["topic1"][:partitions][0]
+
         assert_equal(149, partition[:committed_offset])
       end
 
@@ -332,7 +343,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups d
         partition = result["cg1"][:subscription_groups]["sg1"][:topics]["topic1"][:partitions][0]
 
         # Should only set transactional to false, not enrich
-        assert_equal(false, partition[:transactional])
+        refute(partition[:transactional])
         assert_equal(0, partition[:lag_stored])
         assert_equal(0, partition[:stored_offset])
       end
@@ -380,7 +391,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups d
         result = enricher.call
         partition = result["cg1"][:subscription_groups]["sg1"][:topics]["topic1"][:partitions][0]
 
-        assert_equal(false, partition[:transactional])
+        refute(partition[:transactional])
         assert_equal(0, partition[:lag_stored])
         assert_equal(0, partition[:stored_offset])
       end
@@ -430,7 +441,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups d
         result = enricher.call
         partition = result["cg1"][:subscription_groups]["sg1"][:topics]["topic1"][:partitions][0]
 
-        assert_equal(false, partition[:transactional])
+        refute(partition[:transactional])
         assert_equal(0, partition[:lag_stored])
         assert_equal(0, partition[:stored_offset])
       end
@@ -474,8 +485,8 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups d
       it "enriches all consumer groups" do
         result = enricher.call
 
-        assert_equal(150.0, result["cg1"][:subscription_groups]["sg1"][:state][:poll_age])
-        assert_equal(50.0, result["cg2"][:subscription_groups]["sg2"][:state][:poll_age])
+        assert_in_delta(150.0, result["cg1"][:subscription_groups]["sg1"][:state][:poll_age])
+        assert_in_delta(50.0, result["cg2"][:subscription_groups]["sg2"][:state][:poll_age])
       end
     end
   end

@@ -81,6 +81,7 @@ describe_current do
 
       it "expect to fill all the compacted with messages dummies" do
         dummies = (0..24).map { |i| [0, i] }.reverse
+
         assert_equal([25, dummies, false], page)
       end
     end
@@ -109,6 +110,7 @@ describe_current do
 
       it "expect to fill all the compacted with messages dummies" do
         dummies = (50..74).map { |i| [0, i] }.reverse
+
         assert_equal([75, dummies, 25], page)
       end
     end
@@ -129,9 +131,9 @@ describe_current do
       let(:start_offset) { 0 }
 
       it "expect to return them in order" do
-        assert_equal(false, page[0])
+        refute(page[0])
         assert_equal((0..6).to_a.reverse, page[1].map(&:offset))
-        assert_equal(false, page[2])
+        refute(page[2])
       end
     end
 
@@ -141,7 +143,7 @@ describe_current do
       let(:start_offset) { 2 }
 
       it "expect to return them in order" do
-        assert_equal(false, page[0])
+        refute(page[0])
         assert_equal((2..6).to_a.reverse, page[1].map(&:offset))
         assert_equal(0, page[2])
       end
@@ -153,7 +155,7 @@ describe_current do
       let(:start_offset) { 6 }
 
       it "expect to return them in order" do
-        assert_equal(false, page[0])
+        refute(page[0])
         assert_equal([6], page[1].map(&:offset))
         assert_equal(0, page[2])
       end
@@ -167,7 +169,7 @@ describe_current do
       it "expect to return them in order" do
         assert_equal(25, page[0])
         assert_equal((0..24).to_a.reverse, page[1].map(&:offset))
-        assert_equal(false, page[2])
+        refute(page[2])
       end
     end
 
@@ -177,7 +179,7 @@ describe_current do
       let(:start_offset) { 99 }
 
       it "expect to return them in order" do
-        assert_equal(false, page[0])
+        refute(page[0])
         assert_equal([99], page[1].map(&:offset))
         assert_equal(74, page[2])
       end
@@ -201,7 +203,7 @@ describe_current do
       let(:start_offset) { -1 }
 
       it "expect to return it in order" do
-        assert_equal(false, page[0])
+        refute(page[0])
         assert_equal((75..99).to_a.reverse, page[1].map(&:offset))
         assert_equal(50, page[2])
       end
@@ -230,7 +232,7 @@ describe_current do
 
       it "expect to return this data" do
         assert_equal([3, 2, 1, 0], result[0].map(&:offset))
-        assert_equal(false, result[1])
+        refute(result[1])
       end
     end
 
@@ -245,7 +247,7 @@ describe_current do
       it "expect to return this data" do
         assert_equal([0, 0, 0, 0], result[0].map(&:offset))
         assert_equal([0, 1, 2, 3], result[0].map(&:partition))
-        assert_equal(false, result[1])
+        refute(result[1])
       end
     end
 
@@ -264,7 +266,7 @@ describe_current do
       it "expect to fetch from partitions we want" do
         assert_equal([0, 0, 0, 0], result[0].map(&:offset))
         assert_equal((25..28).to_a, result[0].map(&:partition))
-        assert_equal(false, result[1])
+        refute(result[1])
       end
     end
   end

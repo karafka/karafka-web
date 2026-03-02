@@ -16,8 +16,8 @@ describe(
       times.each do |key_name|
         state[:aggregated][key_name].each do |sample|
           assert(sample.last[:lag_total].between?(0, 5))
-          assert_equal(false, sample.last.key?(:lag))
-          assert_equal(false, sample.last.key?(:lag_stored))
+          refute(sample.last.key?(:lag))
+          refute(sample.last.key?(:lag_stored))
         end
       end
     end
@@ -30,8 +30,8 @@ describe(
           metric_group.each_value do |samples|
             samples.each_value do |sample|
               assert(sample[:lag_total].between?(0, 5))
-              assert_equal(false, sample.key?(:lag))
-              assert_equal(false, sample.key?(:lag_stored))
+              refute(sample.key?(:lag))
+              refute(sample.key?(:lag_stored))
             end
           end
         end
@@ -49,8 +49,8 @@ describe(
       times.each do |key_name|
         state[:aggregated][key_name].each do |sample|
           assert(sample.last[:lag_total].between?(0, 5))
-          assert_equal(false, sample.last.key?(:lag))
-          assert_equal(false, sample.last.key?(:lag_stored))
+          refute(sample.last.key?(:lag))
+          refute(sample.last.key?(:lag_stored))
         end
       end
     end
@@ -63,8 +63,8 @@ describe(
           metric_group.each_value do |samples|
             samples.each_value do |sample|
               assert(sample[:lag_total].between?(0, 5))
-              assert_equal(false, sample.key?(:lag))
-              assert_equal(false, sample.key?(:lag_stored))
+              refute(sample.key?(:lag))
+              refute(sample.key?(:lag_stored))
             end
           end
         end

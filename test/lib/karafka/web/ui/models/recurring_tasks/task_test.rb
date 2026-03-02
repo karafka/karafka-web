@@ -9,13 +9,13 @@ describe_current do
 
   describe "#enabled?" do
     context "when enabled" do
-      it { assert_equal(true, task.enabled?) }
+      it { assert_predicate(task, :enabled?) }
     end
 
     context "when disabled" do
       let(:attrs) { { enabled: false } }
 
-      it { assert_equal(false, task.enabled?) }
+      it { refute_predicate(task, :enabled?) }
     end
   end
 end

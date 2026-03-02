@@ -14,7 +14,7 @@ describe_current do
   end
 
   it "expect to have proper attributes" do
-    assert_equal(1_690_883_271.5_342_352, job.updated_at)
+    assert_in_delta(1_690_883_271.5_342_352, job.updated_at)
     assert_equal("default", job.topic)
     assert_equal(0, job.partition)
     assert_equal(327_359, job.first_offset)

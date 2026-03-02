@@ -46,7 +46,7 @@ describe_current do
     let(:message_key) { nil }
     let(:message_payload) { { type: "request", schema_version: schema_version } }
 
-    it { assert_equal(true, matcher.matches?(message)) }
+    it { assert(matcher.matches?(message)) }
   end
 
   context "when process_id in matchers matches current process" do
@@ -55,7 +55,7 @@ describe_current do
       { type: "request", schema_version: schema_version, matchers: { process_id: process_id } }
     end
 
-    it { assert_equal(true, matcher.matches?(message)) }
+    it { assert(matcher.matches?(message)) }
   end
 
   context "when process_id in matchers does not match current process" do
@@ -68,21 +68,21 @@ describe_current do
       }
     end
 
-    it { assert_equal(false, matcher.matches?(message)) }
+    it { refute(matcher.matches?(message)) }
   end
 
   context "when message type is not command" do
     let(:message_key) { nil }
     let(:message_payload) { { type: "result", schema_version: schema_version } }
 
-    it { assert_equal(false, matcher.matches?(message)) }
+    it { refute(matcher.matches?(message)) }
   end
 
   context "when message schema version does not match" do
     let(:message_key) { nil }
     let(:message_payload) { { type: "request", schema_version: "2.0" } }
 
-    it { assert_equal(false, matcher.matches?(message)) }
+    it { refute(matcher.matches?(message)) }
   end
 
   describe "matchers filtering" do
@@ -107,7 +107,7 @@ describe_current do
         { type: "request", schema_version: schema_version }
       end
 
-      it { assert_equal(true, matcher.matches?(message)) }
+      it { assert(matcher.matches?(message)) }
     end
 
     context "when matchers is empty hash" do
@@ -115,7 +115,7 @@ describe_current do
         { type: "request", schema_version: schema_version, matchers: {} }
       end
 
-      it { assert_equal(true, matcher.matches?(message)) }
+      it { assert(matcher.matches?(message)) }
     end
 
     context "with consumer_group_id matcher" do
@@ -128,7 +128,7 @@ describe_current do
           }
         end
 
-        it { assert_equal(true, matcher.matches?(message)) }
+        it { assert(matcher.matches?(message)) }
       end
 
       context "when consumer_group_id does not match any assignment" do
@@ -140,7 +140,7 @@ describe_current do
           }
         end
 
-        it { assert_equal(false, matcher.matches?(message)) }
+        it { refute(matcher.matches?(message)) }
       end
     end
 
@@ -154,7 +154,7 @@ describe_current do
           }
         end
 
-        it { assert_equal(true, matcher.matches?(message)) }
+        it { assert(matcher.matches?(message)) }
       end
 
       context "when topic does not match any assignment" do
@@ -166,7 +166,7 @@ describe_current do
           }
         end
 
-        it { assert_equal(false, matcher.matches?(message)) }
+        it { refute(matcher.matches?(message)) }
       end
     end
 
@@ -183,7 +183,7 @@ describe_current do
           }
         end
 
-        it { assert_equal(true, matcher.matches?(message)) }
+        it { assert(matcher.matches?(message)) }
       end
 
       context "when one matcher fails" do
@@ -198,7 +198,7 @@ describe_current do
           }
         end
 
-        it { assert_equal(false, matcher.matches?(message)) }
+        it { refute(matcher.matches?(message)) }
       end
 
       context "when all matchers fail" do
@@ -213,7 +213,7 @@ describe_current do
           }
         end
 
-        it { assert_equal(false, matcher.matches?(message)) }
+        it { refute(matcher.matches?(message)) }
       end
     end
 
@@ -227,7 +227,7 @@ describe_current do
       end
 
       it "ignores unknown matchers for forward compatibility" do
-        assert_equal(true, matcher.matches?(message))
+        assert(matcher.matches?(message))
       end
     end
 
@@ -244,7 +244,7 @@ describe_current do
           }
         end
 
-        it { assert_equal(true, matcher.matches?(message)) }
+        it { assert(matcher.matches?(message)) }
       end
 
       context "when known matcher fails" do
@@ -259,7 +259,7 @@ describe_current do
           }
         end
 
-        it { assert_equal(false, matcher.matches?(message)) }
+        it { refute(matcher.matches?(message)) }
       end
     end
 
@@ -275,7 +275,7 @@ describe_current do
           }
         end
 
-        it { assert_equal(false, matcher.matches?(message)) }
+        it { refute(matcher.matches?(message)) }
       end
 
       context "with topic matcher" do
@@ -287,7 +287,7 @@ describe_current do
           }
         end
 
-        it { assert_equal(false, matcher.matches?(message)) }
+        it { refute(matcher.matches?(message)) }
       end
     end
   end

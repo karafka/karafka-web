@@ -6,29 +6,29 @@ describe_current do
   describe ".applicable?" do
     context "when schema version is less than 1.6.0" do
       it "returns true for 1.5.0" do
-        assert_equal(true, described_class.applicable?("1.5.0"))
+        assert(described_class.applicable?("1.5.0"))
       end
 
       it "returns true for 1.4.0" do
-        assert_equal(true, described_class.applicable?("1.4.0"))
+        assert(described_class.applicable?("1.4.0"))
       end
 
       it "returns true for 1.0.0" do
-        assert_equal(true, described_class.applicable?("1.0.0"))
+        assert(described_class.applicable?("1.0.0"))
       end
     end
 
     context "when schema version is 1.6.0 or higher" do
       it "returns false for 1.6.0" do
-        assert_equal(false, described_class.applicable?("1.6.0"))
+        refute(described_class.applicable?("1.6.0"))
       end
 
       it "returns false for 1.7.0" do
-        assert_equal(false, described_class.applicable?("1.7.0"))
+        refute(described_class.applicable?("1.7.0"))
       end
 
       it "returns false for 2.0.0" do
-        assert_equal(false, described_class.applicable?("2.0.0"))
+        refute(described_class.applicable?("2.0.0"))
       end
     end
   end
@@ -66,13 +66,15 @@ describe_current do
         migration.migrate(report)
 
         sg = report[:consumer_groups]["test_group"][:subscription_groups]["sg_0"]
-        assert_equal(false, sg[:instance_id])
+
+        refute(sg[:instance_id])
       end
 
       it "preserves other subscription group fields" do
         migration.migrate(report)
 
         sg = report[:consumer_groups]["test_group"][:subscription_groups]["sg_0"]
+
         assert_equal("sg_0", sg[:id])
         assert_equal("up", sg[:state][:state])
         assert_equal("steady", sg[:state][:join_state])
@@ -153,9 +155,10 @@ describe_current do
 
         cg1_sgs = report[:consumer_groups]["cg_1"][:subscription_groups]
         cg2_sgs = report[:consumer_groups]["cg_2"][:subscription_groups]
-        assert_equal(false, cg1_sgs["sg_0"][:instance_id])
-        assert_equal(false, cg1_sgs["sg_1"][:instance_id])
-        assert_equal(false, cg2_sgs["sg_2"][:instance_id])
+
+        refute(cg1_sgs["sg_0"][:instance_id])
+        refute(cg1_sgs["sg_1"][:instance_id])
+        refute(cg2_sgs["sg_2"][:instance_id])
       end
     end
 

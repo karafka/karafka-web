@@ -45,7 +45,7 @@ describe_current do
       assert_equal("accepted", states_state[:schema_state])
       assert_equal({}, states_state[:processes])
       assert_operator(states_state[:dispatched_at], :<, Time.now.to_f)
-      assert_equal({active: 0, standby: 0}, states_state[:stats][:listeners])
+      assert_equal({ active: 0, standby: 0 }, states_state[:stats][:listeners])
 
       %i[
         batches jobs messages retries dead busy enqueued waiting workers processes rss

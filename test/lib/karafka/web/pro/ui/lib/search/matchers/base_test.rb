@@ -24,7 +24,7 @@ describe_current do
   let(:matcher_class) { described_class }
 
   describe ".active?" do
-    it { assert_equal(true, matcher_class.active?(rand.to_s)) }
+    it { assert(matcher_class.active?(rand.to_s)) }
   end
 
   describe ".name" do

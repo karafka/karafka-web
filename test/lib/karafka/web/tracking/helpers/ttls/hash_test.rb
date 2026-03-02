@@ -34,6 +34,7 @@ describe_current do
       end
 
       [writer, inspector].each(&:join)
+
       assert_empty(errors)
     end
   end

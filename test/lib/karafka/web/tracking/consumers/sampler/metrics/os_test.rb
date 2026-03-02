@@ -203,11 +203,13 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
 
       it "returns array with memory, threads, and pid for all processes" do
         result = os_metrics.memory_threads_ps
+
         assert_kind_of(Array, result)
         assert_equal(3, result.size)
 
         # Find current process entry
         current_process = result.find { |row| row[2] == Process.pid }
+
         assert_kind_of(Array, current_process)
         assert_equal(3, current_process.size)
         assert_equal(15, current_process[1]) # thread count only for current process
@@ -215,7 +217,8 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
 
         # Other processes should have 0 threads
         other_processes = result.reject { |row| row[2] == Process.pid }
-        assert_equal(true, other_processes.all? { |row| row[1] == 0 })
+
+        assert(other_processes.all? { |row| row[1] == 0 })
       end
     end
 
@@ -229,6 +232,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
 
       it "returns array with memory and pid, threads set to 0" do
         result = os_metrics.memory_threads_ps
+
         assert_kind_of(Array, result)
         assert_equal(2, result.size)
         # First process
@@ -244,7 +248,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
       end
 
       it "returns false" do
-        assert_equal(false, os_metrics.memory_threads_ps)
+        refute(os_metrics.memory_threads_ps)
       end
     end
   end

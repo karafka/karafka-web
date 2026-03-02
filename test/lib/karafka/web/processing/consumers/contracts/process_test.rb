@@ -112,6 +112,7 @@ describe_current do
 
     it "fails validation" do
       result = contract.call(valid_params)
+
       refute_predicate(result, :success?)
       assert_includes(result.errors[:dispatched_at], "is invalid")
       assert_includes(result.errors[:offset], "is invalid")

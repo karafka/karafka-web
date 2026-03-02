@@ -11,6 +11,6 @@ describe(
 
     before { described_class.new.migrate(state) }
 
-    it { assert_equal(false, state[:stats].key?(:processing)) }
+    it { refute(state[:stats].key?(:processing)) }
   end
 end

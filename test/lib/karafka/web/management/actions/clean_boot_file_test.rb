@@ -20,6 +20,7 @@ describe_current do
 
     it "expect to remove the web setup code and leave the rest" do
       clean
+
       assert_equal("some other stuff\nother stuff\n", File.read(boot_file))
     end
   end
@@ -29,6 +30,7 @@ describe_current do
 
     it "expect not to change the content of the boot file" do
       clean
+
       assert_equal("nothing", File.read(boot_file))
     end
   end

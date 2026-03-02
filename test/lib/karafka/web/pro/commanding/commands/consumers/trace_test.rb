@@ -46,6 +46,7 @@ describe_current do
       assert_equal("consumers.trace", action)
 
       thread_info = threads_info.values.first
+
       assert_includes(thread_info[:label], "Thread TID-")
       assert_kind_of(String, thread_info[:backtrace])
     end
@@ -63,6 +64,7 @@ describe_current do
         assert_equal("consumers.trace", action)
 
         thread_info = threads_info.values.first
+
         assert_includes(thread_info[:label], "Thread TID-")
         assert_kind_of(String, thread_info[:backtrace])
       end

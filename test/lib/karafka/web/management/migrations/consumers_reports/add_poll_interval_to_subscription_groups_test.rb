@@ -6,29 +6,29 @@ describe_current do
   describe ".applicable?" do
     context "when schema version is less than 1.7.0" do
       it "returns true for 1.6.0" do
-        assert_equal(true, described_class.applicable?("1.6.0"))
+        assert(described_class.applicable?("1.6.0"))
       end
 
       it "returns true for 1.5.0" do
-        assert_equal(true, described_class.applicable?("1.5.0"))
+        assert(described_class.applicable?("1.5.0"))
       end
 
       it "returns true for 1.0.0" do
-        assert_equal(true, described_class.applicable?("1.0.0"))
+        assert(described_class.applicable?("1.0.0"))
       end
     end
 
     context "when schema version is 1.7.0 or higher" do
       it "returns false for 1.7.0" do
-        assert_equal(false, described_class.applicable?("1.7.0"))
+        refute(described_class.applicable?("1.7.0"))
       end
 
       it "returns false for 1.8.0" do
-        assert_equal(false, described_class.applicable?("1.8.0"))
+        refute(described_class.applicable?("1.8.0"))
       end
 
       it "returns false for 2.0.0" do
-        assert_equal(false, described_class.applicable?("2.0.0"))
+        refute(described_class.applicable?("2.0.0"))
       end
     end
   end
@@ -67,6 +67,7 @@ describe_current do
         migration.migrate(report)
 
         state = report[:consumer_groups]["test_group"][:subscription_groups]["sg_0"][:state]
+
         assert_equal(300_000, state[:poll_interval])
       end
 
@@ -74,6 +75,7 @@ describe_current do
         migration.migrate(report)
 
         state = report[:consumer_groups]["test_group"][:subscription_groups]["sg_0"][:state]
+
         assert_equal("up", state[:state])
         assert_equal("steady", state[:join_state])
         assert_equal(100, state[:poll_age])
@@ -109,6 +111,7 @@ describe_current do
         migration.migrate(report)
 
         state = report[:consumer_groups]["test_group"][:subscription_groups]["sg_0"][:state]
+
         assert_equal(600_000, state[:poll_interval])
       end
     end
@@ -156,6 +159,7 @@ describe_current do
 
         cg1_sgs = report[:consumer_groups]["cg_1"][:subscription_groups]
         cg2_sgs = report[:consumer_groups]["cg_2"][:subscription_groups]
+
         assert_equal(300_000, cg1_sgs["sg_0"][:state][:poll_interval])
         assert_equal(300_000, cg1_sgs["sg_1"][:state][:poll_interval])
         assert_equal(300_000, cg2_sgs["sg_2"][:state][:poll_interval])

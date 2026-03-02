@@ -39,25 +39,25 @@ describe_current do
     context "when message schema version matches current" do
       let(:schema_version_value) { current_schema_version }
 
-      it { assert_equal(true, matcher.matches?) }
+      it { assert_predicate(matcher, :matches?) }
     end
 
     context "when message schema version does not match current" do
       let(:schema_version_value) { "2.0.0" }
 
-      it { assert_equal(false, matcher.matches?) }
+      it { refute_predicate(matcher, :matches?) }
     end
 
     context "when message schema version is older" do
       let(:schema_version_value) { "1.0.0" }
 
-      it { assert_equal(false, matcher.matches?) }
+      it { refute_predicate(matcher, :matches?) }
     end
 
     context "when message schema version is nil" do
       let(:schema_version_value) { nil }
 
-      it { assert_equal(false, matcher.matches?) }
+      it { refute_predicate(matcher, :matches?) }
     end
   end
 end

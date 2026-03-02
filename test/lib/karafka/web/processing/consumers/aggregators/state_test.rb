@@ -142,6 +142,7 @@ describe_current do
         state = state_aggregator.to_h
 
         expect(state[:processes].keys).to contain_exactly(:"worker-1", :"worker-2")
+
         assert_equal(10, state[:processes][:"worker-1"][:offset])
         assert_equal(20, state[:processes][:"worker-2"][:offset])
       end
@@ -163,6 +164,7 @@ describe_current do
         state = state_aggregator.to_h
 
         process_id = report[:process][:id].to_sym
+
         assert_includes(state[:processes].keys, process_id)
         assert_equal(42, state[:processes][process_id][:offset])
       end
@@ -194,17 +196,20 @@ describe_current do
   describe "#to_h and #stats" do
     it "includes schema version" do
       state = state_aggregator.to_h
+
       assert_equal("1.4.0", state[:schema_version])
     end
 
     it "includes dispatched_at timestamp" do
       state = state_aggregator.to_h
+
       assert_kind_of(Float, state[:dispatched_at])
       assert_operator(state[:dispatched_at], :>, 0)
     end
 
     it "includes schema state" do
       state = state_aggregator.to_h
+
       assert_kind_of(String, state[:schema_state])
     end
 
@@ -213,7 +218,7 @@ describe_current do
       stats2 = state_aggregator.stats
 
       assert_equal(stats2, stats1)
-      refute_equal(stats2.object_id, stats1.object_id)
+      refute_same(stats2, stats1)
     end
   end
 end

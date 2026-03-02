@@ -30,6 +30,7 @@ describe_current do
 
       expected = %(<time class="ltr" dir="ltr" title="#{actual_stamp}" ) +
         %(datetime="#{actual_stamp}">#{time_float}</time>)
+
       assert_equal(expected, result)
     end
 

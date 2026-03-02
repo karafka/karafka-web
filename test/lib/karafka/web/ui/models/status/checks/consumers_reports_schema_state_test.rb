@@ -6,7 +6,7 @@ describe_current do
   let(:context) { Karafka::Web::Ui::Models::Status::Context.new }
 
   describe "DSL configuration" do
-    it { assert_equal(false, described_class.independent?) }
+    it { refute_predicate(described_class, :independent?) }
     it { assert_equal(:state_calculation, described_class.dependency) }
     it { assert_equal({}, described_class.halted_details) }
   end
@@ -21,7 +21,7 @@ describe_current do
         result = check.call
 
         assert_equal(:success, result.status)
-        assert_equal(true, result.success?)
+        assert_predicate(result, :success?)
       end
     end
 
@@ -34,7 +34,7 @@ describe_current do
         result = check.call
 
         assert_equal(:failure, result.status)
-        assert_equal(false, result.success?)
+        refute_predicate(result, :success?)
       end
     end
 

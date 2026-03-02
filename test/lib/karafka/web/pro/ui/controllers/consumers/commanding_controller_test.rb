@@ -42,12 +42,13 @@ describe_current do
       # Dispatch of commands is async, so we have to wait
       sleep(1)
       message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
+
       assert_nil(message.key)
       assert_equal("1.2.0", message.payload[:schema_version])
       assert_equal("request", message.payload[:type])
       refute_nil(message.payload[:dispatched_at])
-      assert_equal({name: "consumers.trace"}, message.payload[:command])
-      assert_equal({process_id: process_id}, message.payload[:matchers])
+      assert_equal({ name: "consumers.trace" }, message.payload[:command])
+      assert_equal({ process_id: process_id }, message.payload[:matchers])
     end
   end
 
@@ -65,12 +66,13 @@ describe_current do
       # Dispatch of commands is async, so we have to wait
       sleep(1)
       message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
+
       assert_nil(message.key)
       assert_equal("1.2.0", message.payload[:schema_version])
       assert_equal("request", message.payload[:type])
       refute_nil(message.payload[:dispatched_at])
-      assert_equal({name: "consumers.quiet"}, message.payload[:command])
-      assert_equal({process_id: process_id}, message.payload[:matchers])
+      assert_equal({ name: "consumers.quiet" }, message.payload[:command])
+      assert_equal({ process_id: process_id }, message.payload[:matchers])
     end
   end
 
@@ -88,12 +90,13 @@ describe_current do
       # Dispatch of commands is async, so we have to wait
       sleep(1)
       message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
+
       assert_nil(message.key)
       assert_equal("1.2.0", message.payload[:schema_version])
       assert_equal("request", message.payload[:type])
       refute_nil(message.payload[:dispatched_at])
-      assert_equal({name: "consumers.stop"}, message.payload[:command])
-      assert_equal({process_id: process_id}, message.payload[:matchers])
+      assert_equal({ name: "consumers.stop" }, message.payload[:command])
+      assert_equal({ process_id: process_id }, message.payload[:matchers])
     end
   end
 
@@ -111,11 +114,12 @@ describe_current do
       # Dispatch of commands is async, so we have to wait
       sleep(1)
       message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
+
       assert_nil(message.key)
       assert_equal("1.2.0", message.payload[:schema_version])
       assert_equal("request", message.payload[:type])
       refute_nil(message.payload[:dispatched_at])
-      assert_equal({name: "consumers.quiet"}, message.payload[:command])
+      assert_equal({ name: "consumers.quiet" }, message.payload[:command])
       assert_equal({}, message.payload[:matchers])
     end
   end
@@ -134,11 +138,12 @@ describe_current do
       # Dispatch of commands is async, so we have to wait
       sleep(1)
       message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
+
       assert_nil(message.key)
       assert_equal("1.2.0", message.payload[:schema_version])
       assert_equal("request", message.payload[:type])
       refute_nil(message.payload[:dispatched_at])
-      assert_equal({name: "consumers.stop"}, message.payload[:command])
+      assert_equal({ name: "consumers.stop" }, message.payload[:command])
       assert_equal({}, message.payload[:matchers])
     end
   end

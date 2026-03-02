@@ -32,10 +32,10 @@ describe_current do
     it "expect to have basic empty stats" do
       hashed = metrics_aggregator.to_h
 
-      assert_equal({days: [], hours: [], minutes: [], seconds: []}, hashed[:aggregated])
-      assert_equal({days: [], hours: [], minutes: [], seconds: []}, hashed[:consumer_groups])
+      assert_equal({ days: [], hours: [], minutes: [], seconds: [] }, hashed[:aggregated])
+      assert_equal({ days: [], hours: [], minutes: [], seconds: [] }, hashed[:consumer_groups])
       assert_equal("1.3.0", hashed[:schema_version])
-      assert_equal(true, hashed.key?(:dispatched_at))
+      assert(hashed.key?(:dispatched_at))
     end
   end
 
@@ -94,6 +94,7 @@ describe_current do
 
       it "expect to include lso metric as the topic partition lags because of it" do
         topics1 = metrics_aggregator.to_h[:consumer_groups][:seconds][0][1][:example_app_app]
+
         assert_equal(5_000, topics1[:visits][:ls_offset_fd])
       end
     end

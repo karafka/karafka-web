@@ -122,6 +122,7 @@ describe_current do
             assert_equal("test-process", pid)
             assert_equal("applied", payload[:status])
             expect(payload[:partitions_affected]).to contain_exactly(0, 1)
+
             assert_empty(payload[:partitions_prevented])
           end
       end

@@ -28,7 +28,11 @@ module MockCompat
       if original == :__mock_compat_no_original__
         # Remove the method we added
         if obj.respond_to?(method_name)
-          obj.singleton_class.remove_method(method_name) rescue nil
+          begin
+            obj.singleton_class.remove_method(method_name)
+          rescue
+            nil
+          end
         end
       else
         obj.define_singleton_method(method_name, original)
@@ -238,8 +242,8 @@ module MockCompat
     def failure_message(obj)
       calls = MockCompat::CALL_REGISTRY[obj.__id__][@method_name]
       "Expected #{obj.class}##{@method_name} to have been called" \
-        "#{@count ? " #{@count} time(s)" : ""}" \
-        "#{@expected_args ? " with #{@expected_args.inspect}" : ""}" \
+        "#{" #{@count} time(s)" if @count}" \
+        "#{" with #{@expected_args.inspect}" if @expected_args}" \
         ", but was called #{calls.length} time(s)"
     end
 
@@ -318,7 +322,7 @@ module MockExpectIntegration
       MockExpectProxy.new(obj_or_val, self)
     else
       # Standard minitest expect form: expect(value).must_equal(...)
-      super(obj_or_val, *args, &block)
+      super
     end
   end
 

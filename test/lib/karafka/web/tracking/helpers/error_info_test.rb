@@ -71,6 +71,7 @@ describe_current do
         allow(error).to receive(:backtrace).and_return(nil)
 
         result = extractor.extract_error_info(error)
+
         assert_equal("", result[2])
       end
 
@@ -79,6 +80,7 @@ describe_current do
         error.set_backtrace([])
 
         result = extractor.extract_error_info(error)
+
         assert_equal("", result[2])
       end
 
@@ -131,6 +133,7 @@ describe_current do
         error.set_backtrace(backtrace)
 
         result = extractor.extract_error_info(error)
+
         assert_includes(result[2], "file.rb:10:in `method'")
       end
 
@@ -150,6 +153,7 @@ describe_current do
         error.set_backtrace(backtrace)
 
         result = extractor.extract_error_info(error)
+
         assert_equal("line1:10\nline2:20\nline3:30", result[2])
       end
 
@@ -248,6 +252,7 @@ describe_current do
         error = StandardError.new(invalid_utf8)
 
         result = extractor.extract_error_message(error)
+
         assert_kind_of(String, result)
         assert_equal(Encoding::UTF_8, result.encoding)
       end
@@ -261,6 +266,7 @@ describe_current do
         allow(message_result).to receive(:respond_to?).with(:scrub!).and_return(false)
 
         result = extractor.extract_error_message(error)
+
         assert_equal("normal message", result)
       end
     end
@@ -272,6 +278,7 @@ describe_current do
         allow(error).to receive(:message).and_raise(StandardError, "extraction error")
 
         result = extractor.extract_error_message(error)
+
         assert_equal("!!! Error message extraction failed !!!", result)
       end
 
@@ -282,6 +289,7 @@ describe_current do
         allow(message_mock).to receive(:to_s).and_raise(StandardError)
 
         result = extractor.extract_error_message(error)
+
         assert_equal("!!! Error message extraction failed !!!", result)
       end
     end

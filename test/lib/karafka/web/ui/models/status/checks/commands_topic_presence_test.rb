@@ -6,7 +6,7 @@ describe_current do
   let(:context) { Karafka::Web::Ui::Models::Status::Context.new }
 
   describe "DSL configuration" do
-    it { assert_equal(false, described_class.independent?) }
+    it { refute_predicate(described_class, :independent?) }
     it { assert_equal(:topics, described_class.dependency) }
   end
 
@@ -18,7 +18,7 @@ describe_current do
         result = check.call
 
         assert_equal(:success, result.status)
-        assert_equal(true, result.success?)
+        assert_predicate(result, :success?)
       end
     end
 
@@ -42,14 +42,14 @@ describe_current do
           result = check.call
 
           assert_equal(:success, result.status)
-          assert_equal(true, result.success?)
+          assert_predicate(result, :success?)
         end
 
         it "includes topic details" do
           result = check.call
 
           assert_equal(context.topics_consumers_commands, result.details[:topic_name])
-          assert_equal(true, result.details[:present])
+          assert(result.details[:present])
         end
       end
 
@@ -62,14 +62,14 @@ describe_current do
           result = check.call
 
           assert_equal(:warning, result.status)
-          assert_equal(true, result.success?)
+          assert_predicate(result, :success?)
         end
 
         it "includes topic details" do
           result = check.call
 
           assert_equal(context.topics_consumers_commands, result.details[:topic_name])
-          assert_equal(false, result.details[:present])
+          refute(result.details[:present])
         end
       end
     end

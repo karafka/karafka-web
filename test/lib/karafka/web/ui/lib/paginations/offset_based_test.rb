@@ -18,7 +18,7 @@ describe_current do
   describe "#paginate?" do
     context "when there is more than one page" do
       it "returns true" do
-        assert_equal(true, pagination.paginate?)
+        assert_predicate(pagination, :paginate?)
       end
     end
 
@@ -27,7 +27,7 @@ describe_current do
       let(:next_offset) { false }
 
       it "returns false" do
-        assert_equal(false, pagination.paginate?)
+        refute_predicate(pagination, :paginate?)
       end
     end
   end
@@ -35,7 +35,7 @@ describe_current do
   describe "#first_offset?" do
     context "when the current offset is not -1" do
       it "returns true" do
-        assert_equal(true, pagination.first_offset?)
+        assert_predicate(pagination, :first_offset?)
       end
     end
 
@@ -43,7 +43,7 @@ describe_current do
       let(:current_offset) { -1 }
 
       it "returns false" do
-        assert_equal(false, pagination.first_offset?)
+        refute_predicate(pagination, :first_offset?)
       end
     end
   end
@@ -57,7 +57,7 @@ describe_current do
   describe "#previous_offset?" do
     context "when previous offset is present" do
       it "returns true" do
-        assert_equal(true, pagination.previous_offset?)
+        assert_predicate(pagination, :previous_offset?)
       end
     end
 
@@ -65,21 +65,21 @@ describe_current do
       let(:previous_offset) { false }
 
       it "returns false" do
-        assert_equal(false, pagination.previous_offset?)
+        refute_predicate(pagination, :previous_offset?)
       end
     end
   end
 
   describe "#current_offset?" do
     it "returns false" do
-      assert_equal(true, pagination.current_offset?)
+      assert_predicate(pagination, :current_offset?)
     end
   end
 
   describe "#next_offset?" do
     context "when next offset is present" do
       it "returns true" do
-        assert_equal(true, pagination.next_offset?)
+        assert_predicate(pagination, :next_offset?)
       end
     end
 
@@ -87,7 +87,7 @@ describe_current do
       let(:next_offset) { false }
 
       it "returns false" do
-        assert_equal(false, pagination.next_offset?)
+        refute_predicate(pagination, :next_offset?)
       end
     end
   end

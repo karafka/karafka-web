@@ -198,6 +198,7 @@ describe_current do
 
       it "includes appropriate error message" do
         result = contract.call(params)
+
         assert_includes(result.errors[:processes], "must be a hash with symbol keys")
       end
     end
@@ -220,6 +221,7 @@ describe_current do
 
       it "includes appropriate error message" do
         result = contract.call(params)
+
         assert_includes(result.errors[:processes], "must be a hash with symbol keys")
       end
     end
@@ -242,6 +244,7 @@ describe_current do
 
       it "includes appropriate error message" do
         result = contract.call(params)
+
         assert_includes(result.errors[:processes], "must be a hash with symbol keys")
       end
     end

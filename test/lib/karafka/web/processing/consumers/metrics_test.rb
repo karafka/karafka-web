@@ -30,10 +30,10 @@ describe_current do
 
       it "expect to get it with the data inside" do
         assert_kind_of(Hash, metrics)
-        assert_equal(true, metrics.key?(:aggregated))
-        assert_equal(true, metrics.key?(:consumer_groups))
-        assert_equal(true, metrics.key?(:schema_version))
-        assert_equal(true, metrics.key?(:dispatched_at))
+        assert(metrics.key?(:aggregated))
+        assert(metrics.key?(:consumer_groups))
+        assert(metrics.key?(:schema_version))
+        assert(metrics.key?(:dispatched_at))
       end
     end
   end

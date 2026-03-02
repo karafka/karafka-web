@@ -11,6 +11,6 @@ describe(
 
     before { described_class.new.migrate(state) }
 
-    it { assert_equal({active: 4, standby: 0}, state[:stats][:listeners]) }
+    it { assert_equal({ active: 4, standby: 0 }, state[:stats][:listeners]) }
   end
 end

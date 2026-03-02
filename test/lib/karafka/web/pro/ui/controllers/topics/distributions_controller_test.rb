@@ -246,6 +246,7 @@ describe_current do
           sleep(1)
 
           updated_topic = Karafka::Web::Ui::Models::Topic.find(topic_name)
+
           assert_equal(new_partition_count, updated_topic.partition_count)
         end
       end

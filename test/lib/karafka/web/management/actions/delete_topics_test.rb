@@ -37,7 +37,8 @@ describe_current do
       delete
 
       existing_topics = topics.call
-      assert_equal(true, configured_topics.none? { |t| existing_topics.include?(t) })
+
+      assert(configured_topics.none? { |t| existing_topics.include?(t) })
     end
   end
 

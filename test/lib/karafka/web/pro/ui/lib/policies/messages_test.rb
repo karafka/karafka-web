@@ -24,24 +24,24 @@ describe_current do
   let(:policy) { described_class.new }
 
   describe "#key?" do
-    it { assert_equal(true, policy.key?("irrelevant")) }
+    it { assert(policy.key?("irrelevant")) }
   end
 
   describe "#headers?" do
-    it { assert_equal(true, policy.headers?("irrelevant")) }
+    it { assert(policy.headers?("irrelevant")) }
   end
 
   describe "#payload?" do
     context "when encryption is off" do
       let(:message) { Struct.new(:headers).new({}) }
 
-      it { assert_equal(true, policy.payload?(message)) }
+      it { assert(policy.payload?(message)) }
     end
 
     context "when encryption is on" do
       let(:message) { Struct.new(:headers).new({ "encryption" => true }) }
 
-      it { assert_equal(false, policy.payload?(message)) }
+      it { refute(policy.payload?(message)) }
     end
   end
 
@@ -49,13 +49,13 @@ describe_current do
     context "when encryption is off" do
       let(:message) { Struct.new(:headers).new({}) }
 
-      it { assert_equal(true, policy.download?(message)) }
+      it { assert(policy.download?(message)) }
     end
 
     context "when encryption is on" do
       let(:message) { Struct.new(:headers).new({ "encryption" => true }) }
 
-      it { assert_equal(false, policy.download?(message)) }
+      it { refute(policy.download?(message)) }
     end
   end
 
@@ -63,17 +63,17 @@ describe_current do
     context "when encryption is off" do
       let(:message) { Struct.new(:headers).new({}) }
 
-      it { assert_equal(true, policy.export?(message)) }
+      it { assert(policy.export?(message)) }
     end
 
     context "when encryption is on" do
       let(:message) { Struct.new(:headers).new({ "encryption" => true }) }
 
-      it { assert_equal(false, policy.export?(message)) }
+      it { refute(policy.export?(message)) }
     end
   end
 
   describe "#republish?" do
-    it { assert_equal(true, policy.republish?(nil)) }
+    it { assert(policy.republish?(nil)) }
   end
 end

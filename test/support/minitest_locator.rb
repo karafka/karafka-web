@@ -22,6 +22,7 @@ class MinitestLocator < Karafka::Core::Helpers::RSpecLocator
         describe(this.inherited) do
           include Rack::Test::Methods
           include ControllerHelper
+
           instance_eval(&block)
         end
       else

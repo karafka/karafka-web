@@ -12,8 +12,8 @@ describe(
     before { described_class.new.migrate(state) }
 
     it { assert_equal(0, state[:stats][:lag_total]) }
-    it { assert_equal(false, state[:stats].key?(:lag)) }
-    it { assert_equal(false, state[:stats].key?(:lag_stored)) }
+    it { refute(state[:stats].key?(:lag)) }
+    it { refute(state[:stats].key?(:lag_stored)) }
   end
 
   context "when migrating from 1.2.2" do
@@ -22,7 +22,7 @@ describe(
     before { described_class.new.migrate(state) }
 
     it { assert_equal(0, state[:stats][:lag_total]) }
-    it { assert_equal(false, state[:stats].key?(:lag)) }
-    it { assert_equal(false, state[:stats].key?(:lag_stored)) }
+    it { refute(state[:stats].key?(:lag)) }
+    it { refute(state[:stats].key?(:lag_stored)) }
   end
 end

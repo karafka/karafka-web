@@ -36,6 +36,7 @@ describe_current do
 
     it "expect the error to match the error contract" do
       schema = Karafka::Web::Tracking::Contracts::Error.new
+
       assert_predicate(schema.call(recorded_errors.first), :success?)
     end
 

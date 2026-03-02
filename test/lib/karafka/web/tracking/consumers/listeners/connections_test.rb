@@ -64,6 +64,7 @@ describe_current do
       listener.on_connection_listener_before_fetch_loop(event)
 
       expect(sampler).to have_received(:track)
+
       assert_equal(sampler, yielded_sampler)
     end
 
@@ -107,7 +108,7 @@ describe_current do
       it "stores false for instance_id in subscription group data" do
         listener.on_connection_listener_before_fetch_loop(event)
 
-        assert_equal(false, subscription_groups[sg_id][:instance_id])
+        refute(subscription_groups[sg_id][:instance_id])
       end
     end
 
@@ -216,6 +217,7 @@ describe_current do
       listener.on_connection_listener_fetch_loop_received(event)
 
       expect(sampler).to have_received(:track)
+
       assert_equal(current_time, subscription_groups[sg_id][:polled_at])
     end
 
@@ -236,6 +238,7 @@ describe_current do
       listener.on_connection_listener_fetch_loop_received(event)
 
       expect(sampler).to have_received(:track)
+
       assert_equal("preserved", subscription_groups[sg_id][:existing_data])
       assert_kind_of(Float, subscription_groups[sg_id][:polled_at])
     end
@@ -291,10 +294,12 @@ describe_current do
 
       # During fetch loop - update polled_at
       listener.on_connection_listener_fetch_loop_received(event_received)
+
       assert_kind_of(Float, subscription_groups[sg_id][:polled_at])
 
       # After fetch loop - cleanup
       listener.on_connection_listener_after_fetch_loop(event_after)
+
       refute(subscription_groups.key?(sg_id))
       refute(consumer_groups[cg_id][:subscription_groups].key?(sg_id))
     end

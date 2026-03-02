@@ -52,6 +52,7 @@ describe_current do
     context "when active is not a boolean" do
       it "expect to fail" do
         invalid_params = valid_params.merge(commanding: { active: "yes" })
+
         refute_predicate(contract.call(invalid_params), :success?)
       end
     end
@@ -59,6 +60,7 @@ describe_current do
     context "when pause_timeout is not a positive integer" do
       it "expect to fail" do
         invalid_params = valid_params.merge(commanding: { pause_timeout: -5 })
+
         refute_predicate(contract.call(invalid_params), :success?)
       end
     end
@@ -66,6 +68,7 @@ describe_current do
     context "when max_wait_time is not a positive integer" do
       it "expect to fail" do
         invalid_params = valid_params.merge(commanding: { max_wait_time: 0 })
+
         refute_predicate(contract.call(invalid_params), :success?)
       end
     end
@@ -73,6 +76,7 @@ describe_current do
     context "when kafka config is not a hash" do
       it "expect to fail" do
         invalid_params = valid_params.merge(commanding: { kafka: "string" })
+
         refute_predicate(contract.call(invalid_params), :success?)
       end
     end
@@ -93,6 +97,7 @@ describe_current do
       it "expect to fail" do
         invalid_kafka_config = { "brokers" => %w[localhost:9092], "client_id" => "test" }
         invalid_params = valid_params.merge(commanding: { kafka: invalid_kafka_config })
+
         refute_predicate(contract.call(invalid_params), :success?)
       end
     end

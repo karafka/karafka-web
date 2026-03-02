@@ -165,11 +165,12 @@ describe_current do
       assert_equal(topic_name, command[:topic])
       assert_equal(0, command[:partition_id])
       assert_equal(offset, command[:offset])
-      assert_equal(false, command[:prevent_overtaking])
-      assert_equal(true, command[:force_resume])
+      refute(command[:prevent_overtaking])
+      assert(command[:force_resume])
       assert_equal("partitions.seek", command[:name])
 
       matchers = message.payload.fetch(:matchers)
+
       assert_equal(consumer_group_id, matchers[:consumer_group_id])
       assert_equal(topic_name, matchers[:topic])
       assert_equal(partition_id, matchers[:partition_id])

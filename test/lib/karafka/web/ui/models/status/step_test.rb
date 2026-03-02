@@ -10,25 +10,25 @@ describe_current do
     context "when status is :success" do
       let(:status) { :success }
 
-      it { assert_equal(true, step.success?) }
+      it { assert_predicate(step, :success?) }
     end
 
     context "when status is :warning" do
       let(:status) { :warning }
 
-      it { assert_equal(true, step.success?) }
+      it { assert_predicate(step, :success?) }
     end
 
     context "when status is :failure" do
       let(:status) { :failure }
 
-      it { assert_equal(false, step.success?) }
+      it { refute_predicate(step, :success?) }
     end
 
     context "when status is :halted" do
       let(:status) { :halted }
 
-      it { assert_equal(false, step.success?) }
+      it { refute_predicate(step, :success?) }
     end
   end
 

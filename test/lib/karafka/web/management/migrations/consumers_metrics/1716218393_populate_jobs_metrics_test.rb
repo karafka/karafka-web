@@ -16,7 +16,7 @@ describe(
       times.each do |key_name|
         state[:aggregated][key_name].each do |sample|
           assert_equal(sample.last[:batches], sample.last[:jobs])
-          assert_equal(true, sample.last.key?(:jobs))
+          assert(sample.last.key?(:jobs))
         end
       end
     end

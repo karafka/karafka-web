@@ -24,7 +24,7 @@ describe_current do
   let(:matcher) { described_class.new }
 
   describe ".active?" do
-    it { assert_equal(true, described_class.active?(rand.to_s)) }
+    it { assert(described_class.active?(rand.to_s)) }
   end
 
   describe "#call" do
@@ -35,7 +35,7 @@ describe_current do
       let(:raw_key) { "This is a test phrase in the key." }
 
       it "returns true" do
-        assert_equal(true, matcher.call(message, phrase))
+        assert(matcher.call(message, phrase))
       end
     end
 
@@ -43,7 +43,7 @@ describe_current do
       let(:raw_key) { "This key does not contain the search term." }
 
       it "returns false" do
-        assert_equal(false, matcher.call(message, phrase))
+        refute(matcher.call(message, phrase))
       end
     end
 
@@ -52,7 +52,7 @@ describe_current do
       let(:phrase) { "test phrase-ó".encode("UTF-8") }
 
       it "returns false" do
-        assert_equal(false, matcher.call(message, phrase))
+        refute(matcher.call(message, phrase))
       end
     end
   end

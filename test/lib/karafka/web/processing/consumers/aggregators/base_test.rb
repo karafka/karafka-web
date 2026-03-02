@@ -137,6 +137,7 @@ describe_current do
       time1 = aggregator.monotonic_now
       sleep(0.001)
       time2 = aggregator.monotonic_now
+
       assert_operator(time2, :>, time1)
     end
   end

@@ -107,13 +107,14 @@ describe_current do
       result = producer.produce_async(topic: "test", payload: "data")
 
       expect(variant).to have_received(:produce_async).with(topic: "test", payload: "data")
-      assert_equal(true, result)
+
+      assert(result)
     end
 
     it "responds to producer methods" do
       allow(variant).to receive(:respond_to?).with(:produce_async, false).and_return(true)
 
-      assert_equal(true, producer.respond_to?(:produce_async))
+      assert_respond_to(producer, :produce_async)
     end
   end
 

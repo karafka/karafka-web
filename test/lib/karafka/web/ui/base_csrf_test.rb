@@ -15,7 +15,7 @@ describe Karafka::Web::Ui::Base do
     end
 
     it "responds to check_sec_fetch_site! method" do
-      assert_equal(true, described_class.new({}).respond_to?(:check_sec_fetch_site!))
+      assert_respond_to(described_class.new({}), :check_sec_fetch_site!)
     end
   end
 
@@ -45,6 +45,7 @@ describe Karafka::Web::Ui::Base do
     context "with GET requests" do
       it "allows requests without Sec-Fetch-Site header" do
         get "/test"
+
         assert_equal(200, last_response.status)
         assert_equal("GET OK", last_response.body)
       end
@@ -52,6 +53,7 @@ describe Karafka::Web::Ui::Base do
       it "allows requests with any Sec-Fetch-Site header value" do
         header "Sec-Fetch-Site", "cross-site"
         get "/test"
+
         assert_equal(200, last_response.status)
       end
     end
@@ -59,6 +61,7 @@ describe Karafka::Web::Ui::Base do
     context "with POST requests" do
       it "rejects requests without Sec-Fetch-Site header" do
         post "/test"
+
         assert_equal(403, last_response.status)
         assert_empty(last_response.body)
       end
@@ -66,18 +69,21 @@ describe Karafka::Web::Ui::Base do
       it "rejects requests with cross-site header" do
         header "Sec-Fetch-Site", "cross-site"
         post "/test"
+
         assert_equal(403, last_response.status)
       end
 
       it "rejects requests with same-site header" do
         header "Sec-Fetch-Site", "same-site"
         post "/test"
+
         assert_equal(403, last_response.status)
       end
 
       it "allows requests with same-origin header" do
         header "Sec-Fetch-Site", "same-origin"
         post "/test"
+
         assert_equal(200, last_response.status)
         assert_equal("POST OK", last_response.body)
       end
@@ -86,12 +92,14 @@ describe Karafka::Web::Ui::Base do
     context "with PUT requests" do
       it "rejects requests without Sec-Fetch-Site header" do
         put "/test"
+
         assert_equal(403, last_response.status)
       end
 
       it "allows requests with same-origin header" do
         header "Sec-Fetch-Site", "same-origin"
         put "/test"
+
         assert_equal(200, last_response.status)
         assert_equal("PUT OK", last_response.body)
       end
@@ -100,12 +108,14 @@ describe Karafka::Web::Ui::Base do
     context "with DELETE requests" do
       it "rejects requests without Sec-Fetch-Site header" do
         delete "/test"
+
         assert_equal(403, last_response.status)
       end
 
       it "allows requests with same-origin header" do
         header "Sec-Fetch-Site", "same-origin"
         delete "/test"
+
         assert_equal(200, last_response.status)
         assert_equal("DELETE OK", last_response.body)
       end
@@ -118,6 +128,7 @@ describe Karafka::Web::Ui::Base do
 
     it "allows GET requests to dashboard" do
       get "dashboard"
+
       assert_equal(200, last_response.status)
     end
   end
@@ -135,12 +146,14 @@ describe Karafka::Web::Ui::Base do
 
     it "blocks POST requests without Sec-Fetch-Site header" do
       post "ux"
+
       assert_equal(403, last_response.status)
     end
 
     it "blocks POST requests with cross-site header" do
       header "Sec-Fetch-Site", "cross-site"
       post "ux"
+
       assert_equal(403, last_response.status)
     end
   end

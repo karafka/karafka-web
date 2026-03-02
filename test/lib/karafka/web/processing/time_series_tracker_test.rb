@@ -32,6 +32,7 @@ describe_current do
 
       it "imports the existing data" do
         result = tracker.to_h
+
         assert_equal(existing[:days], result[:days])
         assert_equal(existing[:hours], result[:hours])
         assert_equal(existing[:minutes], result[:minutes])
@@ -68,6 +69,7 @@ describe_current do
       tracker.add(metric_data, fractional_time)
 
       result = tracker.to_h
+
       assert_equal(123_456, result[:days].last[0])
     end
 
@@ -79,6 +81,7 @@ describe_current do
 
         # Before eviction, all points should be present
         result = tracker.to_h
+
         assert_equal(3, result[:seconds].size)
       end
     end
@@ -110,6 +113,7 @@ describe_current do
         end
 
         result = tracker.to_h
+
         assert_operator(result[:days].size, :<=, 57)
       end
 
@@ -121,6 +125,7 @@ describe_current do
         end
 
         result = tracker.to_h
+
         assert_operator(result[:hours].size, :<=, 49)
       end
 
@@ -132,6 +137,7 @@ describe_current do
         end
 
         result = tracker.to_h
+
         assert_operator(result[:minutes].size, :<=, 61)
       end
 
@@ -143,6 +149,7 @@ describe_current do
         end
 
         result = tracker.to_h
+
         assert_operator(result[:seconds].size, :<=, 61)
       end
     end
@@ -184,6 +191,7 @@ describe_current do
 
         result = tracker.to_h
         times = result[:seconds].map(&:first)
+
         assert_equal(times.sort, times)
       end
     end
@@ -258,6 +266,7 @@ describe_current do
         result = tracker.to_h
         # Should keep only one entry per unique timestamp after deduplication
         unique_times = result[:seconds].map(&:first).uniq
+
         assert_equal(1, unique_times.size)
       end
     end
@@ -268,6 +277,7 @@ describe_current do
         tracker.add({ value: "large" }, large_time)
 
         result = tracker.to_h
+
         assert_equal(9_999_999_999, result[:days].last[0])
       end
     end
@@ -275,6 +285,7 @@ describe_current do
     context "when data is empty" do
       it "handles empty data gracefully" do
         result = tracker.to_h
+
         assert_empty(result[:days])
         assert_empty(result[:hours])
         assert_empty(result[:minutes])

@@ -12,6 +12,6 @@ describe(
     before { described_class.new.migrate(state) }
 
     it { assert_equal(0, state[:stats][:lag_hybrid]) }
-    it { assert_equal(false, state[:stats].key?(:lag_total)) }
+    it { refute(state[:stats].key?(:lag_total)) }
   end
 end

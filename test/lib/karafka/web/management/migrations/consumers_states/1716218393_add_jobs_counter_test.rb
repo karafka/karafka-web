@@ -12,6 +12,6 @@ describe(
     before { described_class.new.migrate(state) }
 
     it { assert_equal(16_351, state[:stats][:jobs]) }
-    it { assert_equal(true, state[:stats].key?(:jobs)) }
+    it { assert(state[:stats].key?(:jobs)) }
   end
 end

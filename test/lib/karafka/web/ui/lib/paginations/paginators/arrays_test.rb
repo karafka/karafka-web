@@ -8,7 +8,7 @@ describe_current do
     let(:page) { 1 }
 
     it { assert_equal([1, 2, 3], pagination[0]) }
-    it { assert_equal(true, pagination[1]) }
+    it { assert(pagination[1]) }
   end
 
   context "when a lot of data and page 1" do
@@ -16,7 +16,7 @@ describe_current do
     let(:page) { 1 }
 
     it { assert_equal((0..24).to_a, pagination[0]) }
-    it { assert_equal(false, pagination[1]) }
+    it { refute(pagination[1]) }
   end
 
   context "when a lot of data and last page" do
@@ -24,7 +24,7 @@ describe_current do
     let(:page) { 5 }
 
     it { assert_equal((100..110).to_a, pagination[0]) }
-    it { assert_equal(true, pagination[1]) }
+    it { assert(pagination[1]) }
   end
 
   context "when no data and page 1" do
@@ -32,7 +32,7 @@ describe_current do
     let(:page) { 1 }
 
     it { assert_equal([], pagination[0]) }
-    it { assert_equal(true, pagination[1]) }
+    it { assert(pagination[1]) }
   end
 
   context "when no data and page 2" do
@@ -40,6 +40,6 @@ describe_current do
     let(:page) { 2 }
 
     it { assert_equal([], pagination[0]) }
-    it { assert_equal(true, pagination[1]) }
+    it { assert(pagination[1]) }
   end
 end

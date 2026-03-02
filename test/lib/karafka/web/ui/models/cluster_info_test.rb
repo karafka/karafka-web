@@ -10,6 +10,7 @@ describe_current do
   before { topic }
 
   it { info.fetch }
+
   it { assert_includes(info.topics.map(&:topic_name), topic) }
   it { refute_includes(info.topics.map(&:topic_name), non_existing_topic) }
   it { assert_raises(not_found_error) { info.topic(non_existing_topic) } }
