@@ -1,0 +1,212 @@
+# frozen_string_literal: true
+
+describe_current do
+  let(:contract) { described_class.new }
+
+  let(:subscription_group) do
+    {
+      id: "subscription_group1",
+      topics: {
+        "topic1" => {
+          name: "topic1",
+          partitions_cnt: 1,
+          partitions: {
+            0 => {
+              id: 0,
+              lag_stored: 10,
+              lag_stored_d: 5,
+              lag: 0,
+              lag_d: 0,
+              committed_offset: 100,
+              committed_offset_fd: 0,
+              stored_offset: 95,
+              stored_offset_fd: 0,
+              hi_offset: 2,
+              hi_offset_fd: 2,
+              lo_offset: 0,
+              eof_offset: 0,
+              ls_offset: 0,
+              ls_offset_d: 0,
+              ls_offset_fd: 0,
+              fetch_state: "active",
+              poll_state: "active",
+              poll_state_ch: 0,
+              transactional: false
+            }
+          }
+        }
+      },
+      instance_id: false,
+      state: {
+        state: "up",
+        join_state: "steady",
+        stateage: 90_002,
+        rebalance_age: 90_000,
+        rebalance_cnt: 1,
+        rebalance_reason: "Metadata for subscribed topic(s) has changed",
+        poll_age: 12,
+        poll_interval: 300_000
+      }
+    }
+  end
+
+  context "when config is valid" do
+    it { assert_predicate(contract.call(subscription_group), :success?) }
+  end
+
+  context "when id is missing" do
+    before { subscription_group.delete(:id) }
+
+    it { refute_predicate(contract.call(subscription_group), :success?) }
+  end
+
+  context "when id is not a string" do
+    before { subscription_group[:id] = 123 }
+
+    it { refute_predicate(contract.call(subscription_group), :success?) }
+  end
+
+  context "when id is empty" do
+    before { subscription_group[:id] = "" }
+
+    it { refute_predicate(contract.call(subscription_group), :success?) }
+  end
+
+  context "when topics is missing" do
+    before { subscription_group.delete(:topics) }
+
+    it { refute_predicate(contract.call(subscription_group), :success?) }
+  end
+
+  context "when topics is not a hash" do
+    before { subscription_group[:topics] = "not a hash" }
+
+    it { refute_predicate(contract.call(subscription_group), :success?) }
+  end
+
+  context "when state is missing" do
+    before { subscription_group.delete(:state) }
+
+    it { refute_predicate(contract.call(subscription_group), :success?) }
+  end
+
+  context "when rebalance_reason in state is missing" do
+    before { subscription_group[:state].delete(:rebalance_reason) }
+
+    it { refute_predicate(contract.call(subscription_group), :success?) }
+  end
+
+  context "when rebalance_reason is not a string" do
+    before { subscription_group[:state][:rebalance_reason] = rand }
+
+    it { refute_predicate(contract.call(subscription_group), :success?) }
+  end
+
+  context "when rebalance_reason is empty" do
+    before { subscription_group[:state][:rebalance_reason] = "" }
+
+    it { assert_predicate(contract.call(subscription_group), :success?) }
+  end
+
+  %i[
+    state
+    join_state
+  ].each do |key|
+    context "when #{key} in state is missing" do
+      before { subscription_group[:state].delete(key) }
+
+      it { refute_predicate(contract.call(subscription_group), :success?) }
+    end
+
+    context "when #{key} is not a string" do
+      before { subscription_group[:state][key] = rand }
+
+      it { refute_predicate(contract.call(subscription_group), :success?) }
+    end
+
+    context "when #{key} is empty" do
+      before { subscription_group[:state][key] = "" }
+
+      it { refute_predicate(contract.call(subscription_group), :success?) }
+    end
+  end
+
+  %i[
+    stateage
+    rebalance_age
+    rebalance_cnt
+    poll_age
+  ].each do |key|
+    context "when #{key} in state is missing" do
+      before { subscription_group[:state].delete(key) }
+
+      it { refute_predicate(contract.call(subscription_group), :success?) }
+    end
+
+    context "when #{key} is not a numeric value" do
+      before { subscription_group[:state][key] = "not a number" }
+
+      it { refute_predicate(contract.call(subscription_group), :success?) }
+    end
+
+    context "when #{key} is less than 0" do
+      before { subscription_group[:state][key] = -1 }
+
+      it { refute_predicate(contract.call(subscription_group), :success?) }
+    end
+  end
+
+  context "when poll_interval in state is missing" do
+    before { subscription_group[:state].delete(:poll_interval) }
+
+    it { refute_predicate(contract.call(subscription_group), :success?) }
+  end
+
+  context "when poll_interval is not an integer" do
+    before { subscription_group[:state][:poll_interval] = "not a number" }
+
+    it { refute_predicate(contract.call(subscription_group), :success?) }
+  end
+
+  context "when poll_interval is zero" do
+    before { subscription_group[:state][:poll_interval] = 0 }
+
+    it { refute_predicate(contract.call(subscription_group), :success?) }
+  end
+
+  context "when poll_interval is negative" do
+    before { subscription_group[:state][:poll_interval] = -1 }
+
+    it { refute_predicate(contract.call(subscription_group), :success?) }
+  end
+
+  context "when instance_id is missing" do
+    before { subscription_group.delete(:instance_id) }
+
+    it { refute_predicate(contract.call(subscription_group), :success?) }
+  end
+
+  context "when instance_id is false" do
+    before { subscription_group[:instance_id] = false }
+
+    it { assert_predicate(contract.call(subscription_group), :success?) }
+  end
+
+  context "when instance_id is a string" do
+    before { subscription_group[:instance_id] = "my-static-instance" }
+
+    it { assert_predicate(contract.call(subscription_group), :success?) }
+  end
+
+  context "when instance_id is not false or string" do
+    before { subscription_group[:instance_id] = 123 }
+
+    it { refute_predicate(contract.call(subscription_group), :success?) }
+  end
+
+  context "when instance_id is nil" do
+    before { subscription_group[:instance_id] = nil }
+
+    it { refute_predicate(contract.call(subscription_group), :success?) }
+  end
+end
