@@ -74,6 +74,46 @@ module MinitestDescribedClass
   end
 end
 
+# Relax Minitest::Spec let restrictions for RSpec migrated tests
+# Allows let(:message) etc. which RSpec permitted but Minitest blocks
+# Still protects critical Minitest internals like :run that would break test execution
+# When overriding internal methods (e.g. :message), the method is dispatched by arity:
+# called with no args returns the memoized let value, with args delegates to the original
+Minitest::Spec::DSL.class_eval do
+  MINITEST_CRITICAL_METHODS = %w[run setup teardown].freeze
+
+  def let(name, &block)
+    name = name.to_s
+    pre, post = "let '#{name}' cannot ", ". Please use another name."
+
+    raise ArgumentError, "#{pre}begin with 'test'#{post}" if name.start_with?("test")
+    raise ArgumentError, "#{pre}override a critical Minitest method#{post}" if
+      MINITEST_CRITICAL_METHODS.include?(name)
+
+    original = begin
+      instance_method(name)
+    rescue NameError
+      nil
+    end
+
+    if original
+      define_method(name) do |*args, **kwargs, &blk|
+        if args.empty? && kwargs.empty? && blk.nil?
+          @_memoized ||= {}
+          @_memoized.fetch(name) { |k| @_memoized[k] = instance_eval(&block) }
+        else
+          original.bind_call(self, *args, **kwargs, &blk)
+        end
+      end
+    else
+      define_method(name) do
+        @_memoized ||= {}
+        @_memoized.fetch(name) { |k| @_memoized[k] = instance_eval(&block) }
+      end
+    end
+  end
+end
+
 # Add context as alias for describe, and include helpers
 class Minitest::Spec
   include MinitestDescribedClass
@@ -89,6 +129,16 @@ end
 
 # Extend Minitest::Spec with the locator for describe_current
 Minitest::Spec.extend MinitestLocator.new(__FILE__)
+
+# Make describe_current available at top level (like Minitest's describe via Kernel)
+module Kernel
+  private
+
+  def describe_current(&block)
+    Minitest::Spec.describe_current(&block)
+  end
+end
+
 include TopicsManagerHelper
 
 # We set it here because we fake Web-UI topics and without this the faked once would have

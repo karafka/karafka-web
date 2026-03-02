@@ -19,10 +19,10 @@ describe_current do
   end
 
   describe "#install" do
-    let(:run) { described_class.new.install }
+    let(:execute) { described_class.new.install }
 
     it "expect to create topics, populate data, migrate and expand boot file" do
-      run
+      execute
       expect(topics_creator).to have_received(:call)
       expect(states_creator).to have_received(:call)
       expect(states_migrator).to have_received(:call)
@@ -31,10 +31,10 @@ describe_current do
   end
 
   describe "#migrate" do
-    let(:run) { described_class.new.migrate }
+    let(:execute) { described_class.new.migrate }
 
     it "expect to create topics and their states" do
-      run
+      execute
       expect(topics_creator).to have_received(:call)
       expect(states_creator).to have_received(:call)
       expect(states_migrator).to have_received(:call)
@@ -42,7 +42,7 @@ describe_current do
   end
 
   describe "#reset" do
-    let(:run) { described_class.new.reset }
+    let(:execute) { described_class.new.reset }
 
     let(:topics_reseter) { Karafka::Web::Management::Actions::DeleteTopics.new }
 
@@ -52,7 +52,7 @@ describe_current do
     end
 
     it "expect to remote topics, create topics and their states" do
-      run
+      execute
       expect(topics_reseter).to have_received(:call)
       expect(topics_creator).to have_received(:call)
       expect(states_creator).to have_received(:call)
@@ -61,7 +61,7 @@ describe_current do
   end
 
   describe "#uninstall" do
-    let(:run) { described_class.new.uninstall }
+    let(:execute) { described_class.new.uninstall }
 
     let(:deleter) { Karafka::Web::Management::Actions::DeleteTopics.new }
     let(:cleaner) { Karafka::Web::Management::Actions::CleanBootFile.new }
@@ -75,14 +75,14 @@ describe_current do
     end
 
     it "expect to delete and clean" do
-      run
+      execute
       expect(deleter).to have_received(:call)
       expect(cleaner).to have_received(:call)
     end
   end
 
   describe "#enable!" do
-    let(:run) { described_class.new.enable! }
+    let(:execute) { described_class.new.enable! }
 
     let(:runner) { Karafka::Web::Management::Actions::Enable.new }
 
@@ -92,7 +92,7 @@ describe_current do
     end
 
     it "expect to enable" do
-      run
+      execute
       expect(runner).to have_received(:call)
     end
   end

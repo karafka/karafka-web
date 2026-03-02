@@ -42,7 +42,7 @@ PIDS=()
 for i in $(seq 0 $((REGULAR_WORKERS - 1))); do
   if [ -n "${REGULAR_GROUPS[$i]}" ]; then
     PARALLEL=true PARALLEL_GROUP_ID="regular_$i" SPECS_TYPE=regular \
-      bundle exec ruby -Itest -Ilib -e "require 'test_helper'; require 'minitest/autorun'" \
+      bundle exec ruby -Itest -Ilib -e "files = ARGV.dup; require 'test_helper'; files.each { |f| require File.expand_path(f) }" \
       ${REGULAR_GROUPS[$i]} \
       > "$TMPDIR/regular_$i.log" 2>&1 &
     PIDS+=($!)
@@ -54,7 +54,7 @@ done
 for i in $(seq 0 $((PRO_WORKERS - 1))); do
   if [ -n "${PRO_GROUPS[$i]}" ]; then
     PARALLEL=true PARALLEL_GROUP_ID="pro_$i" SPECS_TYPE=pro \
-      bundle exec ruby -Itest -Ilib -e "require 'test_helper'; require 'minitest/autorun'" \
+      bundle exec ruby -Itest -Ilib -e "files = ARGV.dup; require 'test_helper'; files.each { |f| require File.expand_path(f) }" \
       ${PRO_GROUPS[$i]} \
       > "$TMPDIR/pro_$i.log" 2>&1 &
     PIDS+=($!)
