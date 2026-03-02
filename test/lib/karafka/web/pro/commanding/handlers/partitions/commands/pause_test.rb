@@ -21,5 +21,7 @@
 # Contact: contact@karafka.io
 
 describe_current do
-  pending
+  it 'is pending' do
+    skip 'pending implementation'
+  end
 end

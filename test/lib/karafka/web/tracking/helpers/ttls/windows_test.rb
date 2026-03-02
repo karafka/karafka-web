@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
 describe_current do
-  pending
+  it 'is pending' do
+    skip 'pending implementation'
+  end
 end

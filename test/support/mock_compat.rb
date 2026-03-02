@@ -71,6 +71,11 @@ module MockCompat
     ReceiveMessagesMatcher.new(hash)
   end
 
+  # Returns a matcher that checks if a collection contains exactly the given elements (any order)
+  def contain_exactly(*expected)
+    ContainExactlyMatcher.new(expected)
+  end
+
   # Returns a matcher that checks if a hash includes certain keys
   def hash_including(**expected)
     HashIncludingMatcher.new(expected)
@@ -291,6 +296,25 @@ module MockCompat
     end
   end
 
+  # Matcher for expect(collection).to contain_exactly(a, b, c)
+  class ContainExactlyMatcher
+    def initialize(expected)
+      @expected = expected
+    end
+
+    def matches?(actual)
+      return false unless actual.respond_to?(:sort)
+
+      actual.sort == @expected.sort
+    rescue ArgumentError
+      actual.to_a.length == @expected.length && @expected.all? { |e| actual.include?(e) }
+    end
+
+    def failure_message(actual)
+      "Expected collection to contain exactly #{@expected.inspect}, but got #{actual.inspect}"
+    end
+  end
+
   # Hash matcher for expect(...).to have_received(:m).with(hash_including(...))
   class HashIncludingMatcher
     def initialize(expected)
@@ -345,7 +369,8 @@ module MockExpectIntegration
           matcher.failure_message(@obj)
         )
       elsif matcher.respond_to?(:matches?)
-        @test_context.assert(matcher.matches?(@obj))
+        msg = matcher.respond_to?(:failure_message) ? matcher.failure_message(@obj) : nil
+        @test_context.assert(matcher.matches?(@obj), msg)
       else
         # Fall back - the matcher might be a simple value for include etc.
         @test_context.assert_includes(@obj, matcher)

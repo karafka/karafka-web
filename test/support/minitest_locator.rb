@@ -7,6 +7,28 @@ require "karafka/core/helpers/rspec_locator"
 #
 # Uses the same core locator logic from karafka-core to map file paths to class names.
 class MinitestLocator < Karafka::Core::Helpers::RSpecLocator
+  # Derives the class under test from the caller's file path
+  # Searches the call stack for the first _test.rb file to handle any call depth
+  # @return [Class] class for the Minitest `#describe` method
+  def inherited
+    test_file = caller.find { |frame| frame.include?("_test.rb") }
+
+    raise "No _test.rb file found in call stack" unless test_file
+
+    test_file
+      .split(':')
+      .first
+      .gsub(@specs_root_dir, '')
+      .gsub('_test.rb', '')
+      .split('/')
+      .delete_if(&:empty?)
+      .itself[1..]
+      .join('/')
+      .then { |path| custom_camelize(path) }
+      .then { |string| transform_inflections(string) }
+      .then { |class_name| custom_constantize(class_name) }
+  end
+
   # Builds needed API on the Minitest::Spec class
   # @param base [Class] Minitest::Spec class to extend
   def extended(base)
