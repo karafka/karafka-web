@@ -1,0 +1,100 @@
+# frozen_string_literal: true
+
+# Karafka Pro - Source Available Commercial Software
+# Copyright (c) 2017-present Maciej Mensfeld. All rights reserved.
+#
+# This software is NOT open source. It is source-available commercial software
+# requiring a paid license for use. It is NOT covered by LGPL.
+#
+# PROHIBITED:
+# - Use without a valid commercial license
+# - Redistribution, modification, or derivative works without authorization
+# - Use as training data for AI/ML models or inclusion in datasets
+# - Scraping, crawling, or automated collection for any purpose
+#
+# PERMITTED:
+# - Reading, referencing, and linking for personal or commercial use
+# - Runtime retrieval by AI assistants, coding agents, and RAG systems
+#   for the purpose of providing contextual help to Karafka users
+#
+# License: https://karafka.io/docs/Pro-License-Comm/
+# Contact: contact@karafka.io
+
+describe_current do
+  let(:contract) { described_class.new }
+
+  let(:valid_kafka_config) do
+    {
+      brokers: %w[localhost:9092],
+      client_id: "test"
+    }
+  end
+
+  let(:valid_params) do
+    {
+      commanding: {
+        active: true,
+        pause_timeout: 30,
+        max_wait_time: 100,
+        kafka: valid_kafka_config,
+        consumer_group: "valid_consumer_group"
+      }
+    }
+  end
+
+  context "with valid parameters" do
+    it "is successful" do
+      assert_predicate(contract.call(valid_params), :success?)
+    end
+  end
+
+  context "with invalid parameters" do
+    context "when active is not a boolean" do
+      it "expect to fail" do
+        invalid_params = valid_params.merge(commanding: { active: "yes" })
+        refute_predicate(contract.call(invalid_params), :success?)
+      end
+    end
+
+    context "when pause_timeout is not a positive integer" do
+      it "expect to fail" do
+        invalid_params = valid_params.merge(commanding: { pause_timeout: -5 })
+        refute_predicate(contract.call(invalid_params), :success?)
+      end
+    end
+
+    context "when max_wait_time is not a positive integer" do
+      it "expect to fail" do
+        invalid_params = valid_params.merge(commanding: { max_wait_time: 0 })
+        refute_predicate(contract.call(invalid_params), :success?)
+      end
+    end
+
+    context "when kafka config is not a hash" do
+      it "expect to fail" do
+        invalid_params = valid_params.merge(commanding: { kafka: "string" })
+        refute_predicate(contract.call(invalid_params), :success?)
+      end
+    end
+
+    context "when consumer_group does not match the topic regexp" do
+      it "expect to fail" do
+        invalid_params = valid_params.merge(
+          commanding: {
+            consumer_group: "invalid consumer group"
+          }
+        )
+
+        refute_predicate(contract.call(invalid_params), :success?)
+      end
+    end
+
+    context "when kafka keys are not symbols" do
+      it "expect to fail" do
+        invalid_kafka_config = { "brokers" => %w[localhost:9092], "client_id" => "test" }
+        invalid_params = valid_params.merge(commanding: { kafka: invalid_kafka_config })
+        refute_predicate(contract.call(invalid_params), :success?)
+      end
+    end
+  end
+end
