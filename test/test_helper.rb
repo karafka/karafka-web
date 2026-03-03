@@ -123,6 +123,20 @@ class Minitest::Spec
 
   class << self
     alias_method :context, :describe
+
+    # Class-level described_class for use in describe blocks (e.g., include described_class)
+    # Walks the describe hierarchy to find the class being described
+    def described_class
+      klass = self
+
+      while klass.respond_to?(:desc)
+        return klass.desc if klass.desc.is_a?(Class) || klass.desc.is_a?(Module)
+
+        klass = klass.superclass
+      end
+
+      nil
+    end
   end
 end
 

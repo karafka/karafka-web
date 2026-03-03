@@ -32,18 +32,19 @@ module MockCompat
   # Clean up all stubs and call recordings after each test
   def self.cleanup!
     STUB_REGISTRY.each do |obj, method_name, original|
-      if original == :__mock_compat_no_original__
-        # Remove the method we added
-        if obj.respond_to?(method_name)
-          begin
-            obj.singleton_class.remove_method(method_name)
-          rescue
-            nil
-          end
-        end
-      else
+      # Always remove the singleton method stub first
+      begin
+        obj.singleton_class.remove_method(method_name)
+      rescue NameError
+        nil
+      end
+
+      # If the original was a singleton method (not inherited), restore it
+      if original.is_a?(Method)
         obj.define_singleton_method(method_name, original)
       end
+      # For :__mock_compat_no_original__ - method didn't exist, removal is sufficient
+      # For :__mock_compat_inherited__ - inherited method is exposed by removal
     end
     STUB_REGISTRY.clear
     CALL_REGISTRY.clear
@@ -179,11 +180,13 @@ module MockCompat
       raise_error = @raise_error
       yield_value = @yield_value
 
-      # Save original method if it exists
-      original = if obj.respond_to?(method_name)
-        obj.method(method_name)
+      # Save original method - distinguish singleton vs inherited
+      original = if obj.singleton_methods.include?(method_name.to_sym)
+        obj.method(method_name) # Singleton method, save for restoration
+      elsif obj.respond_to?(method_name)
+        :__mock_compat_inherited__ # Inherited method, removal will expose it
       else
-        :__mock_compat_no_original__
+        :__mock_compat_no_original__ # Didn't exist
       end
 
       call_count = [0]
