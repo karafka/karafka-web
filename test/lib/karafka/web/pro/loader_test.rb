@@ -52,7 +52,7 @@ describe_current do
     describe "regular tests" do
       let(:timings) { JSON.parse(File.read(timings_dir.join("regular.json"))) }
 
-      let(:test_files) do
+      let(:spec_files) do
         Dir[Karafka::Web.gem_root.join("test", "lib", "karafka", "web", "**", "*_test.rb")]
           .reject { |f| f.include?("/pro/") }
           .map { |f| f.sub("#{Karafka::Web.gem_root}/", "") }
@@ -60,7 +60,7 @@ describe_current do
 
       it "has timing data for all regular test files" do
         timing_keys = timings.keys.map { |k| k.delete_prefix("./") }
-        missing = test_files.reject { |f| timing_keys.include?(f) }
+        missing = spec_files.reject { |f| timing_keys.include?(f) }
 
         assert_empty(
           missing,
@@ -74,14 +74,14 @@ describe_current do
     describe "pro tests" do
       let(:timings) { JSON.parse(File.read(timings_dir.join("pro.json"))) }
 
-      let(:test_files) do
+      let(:spec_files) do
         Dir[Karafka::Web.gem_root.join("test", "lib", "karafka", "web", "pro", "**", "*_test.rb")]
           .map { |f| f.sub("#{Karafka::Web.gem_root}/", "") }
       end
 
       it "has timing data for all pro test files" do
         timing_keys = timings.keys.map { |k| k.delete_prefix("./") }
-        missing = test_files.reject { |f| timing_keys.include?(f) }
+        missing = spec_files.reject { |f| timing_keys.include?(f) }
 
         assert_empty(
           missing,

@@ -95,11 +95,17 @@ Minitest::Spec::DSL.class_eval do
       nil
     end
 
+    # Define raw method using the block directly to preserve super() resolution.
+    # When a child describe overrides a parent's let, super() in the block
+    # properly calls the parent's method because define_method preserves MRO.
+    define_method(name, &block)
+    raw = instance_method(name)
+
     if original
       define_method(name) do |*args, **kwargs, &blk|
         if args.empty? && kwargs.empty? && blk.nil?
           @_memoized ||= {}
-          @_memoized.fetch(name) { |k| @_memoized[k] = instance_eval(&block) }
+          @_memoized.fetch(name) { |k| @_memoized[k] = raw.bind_call(self) }
         else
           original.bind_call(self, *args, **kwargs, &blk)
         end
@@ -107,7 +113,7 @@ Minitest::Spec::DSL.class_eval do
     else
       define_method(name) do
         @_memoized ||= {}
-        @_memoized.fetch(name) { |k| @_memoized[k] = instance_eval(&block) }
+        @_memoized.fetch(name) { |k| @_memoized[k] = raw.bind_call(self) }
       end
     end
   end

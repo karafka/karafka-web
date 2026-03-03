@@ -3,7 +3,7 @@
 describe_current do
   # Simple test class that responds to attribute methods without being Enumerable
   # (unlike Struct which is Enumerable and would interfere with sorter logic)
-  let(:test_object) do
+  let(:sortable_object) do
     Class.new do
       def initialize(attrs)
         @attrs = attrs
@@ -90,17 +90,17 @@ describe_current do
   end
 
   context "when sorting objects that respond to an attribute" do
-    let(:resource) { [test_object.new(a: 5), test_object.new(a: 4), test_object.new(a: 3)] }
+    let(:resource) { [sortable_object.new(a: 5), sortable_object.new(a: 4), sortable_object.new(a: 3)] }
     let(:sort_query) { "a asc" }
     let(:allowed_attributes) { %w[a] }
 
     it do
-      assert_equal([test_object.new(a: 3), test_object.new(a: 4), test_object.new(a: 5)], sorting)
+      assert_equal([sortable_object.new(a: 3), sortable_object.new(a: 4), sortable_object.new(a: 5)], sorting)
     end
   end
 
   context "when sorting objects that do not respond to an attribute" do
-    let(:resource) { [test_object.new(x: 5), test_object.new(x: 4), test_object.new(x: 3)] }
+    let(:resource) { [sortable_object.new(x: 5), sortable_object.new(x: 4), sortable_object.new(x: 3)] }
     let(:sort_query) { "a asc" }
     let(:allowed_attributes) { %w[a] }
 
