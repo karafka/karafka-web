@@ -46,6 +46,22 @@ module IntegrationHelper
     exit 1
   end
 
+  # Asserts that a comparison operator holds between two values
+  #
+  # @param value1 [Object] the left-hand side value
+  # @param operator [Symbol] the comparison operator (e.g., :<, :>, :<=, :>=)
+  # @param value2 [Object] the right-hand side value
+  # @param message [String] error message to display if assertion fails
+  def assert_operator(value1, operator, value2, message)
+    return if value1.public_send(operator, value2)
+
+    puts <<~ERROR
+      FAILED: #{message}
+        Expected: #{value1} #{operator} #{value2}
+    ERROR
+    exit 1
+  end
+
   # Asserts that a value is within a range, exits with error if not
   #
   # @param value [Numeric] the value to check

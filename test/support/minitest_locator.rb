@@ -16,14 +16,14 @@ class MinitestLocator < Karafka::Core::Helpers::RSpecLocator
     raise "No _test.rb file found in call stack" unless test_file
 
     test_file
-      .split(':')
+      .split(":")
       .first
-      .gsub(@specs_root_dir, '')
-      .gsub('_test.rb', '')
-      .split('/')
+      .gsub(@specs_root_dir, "")
+      .gsub("_test.rb", "")
+      .split("/")
       .delete_if(&:empty?)
       .itself[1..]
-      .join('/')
+      .join("/")
       .then { |path| custom_camelize(path) }
       .then { |string| transform_inflections(string) }
       .then { |class_name| custom_constantize(class_name) }
