@@ -246,12 +246,12 @@ Minitest::Spec.class_eval do
     # Do not proceed if there were any errors in the test
     next if failures.any?
     # Analyze only valid html responses data
-    next unless response&.content_type&.include?("text/html")
+    next unless last_response&.content_type&.include?("text/html")
 
     validator = LinksValidator.instance
     validator.context = self
     validator.description = name
-    validator.validate_all!(response)
+    validator.validate_all!(last_response)
   end
 end
 

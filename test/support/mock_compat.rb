@@ -38,9 +38,21 @@ module MockCompat
   CALL_REGISTRY = Hash.new { |h, k| h[k] = Hash.new { |h2, k2| h2[k2] = [] } }
 
   # Clean up all stubs, constants, and call recordings after each test
+  #
+  # When the same method on the same object is stubbed multiple times (e.g., outer before
+  # stubs :sampler, inner context stubs it again), we must:
+  # 1. Remove the stub from the singleton class (only once per unique obj+method)
+  # 2. Restore the FIRST (true original) saved method, not intermediate stubs
   def self.cleanup!
-    STUB_REGISTRY.reverse_each do |obj, method_name, original_for_restore, cleanup_type|
-      # Always remove the singleton method stub first
+    # For each unique (obj, method_name), keep only the first (oldest/original) entry
+    originals = {}
+    STUB_REGISTRY.each do |entry|
+      key = [entry[0].__id__, entry[1].to_s]
+      originals[key] ||= entry
+    end
+
+    # Remove stub and restore original for each unique method
+    originals.each_value do |obj, method_name, original_for_restore, cleanup_type|
       begin
         obj.singleton_class.remove_method(method_name)
       rescue NameError
