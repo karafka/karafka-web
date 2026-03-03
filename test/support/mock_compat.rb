@@ -52,6 +52,7 @@ module MockCompat
     end
 
     # Remove stub and restore original for each unique method
+    # Each restoration is wrapped in rescue to prevent one failure from blocking others
     originals.each_value do |obj, method_name, original_for_restore, cleanup_type|
       begin
         obj.singleton_class.remove_method(method_name)
@@ -59,9 +60,13 @@ module MockCompat
         nil
       end
 
-      # Only restore if it was originally a singleton method
-      if cleanup_type == :singleton && original_for_restore.is_a?(Method)
-        obj.define_singleton_method(method_name, original_for_restore)
+      begin
+        # Only restore if it was originally a singleton method
+        if cleanup_type == :singleton && original_for_restore.is_a?(Method)
+          obj.define_singleton_method(method_name, original_for_restore)
+        end
+      rescue StandardError
+        nil
       end
       # For :inherited - inherited method is exposed by removal
       # For :none - method didn't exist, removal is sufficient

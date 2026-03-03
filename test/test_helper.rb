@@ -199,12 +199,22 @@ PRODUCERS = Struct.new(:regular, :transactional).new(
 # Topics that we will use for all the tests as the primary karafka-web topics for valid cases
 TOPICS = Array.new(5) { create_topic }
 
+# Save the original routes method before any tests can corrupt it via instance_double leaks.
+# When MockCompat cleanup fails to restore Karafka::App.routes, we use this to recover.
+ORIGINAL_ROUTES_METHOD = Karafka::App.method(:routes)
+
 # Global setup that runs before each test
 Minitest::Spec.class_eval do
   before do
     # Prepare clean routing setup for each test
     # We do this because some of the tests extend routing and we do not want them to interfere
     # with each other.
+    # When MockCompat cleanup fails to restore routes properly (e.g., instance_double leak
+    # from a previous test), restore the original routes method
+    unless Karafka::App.routes.is_a?(Karafka::Routing::Builder)
+      Karafka::App.define_singleton_method(:routes, ORIGINAL_ROUTES_METHOD)
+    end
+
     Karafka::App.routes.clear
     draw_defaults
     Karafka::Web::Management::Actions::Enable.new.send(:extend_routing)
