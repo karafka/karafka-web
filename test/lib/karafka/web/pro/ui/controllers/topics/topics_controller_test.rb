@@ -190,38 +190,23 @@ describe_current do
     end
 
     context "with parameter validation" do
-      shared_examples "invalid parameter" do |params_override|
-        before { post "topics", default_params.merge(params_override) }
+      [
+        { topic_name: "" },
+        { partitions_count: 0 },
+        { replication_factor: 0 }
+      ].each do |params_override|
+        context "with invalid #{params_override.keys.first}" do
+          before { post "topics", default_params.merge(params_override) }
 
-        it "renders form" do
-          assert_predicate(response, :ok?)
-          assert_includes(body, "Creating New Topic")
-        end
-      end
-
-      it_behaves_like "invalid parameter", topic_name: ""
-      it_behaves_like "invalid parameter", partitions_count: 0
-      it_behaves_like "invalid parameter", replication_factor: 0
-    end
-
-    context "with topic name validation" do
-      shared_examples "topic name validation" do |topic_name, expected_success|
-        before do
-          allow(Karafka::Admin).to receive(:create_topic) if expected_success
-          post "topics", default_params.merge(topic_name: topic_name)
-        end
-
-        it "handles #{topic_name} as expected" do
-          if expected_success
-            assert_equal(302, response.status)
-            assert(response.location.end_with?("/topics"))
-          else
+          it "renders form" do
             assert_predicate(response, :ok?)
             assert_includes(body, "Creating New Topic")
           end
         end
       end
+    end
 
+    context "with topic name validation" do
       {
         "valid-topic" => true,
         "valid.topic" => true,
@@ -231,8 +216,23 @@ describe_current do
         "invalid#topic" => false,
         "invalid@topic" => false,
         "a" * 250 => false
-      }.each do |name, expected_success|
-        it_behaves_like "topic name validation", name, expected_success
+      }.each do |topic_name_val, expected_success|
+        context "with topic name #{topic_name_val.truncate(20)}" do
+          before do
+            allow(Karafka::Admin).to receive(:create_topic) if expected_success
+            post "topics", default_params.merge(topic_name: topic_name_val)
+          end
+
+          it "handles as expected" do
+            if expected_success
+              assert_equal(302, response.status)
+              assert(response.location.end_with?("/topics"))
+            else
+              assert_predicate(response, :ok?)
+              assert_includes(body, "Creating New Topic")
+            end
+          end
+        end
       end
     end
   end
