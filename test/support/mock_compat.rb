@@ -349,11 +349,12 @@ module MockCompat
     end
 
     def at_least(count_or_sym)
-      @at_least_count = case count_or_sym
-                         when :once then 1
-                         when :twice then 2
-                         else count_or_sym
-                         end
+      @at_least_count =
+        case count_or_sym
+        when :once then 1
+        when :twice then 2
+        else count_or_sym
+        end
       self
     end
 
