@@ -239,11 +239,11 @@ describe_current do
 
   describe "#edit" do
     let(:topic_name) { generate_topic_name }
-    let(:test_topic) { create_topic(topic_name: topic_name) }
+    let(:setup_topic) { create_topic(topic_name: topic_name) }
 
     context "when topics management feature is enabled" do
       before do
-        test_topic
+        setup_topic
         get "topics/#{topic_name}/delete"
       end
 
@@ -303,11 +303,11 @@ describe_current do
 
   describe "#delete" do
     let(:topic_name) { generate_topic_name }
-    let(:test_topic) { create_topic(topic_name: topic_name) }
+    let(:setup_topic) { create_topic(topic_name: topic_name) }
 
     context "when topics management feature is enabled" do
       before do
-        test_topic
+        setup_topic
         delete "topics/#{topic_name}"
       end
 

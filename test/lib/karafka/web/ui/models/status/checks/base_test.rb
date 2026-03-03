@@ -4,7 +4,7 @@ describe_current do
   let(:context) { Karafka::Web::Ui::Models::Status::Context.new }
 
   describe "DSL class methods" do
-    let(:test_class) do
+    let(:check_class) do
       Class.new(described_class) do
         depends_on :some_check
         independent!
@@ -13,7 +13,7 @@ describe_current do
 
     describe ".depends_on" do
       it "sets the dependency" do
-        assert_equal(:some_check, test_class.dependency)
+        assert_equal(:some_check, check_class.dependency)
       end
     end
 
@@ -29,7 +29,7 @@ describe_current do
 
     describe ".independent!" do
       it "marks the class as independent" do
-        assert_predicate(test_class, :independent?)
+        assert_predicate(check_class, :independent?)
       end
     end
 

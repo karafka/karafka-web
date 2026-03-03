@@ -158,11 +158,11 @@ describe_current do
 
   describe "#edit" do
     let(:topic_name) { generate_topic_name }
-    let(:test_topic) { create_topic(topic_name: topic_name) }
+    let(:setup_topic) { create_topic(topic_name: topic_name) }
 
     context "when topics management feature is enabled" do
       before do
-        test_topic
+        setup_topic
         get "topics/#{topic_name}/distribution/edit"
       end
 
@@ -222,7 +222,7 @@ describe_current do
 
   describe "#update" do
     let(:topic_name) { generate_topic_name }
-    let(:test_topic) { create_topic(topic_name: topic_name) }
+    let(:setup_topic) { create_topic(topic_name: topic_name) }
     let(:new_partition_count) { 5 }
     let(:default_params) do
       {
@@ -233,7 +233,7 @@ describe_current do
     context "when topics management feature is enabled" do
       context "when update succeeds" do
         before do
-          test_topic
+          setup_topic
           put "topics/#{topic_name}/distribution", default_params
         end
 
@@ -254,7 +254,7 @@ describe_current do
       context "with invalid partition count" do
         context "when partition count is equal to current" do
           before do
-            test_topic
+            setup_topic
             put "topics/#{topic_name}/distribution", partition_count: 1
           end
 
@@ -267,7 +267,7 @@ describe_current do
 
         context "when partition count is too high" do
           before do
-            test_topic
+            setup_topic
             put "topics/#{topic_name}/distribution", partition_count: 1_000_000
           end
 

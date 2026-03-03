@@ -6,6 +6,7 @@
 #
 # Supported patterns:
 #   allow(obj).to receive(:method).and_return(value)
+#   allow(obj).to receive(:method).with(args).and_return(value)
 #   allow(obj).to receive(:method).and_call_original
 #   allow(obj).to receive(:method).and_raise(error)
 #   allow(obj).to receive(:method).and_yield(value)
@@ -14,24 +15,31 @@
 #   expect(obj).to have_received(:method)
 #   expect(obj).to have_received(:method).with(args)
 #   expect(obj).to have_received(:method).once
+#   expect(obj).to have_received(:method).at_least(:once)
 #   expect(obj).not_to have_received(:method)
 #   expect(obj).to eq(value)
+#   expect(obj).to be(value)
 #   expect(obj).to include(value)
 #   expect(obj).to be_nil
 #   expect(obj).to be_truthy
+#   expect(obj).to be_within(delta).of(value)
 #   expect(obj).to contain_exactly(a, b, c)
 #   expect { block }.to raise_error(ErrorClass)
 #   expect { block }.to change { value }.from(a).to(b)
 #   instance_double(ClassName, method1: val1, ...)
+#   stub_const("Const::Name", value)
+#   an_instance_of(ClassName)
 module MockCompat
   # Registry of all stubs applied during a test, for cleanup
   STUB_REGISTRY = []
+  # Registry of stubbed constants, for cleanup
+  CONST_REGISTRY = []
   # Registry of method call recordings
   CALL_REGISTRY = Hash.new { |h, k| h[k] = Hash.new { |h2, k2| h2[k2] = [] } }
 
-  # Clean up all stubs and call recordings after each test
+  # Clean up all stubs, constants, and call recordings after each test
   def self.cleanup!
-    STUB_REGISTRY.each do |obj, method_name, original|
+    STUB_REGISTRY.each do |obj, method_name, original_for_restore, cleanup_type|
       # Always remove the singleton method stub first
       begin
         obj.singleton_class.remove_method(method_name)
@@ -39,14 +47,21 @@ module MockCompat
         nil
       end
 
-      # If the original was a singleton method (not inherited), restore it
-      if original.is_a?(Method)
-        obj.define_singleton_method(method_name, original)
+      # Only restore if it was originally a singleton method
+      if cleanup_type == :singleton && original_for_restore.is_a?(Method)
+        obj.define_singleton_method(method_name, original_for_restore)
       end
-      # For :__mock_compat_no_original__ - method didn't exist, removal is sufficient
-      # For :__mock_compat_inherited__ - inherited method is exposed by removal
+      # For :inherited - inherited method is exposed by removal
+      # For :none - method didn't exist, removal is sufficient
     end
     STUB_REGISTRY.clear
+
+    CONST_REGISTRY.each do |parent, const, original|
+      parent.send(:remove_const, const) if parent.const_defined?(const, false)
+      parent.const_set(const, original) unless original == :__not_defined__
+    end
+    CONST_REGISTRY.clear
+
     CALL_REGISTRY.clear
   end
 
@@ -62,6 +77,24 @@ module MockCompat
       mock.define_singleton_method(method_name) { |*_args, **_kwargs, &_block| return_value }
     end
     mock
+  end
+
+  # Temporarily replaces a constant for the duration of a test
+  def stub_const(const_name, value)
+    parts = const_name.split("::")
+    if parts.length == 1
+      parent = Object
+      const = parts.first.to_sym
+    else
+      parent = parts[0..-2].inject(Object) { |mod, name| mod.const_get(name) }
+      const = parts.last.to_sym
+    end
+
+    original = parent.const_defined?(const, false) ? parent.const_get(const) : :__not_defined__
+    parent.send(:remove_const, const) if parent.const_defined?(const, false)
+    parent.const_set(const, value)
+
+    MockCompat::CONST_REGISTRY << [parent, const, original]
   end
 
   # Returns a matcher for have_received assertions
@@ -89,9 +122,23 @@ module MockCompat
     HashIncludingMatcher.new(expected)
   end
 
+  # Returns an argument matcher for class instance checks
+  def an_instance_of(klass)
+    AnInstanceOfMatcher.new(klass)
+  end
+
   # Returns an equality matcher
   def eq(expected)
     EqMatcher.new(expected)
+  end
+
+  # Returns an identity matcher (object identity via .equal?)
+  def be(expected = :__no_arg__)
+    if expected == :__no_arg__
+      BeIdentityMatcher.new(nil, false)
+    else
+      BeIdentityMatcher.new(expected, true)
+    end
   end
 
   # Returns an include matcher
@@ -107,6 +154,11 @@ module MockCompat
   # Returns a be_truthy matcher
   def be_truthy
     BeTruthyMatcher.new
+  end
+
+  # Returns a be_within matcher for numeric proximity checks
+  def be_within(delta)
+    BeWithinMatcher.new(delta)
   end
 
   # Returns a raise_error matcher
@@ -145,7 +197,15 @@ module MockCompat
       @return_block = nil
       @call_original = false
       @raise_error = nil
-      @yield_value = nil
+      @yield_values = nil
+      @with_args = nil
+      @with_kwargs = nil
+    end
+
+    def with(*args, **kwargs)
+      @with_args = args
+      @with_kwargs = kwargs.empty? ? nil : kwargs
+      self
     end
 
     def and_return(*values)
@@ -168,7 +228,8 @@ module MockCompat
     end
 
     def and_yield(*values)
-      @yield_value = values
+      @yield_values ||= []
+      @yield_values << values
       self
     end
 
@@ -178,15 +239,23 @@ module MockCompat
       return_values = @return_values
       call_original = @call_original
       raise_error = @raise_error
-      yield_value = @yield_value
+      yield_values = @yield_values
 
-      # Save original method - distinguish singleton vs inherited
-      original = if obj.singleton_methods.include?(method_name.to_sym)
-        obj.method(method_name) # Singleton method, save for restoration
-      elsif obj.respond_to?(method_name)
-        :__mock_compat_inherited__ # Inherited method, removal will expose it
+      # Determine cleanup strategy
+      is_singleton = obj.singleton_methods.include?(method_name.to_sym)
+      had_method = obj.respond_to?(method_name)
+
+      # Save original method reference for and_call_original
+      original_method = had_method ? obj.method(method_name) : nil
+
+      # Save original singleton method for restoration during cleanup
+      original_for_restore = is_singleton ? obj.method(method_name) : nil
+      cleanup_type = if is_singleton
+        :singleton
+      elsif had_method
+        :inherited
       else
-        :__mock_compat_no_original__ # Didn't exist
+        :none
       end
 
       call_count = [0]
@@ -201,10 +270,12 @@ module MockCompat
 
         if raise_error
           raise(*raise_error)
-        elsif yield_value
-          block&.call(*yield_value)
-        elsif call_original && original != :__mock_compat_no_original__
-          original.call(*args, **kwargs, &block)
+        elsif yield_values && !yield_values.empty?
+          result = nil
+          yield_values.each { |yv| result = block&.call(*yv) }
+          result
+        elsif call_original && original_method
+          original_method.call(*args, **kwargs, &block)
         elsif return_values
           idx = [call_count[0], return_values.length - 1].min
           call_count[0] += 1
@@ -214,7 +285,7 @@ module MockCompat
         end
       end
 
-      MockCompat::STUB_REGISTRY << [obj, method_name, original]
+      MockCompat::STUB_REGISTRY << [obj, method_name, original_for_restore, cleanup_type]
     end
   end
 
@@ -240,6 +311,7 @@ module MockCompat
       @expected_args = nil
       @expected_kwargs = nil
       @count = nil
+      @at_least_count = nil
     end
 
     def with(*args, **kwargs)
@@ -262,6 +334,15 @@ module MockCompat
       ExactlyProxy.new(self, n)
     end
 
+    def at_least(count_or_sym)
+      case count_or_sym
+      when :once then @at_least_count = 1
+      when :twice then @at_least_count = 2
+      else @at_least_count = count_or_sym
+      end
+      self
+    end
+
     def set_count(n)
       @count = n
     end
@@ -279,6 +360,8 @@ module MockCompat
 
       if @count
         calls.length == @count
+      elsif @at_least_count
+        calls.length >= @at_least_count
       else
         calls.length > 0
       end
@@ -288,6 +371,7 @@ module MockCompat
       calls = MockCompat::CALL_REGISTRY[obj.__id__][@method_name]
       "Expected #{obj.class}##{@method_name} to have been called" \
         "#{" #{@count} time(s)" if @count}" \
+        "#{" at least #{@at_least_count} time(s)" if @at_least_count}" \
         "#{" with #{@expected_args.inspect}" if @expected_args}" \
         ", but was called #{calls.length} time(s)"
     end
@@ -311,6 +395,8 @@ module MockCompat
       expected.each_with_index.all? do |exp, i|
         if exp.is_a?(HashIncludingMatcher)
           exp.matches?(actual[i])
+        elsif exp.is_a?(AnInstanceOfMatcher)
+          exp.matches?(actual[i])
         else
           exp == actual[i]
         end
@@ -333,6 +419,25 @@ module MockCompat
     def times
       @matcher.set_count(@n)
       @matcher
+    end
+  end
+
+  # Argument matcher for an_instance_of(Class)
+  class AnInstanceOfMatcher
+    def initialize(klass)
+      @klass = klass
+    end
+
+    def ==(other)
+      other.is_a?(@klass)
+    end
+
+    def matches?(actual)
+      actual.is_a?(@klass)
+    end
+
+    def failure_message(actual)
+      "Expected an instance of #{@klass}, but got #{actual.class}"
     end
   end
 
@@ -387,6 +492,23 @@ module MockCompat
     end
   end
 
+  # Matcher for expect(value).to be(expected) - object identity
+  class BeIdentityMatcher
+    def initialize(expected, has_arg)
+      @expected = expected
+      @has_arg = has_arg
+    end
+
+    def matches?(actual)
+      actual.equal?(@expected)
+    end
+
+    def failure_message(actual)
+      "Expected #{actual.inspect} (#{actual.class}) to be the same object as " \
+        "#{@expected.inspect} (#{@expected.class})"
+    end
+  end
+
   # Matcher for expect(value).to include(expected)
   class IncludeMatcher
     def initialize(expected)
@@ -427,6 +549,29 @@ module MockCompat
 
     def failure_message(actual)
       "Expected truthy value, but got #{actual.inspect}"
+    end
+  end
+
+  # Matcher for expect(value).to be_within(delta).of(expected)
+  class BeWithinMatcher
+    def initialize(delta)
+      @delta = delta
+      @expected = nil
+    end
+
+    def of(expected)
+      @expected = expected
+      self
+    end
+
+    def matches?(actual)
+      return false unless @expected
+
+      (actual - @expected).abs <= @delta
+    end
+
+    def failure_message(actual)
+      "Expected #{actual.inspect} to be within #{@delta} of #{@expected.inspect}"
     end
   end
 

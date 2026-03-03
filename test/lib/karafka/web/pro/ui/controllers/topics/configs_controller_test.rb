@@ -54,13 +54,13 @@ describe_current do
 
   describe "#edit" do
     let(:topic_name) { generate_topic_name }
-    let(:test_topic) { create_topic(topic_name: topic_name) }
+    let(:setup_topic) { create_topic(topic_name: topic_name) }
     let(:property_name) { "cleanup.policy" }
 
     context "when topics management feature is enabled" do
       context "when property exists and is editable" do
         before do
-          test_topic
+          setup_topic
           get "topics/#{topic_name}/config/#{property_name}/edit"
         end
 
@@ -87,7 +87,7 @@ describe_current do
 
       context "when property does not exist" do
         before do
-          test_topic
+          setup_topic
           get "topics/#{topic_name}/config/non-existent-property/edit"
         end
 
@@ -120,7 +120,7 @@ describe_current do
 
   describe "#update" do
     let(:topic_name) { generate_topic_name }
-    let(:test_topic) { create_topic(topic_name: topic_name) }
+    let(:setup_topic) { create_topic(topic_name: topic_name) }
     let(:property_name) { "max.message.bytes" }
     let(:property_value) { rand(1_000..100_000) }
     let(:default_params) { { property_value: property_value } }
@@ -133,7 +133,7 @@ describe_current do
     context "when topics management feature is enabled" do
       context "when update succeeds" do
         before do
-          test_topic
+          setup_topic
           put "topics/#{topic_name}/config/#{property_name}", default_params
           sleep(1)
         end
@@ -151,7 +151,7 @@ describe_current do
         let(:property_value) { "-1" }
 
         before do
-          test_topic
+          setup_topic
           put "topics/#{topic_name}/config/#{property_name}", default_params
         end
 
@@ -188,7 +188,7 @@ describe_current do
 
     context "when property does not exist" do
       before do
-        test_topic
+        setup_topic
         put "topics/#{topic_name}/config/non-existent-property", default_params
       end
 

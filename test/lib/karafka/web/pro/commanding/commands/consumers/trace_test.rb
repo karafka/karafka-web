@@ -24,7 +24,7 @@ describe_current do
   let(:trace_command) { described_class.new({}) }
 
   let(:dispatcher) { Karafka::Web::Pro::Commanding::Dispatcher }
-  let(:test_thread) { Thread.new { sleep(0.5) } }
+  let(:traced_thread) { Thread.new { sleep(0.5) } }
   let(:process_pid) { Karafka::Web.config.tracking.consumers.sampler.process_id }
 
   before do
@@ -33,8 +33,8 @@ describe_current do
   end
 
   after do
-    test_thread.kill
-    test_thread.join
+    traced_thread.kill
+    traced_thread.join
   end
 
   it "expect to collect and publish threads backtraces to Kafka" do
