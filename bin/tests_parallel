@@ -37,12 +37,29 @@ readarray -t PRO_GROUPS < <(echo "$PRO_JSON" | jq -r '.[] | join(" ")')
 echo ""
 echo "Starting parallel execution..."
 
+# Per-worker timeout in seconds (10 minutes)
+WORKER_TIMEOUT=600
+
+# Ruby bootstrap code: save ARGV before test_helper clears it, add diagnostics
+read -r -d '' RUBY_BOOTSTRAP << 'RUBY' || true
+$stdout.sync = true
+$stderr.sync = true
+files = ARGV.dup
+warn "[#{Process.pid}] Loading test_helper..."
+require 'test_helper'
+warn "[#{Process.pid}] test_helper loaded, loading #{files.size} test files..."
+files.each { |f| require File.expand_path(f) }
+warn "[#{Process.pid}] All #{files.size} files loaded, starting test execution..."
+ARGV.push('--verbose')
+RUBY
+
 # Launch regular test workers
 PIDS=()
 for i in $(seq 0 $((REGULAR_WORKERS - 1))); do
   if [ -n "${REGULAR_GROUPS[$i]}" ]; then
     PARALLEL=true PARALLEL_GROUP_ID="regular_$i" SPECS_TYPE=regular \
-      bundle exec ruby -Itest -Ilib -e "files = ARGV.dup; require 'test_helper'; files.each { |f| require File.expand_path(f) }" \
+      timeout $WORKER_TIMEOUT \
+      bundle exec ruby -Itest -Ilib -e "$RUBY_BOOTSTRAP" \
       ${REGULAR_GROUPS[$i]} \
       > "$TMPDIR/regular_$i.log" 2>&1 &
     PIDS+=($!)
@@ -54,7 +71,8 @@ done
 for i in $(seq 0 $((PRO_WORKERS - 1))); do
   if [ -n "${PRO_GROUPS[$i]}" ]; then
     PARALLEL=true PARALLEL_GROUP_ID="pro_$i" SPECS_TYPE=pro \
-      bundle exec ruby -Itest -Ilib -e "files = ARGV.dup; require 'test_helper'; files.each { |f| require File.expand_path(f) }" \
+      timeout $WORKER_TIMEOUT \
+      bundle exec ruby -Itest -Ilib -e "$RUBY_BOOTSTRAP" \
       ${PRO_GROUPS[$i]} \
       > "$TMPDIR/pro_$i.log" 2>&1 &
     PIDS+=($!)

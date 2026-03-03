@@ -62,6 +62,37 @@ module IntegrationHelper
     exit 1
   end
 
+  # Asserts that an object responds to a predicate method with true
+  #
+  # @param object [Object] the object to test
+  # @param predicate [Symbol] the predicate method to call (e.g., :any?, :empty?)
+  # @param message [String] error message to display if assertion fails
+  def assert_predicate(object, predicate, message)
+    return if object.public_send(predicate)
+
+    puts <<~ERROR
+      FAILED: #{message}
+        Expected #{object.inspect} to respond truthy to #{predicate}
+    ERROR
+    exit 1
+  end
+
+  # Asserts that a value is an instance of a class or its subclass
+  #
+  # @param klass [Class] the expected class
+  # @param object [Object] the object to check
+  # @param message [String] error message to display if assertion fails
+  def assert_kind_of(klass, object, message)
+    return if object.is_a?(klass)
+
+    puts <<~ERROR
+      FAILED: #{message}
+        Expected kind of: #{klass}
+        Got: #{object.class}
+    ERROR
+    exit 1
+  end
+
   # Asserts that a value is within a range, exits with error if not
   #
   # @param value [Numeric] the value to check
