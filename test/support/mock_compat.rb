@@ -161,6 +161,20 @@ module MockCompat
     BeWithinMatcher.new(delta)
   end
 
+  # Dynamic be_* predicate matchers (e.g., be_frozen → frozen?)
+  def method_missing(name, *args, &block)
+    if name.to_s.start_with?("be_") && args.empty? && !block
+      predicate = "#{name.to_s.sub(/^be_/, "")}?"
+      DynamicPredicateMatcher.new(predicate)
+    else
+      super
+    end
+  end
+
+  def respond_to_missing?(name, include_private = false)
+    name.to_s.start_with?("be_") || super
+  end
+
   # Returns a raise_error matcher
   def raise_error(*args)
     RaiseErrorMatcher.new(*args)
@@ -335,11 +349,11 @@ module MockCompat
     end
 
     def at_least(count_or_sym)
-      case count_or_sym
-      when :once then @at_least_count = 1
-      when :twice then @at_least_count = 2
-      else @at_least_count = count_or_sym
-      end
+      @at_least_count = case count_or_sym
+                         when :once then 1
+                         when :twice then 2
+                         else count_or_sym
+                         end
       self
     end
 
@@ -474,6 +488,21 @@ module MockCompat
 
     def ==(other)
       matches?(other)
+    end
+  end
+
+  # Dynamic predicate matcher for be_* patterns (e.g., be_frozen → frozen?)
+  class DynamicPredicateMatcher
+    def initialize(predicate)
+      @predicate = predicate
+    end
+
+    def matches?(actual)
+      actual.public_send(@predicate)
+    end
+
+    def failure_message(actual)
+      "Expected #{actual.inspect} to be #{@predicate.chomp("?")}"
     end
   end
 
