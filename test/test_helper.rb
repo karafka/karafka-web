@@ -209,8 +209,25 @@ Minitest::Spec.class_eval do
     draw_defaults
     Karafka::Web::Management::Actions::Enable.new.send(:extend_routing)
 
-    Karafka::Web.config.tracking.consumers.sampler.clear
-    Karafka::Web.config.tracking.producers.sampler.clear
+    consumers_sampler = Karafka::Web.config.tracking.consumers.sampler
+    producers_sampler = Karafka::Web.config.tracking.producers.sampler
+
+    # When MockCompat cleanup fails to restore the sampler properly (e.g., instance_double
+    # leak from a previous test), reinitialize it to prevent cascading failures
+    if consumers_sampler.is_a?(Karafka::Web::Tracking::Consumers::Sampler)
+      consumers_sampler.clear
+    else
+      Karafka::Web.config.tracking.consumers.sampler =
+        Karafka::Web::Tracking::Consumers::Sampler.new
+    end
+
+    if producers_sampler.is_a?(Karafka::Web::Tracking::Producers::Sampler)
+      producers_sampler.clear
+    else
+      Karafka::Web.config.tracking.producers.sampler =
+        Karafka::Web::Tracking::Producers::Sampler.new
+    end
+
     Karafka::Web.config.ui.cache.clear
 
     # Set existing topics
@@ -242,7 +259,7 @@ Minitest::Spec.class_eval do
   # Links validation for controller tests
   after do
     # Skip if this is not a controller test (no Rack::Test methods)
-    next unless respond_to?(:last_response)
+    next unless respond_to?(:last_response) && respond_to?(:app)
     # Do not proceed if there were any errors in the test
     next if failures.any?
     # Analyze only valid html responses data
