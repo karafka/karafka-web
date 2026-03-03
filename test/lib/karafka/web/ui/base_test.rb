@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 describe Karafka::Web::Ui::Base do
+  include Rack::Test::Methods
+  include ControllerHelper
+
   let(:app) { Karafka::Web::Ui::App }
 
   let(:monitor) { Karafka.monitor }
