@@ -39,7 +39,7 @@ module MockCompat
 
   # Clean up all stubs, constants, and call recordings after each test
   def self.cleanup!
-    STUB_REGISTRY.each do |obj, method_name, original_for_restore, cleanup_type|
+    STUB_REGISTRY.reverse_each do |obj, method_name, original_for_restore, cleanup_type|
       # Always remove the singleton method stub first
       begin
         obj.singleton_class.remove_method(method_name)
