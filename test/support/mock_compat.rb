@@ -15,6 +15,13 @@
 #   expect(obj).to have_received(:method).with(args)
 #   expect(obj).to have_received(:method).once
 #   expect(obj).not_to have_received(:method)
+#   expect(obj).to eq(value)
+#   expect(obj).to include(value)
+#   expect(obj).to be_nil
+#   expect(obj).to be_truthy
+#   expect(obj).to contain_exactly(a, b, c)
+#   expect { block }.to raise_error(ErrorClass)
+#   expect { block }.to change { value }.from(a).to(b)
 #   instance_double(ClassName, method1: val1, ...)
 module MockCompat
   # Registry of all stubs applied during a test, for cleanup
@@ -79,6 +86,36 @@ module MockCompat
   # Returns a matcher that checks if a hash includes certain keys
   def hash_including(**expected)
     HashIncludingMatcher.new(expected)
+  end
+
+  # Returns an equality matcher
+  def eq(expected)
+    EqMatcher.new(expected)
+  end
+
+  # Returns an include matcher
+  def include(*expected)
+    IncludeMatcher.new(expected)
+  end
+
+  # Returns a be_nil matcher
+  def be_nil
+    BeNilMatcher.new
+  end
+
+  # Returns a be_truthy matcher
+  def be_truthy
+    BeTruthyMatcher.new
+  end
+
+  # Returns a raise_error matcher
+  def raise_error(*args)
+    RaiseErrorMatcher.new(*args)
+  end
+
+  # Returns a change matcher
+  def change(obj = nil, method_name = nil, &block)
+    ChangeMatcher.new(obj, method_name, &block)
   end
 
   # Proxy for allow(obj).to receive(...)
@@ -331,16 +368,158 @@ module MockCompat
       matches?(other)
     end
   end
+
+  # Matcher for expect(value).to eq(expected)
+  class EqMatcher
+    def initialize(expected)
+      @expected = expected
+    end
+
+    def matches?(actual)
+      actual == @expected
+    end
+
+    def failure_message(actual)
+      "Expected #{actual.inspect} to equal #{@expected.inspect}"
+    end
+  end
+
+  # Matcher for expect(value).to include(expected)
+  class IncludeMatcher
+    def initialize(expected)
+      @expected = expected
+    end
+
+    def matches?(actual)
+      @expected.all? do |exp|
+        if actual.is_a?(Hash) && exp.is_a?(Hash)
+          exp.all? { |k, v| actual[k] == v }
+        else
+          actual.include?(exp)
+        end
+      end
+    end
+
+    def failure_message(actual)
+      "Expected #{actual.inspect} to include #{@expected.inspect}"
+    end
+  end
+
+  # Matcher for expect(value).to be_nil
+  class BeNilMatcher
+    def matches?(actual)
+      actual.nil?
+    end
+
+    def failure_message(actual)
+      "Expected nil, but got #{actual.inspect}"
+    end
+  end
+
+  # Matcher for expect(value).to be_truthy
+  class BeTruthyMatcher
+    def matches?(actual)
+      !!actual
+    end
+
+    def failure_message(actual)
+      "Expected truthy value, but got #{actual.inspect}"
+    end
+  end
+
+  # Matcher for expect { block }.to raise_error(ErrorClass, message)
+  class RaiseErrorMatcher
+    def initialize(error_class = StandardError, message = nil)
+      @error_class = error_class
+      @message = message
+    end
+
+    def block_matches?(block)
+      block.call
+      @matched = false
+      false
+    rescue @error_class => e
+      @matched = if @message
+        e.message.include?(@message.to_s) || e.message == @message.to_s
+      else
+        true
+      end
+      @raised_error = e
+      @matched
+    rescue => e
+      @raised_error = e
+      @matched = false
+      false
+    end
+
+    def failure_message(_actual = nil)
+      if @raised_error
+        "Expected #{@error_class}#{" with message '#{@message}'" if @message}, " \
+          "but got #{@raised_error.class}: #{@raised_error.message}"
+      else
+        "Expected #{@error_class}#{" with message '#{@message}'" if @message} to be raised, but nothing was raised"
+      end
+    end
+  end
+
+  # Matcher for expect { block }.to change { value }.from(a).to(b)
+  # Also supports expect { block }.to change(obj, :method).from(a).to(b)
+  class ChangeMatcher
+    def initialize(obj = nil, method_name = nil, &block)
+      if block
+        @value_block = block
+      elsif obj && method_name
+        @value_block = -> { obj.public_send(method_name) }
+      end
+      @from = :__not_set__
+      @to = :__not_set__
+    end
+
+    def from(expected)
+      @from = expected
+      self
+    end
+
+    def to(expected)
+      @to = expected
+      self
+    end
+
+    def block_matches?(block)
+      @before_value = @value_block.call
+      block.call
+      @after_value = @value_block.call
+
+      changed = @before_value != @after_value
+      from_ok = @from == :__not_set__ || @before_value == @from
+      to_ok = @to == :__not_set__ || @after_value == @to
+
+      changed && from_ok && to_ok
+    end
+
+    def failure_message(_actual = nil)
+      if @from != :__not_set__ && @to != :__not_set__
+        "Expected value to change from #{@from.inspect} to #{@to.inspect}, " \
+          "but was #{@before_value.inspect} before and #{@after_value.inspect} after"
+      else
+        "Expected value to change, but was #{@before_value.inspect} before and #{@after_value.inspect} after"
+      end
+    end
+
+    def negative_failure_message(_actual = nil)
+      "Expected value not to change, but changed from #{@before_value.inspect} to #{@after_value.inspect}"
+    end
+  end
 end
 
 # Integration with Minitest::Spec - expect(obj).to/not_to for mock assertions
 module MockExpectIntegration
-  # Override expect to handle have_received matchers
+  # Override expect to handle have_received matchers and RSpec-style expectations
   # This wraps minitest's expect to add mock verification support
   def expect(obj_or_val = :__not_provided__, *args, &block)
     if obj_or_val == :__not_provided__ && block
-      # Block form: expect { ... } - delegate to super
-      super(&block)
+      # Block form: expect { ... } - return proxy for raise_error, change etc.
+      BlockExpectProxy.new(block, self)
     elsif args.empty? && !block
       # Mock verification form: expect(obj)
       MockExpectProxy.new(obj_or_val, self)
@@ -385,6 +564,32 @@ module MockExpectIntegration
         )
       elsif matcher.respond_to?(:matches?)
         @test_context.refute(matcher.matches?(@obj))
+      end
+    end
+  end
+
+  class BlockExpectProxy
+    def initialize(block, test_context)
+      @block = block
+      @test_context = test_context
+    end
+
+    def to(matcher)
+      if matcher.respond_to?(:block_matches?)
+        msg = matcher.respond_to?(:failure_message) ? matcher.failure_message(nil) : nil
+        @test_context.assert(matcher.block_matches?(@block), msg)
+      else
+        @test_context.flunk("Unsupported block matcher: #{matcher.class}")
+      end
+    end
+
+    def not_to(matcher)
+      if matcher.respond_to?(:block_matches?)
+        result = matcher.block_matches?(@block)
+        msg = matcher.respond_to?(:negative_failure_message) ? matcher.negative_failure_message(nil) : nil
+        @test_context.refute(result, msg)
+      else
+        @test_context.flunk("Unsupported block matcher: #{matcher.class}")
       end
     end
   end

@@ -79,14 +79,13 @@ end
 # Still protects critical Minitest internals like :run that would break test execution
 # When overriding internal methods (e.g. :message), the method is dispatched by arity:
 # called with no args returns the memoized let value, with args delegates to the original
-Minitest::Spec::DSL.class_eval do
-  MINITEST_CRITICAL_METHODS = %w[run setup teardown].freeze
+MINITEST_CRITICAL_METHODS = %w[run setup teardown].freeze
 
+Minitest::Spec::DSL.class_eval do
   def let(name, &block)
     name = name.to_s
     pre, post = "let '#{name}' cannot ", ". Please use another name."
 
-    raise ArgumentError, "#{pre}begin with 'test'#{post}" if name.start_with?("test")
     raise ArgumentError, "#{pre}override a critical Minitest method#{post}" if
       MINITEST_CRITICAL_METHODS.include?(name)
 
