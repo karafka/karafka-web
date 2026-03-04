@@ -217,7 +217,7 @@ describe_current do
         "invalid@topic" => false,
         "a" * 250 => false
       }.each do |topic_name_val, expected_success|
-        context "with topic name #{topic_name_val.truncate(20)}" do
+        context "with topic name #{topic_name_val[0, 20]}" do
           before do
             allow(Karafka::Admin).to receive(:create_topic) if expected_success
             post "topics", default_params.merge(topic_name: topic_name_val)
