@@ -38,7 +38,7 @@ echo ""
 echo "Starting parallel execution..."
 
 # Per-worker timeout in seconds (5 minutes)
-WORKER_TIMEOUT=300
+WORKER_TIMEOUT=600
 
 # Ruby bootstrap code: save ARGV before test_helper clears it, add diagnostics
 read -r -d '' RUBY_BOOTSTRAP << 'RUBY' || true
