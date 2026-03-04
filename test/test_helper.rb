@@ -203,6 +203,11 @@ TOPICS = Array.new(5) { create_topic }
 # When MockCompat cleanup fails to restore Karafka::App.routes, we use this to recover.
 ORIGINAL_ROUTES_METHOD = Karafka::App.method(:routes)
 
+# Save the original group_id before any tests can corrupt it via stubs.
+# Status tests stub group_id to test disabled routing scenarios, and if MockCompat cleanup
+# fails to restore it, extend_routing fails with InvalidConfigurationError.
+ORIGINAL_GROUP_ID = Karafka::Web.config.group_id
+
 # Global setup that runs before each test
 Minitest::Spec.class_eval do
   before do
@@ -213,6 +218,11 @@ Minitest::Spec.class_eval do
     # from a previous test), restore the original routes method
     unless Karafka::App.routes.is_a?(Karafka::Routing::Builder)
       Karafka::App.define_singleton_method(:routes, ORIGINAL_ROUTES_METHOD)
+    end
+
+    # Restore group_id if it was corrupted by a previous test's mock leak
+    unless Karafka::Web.config.group_id.is_a?(String)
+      Karafka::Web.config.group_id = ORIGINAL_GROUP_ID
     end
 
     Karafka::App.routes.clear
@@ -229,6 +239,12 @@ Minitest::Spec.class_eval do
     else
       Karafka::Web.config.tracking.consumers.sampler =
         Karafka::Web::Tracking::Consumers::Sampler.new
+
+      # Also clear cached sampler references in subscribed listeners so they
+      # pick up the new sampler on next access
+      Karafka::Web.config.tracking.consumers.listeners.each do |listener|
+        listener.remove_instance_variable(:@sampler) if listener.instance_variable_defined?(:@sampler)
+      end
     end
 
     if producers_sampler.is_a?(Karafka::Web::Tracking::Producers::Sampler)
@@ -236,6 +252,10 @@ Minitest::Spec.class_eval do
     else
       Karafka::Web.config.tracking.producers.sampler =
         Karafka::Web::Tracking::Producers::Sampler.new
+
+      Karafka::Web.config.tracking.producers.listeners.each do |listener|
+        listener.remove_instance_variable(:@sampler) if listener.instance_variable_defined?(:@sampler)
+      end
     end
 
     Karafka::Web.config.ui.cache.clear
@@ -255,8 +275,25 @@ Minitest::Spec.class_eval do
     end
   end
 
-  # Restore them as some tests modify those
+  # Restore them as some tests modify those and validate controller responses.
+  # IMPORTANT: Minitest::Spec's `after` uses define_method(:teardown), so each call
+  # REPLACES the previous one. All after-test logic must be in a single `after` block.
   after do
+    # Links validation for controller tests (must run before cleanup)
+    if respond_to?(:last_response) && respond_to?(:app)
+      begin
+        resp = last_response
+        if failures.none? && resp&.content_type&.include?("text/html")
+          validator = LinksValidator.instance
+          validator.context = self
+          validator.description = name
+          validator.validate_all!(resp)
+        end
+      rescue Rack::Test::Error
+        # No request was made in this test, skip validation
+      end
+    end
+
     MockCompat.cleanup!
 
     Karafka::Web.config.topics.consumers.states.name = TOPICS[0]
@@ -264,21 +301,6 @@ Minitest::Spec.class_eval do
     Karafka::Web.config.topics.consumers.reports.name = TOPICS[2]
     Karafka::Web.config.topics.consumers.commands.name = TOPICS[3]
     Karafka::Web.config.topics.errors.name = TOPICS[4]
-  end
-
-  # Links validation for controller tests
-  after do
-    # Skip if this is not a controller test (no Rack::Test methods)
-    next unless respond_to?(:last_response) && respond_to?(:app)
-    # Do not proceed if there were any errors in the test
-    next if failures.any?
-    # Analyze only valid html responses data
-    next unless last_response&.content_type&.include?("text/html")
-
-    validator = LinksValidator.instance
-    validator.context = self
-    validator.description = name
-    validator.validate_all!(last_response)
   end
 end
 

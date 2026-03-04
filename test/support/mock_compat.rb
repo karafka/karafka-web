@@ -65,7 +65,7 @@ module MockCompat
         if cleanup_type == :singleton && original_for_restore.is_a?(Method)
           obj.define_singleton_method(method_name, original_for_restore)
         end
-      rescue StandardError
+      rescue
         nil
       end
       # For :inherited - inherited method is exposed by removal
@@ -96,14 +96,34 @@ module MockCompat
     mock
   end
 
+  # Alias for instance_double without class verification
+  def double(name_or_stubs = nil, stubs = {})
+    if name_or_stubs.is_a?(Hash)
+      instance_double(Object, name_or_stubs)
+    elsif name_or_stubs.is_a?(String) || name_or_stubs.is_a?(Symbol)
+      instance_double(Object, stubs)
+    else
+      instance_double(Object)
+    end
+  end
+
   # Temporarily replaces a constant for the duration of a test
   def stub_const(const_name, value)
     parts = const_name.split("::")
+    parent = Object
+
     if parts.length == 1
-      parent = Object
       const = parts.first.to_sym
     else
-      parent = parts[0..-2].inject(Object) { |mod, name| mod.const_get(name) }
+      # Build intermediate modules if they don't exist
+      parts[0..-2].each do |name|
+        unless parent.const_defined?(name, false)
+          mod = Module.new
+          parent.const_set(name, mod)
+          MockCompat::CONST_REGISTRY << [parent, name.to_sym, :__not_defined__]
+        end
+        parent = parent.const_get(name)
+      end
       const = parts.last.to_sym
     end
 
@@ -120,8 +140,8 @@ module MockCompat
   end
 
   # Returns a receive matcher for setting up stubs
-  def receive(method_name)
-    ReceiveMatcher.new(method_name)
+  def receive(method_name, &block)
+    ReceiveMatcher.new(method_name, &block)
   end
 
   # Returns a receive_messages matcher for setting up multiple stubs
@@ -208,9 +228,11 @@ module MockCompat
       @obj = obj
     end
 
-    def to(matcher)
+    def to(matcher, &block)
       case matcher
       when ReceiveMatcher
+        # Support allow(obj).to receive(:method) { |args| block }
+        matcher.instance_variable_set(:@return_block, block) if block
         matcher.apply(@obj)
       when ReceiveMessagesMatcher
         matcher.apply(@obj)
@@ -222,10 +244,10 @@ module MockCompat
   class ReceiveMatcher
     attr_reader :method_name
 
-    def initialize(method_name)
+    def initialize(method_name, &block)
       @method_name = method_name
       @return_value = nil
-      @return_block = nil
+      @return_block = block
       @call_original = false
       @raise_error = nil
       @yield_values = nil
@@ -268,6 +290,7 @@ module MockCompat
       method_name = @method_name
       return_value = @return_value
       return_values = @return_values
+      return_block = @return_block
       call_original = @call_original
       raise_error = @raise_error
       yield_values = @yield_values
@@ -301,10 +324,13 @@ module MockCompat
 
         if raise_error
           raise(*raise_error)
+        elsif return_block
+          return_block.call(*args, **kwargs, &block)
         elsif yield_values && !yield_values.empty?
           result = nil
           yield_values.each { |yv| result = block&.call(*yv) }
-          result
+          # If and_return was also specified, use that as the return value
+          return_value.nil? ? result : return_value
         elsif call_original && original_method
           original_method.call(*args, **kwargs, &block)
         elsif return_values
@@ -429,6 +455,8 @@ module MockCompat
           exp.matches?(actual[i])
         elsif exp.is_a?(AnInstanceOfMatcher)
           exp.matches?(actual[i])
+        elsif exp.is_a?(Regexp)
+          exp.match?(actual[i].to_s)
         else
           exp == actual[i]
         end

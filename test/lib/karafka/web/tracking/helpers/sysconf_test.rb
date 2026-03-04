@@ -24,7 +24,9 @@ describe_current do
       assert_equal(page_size2, page_size1)
     end
 
-    context "when on Linux systems", if: RUBY_PLATFORM.include?("linux") do
+    context "when on Linux systems" do
+      before { skip "Linux only" unless RUBY_PLATFORM.include?("linux") }
+
       it "uses the correct libc library and constant" do
         assert_equal(30, described_class::SC_PAGESIZE)
       end
@@ -37,7 +39,9 @@ describe_current do
       end
     end
 
-    context "when on macOS systems", if: RUBY_PLATFORM.include?("darwin") do
+    context "when on macOS systems" do
+      before { skip "macOS only" unless RUBY_PLATFORM.include?("darwin") }
+
       it "uses the correct system library and constant" do
         assert_equal(29, described_class::SC_PAGESIZE)
       end
@@ -52,7 +56,7 @@ describe_current do
 
     context "when checking FFI integration" do
       it "properly extends FFI::Library" do
-        assert_includes(described_class.ancestors, FFI::Library)
+        assert_includes(described_class.singleton_class.ancestors, FFI::Library)
       end
 
       it "has sysconf function attached" do

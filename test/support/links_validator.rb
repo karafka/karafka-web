@@ -136,7 +136,7 @@ class LinksValidator
       return
     end
 
-    status = @context.response.status
+    status = @context.last_response.status
 
     assert_msg = "Link '#{link}' returned #{status} status"
     @context.assert_includes(ALLOWED_RESPONSES, status, assert_msg)

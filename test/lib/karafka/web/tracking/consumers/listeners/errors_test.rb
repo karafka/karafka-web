@@ -174,7 +174,7 @@ describe_current do
           listener.on_error_occurred(event)
           error_details = sampler.errors.last[:details]
 
-          assert_includes(error_details, trace_id: "trace-123-abc")
+          assert_equal("trace-123-abc", error_details[:trace_id])
         end
       end
 
@@ -187,7 +187,7 @@ describe_current do
           listener.on_error_occurred(event)
           error_details = sampler.errors.last[:details]
 
-          assert_includes(error_details, trace_id: nil)
+          assert_nil(error_details[:trace_id])
         end
       end
     end
