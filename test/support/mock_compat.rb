@@ -222,6 +222,16 @@ module MockCompat
     ChangeMatcher.new(obj, method_name, &block)
   end
 
+  # Returns a yield_with_args matcher for block yield assertions
+  def yield_with_args(*expected_args)
+    YieldWithArgsMatcher.new(*expected_args)
+  end
+
+  # Returns a yield_control matcher for block yield assertions
+  def yield_control
+    YieldControlMatcher.new
+  end
+
   # Proxy for allow(obj).to receive(...)
   class AllowProxy
     def initialize(obj)
@@ -647,6 +657,65 @@ module MockCompat
 
     def failure_message(actual)
       "Expected #{actual.inspect} to be within #{@delta} of #{@expected.inspect}"
+    end
+  end
+
+  # Matcher for expect { |b| method(&b) }.to yield_with_args(expected)
+  # The block receives a probe proc; the method under test calls it with args
+  class YieldWithArgsMatcher
+    def initialize(*expected_args)
+      @expected_args = expected_args
+      @yielded = false
+      @actual_args = nil
+    end
+
+    def block_matches?(block)
+      probe = proc do |*args|
+        @yielded = true
+        @actual_args = args
+      end
+      block.call(probe)
+      @yielded && args_match?
+    end
+
+    def failure_message(_actual = nil)
+      if @yielded
+        "Expected block to yield with #{@expected_args.inspect}, " \
+          "but yielded with #{@actual_args.inspect}"
+      else
+        "Expected block to yield with args, but did not yield"
+      end
+    end
+
+    private
+
+    def args_match?
+      return true if @expected_args.empty?
+
+      @expected_args.each_with_index.all? do |exp, i|
+        exp == @actual_args[i]
+      end
+    end
+  end
+
+  # Matcher for expect { |b| method(&b) }.to/not_to yield_control
+  class YieldControlMatcher
+    def initialize
+      @yielded = false
+    end
+
+    def block_matches?(block)
+      probe = proc { |*_args| @yielded = true }
+      block.call(probe)
+      @yielded
+    end
+
+    def failure_message(_actual = nil)
+      "Expected block to yield control, but did not"
+    end
+
+    def negative_failure_message(_actual = nil)
+      "Expected block not to yield control, but it did"
     end
   end
 
