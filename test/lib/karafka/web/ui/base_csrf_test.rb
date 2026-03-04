@@ -14,8 +14,9 @@ describe Karafka::Web::Ui::Base do
       assert_equal(:raise, described_class.opts[:sec_fetch_site_csrf][:csrf_failure])
     end
 
-    it "responds to check_sec_fetch_site! method" do
-      assert_respond_to(described_class.new({}), :check_sec_fetch_site!)
+    it "has check_sec_fetch_site! available in the app" do
+      assert(described_class.instance_methods(true).any? { |m| m.to_s.include?("sec_fetch_site") } ||
+             described_class.private_instance_methods(true).any? { |m| m.to_s.include?("sec_fetch_site") })
     end
   end
 

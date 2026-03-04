@@ -555,8 +555,8 @@ describe_current do
         flattened = helper.flatten_params("", params)
         path = helper.topics_path
 
-        assert_includes(flattened, "filter[status]" => "active")
-        assert_includes(flattened, "filter[tags][0]" => "urgent")
+        assert_equal("active", flattened["filter[status]"])
+        assert_equal("urgent", flattened["filter[tags][0]"])
         assert_equal("/web-ui/topics", path)
       end
     end
