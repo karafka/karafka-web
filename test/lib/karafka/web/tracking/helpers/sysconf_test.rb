@@ -24,33 +24,33 @@ describe_current do
       assert_equal(page_size2, page_size1)
     end
 
-    context "when on Linux systems" do
-      before { skip "Linux only" unless RUBY_PLATFORM.include?("linux") }
+    if RUBY_PLATFORM.include?("linux")
+      context "when on Linux systems" do
+        it "uses the correct libc library and constant" do
+          assert_equal(30, described_class::SC_PAGESIZE)
+        end
 
-      it "uses the correct libc library and constant" do
-        assert_equal(30, described_class::SC_PAGESIZE)
-      end
+        it "returns typical Linux page size (usually 4096)" do
+          page_size = described_class.page_size
 
-      it "returns typical Linux page size (usually 4096)" do
-        page_size = described_class.page_size
-
-        # Most Linux systems use 4KB pages
-        refute_empty([page_size] & [4_096, 8_192, 16_384])
+          # Most Linux systems use 4KB pages
+          refute_empty([page_size] & [4_096, 8_192, 16_384])
+        end
       end
     end
 
-    context "when on macOS systems" do
-      before { skip "macOS only" unless RUBY_PLATFORM.include?("darwin") }
+    if RUBY_PLATFORM.include?("darwin")
+      context "when on macOS systems" do
+        it "uses the correct system library and constant" do
+          assert_equal(29, described_class::SC_PAGESIZE)
+        end
 
-      it "uses the correct system library and constant" do
-        assert_equal(29, described_class::SC_PAGESIZE)
-      end
+        it "returns typical macOS page size" do
+          page_size = described_class.page_size
 
-      it "returns typical macOS page size" do
-        page_size = described_class.page_size
-
-        # macOS typically uses 4KB pages on Intel, 16KB on Apple Silicon
-        refute_empty([page_size] & [4_096, 8_192, 16_384])
+          # macOS typically uses 4KB pages on Intel, 16KB on Apple Silicon
+          refute_empty([page_size] & [4_096, 8_192, 16_384])
+        end
       end
     end
 
@@ -84,11 +84,11 @@ describe_current do
       it "defines appropriate constants for the current platform" do
         case RUBY_PLATFORM
         when /linux/
-          expect(defined?(described_class::SC_PAGESIZE)).to be_truthy
+          assert(defined?(described_class::SC_PAGESIZE))
 
           assert_equal(30, described_class::SC_PAGESIZE)
         when /darwin/
-          expect(defined?(described_class::SC_PAGESIZE)).to be_truthy
+          assert(defined?(described_class::SC_PAGESIZE))
 
           assert_equal(29, described_class::SC_PAGESIZE)
         else
