@@ -45,12 +45,8 @@ read -r -d '' RUBY_BOOTSTRAP << 'RUBY' || true
 $stdout.sync = true
 $stderr.sync = true
 files = ARGV.dup
-warn "[#{Process.pid}] Loading test_helper..."
 require 'test_helper'
-warn "[#{Process.pid}] test_helper loaded, loading #{files.size} test files..."
 files.each { |f| require File.expand_path(f) }
-warn "[#{Process.pid}] All #{files.size} files loaded, starting test execution..."
-ARGV.push('--verbose')
 RUBY
 
 # Launch regular test workers

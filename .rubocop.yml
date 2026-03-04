@@ -28,6 +28,10 @@ Style/MixinUsage:
   Exclude:
     - test/**/*
 
+Style/OneClassPerFile:
+  Exclude:
+    - test/**/*
+
 ThreadSafety/ClassAndModuleAttributes:
   Enabled: false
 
