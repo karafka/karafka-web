@@ -352,7 +352,11 @@ module MockCompat
           args: args, kwargs: kwargs, block: block
         }
 
-        if raise_error
+        if raise_error && yield_values && !yield_values.empty?
+          # Combined and_raise + and_yield: yield first, then raise (RSpec behavior)
+          yield_values.each { |yv| block&.call(*yv) }
+          raise(*raise_error)
+        elsif raise_error
           raise(*raise_error)
         elsif return_block
           return_block.call(*args, **kwargs, &block)
