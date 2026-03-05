@@ -37,6 +37,26 @@ module MockCompat
   # Registry of method call recordings
   CALL_REGISTRY = Hash.new { |h, k| h[k] = Hash.new { |h2, k2| h2[k2] = [] } }
 
+  # Check if positional args match for with-constrained stub dispatch
+  def self.args_match_dispatch?(expected, actual)
+    return true if expected.nil?
+
+    expected.each_with_index.all? do |exp, i|
+      if exp.is_a?(AnInstanceOfMatcher)
+        exp.matches?(actual[i])
+      else
+        exp == actual[i]
+      end
+    end
+  end
+
+  # Check if keyword args match for with-constrained stub dispatch
+  def self.kwargs_match_dispatch?(expected, actual)
+    return true if expected.nil?
+
+    expected.all? { |k, v| actual[k] == v }
+  end
+
   # Clean up all stubs, constants, and call recordings after each test
   #
   # When the same method on the same object is stubbed multiple times (e.g., outer before
@@ -304,6 +324,8 @@ module MockCompat
       call_original = @call_original
       raise_error = @raise_error
       yield_values = @yield_values
+      with_args = @with_args
+      with_kwargs = @with_kwargs
 
       # Determine cleanup strategy
       is_singleton = obj.singleton_methods.include?(method_name.to_sym)
@@ -324,12 +346,10 @@ module MockCompat
 
       call_count = [0]
 
-      obj.define_singleton_method(method_name) do |*args, **kwargs, &block|
-        # Record the call
+      # Build the handler proc for this stub's behavior
+      handler = proc do |*args, **kwargs, &block|
         MockCompat::CALL_REGISTRY[obj.__id__][method_name] << {
-          args: args,
-          kwargs: kwargs,
-          block: block
+          args: args, kwargs: kwargs, block: block
         }
 
         if raise_error
@@ -339,7 +359,6 @@ module MockCompat
         elsif yield_values && !yield_values.empty?
           result = nil
           yield_values.each { |yv| result = block&.call(*yv) }
-          # If and_return was also specified, use that as the return value
           return_value.nil? ? result : return_value
         elsif call_original && original_method
           original_method.call(*args, **kwargs, &block)
@@ -349,6 +368,26 @@ module MockCompat
           return_values[idx]
         else
           return_value
+        end
+      end
+
+      if with_args || with_kwargs
+        # With-constrained stub: chain with previous method so multiple
+        # .with() stubs on the same method all work (like RSpec)
+        prev_method = had_method ? obj.method(method_name) : nil
+
+        obj.define_singleton_method(method_name) do |*args, **kwargs, &block|
+          if MockCompat.args_match_dispatch?(with_args, args) &&
+              MockCompat.kwargs_match_dispatch?(with_kwargs, kwargs)
+            handler.call(*args, **kwargs, &block)
+          elsif prev_method
+            prev_method.call(*args, **kwargs, &block)
+          end
+        end
+      else
+        # No with constraints - simple stub that handles all calls
+        obj.define_singleton_method(method_name) do |*args, **kwargs, &block|
+          handler.call(*args, **kwargs, &block)
         end
       end
 
