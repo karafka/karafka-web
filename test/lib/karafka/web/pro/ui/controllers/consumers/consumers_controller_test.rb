@@ -74,6 +74,8 @@ describe_current do
         get "consumers/overview"
       end
 
+      after { Karafka::Web.config.commanding.active = true }
+
       it do
         assert(response.ok?)
         assert_includes(body, "Commands")
@@ -688,6 +690,8 @@ describe_current do
 
         get "consumers/shinra:1:1/details"
       end
+
+      after { Karafka::Web.config.commanding.active = true }
 
       it do
         assert(response.ok?)
