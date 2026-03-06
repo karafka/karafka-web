@@ -178,7 +178,7 @@ describe_current do
         new_state = state_aggregator.to_h
         new_total = new_state[:stats][:messages]
 
-        assert_operator(new_total, :>, initial_total)
+        assert(new_total > initial_total)
       end
 
       it "updates stats correctly" do
@@ -187,8 +187,8 @@ describe_current do
 
         assert_kind_of(Hash, stats)
         assert_equal(1, stats[:processes])
-        assert_operator(stats[:busy], :>=, 0)
-        assert_operator(stats[:enqueued], :>=, 0)
+        assert(stats[:busy] >= 0)
+        assert(stats[:enqueued] >= 0)
       end
     end
   end
@@ -204,7 +204,7 @@ describe_current do
       state = state_aggregator.to_h
 
       assert_kind_of(Float, state[:dispatched_at])
-      assert_operator(state[:dispatched_at], :>, 0)
+      assert(state[:dispatched_at] > 0)
     end
 
     it "includes schema state" do

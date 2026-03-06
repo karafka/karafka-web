@@ -32,7 +32,7 @@ describe_current do
       before { get "dlq" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "No Dead Letter Queue topics exist in Kafka")
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
@@ -51,7 +51,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         assert_includes(body, dlq_topic)
         refute_includes(body, "No Dead Letter Queue topics exist in Kafka")
@@ -73,7 +73,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         assert_includes(body, dlq_topic)
         refute_includes(body, "#{topic.name}\"")
@@ -94,7 +94,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         assert_includes(body, dlq_topic)
         refute_includes(body, "No Dead Letter Queue topics exist in Kafka")

@@ -56,37 +56,37 @@ describe_current do
   end
 
   context "when config is valid" do
-    it { assert_predicate(contract.call(consumer_group), :success?) }
+    it { assert(contract.call(consumer_group).success?) }
   end
 
   context "when id is missing" do
     before { consumer_group.delete(:id) }
 
-    it { refute_predicate(contract.call(consumer_group), :success?) }
+    it { refute(contract.call(consumer_group).success?) }
   end
 
   context "when id is empty" do
     before { consumer_group[:id] = "" }
 
-    it { refute_predicate(contract.call(consumer_group), :success?) }
+    it { refute(contract.call(consumer_group).success?) }
   end
 
   context "when id is not a string" do
     before { consumer_group[:id] = 123 }
 
-    it { refute_predicate(contract.call(consumer_group), :success?) }
+    it { refute(contract.call(consumer_group).success?) }
   end
 
   context "when subscription_groups is missing" do
     before { consumer_group.delete(:subscription_groups) }
 
-    it { refute_predicate(contract.call(consumer_group), :success?) }
+    it { refute(contract.call(consumer_group).success?) }
   end
 
   context "when subscription_groups is not a hash" do
     before { consumer_group[:subscription_groups] = "not a hash" }
 
-    it { refute_predicate(contract.call(consumer_group), :success?) }
+    it { refute(contract.call(consumer_group).success?) }
   end
 
   context "when subscription_group does not have an id" do

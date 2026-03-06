@@ -16,13 +16,13 @@ assert_in_range(memory_limit, 252_000, 272_000, "Memory limit should be ~256MB")
 
 memory_size = container_metrics.memory_size
 
-assert_operator(memory_size, :<, 300_000, "Memory size should be less than 300MB")
-assert_operator(memory_size, :>, 200_000, "Memory size should be more than 200MB")
+assert(memory_size < 300_000, "Memory size should be less than 300MB")
+assert(memory_size > 200_000, "Memory size should be more than 200MB")
 
 memory_usage = container_metrics.memory_usage
 
-assert_operator(memory_usage, :>, 0, "Memory usage should be positive")
+assert(memory_usage > 0, "Memory usage should be positive")
 
 cpus = container_metrics.cpus
 
-assert_operator(cpus, :>, 0, "CPU count should be positive")
+assert(cpus > 0, "CPU count should be positive")

@@ -14,32 +14,32 @@ describe_current do
 
   context "when all values are valid" do
     it "is valid" do
-      assert_predicate(contract.call(metrics), :success?)
+      assert(contract.call(metrics).success?)
     end
   end
 
   context "when dispatched_at is negative" do
     before { metrics[:dispatched_at] = -1 }
 
-    it { refute_predicate(contract.call(metrics), :success?) }
+    it { refute(contract.call(metrics).success?) }
   end
 
   context "when dispatched_at is not a number" do
     before { metrics[:dispatched_at] = "test" }
 
-    it { refute_predicate(contract.call(metrics), :success?) }
+    it { refute(contract.call(metrics).success?) }
   end
 
   context "when schema_version is empty" do
     before { metrics[:schema_version] = "" }
 
-    it { refute_predicate(contract.call(metrics), :success?) }
+    it { refute(contract.call(metrics).success?) }
   end
 
   context "when schema_version is not a string" do
     before { metrics[:schema_version] = 123 }
 
-    it { refute_predicate(contract.call(metrics), :success?) }
+    it { refute(contract.call(metrics).success?) }
   end
 
   context "when aggregated metrics exist but are not valid" do

@@ -21,12 +21,12 @@ end
 
 memory_size = container_metrics.memory_size
 
-assert_operator(memory_size, :>, 2_000_000, "Should use host memory when no container limit")
+assert(memory_size > 2_000_000, "Should use host memory when no container limit")
 
 memory_usage = container_metrics.memory_usage
 
-assert_operator(memory_usage, :>, 0, "Memory usage should be positive")
+assert(memory_usage > 0, "Memory usage should be positive")
 
 cpus = container_metrics.cpus
 
-assert_operator(cpus, :>, 0, "CPU count should be positive")
+assert(cpus > 0, "CPU count should be positive")

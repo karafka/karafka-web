@@ -15,7 +15,7 @@ describe_current do
     end
 
     it do
-      refute_predicate(response, :ok?)
+      refute(response.ok?)
       assert_equal(404, status)
     end
   end
@@ -28,7 +28,7 @@ describe_current do
     end
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, support_message)
       assert_includes(body, breadcrumbs)
       refute_includes(body, pagination)
@@ -40,7 +40,7 @@ describe_current do
     before { get "consumers" }
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, support_message)
       refute_includes(body, no_processes)
       refute_includes(body, pagination)
@@ -68,7 +68,7 @@ describe_current do
     end
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       refute_includes(body, "partitions: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9")
       assert_includes(body, support_message)
       refute_includes(body, no_processes)
@@ -99,7 +99,7 @@ describe_current do
     end
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, "0-50")
       assert_includes(body, "default-[0-50] (51 partitions total)")
       assert_includes(body, support_message)
@@ -125,7 +125,7 @@ describe_current do
     end
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, support_message)
       assert_includes(body, breadcrumbs)
       refute_includes(body, no_processes)
@@ -166,7 +166,7 @@ describe_current do
       before { get "consumers" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, pagination)
         assert_includes(body, support_message)
         assert_includes(body, "shinra:0:0")
@@ -181,7 +181,7 @@ describe_current do
       before { get "consumers?page=2" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, pagination)
         assert_includes(body, support_message)
         assert_includes(body, "shinra:32:32")
@@ -196,7 +196,7 @@ describe_current do
       before { get "consumers?page=100" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, pagination)
         assert_includes(body, support_message)
         assert_equal(0, body.scan("shinra:").size)

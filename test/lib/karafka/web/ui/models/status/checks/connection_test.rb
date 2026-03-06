@@ -6,7 +6,7 @@ describe_current do
   let(:context) { Karafka::Web::Ui::Models::Status::Context.new }
 
   describe "DSL configuration" do
-    it { refute_predicate(described_class, :independent?) }
+    it { refute(described_class.independent?) }
     it { assert_equal(:enabled, described_class.dependency) }
     it { assert_equal({ time: nil }, described_class.halted_details) }
   end
@@ -24,7 +24,7 @@ describe_current do
 
         assert_equal(:success, result.status)
         assert_kind_of(Numeric, result.details[:time])
-        assert_operator(result.details[:time], :<, 1_000)
+        assert(result.details[:time] < 1_000)
       end
 
       it "caches cluster_info in context" do

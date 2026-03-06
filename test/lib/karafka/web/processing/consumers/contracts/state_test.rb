@@ -34,7 +34,7 @@ describe_current do
 
   context "when all values are valid" do
     it "is valid" do
-      assert_predicate(contract.call(params), :success?)
+      assert(contract.call(params).success?)
     end
   end
 
@@ -42,25 +42,25 @@ describe_current do
     context "when schema_version is missing" do
       before { params.delete(:schema_version) }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when schema_version is empty" do
       before { params[:schema_version] = "" }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when schema_version is not a string" do
       before { params[:schema_version] = 123 }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when schema_version is nil" do
       before { params[:schema_version] = nil }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
   end
 
@@ -68,43 +68,43 @@ describe_current do
     context "when dispatched_at is missing" do
       before { params.delete(:dispatched_at) }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when dispatched_at is negative" do
       before { params[:dispatched_at] = -1 }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when dispatched_at is zero" do
       before { params[:dispatched_at] = 0 }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when dispatched_at is not a number" do
       before { params[:dispatched_at] = "test" }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when dispatched_at is nil" do
       before { params[:dispatched_at] = nil }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when dispatched_at is a valid float" do
       before { params[:dispatched_at] = 1_234_567_890.123 }
 
-      it { assert_predicate(contract.call(params), :success?) }
+      it { assert(contract.call(params).success?) }
     end
 
     context "when dispatched_at is a valid integer" do
       before { params[:dispatched_at] = 1_234_567_890 }
 
-      it { assert_predicate(contract.call(params), :success?) }
+      it { assert(contract.call(params).success?) }
     end
   end
 
@@ -112,25 +112,25 @@ describe_current do
     context "when stats is missing" do
       before { params.delete(:stats) }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when stats is not a hash" do
       before { params[:stats] = "not a hash" }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when stats is nil" do
       before { params[:stats] = nil }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when stats is an array" do
       before { params[:stats] = [] }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when stats has invalid aggregated stats" do
@@ -150,19 +150,19 @@ describe_current do
     context "when processes is missing" do
       before { params.delete(:processes) }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when processes is not a hash" do
       before { params[:processes] = [] }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when processes is nil" do
       before { params[:processes] = nil }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when process has invalid structure" do
@@ -181,7 +181,7 @@ describe_current do
         }
       end
 
-      it { assert_predicate(contract.call(params), :success?) }
+      it { assert(contract.call(params).success?) }
     end
 
     context "when process ID is a string instead of symbol" do
@@ -194,7 +194,7 @@ describe_current do
         }
       end
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
 
       it "includes appropriate error message" do
         result = contract.call(params)
@@ -217,7 +217,7 @@ describe_current do
         }
       end
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
 
       it "includes appropriate error message" do
         result = contract.call(params)
@@ -240,7 +240,7 @@ describe_current do
         }
       end
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
 
       it "includes appropriate error message" do
         result = contract.call(params)
@@ -263,7 +263,7 @@ describe_current do
         }
       end
 
-      it { assert_predicate(contract.call(params), :success?) }
+      it { assert(contract.call(params).success?) }
     end
   end
 
@@ -271,43 +271,43 @@ describe_current do
     context "when schema_state is missing" do
       before { params.delete(:schema_state) }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when schema_state is compatible" do
       before { params[:schema_state] = "compatible" }
 
-      it { assert_predicate(contract.call(params), :success?) }
+      it { assert(contract.call(params).success?) }
     end
 
     context "when schema_state is incompatible" do
       before { params[:schema_state] = "incompatible" }
 
-      it { assert_predicate(contract.call(params), :success?) }
+      it { assert(contract.call(params).success?) }
     end
 
     context "when schema_state is not one of the accepted values" do
       before { params[:schema_state] = "na" }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when schema_state is nil" do
       before { params[:schema_state] = nil }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when schema_state is empty string" do
       before { params[:schema_state] = "" }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when schema_state is not a string" do
       before { params[:schema_state] = 123 }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
   end
 
@@ -329,6 +329,6 @@ describe_current do
       }
     end
 
-    it { assert_predicate(contract.call(params), :success?) }
+    it { assert(contract.call(params).success?) }
   end
 end

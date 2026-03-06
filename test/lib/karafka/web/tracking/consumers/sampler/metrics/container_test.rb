@@ -33,7 +33,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container do
           .with("/sys/fs/cgroup/cgroup.controllers")
           .and_return(true)
 
-        assert_predicate(described_class, :active?)
+        assert(described_class.active?)
       end
     end
 
@@ -47,7 +47,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container do
           .with("/sys/fs/cgroup/memory/memory.limit_in_bytes")
           .and_return(true)
 
-        assert_predicate(described_class, :active?)
+        assert(described_class.active?)
       end
     end
   end
@@ -56,7 +56,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container do
     context "when running outside container (real behavior)" do
       it "falls back to OS metrics since no cgroup limit exists" do
         # This tests the actual || super fallback
-        assert_operator(container_metrics.memory_size, :>, 0)
+        assert(container_metrics.memory_size > 0)
       end
     end
 

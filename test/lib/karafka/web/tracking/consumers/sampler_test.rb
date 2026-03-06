@@ -21,7 +21,7 @@ describe_current do
     it { assert_equal(0, process[:memory_usage]) }
     it { assert_equal(0, process[:memory_total_usage]) }
     it { refute_nil(process[:memory_size]) }
-    it { assert_operator(process[:cpus], :>, 0) }
+    it { assert(process[:cpus] > 0) }
     it { assert_equal(0, process[:threads]) }
     it { assert_equal([-1, -1, -1], process[:cpu_usage]) }
     it { assert_equal(Karafka::Process.tags, process[:tags]) }
@@ -91,7 +91,7 @@ describe_current do
       it "instantiates Os metrics collector as cgroups are not available" do
         sampler = described_class.new
         # Test through public API - memory_size should work (from Os class)
-        assert_operator(sampler.to_report[:process][:memory_size], :>, 0)
+        assert(sampler.to_report[:process][:memory_size] > 0)
       end
     end
 

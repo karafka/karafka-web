@@ -46,37 +46,6 @@ module IntegrationHelper
     exit 1
   end
 
-  # Asserts that a comparison operator holds between two values
-  #
-  # @param value1 [Object] the left-hand side value
-  # @param operator [Symbol] the comparison operator (e.g., :<, :>, :<=, :>=)
-  # @param value2 [Object] the right-hand side value
-  # @param message [String] error message to display if assertion fails
-  def assert_operator(value1, operator, value2, message)
-    return if value1.public_send(operator, value2)
-
-    puts <<~ERROR
-      FAILED: #{message}
-        Expected: #{value1} #{operator} #{value2}
-    ERROR
-    exit 1
-  end
-
-  # Asserts that an object responds to a predicate method with true
-  #
-  # @param object [Object] the object to test
-  # @param predicate [Symbol] the predicate method to call (e.g., :any?, :empty?)
-  # @param message [String] error message to display if assertion fails
-  def assert_predicate(object, predicate, message)
-    return if object.public_send(predicate)
-
-    puts <<~ERROR
-      FAILED: #{message}
-        Expected #{object.inspect} to respond truthy to #{predicate}
-    ERROR
-    exit 1
-  end
-
   # Asserts that a value is an instance of a class or its subclass
   #
   # @param klass [Class] the expected class

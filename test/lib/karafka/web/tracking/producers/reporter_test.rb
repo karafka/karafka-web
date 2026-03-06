@@ -106,17 +106,17 @@ describe_current do
     context "when producer is not yet created" do
       before { allow(Karafka::Web).to receive(:producer).and_return(nil) }
 
-      it { refute_predicate(reporter, :active?) }
+      it { refute(reporter.active?) }
     end
 
     context "when producer is not active" do
       before { allow(Karafka::Web.producer.status).to receive(:active?).and_return(false) }
 
-      it { refute_predicate(reporter, :active?) }
+      it { refute(reporter.active?) }
     end
 
     context "when producer exists and is active" do
-      it { assert_predicate(reporter, :active?) }
+      it { assert(reporter.active?) }
     end
   end
 end

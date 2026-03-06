@@ -50,13 +50,13 @@ describe_current do
     context "when topic is not specified in matchers" do
       let(:matchers) { {} }
 
-      it { refute_predicate(matcher, :apply?) }
+      it { refute(matcher.apply?) }
     end
 
     context "when topic is specified in matchers" do
       let(:matchers) { { topic: "my_topic" } }
 
-      it { assert_predicate(matcher, :apply?) }
+      it { assert(matcher.apply?) }
     end
   end
 
@@ -64,20 +64,20 @@ describe_current do
     context "when topic name matches an assigned topic" do
       let(:matchers) { { topic: "my_topic" } }
 
-      it { assert_predicate(matcher, :matches?) }
+      it { assert(matcher.matches?) }
     end
 
     context "when topic name does not match any assigned topic" do
       let(:matchers) { { topic: "other_topic" } }
 
-      it { refute_predicate(matcher, :matches?) }
+      it { refute(matcher.matches?) }
     end
 
     context "when there are no assignments" do
       let(:assignments) { {} }
       let(:matchers) { { topic: "my_topic" } }
 
-      it { refute_predicate(matcher, :matches?) }
+      it { refute(matcher.matches?) }
     end
 
     context "when there are multiple topic assignments" do
@@ -94,19 +94,19 @@ describe_current do
       context "when matching first topic" do
         let(:matchers) { { topic: "my_topic" } }
 
-        it { assert_predicate(matcher, :matches?) }
+        it { assert(matcher.matches?) }
       end
 
       context "when matching second topic" do
         let(:matchers) { { topic: "second_topic" } }
 
-        it { assert_predicate(matcher, :matches?) }
+        it { assert(matcher.matches?) }
       end
 
       context "when matching neither topic" do
         let(:matchers) { { topic: "third_topic" } }
 
-        it { refute_predicate(matcher, :matches?) }
+        it { refute(matcher.matches?) }
       end
     end
   end

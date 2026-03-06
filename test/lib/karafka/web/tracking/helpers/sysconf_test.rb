@@ -6,7 +6,7 @@ describe_current do
       page_size = described_class.page_size
 
       assert_kind_of(Integer, page_size)
-      assert_operator(page_size, :>, 0)
+      assert(page_size > 0)
     end
 
     it "returns a reasonable page size value" do
@@ -68,7 +68,7 @@ describe_current do
         result = described_class.sysconf(described_class::SC_PAGESIZE)
 
         assert_kind_of(Integer, result)
-        assert_operator(result, :>, 0)
+        assert(result > 0)
       end
     end
 
@@ -115,7 +115,7 @@ describe_current do
         pages_needed = (memory_in_bytes + page_size - 1) / page_size
 
         assert_kind_of(Integer, pages_needed)
-        assert_operator(pages_needed, :>, 0)
+        assert(pages_needed > 0)
       end
     end
   end

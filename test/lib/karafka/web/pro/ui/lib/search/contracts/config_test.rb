@@ -39,20 +39,20 @@ describe_current do
 
   context "when all values are valid" do
     it "is valid" do
-      assert_predicate(contract.call(params), :success?)
+      assert(contract.call(params).success?)
     end
   end
 
   context "when matchers is not an array" do
     before { params[:ui][:search][:matchers] = "not_an_array" }
 
-    it { refute_predicate(contract.call(params), :success?) }
+    it { refute(contract.call(params).success?) }
   end
 
   context "when matchers is an empty array" do
     before { params[:ui][:search][:matchers] = [] }
 
-    it { refute_predicate(contract.call(params), :success?) }
+    it { refute(contract.call(params).success?) }
   end
 
   context "when a matcher does not respond to name" do
@@ -66,7 +66,7 @@ describe_current do
 
     before { params[:ui][:search][:matchers] = [invalid_matcher] }
 
-    it { refute_predicate(contract.call(params), :success?) }
+    it { refute(contract.call(params).success?) }
   end
 
   context "when a matcher does not respond to call" do
@@ -80,7 +80,7 @@ describe_current do
 
     before { params[:ui][:search][:matchers] = [invalid_matcher] }
 
-    it { refute_predicate(contract.call(params), :success?) }
+    it { refute(contract.call(params).success?) }
   end
 
   context "when matchers have duplicate names" do
@@ -98,42 +98,42 @@ describe_current do
 
     before { params[:ui][:search][:matchers] = [matcher, duplicate_matcher] }
 
-    it { refute_predicate(contract.call(params), :success?) }
+    it { refute(contract.call(params).success?) }
   end
 
   context "when limits is not an array" do
     before { params[:ui][:search][:limits] = "not_an_array" }
 
-    it { refute_predicate(contract.call(params), :success?) }
+    it { refute(contract.call(params).success?) }
   end
 
   context "when limits is an empty array" do
     before { params[:ui][:search][:limits] = [] }
 
-    it { refute_predicate(contract.call(params), :success?) }
+    it { refute(contract.call(params).success?) }
   end
 
   context "when limits contains negative numbers" do
     before { params[:ui][:search][:limits] = [-100] }
 
-    it { refute_predicate(contract.call(params), :success?) }
+    it { refute(contract.call(params).success?) }
   end
 
   context "when limits contains non-numbers" do
     before { params[:ui][:search][:limits] = ["na"] }
 
-    it { refute_predicate(contract.call(params), :success?) }
+    it { refute(contract.call(params).success?) }
   end
 
   context "when timeout is not an integer" do
     before { params[:ui][:search][:timeout] = [] }
 
-    it { refute_predicate(contract.call(params), :success?) }
+    it { refute(contract.call(params).success?) }
   end
 
   context "when timeout is not positive" do
     before { params[:ui][:search][:timeout] = 0 }
 
-    it { refute_predicate(contract.call(params), :success?) }
+    it { refute(contract.call(params).success?) }
   end
 end

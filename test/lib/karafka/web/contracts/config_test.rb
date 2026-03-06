@@ -78,27 +78,27 @@ describe_current do
 
   context "when all values are valid" do
     it "is valid" do
-      assert_predicate(contract.call(params), :success?)
+      assert(contract.call(params).success?)
     end
   end
 
   context "when enabled is not boolean" do
     before { params[:enabled] = "string_value" }
 
-    it { refute_predicate(contract.call(params), :success?) }
+    it { refute(contract.call(params).success?) }
   end
 
   context "when ttl is not numeric" do
     before { params[:ttl] = "string_value" }
 
-    it { refute_predicate(contract.call(params), :success?) }
+    it { refute(contract.call(params).success?) }
   end
 
   context "when validating topics topics" do
     context "when errors topic does not match the regexp" do
       before { params[:topics][:errors][:name] = "invalid topic!" }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when validating consumer scoped fields" do
@@ -111,19 +111,19 @@ describe_current do
         context "when #{field} name does not match the regexp" do
           before { params[:topics][:consumers][field][:name] = "invalid topic!" }
 
-          it { refute_predicate(contract.call(params), :success?) }
+          it { refute(contract.call(params).success?) }
         end
 
         context "when #{field} config contains non-symbol keys" do
           before { params[:topics][:consumers][field][:config] = { "a" => "b" } }
 
-          it { refute_predicate(contract.call(params), :success?) }
+          it { refute(contract.call(params).success?) }
         end
 
         context "when #{field} config is empty" do
           before { params[:topics][:consumers][field][:config] = {} }
 
-          it { refute_predicate(contract.call(params), :success?) }
+          it { refute(contract.call(params).success?) }
         end
       end
     end
@@ -133,37 +133,37 @@ describe_current do
     context "when interval is less than 1000" do
       before { params[:tracking][:interval] = 999 }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when interval is not an integer" do
       before { params[:tracking][:interval] = 1000.5 }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when consumers sync_threshold is less than 0" do
       before { params[:tracking][:consumers][:sync_threshold] = -1 }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when consumers sync_threshold is not an integer" do
       before { params[:tracking][:consumers][:sync_threshold] = 1.1 }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when producers sync_threshold is less than 0" do
       before { params[:tracking][:producers][:sync_threshold] = -1 }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when producers sync_threshold is not an integer" do
       before { params[:tracking][:producers][:sync_threshold] = 1.1 }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     keys = %i[consumers producers].freeze
@@ -175,14 +175,14 @@ describe_current do
           context "when #{field} is nil" do
             before { params[:tracking][entity][field] = nil }
 
-            it { refute_predicate(contract.call(params), :success?) }
+            it { refute(contract.call(params).success?) }
           end
         end
 
         context "when listeners is not an array" do
           before { params[:tracking][entity][:listeners] = "not_an_array" }
 
-          it { refute_predicate(contract.call(params), :success?) }
+          it { refute(contract.call(params).success?) }
         end
       end
     end
@@ -192,25 +192,25 @@ describe_current do
     context "when active is not a boolean" do
       before { params[:processing][:active] = "maybe" }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when group_id does not match the regexp" do
       before { params[:group_id] = "invalid topic!" }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when interval is less than 1000" do
       before { params[:processing][:interval] = 999 }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when kafka is nil" do
       before { params[:processing][:kafka] = nil }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
   end
 
@@ -219,86 +219,86 @@ describe_current do
       context "when key is empty" do
         before { params[:ui][:sessions][:key] = "" }
 
-        it { refute_predicate(contract.call(params), :success?) }
+        it { refute(contract.call(params).success?) }
       end
 
       context "when env_key is empty" do
         before { params[:ui][:sessions][:env_key] = "" }
 
-        it { refute_predicate(contract.call(params), :success?) }
+        it { refute(contract.call(params).success?) }
       end
 
       context "when secret is less than 64 characters long" do
         before { params[:ui][:sessions][:secret] = "short" }
 
-        it { refute_predicate(contract.call(params), :success?) }
+        it { refute(contract.call(params).success?) }
       end
     end
 
     context "when kafka is nil" do
       before { params[:ui][:kafka] = nil }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when per_page is more than 100" do
       before { params[:ui][:per_page] = 101 }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when per_page is less than 1" do
       before { params[:ui][:per_page] = 0 }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when internal_topics is nil" do
       before { params[:ui][:visibility][:internal_topics] = nil }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when internal_topics is not boolean" do
       before { params[:ui][:visibility][:internal_topics] = "1" }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when active_topics_cluster_lags_only is nil" do
       before { params[:ui][:visibility][:active_topics_cluster_lags_only] = nil }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when active_topics_cluster_lags_only is not boolean" do
       before { params[:ui][:visibility][:active_topics_cluster_lags_only] = "1" }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when max_visible_payload_size is not an integer" do
       before { params[:ui][:max_visible_payload_size] = "1" }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when max_visible_payload_size is less than 1" do
       before { params[:ui][:max_visible_payload_size] = 0 }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when dlq_patterns is not an array" do
       before { params[:ui][:dlq_patterns] = "1" }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when dlq_patterns is array with things other than string or regexp" do
       before { params[:ui][:dlq_patterns] = [1, 2, 3] }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when validating custom UI config options" do
@@ -307,25 +307,25 @@ describe_current do
           context "when set to false" do
             before { params[:ui][:custom][key] = false }
 
-            it { assert_predicate(contract.call(params), :success?) }
+            it { assert(contract.call(params).success?) }
           end
 
           context "when set to an empty string" do
             before { params[:ui][:custom][key] = "" }
 
-            it { refute_predicate(contract.call(params), :success?) }
+            it { refute(contract.call(params).success?) }
           end
 
           context "when set to a non-empty string" do
             before { params[:ui][:custom][key] = "something.valid" }
 
-            it { assert_predicate(contract.call(params), :success?) }
+            it { assert(contract.call(params).success?) }
           end
 
           context "when set to an invalid type" do
             before { params[:ui][:custom][key] = 123 }
 
-            it { refute_predicate(contract.call(params), :success?) }
+            it { refute(contract.call(params).success?) }
           end
         end
       end

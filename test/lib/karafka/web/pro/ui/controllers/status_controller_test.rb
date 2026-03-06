@@ -28,7 +28,7 @@ describe_current do
       before { get "status" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         refute_includes(body, support_message)
         assert_includes(body, breadcrumbs)
       end
@@ -45,7 +45,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         refute_includes(body, support_message)
         assert_includes(body, breadcrumbs)
       end
@@ -71,7 +71,7 @@ describe_current do
       end
 
       it "displays successful status with topic information" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "Status")
         refute_includes(body, support_message)
         assert_includes(body, breadcrumbs)
@@ -101,7 +101,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "Commands topic presence")
         assert_includes(body, "does not exist")
         assert_includes(body, "required for Pro commanding features")

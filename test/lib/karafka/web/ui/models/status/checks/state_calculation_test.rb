@@ -7,7 +7,7 @@ describe_current do
   let(:current_state) { { dispatched_at: Time.now.to_f } }
 
   describe "DSL configuration" do
-    it { refute_predicate(described_class, :independent?) }
+    it { refute(described_class.independent?) }
     it { assert_equal(:materializing_lag, described_class.dependency) }
     it { assert_equal({}, described_class.halted_details) }
   end

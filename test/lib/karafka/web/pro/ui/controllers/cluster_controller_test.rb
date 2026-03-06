@@ -27,7 +27,7 @@ describe_current do
     before { get "cluster" }
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, "ID")
       assert_includes(body, breadcrumbs)
       refute_includes(body, support_message)
@@ -43,7 +43,7 @@ describe_current do
       end
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(403, response.status)
       end
     end
@@ -54,7 +54,7 @@ describe_current do
       before { get "cluster/123" }
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, status)
       end
     end
@@ -63,7 +63,7 @@ describe_current do
       before { get "cluster/1" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, support_message)
         assert_includes(body, "advertised.listeners")
@@ -78,7 +78,7 @@ describe_current do
     before { get "cluster/replication" }
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, breadcrumbs)
       refute_includes(body, support_message)
     end
@@ -90,7 +90,7 @@ describe_current do
         before { get "cluster/replication?page=2" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, breadcrumbs)
           assert_includes(body, pagination)
           refute_includes(body, support_message)
@@ -101,7 +101,7 @@ describe_current do
         before { get "cluster/replication?page=100000000" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, pagination)
           assert_includes(body, no_meaningful_results)
           refute_includes(body, support_message)

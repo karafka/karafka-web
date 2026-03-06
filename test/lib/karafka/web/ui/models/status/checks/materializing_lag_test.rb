@@ -7,7 +7,7 @@ describe_current do
   let(:max_lag) { (Karafka::Web.config.tracking.interval * 2) / 1_000 }
 
   describe "DSL configuration" do
-    it { refute_predicate(described_class, :independent?) }
+    it { refute(described_class.independent?) }
     it { assert_equal(:live_reporting, described_class.dependency) }
 
     it "returns halted details with max_lag" do
@@ -32,7 +32,7 @@ describe_current do
         result = check.call
 
         assert_equal(:success, result.status)
-        assert_operator(result.details[:lag], :<, max_lag)
+        assert(result.details[:lag] < max_lag)
         assert_equal(max_lag, result.details[:max_lag])
       end
     end
@@ -50,7 +50,7 @@ describe_current do
         result = check.call
 
         assert_equal(:failure, result.status)
-        assert_operator(result.details[:lag], :>, max_lag)
+        assert(result.details[:lag] > max_lag)
       end
     end
   end

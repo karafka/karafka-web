@@ -7,7 +7,7 @@ describe_current do
     before { get "support" }
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, support_message)
       assert_includes(body, breadcrumbs)
     end

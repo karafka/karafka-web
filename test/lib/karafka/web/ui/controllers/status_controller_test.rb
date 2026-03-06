@@ -12,7 +12,7 @@ describe_current do
       before { get "status" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, support_message)
         assert_includes(body, breadcrumbs)
         refute_includes(body, "The initial state of the consumers appears to")
@@ -57,7 +57,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, support_message)
         assert_includes(body, breadcrumbs)
 
@@ -86,7 +86,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, support_message)
         assert_includes(body, breadcrumbs)
         assert_includes(body, "Please ensure all those topics have a replication")
@@ -107,7 +107,7 @@ describe_current do
       before { get "status" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, support_message)
         assert_includes(body, breadcrumbs)
         refute_includes(body, "Please ensure all those topics have a replication")
@@ -126,7 +126,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, support_message)
         assert_includes(body, breadcrumbs)
         assert_includes(body, "The initial state of the consumers appears to")
@@ -144,7 +144,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, support_message)
         assert_includes(body, breadcrumbs)
         assert_includes(body, "The initial state of the consumers metrics appears to")
@@ -155,7 +155,7 @@ describe_current do
       before { get "status?debug=true&refresh=1" }
 
       it "ignores query parameters and shows normal status" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, support_message)
         assert_includes(body, breadcrumbs)
       end
@@ -169,7 +169,7 @@ describe_current do
       end
 
       it "always shows fresh status" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, support_message)
       end
     end
@@ -178,7 +178,7 @@ describe_current do
       before { get "status" }
 
       it "shows Karafka and Web UI versions" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, Karafka::VERSION)
         assert_includes(body, Karafka::Web::VERSION)
       end
@@ -191,7 +191,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, support_message)
         assert_includes(body, breadcrumbs)
         assert_includes(body, "Karafka Web-UI is not part of your")
@@ -209,7 +209,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, support_message)
         assert_includes(body, breadcrumbs)
         assert_includes(body, "Web UI was not able to establish a connection")
@@ -228,7 +228,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, support_message)
         assert_includes(body, breadcrumbs)
         assert_includes(body, "need to be configured with")
@@ -257,7 +257,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, support_message)
         assert_includes(body, breadcrumbs)
         assert_includes(body, "There are no Karafka consumer processes actively reporting")
@@ -293,7 +293,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, support_message)
         assert_includes(body, breadcrumbs)
         assert_includes(body, "were not located in the Kafka cluster")
@@ -309,7 +309,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, support_message)
         assert_includes(body, breadcrumbs)
         assert_includes(body, "Karafka Pro subscription")
@@ -335,7 +335,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, support_message)
         assert_includes(body, breadcrumbs)
         # Corrupted reports data leads to failure in consumers_reports check
@@ -371,7 +371,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, support_message)
         assert_includes(body, breadcrumbs)
         assert_includes(body, "Incompatible consumer reports detected")
@@ -405,7 +405,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, support_message)
         assert_includes(body, breadcrumbs)
         assert_includes(body, "Some consumers are using schema versions")
@@ -441,7 +441,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, support_message)
         assert_includes(body, breadcrumbs)
         assert_includes(body, "significant lag in materializing")
@@ -468,7 +468,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, support_message)
         assert_includes(body, breadcrumbs)
         assert_includes(body, "is subscribed to handle")

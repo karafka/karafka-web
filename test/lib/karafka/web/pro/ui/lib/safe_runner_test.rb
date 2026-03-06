@@ -34,7 +34,7 @@ describe_current do
       it "sets success to true" do
         safe_runner.call
 
-        assert_predicate(safe_runner, :success?)
+        assert(safe_runner.success?)
       end
     end
 
@@ -55,7 +55,7 @@ describe_current do
       it "sets success to false" do
         safe_runner.call
 
-        refute_predicate(safe_runner, :success?)
+        refute(safe_runner.success?)
       end
     end
   end
@@ -65,7 +65,7 @@ describe_current do
       let(:block) { -> { "not called" } }
 
       it "returns false" do
-        refute_predicate(safe_runner, :executed?)
+        refute(safe_runner.executed?)
       end
     end
 
@@ -75,7 +75,7 @@ describe_current do
       it "returns true" do
         safe_runner.call
 
-        assert_predicate(safe_runner, :executed?)
+        assert(safe_runner.executed?)
       end
     end
   end
@@ -85,7 +85,7 @@ describe_current do
       let(:block) { -> { "deferred success" } }
 
       it "executes the block and returns true" do
-        assert_predicate(safe_runner, :success?)
+        assert(safe_runner.success?)
       end
     end
   end
@@ -95,7 +95,7 @@ describe_current do
       let(:block) { -> { raise StandardError } }
 
       it "executes the block and returns true for failure" do
-        assert_predicate(safe_runner, :failure?)
+        assert(safe_runner.failure?)
       end
     end
   end

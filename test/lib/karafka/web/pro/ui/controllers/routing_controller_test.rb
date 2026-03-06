@@ -28,7 +28,7 @@ describe_current do
       before { get "routing" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, topics_config.consumers.states.name)
         assert_includes(body, topics_config.consumers.metrics.name)
         assert_includes(body, topics_config.consumers.reports.name)
@@ -47,7 +47,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, topics_config.consumers.states.name)
         assert_includes(body, topics_config.consumers.metrics.name)
         assert_includes(body, topics_config.consumers.reports.name)
@@ -79,7 +79,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, topics_config.errors.name)
         assert_includes(body, "karafka_web")
         assert_includes(body, breadcrumbs)
@@ -92,7 +92,7 @@ describe_current do
     before { get "routing/#{Karafka::App.routes.first.topics.first.id}" }
 
     it "expect to display details, including the injectable once" do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, "kafka.topic.metadata.refresh.interval.ms")
       assert_includes(body, breadcrumbs)
       assert_includes(body, "kafka.statistics.interval.ms")
@@ -103,7 +103,7 @@ describe_current do
       before { get "routing/na" }
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, status)
       end
     end
@@ -128,7 +128,7 @@ describe_current do
       end
 
       it "expect to hide them" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "kafka.sasl.username")
         assert_includes(body, "***")
         assert_includes(body, breadcrumbs)
@@ -154,7 +154,7 @@ describe_current do
       end
 
       it "expect to hide them" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "kafka.ssl.key.password")
         assert_includes(body, "***")
         assert_includes(body, breadcrumbs)

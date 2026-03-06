@@ -7,19 +7,19 @@ describe_current do
     context "when producer is not yet created" do
       before { allow(Karafka).to receive(:producer).and_return(nil) }
 
-      it { refute_predicate(reporter, :active?) }
+      it { refute(reporter.active?) }
     end
 
     context "when producer is not active" do
       before { allow(Karafka.producer.status).to receive(:active?).and_return(false) }
 
-      it { refute_predicate(reporter, :active?) }
+      it { refute(reporter.active?) }
     end
 
     context "when producer exists but karafka is not even initializing" do
       before { allow(Karafka::App).to receive(:initializing?).and_return(true) }
 
-      it { refute_predicate(reporter, :active?) }
+      it { refute(reporter.active?) }
     end
 
     context "when producer exists but karafka is not initialized" do
@@ -30,7 +30,7 @@ describe_current do
         )
       end
 
-      it { refute_predicate(reporter, :active?) }
+      it { refute(reporter.active?) }
     end
 
     context "when producer exists and is active and server is running" do
@@ -41,7 +41,7 @@ describe_current do
         )
       end
 
-      it { assert_predicate(reporter, :active?) }
+      it { assert(reporter.active?) }
     end
   end
 end

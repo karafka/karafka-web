@@ -27,7 +27,7 @@ describe_current do
     before { get "ux" }
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       refute_includes(body, support_message)
       assert_includes(body, breadcrumbs)
     end

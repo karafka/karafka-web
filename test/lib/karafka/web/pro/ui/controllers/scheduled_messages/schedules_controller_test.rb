@@ -41,7 +41,7 @@ describe_current do
       before { get "scheduled_messages/schedules" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, no_groups)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
@@ -59,7 +59,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, no_groups)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
@@ -83,7 +83,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, messages_topic)
         assert_includes(body, breadcrumbs)
         refute_includes(body, no_groups)
@@ -113,7 +113,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, messages_topic1)
         assert_includes(body, messages_topic2)
         assert_includes(body, breadcrumbs)
@@ -142,7 +142,7 @@ describe_current do
       before { get "scheduled_messages/schedules/#{messages_topic}" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, messages_topic)
         assert_includes(body, breadcrumbs)
         assert_includes(body, no_states)
@@ -160,7 +160,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, messages_topic)
         assert_includes(body, breadcrumbs)
         assert_includes(body, "2024-09-02")

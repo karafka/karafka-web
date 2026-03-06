@@ -42,13 +42,13 @@ describe_current do
     context "when process_id is not specified in matchers" do
       let(:matchers) { {} }
 
-      it { refute_predicate(matcher, :apply?) }
+      it { refute(matcher.apply?) }
     end
 
     context "when process_id is specified in matchers" do
       let(:matchers) { { process_id: current_process_id } }
 
-      it { assert_predicate(matcher, :apply?) }
+      it { assert(matcher.apply?) }
     end
   end
 
@@ -56,19 +56,19 @@ describe_current do
     context "when process_id matches current process ID" do
       let(:matchers) { { process_id: current_process_id } }
 
-      it { assert_predicate(matcher, :matches?) }
+      it { assert(matcher.matches?) }
     end
 
     context "when process_id does not match current process ID" do
       let(:matchers) { { process_id: "other-process-456" } }
 
-      it { refute_predicate(matcher, :matches?) }
+      it { refute(matcher.matches?) }
     end
 
     context "when process_id is empty string" do
       let(:matchers) { { process_id: "" } }
 
-      it { refute_predicate(matcher, :matches?) }
+      it { refute(matcher.matches?) }
     end
   end
 end

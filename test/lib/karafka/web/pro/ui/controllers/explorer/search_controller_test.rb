@@ -45,7 +45,7 @@ describe_current do
     before { get "explorer/topic/search" }
 
     it do
-      refute_predicate(response, :ok?)
+      refute(response.ok?)
       assert_equal(404, response.status)
     end
   end
@@ -54,7 +54,7 @@ describe_current do
     before { get "explorer/#{topic}/search" }
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, breadcrumbs)
       assert_includes(body, no_search_criteria)
       assert_includes(body, search_modal)
@@ -81,7 +81,7 @@ describe_current do
     end
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, breadcrumbs)
       assert_includes(body, no_search_criteria)
       assert_includes(body, search_modal)
@@ -103,7 +103,7 @@ describe_current do
     end
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, breadcrumbs)
       assert_includes(body, no_search_criteria)
       assert_includes(body, search_modal)
@@ -122,7 +122,7 @@ describe_current do
     end
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, breadcrumbs)
       assert_includes(body, no_search_criteria)
       assert_includes(body, search_modal)
@@ -138,7 +138,7 @@ describe_current do
     before { get "explorer/#{topic}/search?search[matcher]=invalid" }
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, breadcrumbs)
       assert_includes(body, search_modal)
       assert_includes(body, "matcher: must match the existing matchers names")
@@ -155,7 +155,7 @@ describe_current do
     before { get "explorer/#{topic}/search?#{valid_search}" }
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, breadcrumbs)
       assert_includes(body, search_modal)
       assert_includes(body, "table")
@@ -186,7 +186,7 @@ describe_current do
     end
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, breadcrumbs)
       assert_includes(body, search_modal)
       assert_includes(body, "table")
@@ -230,7 +230,7 @@ describe_current do
     end
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, breadcrumbs)
       assert_includes(body, search_modal)
       assert_includes(body, "table")
@@ -271,7 +271,7 @@ describe_current do
     end
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, breadcrumbs)
       assert_includes(body, search_modal)
       assert_includes(body, "table")
@@ -316,7 +316,7 @@ describe_current do
     end
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, breadcrumbs)
       assert_includes(body, search_modal)
       assert_includes(body, "table")
@@ -360,7 +360,7 @@ describe_current do
     end
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, breadcrumbs)
       assert_includes(body, search_modal)
       assert_includes(body, "table")

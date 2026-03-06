@@ -127,7 +127,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
 
   describe "#cpus" do
     it "returns number of processors" do
-      assert_operator(os_metrics.cpus, :>, 0)
+      assert(os_metrics.cpus > 0)
       assert_equal(Etc.nprocessors, os_metrics.cpus)
     end
   end

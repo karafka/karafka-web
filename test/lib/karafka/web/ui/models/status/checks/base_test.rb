@@ -29,7 +29,7 @@ describe_current do
 
     describe ".independent!" do
       it "marks the class as independent" do
-        assert_predicate(check_class, :independent?)
+        assert(check_class.independent?)
       end
     end
 
@@ -38,7 +38,7 @@ describe_current do
         let(:dependent_class) { Class.new(described_class) }
 
         it "returns false" do
-          refute_predicate(dependent_class, :independent?)
+          refute(dependent_class.independent?)
         end
       end
     end
