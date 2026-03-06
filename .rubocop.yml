@@ -36,3 +36,15 @@ ThreadSafety/ClassInstanceVariable:
 
 ThreadSafety/NewThread:
   Enabled: false
+
+Minitest/AssertOperator:
+  Enabled: false
+
+Minitest/RefuteOperator:
+  Enabled: false
+
+Minitest/AssertPredicate:
+  Enabled: false
+
+Minitest/RefutePredicate:
+  Enabled: false
