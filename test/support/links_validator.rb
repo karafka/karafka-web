@@ -8,7 +8,7 @@ class LinksValidator
   # 200 - ok
   # 302, 304 - redirects
   # 402 - paid pro feature
-  ALLOWED_RESPONSES = [200, 302, 304, 402, 403].freeze
+  ALLOWED_RESPONSES = [200, 302, 304, 402].freeze
 
   # Cases that are hardcoded or come from fixtures that are always 404 or are expected to fail
   # in other ways
