@@ -30,7 +30,7 @@ describe_current do
       before { post "scheduled_messages/messages/non-existing/0/1/republish" }
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, response.status)
       end
     end

@@ -40,7 +40,7 @@ describe_current do
       assert_equal(213_731_273, process.lag_stored)
       assert_equal(13, process.lag)
       assert_equal(3, process.subscribed_partitions_count)
-      assert_predicate(process, :subscribed?)
+      assert(process.subscribed?)
     end
   end
 
@@ -48,19 +48,19 @@ describe_current do
     let(:process) { described_class.find(state, "shinra:1:1") }
 
     context "when schema matches the one in memory" do
-      it { assert_predicate(process, :schema_compatible?) }
+      it { assert(process.schema_compatible?) }
     end
 
     context "when schema is newer than the one in memory" do
       before { process[:schema_version] = "#{process[:schema_version]}1" }
 
-      it { refute_predicate(process, :schema_compatible?) }
+      it { refute(process.schema_compatible?) }
     end
 
     context "when schema is older than the one in memory" do
       before { process[:schema_version] = "0.1" }
 
-      it { refute_predicate(process, :schema_compatible?) }
+      it { refute(process.schema_compatible?) }
     end
   end
 end

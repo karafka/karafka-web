@@ -25,17 +25,17 @@ assert_in_range(memory_limit, 514_000, 534_000, "Memory limit should be ~512MB")
 
 memory_size = container_metrics.memory_size
 
-assert_operator(memory_size, :<, 600_000, "Should use container limit, not host memory")
-assert_operator(memory_size, :>, 400_000, "Memory size should be more than 400MB")
+assert(memory_size < 600_000, "Should use container limit, not host memory")
+assert(memory_size > 400_000, "Memory size should be more than 400MB")
 
 memory_usage = container_metrics.memory_usage
 
-assert_operator(memory_usage, :>, 0, "Memory usage should be positive")
+assert(memory_usage > 0, "Memory usage should be positive")
 assert_type(memory_usage, Integer, "Memory usage should be an integer")
 
 cpus = container_metrics.cpus
 
-assert_operator(cpus, :>, 0, "CPU count should be positive")
+assert(cpus > 0, "CPU count should be positive")
 assert_type(cpus, Integer, "CPU count should be an integer")
 
 memory_threads_ps = container_metrics.memory_threads_ps
@@ -45,8 +45,8 @@ assert_type(memory_threads_ps, Array, "Process data should be an array")
 
 memory_total = container_metrics.memory_total_usage(memory_threads_ps)
 
-assert_operator(memory_total, :>, 0, "Total memory usage should be positive")
+assert(memory_total > 0, "Total memory usage should be positive")
 
 threads = container_metrics.threads(memory_threads_ps)
 
-assert_operator(threads, :>, 0, "Thread count should be positive")
+assert(threads > 0, "Thread count should be positive")

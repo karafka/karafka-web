@@ -31,7 +31,7 @@ describe_current do
       before { get "topics/#{generate_topic_name}/replication" }
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, status)
       end
     end
@@ -40,7 +40,7 @@ describe_current do
       before { get "topics/#{topic}/replication" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -68,7 +68,7 @@ describe_current do
       before { get "topics/#{topic}/replication" }
 
       it "displays all partitions" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, topic)
         assert_includes(body, "0")
         assert_includes(body, "1")
@@ -95,7 +95,7 @@ describe_current do
         end
 
         it "displays the no redundancy warning with production severity" do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, "No Replication Redundancy")
           assert_includes(body, "replication factor of")
           assert_includes(body, "redundant copies")
@@ -116,7 +116,7 @@ describe_current do
         end
 
         it "displays the no redundancy warning with development context" do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, "No Replication Redundancy")
           assert_includes(body, "replication factor of")
           assert_includes(body, "acceptable for development")
@@ -187,7 +187,7 @@ describe_current do
       end
 
       it "displays the zero fault tolerance warning" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "Replication Resilience Issue Detected")
         assert_includes(body, "zero")
         assert_includes(body, "fault tolerance")
@@ -255,7 +255,7 @@ describe_current do
       end
 
       it "displays the low durability warning" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "Low Data Durability Configuration")
         assert_includes(body, "min.insync.replicas")
         assert_includes(body, "replication factor of")
@@ -322,7 +322,7 @@ describe_current do
       end
 
       it "displays the success message" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "Replication Configuration is Fault Tolerant")
         assert_includes(body, "broker failure")
       end

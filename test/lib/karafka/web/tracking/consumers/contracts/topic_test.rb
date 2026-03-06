@@ -35,54 +35,54 @@ describe_current do
   end
 
   context "when config is valid" do
-    it { assert_predicate(contract.call(topic), :success?) }
+    it { assert(contract.call(topic).success?) }
   end
 
   context "when name is missing" do
     before { topic.delete(:name) }
 
-    it { refute_predicate(contract.call(topic), :success?) }
+    it { refute(contract.call(topic).success?) }
   end
 
   context "when name is not a string" do
     before { topic[:name] = 123 }
 
-    it { refute_predicate(contract.call(topic), :success?) }
+    it { refute(contract.call(topic).success?) }
   end
 
   context "when name is empty" do
     before { topic[:name] = "" }
 
-    it { refute_predicate(contract.call(topic), :success?) }
+    it { refute(contract.call(topic).success?) }
   end
 
   context "when partitions is missing" do
     before { topic.delete(:partitions) }
 
-    it { refute_predicate(contract.call(topic), :success?) }
+    it { refute(contract.call(topic).success?) }
   end
 
   context "when partitions is not a hash" do
     before { topic[:partitions] = "not a hash" }
 
-    it { refute_predicate(contract.call(topic), :success?) }
+    it { refute(contract.call(topic).success?) }
   end
 
   context "when partitions_cnt is missing" do
     before { topic.delete(:partitions_cnt) }
 
-    it { refute_predicate(contract.call(topic), :success?) }
+    it { refute(contract.call(topic).success?) }
   end
 
   context "when partitions_cnt is not an integer" do
     before { topic[:partitions_cnt] = "5" }
 
-    it { refute_predicate(contract.call(topic), :success?) }
+    it { refute(contract.call(topic).success?) }
   end
 
   context "when partitions_cnt is negative" do
     before { topic[:partitions_cnt] = -1 }
 
-    it { refute_predicate(contract.call(topic), :success?) }
+    it { refute(contract.call(topic).success?) }
   end
 end

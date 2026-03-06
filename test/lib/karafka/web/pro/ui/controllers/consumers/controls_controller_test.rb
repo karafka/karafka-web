@@ -36,7 +36,7 @@ describe_current do
       end
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, status)
       end
     end
@@ -49,7 +49,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         refute_includes(body, support_message)
         refute_includes(body, pagination)
         assert_includes(body, breadcrumbs)
@@ -61,7 +61,7 @@ describe_current do
       before { get "consumers/controls" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         refute_includes(body, support_message)
         refute_includes(body, no_processes)
         refute_includes(body, pagination)
@@ -79,7 +79,7 @@ describe_current do
       context "when sorting" do
         before { get "consumers/controls?sort=id+desc" }
 
-        it { assert_predicate(response, :ok?) }
+        it { assert(response.ok?) }
       end
     end
 
@@ -102,7 +102,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         refute_includes(body, support_message)
         refute_includes(body, no_processes)
         refute_includes(body, pagination)
@@ -122,7 +122,7 @@ describe_current do
       context "when sorting" do
         before { get "consumers/controls?sort=id+desc" }
 
-        it { assert_predicate(response, :ok?) }
+        it { assert(response.ok?) }
       end
     end
 
@@ -145,7 +145,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         refute_includes(body, support_message)
         refute_includes(body, no_processes)
         refute_includes(body, pagination)
@@ -165,7 +165,7 @@ describe_current do
       context "when sorting" do
         before { get "consumers/controls?sort=id+desc" }
 
-        it { assert_predicate(response, :ok?) }
+        it { assert(response.ok?) }
       end
     end
 
@@ -181,7 +181,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         refute_includes(body, support_message)
         refute_includes(body, no_processes)
         refute_includes(body, pagination)
@@ -226,7 +226,7 @@ describe_current do
         before { get "consumers/controls" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, pagination)
           assert_includes(body, "shinra:0:0")
           assert_includes(body, "shinra:1:1")
@@ -241,7 +241,7 @@ describe_current do
         before { get "consumers/controls?page=2" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, pagination)
           assert_includes(body, "shinra:32:32")
           assert_includes(body, "shinra:34:34")
@@ -256,7 +256,7 @@ describe_current do
         before { get "consumers/controls?page=100" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, pagination)
           assert_includes(body, no_meaningful_results)
           assert_equal(0, body.scan("shinra:").size)

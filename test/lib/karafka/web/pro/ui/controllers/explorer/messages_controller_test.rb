@@ -31,7 +31,7 @@ describe_current do
       before { get "explorer/messages/non-existing/0/1/forward" }
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, response.status)
       end
     end
@@ -45,7 +45,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, topic)
         assert_includes(body, "message-republish-form")
         refute_includes(body, pagination)
@@ -59,7 +59,7 @@ describe_current do
       before { post "explorer/messages/non-existing/0/1/republish" }
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, response.status)
       end
     end
@@ -148,7 +148,7 @@ describe_current do
       end
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(403, response.status)
       end
     end
@@ -159,7 +159,7 @@ describe_current do
       before { get "explorer/messages/non-existing/0/1/download" }
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, response.status)
       end
     end
@@ -175,7 +175,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_equal(expected_disposition, response.headers["content-disposition"])
         assert_equal("application/octet-stream", response.headers["content-type"])
         assert_equal(payload, response.body)
@@ -195,7 +195,7 @@ describe_current do
       end
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(403, response.status)
       end
     end
@@ -206,7 +206,7 @@ describe_current do
       before { get "explorer/messages/non-existing/0/1/export" }
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, response.status)
       end
     end
@@ -222,7 +222,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_equal(expected_disposition, response.headers["content-disposition"])
         assert_equal("application/octet-stream", response.headers["content-type"])
         assert_equal(payload, response.body)
@@ -249,7 +249,7 @@ describe_current do
       end
 
       it "expect to use custom deserializer" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_equal(expected_disposition, response.headers["content-disposition"])
         assert_equal("application/octet-stream", response.headers["content-type"])
         assert_equal('"1"', response.body)
@@ -269,7 +269,7 @@ describe_current do
       end
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(403, response.status)
       end
     end

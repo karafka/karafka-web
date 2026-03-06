@@ -114,7 +114,7 @@ describe_current do
 
         result = tracker.to_h
 
-        assert_operator(result[:days].size, :<=, 57)
+        assert(result[:days].size <= 57)
       end
 
       it "respects the limit for hours range" do
@@ -126,7 +126,7 @@ describe_current do
 
         result = tracker.to_h
 
-        assert_operator(result[:hours].size, :<=, 49)
+        assert(result[:hours].size <= 49)
       end
 
       it "respects the limit for minutes range" do
@@ -138,7 +138,7 @@ describe_current do
 
         result = tracker.to_h
 
-        assert_operator(result[:minutes].size, :<=, 61)
+        assert(result[:minutes].size <= 61)
       end
 
       it "respects the limit for seconds range" do
@@ -150,7 +150,7 @@ describe_current do
 
         result = tracker.to_h
 
-        assert_operator(result[:seconds].size, :<=, 61)
+        assert(result[:seconds].size <= 61)
       end
     end
 
@@ -167,7 +167,7 @@ describe_current do
 
         result = tracker.to_h
         # The implementation may create more points than expected due to resolution logic
-        assert_operator(result[:days].size, :>=, 2)
+        assert(result[:days].size >= 2)
       end
 
       it "keeps the first data point within a resolution window" do
@@ -252,7 +252,7 @@ describe_current do
       result = tracker.to_h
 
       # After eviction, data should be within limits
-      assert_operator(result[:seconds].size, :<=, 61)
+      assert(result[:seconds].size <= 61)
     end
   end
 

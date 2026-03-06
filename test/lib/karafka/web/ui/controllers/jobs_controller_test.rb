@@ -29,7 +29,7 @@ describe_current do
       end
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, status)
       end
     end
@@ -38,7 +38,7 @@ describe_current do
       before { get "jobs/running" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "2023-08-01T09:47:51")
         assert_includes(body, "ActiveJob::Consumer")
         assert_includes(body, support_message)
@@ -63,7 +63,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "There are no running jobs at the moment")
         refute_includes(body, "ActiveJob::Consumer")
         assert_includes(body, support_message)
@@ -90,7 +90,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, support_message)
         assert_includes(body, breadcrumbs)
         assert_includes(body, "N/A")
@@ -117,7 +117,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "eofed")
         assert_includes(body, support_message)
         assert_includes(body, breadcrumbs)
@@ -155,7 +155,7 @@ describe_current do
         before { get "jobs/running" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, "2023-08-01T09:47:51")
           assert_equal(25, body.scan("ActiveJob::Consumer").size)
           assert_includes(body, support_message)
@@ -181,7 +181,7 @@ describe_current do
         end
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, "2023-08-01T09:47:51")
           assert_equal(25, body.scan("ActiveJob::Consumer").size)
           assert_includes(body, support_message)
@@ -199,7 +199,7 @@ describe_current do
         before { get "jobs/running?page=2" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, pagination)
           assert_includes(body, support_message)
           assert_includes(body, "shinra:32:32")
@@ -214,7 +214,7 @@ describe_current do
         before { get "jobs/running?page=100" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, pagination)
           assert_includes(body, support_message)
           assert_equal(0, body.scan("shinra:").size)
@@ -236,7 +236,7 @@ describe_current do
       end
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, status)
       end
     end
@@ -257,7 +257,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "2023-08-01T09:47:51")
         assert_includes(body, "ActiveJob::Consumer")
         assert_includes(body, support_message)
@@ -282,7 +282,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "There are no pending jobs at the moment")
         refute_includes(body, "ActiveJob::Consumer")
         assert_includes(body, support_message)
@@ -321,7 +321,7 @@ describe_current do
         before { get "jobs/pending" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, "2023-08-01T09:47:51")
           assert_equal(25, body.scan("ActiveJob::Consumer").size)
           assert_includes(body, support_message)
@@ -347,7 +347,7 @@ describe_current do
         end
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, "2023-08-01T09:47:51")
           assert_equal(25, body.scan("ActiveJob::Consumer").size)
           assert_includes(body, support_message)
@@ -365,7 +365,7 @@ describe_current do
         before { get "jobs/pending?page=2" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, pagination)
           assert_includes(body, support_message)
           assert_includes(body, "shinra:32:32")
@@ -380,7 +380,7 @@ describe_current do
         before { get "jobs/pending?page=100" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, pagination)
           assert_includes(body, support_message)
           assert_equal(0, body.scan("shinra:").size)

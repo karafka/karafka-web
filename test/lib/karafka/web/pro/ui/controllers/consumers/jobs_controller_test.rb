@@ -42,7 +42,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "This process has no running jobs at the moment")
         refute_includes(body, "Karafka::Pro::ActiveJob::Consumer")
         refute_includes(body, pagination)
@@ -54,7 +54,7 @@ describe_current do
       before { get "consumers/shinra:1:1/jobs/running" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "Karafka::Pro::ActiveJob::Consumer")
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -73,7 +73,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "Karafka::Pro::ActiveJob::Consumer")
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -93,7 +93,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "This process has no running jobs at the moment")
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -104,7 +104,7 @@ describe_current do
       before { get "consumers/4e8f7174ae53/jobs/running" }
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, status)
       end
     end
@@ -126,7 +126,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "This process has no pending jobs at the moment")
         refute_includes(body, "Karafka::Pro::ActiveJob::Consumer")
         refute_includes(body, pagination)
@@ -149,7 +149,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "Karafka::Pro::ActiveJob::Consumer")
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -171,7 +171,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "Karafka::Pro::ActiveJob::Consumer")
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -191,7 +191,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "This process has no pending jobs at the moment")
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -202,7 +202,7 @@ describe_current do
       before { get "consumers/4e8f7174ae53/jobs/pending" }
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, status)
       end
     end

@@ -33,7 +33,7 @@ describe_current do
     end
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, breadcrumbs)
       refute_includes(body, pagination)
       refute_includes(body, support_message)
@@ -51,7 +51,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -69,7 +69,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -87,7 +87,7 @@ describe_current do
       before { get "topics/new" }
 
       it "renders successfully" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         assert_includes(body, "Creating New Topic")
         assert_includes(body, "Topic Name:")
@@ -114,7 +114,7 @@ describe_current do
       end
 
       it "returns unauthorized status" do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(403, status)
       end
     end
@@ -167,7 +167,7 @@ describe_current do
       end
 
       it "returns unauthorized status" do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(403, status)
       end
     end
@@ -179,7 +179,7 @@ describe_current do
       before { post "topics", default_params }
 
       it "renders form with errors" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "Creating New Topic")
         assert_includes(body, "Please Correct the Following Errors Before Continuing")
         assert_includes(body, error_message)
@@ -199,7 +199,7 @@ describe_current do
           before { post "topics", default_params.merge(params_override) }
 
           it "renders form" do
-            assert_predicate(response, :ok?)
+            assert(response.ok?)
             assert_includes(body, "Creating New Topic")
           end
         end
@@ -228,7 +228,7 @@ describe_current do
               assert_equal(302, response.status)
               assert(response.location.end_with?("/topics"))
             else
-              assert_predicate(response, :ok?)
+              assert(response.ok?)
               assert_includes(body, "Creating New Topic")
             end
           end
@@ -248,7 +248,7 @@ describe_current do
       end
 
       it "renders removal confirmation page with all required elements" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         assert_includes(body, "Topic #{topic_name} Removal Confirmation")
         refute_includes(body, pagination)
@@ -287,7 +287,7 @@ describe_current do
       end
 
       it "returns unauthorized status" do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(403, status)
       end
     end
@@ -326,7 +326,7 @@ describe_current do
       end
 
       it "returns unauthorized status" do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(403, status)
       end
     end

@@ -6,7 +6,7 @@ describe_current do
   let(:context) { Karafka::Web::Ui::Models::Status::Context.new }
 
   describe "DSL configuration" do
-    it { refute_predicate(described_class, :independent?) }
+    it { refute(described_class.independent?) }
     it { assert_equal(:consumers_reports_schema_state, described_class.dependency) }
     it { assert_equal([], described_class.halted_details) }
   end
@@ -74,7 +74,7 @@ describe_current do
         result = check.call
 
         assert_equal(:warning, result.status)
-        assert_predicate(result, :success?)
+        assert(result.success?)
       end
 
       it "includes missing topics in details" do

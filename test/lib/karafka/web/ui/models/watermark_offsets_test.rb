@@ -42,21 +42,21 @@ describe_current do
 
   describe "#cleaned?" do
     context "when partition is empty" do
-      it { refute_predicate(watermarks, :cleaned?) }
+      it { refute(watermarks.cleaned?) }
     end
 
     context "when there is some data" do
       let(:high) { 100 }
       let(:low) { 80 }
 
-      it { refute_predicate(watermarks, :cleaned?) }
+      it { refute(watermarks.cleaned?) }
     end
 
     context "when there was some data but no more" do
       let(:high) { 100 }
       let(:low) { 100 }
 
-      it { assert_predicate(watermarks, :cleaned?) }
+      it { assert(watermarks.cleaned?) }
     end
   end
 
@@ -81,7 +81,7 @@ describe_current do
       assert_equal(0, result.low)
       assert_equal(0, result.high)
       assert_empty(result)
-      refute_predicate(result, :cleaned?)
+      refute(result.cleaned?)
     end
   end
 
@@ -96,7 +96,7 @@ describe_current do
       assert_equal(0, result.low)
       assert_equal(2, result.high)
       refute_empty(result)
-      refute_predicate(result, :cleaned?)
+      refute(result.cleaned?)
     end
   end
 end

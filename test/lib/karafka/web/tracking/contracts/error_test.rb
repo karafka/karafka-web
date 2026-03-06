@@ -20,31 +20,31 @@ describe_current do
     }
   end
 
-  it { assert_predicate(contract.call(error), :success?) }
+  it { assert(contract.call(error).success?) }
 
   context "when validating id" do
     context "when missing" do
       before { error.delete(:id) }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
 
     context "when not a string" do
       before { error[:id] = 123 }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
 
     context "when empty" do
       before { error[:id] = "" }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
 
     context "when valid uuid" do
       before { error[:id] = SecureRandom.uuid }
 
-      it { assert_predicate(contract.call(error), :success?) }
+      it { assert(contract.call(error).success?) }
     end
   end
 
@@ -52,13 +52,13 @@ describe_current do
     context "when missing" do
       before { error.delete(:schema_version) }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
 
     context "when not a string" do
       before { error[:schema_version] = 1 }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
   end
 
@@ -66,19 +66,19 @@ describe_current do
     context "when missing" do
       before { error.delete(:type) }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
 
     context "when not a string" do
       before { error[:type] = 1 }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
 
     context "when empty" do
       before { error[:type] = "" }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
   end
 
@@ -86,19 +86,19 @@ describe_current do
     context "when missing" do
       before { error.delete(:error_class) }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
 
     context "when not a string" do
       before { error[:error_class] = 1 }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
 
     context "when empty" do
       before { error[:error_class] = "" }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
   end
 
@@ -106,19 +106,19 @@ describe_current do
     context "when missing" do
       before { error.delete(:error_message) }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
 
     context "when not a string" do
       before { error[:error_message] = 1 }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
 
     context "when empty" do
       before { error[:error_message] = "" }
 
-      it { assert_predicate(contract.call(error), :success?) }
+      it { assert(contract.call(error).success?) }
     end
   end
 
@@ -126,19 +126,19 @@ describe_current do
     context "when missing" do
       before { error.delete(:backtrace) }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
 
     context "when not a string" do
       before { error[:backtrace] = 1 }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
 
     context "when empty" do
       before { error[:backtrace] = "" }
 
-      it { assert_predicate(contract.call(error), :success?) }
+      it { assert(contract.call(error).success?) }
     end
   end
 
@@ -146,25 +146,25 @@ describe_current do
     context "when missing" do
       before { error.delete(:details) }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
 
     context "when not a string" do
       before { error[:details] = 1 }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
 
     context "when empty" do
       before { error[:details] = {} }
 
-      it { assert_predicate(contract.call(error), :success?) }
+      it { assert(contract.call(error).success?) }
     end
 
     context "when not empty" do
       before { error[:details] = { rand => rand } }
 
-      it { assert_predicate(contract.call(error), :success?) }
+      it { assert(contract.call(error).success?) }
     end
   end
 
@@ -172,25 +172,25 @@ describe_current do
     context "when missing" do
       before { error.delete(:occurred_at) }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
 
     context "when a string" do
       before { error[:occurred_at] = "1" }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
 
     context "when empty" do
       before { error[:occurred_at] = nil }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
 
     context "when numeric" do
       before { error[:occurred_at] = 1_685_459_118.65 }
 
-      it { assert_predicate(contract.call(error), :success?) }
+      it { assert(contract.call(error).success?) }
     end
   end
 
@@ -198,19 +198,19 @@ describe_current do
     context "when missing" do
       before { error[:process].delete(:id) }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
 
     context "when not a string" do
       before { error[:process][:id] = 1 }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
 
     context "when empty" do
       before { error[:process][:id] = "" }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
   end
 
@@ -218,13 +218,13 @@ describe_current do
     context "when missing" do
       before { error[:process].delete(:tags) }
 
-      it { assert_predicate(contract.call(error), :success?) }
+      it { assert(contract.call(error).success?) }
     end
 
     context "when not a taggable" do
       before { error[:process][:tags] = 1 }
 
-      it { refute_predicate(contract.call(error), :success?) }
+      it { refute(contract.call(error).success?) }
     end
   end
 end

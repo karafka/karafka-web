@@ -35,7 +35,7 @@ describe_current do
     end
 
     it do
-      refute_predicate(response, :ok?)
+      refute(response.ok?)
       assert_equal(404, status)
     end
   end
@@ -52,7 +52,7 @@ describe_current do
     end
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, no_meaningful)
       assert_includes(body, 'id="refreshable"')
       assert_includes(body, '<div id="refreshable" class="col-span-12 mb-10">')
@@ -74,7 +74,7 @@ describe_current do
     end
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, no_meaningful)
       refute_includes(body, support_message)
       refute_includes(body, breadcrumbs)
@@ -87,7 +87,7 @@ describe_current do
     before { get "dashboard" }
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, "Pace")
       assert_includes(body, "Batches")
       assert_includes(body, "Jobs")
@@ -119,7 +119,7 @@ describe_current do
     end
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, "Pace")
       assert_includes(body, "Batches")
       assert_includes(body, "Jobs")
@@ -151,7 +151,7 @@ describe_current do
     end
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
     end
   end
 end

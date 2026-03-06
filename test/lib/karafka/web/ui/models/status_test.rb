@@ -42,7 +42,7 @@ describe_current do
   describe "#enabled" do
     let(:result) { status.enabled }
 
-    it { assert_predicate(result, :success?) }
+    it { assert(result.success?) }
     it { assert_equal("success", result.to_s) }
     it { assert_equal({}, result.details) }
     it { assert_equal("successes", result.partial_namespace) }
@@ -50,7 +50,7 @@ describe_current do
     context "when routing does not include the web processing group" do
       before { allow(Karafka::Web.config).to receive(:group_id).and_return([]) }
 
-      it { refute_predicate(result, :success?) }
+      it { refute(result.success?) }
       it { assert_equal("failure", result.to_s) }
       it { assert_equal({}, result.details) }
       it { assert_equal("failures", result.partial_namespace) }
@@ -63,14 +63,14 @@ describe_current do
     context "when routing is not enabled" do
       before { allow(Karafka::Web.config).to receive(:group_id).and_return([]) }
 
-      it { refute_predicate(result, :success?) }
+      it { refute(result.success?) }
       it { assert_equal("halted", result.to_s) }
       it { assert_equal({ time: nil }, result.details) }
       it { assert_equal("failures", result.partial_namespace) }
     end
 
     context "when we can connect fast" do
-      it { assert_predicate(result, :success?) }
+      it { assert(result.success?) }
       it { assert_equal("success", result.to_s) }
       it { refute_nil(result.details[:time]) }
       it { assert_equal("successes", result.partial_namespace) }
@@ -83,7 +83,7 @@ describe_current do
           .and_raise(Rdkafka::RdkafkaError.new(0))
       end
 
-      it { refute_predicate(result, :success?) }
+      it { refute(result.success?) }
       it { assert_equal("failure", result.to_s) }
       it { refute_nil(result.details[:time]) }
       it { assert_equal("failures", result.partial_namespace) }
@@ -100,7 +100,7 @@ describe_current do
           .and_raise(Rdkafka::RdkafkaError.new(0))
       end
 
-      it { refute_predicate(result, :success?) }
+      it { refute(result.success?) }
       it { assert_equal("halted", result.to_s) }
       it { assert_equal({}, result.details) }
       it { assert_equal("failures", result.partial_namespace) }
@@ -110,7 +110,7 @@ describe_current do
       before { all_topics }
 
       it "expect all to be ok" do
-        assert_predicate(result, :success?)
+        assert(result.success?)
         assert_equal("success", result.to_s)
         refute_nil(result.details)
         assert_equal("successes", result.partial_namespace)
@@ -128,7 +128,7 @@ describe_current do
       end
 
       it "expect not to be successful" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("failure", result.to_s)
         refute(result.details[na_topic][:present])
         assert(result.details[reports_topic][:present])
@@ -152,7 +152,7 @@ describe_current do
       end
 
       it "expect not to be successful" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("failure", result.to_s)
         refute(result.details[na_topic][:present])
         assert(result.details[reports_topic][:present])
@@ -172,7 +172,7 @@ describe_current do
     context "when not all topics are there" do
       before { Karafka::Web.config.topics.errors.name = generate_topic_name }
 
-      it { refute_predicate(result, :success?) }
+      it { refute(result.success?) }
       it { assert_equal("halted", result.to_s) }
       it { assert_equal({}, result.details) }
       it { assert_equal("failures", result.partial_namespace) }
@@ -187,7 +187,7 @@ describe_current do
       end
 
       it "expect to have everything in order" do
-        assert_predicate(result, :success?)
+        assert(result.success?)
         assert_equal("success", result.to_s)
         refute_empty(result.details)
         assert_equal("successes", result.partial_namespace)
@@ -203,7 +203,7 @@ describe_current do
       end
 
       it "expect to have everything in order" do
-        assert_predicate(result, :success?)
+        assert(result.success?)
         assert_equal("success", result.to_s)
         refute_empty(result.details)
         assert_equal("successes", result.partial_namespace)
@@ -219,7 +219,7 @@ describe_current do
       end
 
       it "expect to fail and report" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("failure", result.to_s)
         refute_empty(result.details)
         assert_equal("failures", result.partial_namespace)
@@ -239,7 +239,7 @@ describe_current do
       end
 
       it "expect to halt" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("halted", result.to_s)
         assert_equal({}, result.details)
         assert_equal("failures", result.partial_namespace)
@@ -250,7 +250,7 @@ describe_current do
       before { all_topics }
 
       it "expect all to be ok" do
-        assert_predicate(result, :success?)
+        assert(result.success?)
         assert_equal("success", result.to_s)
         refute_empty(result.details)
         assert_equal("successes", result.partial_namespace)
@@ -264,7 +264,7 @@ describe_current do
       end
 
       it "expect to warn" do
-        assert_predicate(result, :success?)
+        assert(result.success?)
         assert_equal("warning", result.to_s)
         refute_empty(result.details)
         assert_equal("warnings", result.partial_namespace)
@@ -278,7 +278,7 @@ describe_current do
       end
 
       it "expect all to be ok because non-production is acceptable" do
-        assert_predicate(result, :success?)
+        assert(result.success?)
         assert_equal("success", result.to_s)
         refute_empty(result.details)
         assert_equal("successes", result.partial_namespace)
@@ -298,7 +298,7 @@ describe_current do
       end
 
       it "expect to halt" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("halted", result.to_s)
         assert_equal({ issue_type: :presence }, result.details)
         assert_equal("failures", result.partial_namespace)
@@ -309,7 +309,7 @@ describe_current do
       before { all_topics }
 
       it "expect to fail" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("failure", result.to_s)
         assert_equal({ issue_type: :presence }, result.details)
         assert_equal("failures", result.partial_namespace)
@@ -323,7 +323,7 @@ describe_current do
       end
 
       it "expect all to be ok" do
-        assert_predicate(result, :success?)
+        assert(result.success?)
         assert_equal("success", result.to_s)
         assert_equal({ issue_type: :presence }, result.details)
         assert_equal("successes", result.partial_namespace)
@@ -337,7 +337,7 @@ describe_current do
       end
 
       it "expect all to be ok" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("failure", result.to_s)
         assert_equal({ issue_type: :deserialization }, result.details)
         assert_equal("failures", result.partial_namespace)
@@ -353,7 +353,7 @@ describe_current do
       end
 
       it "expect all to be ok because replication is a warning" do
-        assert_predicate(result, :success?)
+        assert(result.success?)
         assert_equal("success", result.to_s)
         assert_equal({ issue_type: :presence }, result.details)
         assert_equal("successes", result.partial_namespace)
@@ -373,7 +373,7 @@ describe_current do
       end
 
       it "expect to halt" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("halted", result.to_s)
         assert_equal({ issue_type: :presence }, result.details)
         assert_equal("failures", result.partial_namespace)
@@ -387,7 +387,7 @@ describe_current do
       end
 
       it "expect to fail" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("failure", result.to_s)
         assert_equal({ issue_type: :presence }, result.details)
         assert_equal("failures", result.partial_namespace)
@@ -402,7 +402,7 @@ describe_current do
       end
 
       it "expect to fail" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("failure", result.to_s)
         assert_equal({ issue_type: :deserialization }, result.details)
         assert_equal("failures", result.partial_namespace)
@@ -413,7 +413,7 @@ describe_current do
       before { ready_topics }
 
       it "expect all to be ok" do
-        assert_predicate(result, :success?)
+        assert(result.success?)
         assert_equal("success", result.to_s)
         assert_equal({ issue_type: :presence }, result.details)
         assert_equal("successes", result.partial_namespace)
@@ -431,7 +431,7 @@ describe_current do
       end
 
       it "expect to halt" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("halted", result.to_s)
         assert_equal({}, result.details)
         assert_equal("failures", result.partial_namespace)
@@ -442,7 +442,7 @@ describe_current do
       before { ready_topics }
 
       it "expect all to be ok" do
-        assert_predicate(result, :success?)
+        assert(result.success?)
         assert_equal("success", result.to_s)
         assert_equal({}, result.details)
         assert_equal("successes", result.partial_namespace)
@@ -457,7 +457,7 @@ describe_current do
       end
 
       it "expect all to be ok" do
-        assert_predicate(result, :success?)
+        assert(result.success?)
         assert_equal("success", result.to_s)
         assert_equal({}, result.details)
         assert_equal("successes", result.partial_namespace)
@@ -473,7 +473,7 @@ describe_current do
       end
 
       it "expect all to be ok" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("failure", result.to_s)
         assert_equal({}, result.details)
         assert_equal("failures", result.partial_namespace)
@@ -492,7 +492,7 @@ describe_current do
       end
 
       it "expect to halt" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("halted", result.to_s)
         assert_equal({}, result.details)
         assert_equal("failures", result.partial_namespace)
@@ -503,7 +503,7 @@ describe_current do
       before { ready_topics }
 
       it "expect all to be ok" do
-        assert_predicate(result, :success?)
+        assert(result.success?)
         assert_equal("success", result.to_s)
         assert_equal({}, result.details)
         assert_equal("successes", result.partial_namespace)
@@ -518,7 +518,7 @@ describe_current do
       end
 
       it "expect all to be ok" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("failure", result.to_s)
         assert_equal({}, result.details)
         assert_equal("failures", result.partial_namespace)
@@ -538,7 +538,7 @@ describe_current do
       end
 
       it "expect to halt" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("halted", result.to_s)
         assert_equal({ incompatible: [] }, result.details)
         assert_equal("failures", result.partial_namespace)
@@ -549,7 +549,7 @@ describe_current do
       before { ready_topics }
 
       it "expect all to be ok" do
-        assert_predicate(result, :success?)
+        assert(result.success?)
         assert_equal("success", result.to_s)
         assert_empty(result.details[:incompatible])
         assert_equal("successes", result.partial_namespace)
@@ -570,7 +570,7 @@ describe_current do
       end
 
       it "expect to warn" do
-        assert_predicate(result, :success?)
+        assert(result.success?)
         assert_equal("warning", result.to_s)
         refute_empty(result.details[:incompatible])
         assert_equal("warnings", result.partial_namespace)
@@ -589,7 +589,7 @@ describe_current do
       end
 
       it "expect to halt" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("halted", result.to_s)
         assert_equal({ lag: 0, max_lag: 10 }, result.details)
         assert_equal("failures", result.partial_namespace)
@@ -611,7 +611,7 @@ describe_current do
       end
 
       it "expect all to be ok" do
-        assert_predicate(result, :success?)
+        assert(result.success?)
         assert_equal("success", result.to_s)
         assert_equal("successes", result.partial_namespace)
       end
@@ -636,10 +636,10 @@ describe_current do
       end
 
       it "expect all to be ok" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("failure", result.to_s)
         assert_equal("failures", result.partial_namespace)
-        assert_operator(result[:details][:lag], :>, 10)
+        assert(result[:details][:lag] > 10)
       end
     end
   end
@@ -655,7 +655,7 @@ describe_current do
       end
 
       it "expect to halt" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("halted", result.to_s)
         assert_equal({}, result.details)
         assert_equal("failures", result.partial_namespace)
@@ -666,7 +666,7 @@ describe_current do
       before { ready_topics }
 
       it "expect to report failure" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("failure", result.to_s)
         assert_equal({}, result.details)
         assert_equal("failures", result.partial_namespace)
@@ -688,7 +688,7 @@ describe_current do
       end
 
       it "expect all to be ok" do
-        assert_predicate(result, :success?)
+        assert(result.success?)
         assert_equal("success", result.to_s)
         assert_equal({}, result.details)
         assert_equal("successes", result.partial_namespace)
@@ -703,7 +703,7 @@ describe_current do
       before { ready_topics }
 
       it "expect to halt" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("halted", result.to_s)
         assert_equal({}, result.details)
         assert_equal("failures", result.partial_namespace)
@@ -725,7 +725,7 @@ describe_current do
       end
 
       it "expect all to be ok" do
-        assert_predicate(result, :success?)
+        assert(result.success?)
         assert_equal("success", result.to_s)
         assert_equal({}, result.details)
         assert_equal("successes", result.partial_namespace)
@@ -751,7 +751,7 @@ describe_current do
       end
 
       it "expect all to be ok" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("failure", result.to_s)
         assert_equal({}, result.details)
         assert_equal("failures", result.partial_namespace)
@@ -766,7 +766,7 @@ describe_current do
       before { ready_topics }
 
       it "expect to halt" do
-        refute_predicate(result, :success?)
+        refute(result.success?)
         assert_equal("halted", result.to_s)
         assert_equal([], result.details)
         assert_equal("failures", result.partial_namespace)
@@ -795,7 +795,7 @@ describe_current do
         end
 
         it "expect all to be ok" do
-          assert_predicate(result, :success?)
+          assert(result.success?)
           assert_equal("success", result.to_s)
           assert_equal([], result.details)
           assert_equal("successes", result.partial_namespace)
@@ -812,7 +812,7 @@ describe_current do
         end
 
         it "expect to warn" do
-          assert_predicate(result, :success?)
+          assert(result.success?)
           assert_equal("warning", result.to_s)
           assert_includes(result.details, non_existing_topic)
           assert_equal("warnings", result.partial_namespace)
@@ -828,7 +828,7 @@ describe_current do
       before { allow(Karafka).to receive(:pro?).and_return(true) }
 
       it "expect all to be ok" do
-        assert_predicate(result, :success?)
+        assert(result.success?)
         assert_equal("success", result.to_s)
         assert_equal({}, result.details)
         assert_equal("successes", result.partial_namespace)
@@ -839,7 +839,7 @@ describe_current do
       before { allow(Karafka).to receive(:pro?).and_return(false) }
 
       it "expect all to be ok" do
-        assert_predicate(result, :success?)
+        assert(result.success?)
         assert_equal("warning", result.to_s)
         assert_equal({}, result.details)
         assert_equal("warnings", result.partial_namespace)

@@ -16,12 +16,12 @@ describe_current do
   it { assert_equal("offset", pagination.offset_key) }
 
   context "when there is no data in the partition" do
-    it { refute_predicate(pagination, :paginate?) }
-    it { refute_predicate(pagination, :first_offset?) }
-    it { refute_predicate(pagination, :previous_offset?) }
-    it { assert_predicate(pagination, :current_offset?) }
+    it { refute(pagination.paginate?) }
+    it { refute(pagination.first_offset?) }
+    it { refute(pagination.previous_offset?) }
+    it { assert(pagination.current_offset?) }
     it { assert_equal("0", pagination.current_label) }
-    it { refute_predicate(pagination, :next_offset?) }
+    it { refute(pagination.next_offset?) }
   end
 
   context "when we view most recent offset that is also first offset" do
@@ -29,12 +29,12 @@ describe_current do
     let(:low_watermark_offset) { 0 }
     let(:high_watermark_offset) { 1 }
 
-    it { refute_predicate(pagination, :paginate?) }
-    it { refute_predicate(pagination, :first_offset?) }
-    it { refute_predicate(pagination, :previous_offset?) }
-    it { assert_predicate(pagination, :current_offset?) }
+    it { refute(pagination.paginate?) }
+    it { refute(pagination.first_offset?) }
+    it { refute(pagination.previous_offset?) }
+    it { assert(pagination.current_offset?) }
     it { assert_equal("0", pagination.current_label) }
-    it { refute_predicate(pagination, :next_offset?) }
+    it { refute(pagination.next_offset?) }
   end
 
   context "when we view most recent distant offset" do
@@ -42,12 +42,12 @@ describe_current do
     let(:low_watermark_offset) { 0 }
     let(:high_watermark_offset) { 100 }
 
-    it { assert_predicate(pagination, :paginate?) }
-    it { refute_predicate(pagination, :first_offset?) }
-    it { refute_predicate(pagination, :previous_offset?) }
-    it { assert_predicate(pagination, :current_offset?) }
+    it { assert(pagination.paginate?) }
+    it { refute(pagination.first_offset?) }
+    it { refute(pagination.previous_offset?) }
+    it { assert(pagination.current_offset?) }
     it { assert_equal("99", pagination.current_label) }
-    it { assert_predicate(pagination, :next_offset?) }
+    it { assert(pagination.next_offset?) }
     it { assert_equal(98, pagination.next_offset) }
   end
 
@@ -56,12 +56,12 @@ describe_current do
     let(:low_watermark_offset) { 0 }
     let(:high_watermark_offset) { 100 }
 
-    it { assert_predicate(pagination, :paginate?) }
-    it { assert_predicate(pagination, :first_offset?) }
-    it { assert_predicate(pagination, :previous_offset?) }
-    it { assert_predicate(pagination, :current_offset?) }
+    it { assert(pagination.paginate?) }
+    it { assert(pagination.first_offset?) }
+    it { assert(pagination.previous_offset?) }
+    it { assert(pagination.current_offset?) }
     it { assert_equal("98", pagination.current_label) }
-    it { assert_predicate(pagination, :next_offset?) }
+    it { assert(pagination.next_offset?) }
     it { assert_equal(97, pagination.next_offset) }
     it { assert_equal(99, pagination.previous_offset) }
   end
@@ -71,12 +71,12 @@ describe_current do
     let(:low_watermark_offset) { 0 }
     let(:high_watermark_offset) { 100 }
 
-    it { assert_predicate(pagination, :paginate?) }
-    it { assert_predicate(pagination, :first_offset?) }
-    it { assert_predicate(pagination, :previous_offset?) }
-    it { assert_predicate(pagination, :current_offset?) }
+    it { assert(pagination.paginate?) }
+    it { assert(pagination.first_offset?) }
+    it { assert(pagination.previous_offset?) }
+    it { assert(pagination.current_offset?) }
     it { assert_equal("0", pagination.current_label) }
-    it { refute_predicate(pagination, :next_offset?) }
+    it { refute(pagination.next_offset?) }
     it { assert_equal(1, pagination.previous_offset) }
   end
 
@@ -85,12 +85,12 @@ describe_current do
     let(:low_watermark_offset) { 0 }
     let(:high_watermark_offset) { 100 }
 
-    it { assert_predicate(pagination, :paginate?) }
-    it { assert_predicate(pagination, :first_offset?) }
-    it { assert_predicate(pagination, :previous_offset?) }
-    it { assert_predicate(pagination, :current_offset?) }
+    it { assert(pagination.paginate?) }
+    it { assert(pagination.first_offset?) }
+    it { assert(pagination.previous_offset?) }
+    it { assert(pagination.current_offset?) }
     it { assert_equal("1", pagination.current_label) }
-    it { assert_predicate(pagination, :next_offset?) }
+    it { assert(pagination.next_offset?) }
     it { assert_equal(2, pagination.previous_offset) }
     it { assert_equal(0, pagination.next_offset) }
   end
@@ -100,12 +100,12 @@ describe_current do
     let(:low_watermark_offset) { 0 }
     let(:high_watermark_offset) { 100 }
 
-    it { assert_predicate(pagination, :paginate?) }
-    it { assert_predicate(pagination, :first_offset?) }
-    it { assert_predicate(pagination, :previous_offset?) }
-    it { assert_predicate(pagination, :current_offset?) }
+    it { assert(pagination.paginate?) }
+    it { assert(pagination.first_offset?) }
+    it { assert(pagination.previous_offset?) }
+    it { assert(pagination.current_offset?) }
     it { assert_equal("50", pagination.current_label) }
-    it { assert_predicate(pagination, :next_offset?) }
+    it { assert(pagination.next_offset?) }
     it { assert_equal(51, pagination.previous_offset) }
     it { assert_equal(49, pagination.next_offset) }
   end

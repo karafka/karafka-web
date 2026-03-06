@@ -32,7 +32,7 @@ describe_current do
       before { get "scheduled_messages/explorer/topics/#{topic}" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "This topic is empty and does not contain any data")
         assert_includes(body, breadcrumbs)
         refute_includes(body, "total: 1")
@@ -49,7 +49,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "total: 1")
         assert_includes(body, breadcrumbs)
         assert_includes(body, search_button)
@@ -65,7 +65,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "total: 1")
         assert_includes(body, breadcrumbs)
         assert_includes(body, search_button)
@@ -82,7 +82,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "total: 1")
         assert_includes(body, "cancel")
         assert_includes(body, breadcrumbs)
@@ -112,7 +112,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "total: 1")
         assert_includes(body, breadcrumbs)
         assert_includes(body, "[Deserialization Failed]")
@@ -128,7 +128,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, '<span class="badge  badge-primary">schedule</span>')
         assert_includes(body, breadcrumbs)
         assert_includes(body, pagination)
@@ -149,7 +149,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         assert_includes(body, pagination)
         assert_includes(body, "#{topic}/0/6")
@@ -170,7 +170,7 @@ describe_current do
       before { get "scheduled_messages/explorer/topics/#{topic}/1" }
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, response.status)
       end
     end
@@ -179,7 +179,7 @@ describe_current do
       before { get "scheduled_messages/explorer/topics/#{topic}/0" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         assert_includes(body, no_data)
         refute_includes(body, "high: 0")
@@ -198,7 +198,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         assert_includes(body, "Watermark offsets")
         assert_includes(body, "high: 1")
@@ -217,7 +217,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         assert_includes(body, "Watermark offsets")
         assert_includes(body, "high: 2")
@@ -240,7 +240,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         assert_includes(body, "Watermark offsets")
         assert_includes(body, "high: 1")
@@ -258,7 +258,7 @@ describe_current do
         before { get "scheduled_messages/explorer/topics/#{topic}/0?offset=99" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, breadcrumbs)
           assert_includes(body, "Watermark offsets")
           assert_includes(body, "high: 100")
@@ -276,7 +276,7 @@ describe_current do
         before { get "scheduled_messages/explorer/topics/#{topic}/0?offset=75" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, breadcrumbs)
           assert_includes(body, "Watermark offsets")
           assert_includes(body, "high: 100")
@@ -297,7 +297,7 @@ describe_current do
         before { get "scheduled_messages/explorer/topics/#{topic}/0?offset=0" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, breadcrumbs)
           assert_includes(body, "Watermark offsets")
           assert_includes(body, "high: 100")
@@ -319,7 +319,7 @@ describe_current do
         before { get "scheduled_messages/explorer/topics/#{topic}/0?offset=1000" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, breadcrumbs)
           assert_includes(body, "This page does not contain any data")
           refute_includes(body, "Watermark offsets")
@@ -341,7 +341,7 @@ describe_current do
       before { get "scheduled_messages/explorer/topic/100/closest/2023-10-10/12:12:12" }
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, response.status)
       end
     end
@@ -350,7 +350,7 @@ describe_current do
       before { get "scheduled_messages/explorer/topic/100/closest/0" }
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, response.status)
       end
     end
@@ -359,7 +359,7 @@ describe_current do
       before { get "scheduled_messages/explorer/topic/100/closest/2023-13-10/27:12:12" }
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, response.status)
       end
     end
@@ -368,7 +368,7 @@ describe_current do
       before { get "scheduled_messages/explorer/topic/100/closest/03142341231" }
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, response.status)
       end
     end

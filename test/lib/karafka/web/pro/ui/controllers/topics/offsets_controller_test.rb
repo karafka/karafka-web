@@ -31,7 +31,7 @@ describe_current do
       before { get "topics/#{generate_topic_name}/offsets" }
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, status)
       end
     end
@@ -40,7 +40,7 @@ describe_current do
       before { get "topics/#{topic}/offsets" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -56,7 +56,7 @@ describe_current do
       before { get "topics/#{topic}/offsets" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         assert_includes(body, pagination)
         refute_includes(body, support_message)
@@ -73,7 +73,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -94,7 +94,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         assert_includes(body, pagination)
         refute_includes(body, support_message)

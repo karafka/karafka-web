@@ -29,13 +29,13 @@ describe_current do
   end
 
   context "when config is valid" do
-    it { assert_predicate(contract.call(config), :success?) }
+    it { assert(contract.call(config).success?) }
   end
 
   context "when id is less than 0" do
     before { config[:id] = -1 }
 
-    it { refute_predicate(contract.call(config), :success?) }
+    it { refute(contract.call(config).success?) }
   end
 
   %i[
@@ -45,19 +45,19 @@ describe_current do
     context "when #{state} is not present" do
       before { config.delete(state) }
 
-      it { refute_predicate(contract.call(config), :success?) }
+      it { refute(contract.call(config).success?) }
     end
 
     context "when #{state} is not a string" do
       before { config[state] = rand }
 
-      it { refute_predicate(contract.call(config), :success?) }
+      it { refute(contract.call(config).success?) }
     end
 
     context "when #{state} is empty" do
       before { config[state] = "" }
 
-      it { refute_predicate(contract.call(config), :success?) }
+      it { refute(contract.call(config).success?) }
     end
   end
 
@@ -84,13 +84,13 @@ describe_current do
     context "when #{key} is not numeric" do
       before { config[key] = "2" }
 
-      it { refute_predicate(contract.call(config), :success?) }
+      it { refute(contract.call(config).success?) }
     end
 
     context "when #{key} is missing" do
       before { config.delete(key) }
 
-      it { refute_predicate(contract.call(config), :success?) }
+      it { refute(contract.call(config).success?) }
     end
   end
 
@@ -104,7 +104,7 @@ describe_current do
     context "when #{fd} is less than 0" do
       before { config[fd] = -1 }
 
-      it { refute_predicate(contract.call(config), :success?) }
+      it { refute(contract.call(config).success?) }
     end
   end
 end

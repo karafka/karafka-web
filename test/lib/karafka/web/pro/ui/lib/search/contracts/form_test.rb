@@ -37,7 +37,7 @@ describe_current do
 
   context "when all values are valid" do
     it "is valid" do
-      assert_predicate(contract.call(params), :success?)
+      assert(contract.call(params).success?)
     end
   end
 
@@ -45,13 +45,13 @@ describe_current do
     context "when phrase is not a string" do
       before { params[:phrase] = 123 }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when phrase is empty" do
       before { params[:phrase] = "" }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
   end
 
@@ -59,19 +59,19 @@ describe_current do
     context "when limit is not an integer" do
       before { params[:limit] = "not_an_integer" }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when limit is less than 1" do
       before { params[:limit] = 0 }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when limit is greater than 100_000" do
       before { params[:limit] = 100_001 }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
   end
 
@@ -79,7 +79,7 @@ describe_current do
     context "when matcher is not in the declared matchers" do
       before { params[:matcher] = "InvalidMatcher" }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
   end
 
@@ -87,7 +87,7 @@ describe_current do
     context "when offset_type is not a valid option" do
       before { params[:offset_type] = "invalid_type" }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
   end
 
@@ -95,13 +95,13 @@ describe_current do
     context "when offset is not an integer" do
       before { params[:offset] = "not_an_integer" }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when offset is negative" do
       before { params[:offset] = -1 }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
   end
 
@@ -109,19 +109,19 @@ describe_current do
     context "when timestamp is not an integer" do
       before { params[:timestamp] = "not_an_integer" }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when timestamp is negative" do
       before { params[:timestamp] = -1 }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when timestamp is in the future" do
       before { params[:timestamp] = ((Time.now.to_f + 120) * 1_000).to_i }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
   end
 
@@ -129,19 +129,19 @@ describe_current do
     context "when partitions is not an array" do
       before { params[:partitions] = "not_an_array" }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when partitions is an empty array" do
       before { params[:partitions] = [] }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
 
     context "when partitions contains non-string elements" do
       before { params[:partitions] = [1, 2, 3] }
 
-      it { refute_predicate(contract.call(params), :success?) }
+      it { refute(contract.call(params).success?) }
     end
   end
 end

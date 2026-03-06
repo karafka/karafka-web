@@ -46,9 +46,9 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
         # Utilization should be between 0 and 100
         utilization = jobs_metrics.utilization
 
-        assert_operator(utilization, :>=, 0)
-        assert_operator(utilization, :<=, 100)
-        assert_operator(utilization, :>, 0) # We added work, so it should not be 0
+        assert(utilization >= 0)
+        assert(utilization <= 100)
+        assert(utilization > 0) # We added work, so it should not be 0
       end
 
       it "rounds to 2 decimal places" do

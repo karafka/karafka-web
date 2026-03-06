@@ -37,7 +37,7 @@ describe_current do
     it "expect the error to match the error contract" do
       schema = Karafka::Web::Tracking::Contracts::Error.new
 
-      assert_predicate(schema.call(recorded_errors.first), :success?)
+      assert(schema.call(recorded_errors.first).success?)
     end
 
     it "expect to include schema version 1.2.0" do

@@ -37,7 +37,7 @@ describe_current do
 
   context "when all values are valid" do
     it "is valid" do
-      assert_predicate(contract.call(params), :success?)
+      assert(contract.call(params).success?)
     end
   end
 
@@ -45,21 +45,21 @@ describe_current do
     before { params[:ui][:branding][:type] = "invalid_type" }
 
     it "is not valid" do
-      refute_predicate(contract.call(params), :success?)
+      refute(contract.call(params).success?)
     end
   end
 
   context "when label is nil" do
     before { params[:ui][:branding][:label] = nil }
 
-    it { refute_predicate(contract.call(params), :success?) }
+    it { refute(contract.call(params).success?) }
   end
 
   context "when label is false" do
     before { params[:ui][:branding][:label] = false }
 
     it "is valid" do
-      assert_predicate(contract.call(params), :success?)
+      assert(contract.call(params).success?)
     end
   end
 
@@ -67,21 +67,21 @@ describe_current do
     before { params[:ui][:branding][:label] = "" }
 
     it "is not valid" do
-      refute_predicate(contract.call(params), :success?)
+      refute(contract.call(params).success?)
     end
   end
 
   context "when notice is nil" do
     before { params[:ui][:branding][:notice] = nil }
 
-    it { refute_predicate(contract.call(params), :success?) }
+    it { refute(contract.call(params).success?) }
   end
 
   context "when notice is false" do
     before { params[:ui][:branding][:notice] = false }
 
     it "is valid" do
-      assert_predicate(contract.call(params), :success?)
+      assert(contract.call(params).success?)
     end
   end
 
@@ -89,7 +89,7 @@ describe_current do
     before { params[:ui][:branding][:notice] = "" }
 
     it "is not valid" do
-      refute_predicate(contract.call(params), :success?)
+      refute(contract.call(params).success?)
     end
   end
 end

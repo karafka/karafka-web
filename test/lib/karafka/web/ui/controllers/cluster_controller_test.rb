@@ -27,7 +27,7 @@ describe_current do
     before { get "cluster/brokers" }
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, "ID")
       assert_includes(body, support_message)
       assert_includes(body, breadcrumbs)
@@ -38,7 +38,7 @@ describe_current do
     before { get "cluster/replication" }
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, support_message)
       assert_includes(body, breadcrumbs)
     end
@@ -50,7 +50,7 @@ describe_current do
         before { get "cluster/replication?page=2" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, support_message)
           assert_includes(body, breadcrumbs)
           assert_includes(body, pagination)
@@ -61,7 +61,7 @@ describe_current do
         before { get "cluster/replication?page=100000000" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, pagination)
           assert_includes(body, support_message)
           assert_includes(body, no_meaningful_results)
@@ -72,7 +72,7 @@ describe_current do
         before { get "cluster/replication?page=abc" }
 
         it "defaults to first page" do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, "Replication")
           assert_includes(body, support_message)
         end
@@ -82,7 +82,7 @@ describe_current do
         before { get "cluster/replication?page=-1" }
 
         it "defaults to first page" do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, "Replication")
           assert_includes(body, support_message)
         end
@@ -98,7 +98,7 @@ describe_current do
       end
 
       it "displays partition information correctly" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "Partition")
         assert_includes(body, "Leader")
         assert_includes(body, "In sync brokers")
@@ -113,7 +113,7 @@ describe_current do
       end
 
       it "respects custom page size" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, pagination)
         assert_includes(body, support_message)
       end
@@ -125,7 +125,7 @@ describe_current do
       before { get "cluster/invalid" }
 
       it "redirects to valid cluster page" do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(302, status)
       end
     end

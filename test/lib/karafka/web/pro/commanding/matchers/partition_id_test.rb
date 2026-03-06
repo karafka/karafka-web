@@ -47,13 +47,13 @@ describe_current do
     context "when partition_id is not specified in matchers" do
       let(:matchers) { {} }
 
-      it { refute_predicate(matcher, :apply?) }
+      it { refute(matcher.apply?) }
     end
 
     context "when partition_id is specified in matchers" do
       let(:matchers) { { partition_id: 0 } }
 
-      it { assert_predicate(matcher, :apply?) }
+      it { assert(matcher.apply?) }
     end
   end
 
@@ -61,20 +61,20 @@ describe_current do
     context "when partition_id matches an assigned partition" do
       let(:matchers) { { partition_id: 0 } }
 
-      it { assert_predicate(matcher, :matches?) }
+      it { assert(matcher.matches?) }
     end
 
     context "when partition_id does not match any assigned partition" do
       let(:matchers) { { partition_id: 99 } }
 
-      it { refute_predicate(matcher, :matches?) }
+      it { refute(matcher.matches?) }
     end
 
     context "when there are no assignments" do
       let(:assignments) { {} }
       let(:matchers) { { partition_id: 0 } }
 
-      it { refute_predicate(matcher, :matches?) }
+      it { refute(matcher.matches?) }
     end
 
     context "with multiple topics" do
@@ -86,19 +86,19 @@ describe_current do
       context "when partition exists in any topic" do
         let(:matchers) { { partition_id: 5 } }
 
-        it { assert_predicate(matcher, :matches?) }
+        it { assert(matcher.matches?) }
       end
 
       context "when partition does not exist in any topic" do
         let(:matchers) { { partition_id: 99 } }
 
-        it { refute_predicate(matcher, :matches?) }
+        it { refute(matcher.matches?) }
       end
 
       context "when partition exists in first topic" do
         let(:matchers) { { partition_id: 0 } }
 
-        it { assert_predicate(matcher, :matches?) }
+        it { assert(matcher.matches?) }
       end
     end
   end

@@ -7,7 +7,7 @@ describe_current do
     before { get "routing" }
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, topics_config.consumers.states.name)
       assert_includes(body, topics_config.consumers.metrics.name)
       assert_includes(body, topics_config.consumers.reports.name)
@@ -22,7 +22,7 @@ describe_current do
     before { get "routing/#{Karafka::App.routes.first.topics.first.id}" }
 
     it "expect to display details, including the injectable once" do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, "kafka.topic.metadata.refresh.interval.ms")
       assert_includes(body, breadcrumbs)
       assert_includes(body, "kafka.statistics.interval.ms")
@@ -33,7 +33,7 @@ describe_current do
       before { get "routing/na" }
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, status)
       end
     end
@@ -58,7 +58,7 @@ describe_current do
       end
 
       it "expect to hide them" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "kafka.sasl.username")
         assert_includes(body, "***")
         assert_includes(body, support_message)
@@ -84,7 +84,7 @@ describe_current do
       end
 
       it "expect to hide them" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "kafka.ssl.key.password")
         assert_includes(body, "***")
         assert_includes(body, support_message)
@@ -107,7 +107,7 @@ describe_current do
       end
 
       it "displays manual offset management setting" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "manual_offset_management")
         assert_includes(body, "true")
         assert_includes(body, support_message)
@@ -132,7 +132,7 @@ describe_current do
       end
 
       it "displays processing settings" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "max_messages")
         assert_includes(body, "100")
         assert_includes(body, "max_wait_time")
@@ -159,7 +159,7 @@ describe_current do
       end
 
       it "displays subscription group information" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "subscription_group_details.name")
         assert_includes(body, "critical")
         assert_includes(body, support_message)

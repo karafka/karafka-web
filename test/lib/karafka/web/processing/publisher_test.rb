@@ -189,7 +189,7 @@ describe_current do
       uncompressed_size = consumers_state.to_json.bytesize
       compressed_size = state_message[:payload].bytesize
 
-      assert_operator(compressed_size, :<, uncompressed_size)
+      assert(compressed_size < uncompressed_size)
     end
   end
 end

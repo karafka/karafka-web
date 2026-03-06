@@ -14,7 +14,7 @@ describe_current do
     end
 
     it do
-      refute_predicate(response, :ok?)
+      refute(response.ok?)
       assert_equal(404, status)
     end
   end
@@ -31,7 +31,7 @@ describe_current do
     end
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, "There Needs to Be More Data to Draw Meaningful Graphs")
       assert_includes(body, support_message)
       refute_includes(body, breadcrumbs)
@@ -53,7 +53,7 @@ describe_current do
     end
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, "There Needs to Be More Data to Draw Meaningful Graphs")
       assert_includes(body, support_message)
       refute_includes(body, breadcrumbs)
@@ -66,7 +66,7 @@ describe_current do
     before { get "dashboard" }
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, support_message)
       refute_includes(body, breadcrumbs)
       assert_includes(body, only_pro_feature)
@@ -98,7 +98,7 @@ describe_current do
     end
 
     it do
-      assert_predicate(response, :ok?)
+      assert(response.ok?)
       assert_includes(body, support_message)
       refute_includes(body, breadcrumbs)
       assert_includes(body, only_pro_feature)

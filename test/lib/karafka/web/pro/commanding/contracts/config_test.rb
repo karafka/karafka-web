@@ -44,7 +44,7 @@ describe_current do
 
   context "with valid parameters" do
     it "is successful" do
-      assert_predicate(contract.call(valid_params), :success?)
+      assert(contract.call(valid_params).success?)
     end
   end
 
@@ -53,7 +53,7 @@ describe_current do
       it "expect to fail" do
         invalid_params = valid_params.merge(commanding: { active: "yes" })
 
-        refute_predicate(contract.call(invalid_params), :success?)
+        refute(contract.call(invalid_params).success?)
       end
     end
 
@@ -61,7 +61,7 @@ describe_current do
       it "expect to fail" do
         invalid_params = valid_params.merge(commanding: { pause_timeout: -5 })
 
-        refute_predicate(contract.call(invalid_params), :success?)
+        refute(contract.call(invalid_params).success?)
       end
     end
 
@@ -69,7 +69,7 @@ describe_current do
       it "expect to fail" do
         invalid_params = valid_params.merge(commanding: { max_wait_time: 0 })
 
-        refute_predicate(contract.call(invalid_params), :success?)
+        refute(contract.call(invalid_params).success?)
       end
     end
 
@@ -77,7 +77,7 @@ describe_current do
       it "expect to fail" do
         invalid_params = valid_params.merge(commanding: { kafka: "string" })
 
-        refute_predicate(contract.call(invalid_params), :success?)
+        refute(contract.call(invalid_params).success?)
       end
     end
 
@@ -89,7 +89,7 @@ describe_current do
           }
         )
 
-        refute_predicate(contract.call(invalid_params), :success?)
+        refute(contract.call(invalid_params).success?)
       end
     end
 
@@ -98,7 +98,7 @@ describe_current do
         invalid_kafka_config = { "brokers" => %w[localhost:9092], "client_id" => "test" }
         invalid_params = valid_params.merge(commanding: { kafka: invalid_kafka_config })
 
-        refute_predicate(contract.call(invalid_params), :success?)
+        refute(contract.call(invalid_params).success?)
       end
     end
   end

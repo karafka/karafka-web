@@ -50,13 +50,13 @@ describe_current do
     context "when consumer_group_id is not specified in matchers" do
       let(:matchers) { {} }
 
-      it { refute_predicate(matcher, :apply?) }
+      it { refute(matcher.apply?) }
     end
 
     context "when consumer_group_id is specified in matchers" do
       let(:matchers) { { consumer_group_id: "my_consumer_group" } }
 
-      it { assert_predicate(matcher, :apply?) }
+      it { assert(matcher.apply?) }
     end
   end
 
@@ -64,20 +64,20 @@ describe_current do
     context "when consumer_group_id matches an assigned topic consumer group" do
       let(:matchers) { { consumer_group_id: "my_consumer_group" } }
 
-      it { assert_predicate(matcher, :matches?) }
+      it { assert(matcher.matches?) }
     end
 
     context "when consumer_group_id does not match any assigned consumer group" do
       let(:matchers) { { consumer_group_id: "other_consumer_group" } }
 
-      it { refute_predicate(matcher, :matches?) }
+      it { refute(matcher.matches?) }
     end
 
     context "when there are no assignments" do
       let(:assignments) { {} }
       let(:matchers) { { consumer_group_id: "my_consumer_group" } }
 
-      it { refute_predicate(matcher, :matches?) }
+      it { refute(matcher.matches?) }
     end
 
     context "when there are multiple assignments from different consumer groups" do
@@ -94,19 +94,19 @@ describe_current do
       context "when matching first consumer group" do
         let(:matchers) { { consumer_group_id: "my_consumer_group" } }
 
-        it { assert_predicate(matcher, :matches?) }
+        it { assert(matcher.matches?) }
       end
 
       context "when matching second consumer group" do
         let(:matchers) { { consumer_group_id: "second_consumer_group" } }
 
-        it { assert_predicate(matcher, :matches?) }
+        it { assert(matcher.matches?) }
       end
 
       context "when matching neither consumer group" do
         let(:matchers) { { consumer_group_id: "third_consumer_group" } }
 
-        it { refute_predicate(matcher, :matches?) }
+        it { refute(matcher.matches?) }
       end
     end
   end

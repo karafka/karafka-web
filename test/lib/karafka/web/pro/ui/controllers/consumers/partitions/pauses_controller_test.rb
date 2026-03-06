@@ -63,7 +63,7 @@ describe_current do
 
     context "when a process exists and is running" do
       it "expect to include relevant details" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, consumer_group_id)
         assert_includes(body, topic_name)
         assert_includes(body, partition_id.to_s)
@@ -98,7 +98,7 @@ describe_current do
       end
 
       it "expect to include relevant details" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, consumer_group_id)
         assert_includes(body, topic_name)
         assert_includes(body, partition_id.to_s)
@@ -140,7 +140,7 @@ describe_current do
       end
 
       it "expect to show not running error message" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, cannot_perform)
         assert_includes(body, not_active)
         refute_includes(body, form)
@@ -242,7 +242,7 @@ describe_current do
 
     context "when a process exists and is running and partition is not paused" do
       it "expect to include relevant details" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, consumer_group_id)
         assert_includes(body, topic_name)
         assert_includes(body, partition_id.to_s)
@@ -269,7 +269,7 @@ describe_current do
       end
 
       it "expect to include relevant details" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, consumer_group_id)
         assert_includes(body, topic_name)
         assert_includes(body, partition_id.to_s)
@@ -304,7 +304,7 @@ describe_current do
       end
 
       it "expect to include relevant details" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, consumer_group_id)
         assert_includes(body, topic_name)
         assert_includes(body, partition_id.to_s)
@@ -347,7 +347,7 @@ describe_current do
       end
 
       it "expect to show not running error message" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, cannot_perform)
         assert_includes(body, not_active)
         refute_includes(body, form)

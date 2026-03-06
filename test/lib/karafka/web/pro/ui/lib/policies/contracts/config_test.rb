@@ -36,19 +36,19 @@ describe_current do
 
   context "when all values are valid" do
     it "is valid" do
-      assert_predicate(contract.call(params), :success?)
+      assert(contract.call(params).success?)
     end
   end
 
   context "when messages is nil" do
     before { params[:ui][:policies][:messages] = nil }
 
-    it { refute_predicate(contract.call(params), :success?) }
+    it { refute(contract.call(params).success?) }
   end
 
   context "when requests is nil" do
     before { params[:ui][:policies][:requests] = nil }
 
-    it { refute_predicate(contract.call(params), :success?) }
+    it { refute(contract.call(params).success?) }
   end
 end

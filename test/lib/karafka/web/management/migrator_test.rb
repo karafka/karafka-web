@@ -44,7 +44,7 @@ describe_current do
       assert_equal("1.4.0", states_state[:schema_version])
       assert_equal("accepted", states_state[:schema_state])
       assert_equal({}, states_state[:processes])
-      assert_operator(states_state[:dispatched_at], :<, Time.now.to_f)
+      assert(states_state[:dispatched_at] < Time.now.to_f)
       assert_equal({ active: 0, standby: 0 }, states_state[:stats][:listeners])
 
       %i[
@@ -57,7 +57,7 @@ describe_current do
 
     it "expect to migrate consumers metrics to 1.3.0 with all needed details" do
       assert_equal("1.3.0", metrics_state[:schema_version])
-      assert_operator(states_state[:dispatched_at], :<, Time.now.to_f)
+      assert(states_state[:dispatched_at] < Time.now.to_f)
 
       %i[days hours minutes seconds].each do |stats_key|
         assert_equal([], metrics_state[:aggregated][stats_key])

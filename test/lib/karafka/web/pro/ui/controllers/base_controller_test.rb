@@ -42,7 +42,7 @@ describe_current do
       end
 
       it "expect to render it" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "<strong>100</strong>")
       end
     end
@@ -51,7 +51,7 @@ describe_current do
       let(:nav_erb) { "/tmp/does-not-exist" }
 
       it "expect to render it as an erb string" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "/tmp/does-not-exist")
       end
     end
@@ -60,7 +60,7 @@ describe_current do
       let(:nav_erb) { Fixtures.path("custom/nav.erb") }
 
       it "expect to render it" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "this is a test")
       end
     end

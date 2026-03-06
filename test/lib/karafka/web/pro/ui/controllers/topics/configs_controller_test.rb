@@ -31,7 +31,7 @@ describe_current do
       before { get "topics/#{generate_topic_name}/config" }
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, status)
       end
     end
@@ -40,7 +40,7 @@ describe_current do
       before { get "topics/#{topic}/config" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -65,7 +65,7 @@ describe_current do
         end
 
         it "renders edit form with all required elements" do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, breadcrumbs)
           assert_includes(body, "Topic #{topic_name} - Edit #{property_name}")
           refute_includes(body, pagination)
@@ -104,7 +104,7 @@ describe_current do
       end
 
       it "returns unauthorized status" do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(403, status)
       end
     end
@@ -156,7 +156,7 @@ describe_current do
         end
 
         it "renders edit form with error messages" do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, "Configuration Update Warning")
           assert_includes(body, error_message)
           assert_includes(body, topic_name)
@@ -173,7 +173,7 @@ describe_current do
       end
 
       it "returns unauthorized status" do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(403, status)
       end
     end

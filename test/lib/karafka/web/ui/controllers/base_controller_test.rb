@@ -11,7 +11,7 @@ describe_current do
     before { get "health" }
 
     it do
-      refute_predicate(response, :ok?)
+      refute(response.ok?)
       assert_includes(body, make_better)
       assert_equal(402, status)
     end
@@ -21,7 +21,7 @@ describe_current do
     before { get "explorer" }
 
     it do
-      refute_predicate(response, :ok?)
+      refute(response.ok?)
       assert_includes(body, make_better)
       assert_equal(402, status)
     end
@@ -31,7 +31,7 @@ describe_current do
     before { get "dlq" }
 
     it do
-      refute_predicate(response, :ok?)
+      refute(response.ok?)
       assert_includes(body, make_better)
       assert_equal(402, status)
     end
@@ -50,7 +50,7 @@ describe_current do
       before { get custom_css }
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, status)
       end
 
@@ -58,7 +58,7 @@ describe_current do
         before { get "ux" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           refute_includes(body, "custom.css")
         end
       end
@@ -82,7 +82,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_equal(200, status)
         assert_equal(css_content, body)
         assert_equal("text/css", headers["content-type"])
@@ -93,7 +93,7 @@ describe_current do
         before { get "ux" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, "custom.css")
         end
       end
@@ -117,7 +117,7 @@ describe_current do
       end
 
       it "expect to treat is as a stringified content" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_equal(200, status)
         assert_equal(css_content, body)
         assert_equal("text/css", headers["content-type"])
@@ -128,7 +128,7 @@ describe_current do
         before { get "ux" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, "custom.css")
         end
       end
@@ -154,7 +154,7 @@ describe_current do
       end
 
       it "expect to treat is as a stringified content" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_equal(200, status)
         assert_equal(fetched_content, body)
         assert_equal("text/css", headers["content-type"])
@@ -165,7 +165,7 @@ describe_current do
         before { get "ux" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, "custom.css")
         end
       end
@@ -183,7 +183,7 @@ describe_current do
       before { get custom_js }
 
       it do
-        refute_predicate(response, :ok?)
+        refute(response.ok?)
         assert_equal(404, status)
       end
 
@@ -191,7 +191,7 @@ describe_current do
         before { get "ux" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           refute_includes(body, "custom.js")
         end
       end
@@ -215,7 +215,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_equal(200, status)
         assert_equal(js_content, body)
         assert_equal("application/javascript", headers["content-type"])
@@ -226,7 +226,7 @@ describe_current do
         before { get "ux" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, "custom.js")
         end
       end
@@ -250,7 +250,7 @@ describe_current do
       end
 
       it "expect to treat is as a stringified content" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_equal(200, status)
         assert_equal(js_content, body)
         assert_equal("application/javascript", headers["content-type"])
@@ -261,7 +261,7 @@ describe_current do
         before { get "ux" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, "custom.js")
         end
       end
@@ -287,7 +287,7 @@ describe_current do
       end
 
       it "expect to treat is as a stringified content" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_equal(200, status)
         assert_equal(fetched_content, body)
         assert_equal("application/javascript", headers["content-type"])
@@ -298,7 +298,7 @@ describe_current do
         before { get "ux" }
 
         it do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, "custom.js")
         end
       end
@@ -330,7 +330,7 @@ describe_current do
       end
 
       it "expect to render it" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "<strong>100</strong>")
       end
     end
@@ -339,7 +339,7 @@ describe_current do
       let(:nav_erb) { "/tmp/does-not-exist" }
 
       it "expect to render it as an erb string" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "/tmp/does-not-exist")
       end
     end
@@ -348,7 +348,7 @@ describe_current do
       let(:nav_erb) { Fixtures.path("custom/nav.erb") }
 
       it "expect to render it" do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "this is a test")
       end
     end

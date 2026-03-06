@@ -24,7 +24,7 @@ describe_current do
 
   context "when all values are valid" do
     it "is valid" do
-      assert_predicate(contract.call(stats), :success?)
+      assert(contract.call(stats).success?)
     end
   end
 
@@ -34,19 +34,19 @@ describe_current do
     context "when #{key} is negative" do
       before { stats[key] = -1 }
 
-      it { refute_predicate(contract.call(stats), :success?) }
+      it { refute(contract.call(stats).success?) }
     end
 
     context "when #{key} is not a number" do
       before { stats[key] = "test" }
 
-      it { refute_predicate(contract.call(stats), :success?) }
+      it { refute(contract.call(stats).success?) }
     end
 
     context "when #{key} is float" do
       before { stats[key] = 1.2 }
 
-      it { refute_predicate(contract.call(stats), :success?) }
+      it { refute(contract.call(stats).success?) }
     end
   end
 
@@ -57,33 +57,33 @@ describe_current do
     context "when #{key} is negative" do
       before { stats[key] = -1 }
 
-      it { refute_predicate(contract.call(stats), :success?) }
+      it { refute(contract.call(stats).success?) }
     end
 
     context "when #{key} is not a number" do
       before { stats[key] = "test" }
 
-      it { refute_predicate(contract.call(stats), :success?) }
+      it { refute(contract.call(stats).success?) }
     end
   end
 
   context "when lag_hybrid is not a number" do
     before { stats[:lag_hybrid] = "test" }
 
-    it { refute_predicate(contract.call(stats), :success?) }
+    it { refute(contract.call(stats).success?) }
   end
 
   context "when checking listeners" do
     context "when active below 0" do
       before { stats[:listeners][:active] = -1 }
 
-      it { refute_predicate(contract.call(stats), :success?) }
+      it { refute(contract.call(stats).success?) }
     end
 
     context "when standby below 0" do
       before { stats[:listeners][:standby] = -1 }
 
-      it { refute_predicate(contract.call(stats), :success?) }
+      it { refute(contract.call(stats).success?) }
     end
   end
 end

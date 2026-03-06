@@ -46,7 +46,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -58,7 +58,7 @@ describe_current do
       before { get "health/overview" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -69,7 +69,7 @@ describe_current do
       context "when sorted" do
         before { get "health/overview?sort=id+desc" }
 
-        it { assert_predicate(response, :ok?) }
+        it { assert(response.ok?) }
       end
 
       context "when commanding is enabled" do
@@ -80,7 +80,7 @@ describe_current do
         end
 
         it "expect to show topic pause controls without disabled state" do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, "Pause All")
           refute_includes(body, "btn-warning btn-sm btn-disabled")
         end
@@ -100,7 +100,7 @@ describe_current do
         after { Karafka::Web.config.commanding.active = true }
 
         it "expect to show topic pause controls in disabled state" do
-          assert_predicate(response, :ok?)
+          assert(response.ok?)
           assert_includes(body, "Pause All")
           assert_includes(body, "btn-warning btn-sm btn-disabled")
         end
@@ -127,7 +127,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "No data available")
         assert_equal(2, body.scan("No data available").size) # partitions 1 and 2
       end
@@ -149,7 +149,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         refute_includes(body, "No data available")
       end
     end
@@ -170,7 +170,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "my-static-member-id-123")
         assert_includes(body, "Static Membership ID")
       end
@@ -192,7 +192,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         refute_includes(body, "Static Membership ID")
       end
     end
@@ -206,7 +206,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -225,7 +225,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -239,7 +239,7 @@ describe_current do
       before { get "health/lags" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -262,7 +262,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "No data available")
         assert_equal(2, body.scan("No data available").size)
       end
@@ -282,7 +282,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         refute_includes(body, "No data available")
       end
     end
@@ -296,7 +296,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -315,7 +315,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -329,7 +329,7 @@ describe_current do
       before { get "health/lags" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -347,7 +347,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -361,7 +361,7 @@ describe_current do
       before { get "health/offsets" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -386,7 +386,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "No data available")
         assert_equal(2, body.scan("No data available").size)
       end
@@ -406,7 +406,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         refute_includes(body, "No data available")
       end
     end
@@ -420,7 +420,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -449,7 +449,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -479,7 +479,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -501,7 +501,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -515,7 +515,7 @@ describe_current do
       before { get "health/changes" }
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -539,7 +539,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, "No data available")
         assert_equal(2, body.scan("No data available").size)
       end
@@ -559,7 +559,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         refute_includes(body, "No data available")
       end
     end
@@ -573,7 +573,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
@@ -599,7 +599,7 @@ describe_current do
       end
 
       it do
-        assert_predicate(response, :ok?)
+        assert(response.ok?)
         assert_includes(body, breadcrumbs)
         refute_includes(body, pagination)
         refute_includes(body, support_message)
