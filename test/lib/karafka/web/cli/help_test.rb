@@ -7,15 +7,16 @@ describe_current do
 
   it "expect to print the header" do
     output = capture_io { cli.call }.first
-    assert(output.include?("Karafka Web UI commands:"))
+
+    assert_includes(output, "Karafka Web UI commands:")
   end
 
   it "expect to print all available commands with descriptions" do
     output = capture_io { cli.call }.first
 
     commands.each do |command|
-      assert(output.include?(command.name), "Expected output to include #{command.name}")
-      assert(output.include?(command.desc), "Expected output to include #{command.desc}")
+      assert_includes(output, command.name, "Expected output to include #{command.name}")
+      assert_includes(output, command.desc, "Expected output to include #{command.desc}")
     end
   end
 
