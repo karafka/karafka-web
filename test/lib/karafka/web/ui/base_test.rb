@@ -43,8 +43,8 @@ describe Karafka::Web::Ui::Base do
         end
 
         assert_equal(500, status)
-        assert_includes(body, "500")
-        assert_includes(body, "Internal Server Error")
+        assert_body("500")
+        assert_body("Internal Server Error")
       end
     end
 

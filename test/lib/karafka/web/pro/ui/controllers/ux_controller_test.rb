@@ -28,8 +28,8 @@ describe_current do
 
     it do
       assert(response.ok?)
-      refute_includes(body, support_message)
-      assert_includes(body, breadcrumbs)
+      refute_body(support_message)
+      assert_body(breadcrumbs)
     end
   end
 
@@ -59,8 +59,8 @@ describe_current do
       let(:notice) { false }
 
       it "expect not to have them" do
-        refute_includes(body, "branding_label")
-        refute_includes(body, "branding_notice")
+        refute_body("branding_label")
+        refute_body("branding_notice")
       end
     end
 
@@ -68,8 +68,8 @@ describe_current do
       let(:notice) { false }
 
       it "expect to have only label" do
-        assert_includes(body, "branding_label")
-        refute_includes(body, "branding_notice")
+        assert_body("branding_label")
+        refute_body("branding_notice")
       end
     end
 
@@ -77,15 +77,15 @@ describe_current do
       let(:label) { false }
 
       it "expect to have only notice" do
-        assert_includes(body, "branding_notice")
-        refute_includes(body, "branding_label")
+        assert_body("branding_notice")
+        refute_body("branding_label")
       end
     end
 
     context "when there is notice and label" do
       it "expect to have both" do
-        assert_includes(body, "branding_notice")
-        assert_includes(body, "branding_label")
+        assert_body("branding_notice")
+        assert_body("branding_label")
       end
     end
 
@@ -93,8 +93,8 @@ describe_current do
       let(:type) { :warning }
 
       it "expect to have both" do
-        assert_includes(body, "branding_notice")
-        assert_includes(body, "branding_label")
+        assert_body("branding_notice")
+        assert_body("branding_label")
       end
     end
   end

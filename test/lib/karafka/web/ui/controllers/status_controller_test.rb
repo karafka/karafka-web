@@ -13,36 +13,36 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, "The initial state of the consumers appears to")
+        assert_body(support_message)
+        assert_body(breadcrumbs)
+        refute_body("The initial state of the consumers appears to")
 
         # Enhanced assertions based on actual status page content
-        assert_includes(body, "Data Type")
-        assert_includes(body, "Topic Name")
+        assert_body("Data Type")
+        assert_body("Topic Name")
 
         # Version badges should be present
-        assert_includes(body, "karafka #{Karafka::VERSION}")
-        assert_includes(body, "karafka-web #{Karafka::Web::VERSION}")
-        assert_includes(body, "badge-primary")
+        assert_body("karafka #{Karafka::VERSION}")
+        assert_body("karafka-web #{Karafka::Web::VERSION}")
+        assert_body("badge-primary")
 
         # Status should show topic names in data table
-        assert_includes(body, topics_config.consumers.states.name)
-        assert_includes(body, topics_config.consumers.metrics.name)
-        assert_includes(body, topics_config.consumers.reports.name)
-        assert_includes(body, topics_config.errors.name)
+        assert_body(topics_config.consumers.states.name)
+        assert_body(topics_config.consumers.metrics.name)
+        assert_body(topics_config.consumers.reports.name)
+        assert_body(topics_config.errors.name)
 
         # Should show data type labels
-        assert_includes(body, "Errors")
-        assert_includes(body, "Consumers reports")
-        assert_includes(body, "Consumers states")
-        assert_includes(body, "Consumers metrics")
+        assert_body("Errors")
+        assert_body("Consumers reports")
+        assert_body("Consumers states")
+        assert_body("Consumers metrics")
 
         # Should show alert boxes
-        assert_includes(body, "Components info")
-        assert_includes(body, "Routing topics presence")
-        assert_includes(body, "alert-box-info")
-        assert_includes(body, "alert-box-warning")
+        assert_body("Components info")
+        assert_body("Routing topics presence")
+        assert_body("alert-box-info")
+        assert_body("alert-box-warning")
       end
     end
 
@@ -58,24 +58,24 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
+        assert_body(support_message)
+        assert_body(breadcrumbs)
 
         # Enhanced assertions - missing topics should still show the table structure
-        assert_includes(body, "Data Type")
-        assert_includes(body, "Topic Name")
-        assert_includes(body, "Consumers states")
-        assert_includes(body, "Consumers metrics")
-        assert_includes(body, "Consumers reports")
-        assert_includes(body, "Errors")
+        assert_body("Data Type")
+        assert_body("Topic Name")
+        assert_body("Consumers states")
+        assert_body("Consumers metrics")
+        assert_body("Consumers reports")
+        assert_body("Errors")
 
         # Version info should still be present
-        assert_includes(body, "karafka #{Karafka::VERSION}")
-        assert_includes(body, "badge-primary")
+        assert_body("karafka #{Karafka::VERSION}")
+        assert_body("badge-primary")
 
         # Alert boxes should still be present
-        assert_includes(body, "Components info")
-        assert_includes(body, "alert-box-info")
+        assert_body("Components info")
+        assert_body("alert-box-info")
       end
     end
 
@@ -87,19 +87,19 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "Please ensure all those topics have a replication")
-        assert_includes(body, "alert-box-warning")
+        assert_body(support_message)
+        assert_body(breadcrumbs)
+        assert_body("Please ensure all those topics have a replication")
+        assert_body("alert-box-warning")
 
         # Enhanced assertions - production warnings should have alert structure
-        assert_includes(body, "alert-box-header")
+        assert_body("alert-box-header")
 
         # Basic structure should still be there
-        assert_includes(body, "Data Type")
-        assert_includes(body, "Topic Name")
-        assert_includes(body, "Components info")
-        assert_includes(body, "badge-primary")
+        assert_body("Data Type")
+        assert_body("Topic Name")
+        assert_body("Components info")
+        assert_body("badge-primary")
       end
     end
 
@@ -108,9 +108,9 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, "Please ensure all those topics have a replication")
+        assert_body(support_message)
+        assert_body(breadcrumbs)
+        refute_body("Please ensure all those topics have a replication")
       end
     end
 
@@ -127,9 +127,9 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "The initial state of the consumers appears to")
+        assert_body(support_message)
+        assert_body(breadcrumbs)
+        assert_body("The initial state of the consumers appears to")
       end
     end
 
@@ -145,9 +145,9 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "The initial state of the consumers metrics appears to")
+        assert_body(support_message)
+        assert_body(breadcrumbs)
+        assert_body("The initial state of the consumers metrics appears to")
       end
     end
 
@@ -156,8 +156,8 @@ describe_current do
 
       it "ignores query parameters and shows normal status" do
         assert(response.ok?)
-        assert_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
+        assert_body(support_message)
+        assert_body(breadcrumbs)
       end
     end
 
@@ -170,7 +170,7 @@ describe_current do
 
       it "always shows fresh status" do
         assert(response.ok?)
-        assert_includes(body, support_message)
+        assert_body(support_message)
       end
     end
 
@@ -179,8 +179,8 @@ describe_current do
 
       it "shows Karafka and Web UI versions" do
         assert(response.ok?)
-        assert_includes(body, Karafka::VERSION)
-        assert_includes(body, Karafka::Web::VERSION)
+        assert_body(Karafka::VERSION)
+        assert_body(Karafka::Web::VERSION)
       end
     end
 
@@ -192,10 +192,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "Karafka Web-UI is not part of your")
-        assert_includes(body, "alert-box-error")
+        assert_body(support_message)
+        assert_body(breadcrumbs)
+        assert_body("Karafka Web-UI is not part of your")
+        assert_body("alert-box-error")
       end
     end
 
@@ -210,10 +210,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "Web UI was not able to establish a connection")
-        assert_includes(body, "alert-box-error")
+        assert_body(support_message)
+        assert_body(breadcrumbs)
+        assert_body("Web UI was not able to establish a connection")
+        assert_body("alert-box-error")
       end
     end
 
@@ -229,11 +229,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "need to be configured with")
-        assert_includes(body, "exactly")
-        assert_includes(body, "one partition")
+        assert_body(support_message)
+        assert_body(breadcrumbs)
+        assert_body("need to be configured with")
+        assert_body("exactly")
+        assert_body("one partition")
       end
     end
 
@@ -258,9 +258,9 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "There are no Karafka consumer processes actively reporting")
+        assert_body(support_message)
+        assert_body(breadcrumbs)
+        assert_body("There are no Karafka consumer processes actively reporting")
       end
     end
 
@@ -294,11 +294,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "were not located in the Kafka cluster")
-        assert_includes(body, non_existing_topic)
-        assert_includes(body, "alert-box-warning")
+        assert_body(support_message)
+        assert_body(breadcrumbs)
+        assert_body("were not located in the Kafka cluster")
+        assert_body(non_existing_topic)
+        assert_body("alert-box-warning")
       end
     end
 
@@ -310,10 +310,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "Karafka Pro subscription")
-        assert_includes(body, "alert-box-warning")
+        assert_body(support_message)
+        assert_body(breadcrumbs)
+        assert_body("Karafka Pro subscription")
+        assert_body("alert-box-warning")
       end
     end
 
@@ -336,10 +336,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
+        assert_body(support_message)
+        assert_body(breadcrumbs)
         # Corrupted reports data leads to failure in consumers_reports check
-        assert_includes(body, "alert-box-error")
+        assert_body("alert-box-error")
       end
     end
 
@@ -372,10 +372,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "Incompatible consumer reports detected")
-        assert_includes(body, "alert-box-error")
+        assert_body(support_message)
+        assert_body(breadcrumbs)
+        assert_body("Incompatible consumer reports detected")
+        assert_body("alert-box-error")
       end
     end
 
@@ -406,10 +406,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "Some consumers are using schema versions")
-        assert_includes(body, "alert-box-warning")
+        assert_body(support_message)
+        assert_body(breadcrumbs)
+        assert_body("Some consumers are using schema versions")
+        assert_body("alert-box-warning")
       end
     end
 
@@ -442,10 +442,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "significant lag in materializing")
-        assert_includes(body, "alert-box-error")
+        assert_body(support_message)
+        assert_body(breadcrumbs)
+        assert_body("significant lag in materializing")
+        assert_body("alert-box-error")
       end
     end
 
@@ -469,9 +469,9 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "is subscribed to handle")
+        assert_body(support_message)
+        assert_body(breadcrumbs)
+        assert_body("is subscribed to handle")
       end
     end
   end

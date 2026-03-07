@@ -49,10 +49,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, support_message)
-        refute_includes(body, pagination)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, no_commands)
+        refute_body(support_message)
+        refute_body(pagination)
+        assert_body(breadcrumbs)
+        assert_body(no_commands)
       end
     end
 
@@ -67,14 +67,14 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, support_message)
-        refute_includes(body, no_commands)
-        refute_includes(body, pagination)
-        refute_includes(body, '<span class="badge badge-primary">')
-        refute_includes(body, "/consumers/shinra:1404842:f66b40c75f92/subscriptions")
-        refute_includes(body, "/commands/0")
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "Incompatible command schema.")
+        refute_body(support_message)
+        refute_body(no_commands)
+        refute_body(pagination)
+        refute_body('<span class="badge badge-primary">')
+        refute_body("/consumers/shinra:1404842:f66b40c75f92/subscriptions")
+        refute_body("/commands/0")
+        assert_body(breadcrumbs)
+        assert_body("Incompatible command schema.")
       end
     end
 
@@ -83,15 +83,15 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, support_message)
-        refute_includes(body, no_commands)
-        refute_includes(body, pagination)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, '<span class="badge badge-primary">')
-        assert_includes(body, "command")
-        assert_includes(body, "quiet")
-        assert_includes(body, "process_id:")
-        assert_includes(body, "/commands/0")
+        refute_body(support_message)
+        refute_body(no_commands)
+        refute_body(pagination)
+        assert_body(breadcrumbs)
+        assert_body('<span class="badge badge-primary">')
+        assert_body("command")
+        assert_body("quiet")
+        assert_body("process_id:")
+        assert_body("/commands/0")
       end
     end
 
@@ -121,12 +121,12 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, pagination)
-          refute_includes(body, support_message)
-          assert_includes(body, "commands/99")
-          assert_includes(body, "trace")
-          assert_includes(body, "quiet")
-          assert_includes(body, "stop")
+          assert_body(pagination)
+          refute_body(support_message)
+          assert_body("commands/99")
+          assert_body("trace")
+          assert_body("quiet")
+          assert_body("stop")
         end
       end
 
@@ -135,14 +135,14 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, pagination)
-          refute_includes(body, support_message)
-          assert_includes(body, "commands/53")
-          refute_includes(body, "commands/99")
-          assert_includes(body, "trace")
-          assert_includes(body, "quiet")
-          assert_includes(body, "stop")
-          refute_includes(body, support_message)
+          assert_body(pagination)
+          refute_body(support_message)
+          assert_body("commands/53")
+          refute_body("commands/99")
+          assert_body("trace")
+          assert_body("quiet")
+          assert_body("stop")
+          refute_body(support_message)
         end
       end
 
@@ -151,9 +151,9 @@ describe_current do
 
         it do
           assert(response.ok?)
-          refute_includes(body, pagination)
-          assert_includes(body, no_commands)
-          refute_includes(body, support_message)
+          refute_body(pagination)
+          assert_body(no_commands)
+          refute_body(support_message)
         end
       end
     end
@@ -190,14 +190,14 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, breadcrumbs)
-          refute_includes(body, pagination)
-          refute_includes(body, support_message)
-          assert_includes(body, "<td>Type</td>")
-          assert_includes(body, '<code class="json"')
+          assert_body(breadcrumbs)
+          refute_body(pagination)
+          refute_body(support_message)
+          assert_body("<td>Type</td>")
+          assert_body('<code class="json"')
           # quiet_all and stop_all display just stop with a wildcard target
-          assert_includes(body, "<td>consumers.#{command.split("_").first}</td>")
-          refute_includes(body, incompatible_message)
+          assert_body("<td>consumers.#{command.split("_").first}</td>")
+          refute_body(incompatible_message)
         end
       end
 
@@ -212,13 +212,13 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, breadcrumbs)
-          refute_includes(body, pagination)
-          refute_includes(body, support_message)
-          refute_includes(body, "<td>Type</td>")
-          refute_includes(body, '<code class="json"')
-          refute_includes(body, "<td>#{command}</td>")
-          assert_includes(body, incompatible_message)
+          assert_body(breadcrumbs)
+          refute_body(pagination)
+          refute_body(support_message)
+          refute_body("<td>Type</td>")
+          refute_body('<code class="json"')
+          refute_body("<td>#{command}</td>")
+          assert_body(incompatible_message)
         end
       end
     end
@@ -235,14 +235,14 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        refute_includes(body, incompatible_message)
-        assert_includes(body, "rb:539:in `rd_kafka_consumer_poll")
-        assert_includes(body, "Metadata")
-        assert_includes(body, "trace result")
-        assert_includes(body, "shinra:397793:6fa3f39acf46")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        refute_body(incompatible_message)
+        assert_body("rb:539:in `rd_kafka_consumer_poll")
+        assert_body("Metadata")
+        assert_body("trace result")
+        assert_body("shinra:397793:6fa3f39acf46")
       end
     end
 
@@ -257,10 +257,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, incompatible_message)
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body(incompatible_message)
       end
     end
   end
@@ -296,12 +296,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "<td>Type</td>")
-        assert_includes(body, '<code class="json"')
-        assert_includes(body, "<td>consumers.")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("<td>Type</td>")
+        assert_body('<code class="json"')
+        assert_body("<td>consumers.")
       end
     end
   end

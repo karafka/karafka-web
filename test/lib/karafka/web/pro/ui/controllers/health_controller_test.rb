@@ -47,10 +47,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "No health data is available")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("No health data is available")
       end
     end
 
@@ -59,11 +59,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "Not available until first offset")
-        assert_includes(body, "327355")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("Not available until first offset")
+        assert_body("327355")
       end
 
       context "when sorted" do
@@ -81,12 +81,12 @@ describe_current do
 
         it "expect to show topic pause controls without disabled state" do
           assert(response.ok?)
-          assert_includes(body, "Pause All")
-          refute_includes(body, "btn-warning btn-sm btn-disabled")
+          assert_body("Pause All")
+          refute_body("btn-warning btn-sm btn-disabled")
         end
 
         it "expect to show partition edit options without disabled state" do
-          refute_includes(body, "btn-info btn-sm btn-disabled")
+          refute_body("btn-info btn-sm btn-disabled")
         end
       end
 
@@ -101,12 +101,12 @@ describe_current do
 
         it "expect to show topic pause controls in disabled state" do
           assert(response.ok?)
-          assert_includes(body, "Pause All")
-          assert_includes(body, "btn-warning btn-sm btn-disabled")
+          assert_body("Pause All")
+          assert_body("btn-warning btn-sm btn-disabled")
         end
 
         it "expect to show partition edit options in disabled state" do
-          assert_includes(body, "btn-info btn-sm btn-disabled")
+          assert_body("btn-info btn-sm btn-disabled")
         end
       end
     end
@@ -128,7 +128,7 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "No data available")
+        assert_body("No data available")
         assert_equal(2, body.scan("No data available").size) # partitions 1 and 2
       end
     end
@@ -150,7 +150,7 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, "No data available")
+        refute_body("No data available")
       end
     end
 
@@ -171,8 +171,8 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "my-static-member-id-123")
-        assert_includes(body, "Static Membership ID")
+        assert_body("my-static-member-id-123")
+        assert_body("Static Membership ID")
       end
     end
 
@@ -193,7 +193,7 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, "Static Membership ID")
+        refute_body("Static Membership ID")
       end
     end
 
@@ -207,11 +207,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "Not available until first offset")
-        assert_includes(body, "327355")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("Not available until first offset")
+        assert_body("327355")
       end
     end
   end
@@ -226,12 +226,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "No health data is available")
-        refute_includes(body, "badge-warning")
-        refute_includes(body, "badge-error")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("No health data is available")
+        refute_body("badge-warning")
+        refute_body("badge-error")
       end
     end
 
@@ -240,11 +240,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "213731273")
-        refute_includes(body, "badge-error")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("213731273")
+        refute_body("badge-error")
       end
     end
 
@@ -263,7 +263,7 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "No data available")
+        assert_body("No data available")
         assert_equal(2, body.scan("No data available").size)
       end
     end
@@ -283,7 +283,7 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, "No data available")
+        refute_body("No data available")
       end
     end
 
@@ -297,12 +297,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "Not available until first offset")
-        assert_includes(body, "213731273")
-        refute_includes(body, "badge-error")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("Not available until first offset")
+        assert_body("213731273")
+        refute_body("badge-error")
       end
     end
   end
@@ -316,12 +316,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "No health data is available")
-        refute_includes(body, "badge-warning")
-        refute_includes(body, "badge-error")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("No health data is available")
+        refute_body("badge-warning")
+        refute_body("badge-error")
       end
     end
 
@@ -330,10 +330,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "-1")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("-1")
       end
     end
   end
@@ -348,12 +348,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "No health data is available")
-        refute_includes(body, "badge-warning")
-        refute_includes(body, "badge-error")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("No health data is available")
+        refute_body("badge-warning")
+        refute_body("badge-error")
       end
     end
 
@@ -362,13 +362,13 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "Not available until first offset")
-        assert_includes(body, "327355")
-        refute_includes(body, "badge-warning")
-        refute_includes(body, "badge-error")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("Not available until first offset")
+        assert_body("327355")
+        refute_body("badge-warning")
+        refute_body("badge-error")
       end
     end
 
@@ -387,7 +387,7 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "No data available")
+        assert_body("No data available")
         assert_equal(2, body.scan("No data available").size)
       end
     end
@@ -407,7 +407,7 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, "No data available")
+        refute_body("No data available")
       end
     end
 
@@ -421,13 +421,13 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "Not available until first offset")
-        assert_includes(body, "327355")
-        refute_includes(body, "badge-warning")
-        refute_includes(body, "badge-error")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("Not available until first offset")
+        assert_body("327355")
+        refute_body("badge-warning")
+        refute_body("badge-error")
       end
     end
 
@@ -450,14 +450,14 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "Not available until first offset")
-        assert_includes(body, "badge-warning")
-        assert_includes(body, "at_risk")
-        refute_includes(body, "badge-error")
-        refute_includes(body, "stopped")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("Not available until first offset")
+        assert_body("badge-warning")
+        assert_body("at_risk")
+        refute_body("badge-error")
+        refute_body("stopped")
       end
     end
 
@@ -480,14 +480,14 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "Not available until first offset")
-        assert_includes(body, "badge-error")
-        assert_includes(body, "stopped")
-        refute_includes(body, "at_risk")
-        refute_includes(body, "badge-warning")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("Not available until first offset")
+        assert_body("badge-error")
+        assert_body("stopped")
+        refute_body("at_risk")
+        refute_body("badge-warning")
       end
     end
   end
@@ -502,12 +502,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "No health data is available")
-        refute_includes(body, "badge-warning")
-        refute_includes(body, "badge-error")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("No health data is available")
+        refute_body("badge-warning")
+        refute_body("badge-error")
       end
     end
 
@@ -516,12 +516,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "Pause state change")
-        assert_includes(body, "N/A")
-        assert_includes(body, "2690818656.575513")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("Pause state change")
+        assert_body("N/A")
+        assert_body("2690818656.575513")
       end
     end
 
@@ -540,7 +540,7 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "No data available")
+        assert_body("No data available")
         assert_equal(2, body.scan("No data available").size)
       end
     end
@@ -560,7 +560,7 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, "No data available")
+        refute_body("No data available")
       end
     end
 
@@ -574,11 +574,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "Pause state change")
-        assert_includes(body, "Changes")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("Pause state change")
+        assert_body("Changes")
       end
     end
 
@@ -600,10 +600,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "Until manual resume")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("Until manual resume")
       end
     end
   end

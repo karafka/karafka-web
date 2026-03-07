@@ -29,10 +29,10 @@ describe_current do
 
     it do
       assert(response.ok?)
-      assert_includes(body, support_message)
-      assert_includes(body, breadcrumbs)
-      refute_includes(body, pagination)
-      assert_includes(body, no_processes)
+      assert_body(support_message)
+      assert_body(breadcrumbs)
+      refute_body(pagination)
+      assert_body(no_processes)
     end
   end
 
@@ -41,14 +41,14 @@ describe_current do
 
     it do
       assert(response.ok?)
-      assert_includes(body, support_message)
-      refute_includes(body, no_processes)
-      refute_includes(body, pagination)
-      assert_includes(body, breadcrumbs)
-      assert_includes(body, "246 MB")
-      assert_includes(body, "shinra:1:1")
-      assert_includes(body, "/consumers/shinra:1:1/subscriptions")
-      assert_includes(body, "2690818651.82293")
+      assert_body(support_message)
+      refute_body(no_processes)
+      refute_body(pagination)
+      assert_body(breadcrumbs)
+      assert_body("246 MB")
+      assert_body("shinra:1:1")
+      assert_body("/consumers/shinra:1:1/subscriptions")
+      assert_body("2690818651.82293")
     end
   end
 
@@ -69,15 +69,15 @@ describe_current do
 
     it do
       assert(response.ok?)
-      refute_includes(body, "partitions: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9")
-      assert_includes(body, support_message)
-      refute_includes(body, no_processes)
-      refute_includes(body, pagination)
-      assert_includes(body, breadcrumbs)
-      assert_includes(body, "246 MB")
-      assert_includes(body, "shinra:1:1")
-      assert_includes(body, "/consumers/shinra:1:1/subscriptions")
-      assert_includes(body, "2690818651.82293")
+      refute_body("partitions: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9")
+      assert_body(support_message)
+      refute_body(no_processes)
+      refute_body(pagination)
+      assert_body(breadcrumbs)
+      assert_body("246 MB")
+      assert_body("shinra:1:1")
+      assert_body("/consumers/shinra:1:1/subscriptions")
+      assert_body("2690818651.82293")
     end
   end
 
@@ -100,16 +100,16 @@ describe_current do
 
     it do
       assert(response.ok?)
-      assert_includes(body, "0-50")
-      assert_includes(body, "default-[0-50] (51 partitions total)")
-      assert_includes(body, support_message)
-      assert_includes(body, breadcrumbs)
-      refute_includes(body, no_processes)
-      refute_includes(body, pagination)
-      assert_includes(body, "246 MB")
-      assert_includes(body, "shinra:1:1")
-      assert_includes(body, "/consumers/shinra:1:1/subscriptions")
-      assert_includes(body, "2690818651.82293")
+      assert_body("0-50")
+      assert_body("default-[0-50] (51 partitions total)")
+      assert_body(support_message)
+      assert_body(breadcrumbs)
+      refute_body(no_processes)
+      refute_body(pagination)
+      assert_body("246 MB")
+      assert_body("shinra:1:1")
+      assert_body("/consumers/shinra:1:1/subscriptions")
+      assert_body("2690818651.82293")
     end
   end
 
@@ -126,14 +126,14 @@ describe_current do
 
     it do
       assert(response.ok?)
-      assert_includes(body, support_message)
-      assert_includes(body, breadcrumbs)
-      refute_includes(body, no_processes)
-      refute_includes(body, pagination)
-      assert_includes(body, "246 MB")
-      assert_includes(body, "shinra:1:1")
-      assert_includes(body, "/consumers/shinra:1:1/subscriptions")
-      assert_includes(body, "2690818651.82293")
+      assert_body(support_message)
+      assert_body(breadcrumbs)
+      refute_body(no_processes)
+      refute_body(pagination)
+      assert_body("246 MB")
+      assert_body("shinra:1:1")
+      assert_body("/consumers/shinra:1:1/subscriptions")
+      assert_body("2690818651.82293")
     end
   end
 
@@ -167,12 +167,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, pagination)
-        assert_includes(body, support_message)
-        assert_includes(body, "shinra:0:0")
-        assert_includes(body, "shinra:1:1")
-        assert_includes(body, "shinra:11:11")
-        assert_includes(body, "shinra:12:12")
+        assert_body(pagination)
+        assert_body(support_message)
+        assert_body("shinra:0:0")
+        assert_body("shinra:1:1")
+        assert_body("shinra:11:11")
+        assert_body("shinra:12:12")
         assert_equal(50, body.scan("shinra:").size)
       end
     end
@@ -182,12 +182,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, pagination)
-        assert_includes(body, support_message)
-        assert_includes(body, "shinra:32:32")
-        assert_includes(body, "shinra:34:34")
-        assert_includes(body, "shinra:35:35")
-        assert_includes(body, "shinra:35:35")
+        assert_body(pagination)
+        assert_body(support_message)
+        assert_body("shinra:32:32")
+        assert_body("shinra:34:34")
+        assert_body("shinra:35:35")
+        assert_body("shinra:35:35")
         assert_equal(50, body.scan("shinra:").size)
       end
     end
@@ -197,10 +197,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, pagination)
-        assert_includes(body, support_message)
+        assert_body(pagination)
+        assert_body(support_message)
         assert_equal(0, body.scan("shinra:").size)
-        assert_includes(body, no_meaningful_results)
+        assert_body(no_meaningful_results)
       end
     end
   end

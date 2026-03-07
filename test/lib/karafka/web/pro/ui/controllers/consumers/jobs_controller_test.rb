@@ -43,10 +43,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "This process has no running jobs at the moment")
-        refute_includes(body, "Karafka::Pro::ActiveJob::Consumer")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body("This process has no running jobs at the moment")
+        refute_body("Karafka::Pro::ActiveJob::Consumer")
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -55,9 +55,9 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "Karafka::Pro::ActiveJob::Consumer")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body("Karafka::Pro::ActiveJob::Consumer")
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -74,9 +74,9 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "Karafka::Pro::ActiveJob::Consumer")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body("Karafka::Pro::ActiveJob::Consumer")
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -94,9 +94,9 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "This process has no running jobs at the moment")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body("This process has no running jobs at the moment")
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -127,10 +127,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "This process has no pending jobs at the moment")
-        refute_includes(body, "Karafka::Pro::ActiveJob::Consumer")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body("This process has no pending jobs at the moment")
+        refute_body("Karafka::Pro::ActiveJob::Consumer")
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -150,9 +150,9 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "Karafka::Pro::ActiveJob::Consumer")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body("Karafka::Pro::ActiveJob::Consumer")
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -172,9 +172,9 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "Karafka::Pro::ActiveJob::Consumer")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body("Karafka::Pro::ActiveJob::Consumer")
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -192,9 +192,9 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "This process has no pending jobs at the moment")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body("This process has no pending jobs at the moment")
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 

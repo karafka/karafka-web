@@ -47,10 +47,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, not_operable)
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body(not_operable)
       end
     end
 
@@ -59,11 +59,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, not_operable)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        refute_includes(body, "Schedule 1.0.0")
+        assert_body(breadcrumbs)
+        assert_body(not_operable)
+        refute_body(pagination)
+        refute_body(support_message)
+        refute_body("Schedule 1.0.0")
       end
     end
 
@@ -76,9 +76,9 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, not_operable)
-        refute_includes(body, "Schedule 1.0.0")
+        assert_body(breadcrumbs)
+        assert_body(not_operable)
+        refute_body("Schedule 1.0.0")
       end
     end
 
@@ -95,9 +95,9 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, not_operable)
-        assert_includes(body, "Schedule 1.0.0")
+        assert_body(breadcrumbs)
+        assert_body(not_operable)
+        assert_body("Schedule 1.0.0")
       end
     end
 
@@ -116,9 +116,9 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, not_operable)
-        assert_includes(body, "Schedule 1.0.0")
+        assert_body(breadcrumbs)
+        assert_body(not_operable)
+        assert_body("Schedule 1.0.0")
       end
     end
 
@@ -137,9 +137,9 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, not_operable)
-        refute_includes(body, "Schedule 1.0.0")
+        assert_body(breadcrumbs)
+        assert_body(not_operable)
+        refute_body("Schedule 1.0.0")
       end
     end
 
@@ -156,16 +156,16 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "Never")
-        assert_includes(body, "* * * * *")
-        assert_includes(body, "*/2 * * *")
-        assert_includes(body, "Disabled")
-        assert_includes(body, "status-row-warning text-muted")
-        assert_includes(body, "btn btn-warning btn-sm btn-disabled")
-        assert_includes(body, "Schedule 1.0.1")
-        refute_includes(body, not_operable)
-        refute_includes(body, '<time class="ltr" dir="ltr"')
+        assert_body(breadcrumbs)
+        assert_body("Never")
+        assert_body("* * * * *")
+        assert_body("*/2 * * *")
+        assert_body("Disabled")
+        assert_body("status-row-warning text-muted")
+        assert_body("btn btn-warning btn-sm btn-disabled")
+        assert_body("Schedule 1.0.1")
+        refute_body(not_operable)
+        refute_body('<time class="ltr" dir="ltr"')
       end
     end
 
@@ -182,16 +182,16 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "Never")
-        assert_includes(body, "* * * * *")
-        assert_includes(body, "*/2 * * *")
-        assert_includes(body, "Disabled")
-        assert_includes(body, '<time class="ltr" dir="ltr"')
-        assert_includes(body, "status-row-warning text-muted")
-        assert_includes(body, "btn btn-warning btn-sm btn-disabled")
-        assert_includes(body, "Schedule 1.0.1")
-        refute_includes(body, not_operable)
+        assert_body(breadcrumbs)
+        assert_body("Never")
+        assert_body("* * * * *")
+        assert_body("*/2 * * *")
+        assert_body("Disabled")
+        assert_body('<time class="ltr" dir="ltr"')
+        assert_body("status-row-warning text-muted")
+        assert_body("btn btn-warning btn-sm btn-disabled")
+        assert_body("Schedule 1.0.1")
+        refute_body(not_operable)
       end
     end
 
@@ -208,16 +208,16 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "* * * * *")
-        assert_includes(body, "*/2 * * *")
-        assert_includes(body, "Enabled")
-        assert_includes(body, '<time class="ltr" dir="ltr"')
-        assert_includes(body, "Schedule 1.0.1")
-        refute_includes(body, "btn btn-warning btn-sm btn-disabled")
-        refute_includes(body, "status-row-warning text-muted")
-        refute_includes(body, "Never")
-        refute_includes(body, not_operable)
+        assert_body(breadcrumbs)
+        assert_body("* * * * *")
+        assert_body("*/2 * * *")
+        assert_body("Enabled")
+        assert_body('<time class="ltr" dir="ltr"')
+        assert_body("Schedule 1.0.1")
+        refute_body("btn btn-warning btn-sm btn-disabled")
+        refute_body("status-row-warning text-muted")
+        refute_body("Never")
+        refute_body(not_operable)
       end
     end
 
@@ -255,10 +255,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, no_logs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body(no_logs)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -272,13 +272,13 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "test1")
-        assert_includes(body, "1.0.1")
-        assert_includes(body, '<span class="badge  badge-success">Success</span>')
-        refute_includes(body, no_logs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body("test1")
+        assert_body("1.0.1")
+        assert_body('<span class="badge  badge-success">Success</span>')
+        refute_body(no_logs)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -292,13 +292,13 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "test2")
-        assert_includes(body, "1.0.1")
-        assert_includes(body, '<span class="badge  badge-error">Error</span>')
-        refute_includes(body, no_logs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body("test2")
+        assert_body("1.0.1")
+        assert_body('<span class="badge  badge-error">Error</span>')
+        refute_body(no_logs)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -314,14 +314,14 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "test1")
-        assert_includes(body, "test2")
-        assert_includes(body, "1.0.1")
-        assert_includes(body, '<span class="badge  badge-error">Error</span>')
-        assert_includes(body, pagination)
-        refute_includes(body, no_logs)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body("test1")
+        assert_body("test2")
+        assert_body("1.0.1")
+        assert_body('<span class="badge  badge-error">Error</span>')
+        assert_body(pagination)
+        refute_body(no_logs)
+        refute_body(support_message)
       end
     end
 
@@ -337,14 +337,14 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "test1")
-        assert_includes(body, "test2")
-        assert_includes(body, "1.0.1")
-        assert_includes(body, '<span class="badge  badge-error">Error</span>')
-        assert_includes(body, pagination)
-        refute_includes(body, no_logs)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body("test1")
+        assert_body("test2")
+        assert_body("1.0.1")
+        assert_body('<span class="badge  badge-error">Error</span>')
+        assert_body(pagination)
+        refute_body(no_logs)
+        refute_body(support_message)
       end
     end
   end

@@ -33,12 +33,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "This topic is empty and does not contain any data")
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, "total: 1")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        refute_includes(body, search_button)
+        assert_body("This topic is empty and does not contain any data")
+        assert_body(breadcrumbs)
+        refute_body("total: 1")
+        refute_body(pagination)
+        refute_body(support_message)
+        refute_body(search_button)
       end
     end
 
@@ -50,11 +50,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "total: 1")
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, search_button)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body("total: 1")
+        assert_body(breadcrumbs)
+        assert_body(search_button)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -66,12 +66,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "total: 1")
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, search_button)
-        assert_includes(body, "This offset does not contain any recognized data type.")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body("total: 1")
+        assert_body(breadcrumbs)
+        assert_body(search_button)
+        assert_body("This offset does not contain any recognized data type.")
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -83,12 +83,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "total: 1")
-        assert_includes(body, "cancel")
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, search_button)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body("total: 1")
+        assert_body("cancel")
+        assert_body(breadcrumbs)
+        assert_body(search_button)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -113,11 +113,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "total: 1")
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "[Deserialization Failed]")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body("total: 1")
+        assert_body(breadcrumbs)
+        assert_body("[Deserialization Failed]")
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -129,11 +129,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, '<span class="badge  badge-primary">schedule</span>')
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, pagination)
-        assert_includes(body, "#{topic}/0/5")
-        refute_includes(body, support_message)
+        assert_body('<span class="badge  badge-primary">schedule</span>')
+        assert_body(breadcrumbs)
+        assert_body(pagination)
+        assert_body("#{topic}/0/5")
+        refute_body(support_message)
       end
     end
 
@@ -150,15 +150,15 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, pagination)
-        assert_includes(body, "#{topic}/0/6")
-        assert_includes(body, "#{topic}/0/29")
-        assert_includes(body, compacted_or_transactional_offset)
-        assert_includes(body, search_button)
-        refute_includes(body, "#{topic}/0/30")
-        refute_includes(body, "#{topic}/0/4")
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body(pagination)
+        assert_body("#{topic}/0/6")
+        assert_body("#{topic}/0/29")
+        assert_body(compacted_or_transactional_offset)
+        assert_body(search_button)
+        refute_body("#{topic}/0/30")
+        refute_body("#{topic}/0/4")
+        refute_body(support_message)
       end
     end
   end
@@ -180,14 +180,14 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, no_data)
-        refute_includes(body, "high: 0")
-        refute_includes(body, "low: 0")
-        refute_includes(body, "Watermark offsets")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        refute_includes(body, search_button)
+        assert_body(breadcrumbs)
+        assert_body(no_data)
+        refute_body("high: 0")
+        refute_body("low: 0")
+        refute_body("Watermark offsets")
+        refute_body(pagination)
+        refute_body(support_message)
+        refute_body(search_button)
       end
     end
 
@@ -199,14 +199,14 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "Watermark offsets")
-        assert_includes(body, "high: 1")
-        assert_includes(body, "low: 0")
-        assert_includes(body, search_button)
-        refute_includes(body, no_data)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body("Watermark offsets")
+        assert_body("high: 1")
+        assert_body("low: 0")
+        assert_body(search_button)
+        refute_body(no_data)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -218,13 +218,13 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "Watermark offsets")
-        assert_includes(body, "high: 2")
-        assert_includes(body, "low: 0")
-        refute_includes(body, no_data)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body("Watermark offsets")
+        assert_body("high: 2")
+        assert_body("low: 0")
+        refute_body(no_data)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -241,13 +241,13 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "Watermark offsets")
-        assert_includes(body, "high: 1")
-        assert_includes(body, "low: 0")
-        refute_includes(body, no_data)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body("Watermark offsets")
+        assert_body("high: 1")
+        assert_body("low: 0")
+        refute_body(no_data)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -259,16 +259,16 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, breadcrumbs)
-          assert_includes(body, "Watermark offsets")
-          assert_includes(body, "high: 100")
-          assert_includes(body, "low: 0")
-          assert_includes(body, pagination)
-          assert_includes(body, "/explorer/topics/#{topic}/0/99")
-          refute_includes(body, "/explorer/topics/#{topic}/0/98")
-          refute_includes(body, "/explorer/topics/#{topic}/0/100")
-          refute_includes(body, no_data)
-          refute_includes(body, support_message)
+          assert_body(breadcrumbs)
+          assert_body("Watermark offsets")
+          assert_body("high: 100")
+          assert_body("low: 0")
+          assert_body(pagination)
+          assert_body("/explorer/topics/#{topic}/0/99")
+          refute_body("/explorer/topics/#{topic}/0/98")
+          refute_body("/explorer/topics/#{topic}/0/100")
+          refute_body(no_data)
+          refute_body(support_message)
         end
       end
 
@@ -277,17 +277,17 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, breadcrumbs)
-          assert_includes(body, "Watermark offsets")
-          assert_includes(body, "high: 100")
-          assert_includes(body, "low: 0")
-          assert_includes(body, pagination)
-          assert_includes(body, "/explorer/topics/#{topic}/0/99")
-          assert_includes(body, "/explorer/topics/#{topic}/0/75")
-          refute_includes(body, "/explorer/topics/#{topic}/0/100")
-          refute_includes(body, "/explorer/topics/#{topic}/0/74")
-          refute_includes(body, no_data)
-          refute_includes(body, support_message)
+          assert_body(breadcrumbs)
+          assert_body("Watermark offsets")
+          assert_body("high: 100")
+          assert_body("low: 0")
+          assert_body(pagination)
+          assert_body("/explorer/topics/#{topic}/0/99")
+          assert_body("/explorer/topics/#{topic}/0/75")
+          refute_body("/explorer/topics/#{topic}/0/100")
+          refute_body("/explorer/topics/#{topic}/0/74")
+          refute_body(no_data)
+          refute_body(support_message)
           # 26 because 25 for details + one for breadcrumbs
           assert_equal(26, body.scan("href=\"/explorer/topics/#{topic}/0/").count)
         end
@@ -298,18 +298,18 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, breadcrumbs)
-          assert_includes(body, "Watermark offsets")
-          assert_includes(body, "high: 100")
-          assert_includes(body, "low: 0")
-          assert_includes(body, pagination)
-          assert_includes(body, "/explorer/topics/#{topic}/0/0")
-          assert_includes(body, "/explorer/topics/#{topic}/0/24")
-          refute_includes(body, "/explorer/topics/#{topic}/0/99")
-          refute_includes(body, "/explorer/topics/#{topic}/0/75")
-          refute_includes(body, "/explorer/topics/#{topic}/0/25")
-          refute_includes(body, no_data)
-          refute_includes(body, support_message)
+          assert_body(breadcrumbs)
+          assert_body("Watermark offsets")
+          assert_body("high: 100")
+          assert_body("low: 0")
+          assert_body(pagination)
+          assert_body("/explorer/topics/#{topic}/0/0")
+          assert_body("/explorer/topics/#{topic}/0/24")
+          refute_body("/explorer/topics/#{topic}/0/99")
+          refute_body("/explorer/topics/#{topic}/0/75")
+          refute_body("/explorer/topics/#{topic}/0/25")
+          refute_body(no_data)
+          refute_body(support_message)
           # 26 because 25 for details + one for breadcrumbs
           assert_equal(26, body.scan("href=\"/explorer/topics/#{topic}/0/").count)
         end
@@ -320,15 +320,15 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, breadcrumbs)
-          assert_includes(body, "This page does not contain any data")
-          refute_includes(body, "Watermark offsets")
-          refute_includes(body, "high: 100")
-          refute_includes(body, "low: 0")
-          refute_includes(body, pagination)
-          refute_includes(body, "/explorer/topics/#{topic}/0/99")
-          refute_includes(body, "/explorer/topics/#{topic}/0/100")
-          refute_includes(body, support_message)
+          assert_body(breadcrumbs)
+          assert_body("This page does not contain any data")
+          refute_body("Watermark offsets")
+          refute_body("high: 100")
+          refute_body("low: 0")
+          refute_body(pagination)
+          refute_body("/explorer/topics/#{topic}/0/99")
+          refute_body("/explorer/topics/#{topic}/0/100")
+          refute_body(support_message)
         end
       end
     end

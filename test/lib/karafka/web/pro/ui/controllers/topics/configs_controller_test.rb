@@ -41,13 +41,13 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, topic)
-        assert_includes(body, "max.message.bytes")
-        assert_includes(body, "retention.ms")
-        assert_includes(body, "min.insync.replicas")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body(topic)
+        assert_body("max.message.bytes")
+        assert_body("retention.ms")
+        assert_body("min.insync.replicas")
       end
     end
   end
@@ -66,22 +66,22 @@ describe_current do
 
         it "renders edit form with all required elements" do
           assert(response.ok?)
-          assert_includes(body, breadcrumbs)
-          assert_includes(body, "Topic #{topic_name} - Edit #{property_name}")
-          refute_includes(body, pagination)
-          refute_includes(body, support_message)
+          assert_body(breadcrumbs)
+          assert_body("Topic #{topic_name} - Edit #{property_name}")
+          refute_body(pagination)
+          refute_body(support_message)
 
           # Form elements and structure
-          assert_includes(body, 'method="post"')
-          assert_includes(body, 'name="_method" value="put"')
-          assert_includes(body, "Update Property")
-          assert_includes(body, "Cancel")
+          assert_body('method="post"')
+          assert_body('name="_method" value="put"')
+          assert_body("Update Property")
+          assert_body("Cancel")
 
           # Warnings and hints
-          assert_includes(body, "Configuration Update Warning")
-          assert_includes(body, "Changing topic configurations may affect topic behavior")
-          assert_includes(body, "Some changes may take time to propagate")
-          assert_includes(body, "Before updating this configuration:")
+          assert_body("Configuration Update Warning")
+          assert_body("Changing topic configurations may affect topic behavior")
+          assert_body("Some changes may take time to propagate")
+          assert_body("Before updating this configuration:")
         end
       end
 
@@ -157,11 +157,11 @@ describe_current do
 
         it "renders edit form with error messages" do
           assert(response.ok?)
-          assert_includes(body, "Configuration Update Warning")
-          assert_includes(body, error_message)
-          assert_includes(body, topic_name)
-          assert_includes(body, property_name)
-          assert_includes(body, property_value)
+          assert_body("Configuration Update Warning")
+          assert_body(error_message)
+          assert_body(topic_name)
+          assert_body(property_name)
+          assert_body(property_value)
         end
       end
     end

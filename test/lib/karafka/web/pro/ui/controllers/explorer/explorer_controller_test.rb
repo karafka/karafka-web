@@ -37,14 +37,14 @@ describe_current do
 
     it do
       assert(response.ok?)
-      assert_includes(body, breadcrumbs)
-      refute_includes(body, pagination)
-      refute_includes(body, support_message)
-      assert_includes(body, topics_config.consumers.states.name)
-      assert_includes(body, topics_config.consumers.metrics.name)
-      assert_includes(body, topics_config.consumers.reports.name)
-      assert_includes(body, topics_config.errors.name)
-      refute_includes(body, internal_topic)
+      assert_body(breadcrumbs)
+      refute_body(pagination)
+      refute_body(support_message)
+      assert_body(topics_config.consumers.states.name)
+      assert_body(topics_config.consumers.metrics.name)
+      assert_body(topics_config.consumers.reports.name)
+      assert_body(topics_config.errors.name)
+      refute_body(internal_topic)
     end
 
     context "when there are no topics" do
@@ -55,10 +55,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "There are no available topics in the current cluster")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("There are no available topics in the current cluster")
       end
     end
 
@@ -73,14 +73,14 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, topics_config.consumers.states.name)
-        assert_includes(body, topics_config.consumers.metrics.name)
-        assert_includes(body, topics_config.consumers.reports.name)
-        assert_includes(body, topics_config.errors.name)
-        assert_includes(body, internal_topic)
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body(topics_config.consumers.states.name)
+        assert_body(topics_config.consumers.metrics.name)
+        assert_body(topics_config.consumers.reports.name)
+        assert_body(topics_config.errors.name)
+        assert_body(internal_topic)
       end
     end
   end
@@ -91,12 +91,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "This topic is empty and does not contain any data")
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, "total: 1")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        refute_includes(body, search_button)
+        assert_body("This topic is empty and does not contain any data")
+        assert_body(breadcrumbs)
+        refute_body("total: 1")
+        refute_body(pagination)
+        refute_body(support_message)
+        refute_body(search_button)
       end
     end
 
@@ -108,11 +108,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "total: 1")
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, search_button)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body("total: 1")
+        assert_body(breadcrumbs)
+        assert_body(search_button)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -137,11 +137,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "total: 1")
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "[Deserialization Failed]")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body("total: 1")
+        assert_body(breadcrumbs)
+        assert_body("[Deserialization Failed]")
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -153,13 +153,13 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, pagination)
-        assert_includes(body, "#{topic}/0/5")
-        assert_includes(body, "#{topic}/0/29")
-        refute_includes(body, "#{topic}/0/30")
-        refute_includes(body, "#{topic}/0/4")
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body(pagination)
+        assert_body("#{topic}/0/5")
+        assert_body("#{topic}/0/29")
+        refute_body("#{topic}/0/30")
+        refute_body("#{topic}/0/4")
+        refute_body(support_message)
       end
     end
 
@@ -171,15 +171,15 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, pagination)
-        assert_includes(body, "#{topic}/0/6")
-        assert_includes(body, "#{topic}/0/29")
-        assert_includes(body, compacted_or_transactional_offset)
-        assert_includes(body, search_button)
-        refute_includes(body, "#{topic}/0/30")
-        refute_includes(body, "#{topic}/0/4")
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body(pagination)
+        assert_body("#{topic}/0/6")
+        assert_body("#{topic}/0/29")
+        assert_body(compacted_or_transactional_offset)
+        assert_body(search_button)
+        refute_body("#{topic}/0/30")
+        refute_body("#{topic}/0/4")
+        refute_body(support_message)
       end
     end
 
@@ -191,13 +191,13 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, pagination)
-        assert_includes(body, "#{topic}/0/4")
-        refute_includes(body, "#{topic}/0/30")
-        refute_includes(body, "#{topic}/0/5")
-        refute_includes(body, "#{topic}/0/29")
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body(pagination)
+        assert_body("#{topic}/0/4")
+        refute_body("#{topic}/0/30")
+        refute_body("#{topic}/0/5")
+        refute_body("#{topic}/0/29")
+        refute_body(support_message)
       end
     end
 
@@ -211,20 +211,20 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, pagination)
+        assert_body(breadcrumbs)
+        assert_body(pagination)
 
         partitions.times do |i|
-          assert_includes(body, "#{topic}/#{i}/29")
-          assert_includes(body, "#{topic}/#{i}/28")
-          assert_includes(body, "#{topic}/#{i}/27")
-          assert_includes(body, "#{topic}/#{i}/26")
-          assert_includes(body, "#{topic}/#{i}/25")
-          refute_includes(body, "#{topic}/#{i}/24")
-          refute_includes(body, "#{topic}/#{i}/30")
+          assert_body("#{topic}/#{i}/29")
+          assert_body("#{topic}/#{i}/28")
+          assert_body("#{topic}/#{i}/27")
+          assert_body("#{topic}/#{i}/26")
+          assert_body("#{topic}/#{i}/25")
+          refute_body("#{topic}/#{i}/24")
+          refute_body("#{topic}/#{i}/30")
         end
 
-        refute_includes(body, support_message)
+        refute_body(support_message)
       end
     end
 
@@ -238,20 +238,20 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, pagination)
+        assert_body(breadcrumbs)
+        assert_body(pagination)
 
         partitions.times do |i|
-          assert_includes(body, "#{topic}/#{i}/4")
-          assert_includes(body, "#{topic}/#{i}/3")
-          assert_includes(body, "#{topic}/#{i}/2")
-          assert_includes(body, "#{topic}/#{i}/1")
-          assert_includes(body, "#{topic}/#{i}/0")
-          refute_includes(body, "#{topic}/#{i}/5")
-          refute_includes(body, "#{topic}/#{i}/6")
+          assert_body("#{topic}/#{i}/4")
+          assert_body("#{topic}/#{i}/3")
+          assert_body("#{topic}/#{i}/2")
+          assert_body("#{topic}/#{i}/1")
+          assert_body("#{topic}/#{i}/0")
+          refute_body("#{topic}/#{i}/5")
+          refute_body("#{topic}/#{i}/6")
         end
 
-        refute_includes(body, support_message)
+        refute_body(support_message)
       end
     end
 
@@ -263,10 +263,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, pagination)
-        assert_includes(body, no_meaningful_results)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body(pagination)
+        assert_body(no_meaningful_results)
+        refute_body(support_message)
       end
     end
   end
@@ -297,14 +297,14 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, no_data)
-        refute_includes(body, "high: 0")
-        refute_includes(body, "low: 0")
-        refute_includes(body, "Watermark offsets")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        refute_includes(body, search_button)
+        assert_body(breadcrumbs)
+        assert_body(no_data)
+        refute_body("high: 0")
+        refute_body("low: 0")
+        refute_body("Watermark offsets")
+        refute_body(pagination)
+        refute_body(support_message)
+        refute_body(search_button)
       end
     end
 
@@ -316,14 +316,14 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "Watermark offsets")
-        assert_includes(body, "high: 1")
-        assert_includes(body, "low: 0")
-        assert_includes(body, search_button)
-        refute_includes(body, no_data)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body("Watermark offsets")
+        assert_body("high: 1")
+        assert_body("low: 0")
+        assert_body(search_button)
+        refute_body(no_data)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -335,13 +335,13 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "Watermark offsets")
-        assert_includes(body, "high: 2")
-        assert_includes(body, "low: 0")
-        refute_includes(body, no_data)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body("Watermark offsets")
+        assert_body("high: 2")
+        assert_body("low: 0")
+        refute_body(no_data)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -358,14 +358,14 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "Watermark offsets")
-        assert_includes(body, "high: 1")
-        assert_includes(body, "low: 0")
-        assert_includes(body, removed_or_compacted)
-        refute_includes(body, no_data)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body("Watermark offsets")
+        assert_body("high: 1")
+        assert_body("low: 0")
+        assert_body(removed_or_compacted)
+        refute_body(no_data)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -377,16 +377,16 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, breadcrumbs)
-          assert_includes(body, "Watermark offsets")
-          assert_includes(body, "high: 100")
-          assert_includes(body, "low: 0")
-          assert_includes(body, pagination)
-          assert_includes(body, "/explorer/topics/#{topic}/0/99")
-          refute_includes(body, "/explorer/topics/#{topic}/0/98")
-          refute_includes(body, "/explorer/topics/#{topic}/0/100")
-          refute_includes(body, no_data)
-          refute_includes(body, support_message)
+          assert_body(breadcrumbs)
+          assert_body("Watermark offsets")
+          assert_body("high: 100")
+          assert_body("low: 0")
+          assert_body(pagination)
+          assert_body("/explorer/topics/#{topic}/0/99")
+          refute_body("/explorer/topics/#{topic}/0/98")
+          refute_body("/explorer/topics/#{topic}/0/100")
+          refute_body(no_data)
+          refute_body(support_message)
         end
       end
 
@@ -395,17 +395,17 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, breadcrumbs)
-          assert_includes(body, "Watermark offsets")
-          assert_includes(body, "high: 100")
-          assert_includes(body, "low: 0")
-          assert_includes(body, pagination)
-          assert_includes(body, "/explorer/topics/#{topic}/0/99")
-          assert_includes(body, "/explorer/topics/#{topic}/0/75")
-          refute_includes(body, "/explorer/topics/#{topic}/0/100")
-          refute_includes(body, "/explorer/topics/#{topic}/0/74")
-          refute_includes(body, no_data)
-          refute_includes(body, support_message)
+          assert_body(breadcrumbs)
+          assert_body("Watermark offsets")
+          assert_body("high: 100")
+          assert_body("low: 0")
+          assert_body(pagination)
+          assert_body("/explorer/topics/#{topic}/0/99")
+          assert_body("/explorer/topics/#{topic}/0/75")
+          refute_body("/explorer/topics/#{topic}/0/100")
+          refute_body("/explorer/topics/#{topic}/0/74")
+          refute_body(no_data)
+          refute_body(support_message)
           # 26 because 25 for details + one for breadcrumbs
           assert_equal(26, body.scan("href=\"/explorer/topics/#{topic}/0/").count)
         end
@@ -416,18 +416,18 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, breadcrumbs)
-          assert_includes(body, "Watermark offsets")
-          assert_includes(body, "high: 100")
-          assert_includes(body, "low: 0")
-          assert_includes(body, pagination)
-          assert_includes(body, "/explorer/topics/#{topic}/0/0")
-          assert_includes(body, "/explorer/topics/#{topic}/0/24")
-          refute_includes(body, "/explorer/topics/#{topic}/0/99")
-          refute_includes(body, "/explorer/topics/#{topic}/0/75")
-          refute_includes(body, "/explorer/topics/#{topic}/0/25")
-          refute_includes(body, no_data)
-          refute_includes(body, support_message)
+          assert_body(breadcrumbs)
+          assert_body("Watermark offsets")
+          assert_body("high: 100")
+          assert_body("low: 0")
+          assert_body(pagination)
+          assert_body("/explorer/topics/#{topic}/0/0")
+          assert_body("/explorer/topics/#{topic}/0/24")
+          refute_body("/explorer/topics/#{topic}/0/99")
+          refute_body("/explorer/topics/#{topic}/0/75")
+          refute_body("/explorer/topics/#{topic}/0/25")
+          refute_body(no_data)
+          refute_body(support_message)
           # 26 because 25 for details + one for breadcrumbs
           assert_equal(26, body.scan("href=\"/explorer/topics/#{topic}/0/").count)
         end
@@ -438,15 +438,15 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, breadcrumbs)
-          assert_includes(body, "This page does not contain any data")
-          refute_includes(body, "Watermark offsets")
-          refute_includes(body, "high: 100")
-          refute_includes(body, "low: 0")
-          refute_includes(body, pagination)
-          refute_includes(body, "/explorer/topics/#{topic}/0/99")
-          refute_includes(body, "/explorer/topics/#{topic}/0/100")
-          refute_includes(body, support_message)
+          assert_body(breadcrumbs)
+          assert_body("This page does not contain any data")
+          refute_body("Watermark offsets")
+          refute_body("high: 100")
+          refute_body("low: 0")
+          refute_body(pagination)
+          refute_body("/explorer/topics/#{topic}/0/99")
+          refute_body("/explorer/topics/#{topic}/0/100")
+          refute_body(support_message)
         end
       end
     end
@@ -481,15 +481,15 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, '<code class="json')
-        assert_includes(body, "Metadata")
-        assert_includes(body, "Export as JSON")
-        assert_includes(body, "Download raw")
-        assert_includes(body, "Republish")
-        refute_includes(body, cannot_deserialize)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body('<code class="json')
+        assert_body("Metadata")
+        assert_body("Export as JSON")
+        assert_body("Download raw")
+        assert_body("Republish")
+        refute_body(cannot_deserialize)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -508,19 +508,19 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, '<code class="json')
-        assert_includes(body, "Metadata")
-        assert_includes(body, "Export as JSON")
-        assert_includes(body, "Download raw")
-        assert_includes(body, "Republish")
-        assert_includes(body, "super1")
-        assert_includes(body, "super2")
-        assert_includes(body, "tadam1")
-        assert_includes(body, "tadam2")
-        refute_includes(body, cannot_deserialize)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body('<code class="json')
+        assert_body("Metadata")
+        assert_body("Export as JSON")
+        assert_body("Download raw")
+        assert_body("Republish")
+        assert_body("super1")
+        assert_body("super2")
+        assert_body("tadam1")
+        assert_body("tadam2")
+        refute_body(cannot_deserialize)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -536,15 +536,15 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, '<code class="json')
-        assert_includes(body, "Metadata")
-        assert_includes(body, "Export as JSON")
-        assert_includes(body, "Download raw")
-        refute_includes(body, "Republish")
-        refute_includes(body, cannot_deserialize)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body('<code class="json')
+        assert_body("Metadata")
+        assert_body("Export as JSON")
+        assert_body("Download raw")
+        refute_body("Republish")
+        refute_body(cannot_deserialize)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -564,15 +564,15 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, '<code class="json')
-        assert_includes(body, "Metadata")
-        assert_includes(body, "Export as JSON")
-        assert_includes(body, "Download raw")
-        assert_includes(body, "16d6d5c5-d8a8-45fc-ae1d-34e134772b98")
-        refute_includes(body, cannot_deserialize)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body('<code class="json')
+        assert_body("Metadata")
+        assert_body("Export as JSON")
+        assert_body("Download raw")
+        assert_body("16d6d5c5-d8a8-45fc-ae1d-34e134772b98")
+        refute_body(cannot_deserialize)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -588,14 +588,14 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, '<code class="json')
-        assert_includes(body, "Metadata")
-        assert_includes(body, "Export as JSON")
-        refute_includes(body, "Download raw")
-        refute_includes(body, cannot_deserialize)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body('<code class="json')
+        assert_body("Metadata")
+        assert_body("Export as JSON")
+        refute_body("Download raw")
+        refute_body(cannot_deserialize)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -611,14 +611,14 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, '<code class="json')
-        assert_includes(body, "Metadata")
-        assert_includes(body, "Download raw")
-        refute_includes(body, "Export as JSON")
-        refute_includes(body, cannot_deserialize)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body('<code class="json')
+        assert_body("Metadata")
+        assert_body("Download raw")
+        refute_body("Export as JSON")
+        refute_body(cannot_deserialize)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -630,11 +630,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, '<code class="json')
-        assert_includes(body, "Metadata")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body('<code class="json')
+        assert_body("Metadata")
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -646,12 +646,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "The message has been removed through")
-        assert_includes(body, pagination)
-        refute_includes(body, '<code class="json')
-        refute_includes(body, "Metadata")
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body("The message has been removed through")
+        assert_body(pagination)
+        refute_body('<code class="json')
+        refute_body("Metadata")
+        refute_body(support_message)
       end
     end
 
@@ -679,12 +679,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, '<code class="json')
-        assert_includes(body, "Metadata")
-        assert_includes(body, "Message payloads larger than")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        refute_body('<code class="json')
+        assert_body("Metadata")
+        assert_body("Message payloads larger than")
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -701,12 +701,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, '<code class="json')
-        assert_includes(body, "Metadata")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "Not Available")
+        assert_body(breadcrumbs)
+        assert_body('<code class="json')
+        assert_body("Metadata")
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("Not Available")
       end
     end
 
@@ -718,13 +718,13 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "Metadata")
-        assert_includes(body, '<code class="json')
-        assert_includes(body, cannot_deserialize)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        refute_includes(body, "Export as JSON")
+        assert_body(breadcrumbs)
+        assert_body("Metadata")
+        assert_body('<code class="json')
+        assert_body(cannot_deserialize)
+        refute_body(pagination)
+        refute_body(support_message)
+        refute_body("Export as JSON")
       end
     end
 
@@ -747,13 +747,13 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "Metadata")
-        assert_includes(body, '<code class="json')
-        assert_includes(body, "")
-        assert_includes(body, "Export as JSON")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body("Metadata")
+        assert_body('<code class="json')
+        assert_body("")
+        assert_body("Export as JSON")
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -774,12 +774,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, '<code class="json')
-        assert_includes(body, "Metadata")
-        assert_includes(body, "0.001 KB")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body('<code class="json')
+        assert_body("Metadata")
+        assert_body("0.001 KB")
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -791,12 +791,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, '<code class="json')
-        assert_includes(body, "Metadata")
-        assert_includes(body, "0.0977 KB")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body('<code class="json')
+        assert_body("Metadata")
+        assert_body("0.0977 KB")
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
   end
@@ -817,12 +817,12 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, breadcrumbs)
-          assert_includes(body, payload2)
-          assert_includes(body, topic)
-          refute_includes(body, payload1)
-          refute_includes(body, pagination)
-          refute_includes(body, support_message)
+          assert_body(breadcrumbs)
+          assert_body(payload2)
+          assert_body(topic)
+          refute_body(payload1)
+          refute_body(pagination)
+          refute_body(support_message)
         end
       end
 
@@ -836,12 +836,12 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, breadcrumbs)
-          assert_includes(body, payload2)
-          assert_includes(body, topic)
-          refute_includes(body, payload1)
-          refute_includes(body, pagination)
-          refute_includes(body, support_message)
+          assert_body(breadcrumbs)
+          assert_body(payload2)
+          assert_body(topic)
+          refute_body(payload1)
+          refute_body(pagination)
+          refute_body(support_message)
         end
       end
     end
@@ -854,12 +854,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, payload1)
-        assert_includes(body, topic)
-        refute_includes(body, payload2)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body(payload1)
+        assert_body(topic)
+        refute_body(payload2)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
   end

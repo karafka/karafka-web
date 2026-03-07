@@ -50,10 +50,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, support_message)
-        refute_includes(body, pagination)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, no_processes)
+        refute_body(support_message)
+        refute_body(pagination)
+        assert_body(breadcrumbs)
+        assert_body(no_processes)
       end
     end
 
@@ -62,18 +62,18 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, support_message)
-        refute_includes(body, no_processes)
-        refute_includes(body, pagination)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "shinra:1:1")
-        assert_includes(body, "/consumers/shinra:1:1/subscriptions")
-        assert_includes(body, "running")
-        assert_includes(body, "ID")
-        assert_includes(body, "Performance")
-        assert_includes(body, "Quiet All")
-        assert_includes(body, "Stop All")
-        assert_includes(body, "Trace")
+        refute_body(support_message)
+        refute_body(no_processes)
+        refute_body(pagination)
+        assert_body(breadcrumbs)
+        assert_body("shinra:1:1")
+        assert_body("/consumers/shinra:1:1/subscriptions")
+        assert_body("running")
+        assert_body("ID")
+        assert_body("Performance")
+        assert_body("Quiet All")
+        assert_body("Stop All")
+        assert_body("Trace")
       end
 
       context "when sorting" do
@@ -103,20 +103,20 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, support_message)
-        refute_includes(body, no_processes)
-        refute_includes(body, pagination)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "shinra:1:1")
-        assert_includes(body, "/consumers/shinra:1:1/subscriptions")
-        assert_includes(body, "running")
-        assert_includes(body, "ID")
-        assert_includes(body, "Performance")
-        assert_includes(body, "Quiet All")
-        assert_includes(body, "Stop All")
-        assert_includes(body, "Trace")
-        assert_includes(body, 'title="Supported only in standalone consumer processes"')
-        assert_includes(body, 'title="Supported only with standalone consumer processes"')
+        refute_body(support_message)
+        refute_body(no_processes)
+        refute_body(pagination)
+        assert_body(breadcrumbs)
+        assert_body("shinra:1:1")
+        assert_body("/consumers/shinra:1:1/subscriptions")
+        assert_body("running")
+        assert_body("ID")
+        assert_body("Performance")
+        assert_body("Quiet All")
+        assert_body("Stop All")
+        assert_body("Trace")
+        assert_body('title="Supported only in standalone consumer processes"')
+        assert_body('title="Supported only with standalone consumer processes"')
       end
 
       context "when sorting" do
@@ -146,20 +146,20 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, support_message)
-        refute_includes(body, no_processes)
-        refute_includes(body, pagination)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "shinra:1:1")
-        assert_includes(body, "/consumers/shinra:1:1/subscriptions")
-        assert_includes(body, "running")
-        assert_includes(body, "ID")
-        assert_includes(body, "Performance")
-        assert_includes(body, "Quiet All")
-        assert_includes(body, "Stop All")
-        assert_includes(body, "Trace")
-        assert_includes(body, 'title="Supported only in standalone consumer processes"')
-        assert_includes(body, 'title="Supported only with standalone consumer processes"')
+        refute_body(support_message)
+        refute_body(no_processes)
+        refute_body(pagination)
+        assert_body(breadcrumbs)
+        assert_body("shinra:1:1")
+        assert_body("/consumers/shinra:1:1/subscriptions")
+        assert_body("running")
+        assert_body("ID")
+        assert_body("Performance")
+        assert_body("Quiet All")
+        assert_body("Stop All")
+        assert_body("Trace")
+        assert_body('title="Supported only in standalone consumer processes"')
+        assert_body('title="Supported only with standalone consumer processes"')
       end
 
       context "when sorting" do
@@ -182,18 +182,18 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, support_message)
-        refute_includes(body, no_processes)
-        refute_includes(body, pagination)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "shinra:1:1")
-        assert_includes(body, "/consumers/shinra:1:1/subscriptions")
-        assert_includes(body, "running")
-        assert_includes(body, "ID")
-        assert_includes(body, "Performance")
-        assert_includes(body, "Quiet All")
-        assert_includes(body, "Stop All")
-        assert_includes(body, "Trace")
+        refute_body(support_message)
+        refute_body(no_processes)
+        refute_body(pagination)
+        assert_body(breadcrumbs)
+        assert_body("shinra:1:1")
+        assert_body("/consumers/shinra:1:1/subscriptions")
+        assert_body("running")
+        assert_body("ID")
+        assert_body("Performance")
+        assert_body("Quiet All")
+        assert_body("Stop All")
+        assert_body("Trace")
       end
     end
 
@@ -227,13 +227,13 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, pagination)
-          assert_includes(body, "shinra:0:0")
-          assert_includes(body, "shinra:1:1")
-          assert_includes(body, "shinra:11:11")
-          assert_includes(body, "shinra:12:12")
+          assert_body(pagination)
+          assert_body("shinra:0:0")
+          assert_body("shinra:1:1")
+          assert_body("shinra:11:11")
+          assert_body("shinra:12:12")
           assert_equal(125, body.scan("shinra:").size)
-          refute_includes(body, support_message)
+          refute_body(support_message)
         end
       end
 
@@ -242,13 +242,13 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, pagination)
-          assert_includes(body, "shinra:32:32")
-          assert_includes(body, "shinra:34:34")
-          assert_includes(body, "shinra:35:35")
-          assert_includes(body, "shinra:35:35")
+          assert_body(pagination)
+          assert_body("shinra:32:32")
+          assert_body("shinra:34:34")
+          assert_body("shinra:35:35")
+          assert_body("shinra:35:35")
           assert_equal(125, body.scan("shinra:").size)
-          refute_includes(body, support_message)
+          refute_body(support_message)
         end
       end
 
@@ -257,10 +257,10 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, pagination)
-          assert_includes(body, no_meaningful_results)
+          assert_body(pagination)
+          assert_body(no_meaningful_results)
           assert_equal(0, body.scan("shinra:").size)
-          refute_includes(body, support_message)
+          refute_body(support_message)
         end
       end
     end

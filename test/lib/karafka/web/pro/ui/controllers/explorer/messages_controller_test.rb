@@ -46,10 +46,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, topic)
-        assert_includes(body, "message-republish-form")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(topic)
+        assert_body("message-republish-form")
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
   end

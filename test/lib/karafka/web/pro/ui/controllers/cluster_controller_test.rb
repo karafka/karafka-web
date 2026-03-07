@@ -28,9 +28,9 @@ describe_current do
 
     it do
       assert(response.ok?)
-      assert_includes(body, "ID")
-      assert_includes(body, breadcrumbs)
-      refute_includes(body, support_message)
+      assert_body("ID")
+      assert_body(breadcrumbs)
+      refute_body(support_message)
     end
 
     context "when requests policy prevents us from visiting this page" do
@@ -64,12 +64,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, support_message)
-        assert_includes(body, "advertised.listeners")
-        assert_includes(body, "controller.quota.window.num")
-        assert_includes(body, "log.flush.interval.ms")
-        assert_includes(body, "9223372036854775807")
+        assert_body(breadcrumbs)
+        refute_body(support_message)
+        assert_body("advertised.listeners")
+        assert_body("controller.quota.window.num")
+        assert_body("log.flush.interval.ms")
+        assert_body("9223372036854775807")
       end
     end
   end
@@ -79,8 +79,8 @@ describe_current do
 
     it do
       assert(response.ok?)
-      assert_includes(body, breadcrumbs)
-      refute_includes(body, support_message)
+      assert_body(breadcrumbs)
+      refute_body(support_message)
     end
 
     context "when there are many pages with topics" do
@@ -91,9 +91,9 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, breadcrumbs)
-          assert_includes(body, pagination)
-          refute_includes(body, support_message)
+          assert_body(breadcrumbs)
+          assert_body(pagination)
+          refute_body(support_message)
         end
       end
 
@@ -102,9 +102,9 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, pagination)
-          assert_includes(body, no_meaningful_results)
-          refute_includes(body, support_message)
+          assert_body(pagination)
+          assert_body(no_meaningful_results)
+          refute_body(support_message)
         end
       end
     end

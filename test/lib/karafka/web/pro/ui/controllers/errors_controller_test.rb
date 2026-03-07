@@ -47,10 +47,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "This topic is empty and does not contain any data")
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body("This topic is empty and does not contain any data")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -63,12 +63,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, no_errors)
-        assert_includes(body, "shinra:1555833:4e8f7174ae53")
+        refute_body(no_errors)
+        assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(3, body.scan("StandardError:").size)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body(breadcrumbs)
       end
     end
 
@@ -83,12 +83,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, no_errors)
-        assert_includes(body, "shinra:1555833:4e8f7174ae53")
+        refute_body(no_errors)
+        assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(6, body.scan("StandardError:").size)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body(breadcrumbs)
       end
     end
 
@@ -103,12 +103,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, no_errors)
-        assert_includes(body, "shinra:1555833:4e8f7174ae53")
+        refute_body(no_errors)
+        assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(25, body.scan("StandardError:").size)
-        assert_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
+        assert_body(pagination)
+        refute_body(support_message)
+        assert_body(breadcrumbs)
       end
     end
 
@@ -123,12 +123,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, no_errors)
-        assert_includes(body, "shinra:1555833:4e8f7174ae53")
+        refute_body(no_errors)
+        assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(25, body.scan("StandardError:").size)
-        assert_includes(body, pagination)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, support_message)
+        assert_body(pagination)
+        assert_body(breadcrumbs)
+        refute_body(support_message)
       end
     end
   end
@@ -139,10 +139,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, no_errors)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, support_message)
-        refute_includes(body, pagination)
+        assert_body(no_errors)
+        assert_body(breadcrumbs)
+        refute_body(support_message)
+        refute_body(pagination)
       end
     end
 
@@ -155,14 +155,14 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, no_errors)
-        assert_includes(body, "shinra:1555833:4e8f7174ae53")
+        refute_body(no_errors)
+        assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(3, body.scan("StandardError:").size)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "high: 3")
-        assert_includes(body, "low: 0")
-        assert_includes(body, breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("high: 3")
+        assert_body("low: 0")
+        assert_body(breadcrumbs)
       end
     end
 
@@ -175,14 +175,14 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, no_errors)
-        assert_includes(body, "shinra:1555833:4e8f7174ae53")
+        refute_body(no_errors)
+        assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(25, body.scan("StandardError:").size)
-        assert_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "high: 30")
-        assert_includes(body, "low: 0")
-        assert_includes(body, breadcrumbs)
+        assert_body(pagination)
+        refute_body(support_message)
+        assert_body("high: 30")
+        assert_body("low: 0")
+        assert_body(breadcrumbs)
       end
     end
 
@@ -195,14 +195,14 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, no_errors)
-        assert_includes(body, "shinra:1555833:4e8f7174ae53")
+        refute_body(no_errors)
+        assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(25, body.scan("StandardError:").size)
-        assert_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "high: 30")
-        assert_includes(body, "low: 0")
-        assert_includes(body, breadcrumbs)
+        assert_body(pagination)
+        refute_body(support_message)
+        assert_body("high: 30")
+        assert_body("low: 0")
+        assert_body(breadcrumbs)
       end
     end
 
@@ -215,14 +215,14 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, no_errors)
-        assert_includes(body, "shinra:1555833:4e8f7174ae53")
+        refute_body(no_errors)
+        assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(1, body.scan("StandardError:").size)
-        assert_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "high: 30")
-        assert_includes(body, "low: 0")
-        assert_includes(body, breadcrumbs)
+        assert_body(pagination)
+        refute_body(support_message)
+        assert_body("high: 30")
+        assert_body("low: 0")
+        assert_body(breadcrumbs)
       end
     end
 
@@ -235,13 +235,13 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, no_errors)
+        refute_body(no_errors)
         assert_equal(0, body.scan("StandardError:").size)
-        refute_includes(body, pagination)
-        assert_includes(body, "high: 30")
-        refute_includes(body, support_message)
-        assert_includes(body, "low: 0")
-        assert_includes(body, breadcrumbs)
+        refute_body(pagination)
+        assert_body("high: 30")
+        refute_body(support_message)
+        assert_body("low: 0")
+        assert_body(breadcrumbs)
       end
     end
   end
@@ -265,12 +265,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "shinra:1555833:4e8f7174ae53")
+        assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(3, body.scan("StandardError").size)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        refute_includes(body, "This feature is available only")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        refute_body("This feature is available only")
       end
     end
 
@@ -283,13 +283,13 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, "shinra:1555833:4e8f7174ae53")
-        refute_includes(body, "StandardError")
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, pagination)
-        assert_includes(body, "The message has been removed")
-        refute_includes(body, support_message)
-        refute_includes(body, "This feature is available only")
+        refute_body("shinra:1555833:4e8f7174ae53")
+        refute_body("StandardError")
+        assert_body(breadcrumbs)
+        assert_body(pagination)
+        assert_body("The message has been removed")
+        refute_body(support_message)
+        refute_body("This feature is available only")
       end
     end
 
