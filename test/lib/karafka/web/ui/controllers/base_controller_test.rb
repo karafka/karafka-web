@@ -12,7 +12,7 @@ describe_current do
 
     it do
       refute(response.ok?)
-      assert_includes(body, make_better)
+      assert_body(make_better)
       assert_equal(402, status)
     end
   end
@@ -22,7 +22,7 @@ describe_current do
 
     it do
       refute(response.ok?)
-      assert_includes(body, make_better)
+      assert_body(make_better)
       assert_equal(402, status)
     end
   end
@@ -32,7 +32,7 @@ describe_current do
 
     it do
       refute(response.ok?)
-      assert_includes(body, make_better)
+      assert_body(make_better)
       assert_equal(402, status)
     end
   end
@@ -59,7 +59,7 @@ describe_current do
 
         it do
           assert(response.ok?)
-          refute_includes(body, "custom.css")
+          refute_body("custom.css")
         end
       end
 
@@ -67,7 +67,7 @@ describe_current do
         before { get "not-found" }
 
         it do
-          refute_includes(body, "custom.css")
+          refute_body("custom.css")
         end
       end
     end
@@ -94,7 +94,7 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, "custom.css")
+          assert_body("custom.css")
         end
       end
 
@@ -102,7 +102,7 @@ describe_current do
         before { get "not-found" }
 
         it do
-          assert_includes(body, "custom.css")
+          assert_body("custom.css")
         end
       end
     end
@@ -129,7 +129,7 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, "custom.css")
+          assert_body("custom.css")
         end
       end
 
@@ -137,7 +137,7 @@ describe_current do
         before { get "not-found" }
 
         it do
-          assert_includes(body, "custom.css")
+          assert_body("custom.css")
         end
       end
     end
@@ -166,7 +166,7 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, "custom.css")
+          assert_body("custom.css")
         end
       end
 
@@ -174,7 +174,7 @@ describe_current do
         before { get "not-found" }
 
         it do
-          assert_includes(body, "custom.css")
+          assert_body("custom.css")
         end
       end
     end
@@ -192,7 +192,7 @@ describe_current do
 
         it do
           assert(response.ok?)
-          refute_includes(body, "custom.js")
+          refute_body("custom.js")
         end
       end
 
@@ -200,7 +200,7 @@ describe_current do
         before { get "not-found" }
 
         it do
-          refute_includes(body, "custom.js")
+          refute_body("custom.js")
         end
       end
     end
@@ -227,7 +227,7 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, "custom.js")
+          assert_body("custom.js")
         end
       end
 
@@ -235,7 +235,7 @@ describe_current do
         before { get "not-found" }
 
         it do
-          assert_includes(body, "custom.js")
+          assert_body("custom.js")
         end
       end
     end
@@ -262,7 +262,7 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, "custom.js")
+          assert_body("custom.js")
         end
       end
 
@@ -270,7 +270,7 @@ describe_current do
         before { get "not-found" }
 
         it do
-          assert_includes(body, "custom.js")
+          assert_body("custom.js")
         end
       end
     end
@@ -299,7 +299,7 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, "custom.js")
+          assert_body("custom.js")
         end
       end
 
@@ -307,7 +307,7 @@ describe_current do
         before { get "not-found" }
 
         it do
-          assert_includes(body, "custom.js")
+          assert_body("custom.js")
         end
       end
     end
@@ -331,7 +331,7 @@ describe_current do
 
       it "expect to render it" do
         assert(response.ok?)
-        assert_includes(body, "<strong>100</strong>")
+        assert_body("<strong>100</strong>")
       end
     end
 
@@ -340,7 +340,7 @@ describe_current do
 
       it "expect to render it as an erb string" do
         assert(response.ok?)
-        assert_includes(body, "/tmp/does-not-exist")
+        assert_body("/tmp/does-not-exist")
       end
     end
 
@@ -349,7 +349,7 @@ describe_current do
 
       it "expect to render it" do
         assert(response.ok?)
-        assert_includes(body, "this is a test")
+        assert_body("this is a test")
       end
     end
   end

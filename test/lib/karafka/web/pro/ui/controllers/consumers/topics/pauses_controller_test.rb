@@ -61,16 +61,16 @@ describe_current do
     context "when a process exists and is running" do
       it "expect to include relevant details" do
         assert(response.ok?)
-        assert_includes(body, consumer_group_id)
-        assert_includes(body, topic_name)
-        assert_includes(body, "Pause Duration:")
-        assert_includes(body, "Safety Check:")
-        assert_includes(body, form)
-        assert_includes(body, card_detail)
-        refute_includes(body, lrj_warn1)
-        refute_includes(body, lrj_warn2)
-        refute_includes(body, cannot_perform)
-        refute_includes(body, not_active)
+        assert_body(consumer_group_id)
+        assert_body(topic_name)
+        assert_body("Pause Duration:")
+        assert_body("Safety Check:")
+        assert_body(form)
+        assert_body(card_detail)
+        refute_body(lrj_warn1)
+        refute_body(lrj_warn2)
+        refute_body(cannot_perform)
+        refute_body(not_active)
       end
     end
 
@@ -95,15 +95,15 @@ describe_current do
 
       it "expect to include relevant details" do
         assert(response.ok?)
-        assert_includes(body, consumer_group_id)
-        assert_includes(body, topic_name)
-        assert_includes(body, lrj_warn1)
-        assert_includes(body, lrj_warn2)
-        refute_includes(body, "Pause Duration:")
-        refute_includes(body, "Safety Check:")
-        refute_includes(body, form)
-        refute_includes(body, cannot_perform)
-        refute_includes(body, not_active)
+        assert_body(consumer_group_id)
+        assert_body(topic_name)
+        assert_body(lrj_warn1)
+        assert_body(lrj_warn2)
+        refute_body("Pause Duration:")
+        refute_body("Safety Check:")
+        refute_body(form)
+        refute_body(cannot_perform)
+        refute_body(not_active)
       end
     end
 
@@ -130,9 +130,9 @@ describe_current do
 
       it "expect to show not running error message" do
         assert(response.ok?)
-        assert_includes(body, cannot_perform)
-        assert_includes(body, not_active)
-        refute_includes(body, form)
+        assert_body(cannot_perform)
+        assert_body(not_active)
+        refute_body(form)
       end
     end
   end
@@ -224,16 +224,16 @@ describe_current do
     context "when a process exists and is running" do
       it "expect to include relevant details" do
         assert(response.ok?)
-        assert_includes(body, consumer_group_id)
-        assert_includes(body, topic_name)
-        assert_includes(body, card_detail)
-        assert_includes(body, "Reset Counter:")
-        assert_includes(body, "Resume All Paused Partitions")
-        assert_includes(body, form)
-        refute_includes(body, lrj_warn1)
-        refute_includes(body, lrj_warn2)
-        refute_includes(body, cannot_perform)
-        refute_includes(body, not_active)
+        assert_body(consumer_group_id)
+        assert_body(topic_name)
+        assert_body(card_detail)
+        assert_body("Reset Counter:")
+        assert_body("Resume All Paused Partitions")
+        assert_body(form)
+        refute_body(lrj_warn1)
+        refute_body(lrj_warn2)
+        refute_body(cannot_perform)
+        refute_body(not_active)
       end
     end
 
@@ -258,15 +258,15 @@ describe_current do
 
       it "expect to include relevant details" do
         assert(response.ok?)
-        assert_includes(body, consumer_group_id)
-        assert_includes(body, topic_name)
-        assert_includes(body, lrj_warn1)
-        assert_includes(body, lrj_warn2)
-        refute_includes(body, "Reset Counter:")
-        refute_includes(body, "Resume All Paused Partitions")
-        refute_includes(body, form)
-        refute_includes(body, cannot_perform)
-        refute_includes(body, not_active)
+        assert_body(consumer_group_id)
+        assert_body(topic_name)
+        assert_body(lrj_warn1)
+        assert_body(lrj_warn2)
+        refute_body("Reset Counter:")
+        refute_body("Resume All Paused Partitions")
+        refute_body(form)
+        refute_body(cannot_perform)
+        refute_body(not_active)
       end
     end
 
@@ -293,9 +293,9 @@ describe_current do
 
       it "expect to show not running error message" do
         assert(response.ok?)
-        assert_includes(body, cannot_perform)
-        assert_includes(body, not_active)
-        refute_includes(body, form)
+        assert_body(cannot_perform)
+        assert_body(not_active)
+        refute_body(form)
       end
     end
   end

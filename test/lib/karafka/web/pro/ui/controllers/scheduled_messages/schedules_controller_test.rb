@@ -42,10 +42,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, no_groups)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(no_groups)
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -60,10 +60,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, no_groups)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(no_groups)
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -84,11 +84,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, messages_topic)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, no_groups)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(messages_topic)
+        assert_body(breadcrumbs)
+        refute_body(no_groups)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -114,12 +114,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, messages_topic1)
-        assert_includes(body, messages_topic2)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, no_groups)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(messages_topic1)
+        assert_body(messages_topic2)
+        assert_body(breadcrumbs)
+        refute_body(no_groups)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
   end
@@ -143,11 +143,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, messages_topic)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, no_states)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(messages_topic)
+        assert_body(breadcrumbs)
+        assert_body(no_states)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -161,12 +161,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, messages_topic)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "2024-09-02")
-        refute_includes(body, no_states)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(messages_topic)
+        assert_body(breadcrumbs)
+        assert_body("2024-09-02")
+        refute_body(no_states)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
   end

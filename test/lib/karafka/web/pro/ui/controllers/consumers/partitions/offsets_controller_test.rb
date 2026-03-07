@@ -58,26 +58,26 @@ describe_current do
     context "when a process exists and is running" do
       it "expect to include relevant details" do
         assert(response.ok?)
-        assert_includes(body, consumer_group_id)
-        assert_includes(body, topic_name)
-        assert_includes(body, partition_id.to_s)
-        assert_includes(body, "New Offset:")
-        assert_includes(body, "Prevent Overtaking:")
-        assert_includes(body, "Resume Immediately:")
-        assert_includes(body, "checkbox")
-        assert_includes(body, "Adjust Offset")
-        assert_includes(body, form)
-        assert_includes(body, "Offset Edit")
-        assert_includes(body, "High Offset:")
-        assert_includes(body, "Low Offset:")
-        assert_includes(body, "EOF Offset:")
-        assert_includes(body, "Committed Offset:")
-        assert_includes(body, "Stored Offset:")
-        assert_includes(body, "Lag:")
-        assert_includes(body, "Running Consumer Process Operation")
-        assert_includes(body, "Takes effect during the next poll operation")
-        assert_includes(body, "May affect message processing")
-        refute_includes(body, "This Operation Cannot Be Performed")
+        assert_body(consumer_group_id)
+        assert_body(topic_name)
+        assert_body(partition_id.to_s)
+        assert_body("New Offset:")
+        assert_body("Prevent Overtaking:")
+        assert_body("Resume Immediately:")
+        assert_body("checkbox")
+        assert_body("Adjust Offset")
+        assert_body(form)
+        assert_body("Offset Edit")
+        assert_body("High Offset:")
+        assert_body("Low Offset:")
+        assert_body("EOF Offset:")
+        assert_body("Committed Offset:")
+        assert_body("Stored Offset:")
+        assert_body("Lag:")
+        assert_body("Running Consumer Process Operation")
+        assert_body("Takes effect during the next poll operation")
+        assert_body("May affect message processing")
+        refute_body("This Operation Cannot Be Performed")
       end
     end
 
@@ -110,9 +110,9 @@ describe_current do
 
       it "expect to show not running error message" do
         assert(response.ok?)
-        assert_includes(body, "This Operation Cannot Be Performed")
-        assert_includes(body, "Consumer offsets can only be modified using Web UI when the")
-        refute_includes(body, form)
+        assert_body("This Operation Cannot Be Performed")
+        assert_body("Consumer offsets can only be modified using Web UI when the")
+        refute_body(form)
       end
     end
   end

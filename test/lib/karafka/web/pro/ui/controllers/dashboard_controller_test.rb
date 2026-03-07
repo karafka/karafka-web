@@ -53,11 +53,11 @@ describe_current do
 
     it do
       assert(response.ok?)
-      assert_includes(body, no_meaningful)
-      assert_includes(body, 'id="refreshable"')
-      assert_includes(body, '<div id="refreshable" class="col-span-12 mb-10">')
-      refute_includes(body, support_message)
-      refute_includes(body, breadcrumbs)
+      assert_body(no_meaningful)
+      assert_body('id="refreshable"')
+      assert_body('<div id="refreshable" class="col-span-12 mb-10">')
+      refute_body(support_message)
+      refute_body(breadcrumbs)
     end
   end
 
@@ -75,11 +75,11 @@ describe_current do
 
     it do
       assert(response.ok?)
-      assert_includes(body, no_meaningful)
-      refute_includes(body, support_message)
-      refute_includes(body, breadcrumbs)
-      assert_includes(body, 'id="refreshable"')
-      assert_includes(body, '<div id="refreshable" class="col-span-12 mb-10">')
+      assert_body(no_meaningful)
+      refute_body(support_message)
+      refute_body(breadcrumbs)
+      assert_body('id="refreshable"')
+      assert_body('<div id="refreshable" class="col-span-12 mb-10">')
     end
   end
 
@@ -88,20 +88,20 @@ describe_current do
 
     it do
       assert(response.ok?)
-      assert_includes(body, "Pace")
-      assert_includes(body, "Batches")
-      assert_includes(body, "Jobs")
-      assert_includes(body, "Consumed")
-      assert_includes(body, "Max LSO")
-      assert_includes(body, "Utilization")
-      assert_includes(body, "RSS")
-      assert_includes(body, "Concurrency")
-      assert_includes(body, "Data transfers")
-      assert_includes(body, 'id="refreshable"')
-      assert_includes(body, '<div id="refreshable" class="col-span-12 mb-10">')
-      refute_includes(body, support_message)
-      refute_includes(body, breadcrumbs)
-      refute_includes(body, only_pro_feature)
+      assert_body("Pace")
+      assert_body("Batches")
+      assert_body("Jobs")
+      assert_body("Consumed")
+      assert_body("Max LSO")
+      assert_body("Utilization")
+      assert_body("RSS")
+      assert_body("Concurrency")
+      assert_body("Data transfers")
+      assert_body('id="refreshable"')
+      assert_body('<div id="refreshable" class="col-span-12 mb-10">')
+      refute_body(support_message)
+      refute_body(breadcrumbs)
+      refute_body(only_pro_feature)
     end
   end
 
@@ -120,20 +120,20 @@ describe_current do
 
     it do
       assert(response.ok?)
-      assert_includes(body, "Pace")
-      assert_includes(body, "Batches")
-      assert_includes(body, "Jobs")
-      assert_includes(body, "Consumed")
-      assert_includes(body, "Max LSO")
-      assert_includes(body, "Utilization")
-      assert_includes(body, "RSS")
-      assert_includes(body, "Concurrency")
-      assert_includes(body, "Data transfers")
-      assert_includes(body, 'id="refreshable"')
-      assert_includes(body, '<div id="refreshable" class="col-span-12 mb-10">')
-      refute_includes(body, support_message)
-      refute_includes(body, breadcrumbs)
-      refute_includes(body, only_pro_feature)
+      assert_body("Pace")
+      assert_body("Batches")
+      assert_body("Jobs")
+      assert_body("Consumed")
+      assert_body("Max LSO")
+      assert_body("Utilization")
+      assert_body("RSS")
+      assert_body("Concurrency")
+      assert_body("Data transfers")
+      assert_body('id="refreshable"')
+      assert_body('<div id="refreshable" class="col-span-12 mb-10">')
+      refute_body(support_message)
+      refute_body(breadcrumbs)
+      refute_body(only_pro_feature)
     end
   end
 

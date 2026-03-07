@@ -28,9 +28,9 @@ describe_current do
 
     it do
       assert(response.ok?)
-      assert_includes(body, "ID")
-      assert_includes(body, support_message)
-      assert_includes(body, breadcrumbs)
+      assert_body("ID")
+      assert_body(support_message)
+      assert_body(breadcrumbs)
     end
   end
 
@@ -39,8 +39,8 @@ describe_current do
 
     it do
       assert(response.ok?)
-      assert_includes(body, support_message)
-      assert_includes(body, breadcrumbs)
+      assert_body(support_message)
+      assert_body(breadcrumbs)
     end
 
     context "when there are many pages with topics" do
@@ -51,9 +51,9 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, support_message)
-          assert_includes(body, breadcrumbs)
-          assert_includes(body, pagination)
+          assert_body(support_message)
+          assert_body(breadcrumbs)
+          assert_body(pagination)
         end
       end
 
@@ -62,9 +62,9 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, pagination)
-          assert_includes(body, support_message)
-          assert_includes(body, no_meaningful_results)
+          assert_body(pagination)
+          assert_body(support_message)
+          assert_body(no_meaningful_results)
         end
       end
 
@@ -73,8 +73,8 @@ describe_current do
 
         it "defaults to first page" do
           assert(response.ok?)
-          assert_includes(body, "Replication")
-          assert_includes(body, support_message)
+          assert_body("Replication")
+          assert_body(support_message)
         end
       end
 
@@ -83,8 +83,8 @@ describe_current do
 
         it "defaults to first page" do
           assert(response.ok?)
-          assert_includes(body, "Replication")
-          assert_includes(body, support_message)
+          assert_body("Replication")
+          assert_body(support_message)
         end
       end
     end
@@ -99,9 +99,9 @@ describe_current do
 
       it "displays partition information correctly" do
         assert(response.ok?)
-        assert_includes(body, "Partition")
-        assert_includes(body, "Leader")
-        assert_includes(body, "In sync brokers")
+        assert_body("Partition")
+        assert_body("Leader")
+        assert_body("In sync brokers")
         # The topic might not always be visible immediately, but column headers should be present
       end
     end
@@ -114,8 +114,8 @@ describe_current do
 
       it "respects custom page size" do
         assert(response.ok?)
-        assert_includes(body, pagination)
-        assert_includes(body, support_message)
+        assert_body(pagination)
+        assert_body(support_message)
       end
     end
   end

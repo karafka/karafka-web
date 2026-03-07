@@ -8,8 +8,8 @@ describe_current do
 
     it do
       assert(response.ok?)
-      assert_includes(body, support_message)
-      assert_includes(body, breadcrumbs)
+      assert_body(support_message)
+      assert_body(breadcrumbs)
     end
   end
 end

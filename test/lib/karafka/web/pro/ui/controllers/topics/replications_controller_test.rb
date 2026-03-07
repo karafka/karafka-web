@@ -41,24 +41,24 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, topic)
-        assert_includes(body, "Replica Count")
-        assert_includes(body, "In Sync Brokers")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body(topic)
+        assert_body("Replica Count")
+        assert_body("In Sync Brokers")
       end
 
       it "shows partition details" do
-        assert_includes(body, "Partition")
-        assert_includes(body, "Leader")
-        assert_includes(body, "0") # First partition
+        assert_body("Partition")
+        assert_body("Leader")
+        assert_body("0") # First partition
       end
 
       it "displays replication settings cards" do
-        assert_includes(body, "Replication Factor")
-        assert_includes(body, "Min In-Sync Replicas")
-        assert_includes(body, "Fault Tolerance")
+        assert_body("Replication Factor")
+        assert_body("Min In-Sync Replicas")
+        assert_body("Fault Tolerance")
       end
     end
 
@@ -69,18 +69,18 @@ describe_current do
 
       it "displays all partitions" do
         assert(response.ok?)
-        assert_includes(body, topic)
-        assert_includes(body, "0")
-        assert_includes(body, "1")
-        assert_includes(body, "2")
-        assert_includes(body, "3")
-        assert_includes(body, "4")
+        assert_body(topic)
+        assert_body("0")
+        assert_body("1")
+        assert_body("2")
+        assert_body("3")
+        assert_body("4")
       end
 
       it "shows replication details for each partition" do
-        assert_includes(body, "Replica Count")
-        assert_includes(body, "In Sync Brokers")
-        assert_includes(body, "Leader")
+        assert_body("Replica Count")
+        assert_body("In Sync Brokers")
+        assert_body("Leader")
       end
     end
 
@@ -96,16 +96,16 @@ describe_current do
 
         it "displays the no redundancy warning with production severity" do
           assert(response.ok?)
-          assert_includes(body, "No Replication Redundancy")
-          assert_includes(body, "replication factor of")
-          assert_includes(body, "redundant copies")
-          assert_includes(body, "permanently lost")
-          assert_includes(body, "Broker Failures and Fault Tolerance")
-          assert_includes(body, "critical issue")
+          assert_body("No Replication Redundancy")
+          assert_body("replication factor of")
+          assert_body("redundant copies")
+          assert_body("permanently lost")
+          assert_body("Broker Failures and Fault Tolerance")
+          assert_body("critical issue")
         end
 
         it "shows fault tolerance as 0 brokers" do
-          assert_includes(body, "0 brokers")
+          assert_body("0 brokers")
         end
       end
 
@@ -117,16 +117,16 @@ describe_current do
 
         it "displays the no redundancy warning with development context" do
           assert(response.ok?)
-          assert_includes(body, "No Replication Redundancy")
-          assert_includes(body, "replication factor of")
-          assert_includes(body, "acceptable for development")
-          assert_includes(body, "can cause data loss in production")
+          assert_body("No Replication Redundancy")
+          assert_body("replication factor of")
+          assert_body("acceptable for development")
+          assert_body("can cause data loss in production")
         end
 
         it "still displays the replication settings cards" do
-          assert_includes(body, "Replication Factor")
-          assert_includes(body, "Min In-Sync Replicas")
-          assert_includes(body, "Fault Tolerance")
+          assert_body("Replication Factor")
+          assert_body("Min In-Sync Replicas")
+          assert_body("Fault Tolerance")
         end
       end
     end
@@ -188,15 +188,15 @@ describe_current do
 
       it "displays the zero fault tolerance warning" do
         assert(response.ok?)
-        assert_includes(body, "Replication Resilience Issue Detected")
-        assert_includes(body, "zero")
-        assert_includes(body, "fault tolerance")
-        assert_includes(body, "replication factor of")
-        assert_includes(body, "one")
+        assert_body("Replication Resilience Issue Detected")
+        assert_body("zero")
+        assert_body("fault tolerance")
+        assert_body("replication factor of")
+        assert_body("one")
       end
 
       it "shows fault tolerance as 0 brokers" do
-        assert_includes(body, "0 brokers")
+        assert_body("0 brokers")
       end
     end
 
@@ -256,15 +256,15 @@ describe_current do
 
       it "displays the low durability warning" do
         assert(response.ok?)
-        assert_includes(body, "Low Data Durability Configuration")
-        assert_includes(body, "min.insync.replicas")
-        assert_includes(body, "replication factor of")
-        assert_includes(body, "replication to followers completes")
-        assert_includes(body, "permanently")
+        assert_body("Low Data Durability Configuration")
+        assert_body("min.insync.replicas")
+        assert_body("replication factor of")
+        assert_body("replication to followers completes")
+        assert_body("permanently")
       end
 
       it "shows positive fault tolerance" do
-        assert_includes(body, "2 broker(s)")
+        assert_body("2 broker(s)")
       end
     end
 
@@ -323,12 +323,12 @@ describe_current do
 
       it "displays the success message" do
         assert(response.ok?)
-        assert_includes(body, "Replication Configuration is Fault Tolerant")
-        assert_includes(body, "broker failure")
+        assert_body("Replication Configuration is Fault Tolerant")
+        assert_body("broker failure")
       end
 
       it "shows positive fault tolerance" do
-        assert_includes(body, "1 broker(s)")
+        assert_body("1 broker(s)")
       end
     end
   end

@@ -29,8 +29,8 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
+        refute_body(support_message)
+        assert_body(breadcrumbs)
       end
     end
 
@@ -46,8 +46,8 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
+        refute_body(support_message)
+        assert_body(breadcrumbs)
       end
     end
 
@@ -72,24 +72,24 @@ describe_current do
 
       it "displays successful status with topic information" do
         assert(response.ok?)
-        assert_includes(body, "Status")
-        refute_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, states_topic)
-        assert_includes(body, metrics_topic)
-        assert_includes(body, reports_topic)
-        assert_includes(body, errors_topic)
+        assert_body("Status")
+        refute_body(support_message)
+        assert_body(breadcrumbs)
+        assert_body(states_topic)
+        assert_body(metrics_topic)
+        assert_body(reports_topic)
+        assert_body(errors_topic)
       end
 
       it "shows connection details" do
-        assert_includes(body, "Components info")
-        assert_includes(body, "rdkafka")
-        assert_includes(body, "karafka")
+        assert_body("Components info")
+        assert_body("rdkafka")
+        assert_body("karafka")
       end
 
       it "shows version information" do
-        assert_includes(body, Karafka::VERSION)
-        assert_includes(body, Karafka::Web::VERSION)
+        assert_body(Karafka::VERSION)
+        assert_body(Karafka::Web::VERSION)
       end
     end
 
@@ -102,10 +102,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "Commands topic presence")
-        assert_includes(body, "does not exist")
-        assert_includes(body, "required for Pro commanding features")
-        assert_includes(body, "alert-box-warning")
+        assert_body("Commands topic presence")
+        assert_body("does not exist")
+        assert_body("required for Pro commanding features")
+        assert_body("alert-box-warning")
       end
     end
   end

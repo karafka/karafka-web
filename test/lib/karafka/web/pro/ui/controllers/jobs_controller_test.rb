@@ -59,11 +59,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "2023-08-01T09:47:51")
-        assert_includes(body, "ActiveJob::Consumer")
-        refute_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
+        assert_body("2023-08-01T09:47:51")
+        assert_body("ActiveJob::Consumer")
+        refute_body(support_message)
+        assert_body(breadcrumbs)
+        refute_body(pagination)
       end
     end
 
@@ -84,11 +84,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "There are no running jobs at the moment")
-        refute_includes(body, "ActiveJob::Consumer")
-        refute_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
+        assert_body("There are no running jobs at the moment")
+        refute_body("ActiveJob::Consumer")
+        refute_body(support_message)
+        assert_body(breadcrumbs)
+        refute_body(pagination)
       end
     end
 
@@ -122,15 +122,15 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, "2023-08-01T09:47:51")
+          assert_body("2023-08-01T09:47:51")
           assert_equal(25, body.scan("ActiveJob::Consumer").size)
-          refute_includes(body, support_message)
-          assert_includes(body, breadcrumbs)
-          assert_includes(body, pagination)
-          assert_includes(body, "shinra:0:0")
-          assert_includes(body, "shinra:1:1")
-          assert_includes(body, "shinra:11:11")
-          assert_includes(body, "shinra:12:12")
+          refute_body(support_message)
+          assert_body(breadcrumbs)
+          assert_body(pagination)
+          assert_body("shinra:0:0")
+          assert_body("shinra:1:1")
+          assert_body("shinra:11:11")
+          assert_body("shinra:12:12")
           assert_equal(50, body.scan("shinra:").size)
         end
 
@@ -154,15 +154,15 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, "2023-08-01T09:47:51")
+          assert_body("2023-08-01T09:47:51")
           assert_equal(25, body.scan("ActiveJob::Consumer").size)
-          refute_includes(body, support_message)
-          assert_includes(body, breadcrumbs)
-          assert_includes(body, pagination)
-          assert_includes(body, "shinra:0:0")
-          assert_includes(body, "shinra:1:1")
-          assert_includes(body, "shinra:11:11")
-          assert_includes(body, "shinra:12:12")
+          refute_body(support_message)
+          assert_body(breadcrumbs)
+          assert_body(pagination)
+          assert_body("shinra:0:0")
+          assert_body("shinra:1:1")
+          assert_body("shinra:11:11")
+          assert_body("shinra:12:12")
           assert_equal(50, body.scan("shinra:").size)
         end
       end
@@ -172,12 +172,12 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, pagination)
-          refute_includes(body, support_message)
-          assert_includes(body, "shinra:32:32")
-          assert_includes(body, "shinra:34:34")
-          assert_includes(body, "shinra:35:35")
-          assert_includes(body, "shinra:35:35")
+          assert_body(pagination)
+          refute_body(support_message)
+          assert_body("shinra:32:32")
+          assert_body("shinra:34:34")
+          assert_body("shinra:35:35")
+          assert_body("shinra:35:35")
           assert_equal(50, body.scan("shinra:").size)
         end
       end
@@ -187,10 +187,10 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, pagination)
-          refute_includes(body, support_message)
+          assert_body(pagination)
+          refute_body(support_message)
           assert_equal(0, body.scan("shinra:").size)
-          assert_includes(body, no_meaningful_results)
+          assert_body(no_meaningful_results)
         end
       end
     end
@@ -212,13 +212,13 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "2023-08-01T09:47:51")
-        assert_includes(body, "ActiveJob::Consumer")
-        refute_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "#tick")
-        refute_includes(body, "#consume")
-        refute_includes(body, pagination)
+        assert_body("2023-08-01T09:47:51")
+        assert_body("ActiveJob::Consumer")
+        refute_body(support_message)
+        assert_body(breadcrumbs)
+        assert_body("#tick")
+        refute_body("#consume")
+        refute_body(pagination)
       end
     end
 
@@ -239,13 +239,13 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "2023-08-01T09:47:51")
-        assert_includes(body, "ActiveJob::Consumer")
-        refute_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "#shutdown")
-        refute_includes(body, "#consume")
-        refute_includes(body, pagination)
+        assert_body("2023-08-01T09:47:51")
+        assert_body("ActiveJob::Consumer")
+        refute_body(support_message)
+        assert_body(breadcrumbs)
+        assert_body("#shutdown")
+        refute_body("#consume")
+        refute_body(pagination)
       end
     end
   end
@@ -284,11 +284,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "2023-08-01T09:47:51")
-        assert_includes(body, "ActiveJob::Consumer")
-        refute_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
+        assert_body("2023-08-01T09:47:51")
+        assert_body("ActiveJob::Consumer")
+        refute_body(support_message)
+        assert_body(breadcrumbs)
+        refute_body(pagination)
       end
     end
 
@@ -309,11 +309,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "There are no pending jobs at the moment")
-        refute_includes(body, "ActiveJob::Consumer")
-        refute_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
+        assert_body("There are no pending jobs at the moment")
+        refute_body("ActiveJob::Consumer")
+        refute_body(support_message)
+        assert_body(breadcrumbs)
+        refute_body(pagination)
       end
     end
 
@@ -349,15 +349,15 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, "2023-08-01T09:47:51")
+          assert_body("2023-08-01T09:47:51")
           assert_equal(25, body.scan("ActiveJob::Consumer").size)
-          refute_includes(body, support_message)
-          assert_includes(body, breadcrumbs)
-          assert_includes(body, pagination)
-          assert_includes(body, "shinra:0:0")
-          assert_includes(body, "shinra:1:1")
-          assert_includes(body, "shinra:11:11")
-          assert_includes(body, "shinra:12:12")
+          refute_body(support_message)
+          assert_body(breadcrumbs)
+          assert_body(pagination)
+          assert_body("shinra:0:0")
+          assert_body("shinra:1:1")
+          assert_body("shinra:11:11")
+          assert_body("shinra:12:12")
           assert_equal(50, body.scan("shinra:").size)
         end
       end
@@ -375,15 +375,15 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, "2023-08-01T09:47:51")
+          assert_body("2023-08-01T09:47:51")
           assert_equal(25, body.scan("ActiveJob::Consumer").size)
-          refute_includes(body, support_message)
-          assert_includes(body, breadcrumbs)
-          assert_includes(body, pagination)
-          assert_includes(body, "shinra:0:0")
-          assert_includes(body, "shinra:1:1")
-          assert_includes(body, "shinra:11:11")
-          assert_includes(body, "shinra:12:12")
+          refute_body(support_message)
+          assert_body(breadcrumbs)
+          assert_body(pagination)
+          assert_body("shinra:0:0")
+          assert_body("shinra:1:1")
+          assert_body("shinra:11:11")
+          assert_body("shinra:12:12")
           assert_equal(50, body.scan("shinra:").size)
         end
       end
@@ -393,12 +393,12 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, pagination)
-          refute_includes(body, support_message)
-          assert_includes(body, "shinra:32:32")
-          assert_includes(body, "shinra:34:34")
-          assert_includes(body, "shinra:35:35")
-          assert_includes(body, "shinra:35:35")
+          assert_body(pagination)
+          refute_body(support_message)
+          assert_body("shinra:32:32")
+          assert_body("shinra:34:34")
+          assert_body("shinra:35:35")
+          assert_body("shinra:35:35")
           assert_equal(50, body.scan("shinra:").size)
         end
       end
@@ -408,10 +408,10 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_includes(body, pagination)
-          refute_includes(body, support_message)
+          assert_body(pagination)
+          refute_body(support_message)
           assert_equal(0, body.scan("shinra:").size)
-          assert_includes(body, no_meaningful_results)
+          assert_body(no_meaningful_results)
         end
       end
     end

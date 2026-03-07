@@ -8,7 +8,7 @@ describe_current do
 
     it do
       assert_equal(402, response.status)
-      assert_includes(body, "This feature is available only to")
+      assert_body("This feature is available only to")
     end
   end
 end

@@ -8,13 +8,13 @@ describe_current do
 
     it do
       assert(response.ok?)
-      assert_includes(body, topics_config.consumers.states.name)
-      assert_includes(body, topics_config.consumers.metrics.name)
-      assert_includes(body, topics_config.consumers.reports.name)
-      assert_includes(body, topics_config.errors.name)
-      assert_includes(body, "karafka_web")
-      assert_includes(body, breadcrumbs)
-      assert_includes(body, support_message)
+      assert_body(topics_config.consumers.states.name)
+      assert_body(topics_config.consumers.metrics.name)
+      assert_body(topics_config.consumers.reports.name)
+      assert_body(topics_config.errors.name)
+      assert_body("karafka_web")
+      assert_body(breadcrumbs)
+      assert_body(support_message)
     end
   end
 
@@ -23,10 +23,10 @@ describe_current do
 
     it "expect to display details, including the injectable once" do
       assert(response.ok?)
-      assert_includes(body, "kafka.topic.metadata.refresh.interval.ms")
-      assert_includes(body, breadcrumbs)
-      assert_includes(body, "kafka.statistics.interval.ms")
-      assert_includes(body, support_message)
+      assert_body("kafka.topic.metadata.refresh.interval.ms")
+      assert_body(breadcrumbs)
+      assert_body("kafka.statistics.interval.ms")
+      assert_body(support_message)
     end
 
     context "when given route is not available" do
@@ -59,10 +59,10 @@ describe_current do
 
       it "expect to hide them" do
         assert(response.ok?)
-        assert_includes(body, "kafka.sasl.username")
-        assert_includes(body, "***")
-        assert_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
+        assert_body("kafka.sasl.username")
+        assert_body("***")
+        assert_body(support_message)
+        assert_body(breadcrumbs)
       end
     end
 
@@ -85,10 +85,10 @@ describe_current do
 
       it "expect to hide them" do
         assert(response.ok?)
-        assert_includes(body, "kafka.ssl.key.password")
-        assert_includes(body, "***")
-        assert_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
+        assert_body("kafka.ssl.key.password")
+        assert_body("***")
+        assert_body(support_message)
+        assert_body(breadcrumbs)
       end
     end
 
@@ -108,10 +108,10 @@ describe_current do
 
       it "displays manual offset management setting" do
         assert(response.ok?)
-        assert_includes(body, "manual_offset_management")
-        assert_includes(body, "true")
-        assert_includes(body, support_message)
-        assert_includes(body, breadcrumbs)
+        assert_body("manual_offset_management")
+        assert_body("true")
+        assert_body(support_message)
+        assert_body(breadcrumbs)
       end
     end
 
@@ -133,13 +133,13 @@ describe_current do
 
       it "displays processing settings" do
         assert(response.ok?)
-        assert_includes(body, "max_messages")
-        assert_includes(body, "100")
-        assert_includes(body, "max_wait_time")
-        assert_includes(body, "1000")
-        assert_includes(body, "initial_offset")
-        assert_includes(body, "earliest")
-        assert_includes(body, support_message)
+        assert_body("max_messages")
+        assert_body("100")
+        assert_body("max_wait_time")
+        assert_body("1000")
+        assert_body("initial_offset")
+        assert_body("earliest")
+        assert_body(support_message)
       end
     end
 
@@ -160,9 +160,9 @@ describe_current do
 
       it "displays subscription group information" do
         assert(response.ok?)
-        assert_includes(body, "subscription_group_details.name")
-        assert_includes(body, "critical")
-        assert_includes(body, support_message)
+        assert_body("subscription_group_details.name")
+        assert_body("critical")
+        assert_body(support_message)
       end
     end
   end

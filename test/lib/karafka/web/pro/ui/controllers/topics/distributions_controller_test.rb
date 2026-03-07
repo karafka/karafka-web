@@ -44,12 +44,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        refute_includes(body, "chartjs-bar")
-        assert_includes(body, topic)
-        assert_includes(body, no_data_msg)
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        refute_body("chartjs-bar")
+        assert_body(topic)
+        assert_body(no_data_msg)
       end
     end
 
@@ -60,13 +60,13 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, pagination)
-        refute_includes(body, support_message)
-        refute_includes(body, "chartjs-bar")
-        assert_includes(body, topic)
-        assert_includes(body, no_data_msg)
-        assert_includes(body, many_partitions_msg)
+        assert_body(breadcrumbs)
+        assert_body(pagination)
+        refute_body(support_message)
+        refute_body("chartjs-bar")
+        assert_body(topic)
+        assert_body(no_data_msg)
+        assert_body(many_partitions_msg)
       end
     end
 
@@ -78,13 +78,13 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        refute_includes(body, "chartjs-bar")
-        assert_includes(body, topic)
-        assert_includes(body, "100.0%")
-        refute_includes(body, no_data_msg)
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        refute_body("chartjs-bar")
+        assert_body(topic)
+        assert_body("100.0%")
+        refute_body(no_data_msg)
       end
     end
 
@@ -99,14 +99,14 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "chartjs-bar")
-        assert_includes(body, topic)
-        assert_includes(body, "20.0%")
-        refute_includes(body, no_data_msg)
-        refute_includes(body, many_partitions_msg)
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("chartjs-bar")
+        assert_body(topic)
+        assert_body("20.0%")
+        refute_body(no_data_msg)
+        refute_body(many_partitions_msg)
       end
     end
 
@@ -121,14 +121,14 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "chartjs-bar")
-        assert_includes(body, topic)
-        assert_includes(body, "4.0%")
-        refute_includes(body, no_data_msg)
-        assert_includes(body, many_partitions_msg)
+        assert_body(breadcrumbs)
+        assert_body(pagination)
+        refute_body(support_message)
+        assert_body("chartjs-bar")
+        assert_body(topic)
+        assert_body("4.0%")
+        refute_body(no_data_msg)
+        assert_body(many_partitions_msg)
       end
     end
 
@@ -143,15 +143,15 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "chartjs-bar")
-        assert_includes(body, topic)
-        assert_includes(body, "4.0%")
-        assert_includes(body, '/25">')
-        refute_includes(body, no_data_msg)
-        assert_includes(body, many_partitions_msg)
+        assert_body(breadcrumbs)
+        assert_body(pagination)
+        refute_body(support_message)
+        assert_body("chartjs-bar")
+        assert_body(topic)
+        assert_body("4.0%")
+        assert_body('/25">')
+        refute_body(no_data_msg)
+        assert_body(many_partitions_msg)
       end
     end
   end
@@ -168,34 +168,34 @@ describe_current do
 
       it "renders partition increase form with all required elements" do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "Topic #{topic_name} - Increase Partitions")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body("Topic #{topic_name} - Increase Partitions")
+        refute_body(pagination)
+        refute_body(support_message)
 
         # Current state
-        assert_includes(body, "Current Partitions:")
-        assert_includes(body, "3") # Current partition count
+        assert_body("Current Partitions:")
+        assert_body("3") # Current partition count
 
         # Form elements
-        assert_includes(body, 'method="post"')
-        assert_includes(body, 'name="_method" value="put"')
-        assert_includes(body, 'name="partition_count"')
-        assert_includes(body, 'min="2"') # Current + 1
-        assert_includes(body, "Must be greater than current partition count")
-        assert_includes(body, "Increase Partitions")
-        assert_includes(body, "Cancel")
+        assert_body('method="post"')
+        assert_body('name="_method" value="put"')
+        assert_body('name="partition_count"')
+        assert_body('min="2"') # Current + 1
+        assert_body("Must be greater than current partition count")
+        assert_body("Increase Partitions")
+        assert_body("Cancel")
 
         # Warnings
-        assert_includes(body, "Partition Update Warning")
-        assert_includes(body, "Increasing partitions is a one-way operation")
-        assert_includes(body, "Adding partitions affects message ordering")
-        assert_includes(body, "Changes may take several minutes to be visible")
+        assert_body("Partition Update Warning")
+        assert_body("Increasing partitions is a one-way operation")
+        assert_body("Adding partitions affects message ordering")
+        assert_body("Changes may take several minutes to be visible")
 
         # Hints
-        assert_includes(body, "Before increasing partitions:")
-        assert_includes(body, "Ensure all consumers support dynamic partition detection")
-        assert_includes(body, "Consider increasing partitions during low-traffic periods")
+        assert_body("Before increasing partitions:")
+        assert_body("Ensure all consumers support dynamic partition detection")
+        assert_body("Consider increasing partitions during low-traffic periods")
       end
     end
 
@@ -260,8 +260,8 @@ describe_current do
 
           it "renders edit form" do
             assert(response.ok?)
-            assert_includes(body, "Topic")
-            assert_includes(body, "Increase Partitions")
+            assert_body("Topic")
+            assert_body("Increase Partitions")
           end
         end
 
@@ -273,9 +273,9 @@ describe_current do
 
           it "renders edit form with error" do
             assert(response.ok?)
-            assert_includes(body, "Topic")
-            assert_includes(body, "Increase Partitions")
-            assert_includes(body, "new_total_cnt")
+            assert_body("Topic")
+            assert_body("Increase Partitions")
+            assert_body("new_total_cnt")
           end
         end
       end

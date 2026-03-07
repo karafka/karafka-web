@@ -33,10 +33,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, "No Dead Letter Queue topics exist in Kafka")
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body("No Dead Letter Queue topics exist in Kafka")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -52,11 +52,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, dlq_topic)
-        refute_includes(body, "No Dead Letter Queue topics exist in Kafka")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body(dlq_topic)
+        refute_body("No Dead Letter Queue topics exist in Kafka")
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -74,12 +74,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, dlq_topic)
-        refute_includes(body, "#{topic.name}\"")
-        refute_includes(body, "No Dead Letter Queue topics exist in Kafka")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body(dlq_topic)
+        refute_body("#{topic.name}\"")
+        refute_body("No Dead Letter Queue topics exist in Kafka")
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -95,12 +95,12 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, dlq_topic)
-        refute_includes(body, "No Dead Letter Queue topics exist in Kafka")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        refute_includes(body, "#{topic_name}\"")
+        assert_body(breadcrumbs)
+        assert_body(dlq_topic)
+        refute_body("No Dead Letter Queue topics exist in Kafka")
+        refute_body(pagination)
+        refute_body(support_message)
+        refute_body("#{topic_name}\"")
       end
     end
   end

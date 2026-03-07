@@ -55,6 +55,18 @@ module ControllerHelper
     response.status
   end
 
+  # Asserts that the response body includes the expected string
+  # @param expected [String] expected substring
+  def assert_body(expected)
+    assert_includes(body, expected)
+  end
+
+  # Refutes that the response body includes the expected string
+  # @param expected [String] expected substring
+  def refute_body(expected)
+    refute_includes(body, expected)
+  end
+
   # @return [String] breadcrumbs string part to match for presence
   def breadcrumbs
     '<div class="breadcrumbs">'

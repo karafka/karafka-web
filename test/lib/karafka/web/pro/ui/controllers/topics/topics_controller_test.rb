@@ -34,14 +34,14 @@ describe_current do
 
     it do
       assert(response.ok?)
-      assert_includes(body, breadcrumbs)
-      refute_includes(body, pagination)
-      refute_includes(body, support_message)
-      assert_includes(body, topics_config.consumers.states.name)
-      assert_includes(body, topics_config.consumers.metrics.name)
-      assert_includes(body, topics_config.consumers.reports.name)
-      assert_includes(body, topics_config.errors.name)
-      refute_includes(body, internal_topic)
+      assert_body(breadcrumbs)
+      refute_body(pagination)
+      refute_body(support_message)
+      assert_body(topics_config.consumers.states.name)
+      assert_body(topics_config.consumers.metrics.name)
+      assert_body(topics_config.consumers.reports.name)
+      assert_body(topics_config.errors.name)
+      refute_body(internal_topic)
     end
 
     context "when there are no topics" do
@@ -52,10 +52,10 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, "There are no available topics in the current cluster")
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body("There are no available topics in the current cluster")
       end
     end
 
@@ -70,14 +70,14 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, topics_config.consumers.states.name)
-        assert_includes(body, topics_config.consumers.metrics.name)
-        assert_includes(body, topics_config.consumers.reports.name)
-        assert_includes(body, topics_config.errors.name)
-        assert_includes(body, internal_topic)
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body(topics_config.consumers.states.name)
+        assert_body(topics_config.consumers.metrics.name)
+        assert_body(topics_config.consumers.reports.name)
+        assert_body(topics_config.errors.name)
+        assert_body(internal_topic)
       end
     end
   end
@@ -88,21 +88,21 @@ describe_current do
 
       it "renders successfully" do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "Creating New Topic")
-        assert_includes(body, "Topic Name:")
-        assert_includes(body, "Number of Partitions:")
-        assert_includes(body, "Replication Factor:")
-        assert_includes(body, "Topic Creation Settings")
-        assert_includes(body, "Topic name cannot be changed after creation")
-        assert_includes(body, "Number of partitions can only be increased")
-        assert_includes(body, 'value="5"') # Default partitions count
-        assert_includes(body, 'value="1"') # Default replication factor
-        assert_includes(body, 'pattern="[A-Za-z0-9\-_.]+"') # Topic name pattern
-        assert_includes(body, 'maxlength="249"') # Topic name length limit
-        assert_includes(body, 'min="1"') # Minimum partitions/replication
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body("Creating New Topic")
+        assert_body("Topic Name:")
+        assert_body("Number of Partitions:")
+        assert_body("Replication Factor:")
+        assert_body("Topic Creation Settings")
+        assert_body("Topic name cannot be changed after creation")
+        assert_body("Number of partitions can only be increased")
+        assert_body('value="5"') # Default partitions count
+        assert_body('value="1"') # Default replication factor
+        assert_body('pattern="[A-Za-z0-9\-_.]+"') # Topic name pattern
+        assert_body('maxlength="249"') # Topic name length limit
+        assert_body('min="1"') # Minimum partitions/replication
+        refute_body(pagination)
+        refute_body(support_message)
       end
     end
 
@@ -130,9 +130,9 @@ describe_current do
       end
 
       it "preserves the submitted values" do
-        assert_includes(body, 'value="invalid-topic"')
-        assert_includes(body, 'value="2"')
-        assert_includes(body, 'value="1"')
+        assert_body('value="invalid-topic"')
+        assert_body('value="2"')
+        assert_body('value="1"')
       end
     end
   end
@@ -180,12 +180,12 @@ describe_current do
 
       it "renders form with errors" do
         assert(response.ok?)
-        assert_includes(body, "Creating New Topic")
-        assert_includes(body, "Please Correct the Following Errors Before Continuing")
-        assert_includes(body, error_message)
-        assert_includes(body, "value=\"#{topic_name}\"")
-        assert_includes(body, "value=\"#{partitions_count}\"")
-        assert_includes(body, "value=\"#{replication_factor}\"")
+        assert_body("Creating New Topic")
+        assert_body("Please Correct the Following Errors Before Continuing")
+        assert_body(error_message)
+        assert_body("value=\"#{topic_name}\"")
+        assert_body("value=\"#{partitions_count}\"")
+        assert_body("value=\"#{replication_factor}\"")
       end
     end
 
@@ -200,7 +200,7 @@ describe_current do
 
           it "renders form" do
             assert(response.ok?)
-            assert_includes(body, "Creating New Topic")
+            assert_body("Creating New Topic")
           end
         end
       end
@@ -229,7 +229,7 @@ describe_current do
               assert(response.location.end_with?("/topics"))
             else
               assert(response.ok?)
-              assert_includes(body, "Creating New Topic")
+              assert_body("Creating New Topic")
             end
           end
         end
@@ -249,34 +249,34 @@ describe_current do
 
       it "renders removal confirmation page with all required elements" do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, "Topic #{topic_name} Removal Confirmation")
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
+        assert_body(breadcrumbs)
+        assert_body("Topic #{topic_name} Removal Confirmation")
+        refute_body(pagination)
+        refute_body(support_message)
 
         # Topic details
-        assert_includes(body, "You are about to delete topic:")
-        assert_includes(body, topic_name)
+        assert_body("You are about to delete topic:")
+        assert_body(topic_name)
 
         # Warning messages
-        assert_includes(body, "Topic Removal Warning")
-        assert_includes(body, "All data in this topic will be permanently deleted")
-        assert_includes(body, "All consumers and producers for this topic will stop functioning")
-        assert_includes(body, "Consumer group offsets associated with this topic will be lost")
+        assert_body("Topic Removal Warning")
+        assert_body("All data in this topic will be permanently deleted")
+        assert_body("All consumers and producers for this topic will stop functioning")
+        assert_body("Consumer group offsets associated with this topic will be lost")
 
         # Pre-deletion checklist
-        assert_includes(body, "Before proceeding, ensure that:")
-        assert_includes(body, "All applications consuming from this topic have been properly")
-        assert_includes(body, "All producers to this topic have been stopped")
-        assert_includes(body, "You have backed up any critical data if needed")
-        assert_includes(body, "You have notified relevant team members about this deletion")
+        assert_body("Before proceeding, ensure that:")
+        assert_body("All applications consuming from this topic have been properly")
+        assert_body("All producers to this topic have been stopped")
+        assert_body("You have backed up any critical data if needed")
+        assert_body("You have notified relevant team members about this deletion")
 
         # Form elements
-        assert_includes(body, 'method="post"')
-        assert_includes(body, 'type="hidden"')
-        assert_includes(body, 'name="_method" value="delete"')
-        assert_includes(body, "Delete Topic")
-        assert_includes(body, "Cancel")
+        assert_body('method="post"')
+        assert_body('type="hidden"')
+        assert_body('name="_method" value="delete"')
+        assert_body("Delete Topic")
+        assert_body("Cancel")
       end
     end
 

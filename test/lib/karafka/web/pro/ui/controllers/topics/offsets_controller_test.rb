@@ -41,11 +41,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, topic)
-        assert_includes(body, '<table class="data-table">')
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body(topic)
+        assert_body('<table class="data-table">')
         assert_equal(2, body.scan("<tr>").size)
       end
     end
@@ -57,11 +57,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, topic)
-        assert_includes(body, '<table class="data-table">')
+        assert_body(breadcrumbs)
+        assert_body(pagination)
+        refute_body(support_message)
+        assert_body(topic)
+        assert_body('<table class="data-table">')
         assert_equal(26, body.scan("<tr>").size)
       end
     end
@@ -74,11 +74,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        refute_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, '<table class="data-table">')
-        assert_includes(body, topic)
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        refute_body(support_message)
+        assert_body('<table class="data-table">')
+        assert_body(topic)
         assert_equal(2, body.scan("<tr>").size)
         assert_equal(2, body.scan("<td>100</td>").size)
       end
@@ -95,11 +95,11 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_includes(body, breadcrumbs)
-        assert_includes(body, pagination)
-        refute_includes(body, support_message)
-        assert_includes(body, '<table class="data-table">')
-        assert_includes(body, topic)
+        assert_body(breadcrumbs)
+        assert_body(pagination)
+        refute_body(support_message)
+        assert_body('<table class="data-table">')
+        assert_body(topic)
         assert_equal(26, body.scan("<tr>").size)
         assert_equal(50, body.scan("<td>10</td>").size)
       end
