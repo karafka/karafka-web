@@ -13,8 +13,8 @@ describe_current do
 
   describe "#call" do
     context "when there are active processes" do
-      let(:process1) { instance_double(Karafka::Web::Ui::Models::Process) }
-      let(:process2) { instance_double(Karafka::Web::Ui::Models::Process) }
+      let(:process1) { stub() }
+      let(:process2) { stub() }
 
       before do
         context.processes = [process1, process2]

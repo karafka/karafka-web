@@ -50,7 +50,7 @@ describe_current do
 
     context "when replication factor is low in production" do
       before do
-        allow(Karafka.env).to receive(:production?).and_return(true)
+        Karafka.env.stubs(:production?).returns(true)
         context.cluster_info = Struct.new(:topics).new(
           [
             {
@@ -87,7 +87,7 @@ describe_current do
 
     context "when replication factor is low in non-production" do
       before do
-        allow(Karafka.env).to receive(:production?).and_return(false)
+        Karafka.env.stubs(:production?).returns(false)
         context.cluster_info = Struct.new(:topics).new(
           [
             {

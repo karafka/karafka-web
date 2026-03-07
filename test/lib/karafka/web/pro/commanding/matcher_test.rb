@@ -26,18 +26,14 @@ describe_current do
   let(:process_id) { "1234" }
   let(:schema_version) { "1.2.0" }
   let(:message) do
-    instance_double(
-      Karafka::Messages::Message,
-      key: message_key,
+    stub(key: message_key,
       payload: message_payload,
       headers: { "type" => message_payload[:type] }
     )
   end
 
   before do
-    allow(Karafka::Web.config.tracking.consumers.sampler)
-      .to receive(:process_id)
-      .and_return(process_id)
+    Karafka::Web.config.tracking.consumers.sampler.stubs(:process_id).returns(process_id)
 
     stub_const("Karafka::Web::Pro::Commanding::Dispatcher::SCHEMA_VERSION", schema_version)
   end
@@ -89,17 +85,17 @@ describe_current do
     let(:message_key) { nil }
 
     let(:consumer_group) do
-      instance_double(Karafka::Routing::ConsumerGroup, id: "my_consumer_group")
+      stub(id: "my_consumer_group")
     end
 
     let(:topic) do
-      instance_double(Karafka::Routing::Topic, name: "my_topic", consumer_group: consumer_group)
+      stub(name: "my_topic", consumer_group: consumer_group)
     end
 
     let(:assignments) { { topic => [0, 1, 2] } }
 
     before do
-      allow(Karafka::App).to receive(:assignments).and_return(assignments)
+      Karafka::App.stubs(:assignments).returns(assignments)
     end
 
     context "when no matchers are specified" do

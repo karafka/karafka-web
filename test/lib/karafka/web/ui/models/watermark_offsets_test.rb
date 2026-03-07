@@ -15,7 +15,7 @@ describe_current do
     let(:low) { high - 10 }
 
     before do
-      allow(Karafka::Admin).to receive(:read_watermark_offsets).and_return([low, high])
+      Karafka::Admin.stubs(:read_watermark_offsets).returns([low, high])
     end
 
     it { assert_equal(low, watermarks.low) }

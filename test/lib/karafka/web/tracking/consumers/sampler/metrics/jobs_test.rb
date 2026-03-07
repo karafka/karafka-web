@@ -10,7 +10,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
   describe "#utilization" do
     context "when there are no processed totals" do
       before do
-        allow(jobs_metrics).to receive(:float_now).and_return(started_at + 120)
+        jobs_metrics.stubs(:float_now).returns(started_at + 120)
       end
 
       it "returns 0" do
@@ -23,7 +23,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
         windows.m1[:processed_total_time] << 15_000
         windows.m1[:processed_total_time] << 20_000
         windows.m1[:processed_total_time] << 25_000
-        allow(jobs_metrics).to receive(:float_now).and_return(started_at + 30)
+        jobs_metrics.stubs(:float_now).returns(started_at + 30)
       end
 
       it "uses actual runtime as timefactor" do
@@ -39,7 +39,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
       before do
         windows.m1[:processed_total_time] << 15_000
         windows.m1[:processed_total_time] << 20_000
-        allow(jobs_metrics).to receive(:float_now).and_return(started_at + 60)
+        jobs_metrics.stubs(:float_now).returns(started_at + 60)
       end
 
       it "calculates utilization percentage based on worker time" do
@@ -61,75 +61,51 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
 
   describe "#jobs_queue_statistics" do
     context "when jobs queue is available with all statistics" do
-      let(:queue) { instance_double(Karafka::Processing::JobsQueue) }
+      let(:queue) { stub() }
 
       before do
-        allow(Karafka::Server).to receive(:jobs_queue).and_return(queue)
-        allow(queue).to receive(:statistics).and_return(
-          busy: 3,
-          enqueued: 5,
-          waiting: 2,
-          other_stat: 100
-        )
+        Karafka::Server.stubs(:jobs_queue).returns(queue)
+        queue.stubs(:statistics).returns({ busy: 3, enqueued: 5, waiting: 2, other_stat: 100 })
       end
 
       it "returns only relevant statistics" do
-        expect(jobs_metrics.jobs_queue_statistics).to eq(
-          busy: 3,
-          enqueued: 5,
-          waiting: 2
-        )
+        assert_equal({ busy: 3, enqueued: 5, waiting: 2 }, jobs_metrics.jobs_queue_statistics)
       end
     end
 
     context "when jobs queue is available without waiting stat" do
-      let(:queue) { instance_double(Karafka::Processing::JobsQueue) }
+      let(:queue) { stub() }
 
       before do
-        allow(Karafka::Server).to receive(:jobs_queue).and_return(queue)
-        allow(queue).to receive(:statistics).and_return(
-          busy: 3,
-          enqueued: 5
-        )
+        Karafka::Server.stubs(:jobs_queue).returns(queue)
+        queue.stubs(:statistics).returns({ busy: 3, enqueued: 5 })
       end
 
       it "defaults waiting to 0" do
-        expect(jobs_metrics.jobs_queue_statistics).to eq(
-          busy: 3,
-          enqueued: 5,
-          waiting: 0
-        )
+        assert_equal({ busy: 3, enqueued: 5, waiting: 0 }, jobs_metrics.jobs_queue_statistics)
       end
     end
 
     context "when jobs queue is not available" do
       before do
-        allow(Karafka::Server).to receive(:jobs_queue).and_return(nil)
+        Karafka::Server.stubs(:jobs_queue).returns(nil)
       end
 
       it "returns default statistics" do
-        expect(jobs_metrics.jobs_queue_statistics).to eq(
-          busy: 0,
-          enqueued: 0,
-          waiting: 0
-        )
+        assert_equal({ busy: 0, enqueued: 0, waiting: 0 }, jobs_metrics.jobs_queue_statistics)
       end
     end
 
     context "when jobs queue is available but statistics is nil" do
-      let(:queue) { instance_double(Karafka::Processing::JobsQueue) }
+      let(:queue) { stub() }
 
       before do
-        allow(Karafka::Server).to receive(:jobs_queue).and_return(queue)
-        allow(queue).to receive(:statistics).and_return(nil)
+        Karafka::Server.stubs(:jobs_queue).returns(queue)
+        queue.stubs(:statistics).returns(nil)
       end
 
       it "returns default statistics" do
-        expect(jobs_metrics.jobs_queue_statistics).to eq(
-          busy: 0,
-          enqueued: 0,
-          waiting: 0
-        )
+        assert_equal({ busy: 0, enqueued: 0, waiting: 0 }, jobs_metrics.jobs_queue_statistics)
       end
     end
   end

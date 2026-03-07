@@ -113,8 +113,9 @@ describe_current do
 
   describe "#invalidate!" do
     it "changes state to incompatible" do
-      expect { manager.invalidate! }
-        .to change(manager, :to_s).from("compatible").to("incompatible")
+      assert_equal("compatible", manager.to_s)
+      manager.invalidate!
+      assert_equal("incompatible", manager.to_s)
     end
 
     it "is idempotent" do

@@ -3,15 +3,13 @@
 describe_current do
   let(:parsing) { described_class.new.call(message) }
 
-  let(:message) { instance_double(Karafka::Messages::Message) }
+  let(:message) { stub() }
   let(:raw_payload) { '{"key":"value"}' }
   let(:headers) { {} }
 
   before do
-    allow(message).to receive_messages(
-      raw_payload: raw_payload,
-      headers: headers
-    )
+    message.stubs(:raw_payload).returns(raw_payload)
+    message.stubs(:headers).returns(headers)
   end
 
   context "when JSON is parsed successfully" do

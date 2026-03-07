@@ -76,7 +76,8 @@ describe_current do
     let(:check) { described_class.new(context) }
 
     it "raises NotImplementedError" do
-      expect { check.call }.to raise_error(NotImplementedError, "Subclasses must implement #call")
+      e = assert_raises(NotImplementedError) { check.call }
+      assert_includes(e.message, "Subclasses must implement #call")
     end
   end
 

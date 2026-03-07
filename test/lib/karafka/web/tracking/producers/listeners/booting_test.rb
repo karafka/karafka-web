@@ -13,12 +13,12 @@ describe_current do
   end
 
   describe "#on_producer_connected" do
-    before { allow(scheduler).to receive(:async_call) }
+    before { scheduler.stubs(:async_call) }
 
     it "expect to trigger async call" do
+      scheduler.expects(:async_call)
       listener.on_producer_connected(event)
 
-      expect(scheduler).to have_received(:async_call)
     end
   end
 end

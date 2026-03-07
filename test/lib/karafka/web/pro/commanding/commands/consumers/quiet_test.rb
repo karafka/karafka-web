@@ -23,21 +23,21 @@
 describe_current do
   let(:quiet_command) { described_class.new({}) }
 
-  before { allow(Process).to receive(:kill) }
+  before { Process.stubs(:kill) }
 
   it "expect to send a TSTP signal to the current process" do
+    Process.expects(:kill).with("TSTP", Process.pid)
     quiet_command.call
 
-    expect(Process).to have_received(:kill).with("TSTP", Process.pid)
   end
 
   context "when process to which we send request is not a standalone one" do
-    before { allow(Karafka::Server.execution_mode).to receive(:standalone?).and_return(false) }
+    before { Karafka::Server.execution_mode.stubs(:standalone?).returns(false) }
 
     it "expect to ignore quiet command in a swarm one" do
+      Process.expects(:kill).never
       quiet_command.call
 
-      expect(Process).not_to have_received(:kill)
     end
   end
 end

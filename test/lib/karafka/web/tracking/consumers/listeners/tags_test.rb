@@ -17,7 +17,7 @@ describe_current do
 
   context "when it is active job work" do
     before do
-      allow(topic).to receive(:active_job?).and_return(true)
+      topic.stubs(:active_job?).returns(true)
       listener.on_consumer_consume(event)
     end
 

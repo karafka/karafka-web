@@ -32,9 +32,7 @@ describe_current do
     let(:headers) { {} }
 
     let(:message) do
-      instance_double(
-        Karafka::Messages::Message,
-        raw_payload: raw_payload,
+      stub(raw_payload: raw_payload,
         raw_headers: headers
       )
     end

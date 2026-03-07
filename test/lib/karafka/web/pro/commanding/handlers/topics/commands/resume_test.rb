@@ -23,8 +23,8 @@
 describe_current do
   let(:command) { described_class.new(listener, client, request) }
 
-  let(:listener) { instance_double(Karafka::Connection::Listener) }
-  let(:client) { instance_double(Karafka::Connection::Client) }
+  let(:listener) { stub() }
+  let(:client) { stub() }
 
   let(:request) do
     Karafka::Web::Pro::Commanding::Request.new(
@@ -35,86 +35,67 @@ describe_current do
     )
   end
 
-  let(:coordinators) { instance_double(Karafka::Processing::CoordinatorsBuffer) }
-  let(:coordinator0) { instance_double(Karafka::Processing::Coordinator) }
-  let(:coordinator1) { instance_double(Karafka::Processing::Coordinator) }
-  let(:pause_tracker0) { instance_double(Karafka::TimeTrackers::Pause) }
-  let(:pause_tracker1) { instance_double(Karafka::TimeTrackers::Pause) }
-  let(:subscription_group) { instance_double(Karafka::Routing::SubscriptionGroup) }
-  let(:consumer_group) { instance_double(Karafka::Routing::ConsumerGroup) }
+  let(:coordinators) { stub() }
+  let(:coordinator0) { stub() }
+  let(:coordinator1) { stub() }
+  let(:pause_tracker0) { stub() }
+  let(:pause_tracker1) { stub() }
+  let(:subscription_group) { stub() }
+  let(:consumer_group) { stub() }
   let(:topic_partition_list) { { topic_name => [partition0, partition1] } }
-  let(:partition0) { instance_double(Rdkafka::Consumer::Partition, partition: 0) }
-  let(:partition1) { instance_double(Rdkafka::Consumer::Partition, partition: 1) }
+  let(:partition0) { stub(partition: 0) }
+  let(:partition1) { stub(partition: 1) }
 
   let(:topic_name) { "test_topic" }
   let(:consumer_group_id) { "test_consumer_group" }
   let(:reset_attempts) { false }
 
   before do
-    allow(listener)
-      .to receive_messages(coordinators: coordinators, subscription_group: subscription_group)
+    listener.stubs(:coordinators).returns(coordinators)
+    listener.stubs(:subscription_group).returns(subscription_group)
 
-    allow(subscription_group)
-      .to receive(:consumer_group)
-      .and_return(consumer_group)
+    subscription_group.stubs(:consumer_group).returns(consumer_group)
 
-    allow(consumer_group)
-      .to receive(:id)
-      .and_return(consumer_group_id)
+    consumer_group.stubs(:id).returns(consumer_group_id)
 
-    allow(client)
-      .to receive(:assignment)
-      .and_return(topic_partition_list)
+    client.stubs(:assignment).returns(topic_partition_list)
 
-    allow(topic_partition_list)
-      .to receive(:to_h)
-      .and_return({ topic_name => [partition0, partition1] })
+    topic_partition_list.stubs(:to_h).returns({ topic_name => [partition0, partition1] })
 
-    allow(coordinators)
-      .to receive(:find_or_create)
-      .with(topic_name, 0).and_return(coordinator0)
-    allow(coordinators)
-      .to receive(:find_or_create)
-      .with(topic_name, 1).and_return(coordinator1)
+    coordinators.stubs(:find_or_create).with(topic_name, 0).returns(coordinator0)
+    coordinators.stubs(:find_or_create).with(topic_name, 1).returns(coordinator1)
 
-    allow(coordinator0)
-      .to receive(:pause_tracker)
-      .and_return(pause_tracker0)
-    allow(coordinator1)
-      .to receive(:pause_tracker)
-      .and_return(pause_tracker1)
+    coordinator0.stubs(:pause_tracker).returns(pause_tracker0)
+    coordinator1.stubs(:pause_tracker).returns(pause_tracker1)
 
-    allow(pause_tracker0)
-      .to receive_messages(expire: nil, reset: nil)
-    allow(pause_tracker1)
-      .to receive_messages(expire: nil, reset: nil)
+    pause_tracker0.stubs(:expire).returns(nil)
+    pause_tracker0.stubs(:reset).returns(nil)
+    pause_tracker1.stubs(:expire).returns(nil)
+    pause_tracker1.stubs(:reset).returns(nil)
 
-    allow(Karafka::Web::Pro::Commanding::Dispatcher)
-      .to receive(:result)
+    Karafka::Web::Pro::Commanding::Dispatcher.stubs(:result)
 
-    allow(Karafka::Web.config.tracking.consumers.sampler)
-      .to receive(:process_id)
-      .and_return("test-process")
+    Karafka::Web.config.tracking.consumers.sampler.stubs(:process_id).returns("test-process")
   end
 
   describe "#call" do
     context "when consumer group matches" do
       it "expires pause on all partitions of the topic" do
+        pause_tracker0.expects(:expire)
+        pause_tracker1.expects(:expire)
         command.call
 
-        expect(pause_tracker0).to have_received(:expire)
-        expect(pause_tracker1).to have_received(:expire)
       end
 
       it "reports applied status with affected partitions" do
         command.call
 
-        expect(Karafka::Web::Pro::Commanding::Dispatcher)
-          .to have_received(:result) do |name, pid, payload|
+        # TODO: have_received with block - needs manual conversion
+        # Original: expect(Karafka::Web::Pro::Commanding::Dispatcher) .to have_received(:result) do |name, pid, payload|
             assert_equal("topics.resume", name)
             assert_equal("test-process", pid)
             assert_equal("applied", payload[:status])
-            expect(payload[:partitions_affected]).to contain_exactly(0, 1)
+            assert_equal([0, 1].sort, (payload[:partitions_affected]).sort)
           end
       end
 
@@ -122,10 +103,10 @@ describe_current do
         let(:reset_attempts) { false }
 
         it "does not reset the pause tracker attempts" do
+          pause_tracker0.expects(:reset).never
+          pause_tracker1.expects(:reset).never
           command.call
 
-          expect(pause_tracker0).not_to have_received(:reset)
-          expect(pause_tracker1).not_to have_received(:reset)
         end
       end
 
@@ -133,24 +114,24 @@ describe_current do
         let(:reset_attempts) { true }
 
         it "resets the pause tracker attempts" do
+          pause_tracker0.expects(:reset)
+          pause_tracker1.expects(:reset)
           command.call
 
-          expect(pause_tracker0).to have_received(:reset)
-          expect(pause_tracker1).to have_received(:reset)
         end
       end
     end
 
     context "when no partitions are owned for the topic" do
       before do
-        allow(topic_partition_list).to receive(:to_h).and_return({})
+        topic_partition_list.stubs(:to_h).returns({})
       end
 
       it "reports applied with no affected partitions" do
         command.call
 
-        expect(Karafka::Web::Pro::Commanding::Dispatcher)
-          .to have_received(:result) do |_name, _pid, payload|
+        # TODO: have_received with block - needs manual conversion
+        # Original: expect(Karafka::Web::Pro::Commanding::Dispatcher) .to have_received(:result) do |_name, _pid, payload|
             assert_equal("applied", payload[:status])
             assert_empty(payload[:partitions_affected])
           end

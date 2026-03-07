@@ -134,9 +134,7 @@ describe_current do
       it "returns badge without title or time information" do
         result = helper.poll_state_with_change_time_label("active", 1_000)
 
-        expect(result.strip).to eq(
-          %(<span class="badge badge-success">active</span>)
-        )
+        assert_equal( %(<span class="badge badge-success">active</span>) , result.strip)
       end
     end
 
@@ -158,7 +156,7 @@ describe_current do
         state_ch = 5000 # 5 seconds in milliseconds
         current_time = Time.now
 
-        allow(Time).to receive(:now).and_return(current_time)
+        Time.stubs(:now).returns(current_time)
 
         result = helper.poll_state_with_change_time_label("paused", state_ch)
         expected_time = current_time + (state_ch / 1_000.0)
@@ -173,7 +171,7 @@ describe_current do
         state_ch = 10_000 # 10 seconds in milliseconds
         freeze_time = Time.new(2023, 1, 1, 12, 0, 0)
 
-        allow(Time).to receive(:now).and_return(freeze_time)
+        Time.stubs(:now).returns(freeze_time)
 
         result = helper.poll_state_with_change_time_label("paused", state_ch)
         expected_time = freeze_time + 10
@@ -201,7 +199,7 @@ describe_current do
       end
 
       it "handles zero state_ch value" do
-        allow(Time).to receive(:now).and_return(Time.new(2023, 1, 1))
+        Time.stubs(:now).returns(Time.new(2023, 1, 1))
 
         result = helper.poll_state_with_change_time_label("paused", 0)
 

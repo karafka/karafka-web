@@ -29,7 +29,7 @@ describe_current do
 
   describe "#call" do
     let(:phrase) { "test phrase" }
-    let(:message) { instance_double(Karafka::Messages::Message, raw_headers: raw_headers) }
+    let(:message) { stub(raw_headers: raw_headers) }
 
     context "when the raw headers include the phrase in a key" do
       let(:raw_headers) { { "test phrase" => "some value" } }

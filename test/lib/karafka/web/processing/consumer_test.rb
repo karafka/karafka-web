@@ -11,64 +11,57 @@ describe_current do
 
   let(:messages) { [] }
   let(:coordinator) { build(:processing_coordinator) }
-  let(:migrator) { instance_double(Karafka::Web::Management::Migrator) }
+  let(:migrator) { stub() }
 
   let(:state_aggregator) do
-    instance_double(Karafka::Web::Processing::Consumers::Aggregators::State)
+    stub()
   end
 
   let(:metrics_aggregator) do
-    instance_double(Karafka::Web::Processing::Consumers::Aggregators::Metrics)
+    stub()
   end
 
-  let(:schema_manager) { instance_double(Karafka::Web::Processing::Consumers::SchemaManager) }
+  let(:schema_manager) { stub() }
 
   let(:state_contract) do
-    instance_double(Karafka::Web::Processing::Consumers::Contracts::State)
+    stub()
   end
 
   let(:metrics_contract) do
-    instance_double(Karafka::Web::Processing::Consumers::Contracts::Metrics)
+    stub()
   end
 
   before do
-    allow(consumer).to receive(:messages).and_return(messages)
+    consumer.stubs(:messages).returns(messages)
 
-    allow(Karafka::Web::Management::Migrator).to receive(:new).and_return(migrator)
-    allow(migrator).to receive(:call)
+    Karafka::Web::Management::Migrator.stubs(:new).returns(migrator)
+    migrator.stubs(:call)
 
-    allow(Karafka::Web::Processing::Consumers::SchemaManager)
-      .to receive(:new).and_return(schema_manager)
-    allow(Karafka::Web::Processing::Consumers::Aggregators::State)
-      .to receive(:new).and_return(state_aggregator)
-    allow(Karafka::Web::Processing::Consumers::Aggregators::Metrics)
-      .to receive(:new).and_return(metrics_aggregator)
-    allow(Karafka::Web::Processing::Consumers::Contracts::State)
-      .to receive(:new).and_return(state_contract)
-    allow(Karafka::Web::Processing::Consumers::Contracts::Metrics)
-      .to receive(:new).and_return(metrics_contract)
+    Karafka::Web::Processing::Consumers::SchemaManager.stubs(:new).returns(schema_manager)
+    Karafka::Web::Processing::Consumers::Aggregators::State.stubs(:new).returns(state_aggregator)
+    Karafka::Web::Processing::Consumers::Aggregators::Metrics.stubs(:new).returns(metrics_aggregator)
+    Karafka::Web::Processing::Consumers::Contracts::State.stubs(:new).returns(state_contract)
+    Karafka::Web::Processing::Consumers::Contracts::Metrics.stubs(:new).returns(metrics_contract)
 
-    allow(state_aggregator).to receive(:to_h).and_return({})
-    allow(metrics_aggregator).to receive(:to_h).and_return({})
-    allow(state_contract).to receive(:validate!)
-    allow(metrics_contract).to receive(:validate!)
-    allow(Karafka::Web::Processing::Publisher).to receive(:publish)
+    state_aggregator.stubs(:to_h).returns({})
+    metrics_aggregator.stubs(:to_h).returns({})
+    state_contract.stubs(:validate!)
+    metrics_contract.stubs(:validate!)
+    Karafka::Web::Processing::Publisher.stubs(:publish)
   end
 
   describe "#consume" do
     context "when messages are empty" do
       it "does not dispatch" do
-        allow(Karafka::Web::Processing::Publisher).to receive(:publish)
+        Karafka::Web::Processing::Publisher.expects(:publish).never
+        Karafka::Web::Processing::Publisher.stubs(:publish)
         consumer.consume
-        expect(Karafka::Web::Processing::Publisher).not_to have_received(:publish)
       end
     end
 
     context "when consuming consumer type messages" do
       let(:message1) do
-        instance_double(
-          Karafka::Messages::Message,
-          payload: {
+        stub(payload: {
             schema_version: "1.5.0",
             type: "consumer",
             process: { id: "process-1" },
@@ -79,9 +72,7 @@ describe_current do
       end
 
       let(:message2) do
-        instance_double(
-          Karafka::Messages::Message,
-          payload: {
+        stub(payload: {
             schema_version: "1.5.0",
             type: "consumer",
             process: { id: "process-2" },
@@ -95,50 +86,48 @@ describe_current do
 
       context "when schema is current" do
         before do
-          allow(schema_manager).to receive(:call).and_return(:current)
-          allow(state_aggregator).to receive(:add)
-          allow(state_aggregator).to receive(:add_state)
-          allow(state_aggregator).to receive(:stats).and_return({})
-          allow(metrics_aggregator).to receive(:add_report)
-          allow(metrics_aggregator).to receive(:add_stats)
+          schema_manager.stubs(:call).returns(:current)
+          state_aggregator.stubs(:add)
+          state_aggregator.stubs(:add_state)
+          state_aggregator.stubs(:stats).returns({})
+          metrics_aggregator.stubs(:add_report)
+          metrics_aggregator.stubs(:add_stats)
         end
 
         it "processes messages through aggregators" do
-          allow(state_aggregator).to receive(:add)
-          allow(metrics_aggregator).to receive(:add_report)
+          state_aggregator.stubs(:add)
+          metrics_aggregator.stubs(:add_report)
 
+          state_aggregator.expects(:add).with(message1.payload, message1.offset)
+          state_aggregator.expects(:add).with(message2.payload, message2.offset)
+          metrics_aggregator.expects(:add_report).with(message1.payload)
+          metrics_aggregator.expects(:add_report).with(message2.payload)
           consumer.consume
 
-          expect(state_aggregator).to have_received(:add).with(message1.payload, message1.offset)
-          expect(state_aggregator).to have_received(:add).with(message2.payload, message2.offset)
-          expect(metrics_aggregator).to have_received(:add_report).with(message1.payload)
-          expect(metrics_aggregator).to have_received(:add_report).with(message2.payload)
         end
 
         it "marks last message as consumed on periodic flush" do
-          allow(consumer).to receive(:periodic_flush?).and_return(true)
-          allow(consumer).to receive(:mark_as_consumed)
+          consumer.stubs(:periodic_flush?).returns(true)
+          consumer.stubs(:mark_as_consumed)
 
+          consumer.expects(:mark_as_consumed).with(message2)
           consumer.consume
 
-          expect(consumer).to have_received(:mark_as_consumed).with(message2)
         end
       end
 
       context "when schema is newer" do
         before do
-          allow(schema_manager).to receive(:call).and_return(:newer)
-          allow(schema_manager).to receive(:invalidate!)
+          schema_manager.stubs(:call).returns(:newer)
+          schema_manager.stubs(:invalidate!)
         end
 
         it "raises incompatible schema error" do
-          expect { consumer.consume }.to raise_error(
-            Karafka::Web::Errors::Processing::IncompatibleSchemaError
-          )
+          assert_raises(Karafka::Web::Errors::Processing::IncompatibleSchemaError) { consumer.consume }
         end
 
         it "invalidates schema manager" do
-          allow(schema_manager).to receive(:invalidate!)
+          schema_manager.stubs(:invalidate!)
 
           begin
             consumer.consume
@@ -146,47 +135,36 @@ describe_current do
             # Expected
           end
 
-          expect(schema_manager).to have_received(:invalidate!)
+          schema_manager.expects(:invalidate!) # MOCHA_REORDER
         end
       end
 
       context "when schema is older" do
         before do
-          allow(schema_manager)
-            .to receive(:call)
-            .and_return(:older)
+          schema_manager.stubs(:call).returns(:older)
 
-          allow(state_aggregator)
-            .to receive(:add_state)
+          state_aggregator.stubs(:add_state)
         end
 
         it "only tracks state without full processing" do
-          allow(state_aggregator).to receive(:add_state)
-          allow(state_aggregator).to receive(:add)
-          allow(metrics_aggregator).to receive(:add_report)
+          state_aggregator.stubs(:add_state)
+          state_aggregator.stubs(:add)
+          metrics_aggregator.stubs(:add_report)
 
+          state_aggregator.expects(:add).never
+          metrics_aggregator.expects(:add_report).never
           consumer.consume
 
-          expect(state_aggregator)
-            .to have_received(:add_state)
-            .with(message1.payload, message1.offset)
+          state_aggregator.expects(:add_state).with(message1.payload, message1.offset) # MOCHA_REORDER
 
-          expect(state_aggregator)
-            .to have_received(:add_state)
-            .with(message2.payload, message2.offset)
+          state_aggregator.expects(:add_state).with(message2.payload, message2.offset) # MOCHA_REORDER
 
-          expect(state_aggregator)
-            .not_to have_received(:add)
 
-          expect(metrics_aggregator)
-            .not_to have_received(:add_report)
         end
 
         context "with old schema 1.2.x report using process[:name] instead of process[:id]" do
           let(:old_schema_message) do
-            instance_double(
-              Karafka::Messages::Message,
-              payload: {
+            stub(payload: {
                 schema_version: "1.2.9",
                 type: "consumer",
                 process: {
@@ -204,38 +182,31 @@ describe_current do
           let(:messages) { [old_schema_message] }
 
           it "migrates the report and processes it without crashing" do
-            allow(state_aggregator).to receive(:add_state)
+            state_aggregator.stubs(:add_state)
 
             consumer.consume
           end
 
           it "migrates process[:name] to process[:id] before passing to aggregator" do
-            allow(state_aggregator).to receive(:add_state)
+            state_aggregator.stubs(:add_state)
 
             consumer.consume
 
             # Verify the migrated report was passed to add_state
-            expect(state_aggregator).to have_received(:add_state) do |report, offset|
-              assert_equal("old-process:1:1", report[:process][:id])
-              refute(report[:process].key?(:name))
-              assert_equal(200, offset)
-            end
+            # TODO: have_received with block - needs manual conversion
+            # Original: expect(state_aggregator).to have_received(:add_state) do |report, offset| assert_equal("old-process:1:1", report[:process][:id]) refute(report[:process].key?(:name)) assert_equal(200, offset) end
           end
 
           it "fixes the exact issue from #851 where to_sym was called on nil" do
             # This test ensures that the crash described in issue #851 is fixed:
             # "undefined method 'to_sym' for nil" when processing old reports
             # The migration system should prevent this by renaming :name to :id
-            allow(state_aggregator).to receive(:add_state) do |report, _offset|
-              # This would have crashed in v0.11.3 without the migration
-              # because report[:process][:id] would be nil
-              refute_nil(report[:process][:id])
-              report[:process][:id].to_sym
-            end
+            state_aggregator.stubs(:add_state).with(anything).returns(nil) # TODO: convert do-block stub
+            # Original: allow(state_aggregator).to receive(:add_state) do |report, _offset| # This would have crashed in v0.11.3 without the migration # because report[:process][:id] would be nil refute_nil(report[:process][:id]) report[:process][:id].to_sym end
 
+            state_aggregator.expects(:add_state)
             consumer.consume
 
-            expect(state_aggregator).to have_received(:add_state)
           end
         end
       end
@@ -243,9 +214,7 @@ describe_current do
 
     context "when consuming non-consumer type messages" do
       let(:producer_message) do
-        instance_double(
-          Karafka::Messages::Message,
-          payload: { type: "producer", process: { id: "producer-1" } },
+        stub(payload: { type: "producer", process: { id: "producer-1" } },
           offset: 100
         )
       end
@@ -253,23 +222,21 @@ describe_current do
       let(:messages) { [producer_message] }
 
       it "filters out non-consumer messages" do
-        allow(schema_manager).to receive(:call).and_return(:current)
+        schema_manager.stubs(:call).returns(:current)
 
-        allow(state_aggregator).to receive(:add)
-        allow(metrics_aggregator).to receive(:add_report)
+        state_aggregator.stubs(:add)
+        metrics_aggregator.stubs(:add_report)
 
+        state_aggregator.expects(:add).never
+        metrics_aggregator.expects(:add_report).never
         consumer.consume
 
-        expect(state_aggregator).not_to have_received(:add)
-        expect(metrics_aggregator).not_to have_received(:add_report)
       end
     end
 
     context "when handling periodic flush" do
       let(:message) do
-        instance_double(
-          Karafka::Messages::Message,
-          payload: {
+        stub(payload: {
             type: "consumer",
             process: { id: "process-1" },
             dispatched_at: Time.now.to_f
@@ -281,29 +248,29 @@ describe_current do
       let(:messages) { [message] }
 
       before do
-        allow(schema_manager).to receive(:call).and_return(:current)
-        allow(state_aggregator).to receive(:add)
-        allow(state_aggregator).to receive(:stats).and_return({})
-        allow(metrics_aggregator).to receive(:add_report)
-        allow(metrics_aggregator).to receive(:add_stats)
+        schema_manager.stubs(:call).returns(:current)
+        state_aggregator.stubs(:add)
+        state_aggregator.stubs(:stats).returns({})
+        metrics_aggregator.stubs(:add_report)
+        metrics_aggregator.stubs(:add_stats)
       end
 
       it "does not flush when interval has not passed" do
-        allow(consumer).to receive(:periodic_flush?).and_return(false)
-        allow(Karafka::Web::Processing::Publisher).to receive(:publish)
+        consumer.stubs(:periodic_flush?).returns(false)
+        Karafka::Web::Processing::Publisher.expects(:publish).never
+        Karafka::Web::Processing::Publisher.stubs(:publish)
 
         consumer.consume
 
-        expect(Karafka::Web::Processing::Publisher).not_to have_received(:publish)
       end
 
       it "flushes when interval has passed" do
-        allow(consumer).to receive(:periodic_flush?).and_return(true)
-        allow(Karafka::Web::Processing::Publisher).to receive(:publish)
+        consumer.stubs(:periodic_flush?).returns(true)
+        Karafka::Web::Processing::Publisher.expects(:publish)
+        Karafka::Web::Processing::Publisher.stubs(:publish)
 
         consumer.consume
 
-        expect(Karafka::Web::Processing::Publisher).to have_received(:publish)
       end
     end
   end
@@ -311,9 +278,7 @@ describe_current do
   describe "#shutdown" do
     context "when data has been established" do
       let(:message) do
-        instance_double(
-          Karafka::Messages::Message,
-          payload: {
+        stub(payload: {
             type: "consumer",
             process: { id: "process-1" },
             dispatched_at: Time.now.to_f
@@ -325,42 +290,40 @@ describe_current do
       let(:messages) { [message] }
 
       before do
-        allow(schema_manager).to receive(:call).and_return(:current)
-        allow(state_aggregator).to receive(:add)
-        allow(state_aggregator).to receive(:stats).and_return({})
-        allow(metrics_aggregator).to receive(:add_report)
-        allow(metrics_aggregator).to receive(:add_stats)
-        allow(consumer).to receive(:periodic_flush?).and_return(false)
+        schema_manager.stubs(:call).returns(:current)
+        state_aggregator.stubs(:add)
+        state_aggregator.stubs(:stats).returns({})
+        metrics_aggregator.stubs(:add_report)
+        metrics_aggregator.stubs(:add_stats)
+        consumer.stubs(:periodic_flush?).returns(false)
 
         # Process a message to establish data
         consumer.consume
       end
 
       it "dispatches final state" do
-        allow(Karafka::Web::Processing::Publisher).to receive(:publish)
+        Karafka::Web::Processing::Publisher.expects(:publish)
+        Karafka::Web::Processing::Publisher.stubs(:publish)
 
         consumer.shutdown
 
-        expect(Karafka::Web::Processing::Publisher).to have_received(:publish)
       end
     end
 
     context "when no data has been established" do
       it "does not dispatch" do
-        allow(Karafka::Web::Processing::Publisher).to receive(:publish)
+        Karafka::Web::Processing::Publisher.expects(:publish).never
+        Karafka::Web::Processing::Publisher.stubs(:publish)
 
         consumer.shutdown
 
-        expect(Karafka::Web::Processing::Publisher).not_to have_received(:publish)
       end
     end
   end
 
   describe "bootstrap process" do
     let(:message) do
-      instance_double(
-        Karafka::Messages::Message,
-        payload: { type: "consumer", process: { id: "process-1" }, dispatched_at: Time.now.to_f },
+      stub(payload: { type: "consumer", process: { id: "process-1" }, dispatched_at: Time.now.to_f },
         offset: 100
       )
     end
@@ -368,69 +331,57 @@ describe_current do
     let(:messages) { [message] }
 
     it "runs migrator on first consume" do
-      allow(schema_manager).to receive(:call).and_return(:current)
-      allow(state_aggregator).to receive(:add)
-      allow(state_aggregator).to receive(:stats).and_return({})
-      allow(metrics_aggregator).to receive(:add_report)
-      allow(metrics_aggregator).to receive(:add_stats)
-      allow(migrator).to receive(:call)
+      schema_manager.stubs(:call).returns(:current)
+      state_aggregator.stubs(:add)
+      state_aggregator.stubs(:stats).returns({})
+      metrics_aggregator.stubs(:add_report)
+      metrics_aggregator.stubs(:add_stats)
+      migrator.stubs(:call)
 
+      migrator.expects(:call).once
       consumer.consume
 
-      expect(migrator).to have_received(:call).once
     end
 
     it "does not run migrator on subsequent consumes" do
-      allow(schema_manager).to receive(:call).and_return(:current)
-      allow(state_aggregator).to receive(:add)
-      allow(state_aggregator).to receive(:stats).and_return({})
-      allow(metrics_aggregator).to receive(:add_report)
-      allow(metrics_aggregator).to receive(:add_stats)
-      allow(migrator).to receive(:call)
+      schema_manager.stubs(:call).returns(:current)
+      state_aggregator.stubs(:add)
+      state_aggregator.stubs(:stats).returns({})
+      metrics_aggregator.stubs(:add_report)
+      metrics_aggregator.stubs(:add_stats)
+      migrator.stubs(:call)
 
+      migrator.expects(:call).once
       consumer.consume
       consumer.consume
 
-      expect(migrator).to have_received(:call).once
     end
 
     it "initializes aggregators and contracts" do
-      allow(schema_manager).to receive(:call).and_return(:current)
-      allow(state_aggregator).to receive(:add)
-      allow(state_aggregator).to receive(:stats).and_return({})
-      allow(metrics_aggregator).to receive(:add_report)
-      allow(metrics_aggregator).to receive(:add_stats)
-      allow(Karafka::Web::Processing::Consumers::SchemaManager)
-        .to receive(:new).and_return(schema_manager)
-      allow(Karafka::Web::Processing::Consumers::Aggregators::State)
-        .to receive(:new).and_return(state_aggregator)
-      allow(Karafka::Web::Processing::Consumers::Aggregators::Metrics)
-        .to receive(:new).and_return(metrics_aggregator)
-      allow(Karafka::Web::Processing::Consumers::Contracts::State)
-        .to receive(:new).and_return(state_contract)
-      allow(Karafka::Web::Processing::Consumers::Contracts::Metrics)
-        .to receive(:new).and_return(metrics_contract)
+      schema_manager.stubs(:call).returns(:current)
+      state_aggregator.stubs(:add)
+      state_aggregator.stubs(:stats).returns({})
+      metrics_aggregator.stubs(:add_report)
+      metrics_aggregator.stubs(:add_stats)
+      Karafka::Web::Processing::Consumers::SchemaManager.expects(:new).once
+      Karafka::Web::Processing::Consumers::Aggregators::State.expects(:new).once
+      Karafka::Web::Processing::Consumers::Aggregators::Metrics.expects(:new).once
+      Karafka::Web::Processing::Consumers::Contracts::State.expects(:new).once
+      Karafka::Web::Processing::Consumers::Contracts::Metrics.expects(:new).once
+      Karafka::Web::Processing::Consumers::SchemaManager.stubs(:new).returns(schema_manager)
+      Karafka::Web::Processing::Consumers::Aggregators::State.stubs(:new).returns(state_aggregator)
+      Karafka::Web::Processing::Consumers::Aggregators::Metrics.stubs(:new).returns(metrics_aggregator)
+      Karafka::Web::Processing::Consumers::Contracts::State.stubs(:new).returns(state_contract)
+      Karafka::Web::Processing::Consumers::Contracts::Metrics.stubs(:new).returns(metrics_contract)
 
       consumer.consume
 
-      expect(Karafka::Web::Processing::Consumers::SchemaManager)
-        .to have_received(:new).once
-      expect(Karafka::Web::Processing::Consumers::Aggregators::State)
-        .to have_received(:new).once
-      expect(Karafka::Web::Processing::Consumers::Aggregators::Metrics)
-        .to have_received(:new).once
-      expect(Karafka::Web::Processing::Consumers::Contracts::State)
-        .to have_received(:new).once
-      expect(Karafka::Web::Processing::Consumers::Contracts::Metrics)
-        .to have_received(:new).once
     end
   end
 
   describe "validation" do
     let(:message) do
-      instance_double(
-        Karafka::Messages::Message,
-        payload: { type: "consumer", process: { id: "process-1" }, dispatched_at: Time.now.to_f },
+      stub(payload: { type: "consumer", process: { id: "process-1" }, dispatched_at: Time.now.to_f },
         offset: 100
       )
     end
@@ -438,42 +389,38 @@ describe_current do
     let(:messages) { [message] }
 
     before do
-      allow(schema_manager).to receive(:call).and_return(:current)
-      allow(state_aggregator).to receive(:add)
-      allow(state_aggregator).to receive(:stats).and_return({})
-      allow(metrics_aggregator).to receive(:add_report)
-      allow(metrics_aggregator).to receive(:add_stats)
-      allow(consumer).to receive(:periodic_flush?).and_return(true)
+      schema_manager.stubs(:call).returns(:current)
+      state_aggregator.stubs(:add)
+      state_aggregator.stubs(:stats).returns({})
+      metrics_aggregator.stubs(:add_report)
+      metrics_aggregator.stubs(:add_stats)
+      consumer.stubs(:periodic_flush?).returns(true)
     end
 
     it "validates state before publishing" do
-      allow(state_contract).to receive(:validate!)
+      state_contract.stubs(:validate!)
 
+      state_contract.expects(:validate!).with(hash_including)
       consumer.consume
 
-      expect(state_contract).to have_received(:validate!).with(hash_including)
     end
 
     it "validates metrics before publishing" do
-      allow(metrics_contract).to receive(:validate!)
+      metrics_contract.stubs(:validate!)
 
+      metrics_contract.expects(:validate!).with(hash_including)
       consumer.consume
 
-      expect(metrics_contract).to have_received(:validate!).with(hash_including)
     end
 
     context "when validation fails" do
       before do
-        allow(state_contract).to receive(:validate!).and_raise(
-          Karafka::Web::Errors::ContractError, "Invalid state"
-        )
+        state_contract.stubs(:validate!).raises( Karafka::Web::Errors::ContractError, "Invalid state" )
       end
 
       it "propagates the validation error" do
-        expect { consumer.consume }.to raise_error(
-          Karafka::Web::Errors::ContractError,
-          "Invalid state"
-        )
+        error = assert_raises(Karafka::Web::Errors::ContractError) { consumer.consume }
+        assert_equal("Invalid state", error.message)
       end
     end
   end

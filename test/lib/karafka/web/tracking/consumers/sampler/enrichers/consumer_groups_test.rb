@@ -42,7 +42,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups d
       end
 
       before do
-        allow(enricher).to receive(:monotonic_now).and_return(current_time)
+        enricher.stubs(:monotonic_now).returns(current_time)
       end
 
       it "calculates poll_age correctly" do
@@ -52,7 +52,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups d
       end
 
       it "rounds poll_age to 2 decimal places" do
-        allow(enricher).to receive(:monotonic_now).and_return(polled_at + 1.2345)
+        enricher.stubs(:monotonic_now).returns(polled_at + 1.2345)
         result = enricher.call
 
         assert_in_delta(1.23, result["cg1"][:subscription_groups]["sg1"][:state][:poll_age])
@@ -125,7 +125,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups d
       end
 
       before do
-        allow(enricher).to receive(:monotonic_now).and_return(150.0)
+        enricher.stubs(:monotonic_now).returns(150.0)
       end
 
       it "does not enrich when lag_stored is positive" do
@@ -189,7 +189,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups d
       end
 
       before do
-        allow(enricher).to receive(:monotonic_now).and_return(150.0)
+        enricher.stubs(:monotonic_now).returns(150.0)
       end
 
       it "enriches with transactional flag" do
@@ -335,7 +335,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups d
       end
 
       before do
-        allow(enricher).to receive(:monotonic_now).and_return(150.0)
+        enricher.stubs(:monotonic_now).returns(150.0)
       end
 
       it "does not enrich the partition" do
@@ -384,7 +384,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups d
       end
 
       before do
-        allow(enricher).to receive(:monotonic_now).and_return(150.0)
+        enricher.stubs(:monotonic_now).returns(150.0)
       end
 
       it "does not enrich the partition" do
@@ -434,7 +434,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups d
       end
 
       before do
-        allow(enricher).to receive(:monotonic_now).and_return(150.0)
+        enricher.stubs(:monotonic_now).returns(150.0)
       end
 
       it "does not enrich the partition" do
@@ -479,7 +479,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups d
       end
 
       before do
-        allow(enricher).to receive(:monotonic_now).and_return(250.0)
+        enricher.stubs(:monotonic_now).returns(250.0)
       end
 
       it "enriches all consumer groups" do

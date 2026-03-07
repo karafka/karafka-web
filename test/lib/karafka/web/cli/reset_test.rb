@@ -6,12 +6,12 @@ describe_current do
   let(:installer) { Karafka::Web::Installer.new }
 
   before do
-    allow(Karafka::Web::Installer).to receive(:new).and_return(installer)
-    allow(installer).to receive(:reset)
+    Karafka::Web::Installer.stubs(:new).returns(installer)
+    installer.stubs(:reset)
   end
 
   it "expect to reset using installer" do
+    installer.expects(:reset)
     cli.call
-    expect(installer).to have_received(:reset)
   end
 end

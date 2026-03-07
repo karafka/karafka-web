@@ -13,7 +13,7 @@ describe_current do
     before do
       first_run
       invalid = Open3.capture2("ls -nonexisting")
-      allow(Open3).to receive(:capture2).and_return(invalid)
+      Open3.stubs(:capture2).returns(invalid)
     end
 
     it { assert_equal(first_run, shell.call("cat /dev/urandom | head -n 1")) }

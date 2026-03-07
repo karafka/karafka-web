@@ -7,23 +7,23 @@ describe_current do
   let(:producers_reporter) { Karafka::Web.config.tracking.producers.reporter }
 
   before do
-    allow(consumers_reporter).to receive(:report)
-    allow(producers_reporter).to receive(:report)
+    consumers_reporter.stubs(:report)
+    producers_reporter.stubs(:report)
 
-    allow(scheduler).to receive(:sleep).and_raise(StandardError)
+    scheduler.stubs(:sleep).raises(StandardError)
   end
 
   describe "#call" do
     before do
-      allow(consumers_reporter).to receive(:active?).and_return(true)
-      allow(producers_reporter).to receive(:active?).and_return(false)
+      consumers_reporter.stubs(:active?).returns(true)
+      producers_reporter.stubs(:active?).returns(false)
     end
 
     it "executes only active reporters" do
+      consumers_reporter.expects(:report).once
+      producers_reporter.expects(:report).never
       assert_raises(StandardError) { scheduler.send(:call) }
 
-      expect(consumers_reporter).to have_received(:report).once
-      expect(producers_reporter).not_to have_received(:report)
     end
   end
 end

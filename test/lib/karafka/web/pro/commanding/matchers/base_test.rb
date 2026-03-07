@@ -24,9 +24,7 @@ describe_current do
   let(:matcher) { described_class.new(message) }
 
   let(:message) do
-    instance_double(
-      Karafka::Messages::Message,
-      key: nil,
+    stub(key: nil,
       payload: { schema_version: "1.2.0", matchers: {} },
       headers: { "type" => "request" }
     )
@@ -34,7 +32,8 @@ describe_current do
 
   describe "#matches?" do
     it "raises NotImplementedError" do
-      expect { matcher.matches? }.to raise_error(NotImplementedError, "Implement in a subclass")
+      e = assert_raises(NotImplementedError) { matcher.matches? }
+      assert_includes(e.message, "Implement in a subclass")
     end
   end
 end

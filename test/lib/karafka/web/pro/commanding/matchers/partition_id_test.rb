@@ -24,23 +24,23 @@ describe_current do
   let(:matcher) { described_class.new(message) }
 
   let(:message) do
-    instance_double(Karafka::Messages::Message, payload: { matchers: matchers })
+    stub(payload: { matchers: matchers })
   end
 
   let(:matchers) { { partition_id: 0 } }
 
   let(:consumer_group) do
-    instance_double(Karafka::Routing::ConsumerGroup, id: "my_consumer_group")
+    stub(id: "my_consumer_group")
   end
 
   let(:topic) do
-    instance_double(Karafka::Routing::Topic, name: "my_topic", consumer_group: consumer_group)
+    stub(name: "my_topic", consumer_group: consumer_group)
   end
 
   let(:assignments) { { topic => [0, 1, 2] } }
 
   before do
-    allow(Karafka::App).to receive(:assignments).and_return(assignments)
+    Karafka::App.stubs(:assignments).returns(assignments)
   end
 
   describe "#apply?" do
@@ -79,7 +79,7 @@ describe_current do
 
     context "with multiple topics" do
       let(:topic2) do
-        instance_double(Karafka::Routing::Topic, name: "other_topic", consumer_group: consumer_group)
+        stub(name: "other_topic", consumer_group: consumer_group)
       end
       let(:assignments) { { topic => [0, 1], topic2 => [5, 6] } }
 

@@ -141,7 +141,7 @@ describe_current do
 
         state = state_aggregator.to_h
 
-        expect(state[:processes].keys).to contain_exactly(:"worker-1", :"worker-2")
+        assert_equal([:"worker-1", :"worker-2"].sort, (state[:processes].keys).sort)
 
         assert_equal(10, state[:processes][:"worker-1"][:offset])
         assert_equal(20, state[:processes][:"worker-2"][:offset])

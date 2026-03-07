@@ -81,7 +81,7 @@ describe_current do
 
     context "when replication factor is less than 2 in production" do
       before do
-        allow(Karafka.env).to receive(:production?).and_return(true)
+        Karafka.env.stubs(:production?).returns(true)
         get "status"
       end
 
@@ -186,7 +186,7 @@ describe_current do
 
     context "when Web UI is not enabled in karafka.rb" do
       before do
-        allow(Karafka::Web.config).to receive(:group_id).and_return("non_existent_group")
+        Karafka::Web.config.stubs(:group_id).returns("non_existent_group")
         get "status"
       end
 
@@ -201,9 +201,7 @@ describe_current do
 
     context "when connection to Kafka fails" do
       before do
-        allow(Karafka::Web::Ui::Models::ClusterInfo)
-          .to receive(:fetch)
-          .and_raise(Rdkafka::RdkafkaError.new(0))
+        Karafka::Web::Ui::Models::ClusterInfo.stubs(:fetch).raises(Rdkafka::RdkafkaError.new(0))
 
         get "status"
       end
@@ -285,9 +283,7 @@ describe_current do
 
         produce(reports_topic, parsed.to_json)
 
-        allow(Karafka::App.routes.first.topics.first)
-          .to receive(:name)
-          .and_return(non_existing_topic)
+        Karafka::App.routes.first.topics.first.stubs(:name).returns(non_existing_topic)
 
         get "status"
       end
@@ -304,7 +300,7 @@ describe_current do
 
     context "when pro subscription is not active" do
       before do
-        allow(Karafka).to receive(:pro?).and_return(false)
+        Karafka.stubs(:pro?).returns(false)
         get "status"
       end
 

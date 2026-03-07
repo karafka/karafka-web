@@ -100,11 +100,11 @@ describe_current do
 
     it "shows current size after expired items are cleared" do
       # Add items that will expire
-      allow(array).to receive(:monotonic_now).and_return(1000)
+      array.stubs(:monotonic_now).returns(1000)
       array << "old_item"
 
       # Time passes beyond TTL
-      allow(array).to receive(:monotonic_now).and_return(3000)
+      array.stubs(:monotonic_now).returns(3000)
       array << "new_item"
 
       result = array.inspect
@@ -120,9 +120,9 @@ describe_current do
     end
 
     it "calls clear before inspection" do
-      allow(array).to receive(:clear).and_call_original
+      stub_and_passthrough(array, :clear)
+      array.expects(:clear)
       array.inspect
-      expect(array).to have_received(:clear)
     end
 
     it "handles thread safety during concurrent modifications" do

@@ -240,8 +240,7 @@ describe_current do
         it "increases partitions and redirects with success message" do
           assert_equal(302, response.status)
           assert(response.location.end_with?("/topics/#{topic_name}/distribution"))
-          expect(flash[:success])
-            .to include("Topic #{topic_name} repartitioning to #{new_partition_count} partitions")
+          assert_includes(flash[:success], "Topic #{topic_name} repartitioning to #{new_partition_count} partitions")
 
           sleep(1)
 

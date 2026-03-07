@@ -22,23 +22,23 @@ describe_current do
 
     context "when all routed topics exist in cluster" do
       let(:topic) do
-        instance_double(Karafka::Routing::Topic, name: "topic1", active?: true).tap do |t|
-          allow(t).to receive(:respond_to?).with(:patterns?).and_return(false)
+        stub(name: "topic1", active?: true).tap do |t|
+          t.stubs(:respond_to?).with(:patterns?).returns(false)
         end
       end
 
       let(:topics_collection) do
-        instance_double(Karafka::Routing::Topics).tap do |tc|
-          allow(tc).to receive(:map).and_yield(topic).and_return([topic])
+        stub().tap do |tc|
+          tc.stubs(:map).yields(topic).returns([topic])
         end
       end
 
       let(:consumer_group) do
-        instance_double(Karafka::Routing::ConsumerGroup, topics: topics_collection)
+        stub(topics: topics_collection)
       end
 
       before do
-        allow(Karafka::App).to receive(:routes).and_return([consumer_group])
+        Karafka::App.stubs(:routes).returns([consumer_group])
       end
 
       it "returns success" do
@@ -51,23 +51,23 @@ describe_current do
 
     context "when some routed topics are missing from cluster" do
       let(:missing_topic) do
-        instance_double(Karafka::Routing::Topic, name: "missing_topic", active?: true).tap do |t|
-          allow(t).to receive(:respond_to?).with(:patterns?).and_return(false)
+        stub(name: "missing_topic", active?: true).tap do |t|
+          t.stubs(:respond_to?).with(:patterns?).returns(false)
         end
       end
 
       let(:topics_collection) do
-        instance_double(Karafka::Routing::Topics).tap do |tc|
-          allow(tc).to receive(:map).and_yield(missing_topic).and_return([missing_topic])
+        stub().tap do |tc|
+          tc.stubs(:map).yields(missing_topic).returns([missing_topic])
         end
       end
 
       let(:consumer_group) do
-        instance_double(Karafka::Routing::ConsumerGroup, topics: topics_collection)
+        stub(topics: topics_collection)
       end
 
       before do
-        allow(Karafka::App).to receive(:routes).and_return([consumer_group])
+        Karafka::App.stubs(:routes).returns([consumer_group])
       end
 
       it "returns warning" do
@@ -102,17 +102,17 @@ describe_current do
       end
 
       let(:topics_collection) do
-        instance_double(Karafka::Routing::Topics).tap do |tc|
-          allow(tc).to receive(:map).and_yield(pattern_topic).and_return([pattern_topic])
+        stub().tap do |tc|
+          tc.stubs(:map).yields(pattern_topic).returns([pattern_topic])
         end
       end
 
       let(:consumer_group) do
-        instance_double(Karafka::Routing::ConsumerGroup, topics: topics_collection)
+        stub(topics: topics_collection)
       end
 
       before do
-        allow(Karafka::App).to receive(:routes).and_return([consumer_group])
+        Karafka::App.stubs(:routes).returns([consumer_group])
       end
 
       it "ignores pattern topics and returns success" do
@@ -125,23 +125,23 @@ describe_current do
 
     context "when topic is inactive" do
       let(:inactive_topic) do
-        instance_double(Karafka::Routing::Topic, name: "inactive_topic", active?: false).tap do |t|
-          allow(t).to receive(:respond_to?).with(:patterns?).and_return(false)
+        stub(name: "inactive_topic", active?: false).tap do |t|
+          t.stubs(:respond_to?).with(:patterns?).returns(false)
         end
       end
 
       let(:topics_collection) do
-        instance_double(Karafka::Routing::Topics).tap do |tc|
-          allow(tc).to receive(:map).and_yield(inactive_topic).and_return([inactive_topic])
+        stub().tap do |tc|
+          tc.stubs(:map).yields(inactive_topic).returns([inactive_topic])
         end
       end
 
       let(:consumer_group) do
-        instance_double(Karafka::Routing::ConsumerGroup, topics: topics_collection)
+        stub(topics: topics_collection)
       end
 
       before do
-        allow(Karafka::App).to receive(:routes).and_return([consumer_group])
+        Karafka::App.stubs(:routes).returns([consumer_group])
       end
 
       it "ignores inactive topics and returns success" do

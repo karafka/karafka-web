@@ -23,8 +23,8 @@
 describe_current do
   let(:command) { described_class.new(listener, client, request) }
 
-  let(:listener) { instance_double(Karafka::Connection::Listener) }
-  let(:client) { instance_double(Karafka::Connection::Client) }
+  let(:listener) { stub() }
+  let(:client) { stub() }
 
   let(:request) do
     Karafka::Web::Pro::Commanding::Request.new(
@@ -32,27 +32,24 @@ describe_current do
     )
   end
 
-  let(:coordinators) { instance_double(Karafka::Processing::CoordinatorsBuffer) }
-  let(:coordinator) { instance_double(Karafka::Processing::Coordinator) }
-  let(:pause_tracker) { instance_double(Karafka::TimeTrackers::Pause) }
+  let(:coordinators) { stub() }
+  let(:coordinator) { stub() }
+  let(:pause_tracker) { stub() }
   let(:topic) { "topic_name" }
   let(:partition_id) { 1 }
   let(:should_reset_attempts) { false }
 
   before do
-    allow(listener)
-      .to receive(:coordinators)
-      .and_return(coordinators)
+    listener.stubs(:coordinators).returns(coordinators)
 
-    allow(coordinators)
-      .to receive(:find_or_create)
-      .with(topic, partition_id)
-      .and_return(coordinator)
+    coordinators.stubs(:find_or_create).with(topic, partition_id).returns(coordinator)
 
-    allow(coordinator).to receive(:pause_tracker).and_return(pause_tracker)
-    allow(pause_tracker).to receive(:expire)
-    allow(pause_tracker).to receive(:reset)
-    allow(command).to receive_messages(topic: topic, partition_id: partition_id, result: nil)
+    coordinator.stubs(:pause_tracker).returns(pause_tracker)
+    pause_tracker.stubs(:expire)
+    pause_tracker.stubs(:reset)
+    command.stubs(:topic).returns(topic)
+    command.stubs(:partition_id).returns(partition_id)
+    command.stubs(:result).returns(nil)
   end
 
   describe "#call" do
@@ -60,11 +57,11 @@ describe_current do
       let(:should_reset_attempts) { false }
 
       it "expires the pause without resetting attempts" do
+        pause_tracker.expects(:expire)
+        pause_tracker.expects(:reset).never
+        command.expects(:result).with("applied")
         command.call
 
-        expect(pause_tracker).to have_received(:expire)
-        expect(pause_tracker).not_to have_received(:reset)
-        expect(command).to have_received(:result).with("applied")
       end
     end
 
@@ -72,11 +69,11 @@ describe_current do
       let(:should_reset_attempts) { true }
 
       it "expires the pause and resets attempts" do
+        pause_tracker.expects(:expire)
+        pause_tracker.expects(:reset)
+        command.expects(:result).with("applied")
         command.call
 
-        expect(pause_tracker).to have_received(:expire)
-        expect(pause_tracker).to have_received(:reset)
-        expect(command).to have_received(:result).with("applied")
       end
     end
   end

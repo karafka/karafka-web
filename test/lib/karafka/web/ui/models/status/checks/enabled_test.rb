@@ -23,7 +23,7 @@ describe_current do
 
     context "when web ui group is not in routes" do
       before do
-        allow(Karafka::Web.config).to receive(:group_id).and_return("non_existent_group")
+        Karafka::Web.config.stubs(:group_id).returns("non_existent_group")
       end
 
       it "returns failure" do

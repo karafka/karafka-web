@@ -18,8 +18,8 @@ describe_current do
     let(:status) { Karafka::Web::Ui::Models::Status.new }
 
     before do
-      allow(status.class).to receive(:new).and_return(status)
-      allow(status).to receive(:enabled).and_return(Struct.new(:success?).new(false))
+      status.class.stubs(:new).returns(status)
+      status.stubs(:enabled).returns(Struct.new(:success?).new(false))
       produce(metrics_topic, Fixtures.consumers_metrics_file)
     end
 

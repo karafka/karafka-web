@@ -68,25 +68,14 @@ describe_current do
         hash = { name: "John", age: 30 }
         result = helper.flatten_params("", hash)
 
-        expect(result).to eq(
-          {
-            "name" => "John",
-            "age" => "30"
-          }
-        )
+        assert_equal( { "name" => "John", "age" => "30" } , result)
       end
 
       it "converts all values to strings" do
         hash = { count: 42, active: true, score: 3.14 }
         result = helper.flatten_params("", hash)
 
-        expect(result).to eq(
-          {
-            "count" => "42",
-            "active" => "true",
-            "score" => "3.14"
-          }
-        )
+        assert_equal( { "count" => "42", "active" => "true", "score" => "3.14" } , result)
       end
     end
 
@@ -104,13 +93,7 @@ describe_current do
 
         result = helper.flatten_params("", hash)
 
-        expect(result).to eq(
-          {
-            "user[name]" => "John",
-            "user[profile][age]" => "30",
-            "user[profile][city]" => "NYC"
-          }
-        )
+        assert_equal( { "user[name]" => "John", "user[profile][age]" => "30", "user[profile][city]" => "NYC" } , result)
       end
 
       it "handles deeply nested structures" do
@@ -126,11 +109,7 @@ describe_current do
 
         result = helper.flatten_params("", hash)
 
-        expect(result).to eq(
-          {
-            "level1[level2][level3][value]" => "deep"
-          }
-        )
+        assert_equal( { "level1[level2][level3][value]" => "deep" } , result)
       end
     end
 
@@ -142,13 +121,7 @@ describe_current do
 
         result = helper.flatten_params("", hash)
 
-        expect(result).to eq(
-          {
-            "tags[0]" => "ruby",
-            "tags[1]" => "rails",
-            "tags[2]" => "kafka"
-          }
-        )
+        assert_equal( { "tags[0]" => "ruby", "tags[1]" => "rails", "tags[2]" => "kafka" } , result)
       end
 
       it "handles arrays of hashes" do
@@ -161,14 +134,7 @@ describe_current do
 
         result = helper.flatten_params("", hash)
 
-        expect(result).to eq(
-          {
-            "users[0][name]" => "John",
-            "users[0][age]" => "30",
-            "users[1][name]" => "Jane",
-            "users[1][age]" => "25"
-          }
-        )
+        assert_equal( { "users[0][name]" => "John", "users[0][age]" => "30", "users[1][name]" => "Jane", "users[1][age]" => "25" } , result)
       end
 
       it "handles nested arrays" do
@@ -181,14 +147,7 @@ describe_current do
 
         result = helper.flatten_params("", hash)
 
-        expect(result).to eq(
-          {
-            "matrix[0][0]" => "1",
-            "matrix[0][1]" => "2",
-            "matrix[1][0]" => "3",
-            "matrix[1][1]" => "4"
-          }
-        )
+        assert_equal( { "matrix[0][0]" => "1", "matrix[0][1]" => "2", "matrix[1][0]" => "3", "matrix[1][1]" => "4" } , result)
       end
     end
 
@@ -212,17 +171,7 @@ describe_current do
 
         result = helper.flatten_params("", hash)
 
-        expect(result).to include(
-          {
-            "config[servers][0]" => "server1",
-            "config[servers][1]" => "server2",
-            "config[settings][timeout]" => "30",
-            "config[settings][retries]" => "3",
-            "config[settings][features][enabled][0]" => "feature1",
-            "config[settings][features][enabled][1]" => "feature2",
-            "metadata[version]" => "1.0.0"
-          }
-        )
+        assert_includes(result,  { "config[servers][0]" => "server1", "config[servers][1]" => "server2", "config[settings][timeout]" => "30", "config[settings][retries]" => "3", "config[settings][features][enabled][0]" => "feature1", "config[settings][features][enabled][1]" => "feature2", "metadata[version]" => "1.0.0" } )
       end
     end
 
@@ -231,12 +180,7 @@ describe_current do
         hash = { name: "John", age: 30 }
         result = helper.flatten_params("user", hash)
 
-        expect(result).to eq(
-          {
-            "user[name]" => "John",
-            "user[age]" => "30"
-          }
-        )
+        assert_equal( { "user[name]" => "John", "user[age]" => "30" } , result)
       end
     end
 
@@ -477,9 +421,7 @@ describe_current do
           "details"
         )
 
-        expect(result).to eq(
-          "/web-ui/scheduled_messages/explorer/topics/scheduled-topic/0/100/details"
-        )
+        assert_equal( "/web-ui/scheduled_messages/explorer/topics/scheduled-topic/0/100/details" , result)
       end
     end
 

@@ -28,15 +28,13 @@ describe_current do
       before do
         config.commanding.active = true
 
-        allow(Karafka.monitor).to receive(:subscribe)
+        Karafka.monitor.stubs(:subscribe)
       end
 
       it "subscribes the Commanding Manager to the Karafka monitor" do
         described_class.post_setup(config)
 
-        expect(Karafka.monitor)
-          .to have_received(:subscribe)
-          .with(Karafka::Web::Pro::Commanding::Manager.instance)
+        Karafka.monitor.expects(:subscribe).with(Karafka::Web::Pro::Commanding::Manager.instance) # MOCHA_REORDER
       end
     end
 
@@ -44,17 +42,17 @@ describe_current do
       before do
         config.commanding.active = false
 
-        allow(Karafka::Web::Pro::Commanding::Contracts::Config).to receive(:new)
-        allow(Karafka.monitor).to receive(:subscribe)
+        Karafka::Web::Pro::Commanding::Contracts::Config.stubs(:new)
+        Karafka.monitor.stubs(:subscribe)
       end
 
       after { config.commanding.active = true }
 
       it "does not subscribe the Commanding Manager to the Karafka monitor" do
+        Karafka::Web::Pro::Commanding::Contracts::Config.expects(:new).never
+        Karafka.monitor.expects(:subscribe).never
         described_class.post_setup(config)
 
-        expect(Karafka::Web::Pro::Commanding::Contracts::Config).not_to have_received(:new)
-        expect(Karafka.monitor).not_to have_received(:subscribe)
       end
     end
 
@@ -64,9 +62,7 @@ describe_current do
       after { config.commanding.active = true }
 
       it "raises an error" do
-        expect do
-          described_class.post_setup(config)
-        end.to raise_error(Karafka::Errors::InvalidConfigurationError)
+        assert_raises(Karafka::Errors::InvalidConfigurationError) { described_class.post_setup(config) }
       end
     end
   end

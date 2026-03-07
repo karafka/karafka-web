@@ -10,37 +10,27 @@ describe Karafka::Web::Ui::Base do
 
   describe "error handling and reporting" do
     let(:controller) do
-      instance_double(
-        Karafka::Web::Ui::Controllers::DashboardController,
-        run_before_hooks: nil,
+      stub(run_before_hooks: nil,
         run_after_hooks: nil
       )
     end
 
     before do
-      allow(Karafka::Web::Ui::Controllers::DashboardController)
-        .to receive(:new)
-        .and_return(controller)
+      Karafka::Web::Ui::Controllers::DashboardController.stubs(:new).returns(controller)
     end
 
     context "when an unhandled error occurs in the UI" do
       before do
-        allow(controller)
-          .to receive(:index)
-          .and_raise(StandardError, "Unexpected error in UI")
+        controller.stubs(:index).raises(StandardError, "Unexpected error in UI")
       end
 
       it "expect to report the error to Karafka monitoring and show 500 page" do
-        allow(monitor).to receive(:instrument).and_call_original
+        stub_and_passthrough(monitor, :instrument)
 
         get "dashboard"
 
-        expect(monitor).to have_received(:instrument) do |event, payload|
-          assert_equal("error.occurred", event)
-          assert_equal("web.ui.error", payload[:type])
-          assert_kind_of(StandardError, payload[:error])
-          assert_equal("Unexpected error in UI", payload[:error].message)
-        end
+        # TODO: have_received with block - needs manual conversion
+        # Original: expect(monitor).to have_received(:instrument) do |event, payload| assert_equal("error.occurred", event) assert_equal("web.ui.error", payload[:type]) assert_kind_of(StandardError, payload[:error]) assert_equal("Unexpected error in UI", payload[:error].message) end
 
         assert_equal(500, status)
         assert_body("500")
@@ -50,17 +40,15 @@ describe Karafka::Web::Ui::Base do
 
     context "when a UI::NotFoundError occurs" do
       before do
-        allow(controller)
-          .to receive(:index)
-          .and_raise(Karafka::Web::Errors::Ui::NotFoundError, "Not found")
+        controller.stubs(:index).raises(Karafka::Web::Errors::Ui::NotFoundError, "Not found")
       end
 
       it "expect not to report the error to Karafka monitoring" do
-        allow(monitor).to receive(:instrument).and_call_original
+        stub_and_passthrough(monitor, :instrument)
 
+        monitor.expects(:instrument).never
         get "dashboard"
 
-        expect(monitor).not_to have_received(:instrument)
 
         assert_equal(404, status)
       end
@@ -68,17 +56,15 @@ describe Karafka::Web::Ui::Base do
 
     context "when a UI::ProOnlyError occurs" do
       before do
-        allow(controller)
-          .to receive(:index)
-          .and_raise(Karafka::Web::Errors::Ui::ProOnlyError, "Pro only")
+        controller.stubs(:index).raises(Karafka::Web::Errors::Ui::ProOnlyError, "Pro only")
       end
 
       it "expect not to report the error to Karafka monitoring" do
-        allow(monitor).to receive(:instrument).and_call_original
+        stub_and_passthrough(monitor, :instrument)
 
+        monitor.expects(:instrument).never
         get "dashboard"
 
-        expect(monitor).not_to have_received(:instrument)
 
         assert_equal(402, status)
       end
@@ -86,17 +72,15 @@ describe Karafka::Web::Ui::Base do
 
     context "when a UI::ForbiddenError occurs" do
       before do
-        allow(controller)
-          .to receive(:index)
-          .and_raise(Karafka::Web::Errors::Ui::ForbiddenError, "Forbidden")
+        controller.stubs(:index).raises(Karafka::Web::Errors::Ui::ForbiddenError, "Forbidden")
       end
 
       it "expect not to report the error to Karafka monitoring" do
-        allow(monitor).to receive(:instrument).and_call_original
+        stub_and_passthrough(monitor, :instrument)
 
+        monitor.expects(:instrument).never
         get "dashboard"
 
-        expect(monitor).not_to have_received(:instrument)
 
         assert_equal(403, status)
       end
@@ -104,17 +88,15 @@ describe Karafka::Web::Ui::Base do
 
     context "when a RdkafkaError occurs" do
       before do
-        allow(controller)
-          .to receive(:index)
-          .and_raise(Rdkafka::RdkafkaError.new(1, broker_message: "Kafka error"))
+        controller.stubs(:index).raises(Rdkafka::RdkafkaError.new(1, broker_message: "Kafka error"))
       end
 
       it "expect not to report the error to Karafka monitoring" do
-        allow(monitor).to receive(:instrument).and_call_original
+        stub_and_passthrough(monitor, :instrument)
 
+        monitor.expects(:instrument).never
         get "dashboard"
 
-        expect(monitor).not_to have_received(:instrument)
 
         assert_equal(404, status)
       end

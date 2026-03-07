@@ -139,9 +139,7 @@ describe_current do
       let(:payload) { rand.to_s }
 
       before do
-        allow(Karafka::Web.config.ui.policies.messages)
-          .to receive(:republish?)
-          .and_return(false)
+        Karafka::Web.config.ui.policies.messages.stubs(:republish?).returns(false)
 
         produce(topic, payload)
         post "explorer/messages/#{topic}/0/0/republish"
@@ -186,9 +184,7 @@ describe_current do
       let(:payload) { rand.to_s }
 
       before do
-        allow(Karafka::Web.config.ui.policies.messages)
-          .to receive(:download?)
-          .and_return(false)
+        Karafka::Web.config.ui.policies.messages.stubs(:download?).returns(false)
 
         produce(topic, payload)
         get "explorer/messages/#{topic}/0/0/download"
@@ -260,9 +256,7 @@ describe_current do
       let(:payload) { rand.to_s }
 
       before do
-        allow(Karafka::Web.config.ui.policies.messages)
-          .to receive(:export?)
-          .and_return(false)
+        Karafka::Web.config.ui.policies.messages.stubs(:export?).returns(false)
 
         produce(topic, payload)
         get "explorer/messages/#{topic}/0/0/export"

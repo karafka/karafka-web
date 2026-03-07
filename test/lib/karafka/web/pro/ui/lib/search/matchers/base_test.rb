@@ -50,11 +50,11 @@ describe_current do
   describe "#call" do
     let(:matcher_instance) { matcher_class.new }
     let(:phrase) { "test phrase" }
-    let(:message) { instance_double(Karafka::Messages::Message) }
+    let(:message) { stub() }
 
     it "raises NotImplementedError" do
-      expect { matcher_instance.call(phrase, message) }
-        .to raise_error(NotImplementedError, "Implement in a subclass")
+      e = assert_raises(NotImplementedError) { matcher_instance.call(phrase, message) }
+      assert_includes(e.message, "Implement in a subclass")
     end
   end
 end

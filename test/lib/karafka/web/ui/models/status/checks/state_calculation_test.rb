@@ -30,10 +30,7 @@ describe_current do
       end
 
       before do
-        allow(Karafka::Web::Ui::Models::Health)
-          .to receive(:current)
-          .with(current_state)
-          .and_return(health_data)
+        Karafka::Web::Ui::Models::Health.stubs(:current).with(current_state).returns(health_data)
       end
 
       it "returns success" do
@@ -61,10 +58,7 @@ describe_current do
       end
 
       before do
-        allow(Karafka::Web::Ui::Models::Health)
-          .to receive(:current)
-          .with(current_state)
-          .and_return(health_data)
+        Karafka::Web::Ui::Models::Health.stubs(:current).with(current_state).returns(health_data)
       end
 
       it "returns failure" do
@@ -77,13 +71,13 @@ describe_current do
     context "when subscriptions are already cached" do
       before do
         context.subscriptions = [context.topics_consumers_reports]
-        allow(Karafka::Web::Ui::Models::Health).to receive(:current)
+        Karafka::Web::Ui::Models::Health.stubs(:current)
       end
 
       it "does not fetch again" do
+        Karafka::Web::Ui::Models::Health.expects(:current).never
         check.call
 
-        expect(Karafka::Web::Ui::Models::Health).not_to have_received(:current)
       end
 
       it "returns success" do

@@ -45,7 +45,7 @@ describe_current do
       let(:dlq_topic) { Karafka::App.consumer_groups.last.topics.first.name }
 
       before do
-        allow(topic.dead_letter_queue).to receive(:topic).and_return(dlq_topic)
+        topic.dead_letter_queue.stubs(:topic).returns(dlq_topic)
 
         get "dlq"
       end
@@ -65,7 +65,7 @@ describe_current do
       let(:dlq_topic) { "#{topic.name}.dql" }
 
       before do
-        allow(topic.dead_letter_queue).to receive(:topic).and_return(dlq_topic)
+        topic.dead_letter_queue.stubs(:topic).returns(dlq_topic)
 
         create_topic(topic_name: dlq_topic)
 

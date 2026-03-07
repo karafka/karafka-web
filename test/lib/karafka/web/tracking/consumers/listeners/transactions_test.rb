@@ -21,13 +21,9 @@ describe_current do
   end
 
   before do
-    allow(consumer.topic)
-      .to receive(:subscription_group)
-      .and_return(subscription_group)
+    consumer.topic.stubs(:subscription_group).returns(subscription_group)
 
-    allow(consumer.coordinator)
-      .to receive(:seek_offset)
-      .and_return(seek_offset)
+    consumer.coordinator.stubs(:seek_offset).returns(seek_offset)
 
     sampler.subscription_groups[sg_id]
   end
@@ -37,9 +33,7 @@ describe_current do
       before { listener.on_consumer_consuming_transaction(event) }
 
       it "marks partition as transactional" do
-        expect(
-          partition_details[:transactional]
-        ).to be(true)
+        assert_same(true, partition_details[:transactional])
       end
 
       it "sets the seek offset" do

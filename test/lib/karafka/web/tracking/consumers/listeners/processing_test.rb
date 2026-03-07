@@ -224,7 +224,7 @@ describe_current do
       assert_equal(0, job[:first_offset])
       assert_equal(1, job[:last_offset])
       # CI hiccups can cause this to drift a bit
-      expect(job[:processing_lag]).to be_within(10).of(1_000)
+      assert_in_delta(1_000, job[:processing_lag], 10)
 
       assert_equal(0, job[:consumption_lag])
       assert_equal(0, job[:committed_offset])

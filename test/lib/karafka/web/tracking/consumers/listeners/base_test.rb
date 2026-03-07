@@ -3,14 +3,12 @@
 describe_current do
   let(:listener) { described_class.new }
 
-  let(:sampler) { instance_double(Karafka::Web::Tracking::Consumers::Sampler) }
-  let(:reporter) { instance_double(Karafka::Web::Tracking::Consumers::Reporter) }
+  let(:sampler) { stub() }
+  let(:reporter) { stub() }
 
   before do
-    allow(Karafka::Web.config.tracking.consumers).to receive_messages(
-      sampler: sampler,
-      reporter: reporter
-    )
+    Karafka::Web.config.tracking.consumers.stubs(:sampler).returns(sampler)
+    Karafka::Web.config.tracking.consumers.stubs(:reporter).returns(reporter)
   end
 
   describe "module inclusion and delegation" do
@@ -31,26 +29,26 @@ describe_current do
   describe "sampler delegation" do
     describe "#track" do
       it "delegates to sampler with block" do
-        allow(sampler).to receive(:track).and_yield(sampler)
+        sampler.stubs(:track).yields(sampler)
 
+        sampler.expects(:track)
         yielded_sampler = nil
         listener.track do |s|
           yielded_sampler = s
         end
 
-        expect(sampler).to have_received(:track)
 
         assert_equal(sampler, yielded_sampler)
       end
 
       it "caches the sampler instance" do
-        allow(sampler).to receive(:track)
+        sampler.stubs(:track)
 
+        Karafka::Web.config.tracking.consumers.expects(:sampler).once
         listener.track { nil }
         listener.track { nil }
 
         # Should only call the config once due to memoization
-        expect(Karafka::Web.config.tracking.consumers).to have_received(:sampler).once
       end
     end
 
@@ -62,21 +60,21 @@ describe_current do
   describe "reporter delegation" do
     describe "#report" do
       it "delegates to reporter" do
-        allow(reporter).to receive(:report)
+        reporter.stubs(:report)
 
+        reporter.expects(:report)
         listener.report
 
-        expect(reporter).to have_received(:report)
       end
     end
 
     describe "#report!" do
       it "delegates to reporter" do
-        allow(reporter).to receive(:report!)
+        reporter.stubs(:report!)
 
+        reporter.expects(:report!)
         listener.report!
 
-        expect(reporter).to have_received(:report!)
       end
     end
 
@@ -86,21 +84,21 @@ describe_current do
     end
 
     it "caches the reporter instance" do
-      allow(reporter).to receive(:report)
+      reporter.stubs(:report)
 
+      Karafka::Web.config.tracking.consumers.expects(:reporter).once
       listener.report
       listener.report
 
       # Should only call the config once due to memoization
-      expect(Karafka::Web.config.tracking.consumers).to have_received(:reporter).once
     end
   end
 
   describe "integration behavior" do
     before do
-      allow(sampler).to receive(:track)
-      allow(reporter).to receive(:report)
-      allow(reporter).to receive(:report!)
+      sampler.stubs(:track)
+      reporter.stubs(:report)
+      reporter.stubs(:report!)
     end
 
     it "can be used as a base class for specific listeners" do
@@ -118,13 +116,13 @@ describe_current do
       child_listener = child_class.new
       event_data = { message: "test" }
 
-      allow(sampler).to receive(:track).and_yield(sampler)
-      allow(reporter).to receive(:report)
+      sampler.stubs(:track).yields(sampler)
+      reporter.stubs(:report)
 
       child_listener.on_some_event(event_data)
 
-      expect(sampler).to have_received(:track)
-      expect(reporter).to have_received(:report)
+      sampler.expects(:track) # MOCHA_REORDER
+      reporter.expects(:report) # MOCHA_REORDER
     end
 
     it "maintains separate listener instances" do
@@ -132,7 +130,7 @@ describe_current do
       listener2 = described_class.new
 
       # Instances should be different but use same delegation
-      expect(listener1).not_to be(listener2)
+      refute_same(listener2, listener1)
 
       assert_respond_to(listener1, :track)
       assert_respond_to(listener2, :track)
@@ -141,33 +139,32 @@ describe_current do
 
   describe "configuration integration" do
     context "when sampler configuration changes" do
-      let(:new_sampler) { instance_double(Karafka::Web::Tracking::Consumers::Sampler) }
+      let(:new_sampler) { stub() }
 
       it "uses the newly configured sampler for delegation" do
         # Change configuration and create new instance
-        allow(Karafka::Web.config.tracking.consumers).to receive(:sampler).and_return(new_sampler)
+        new_sampler.expects(:track)
+        Karafka::Web.config.tracking.consumers.stubs(:sampler).returns(new_sampler)
         new_listener = described_class.new
 
         # Test that delegation works with new configuration
-        allow(new_sampler).to receive(:track)
+        new_sampler.stubs(:track)
         new_listener.track { nil }
-        expect(new_sampler).to have_received(:track)
       end
     end
 
     context "when reporter configuration changes" do
-      let(:new_reporter) { instance_double(Karafka::Web::Tracking::Consumers::Reporter) }
+      let(:new_reporter) { stub() }
 
       it "uses the newly configured reporter for delegation" do
         # Change configuration and create new instance
-        allow(Karafka::Web.config.tracking.consumers)
-          .to receive(:reporter).and_return(new_reporter)
+        new_reporter.expects(:report)
+        Karafka::Web.config.tracking.consumers.stubs(:reporter).returns(new_reporter)
         new_listener = described_class.new
 
         # Test that delegation works with new configuration
-        allow(new_reporter).to receive(:report)
+        new_reporter.stubs(:report)
         new_listener.report
-        expect(new_reporter).to have_received(:report)
       end
     end
   end

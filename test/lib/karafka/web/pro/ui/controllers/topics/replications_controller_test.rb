@@ -90,7 +90,7 @@ describe_current do
 
       context "when in production environment" do
         before do
-          allow(Karafka.env).to receive(:production?).and_return(true)
+          Karafka.env.stubs(:production?).returns(true)
           get "topics/#{topic}/replication"
         end
 
@@ -111,7 +111,7 @@ describe_current do
 
       context "when not in production environment" do
         before do
-          allow(Karafka.env).to receive(:production?).and_return(false)
+          Karafka.env.stubs(:production?).returns(false)
           get "topics/#{topic}/replication"
         end
 
@@ -135,9 +135,7 @@ describe_current do
       let(:partitions_data) { [{ replica_count: 2, leader: 1, in_sync_replica_brokers: "1,2" }] }
 
       let(:mock_synonym) do
-        instance_double(
-          Karafka::Admin::Configs::Config,
-          name: "default.replication.factor",
+        stub(name: "default.replication.factor",
           value: "2",
           default?: false,
           read_only?: false,
@@ -148,9 +146,7 @@ describe_current do
       end
 
       let(:mock_config) do
-        instance_double(
-          Karafka::Admin::Configs::Config,
-          name: "min.insync.replicas",
+        stub(name: "min.insync.replicas",
           value: "2",
           default?: false,
           read_only?: false,
@@ -176,12 +172,12 @@ describe_current do
       end
 
       before do
-        allow(topic_model)
-          .to receive_messages(configs: [mock_config], distribution: distribution_result)
-        allow(Karafka::Web::Ui::Models::Topic).to receive(:find).and_call_original
-        allow(Karafka::Web::Ui::Models::Topic).to receive(:find).with(topic).and_return(topic_model)
-        allow(Karafka::Admin).to receive(:read_watermark_offsets).and_return([0, 100])
-        allow(Karafka.env).to receive(:production?).and_return(true)
+        topic_model.stubs(:configs).returns([mock_config])
+        topic_model.stubs(:distribution).returns(distribution_result)
+        stub_and_passthrough(Karafka::Web::Ui::Models::Topic, :find)
+        Karafka::Web::Ui::Models::Topic.stubs(:find).with(topic).returns(topic_model)
+        Karafka::Admin.stubs(:read_watermark_offsets).returns([0, 100])
+        Karafka.env.stubs(:production?).returns(true)
 
         get "topics/#{topic}/replication"
       end
@@ -204,9 +200,7 @@ describe_current do
       let(:partitions_data) { [{ replica_count: 3, leader: 1, in_sync_replica_brokers: "1,2,3" }] }
 
       let(:mock_synonym) do
-        instance_double(
-          Karafka::Admin::Configs::Config,
-          name: "default.replication.factor",
+        stub(name: "default.replication.factor",
           value: "3",
           default?: false,
           read_only?: false,
@@ -217,9 +211,7 @@ describe_current do
       end
 
       let(:mock_config) do
-        instance_double(
-          Karafka::Admin::Configs::Config,
-          name: "min.insync.replicas",
+        stub(name: "min.insync.replicas",
           value: "1",
           default?: false,
           read_only?: false,
@@ -245,12 +237,12 @@ describe_current do
       end
 
       before do
-        allow(topic_model)
-          .to receive_messages(configs: [mock_config], distribution: distribution_result)
-        allow(Karafka::Web::Ui::Models::Topic).to receive(:find).and_call_original
-        allow(Karafka::Web::Ui::Models::Topic).to receive(:find).with(topic).and_return(topic_model)
-        allow(Karafka::Admin).to receive(:read_watermark_offsets).and_return([0, 100])
-        allow(Karafka.env).to receive(:production?).and_return(true)
+        topic_model.stubs(:configs).returns([mock_config])
+        topic_model.stubs(:distribution).returns(distribution_result)
+        stub_and_passthrough(Karafka::Web::Ui::Models::Topic, :find)
+        Karafka::Web::Ui::Models::Topic.stubs(:find).with(topic).returns(topic_model)
+        Karafka::Admin.stubs(:read_watermark_offsets).returns([0, 100])
+        Karafka.env.stubs(:production?).returns(true)
         get "topics/#{topic}/replication"
       end
 
@@ -272,9 +264,7 @@ describe_current do
       let(:partitions_data) { [{ replica_count: 3, leader: 1, in_sync_replica_brokers: "1,2,3" }] }
 
       let(:mock_synonym) do
-        instance_double(
-          Karafka::Admin::Configs::Config,
-          name: "default.replication.factor",
+        stub(name: "default.replication.factor",
           value: "3",
           default?: false,
           read_only?: false,
@@ -285,9 +275,7 @@ describe_current do
       end
 
       let(:mock_config) do
-        instance_double(
-          Karafka::Admin::Configs::Config,
-          name: "min.insync.replicas",
+        stub(name: "min.insync.replicas",
           value: "2",
           default?: false,
           read_only?: false,
@@ -313,11 +301,11 @@ describe_current do
       end
 
       before do
-        allow(topic_model)
-          .to receive_messages(configs: [mock_config], distribution: distribution_result)
-        allow(Karafka::Web::Ui::Models::Topic).to receive(:find).and_call_original
-        allow(Karafka::Web::Ui::Models::Topic).to receive(:find).with(topic).and_return(topic_model)
-        allow(Karafka::Admin).to receive(:read_watermark_offsets).and_return([0, 100])
+        topic_model.stubs(:configs).returns([mock_config])
+        topic_model.stubs(:distribution).returns(distribution_result)
+        stub_and_passthrough(Karafka::Web::Ui::Models::Topic, :find)
+        Karafka::Web::Ui::Models::Topic.stubs(:find).with(topic).returns(topic_model)
+        Karafka::Admin.stubs(:read_watermark_offsets).returns([0, 100])
         get "topics/#{topic}/replication"
       end
 

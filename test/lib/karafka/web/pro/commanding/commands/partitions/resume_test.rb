@@ -28,19 +28,16 @@ describe_current do
   let(:tracker) { Karafka::Web::Pro::Commanding::Handlers::Partitions::Tracker.instance }
 
   before do
-    allow(Karafka::Web::Pro::Commanding::Handlers::Partitions::Tracker)
-      .to receive(:instance)
-      .and_return(tracker)
-    allow(tracker).to receive(:<<)
-    allow(command).to receive(:acceptance)
+    Karafka::Web::Pro::Commanding::Handlers::Partitions::Tracker.stubs(:instance).returns(tracker)
+    tracker.stubs(:<<)
+    command.stubs(:acceptance)
   end
 
   describe "#call" do
     it "delegates the command to tracker and sends acceptance" do
+      tracker.expects(:<<).with(command_request)
+      command.expects(:acceptance).with(command_details)
       command.call
-
-      expect(tracker).to have_received(:<<).with(command_request)
-      expect(command).to have_received(:acceptance).with(command_details)
     end
   end
 end

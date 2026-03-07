@@ -26,7 +26,9 @@ describe_current do
     end
 
     it "updates the hash after fetching a new key" do
-      expect { cache.fetch(:foo) { "bar" } }.to change(cache, :hash)
+      before_val = cache.hash
+      cache.fetch(:foo) { "bar" }
+      refute_equal(before_val, cache.hash)
     end
   end
 
@@ -94,9 +96,7 @@ describe_current do
     context "when session timestamp is newer" do
       it "clears the cache" do
         cache.fetch(:foo) { "old" }
-        expect(
-          cache.clear_if_needed("other", cache.timestamp + 10)
-        ).to be_nil
+        assert_nil(cache.clear_if_needed("other", cache.timestamp + 10))
 
         refute(cache.exist?)
       end
@@ -105,14 +105,14 @@ describe_current do
     context "when cache TTL is exceeded" do
       it "clears the cache" do
         freeze_time = Time.now
-        allow(Time).to receive(:now).and_return(freeze_time)
+        Time.stubs(:now).returns(freeze_time)
 
         cache.fetch(:foo) { "data" }
         initial_ts = cache.timestamp
 
         # Simulate time passing beyond TTL
         later = freeze_time + ((ttl_ms + 50) / 1000.0)
-        allow(Time).to receive(:now).and_return(later)
+        Time.stubs(:now).returns(later)
 
         cache.clear_if_needed(cache.hash, initial_ts)
 

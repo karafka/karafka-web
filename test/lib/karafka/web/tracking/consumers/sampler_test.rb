@@ -97,33 +97,23 @@ describe_current do
 
     context "when cgroups are available (simulated)" do
       it "instantiates Container metrics collector" do
-        allow(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container)
-          .to receive(:active?)
-          .and_return(true)
-        allow(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container)
-          .to receive(:new)
-          .and_call_original
+        Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container.expects(:new)
+        Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container.stubs(:active?).returns(true)
+        stub_and_passthrough(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container, :new)
 
         described_class.new
 
-        expect(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container)
-          .to have_received(:new)
       end
     end
 
     context "when cgroups are not available (simulated)" do
       it "instantiates Os metrics collector" do
-        allow(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container)
-          .to receive(:active?)
-          .and_return(false)
-        allow(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os)
-          .to receive(:new)
-          .and_call_original
+        Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os.expects(:new)
+        Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container.stubs(:active?).returns(false)
+        stub_and_passthrough(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os, :new)
 
         described_class.new
 
-        expect(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os)
-          .to have_received(:new)
       end
     end
   end

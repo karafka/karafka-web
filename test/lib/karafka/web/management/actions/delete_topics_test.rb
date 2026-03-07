@@ -46,8 +46,11 @@ describe_current do
     let(:consumers_states_topic) { create_topic }
 
     it "expect to remove it" do
-      expect { delete }
-        .to change { topics.call.include?(consumers_states_topic) }.from(true).to(false)
+      before_val = topics.call.include?(consumers_states_topic)
+      delete
+      after_val = topics.call.include?(consumers_states_topic)
+      assert_equal(true, before_val)
+      assert_equal(false, after_val)
     end
   end
 
@@ -55,8 +58,11 @@ describe_current do
     let(:consumers_metrics_topic) { create_topic }
 
     it "expect to remove it" do
-      expect { delete }
-        .to change { topics.call.include?(consumers_metrics_topic) }.from(true).to(false)
+      before_val = topics.call.include?(consumers_metrics_topic)
+      delete
+      after_val = topics.call.include?(consumers_metrics_topic)
+      assert_equal(true, before_val)
+      assert_equal(false, after_val)
     end
   end
 
@@ -64,8 +70,11 @@ describe_current do
     let(:consumers_reports_topic) { create_topic }
 
     it "expect to remove it" do
-      expect { delete }
-        .to change { topics.call.include?(consumers_reports_topic) }.from(true).to(false)
+      before_val = topics.call.include?(consumers_reports_topic)
+      delete
+      after_val = topics.call.include?(consumers_reports_topic)
+      assert_equal(true, before_val)
+      assert_equal(false, after_val)
     end
   end
 
@@ -73,8 +82,11 @@ describe_current do
     let(:errors_topic) { create_topic }
 
     it "expect to remove it" do
-      expect { delete }
-        .to change { topics.call.include?(errors_topic) }.from(true).to(false)
+      before_val = topics.call.include?(errors_topic)
+      delete
+      after_val = topics.call.include?(errors_topic)
+      assert_equal(true, before_val)
+      assert_equal(false, after_val)
     end
   end
 end

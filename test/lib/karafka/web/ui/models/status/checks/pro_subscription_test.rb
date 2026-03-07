@@ -12,7 +12,7 @@ describe_current do
 
   describe "#call" do
     context "when Karafka Pro is enabled" do
-      before { allow(Karafka).to receive(:pro?).and_return(true) }
+      before { Karafka.stubs(:pro?).returns(true) }
 
       it "returns success" do
         result = check.call
@@ -23,7 +23,7 @@ describe_current do
     end
 
     context "when Karafka Pro is not enabled" do
-      before { allow(Karafka).to receive(:pro?).and_return(false) }
+      before { Karafka.stubs(:pro?).returns(false) }
 
       it "returns warning" do
         result = check.call

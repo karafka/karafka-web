@@ -16,7 +16,7 @@ describe_current do
       let(:state) { { dispatched_at: Time.now.to_f, schema_state: "compatible" } }
 
       before do
-        allow(Karafka::Web::Ui::Models::ConsumersState).to receive(:current).and_return(state)
+        Karafka::Web::Ui::Models::ConsumersState.stubs(:current).returns(state)
       end
 
       it "returns success" do
@@ -35,7 +35,7 @@ describe_current do
 
     context "when consumers state is not present" do
       before do
-        allow(Karafka::Web::Ui::Models::ConsumersState).to receive(:current).and_return(nil)
+        Karafka::Web::Ui::Models::ConsumersState.stubs(:current).returns(nil)
       end
 
       it "returns failure" do
@@ -48,9 +48,7 @@ describe_current do
 
     context "when consumers state is corrupted (JSON parse error)" do
       before do
-        allow(Karafka::Web::Ui::Models::ConsumersState)
-          .to receive(:current)
-          .and_raise(JSON::ParserError)
+        Karafka::Web::Ui::Models::ConsumersState.stubs(:current).raises(JSON::ParserError)
       end
 
       it "returns failure with deserialization issue type" do
@@ -66,13 +64,13 @@ describe_current do
 
       before do
         context.current_state = state
-        allow(Karafka::Web::Ui::Models::ConsumersState).to receive(:current)
+        Karafka::Web::Ui::Models::ConsumersState.stubs(:current)
       end
 
       it "does not fetch again" do
+        Karafka::Web::Ui::Models::ConsumersState.expects(:current).never
         check.call
 
-        expect(Karafka::Web::Ui::Models::ConsumersState).not_to have_received(:current)
       end
 
       it "returns success" do

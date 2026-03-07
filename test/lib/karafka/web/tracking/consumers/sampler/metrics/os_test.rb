@@ -3,15 +3,13 @@
 describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
   let(:os_metrics) { described_class.new(shell) }
 
-  let(:shell) { instance_double(Karafka::Web::Tracking::MemoizedShell) }
+  let(:shell) { stub() }
 
   describe "#memory_usage" do
     context "when running on Linux" do
       before do
         stub_const("RUBY_PLATFORM", "x86_64-linux")
-        allow(IO).to receive(:readlines)
-          .with("/proc/#{Process.pid}/status")
-          .and_return([
+        IO.stubs(:readlines).with("/proc/#{Process.pid}/status").returns([
             "Name:\truby\n",
             "VmRSS:\t123456 kB\n",
             "VmSize:\t234567 kB\n"
@@ -26,9 +24,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
     context "when running on macOS" do
       before do
         stub_const("RUBY_PLATFORM", "x86_64-darwin")
-        allow(shell).to receive(:call)
-          .with("ps -o pid,rss -p #{Process.pid}")
-          .and_return("  PID  RSS\n#{Process.pid} 98765\n")
+        shell.stubs(:call).with("ps -o pid,rss -p #{Process.pid}").returns("  PID  RSS\n#{Process.pid} 98765\n")
       end
 
       it "uses ps command" do
@@ -63,9 +59,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
     context "when running on Linux" do
       before do
         stub_const("RUBY_PLATFORM", "x86_64-linux")
-        allow(File).to receive(:read)
-          .with("/proc/meminfo")
-          .and_return("MemTotal:       16384000 kB\nMemFree:        8192000 kB\n")
+        File.stubs(:read).with("/proc/meminfo").returns("MemTotal:       16384000 kB\nMemFree:        8192000 kB\n")
       end
 
       it "reads from /proc/meminfo" do
@@ -76,9 +70,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
     context "when running on macOS" do
       before do
         stub_const("RUBY_PLATFORM", "x86_64-darwin")
-        allow(shell).to receive(:call)
-          .with("sysctl -a")
-          .and_return("hw.memsize: 17179869184\nhw.ncpu: 8\n")
+        shell.stubs(:call).with("sysctl -a").returns("hw.memsize: 17179869184\nhw.ncpu: 8\n")
       end
 
       it "uses sysctl command" do
@@ -91,9 +83,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
     context "when running on Linux" do
       before do
         stub_const("RUBY_PLATFORM", "x86_64-linux")
-        allow(File).to receive(:read)
-          .with("/proc/loadavg")
-          .and_return("1.23 4.56 7.89 2/345 12345\n")
+        File.stubs(:read).with("/proc/loadavg").returns("1.23 4.56 7.89 2/345 12345\n")
       end
 
       it "reads load averages from /proc/loadavg" do
@@ -104,9 +94,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
     context "when running on macOS" do
       before do
         stub_const("RUBY_PLATFORM", "x86_64-darwin")
-        allow(shell).to receive(:call)
-          .with("w | head -1")
-          .and_return("12:34  up 5 days, 6:78, 9 users, load averages: 2.34 5.67 8.90\n")
+        shell.stubs(:call).with("w | head -1").returns("12:34  up 5 days, 6:78, 9 users, load averages: 2.34 5.67 8.90\n")
       end
 
       it "parses load averages from w command" do
@@ -159,9 +147,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
       before do
         stub_const("RUBY_PLATFORM", "x86_64-linux")
 
-        allow(Karafka::Web::Tracking::Helpers::Sysconf)
-          .to receive(:page_size)
-          .and_return(4096)
+        Karafka::Web::Tracking::Helpers::Sysconf.stubs(:page_size).returns(4096)
 
         # Simulate multiple processes in /proc
         proc_files = [
@@ -169,36 +155,19 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
           "/proc/#{Process.pid}/statm",
           "/proc/9999/statm"
         ]
-        allow(Dir)
-          .to receive(:glob)
-          .with("/proc/[0-9]*/statm")
-          .and_return(proc_files)
+        Dir.stubs(:glob).with("/proc/[0-9]*/statm").returns(proc_files)
 
         # Stub file reads for all processes
-        allow(File)
-          .to receive(:read)
-          .and_call_original
+        stub_and_passthrough(File, :read)
 
-        allow(File)
-          .to receive(:read)
-          .with("/proc/1/statm")
-          .and_return("1000 500 100 0 0 400 0\n")
+        File.stubs(:read).with("/proc/1/statm").returns("1000 500 100 0 0 400 0\n")
 
-        allow(File)
-          .to receive(:read)
-          .with("/proc/#{Process.pid}/statm")
-          .and_return("12345 6789 1234 0 0 5678 0\n")
+        File.stubs(:read).with("/proc/#{Process.pid}/statm").returns("12345 6789 1234 0 0 5678 0\n")
 
-        allow(File)
-          .to receive(:read)
-          .with("/proc/9999/statm")
-          .and_return("2000 1000 200 0 0 800 0\n")
+        File.stubs(:read).with("/proc/9999/statm").returns("2000 1000 200 0 0 800 0\n")
 
         # Only current process needs thread count
-        allow(File)
-          .to receive(:read)
-          .with("/proc/#{Process.pid}/status")
-          .and_return("Threads:\t15\n")
+        File.stubs(:read).with("/proc/#{Process.pid}/status").returns("Threads:\t15\n")
       end
 
       it "returns array with memory, threads, and pid for all processes" do
@@ -225,9 +194,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
     context "when running on macOS" do
       before do
         stub_const("RUBY_PLATFORM", "x86_64-darwin")
-        allow(shell).to receive(:call)
-          .with("ps -A -o rss=,pid=")
-          .and_return("  1024  #{Process.pid}\n  2048  9999\n")
+        shell.stubs(:call).with("ps -A -o rss=,pid=").returns("  1024  #{Process.pid}\n  2048  9999\n")
       end
 
       it "returns array with memory and pid, threads set to 0" do

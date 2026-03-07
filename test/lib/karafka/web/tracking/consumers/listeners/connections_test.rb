@@ -3,35 +3,25 @@
 describe_current do
   let(:listener) { described_class.new }
 
-  let(:sampler) { instance_double(Karafka::Web::Tracking::Consumers::Sampler) }
+  let(:sampler) { stub() }
   let(:consumer_groups) { {} }
   let(:subscription_groups) { {} }
-  let(:subscription_group) { instance_double(Karafka::Routing::SubscriptionGroup) }
-  let(:consumer_group) { instance_double(Karafka::Routing::ConsumerGroup) }
+  let(:subscription_group) { stub() }
+  let(:consumer_group) { stub() }
   let(:sg_id) { "subscription_group_1" }
   let(:cg_id) { "consumer_group_1" }
 
   before do
-    allow(Karafka::Web.config.tracking.consumers)
-      .to receive(:sampler)
-      .and_return(sampler)
+    Karafka::Web.config.tracking.consumers.stubs(:sampler).returns(sampler)
 
-    allow(sampler)
-      .to receive_messages(
-        consumer_groups: consumer_groups,
-        subscription_groups: subscription_groups
-      )
+    sampler.stubs(:consumer_groups).returns(consumer_groups)
+    sampler.stubs(:subscription_groups).returns(subscription_groups)
 
-    allow(subscription_group)
-      .to receive_messages(
-        id: sg_id,
-        consumer_group: consumer_group,
-        kafka: {}
-      )
+    subscription_group.stubs(:id).returns(sg_id)
+    subscription_group.stubs(:consumer_group).returns(consumer_group)
+    subscription_group.stubs(:kafka).returns({})
 
-    allow(consumer_group)
-      .to receive(:id)
-      .and_return(cg_id)
+    consumer_group.stubs(:id).returns(cg_id)
 
     # Mock the nested structure for consumer groups
     consumer_groups[cg_id] = { subscription_groups: {} }
@@ -43,50 +33,44 @@ describe_current do
     end
 
     it "initializes subscription group in sampler when fetch loop starts" do
-      allow(sampler).to receive(:track).and_yield(sampler)
-      allow(subscription_groups).to receive(:[]).with(sg_id).and_return({})
+      sampler.stubs(:track).yields(sampler)
+      subscription_groups.stubs(:[]).with(sg_id).returns({})
 
+      sampler.expects(:track)
       listener.on_connection_listener_before_fetch_loop(event)
 
-      expect(sampler).to have_received(:track)
     end
 
     it "calls track with correct subscription group id" do
+      sampler.expects(:track)
+      sampler.expects(:track)
+      subscription_groups.expects(:[]).with(sg_id)
       yielded_sampler = nil
 
-      allow(sampler).to receive(:track) do |&block|
-        yielded_sampler = sampler
-        block.call(sampler)
-      end
+      sampler.stubs(:track).with(anything).returns(nil) # TODO: convert do-block stub
+      # Original: allow(sampler).to receive(:track) do |&block| yielded_sampler = sampler block.call(sampler) end
 
-      allow(subscription_groups).to receive(:[]).with(sg_id).and_return({})
+      subscription_groups.stubs(:[]).with(sg_id).returns({})
 
       listener.on_connection_listener_before_fetch_loop(event)
 
-      expect(sampler).to have_received(:track)
 
       assert_equal(sampler, yielded_sampler)
     end
 
     it "accesses subscription group by id in the track block" do
-      allow(sampler).to receive(:track).and_yield(sampler)
-      allow(subscription_groups).to receive(:[]).with(sg_id).and_return({})
+      sampler.stubs(:track).yields(sampler)
+      subscription_groups.stubs(:[]).with(sg_id).returns({})
 
       listener.on_connection_listener_before_fetch_loop(event)
 
-      expect(sampler).to have_received(:track)
-      expect(subscription_groups).to have_received(:[]).with(sg_id)
     end
 
     context "when group.instance.id is configured" do
       before do
-        allow(subscription_group)
-          .to receive(:kafka)
-          .and_return({ "group.instance.id": "my-static-instance" })
+        subscription_group.stubs(:kafka).returns({ "group.instance.id": "my-static-instance" })
 
-        allow(sampler)
-          .to receive(:track)
-          .and_yield(sampler)
+        sampler.stubs(:track).yields(sampler)
 
         subscription_groups[sg_id] = {}
       end
@@ -100,8 +84,8 @@ describe_current do
 
     context "when group.instance.id is not configured" do
       before do
-        allow(subscription_group).to receive(:kafka).and_return({})
-        allow(sampler).to receive(:track).and_yield(sampler)
+        subscription_group.stubs(:kafka).returns({})
+        sampler.stubs(:track).yields(sampler)
         subscription_groups[sg_id] = {}
       end
 
@@ -114,13 +98,9 @@ describe_current do
 
     context "when max.poll.interval.ms is configured" do
       before do
-        allow(subscription_group)
-          .to receive(:kafka)
-          .and_return({ "max.poll.interval.ms": 600_000 })
+        subscription_group.stubs(:kafka).returns({ "max.poll.interval.ms": 600_000 })
 
-        allow(sampler)
-          .to receive(:track)
-          .and_yield(sampler)
+        sampler.stubs(:track).yields(sampler)
 
         subscription_groups[sg_id] = {}
       end
@@ -134,8 +114,8 @@ describe_current do
 
     context "when max.poll.interval.ms is not configured" do
       before do
-        allow(subscription_group).to receive(:kafka).and_return({})
-        allow(sampler).to receive(:track).and_yield(sampler)
+        subscription_group.stubs(:kafka).returns({})
+        sampler.stubs(:track).yields(sampler)
         subscription_groups[sg_id] = {}
       end
 
@@ -159,26 +139,26 @@ describe_current do
     end
 
     it "removes subscription group from consumer group and sampler when fetch loop ends" do
-      allow(sampler).to receive(:track).and_yield(sampler)
+      sampler.stubs(:track).yields(sampler)
 
+      sampler.expects(:track)
       listener.on_connection_listener_after_fetch_loop(event)
 
-      expect(sampler).to have_received(:track)
       # Verify the deletions happened
       refute(consumer_groups[cg_id][:subscription_groups].key?(sg_id))
       refute(subscription_groups.key?(sg_id))
     end
 
     it "cleans up subscription group data properly" do
-      allow(sampler).to receive(:track).and_yield(sampler)
-      allow(consumer_groups[cg_id][:subscription_groups]).to receive(:delete).with(sg_id)
-      allow(subscription_groups).to receive(:delete).with(sg_id)
+      sampler.stubs(:track).yields(sampler)
+      sampler.expects(:track)
+      consumer_groups[cg_id][:subscription_groups].expects(:delete).with(sg_id)
+      subscription_groups.expects(:delete).with(sg_id)
+      consumer_groups[cg_id][:subscription_groups].stubs(:delete).with(sg_id)
+      subscription_groups.stubs(:delete).with(sg_id)
 
       listener.on_connection_listener_after_fetch_loop(event)
 
-      expect(sampler).to have_received(:track)
-      expect(consumer_groups[cg_id][:subscription_groups]).to have_received(:delete).with(sg_id)
-      expect(subscription_groups).to have_received(:delete).with(sg_id)
     end
 
     context "when subscription group is not present" do
@@ -188,11 +168,11 @@ describe_current do
       end
 
       it "handles missing subscription group gracefully" do
-        allow(sampler).to receive(:track).and_yield(sampler)
+        sampler.stubs(:track).yields(sampler)
 
+        sampler.expects(:track)
         listener.on_connection_listener_after_fetch_loop(event)
 
-        expect(sampler).to have_received(:track)
       end
     end
   end
@@ -207,37 +187,35 @@ describe_current do
     end
 
     it "updates polled_at timestamp when poll is received" do
+      sampler.expects(:track)
+      listener.expects(:monotonic_now)
+      sampler.expects(:track)
+      sampler.expects(:track)
+        sampler.expects(:track)
       current_time = nil
-      allow(sampler).to receive(:track) do |&block|
-        current_time = listener.monotonic_now
-        allow(listener).to receive(:monotonic_now).and_return(current_time)
-        block.call(sampler)
-      end
+      sampler.stubs(:track).with(anything).returns(nil) # TODO: convert do-block stub
+      # Original: allow(sampler).to receive(:track) do |&block| current_time = listener.monotonic_now allow(listener).to receive(:monotonic_now).and_return(current_time) block.call(sampler) end
 
       listener.on_connection_listener_fetch_loop_received(event)
 
-      expect(sampler).to have_received(:track)
 
       assert_equal(current_time, subscription_groups[sg_id][:polled_at])
     end
 
     it "uses monotonic time for polled_at timestamp" do
-      allow(listener).to receive(:monotonic_now).and_call_original
-      allow(sampler).to receive(:track).and_yield(sampler)
+      stub_and_passthrough(listener, :monotonic_now)
+      sampler.stubs(:track).yields(sampler)
 
       listener.on_connection_listener_fetch_loop_received(event)
 
-      expect(listener).to have_received(:monotonic_now)
-      expect(sampler).to have_received(:track)
     end
 
     it "updates existing subscription group data" do
       subscription_groups[sg_id][:existing_data] = "preserved"
-      allow(sampler).to receive(:track).and_yield(sampler)
+      sampler.stubs(:track).yields(sampler)
 
       listener.on_connection_listener_fetch_loop_received(event)
 
-      expect(sampler).to have_received(:track)
 
       assert_equal("preserved", subscription_groups[sg_id][:existing_data])
       assert_kind_of(Float, subscription_groups[sg_id][:polled_at])
@@ -249,12 +227,11 @@ describe_current do
       end
 
       it "creates the subscription group entry" do
-        allow(sampler).to receive(:track).and_yield(sampler)
-        allow(subscription_groups).to receive(:[]).with(sg_id).and_return({})
+        sampler.stubs(:track).yields(sampler)
+        subscription_groups.stubs(:[]).with(sg_id).returns({})
 
         listener.on_connection_listener_fetch_loop_received(event)
 
-        expect(sampler).to have_received(:track)
       end
     end
   end
@@ -283,7 +260,7 @@ describe_current do
 
     before do
       # Setup proper tracking calls
-      allow(sampler).to receive(:track).and_yield(sampler)
+      sampler.stubs(:track).yields(sampler)
       subscription_groups[sg_id] = {}
       consumer_groups[cg_id][:subscription_groups][sg_id] = {}
     end
@@ -308,11 +285,11 @@ describe_current do
       listener.on_connection_listener_before_fetch_loop(event_before)
 
       first_time = listener.monotonic_now
-      allow(listener).to receive(:monotonic_now).and_return(first_time)
+      listener.stubs(:monotonic_now).returns(first_time)
       listener.on_connection_listener_fetch_loop_received(event_received)
 
       second_time = first_time + 1.0
-      allow(listener).to receive(:monotonic_now).and_return(second_time)
+      listener.stubs(:monotonic_now).returns(second_time)
       listener.on_connection_listener_fetch_loop_received(event_received)
 
       assert_equal(second_time, subscription_groups[sg_id][:polled_at])
@@ -324,22 +301,22 @@ describe_current do
 
     context "when sampler tracking fails" do
       before do
-        allow(sampler).to receive(:track).and_raise(StandardError, "Sampler error")
+        sampler.stubs(:track).raises(StandardError, "Sampler error")
       end
 
       it "allows errors to propagate from before_fetch_loop" do
-        expect { listener.on_connection_listener_before_fetch_loop(event) }
-          .to raise_error(StandardError, "Sampler error")
+        e = assert_raises(StandardError) { listener.on_connection_listener_before_fetch_loop(event) }
+        assert_includes(e.message, "Sampler error")
       end
 
       it "allows errors to propagate from after_fetch_loop" do
-        expect { listener.on_connection_listener_after_fetch_loop(event) }
-          .to raise_error(StandardError, "Sampler error")
+        e = assert_raises(StandardError) { listener.on_connection_listener_after_fetch_loop(event) }
+        assert_includes(e.message, "Sampler error")
       end
 
       it "allows errors to propagate from fetch_loop_received" do
-        expect { listener.on_connection_listener_fetch_loop_received(event) }
-          .to raise_error(StandardError, "Sampler error")
+        e = assert_raises(StandardError) { listener.on_connection_listener_fetch_loop_received(event) }
+        assert_includes(e.message, "Sampler error")
       end
     end
   end

@@ -5,7 +5,7 @@ describe_current do
 
   let(:boot_file) { Tempfile.new }
 
-  before { allow(Karafka).to receive(:boot_file).and_return(boot_file) }
+  before { Karafka.stubs(:boot_file).returns(boot_file) }
 
   context "when the boot file contains the web setup code" do
     let(:content) do

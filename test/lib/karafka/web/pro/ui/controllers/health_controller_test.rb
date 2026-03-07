@@ -310,7 +310,7 @@ describe_current do
   describe "#cluster_lags" do
     context "when no report data" do
       before do
-        allow(Karafka::Admin).to receive(:read_lags_with_offsets).and_return({})
+        Karafka::Admin.stubs(:read_lags_with_offsets).returns({})
         get "health/cluster_lags"
       end
 

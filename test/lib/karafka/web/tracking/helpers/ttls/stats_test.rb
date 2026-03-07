@@ -16,8 +16,8 @@ describe_current do
   describe "#rps" do
     context "when all arrays are empty" do
       before do
-        allow(ttls_array1).to receive(:samples).and_return([])
-        allow(ttls_array2).to receive(:samples).and_return([])
+        ttls_array1.stubs(:samples).returns([])
+        ttls_array2.stubs(:samples).returns([])
       end
 
       it { assert_equal(0, stats.rps) }
@@ -25,13 +25,9 @@ describe_current do
 
     context "when arrays have only one sample" do
       before do
-        allow(ttls_array1)
-          .to receive(:samples)
-          .and_return([{ value: 10, added_at: 1000 }])
+        ttls_array1.stubs(:samples).returns([{ value: 10, added_at: 1000 }])
 
-        allow(ttls_array2)
-          .to receive(:samples)
-          .and_return([])
+        ttls_array2.stubs(:samples).returns([])
       end
 
       it { assert_equal(0, stats.rps) }
@@ -39,13 +35,9 @@ describe_current do
 
     context "when arrays have enough samples" do
       before do
-        allow(ttls_array1)
-          .to receive(:samples)
-          .and_return([{ value: 100, added_at: 2000 }, { value: 80, added_at: 1000 }])
+        ttls_array1.stubs(:samples).returns([{ value: 100, added_at: 2000 }, { value: 80, added_at: 1000 }])
 
-        allow(ttls_array2)
-          .to receive(:samples)
-          .and_return([{ value: 50, added_at: 2000 }, { value: 20, added_at: 1000 }])
+        ttls_array2.stubs(:samples).returns([{ value: 50, added_at: 2000 }, { value: 20, added_at: 1000 }])
       end
 
       it "computes rps as an aggregate from all the samples" do
@@ -58,13 +50,9 @@ describe_current do
 
     context "when some arrays have insufficient samples" do
       before do
-        allow(ttls_array1)
-          .to receive(:samples)
-          .and_return([{ value: 100, added_at: 2000 }, { value: 80, added_at: 1000 }])
+        ttls_array1.stubs(:samples).returns([{ value: 100, added_at: 2000 }, { value: 80, added_at: 1000 }])
 
-        allow(ttls_array2)
-          .to receive(:samples)
-          .and_return([{ value: 50, added_at: 2000 }])
+        ttls_array2.stubs(:samples).returns([{ value: 50, added_at: 2000 }])
       end
 
       it "computes rps only from arrays with enough samples" do

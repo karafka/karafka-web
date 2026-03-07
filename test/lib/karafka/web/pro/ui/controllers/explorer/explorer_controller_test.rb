@@ -49,7 +49,7 @@ describe_current do
 
     context "when there are no topics" do
       before do
-        allow(Karafka::Web::Ui::Models::ClusterInfo).to receive(:topics).and_return([])
+        Karafka::Web::Ui::Models::ClusterInfo.stubs(:topics).returns([])
         get "explorer/topics"
       end
 
@@ -64,9 +64,7 @@ describe_current do
 
     context "when internal topics should be displayed" do
       before do
-        allow(Karafka::Web.config.ui.visibility)
-          .to receive(:internal_topics)
-          .and_return(true)
+        Karafka::Web.config.ui.visibility.stubs(:internal_topics).returns(true)
 
         get "explorer/topics"
       end
@@ -349,9 +347,7 @@ describe_current do
       before do
         produce(topic, "1")
 
-        allow(Karafka::Web::Ui::Models::Message)
-          .to receive(:offset_page)
-          .and_return([false, [[0, 0]], false])
+        Karafka::Web::Ui::Models::Message.stubs(:offset_page).returns([false, [[0, 0]], false])
 
         get "explorer/topics/#{topic}/0"
       end
@@ -526,9 +522,7 @@ describe_current do
 
     context "when requested message exists but should not be republishable" do
       before do
-        allow(Karafka::Web.config.ui.policies.messages)
-          .to receive(:republish?)
-          .and_return(false)
+        Karafka::Web.config.ui.policies.messages.stubs(:republish?).returns(false)
 
         produce(topic, { test: "me" }.to_json)
         get "explorer/topics/#{topic}/0/0"
@@ -578,9 +572,7 @@ describe_current do
 
     context "when requested message exists, can be deserialized and raw download is off" do
       before do
-        allow(Karafka::Web.config.ui.policies.messages)
-          .to receive(:download?)
-          .and_return(false)
+        Karafka::Web.config.ui.policies.messages.stubs(:download?).returns(false)
 
         produce(topic, { test: "me" }.to_json)
         get "explorer/topics/#{topic}/0/0"
@@ -601,9 +593,7 @@ describe_current do
 
     context "when requested message exists, can be deserialized but export is off" do
       before do
-        allow(Karafka::Web.config.ui.policies.messages)
-          .to receive(:export?)
-          .and_return(false)
+        Karafka::Web.config.ui.policies.messages.stubs(:export?).returns(false)
 
         produce(topic, { test: "me" }.to_json)
         get "explorer/topics/#{topic}/0/0"
@@ -690,10 +680,7 @@ describe_current do
 
     context "when trace_object_allocations_start is not available" do
       before do
-        allow(ObjectSpace)
-          .to receive(:respond_to?)
-          .with(:trace_object_allocations_start)
-          .and_return(false)
+        ObjectSpace.stubs(:respond_to?).with(:trace_object_allocations_start).returns(false)
 
         produce(topic, "1")
         get "explorer/topics/#{topic}/0/0"

@@ -72,10 +72,7 @@ describe_current do
 
   context "when one of the matchers is not active for this topic" do
     before do
-      allow(Karafka::Web::Pro::Ui::Lib::Search::Matchers::RawHeaderIncludes)
-        .to receive(:active?)
-        .with(topic)
-        .and_return(false)
+      Karafka::Web::Pro::Ui::Lib::Search::Matchers::RawHeaderIncludes.stubs(:active?).with(topic).returns(false)
 
       get "explorer/#{topic}/search"
     end

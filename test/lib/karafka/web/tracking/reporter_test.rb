@@ -5,13 +5,13 @@ describe_current do
 
   describe "#active?" do
     context "when producer is not yet created" do
-      before { allow(Karafka::Web).to receive(:producer).and_return(nil) }
+      before { Karafka::Web.stubs(:producer).returns(nil) }
 
       it { refute(reporter.active?) }
     end
 
     context "when producer is not active" do
-      before { allow(Karafka.producer.status).to receive(:active?).and_return(false) }
+      before { Karafka.producer.status.stubs(:active?).returns(false) }
 
       it { refute(reporter.active?) }
     end

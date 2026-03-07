@@ -68,7 +68,7 @@ describe_current do
     context "with backtrace processing" do
       it "handles error without backtrace" do
         error = StandardError.new("no backtrace")
-        allow(error).to receive(:backtrace).and_return(nil)
+        error.stubs(:backtrace).returns(nil)
 
         result = extractor.extract_error_info(error)
 
@@ -107,8 +107,8 @@ describe_current do
         error = StandardError.new("with gem paths")
 
         gem_home = "/test/gem/home"
-        allow(ENV).to receive(:key?).with("GEM_HOME").and_return(true)
-        allow(ENV).to receive(:[]).with("GEM_HOME").and_return(gem_home)
+        ENV.stubs(:key?).with("GEM_HOME").returns(true)
+        ENV.stubs(:[]).with("GEM_HOME").returns(gem_home)
 
         backtrace = [
           "#{gem_home}/gems/some_gem/lib/file.rb:10:in `gem_method'",
@@ -127,7 +127,7 @@ describe_current do
       it "handles backtrace when GEM_HOME not set" do
         error = StandardError.new("no gem home")
 
-        allow(ENV).to receive(:key?).with("GEM_HOME").and_return(false)
+        ENV.stubs(:key?).with("GEM_HOME").returns(false)
 
         backtrace = ["/some/path/file.rb:10:in `method'"]
         error.set_backtrace(backtrace)
@@ -263,7 +263,7 @@ describe_current do
 
         message_result = error.message.to_s[0, 10_000]
         message_result.force_encoding("utf-8")
-        allow(message_result).to receive(:respond_to?).with(:scrub!).and_return(false)
+        message_result.stubs(:respond_to?).with(:scrub!).returns(false)
 
         result = extractor.extract_error_message(error)
 
@@ -275,7 +275,7 @@ describe_current do
       it "returns fallback message when extraction fails" do
         error = StandardError.new("original message")
 
-        allow(error).to receive(:message).and_raise(StandardError, "extraction error")
+        error.stubs(:message).raises(StandardError, "extraction error")
 
         result = extractor.extract_error_message(error)
 
@@ -285,8 +285,8 @@ describe_current do
       it "handles errors during to_s conversion" do
         error = StandardError.new("message")
         message_mock = double
-        allow(error).to receive(:message).and_return(message_mock)
-        allow(message_mock).to receive(:to_s).and_raise(StandardError)
+        error.stubs(:message).returns(message_mock)
+        message_mock.stubs(:to_s).raises(StandardError)
 
         result = extractor.extract_error_message(error)
 

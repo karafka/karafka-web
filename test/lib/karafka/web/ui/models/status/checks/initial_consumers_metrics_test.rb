@@ -16,7 +16,7 @@ describe_current do
       let(:metrics) { { aggregated: {} } }
 
       before do
-        allow(Karafka::Web::Ui::Models::ConsumersMetrics).to receive(:current).and_return(metrics)
+        Karafka::Web::Ui::Models::ConsumersMetrics.stubs(:current).returns(metrics)
       end
 
       it "returns success" do
@@ -35,7 +35,7 @@ describe_current do
 
     context "when consumers metrics is not present" do
       before do
-        allow(Karafka::Web::Ui::Models::ConsumersMetrics).to receive(:current).and_return(nil)
+        Karafka::Web::Ui::Models::ConsumersMetrics.stubs(:current).returns(nil)
       end
 
       it "returns failure" do
@@ -48,9 +48,7 @@ describe_current do
 
     context "when consumers metrics is corrupted (JSON parse error)" do
       before do
-        allow(Karafka::Web::Ui::Models::ConsumersMetrics)
-          .to receive(:current)
-          .and_raise(JSON::ParserError)
+        Karafka::Web::Ui::Models::ConsumersMetrics.stubs(:current).raises(JSON::ParserError)
       end
 
       it "returns failure with deserialization issue type" do
@@ -66,13 +64,13 @@ describe_current do
 
       before do
         context.current_metrics = metrics
-        allow(Karafka::Web::Ui::Models::ConsumersMetrics).to receive(:current)
+        Karafka::Web::Ui::Models::ConsumersMetrics.stubs(:current)
       end
 
       it "does not fetch again" do
+        Karafka::Web::Ui::Models::ConsumersMetrics.expects(:current).never
         check.call
 
-        expect(Karafka::Web::Ui::Models::ConsumersMetrics).not_to have_received(:current)
       end
 
       it "returns success" do

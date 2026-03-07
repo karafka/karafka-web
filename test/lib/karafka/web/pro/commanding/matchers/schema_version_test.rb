@@ -25,9 +25,7 @@ describe_current do
 
   let(:current_schema_version) { "1.2.0" }
   let(:message) do
-    instance_double(
-      Karafka::Messages::Message,
-      payload: { schema_version: schema_version_value }
+    stub(payload: { schema_version: schema_version_value }
     )
   end
 

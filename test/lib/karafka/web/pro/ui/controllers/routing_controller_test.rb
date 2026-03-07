@@ -41,7 +41,7 @@ describe_current do
 
     context "when there is no consumers state" do
       before do
-        allow(Karafka::Web::Ui::Models::ConsumersState).to receive(:current).and_return(false)
+        Karafka::Web::Ui::Models::ConsumersState.stubs(:current).returns(false)
 
         get "routing"
       end

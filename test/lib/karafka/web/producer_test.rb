@@ -3,20 +3,19 @@
 describe_current do
   let(:producer) { described_class.new }
 
-  let(:default_producer) { instance_double(WaterDrop::Producer) }
-  let(:variant) { instance_double(WaterDrop::Producer::Variant) }
+  let(:default_producer) { stub() }
+  let(:variant) { stub() }
 
   before do
-    allow(Karafka).to receive(:producer).and_return(default_producer)
+    Karafka.stubs(:producer).returns(default_producer)
   end
 
   describe "#__getobj__" do
     context "when default producer is not idempotent and not transactional" do
       before do
-        allow(default_producer).to receive_messages(idempotent?: false, transactional?: false)
-        allow(default_producer).to receive(:variant)
-          .with(topic_config: { acks: 0 })
-          .and_return(variant)
+        default_producer.stubs(:idempotent?).returns(false)
+        default_producer.stubs(:transactional?).returns(false)
+        default_producer.stubs(:variant).with(topic_config: { acks: 0 }).returns(variant)
       end
 
       it "returns a variant with acks: 0" do
@@ -24,19 +23,19 @@ describe_current do
       end
 
       it "creates the variant with correct topic_config" do
+        default_producer.expects(:variant).with(topic_config: { acks: 0 })
         producer.__getobj__
-        expect(default_producer).to have_received(:variant).with(topic_config: { acks: 0 })
       end
 
       it "caches the result on subsequent calls" do
+        default_producer.expects(:variant).once
         3.times { producer.__getobj__ }
-        expect(default_producer).to have_received(:variant).once
       end
     end
 
     context "when default producer is idempotent" do
       before do
-        allow(default_producer).to receive(:idempotent?).and_return(true)
+        default_producer.stubs(:idempotent?).returns(true)
       end
 
       it "returns the default producer unchanged" do
@@ -44,20 +43,21 @@ describe_current do
       end
 
       it "does not create a variant" do
-        allow(default_producer).to receive(:variant)
+        default_producer.stubs(:variant)
+        default_producer.expects(:variant).never
         producer.__getobj__
-        expect(default_producer).not_to have_received(:variant)
       end
 
       it "caches the result on subsequent calls" do
+        default_producer.expects(:idempotent?).once
         3.times { producer.__getobj__ }
-        expect(default_producer).to have_received(:idempotent?).once
       end
     end
 
     context "when default producer is transactional" do
       before do
-        allow(default_producer).to receive_messages(idempotent?: false, transactional?: true)
+        default_producer.stubs(:idempotent?).returns(false)
+        default_producer.stubs(:transactional?).returns(true)
       end
 
       it "returns the default producer unchanged" do
@@ -65,20 +65,21 @@ describe_current do
       end
 
       it "does not create a variant" do
-        allow(default_producer).to receive(:variant)
+        default_producer.stubs(:variant)
+        default_producer.expects(:variant).never
         producer.__getobj__
-        expect(default_producer).not_to have_received(:variant)
       end
 
       it "caches the result on subsequent calls" do
+        default_producer.expects(:transactional?).once
         3.times { producer.__getobj__ }
-        expect(default_producer).to have_received(:transactional?).once
       end
     end
 
     context "when default producer is both idempotent and transactional" do
       before do
-        allow(default_producer).to receive_messages(idempotent?: true, transactional?: true)
+        default_producer.stubs(:idempotent?).returns(true)
+        default_producer.stubs(:transactional?).returns(true)
       end
 
       it "returns the default producer unchanged" do
@@ -86,33 +87,32 @@ describe_current do
       end
 
       it "checks idempotent first and short-circuits" do
+        default_producer.expects(:idempotent?)
+        default_producer.expects(:transactional?).never
         producer.__getobj__
-        expect(default_producer).to have_received(:idempotent?)
-        expect(default_producer).not_to have_received(:transactional?)
       end
     end
   end
 
   describe "delegation" do
     before do
-      allow(default_producer).to receive_messages(idempotent?: false, transactional?: false)
-      allow(default_producer).to receive(:variant)
-        .with(topic_config: { acks: 0 })
-        .and_return(variant)
+      default_producer.stubs(:idempotent?).returns(false)
+      default_producer.stubs(:transactional?).returns(false)
+      default_producer.stubs(:variant).with(topic_config: { acks: 0 }).returns(variant)
     end
 
     it "delegates method calls to the underlying producer" do
-      allow(variant).to receive(:produce_async).and_return(true)
+      variant.stubs(:produce_async).returns(true)
 
+      variant.expects(:produce_async).with(topic: "test", payload: "data")
       result = producer.produce_async(topic: "test", payload: "data")
 
-      expect(variant).to have_received(:produce_async).with(topic: "test", payload: "data")
 
       assert(result)
     end
 
     it "responds to producer methods" do
-      allow(variant).to receive(:respond_to?).with(:produce_async, false).and_return(true)
+      variant.stubs(:respond_to?).with(:produce_async, false).returns(true)
 
       assert_respond_to(producer, :produce_async)
     end
@@ -123,7 +123,7 @@ describe_current do
       let(:producer) { described_class.new }
 
       before do
-        allow(Karafka).to receive(:producer).and_return(PRODUCERS.regular)
+        Karafka.stubs(:producer).returns(PRODUCERS.regular)
       end
 
       it "returns a variant since regular producer is not idempotent" do
@@ -142,7 +142,7 @@ describe_current do
       let(:producer) { described_class.new }
 
       before do
-        allow(Karafka).to receive(:producer).and_return(PRODUCERS.transactional)
+        Karafka.stubs(:producer).returns(PRODUCERS.transactional)
       end
 
       it "returns the original producer since transactional producer requires acks: all" do

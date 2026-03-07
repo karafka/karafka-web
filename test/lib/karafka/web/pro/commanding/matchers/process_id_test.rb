@@ -25,17 +25,13 @@ describe_current do
 
   let(:current_process_id) { "process-123" }
   let(:message) do
-    instance_double(
-      Karafka::Messages::Message,
-      payload: { matchers: matchers }
+    stub(payload: { matchers: matchers }
     )
   end
   let(:matchers) { {} }
 
   before do
-    allow(Karafka::Web.config.tracking.consumers.sampler)
-      .to receive(:process_id)
-      .and_return(current_process_id)
+    Karafka::Web.config.tracking.consumers.sampler.stubs(:process_id).returns(current_process_id)
   end
 
   describe "#apply?" do

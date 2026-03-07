@@ -5,29 +5,27 @@ describe_current do
 
   describe "#active?" do
     context "when producer is not yet created" do
-      before { allow(Karafka).to receive(:producer).and_return(nil) }
+      before { Karafka.stubs(:producer).returns(nil) }
 
       it { refute(reporter.active?) }
     end
 
     context "when producer is not active" do
-      before { allow(Karafka.producer.status).to receive(:active?).and_return(false) }
+      before { Karafka.producer.status.stubs(:active?).returns(false) }
 
       it { refute(reporter.active?) }
     end
 
     context "when producer exists but karafka is not even initializing" do
-      before { allow(Karafka::App).to receive(:initializing?).and_return(true) }
+      before { Karafka::App.stubs(:initializing?).returns(true) }
 
       it { refute(reporter.active?) }
     end
 
     context "when producer exists but karafka is not initialized" do
       before do
-        allow(Karafka::App).to receive_messages(
-          initializing?: false,
-          initialized?: true
-        )
+        Karafka::App.stubs(:initializing?).returns(false)
+        Karafka::App.stubs(:initialized?).returns(true)
       end
 
       it { refute(reporter.active?) }
@@ -35,10 +33,8 @@ describe_current do
 
     context "when producer exists and is active and server is running" do
       before do
-        allow(Karafka::App).to receive_messages(
-          initializing?: false,
-          initialized?: false
-        )
+        Karafka::App.stubs(:initializing?).returns(false)
+        Karafka::App.stubs(:initialized?).returns(false)
       end
 
       it { assert(reporter.active?) }

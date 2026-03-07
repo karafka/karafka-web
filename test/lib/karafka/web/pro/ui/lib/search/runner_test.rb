@@ -39,13 +39,11 @@ describe_current do
     end
 
     let(:matcher_instance) { Karafka::Web::Pro::Ui::Lib::Search::Matchers::RawPayloadIncludes.new }
-    let(:iterator_instance) { instance_double(Karafka::Pro::Iterator) }
+    let(:iterator_instance) { stub() }
 
     4.times do |i|
       let(:"message#{i + 1}") do
-        instance_double(
-          Karafka::Messages::Message,
-          partition: i % 2,
+        stub(partition: i % 2,
           offset: i,
           timestamp: Time.now - 10,
           clean!: nil,
@@ -56,25 +54,15 @@ describe_current do
     end
 
     before do
-      allow(Karafka::Web::Pro::Ui::Lib::Search::Matchers::RawPayloadIncludes)
-        .to receive(:new)
-        .and_return(matcher_instance)
+      Karafka::Web::Pro::Ui::Lib::Search::Matchers::RawPayloadIncludes.stubs(:new).returns(matcher_instance)
 
-      allow(Karafka::Pro::Iterator)
-        .to receive(:new).and_return(iterator_instance)
+      Karafka::Pro::Iterator.stubs(:new).returns(iterator_instance)
 
-      allow(iterator_instance)
-        .to receive(:each)
-        .and_yield(message1)
-        .and_yield(message2)
-        .and_yield(message3)
-        .and_yield(message4)
+      iterator_instance.stubs(:each).yields(message1) .and_yield(message2) .and_yield(message3) .and_yield(message4)
 
-      allow(iterator_instance)
-        .to receive(:stop)
+      iterator_instance.stubs(:stop)
 
-      allow(iterator_instance)
-        .to receive(:stop_current_partition)
+      iterator_instance.stubs(:stop_current_partition)
     end
 
     describe "#call" do
@@ -96,7 +84,7 @@ describe_current do
 
       context "when a message matches the phrase" do
         before do
-          allow(matcher_instance).to receive(:call).and_return(true)
+          matcher_instance.stubs(:call).returns(true)
         end
 
         it "adds the message to the matched results" do
@@ -109,24 +97,24 @@ describe_current do
       context "when the total checked limit reach the limit" do
         let(:search_criteria) { super().merge(limit: 1) }
 
-        before { allow(iterator_instance).to receive(:stop) }
+        before { iterator_instance.stubs(:stop) }
 
         it "stops the iterator" do
+          iterator_instance.expects(:stop).at_least_once
           runner.call
 
-          expect(iterator_instance).to have_received(:stop).at_least(:once)
         end
       end
 
       context "when the checked limit for a partition reach the limit" do
         let(:search_criteria) { super().merge(limit: 3) }
 
-        before { allow(iterator_instance).to receive(:stop_current_partition) }
+        before { iterator_instance.stubs(:stop_current_partition) }
 
         it "stops the current partition in the iterator" do
+          iterator_instance.expects(:stop_current_partition).at_least_once
           runner.call
 
-          expect(iterator_instance).to have_received(:stop_current_partition).at_least(:once)
         end
       end
     end

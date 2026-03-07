@@ -5,13 +5,13 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Server do
 
   describe "#listeners" do
     context "when listeners are available" do
-      let(:listener1) { instance_double(Karafka::Connection::Listener, active?: true) }
-      let(:listener2) { instance_double(Karafka::Connection::Listener, active?: true) }
-      let(:listener3) { instance_double(Karafka::Connection::Listener, active?: false) }
+      let(:listener1) { stub(active?: true) }
+      let(:listener2) { stub(active?: true) }
+      let(:listener3) { stub(active?: false) }
       let(:listeners) { [listener1, listener2, listener3] }
 
       before do
-        allow(Karafka::Server).to receive(:listeners).and_return(listeners)
+        Karafka::Server.stubs(:listeners).returns(listeners)
       end
 
       it "returns count of active and standby listeners" do
@@ -21,7 +21,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Server do
 
     context "when listeners are not available" do
       before do
-        allow(Karafka::Server).to receive(:listeners).and_return(nil)
+        Karafka::Server.stubs(:listeners).returns(nil)
       end
 
       it "returns zero counts" do
@@ -30,12 +30,12 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Server do
     end
 
     context "when all listeners are active" do
-      let(:listener1) { instance_double(Karafka::Connection::Listener, active?: true) }
-      let(:listener2) { instance_double(Karafka::Connection::Listener, active?: true) }
+      let(:listener1) { stub(active?: true) }
+      let(:listener2) { stub(active?: true) }
       let(:listeners) { [listener1, listener2] }
 
       before do
-        allow(Karafka::Server).to receive(:listeners).and_return(listeners)
+        Karafka::Server.stubs(:listeners).returns(listeners)
       end
 
       it "returns all as active, none as standby" do
@@ -44,12 +44,12 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Server do
     end
 
     context "when all listeners are standby" do
-      let(:listener1) { instance_double(Karafka::Connection::Listener, active?: false) }
-      let(:listener2) { instance_double(Karafka::Connection::Listener, active?: false) }
+      let(:listener1) { stub(active?: false) }
+      let(:listener2) { stub(active?: false) }
       let(:listeners) { [listener1, listener2] }
 
       before do
-        allow(Karafka::Server).to receive(:listeners).and_return(listeners)
+        Karafka::Server.stubs(:listeners).returns(listeners)
       end
 
       it "returns none as active, all as standby" do
@@ -59,7 +59,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Server do
 
     context "when listeners is an empty array" do
       before do
-        allow(Karafka::Server).to receive(:listeners).and_return([])
+        Karafka::Server.stubs(:listeners).returns([])
       end
 
       it "returns zero counts" do
@@ -70,7 +70,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Server do
 
   describe "#workers" do
     before do
-      allow(Karafka::App.config).to receive(:concurrency).and_return(10)
+      Karafka::App.config.stubs(:concurrency).returns(10)
     end
 
     it "returns configured concurrency" do

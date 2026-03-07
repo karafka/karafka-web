@@ -23,8 +23,8 @@
 describe_current do
   let(:command) { described_class.new(listener, client, request) }
 
-  let(:listener) { instance_double(Karafka::Connection::Listener) }
-  let(:client) { instance_double(Karafka::Connection::Client) }
+  let(:listener) { stub() }
+  let(:client) { stub() }
   let(:request) do
     Karafka::Web::Pro::Commanding::Request.new(
       offset: desired_offset,
@@ -33,44 +33,35 @@ describe_current do
     )
   end
 
-  let(:coordinators) { instance_double(Karafka::Processing::CoordinatorsBuffer) }
-  let(:coordinator) { instance_double(Karafka::Processing::Coordinator) }
-  let(:pause_tracker) { instance_double(Karafka::TimeTrackers::Pause) }
+  let(:coordinators) { stub() }
+  let(:coordinator) { stub() }
+  let(:pause_tracker) { stub() }
   let(:topic) { "topic_name" }
   let(:partition_id) { 1 }
   let(:desired_offset) { 100 }
   let(:prevent_overtaking) { false }
   let(:force_resume) { false }
-  let(:seek_message) { instance_double(Karafka::Messages::Seek) }
+  let(:seek_message) { stub() }
 
   before do
-    allow(listener)
-      .to receive(:coordinators)
-      .and_return(coordinators)
+    listener.stubs(:coordinators).returns(coordinators)
 
-    allow(coordinators)
-      .to receive(:find_or_create)
-      .with(topic, partition_id)
-      .and_return(coordinator)
+    coordinators.stubs(:find_or_create).with(topic, partition_id).returns(coordinator)
 
-    allow(coordinator).to receive_messages(
-      pause_tracker: pause_tracker,
-      seek_offset: current_seek_offset,
-      "seek_offset=": nil
-    )
+    coordinator.stubs(:pause_tracker).returns(pause_tracker)
+    coordinator.stubs(:seek_offset).returns(current_seek_offset)
+    # TODO: could not parse receive_messages pair: "seek_offset=": nil
 
-    allow(pause_tracker).to receive_messages(
-      reset: true,
-      expire: true
-    )
+    pause_tracker.stubs(:reset).returns(true)
+    pause_tracker.stubs(:expire).returns(true)
 
-    allow(command).to receive_messages(topic: topic, partition_id: partition_id, result: nil)
+    command.stubs(:topic).returns(topic)
+    command.stubs(:partition_id).returns(partition_id)
+    command.stubs(:result).returns(nil)
 
-    allow(Karafka::Messages::Seek).to receive(:new).and_return(seek_message)
-    allow(client).to receive_messages(
-      mark_as_consumed!: marking_success,
-      seek: true
-    )
+    Karafka::Messages::Seek.stubs(:new).returns(seek_message)
+    client.stubs(:mark_as_consumed!).returns(marking_success)
+    client.stubs(:seek).returns(true)
   end
 
   describe "#call" do
@@ -84,9 +75,9 @@ describe_current do
         let(:current_seek_offset) { desired_offset + 1 }
 
         it "prevents the seek operation" do
+          command.expects(:result).with("prevented")
+          client.expects(:mark_as_consumed!).never
           command.call
-          expect(command).to have_received(:result).with("prevented")
-          expect(client).not_to have_received(:mark_as_consumed!)
         end
       end
 
@@ -94,9 +85,9 @@ describe_current do
         let(:current_seek_offset) { desired_offset - 1 }
 
         it "executes seek operation" do
+          client.expects(:mark_as_consumed!)
+          command.expects(:result).with("applied")
           command.call
-          expect(client).to have_received(:mark_as_consumed!)
-          expect(command).to have_received(:result).with("applied")
         end
       end
     end
@@ -105,9 +96,9 @@ describe_current do
       let(:marking_success) { false }
 
       it "stops with lost partition result" do
+        command.expects(:result).with("lost_partition")
+        client.expects(:seek).never
         command.call
-        expect(command).to have_received(:result).with("lost_partition")
-        expect(client).not_to have_received(:seek)
       end
     end
 
@@ -115,8 +106,8 @@ describe_current do
       let(:force_resume) { true }
 
       it "expires the pause tracker" do
+        pause_tracker.expects(:expire)
         command.call
-        expect(pause_tracker).to have_received(:expire)
       end
     end
 
@@ -124,20 +115,20 @@ describe_current do
       let(:force_resume) { false }
 
       it "does not expire the pause tracker" do
+        pause_tracker.expects(:expire).never
         command.call
-        expect(pause_tracker).not_to have_received(:expire)
       end
     end
 
     context "when all operations succeed" do
       it "executes the seek operation fully" do
+        client.expects(:mark_as_consumed!)
+        client.expects(:seek)
+        coordinator.expects(:seek_offset=).with(desired_offset)
+        pause_tracker.expects(:reset)
+        command.expects(:result).with("applied")
         command.call
 
-        expect(client).to have_received(:mark_as_consumed!)
-        expect(client).to have_received(:seek)
-        expect(coordinator).to have_received(:seek_offset=).with(desired_offset)
-        expect(pause_tracker).to have_received(:reset)
-        expect(command).to have_received(:result).with("applied")
       end
     end
   end

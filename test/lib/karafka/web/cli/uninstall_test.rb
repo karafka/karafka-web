@@ -6,12 +6,12 @@ describe_current do
   let(:installer) { Karafka::Web::Installer.new }
 
   before do
-    allow(Karafka::Web::Installer).to receive(:new).and_return(installer)
-    allow(installer).to receive(:uninstall)
+    Karafka::Web::Installer.stubs(:new).returns(installer)
+    installer.stubs(:uninstall)
   end
 
   it "expect to uninstall using installer" do
+    installer.expects(:uninstall)
     cli.call
-    expect(installer).to have_received(:uninstall)
   end
 end

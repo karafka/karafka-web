@@ -22,18 +22,18 @@ describe_current do
 
   before do
     Karafka::Web.config.topics.errors.name = errors_topic
-    allow(Karafka::Web).to receive(:producer).and_return(producer)
-    allow(producer.status).to receive(:active?).and_return(true)
-    allow(Karafka::Web.producer).to receive(:produce_many_sync)
-    allow(Karafka::Web.producer).to receive(:produce_many_async)
+    Karafka::Web.stubs(:producer).returns(producer)
+    producer.status.stubs(:active?).returns(true)
+    Karafka::Web.producer.stubs(:produce_many_sync)
+    Karafka::Web.producer.stubs(:produce_many_async)
   end
 
   context "when there is nothing to report" do
     it "expect not to dispatch any messages" do
+      Karafka::Web.producer.expects(:produce_many_sync).never
+      Karafka::Web.producer.expects(:produce_many_async).never
       reporter.report
 
-      expect(Karafka::Web.producer).not_to have_received(:produce_many_sync)
-      expect(Karafka::Web.producer).not_to have_received(:produce_many_async)
     end
   end
 
@@ -44,10 +44,10 @@ describe_current do
     end
 
     it "expect not to dispatch any messages yet" do
+      Karafka::Web.producer.expects(:produce_many_sync).never
+      Karafka::Web.producer.expects(:produce_many_async).never
       reporter.report
 
-      expect(Karafka::Web.producer).not_to have_received(:produce_many_sync)
-      expect(Karafka::Web.producer).not_to have_received(:produce_many_async)
     end
   end
 
@@ -66,9 +66,7 @@ describe_current do
       it "expect to dispatch via async" do
         reporter.report
 
-        expect(producer)
-          .to have_received(:produce_many_async)
-          .with([{ key: "my-process", payload: valid_error.to_json, topic: errors_topic }])
+        producer.expects(:produce_many_async).with([{ key: "my-process", payload: valid_error.to_json, topic: errors_topic }]) # MOCHA_REORDER
       end
     end
 
@@ -84,9 +82,7 @@ describe_current do
       it "expect to dispatch via sync" do
         reporter.report
 
-        expect(producer)
-          .to have_received(:produce_many_sync)
-          .with(dispatch)
+        producer.expects(:produce_many_sync).with(dispatch) # MOCHA_REORDER
       end
     end
 
@@ -104,13 +100,13 @@ describe_current do
 
   describe "#active?" do
     context "when producer is not yet created" do
-      before { allow(Karafka::Web).to receive(:producer).and_return(nil) }
+      before { Karafka::Web.stubs(:producer).returns(nil) }
 
       it { refute(reporter.active?) }
     end
 
     context "when producer is not active" do
-      before { allow(Karafka::Web.producer.status).to receive(:active?).and_return(false) }
+      before { Karafka::Web.producer.status.stubs(:active?).returns(false) }
 
       it { refute(reporter.active?) }
     end

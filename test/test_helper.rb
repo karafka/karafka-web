@@ -55,6 +55,7 @@ require "karafka/web"
 
 require "minitest/autorun"
 require "minitest/spec"
+require "mocha/minitest"
 
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
@@ -124,8 +125,8 @@ class Minitest::Spec
   include MinitestDescribedClass
   include Factories
   include TopicsManagerHelper
-  include MockCompat
-  include MockExpectIntegration
+  include StubHelpers
+  include StubConstHelper
 
   class << self
     alias_method :context, :describe
@@ -199,64 +200,18 @@ PRODUCERS = Struct.new(:regular, :transactional).new(
 # Topics that we will use for all the tests as the primary karafka-web topics for valid cases
 TOPICS = Array.new(5) { create_topic }
 
-# Save the original routes method before any tests can corrupt it via instance_double leaks.
-# When MockCompat cleanup fails to restore Karafka::App.routes, we use this to recover.
-ORIGINAL_ROUTES_METHOD = Karafka::App.method(:routes)
-
-# Save the original group_id before any tests can corrupt it via stubs.
-# Status tests stub group_id to test disabled routing scenarios, and if MockCompat cleanup
-# fails to restore it, extend_routing fails with InvalidConfigurationError.
-ORIGINAL_GROUP_ID = Karafka::Web.config.group_id
-
 # Global setup that runs before each test
 Minitest::Spec.class_eval do
   before do
     # Prepare clean routing setup for each test
     # We do this because some of the tests extend routing and we do not want them to interfere
     # with each other.
-    # When MockCompat cleanup fails to restore routes properly (e.g., instance_double leak
-    # from a previous test), restore the original routes method
-    unless Karafka::App.routes.is_a?(Karafka::Routing::Builder)
-      Karafka::App.define_singleton_method(:routes, ORIGINAL_ROUTES_METHOD)
-    end
-
-    # Restore group_id if it was corrupted by a previous test's mock leak
-    unless Karafka::Web.config.group_id.is_a?(String)
-      Karafka::Web.config.group_id = ORIGINAL_GROUP_ID
-    end
-
     Karafka::App.routes.clear
     draw_defaults
     Karafka::Web::Management::Actions::Enable.new.send(:extend_routing)
 
-    consumers_sampler = Karafka::Web.config.tracking.consumers.sampler
-    producers_sampler = Karafka::Web.config.tracking.producers.sampler
-
-    # When MockCompat cleanup fails to restore the sampler properly (e.g., instance_double
-    # leak from a previous test), reinitialize it to prevent cascading failures
-    if consumers_sampler.is_a?(Karafka::Web::Tracking::Consumers::Sampler)
-      consumers_sampler.clear
-    else
-      Karafka::Web.config.tracking.consumers.sampler =
-        Karafka::Web::Tracking::Consumers::Sampler.new
-
-      # Also clear cached sampler references in subscribed listeners so they
-      # pick up the new sampler on next access
-      Karafka::Web.config.tracking.consumers.listeners.each do |listener|
-        listener.remove_instance_variable(:@sampler) if listener.instance_variable_defined?(:@sampler)
-      end
-    end
-
-    if producers_sampler.is_a?(Karafka::Web::Tracking::Producers::Sampler)
-      producers_sampler.clear
-    else
-      Karafka::Web.config.tracking.producers.sampler =
-        Karafka::Web::Tracking::Producers::Sampler.new
-
-      Karafka::Web.config.tracking.producers.listeners.each do |listener|
-        listener.remove_instance_variable(:@sampler) if listener.instance_variable_defined?(:@sampler)
-      end
-    end
+    Karafka::Web.config.tracking.consumers.sampler.clear
+    Karafka::Web.config.tracking.producers.sampler.clear
 
     Karafka::Web.config.ui.cache.clear
 
@@ -294,7 +249,8 @@ Minitest::Spec.class_eval do
       end
     end
 
-    MockCompat.cleanup!
+    StubHelpers.cleanup!
+    StubConstHelper.cleanup!
 
     Karafka::Web.config.topics.consumers.states.name = TOPICS[0]
     Karafka::Web.config.topics.consumers.metrics.name = TOPICS[1]

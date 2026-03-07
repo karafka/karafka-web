@@ -23,47 +23,47 @@
 describe_current do
   let(:executor) { described_class.new }
 
-  let(:listener) { instance_double(Karafka::Connection::Listener) }
-  let(:client) { instance_double(Karafka::Connection::Client) }
-  let(:request) { instance_double(Karafka::Web::Pro::Commanding::Request) }
+  let(:listener) { stub() }
+  let(:client) { stub() }
+  let(:request) { stub() }
   let(:process_id) { SecureRandom.uuid }
 
   describe "#call" do
     context "when command is resume" do
       let(:command_name) { Karafka::Web::Pro::Commanding::Commands::Topics::Resume.name }
       let(:command_class) { Karafka::Web::Pro::Commanding::Handlers::Topics::Commands::Resume }
-      let(:command_instance) { instance_double(command_class) }
+      let(:command_instance) { stub() }
 
       before do
-        allow(request).to receive(:name).and_return(command_name)
-        allow(command_instance).to receive(:call)
-        allow(command_class).to receive(:new).and_return(command_instance)
+        request.stubs(:name).returns(command_name)
+        command_instance.stubs(:call)
+        command_class.stubs(:new).returns(command_instance)
       end
 
       it "executes resume command" do
+        command_class.expects(:new).with(listener, client, request)
+        command_instance.expects(:call)
         executor.call(listener, client, request)
 
-        expect(command_class).to have_received(:new).with(listener, client, request)
-        expect(command_instance).to have_received(:call)
       end
     end
 
     context "when command is pause" do
       let(:command_name) { Karafka::Web::Pro::Commanding::Commands::Topics::Pause.name }
       let(:command_class) { Karafka::Web::Pro::Commanding::Handlers::Topics::Commands::Pause }
-      let(:command_instance) { instance_double(command_class) }
+      let(:command_instance) { stub() }
 
       before do
-        allow(request).to receive(:name).and_return(command_name)
-        allow(command_instance).to receive(:call)
-        allow(command_class).to receive(:new).and_return(command_instance)
+        request.stubs(:name).returns(command_name)
+        command_instance.stubs(:call)
+        command_class.stubs(:new).returns(command_instance)
       end
 
       it "executes pause command" do
+        command_class.expects(:new).with(listener, client, request)
+        command_instance.expects(:call)
         executor.call(listener, client, request)
 
-        expect(command_class).to have_received(:new).with(listener, client, request)
-        expect(command_instance).to have_received(:call)
       end
     end
 
@@ -71,12 +71,11 @@ describe_current do
       let(:command_name) { "unsupported.command" }
 
       before do
-        allow(request).to receive(:name).and_return(command_name)
+        request.stubs(:name).returns(command_name)
       end
 
       it "raises UnsupportedCaseError" do
-        expect { executor.call(listener, client, request) }
-          .to raise_error(Karafka::Errors::UnsupportedCaseError)
+        assert_raises(Karafka::Errors::UnsupportedCaseError) { executor.call(listener, client, request) }
       end
     end
   end
@@ -86,9 +85,10 @@ describe_current do
     let(:request_hash) { { key: "value" } }
 
     before do
-      allow(request).to receive_messages(name: command_name, to_h: request_hash)
-      allow(Karafka::Web::Pro::Commanding::Dispatcher).to receive(:result)
-      allow(executor).to receive(:process_id).and_return(process_id)
+      request.stubs(:name).returns(command_name)
+      request.stubs(:to_h).returns(request_hash)
+      Karafka::Web::Pro::Commanding::Dispatcher.stubs(:result)
+      executor.stubs(:process_id).returns(process_id)
     end
 
     it "dispatches rejection result with rebalance status" do
@@ -96,9 +96,7 @@ describe_current do
 
       expected_payload = request_hash.merge(status: "rebalance_rejected")
 
-      expect(Karafka::Web::Pro::Commanding::Dispatcher)
-        .to have_received(:result)
-        .with(command_name, process_id, expected_payload)
+      Karafka::Web::Pro::Commanding::Dispatcher.expects(:result).with(command_name, process_id, expected_payload) # MOCHA_REORDER
     end
   end
 end

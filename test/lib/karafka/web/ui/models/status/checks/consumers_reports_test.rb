@@ -22,10 +22,7 @@ describe_current do
       let(:processes) { [process] }
 
       before do
-        allow(Karafka::Web::Ui::Models::Processes)
-          .to receive(:all)
-          .with(current_state)
-          .and_return(processes)
+        Karafka::Web::Ui::Models::Processes.stubs(:all).with(current_state).returns(processes)
       end
 
       it "returns success" do
@@ -44,9 +41,7 @@ describe_current do
 
     context "when processes data is corrupted (JSON parse error)" do
       before do
-        allow(Karafka::Web::Ui::Models::Processes)
-          .to receive(:all)
-          .and_raise(JSON::ParserError)
+        Karafka::Web::Ui::Models::Processes.stubs(:all).raises(JSON::ParserError)
       end
 
       it "returns failure" do
@@ -63,13 +58,13 @@ describe_current do
 
       before do
         context.processes = processes
-        allow(Karafka::Web::Ui::Models::Processes).to receive(:all)
+        Karafka::Web::Ui::Models::Processes.stubs(:all)
       end
 
       it "does not fetch again" do
+        Karafka::Web::Ui::Models::Processes.expects(:all).never
         check.call
 
-        expect(Karafka::Web::Ui::Models::Processes).not_to have_received(:all)
       end
 
       it "returns success" do

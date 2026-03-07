@@ -66,7 +66,7 @@ describe_current do
     end
 
     it "returns the same object that was passed to initialize" do
-      expect(request.to_h).to be(details)
+      assert_same(details, request.to_h)
     end
   end
 

@@ -173,9 +173,7 @@ describe_current do
     context "when a process exists and is running" do
       it "expect to redirect with success message" do
         assert_equal(302, response.status)
-        expect(flash[:success]).to include(
-          "Initiated pause for partition #{topic_name}##{partition_id}"
-        )
+        assert_includes(flash[:success],  "Initiated pause for partition #{topic_name}##{partition_id}" )
       end
 
       it "expect to create pause command with correct parameters" do
@@ -378,9 +376,7 @@ describe_current do
     context "when a process exists and is running" do
       it "expect to redirect with success message" do
         assert_equal(302, response.status)
-        expect(flash[:success]).to include(
-          "Initiated resume for partition #{topic_name}##{partition_id}"
-        )
+        assert_includes(flash[:success],  "Initiated resume for partition #{topic_name}##{partition_id}" )
       end
 
       it "expect to create resume command with correct parameters" do

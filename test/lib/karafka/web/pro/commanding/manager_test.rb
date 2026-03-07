@@ -24,12 +24,12 @@ describe_current do
   let(:manager) { described_class.send(:new) }
 
   describe "#on_app_running" do
-    before { allow(manager).to receive(:async_call) }
+    before { manager.stubs(:async_call) }
 
     it "expect to start listening for commands asynchronously" do
+      manager.expects(:async_call).with("karafka.web.pro.commanding.manager")
       manager.on_app_running(nil)
 
-      expect(manager).to have_received(:async_call).with("karafka.web.pro.commanding.manager")
     end
   end
 
@@ -37,13 +37,13 @@ describe_current do
     let(:listener) { Karafka::Web::Pro::Commanding::Listener.new }
 
     before do
-      allow(listener.class).to receive(:new).and_return(listener)
-      allow(listener).to receive(:stop)
+      listener.class.stubs(:new).returns(listener)
+      listener.stubs(:stop)
     end
 
     it "expect to stop the listener" do
+      listener.expects(:stop)
       manager.on_app_stopping(nil)
-      expect(listener).to have_received(:stop)
     end
   end
 
@@ -61,9 +61,7 @@ describe_current do
     let(:unsupported_command_name) { "unsupported_command" }
 
     let(:message) do
-      instance_double(
-        Karafka::Messages::Message,
-        payload: {
+      stub(payload: {
           command: {
             name: command_name
           }
@@ -72,10 +70,10 @@ describe_current do
     end
 
     before do
-      allow(listener.class).to receive(:new).and_return(listener)
-      allow(matcher.class).to receive(:new).and_return(matcher)
-      allow(listener).to receive(:each).and_yield(message)
-      allow(matcher).to receive(:matches?).with(message).and_return(true)
+      listener.class.stubs(:new).returns(listener)
+      matcher.class.stubs(:new).returns(matcher)
+      listener.stubs(:each).yields(message)
+      matcher.stubs(:matches?).with(message).returns(true)
     end
 
     context "when command is trace" do
@@ -83,13 +81,13 @@ describe_current do
       let(:command_name) { trace_command.class.name }
 
       before do
-        allow(trace_command.class).to receive(:new).and_return(trace_command)
-        allow(trace_command).to receive(:call)
+        trace_command.class.stubs(:new).returns(trace_command)
+        trace_command.stubs(:call)
       end
 
       it "executes trace command" do
+        trace_command.expects(:call)
         manager.send(:call)
-        expect(trace_command).to have_received(:call)
       end
     end
 
@@ -98,13 +96,13 @@ describe_current do
       let(:command_name) { quiet_command.class.name }
 
       before do
-        allow(quiet_command.class).to receive(:new).and_return(quiet_command)
-        allow(quiet_command).to receive(:call)
+        quiet_command.class.stubs(:new).returns(quiet_command)
+        quiet_command.stubs(:call)
       end
 
       it "executes quiet command" do
+        quiet_command.expects(:call)
         manager.send(:call)
-        expect(quiet_command).to have_received(:call)
       end
     end
 
@@ -113,13 +111,13 @@ describe_current do
       let(:command_name) { stop_command.class.name }
 
       before do
-        allow(stop_command.class).to receive(:new).and_return(stop_command)
-        allow(stop_command).to receive(:call)
+        stop_command.class.stubs(:new).returns(stop_command)
+        stop_command.stubs(:call)
       end
 
       it "executes stop command" do
+        stop_command.expects(:call)
         manager.send(:call)
-        expect(stop_command).to have_received(:call)
       end
     end
 
@@ -128,13 +126,13 @@ describe_current do
       let(:command_name) { seek_command.class.name }
 
       before do
-        allow(seek_command.class).to receive(:new).and_return(seek_command)
-        allow(seek_command).to receive(:call)
+        seek_command.class.stubs(:new).returns(seek_command)
+        seek_command.stubs(:call)
       end
 
       it "executes stop command" do
+        seek_command.expects(:call)
         manager.send(:call)
-        expect(seek_command).to have_received(:call)
       end
     end
 
@@ -143,13 +141,13 @@ describe_current do
       let(:command_name) { pause_command.class.name }
 
       before do
-        allow(pause_command.class).to receive(:new).and_return(pause_command)
-        allow(pause_command).to receive(:call)
+        pause_command.class.stubs(:new).returns(pause_command)
+        pause_command.stubs(:call)
       end
 
       it "executes stop command" do
+        pause_command.expects(:call)
         manager.send(:call)
-        expect(pause_command).to have_received(:call)
       end
     end
 
@@ -158,13 +156,13 @@ describe_current do
       let(:command_name) { resume_command.class.name }
 
       before do
-        allow(resume_command.class).to receive(:new).and_return(resume_command)
-        allow(resume_command).to receive(:call)
+        resume_command.class.stubs(:new).returns(resume_command)
+        resume_command.stubs(:call)
       end
 
       it "executes stop command" do
+        resume_command.expects(:call)
         manager.send(:call)
-        expect(resume_command).to have_received(:call)
       end
     end
 

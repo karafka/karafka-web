@@ -3,7 +3,7 @@
 describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container do
   let(:container_metrics) { described_class.new(shell) }
 
-  let(:shell) { instance_double(Karafka::Web::Tracking::MemoizedShell) }
+  let(:shell) { stub() }
 
   describe ".active?" do
     before do
@@ -28,10 +28,8 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container do
 
     context "when cgroup v2 is available (simulated)" do
       it "returns true" do
-        allow(File).to receive(:exist?).and_call_original
-        allow(File).to receive(:exist?)
-          .with("/sys/fs/cgroup/cgroup.controllers")
-          .and_return(true)
+        stub_and_passthrough(File, :exist?)
+        File.stubs(:exist?).with("/sys/fs/cgroup/cgroup.controllers").returns(true)
 
         assert(described_class.active?)
       end
@@ -39,13 +37,9 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container do
 
     context "when cgroup v1 is available (simulated)" do
       it "returns true" do
-        allow(File).to receive(:exist?).and_call_original
-        allow(File).to receive(:exist?)
-          .with("/sys/fs/cgroup/cgroup.controllers")
-          .and_return(false)
-        allow(File).to receive(:exist?)
-          .with("/sys/fs/cgroup/memory/memory.limit_in_bytes")
-          .and_return(true)
+        stub_and_passthrough(File, :exist?)
+        File.stubs(:exist?).with("/sys/fs/cgroup/cgroup.controllers").returns(false)
+        File.stubs(:exist?).with("/sys/fs/cgroup/memory/memory.limit_in_bytes").returns(true)
 
         assert(described_class.active?)
       end
@@ -62,7 +56,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container do
 
     context "when cgroup memory limit is available (simulated)" do
       before do
-        allow(described_class).to receive(:memory_limit).and_return(2 * 1024 * 1024) # 2GB in KB
+        described_class.stubs(:memory_limit).returns(2 * 1024 * 1024) # 2GB in KB
       end
 
       it "returns cgroup memory limit" do
@@ -73,10 +67,8 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container do
     context "when cgroup memory limit is not available (simulated)" do
       before do
         stub_const("RUBY_PLATFORM", "x86_64-linux")
-        allow(described_class).to receive(:memory_limit).and_return(nil)
-        allow(File).to receive(:read)
-          .with("/proc/meminfo")
-          .and_return("MemTotal:       16384000 kB\n")
+        described_class.stubs(:memory_limit).returns(nil)
+        File.stubs(:read).with("/proc/meminfo").returns("MemTotal:       16384000 kB\n")
       end
 
       it "falls back to OS metrics via super" do

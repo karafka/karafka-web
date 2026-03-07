@@ -232,9 +232,7 @@ describe_current do
       before do
         produce(topic, "1")
 
-        allow(Karafka::Web::Ui::Models::Message)
-          .to receive(:offset_page)
-          .and_return([false, [[0, 0]], false])
+        Karafka::Web::Ui::Models::Message.stubs(:offset_page).returns([false, [[0, 0]], false])
 
         get "scheduled_messages/explorer/topics/#{topic}/0"
       end

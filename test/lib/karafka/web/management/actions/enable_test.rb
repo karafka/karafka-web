@@ -5,9 +5,7 @@ describe_current do
 
   context "when karafka framework is not initialized" do
     before do
-      allow(Karafka::App.config.internal.status)
-        .to receive(:initializing?)
-        .and_return(true)
+      Karafka::App.config.internal.status.stubs(:initializing?).returns(true)
     end
 
     it "expect not to allow for enabling of web-ui" do
@@ -16,62 +14,63 @@ describe_current do
   end
 
   context "when tracking is active" do
-    let(:ui_listener) { instance_double(Karafka::Web::Tracking::Ui::Errors) }
-    let(:routes) { instance_double(Karafka::Routing::Builder) }
-    let(:karafka_monitor) { instance_double(Karafka::Instrumentation::Monitor) }
-    let(:app_monitor) { instance_double(Karafka::Instrumentation::Monitor) }
+    let(:ui_listener) { stub() }
+    let(:routes) { stub() }
+    let(:karafka_monitor) { stub() }
+    let(:app_monitor) { stub() }
 
     before do
       # Config mocks
-      allow(Karafka::Web.config).to receive(:enabled).and_return(false, true)
-      allow(Karafka::Web.config).to receive(:enabled=)
+      Karafka::Web.config.stubs(:enabled).returns(false, true)
+      Karafka::Web.config.stubs(:enabled=)
 
-      allow(Karafka::Web.config.tracking).to receive(:active).and_return(nil, true)
-      allow(Karafka::Web.config.tracking).to receive(:active=)
+      Karafka::Web.config.tracking.stubs(:active).returns(nil, true)
+      Karafka::Web.config.tracking.stubs(:active=)
 
       # Mock listeners config
-      allow(Karafka::Web.config.tracking.ui).to receive(:listeners).and_return([ui_listener])
-      allow(Karafka::Web.config.tracking.consumers).to receive(:listeners).and_return([])
-      allow(Karafka::Web.config.tracking.producers).to receive(:listeners).and_return([])
+      Karafka::Web.config.tracking.ui.stubs(:listeners).returns([ui_listener])
+      Karafka::Web.config.tracking.consumers.stubs(:listeners).returns([])
+      Karafka::Web.config.tracking.producers.stubs(:listeners).returns([])
 
       # Mock routing and monitors
-      allow(routes).to receive(:draw)
-      allow(karafka_monitor).to receive(:subscribe)
-      allow(app_monitor).to receive(:subscribe)
+      routes.stubs(:draw)
+      karafka_monitor.stubs(:subscribe)
+      app_monitor.stubs(:subscribe)
 
-      allow(Karafka::App).to receive_messages(routes: routes, monitor: app_monitor)
-      allow(Karafka).to receive(:monitor).and_return(karafka_monitor)
+      Karafka::App.stubs(:routes).returns(routes)
+      Karafka::App.stubs(:monitor).returns(app_monitor)
+      Karafka.stubs(:monitor).returns(karafka_monitor)
     end
 
     it "expect to subscribe UI listeners to Karafka monitor" do
+      karafka_monitor.expects(:subscribe).with(ui_listener)
       enable
 
-      expect(karafka_monitor).to have_received(:subscribe).with(ui_listener)
     end
   end
 
   context "when tracking is not active" do
-    let(:routes) { instance_double(Karafka::Routing::Builder) }
-    let(:karafka_monitor) { instance_double(Karafka::Instrumentation::Monitor) }
+    let(:routes) { stub() }
+    let(:karafka_monitor) { stub() }
 
     before do
-      allow(Karafka::Web.config).to receive(:enabled).and_return(false, true)
-      allow(Karafka::Web.config).to receive(:enabled=)
+      Karafka::Web.config.stubs(:enabled).returns(false, true)
+      Karafka::Web.config.stubs(:enabled=)
 
-      allow(Karafka::Web.config.tracking).to receive(:active).and_return(nil, false)
-      allow(Karafka::Web.config.tracking).to receive(:active=)
+      Karafka::Web.config.tracking.stubs(:active).returns(nil, false)
+      Karafka::Web.config.tracking.stubs(:active=)
 
-      allow(routes).to receive(:draw)
-      allow(karafka_monitor).to receive(:subscribe)
+      routes.stubs(:draw)
+      karafka_monitor.stubs(:subscribe)
 
-      allow(Karafka::App).to receive(:routes).and_return(routes)
-      allow(Karafka).to receive(:monitor).and_return(karafka_monitor)
+      Karafka::App.stubs(:routes).returns(routes)
+      Karafka.stubs(:monitor).returns(karafka_monitor)
     end
 
     it "expect not to subscribe any listeners" do
+      karafka_monitor.expects(:subscribe).never
       enable
 
-      expect(karafka_monitor).not_to have_received(:subscribe)
     end
   end
 end

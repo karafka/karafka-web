@@ -48,7 +48,7 @@ describe_current do
     it { assert_equal("successes", result.partial_namespace) }
 
     context "when routing does not include the web processing group" do
-      before { allow(Karafka::Web.config).to receive(:group_id).and_return([]) }
+      before { Karafka::Web.config.stubs(:group_id).returns([]) }
 
       it { refute(result.success?) }
       it { assert_equal("failure", result.to_s) }
@@ -61,7 +61,7 @@ describe_current do
     let(:result) { status.connection }
 
     context "when routing is not enabled" do
-      before { allow(Karafka::Web.config).to receive(:group_id).and_return([]) }
+      before { Karafka::Web.config.stubs(:group_id).returns([]) }
 
       it { refute(result.success?) }
       it { assert_equal("halted", result.to_s) }
@@ -78,9 +78,7 @@ describe_current do
 
     context "when we cannot connect" do
       before do
-        allow(Karafka::Web::Ui::Models::ClusterInfo)
-          .to receive(:fetch)
-          .and_raise(Rdkafka::RdkafkaError.new(0))
+        Karafka::Web::Ui::Models::ClusterInfo.stubs(:fetch).raises(Rdkafka::RdkafkaError.new(0))
       end
 
       it { refute(result.success?) }
@@ -95,9 +93,7 @@ describe_current do
 
     context "when there is no connection" do
       before do
-        allow(Karafka::Web::Ui::Models::ClusterInfo)
-          .to receive(:fetch)
-          .and_raise(Rdkafka::RdkafkaError.new(0))
+        Karafka::Web::Ui::Models::ClusterInfo.stubs(:fetch).raises(Rdkafka::RdkafkaError.new(0))
       end
 
       it { refute(result.success?) }
@@ -260,7 +256,7 @@ describe_current do
     context "when replication is low in production" do
       before do
         all_topics
-        allow(Karafka.env).to receive(:production?).and_return(true)
+        Karafka.env.stubs(:production?).returns(true)
       end
 
       it "expect to warn" do
@@ -274,7 +270,7 @@ describe_current do
     context "when replication is low in non-production" do
       before do
         all_topics
-        allow(Karafka.env).to receive(:production?).and_return(false)
+        Karafka.env.stubs(:production?).returns(false)
       end
 
       it "expect all to be ok because non-production is acceptable" do
@@ -349,7 +345,7 @@ describe_current do
         all_topics
         produce(states_topic, state)
         # This will force a warning because in prod replication is expected to be > 1
-        allow(Karafka.env).to receive(:production?).and_return(true)
+        Karafka.env.stubs(:production?).returns(true)
       end
 
       it "expect all to be ok because replication is a warning" do
@@ -791,7 +787,7 @@ describe_current do
         before do
           routes = Karafka::App.routes
           # We are interested only in stubbing the result on the last execution
-          allow(Karafka::App).to receive(:routes).and_return(routes, routes, routes, [])
+          Karafka::App.stubs(:routes).returns(routes, routes, routes, [])
         end
 
         it "expect all to be ok" do
@@ -806,9 +802,7 @@ describe_current do
         let(:non_existing_topic) { generate_topic_name }
 
         before do
-          allow(Karafka::App.routes.first.topics.first)
-            .to receive(:name)
-            .and_return(non_existing_topic)
+          Karafka::App.routes.first.topics.first.stubs(:name).returns(non_existing_topic)
         end
 
         it "expect to warn" do
@@ -825,7 +819,7 @@ describe_current do
     let(:result) { status.pro_subscription }
 
     context "when pro is on" do
-      before { allow(Karafka).to receive(:pro?).and_return(true) }
+      before { Karafka.stubs(:pro?).returns(true) }
 
       it "expect all to be ok" do
         assert(result.success?)
@@ -836,7 +830,7 @@ describe_current do
     end
 
     context "when pro is off" do
-      before { allow(Karafka).to receive(:pro?).and_return(false) }
+      before { Karafka.stubs(:pro?).returns(false) }
 
       it "expect all to be ok" do
         assert(result.success?)

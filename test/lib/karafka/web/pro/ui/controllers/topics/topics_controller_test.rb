@@ -46,7 +46,7 @@ describe_current do
 
     context "when there are no topics" do
       before do
-        allow(Karafka::Web::Ui::Models::Topic).to receive(:all).and_return([])
+        Karafka::Web::Ui::Models::Topic.stubs(:all).returns([])
         get "topics"
       end
 
@@ -61,9 +61,7 @@ describe_current do
 
     context "when internal topics should be displayed" do
       before do
-        allow(Karafka::Web.config.ui.visibility)
-          .to receive(:internal_topics)
-          .and_return(true)
+        Karafka::Web.config.ui.visibility.stubs(:internal_topics).returns(true)
 
         get "topics"
       end
@@ -219,7 +217,7 @@ describe_current do
       }.each do |topic_name_val, expected_success|
         context "with topic name #{topic_name_val[0, 20]}" do
           before do
-            allow(Karafka::Admin).to receive(:create_topic) if expected_success
+            Karafka::Admin.stubs(:create_topic) if expected_success
             post "topics", default_params.merge(topic_name: topic_name_val)
           end
 

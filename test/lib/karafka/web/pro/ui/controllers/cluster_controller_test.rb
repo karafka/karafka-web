@@ -35,9 +35,7 @@ describe_current do
 
     context "when requests policy prevents us from visiting this page" do
       before do
-        allow(Karafka::Web.config.ui.policies.requests)
-          .to receive(:allow?)
-          .and_return(false)
+        Karafka::Web.config.ui.policies.requests.stubs(:allow?).returns(false)
 
         get "cluster"
       end

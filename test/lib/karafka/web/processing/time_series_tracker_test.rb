@@ -9,14 +9,7 @@ describe_current do
   describe "#initialize" do
     context "when initialized with empty data" do
       it "creates empty arrays for all time ranges" do
-        expect(tracker.to_h).to eq(
-          {
-            days: [],
-            hours: [],
-            minutes: [],
-            seconds: []
-          }
-        )
+        assert_equal( { days: [], hours: [], minutes: [], seconds: [] } , tracker.to_h)
       end
     end
 
@@ -233,9 +226,9 @@ describe_current do
     end
 
     it "has all ranges frozen" do
-      expect(described_class::TIME_RANGES).to be_frozen
+      assert(described_class::TIME_RANGES.frozen?)
       described_class::TIME_RANGES.each_value do |config|
-        expect(config).to be_frozen
+        assert(config.frozen?)
       end
     end
   end

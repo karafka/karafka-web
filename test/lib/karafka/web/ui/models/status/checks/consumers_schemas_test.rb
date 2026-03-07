@@ -14,11 +14,11 @@ describe_current do
   describe "#call" do
     context "when all processes have compatible schemas" do
       let(:process1) do
-        instance_double(Karafka::Web::Ui::Models::Process, schema_compatible?: true)
+        stub(schema_compatible?: true)
       end
 
       let(:process2) do
-        instance_double(Karafka::Web::Ui::Models::Process, schema_compatible?: true)
+        stub(schema_compatible?: true)
       end
 
       before do
@@ -35,11 +35,11 @@ describe_current do
 
     context "when some processes have incompatible schemas" do
       let(:compatible_process) do
-        instance_double(Karafka::Web::Ui::Models::Process, schema_compatible?: true)
+        stub(schema_compatible?: true)
       end
 
       let(:incompatible_process) do
-        instance_double(Karafka::Web::Ui::Models::Process, schema_compatible?: false)
+        stub(schema_compatible?: false)
       end
 
       before do
@@ -56,17 +56,17 @@ describe_current do
       it "includes incompatible processes in details" do
         result = check.call
 
-        expect(result.details[:incompatible]).to contain_exactly(incompatible_process)
+        assert_equal([incompatible_process].sort, (result.details[:incompatible]).sort)
       end
     end
 
     context "when all processes have incompatible schemas" do
       let(:incompatible1) do
-        instance_double(Karafka::Web::Ui::Models::Process, schema_compatible?: false)
+        stub(schema_compatible?: false)
       end
 
       let(:incompatible2) do
-        instance_double(Karafka::Web::Ui::Models::Process, schema_compatible?: false)
+        stub(schema_compatible?: false)
       end
 
       before do
@@ -77,7 +77,7 @@ describe_current do
         result = check.call
 
         assert_equal(:warning, result.status)
-        expect(result.details[:incompatible]).to contain_exactly(incompatible1, incompatible2)
+        assert_equal([incompatible1, incompatible2].sort, (result.details[:incompatible]).sort)
       end
     end
   end

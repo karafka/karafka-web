@@ -14,25 +14,19 @@ describe_current do
   end
 
   let(:consumer_group) do
-    instance_double(
-      Karafka::Routing::ConsumerGroup,
-      id: "group1"
+    stub(id: "group1"
     )
   end
 
   let(:subscription_group) do
-    instance_double(
-      Karafka::Routing::SubscriptionGroup,
-      id: "sub1",
+    stub(id: "sub1",
       consumer_group: consumer_group
     )
   end
 
   describe "#on_error_occurred" do
     let(:topic) do
-      instance_double(
-        Karafka::Routing::Topic,
-        name: "topic_name",
+      stub(name: "topic_name",
         consumer_group: consumer_group,
         subscription_group: subscription_group
       )
@@ -128,15 +122,7 @@ describe_current do
         listener.on_error_occurred(event)
         error_details = sampler.errors.last[:details]
 
-        expect(error_details).to include(
-          topic: "topic_name",
-          consumer_group: "group1",
-          subscription_group: "sub1",
-          partition: 0,
-          first_offset: 5,
-          last_offset: 10,
-          committed_offset: 99
-        )
+        assert_includes(error_details,  topic: "topic_name", consumer_group: "group1", subscription_group: "sub1", partition: 0, first_offset: 5, last_offset: 10, committed_offset: 99 )
 
         assert_equal(["tag1"], error_details[:tags].to_a)
       end
@@ -167,7 +153,7 @@ describe_current do
         end
 
         before do
-          allow(Karafka).to receive(:pro?).and_return(true)
+          Karafka.stubs(:pro?).returns(true)
         end
 
         it "expect to include trace_id in details" do
@@ -180,7 +166,7 @@ describe_current do
 
       context "when Karafka is not pro version" do
         before do
-          allow(Karafka).to receive(:pro?).and_return(false)
+          Karafka.stubs(:pro?).returns(false)
         end
 
         it "expect trace_id to be nil" do
@@ -204,16 +190,12 @@ describe_current do
         listener.on_error_occurred(event)
         error_details = sampler.errors.last[:details]
 
-        expect(error_details).to include(
-          consumer_group: "group1",
-          subscription_group: "sub1",
-          name: ""
-        )
+        assert_includes(error_details,  consumer_group: "group1", subscription_group: "sub1", name: "" )
       end
     end
 
     context "when caller is a listener" do
-      before { allow(subscription_group).to receive(:topics).and_return([topic]) }
+      before { subscription_group.stubs(:topics).returns([topic]) }
 
       let(:caller_ref) do
         Karafka::Connection::Listener.new(
@@ -227,10 +209,7 @@ describe_current do
         listener.on_error_occurred(event)
         error_details = sampler.errors.last[:details]
 
-        expect(error_details).to include(
-          consumer_group: "group1",
-          subscription_group: "sub1"
-        )
+        assert_includes(error_details,  consumer_group: "group1", subscription_group: "sub1" )
       end
     end
 
