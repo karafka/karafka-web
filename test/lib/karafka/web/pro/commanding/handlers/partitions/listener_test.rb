@@ -23,11 +23,10 @@
 describe_current do
   let(:listener) { described_class.new }
 
-  let(:tracker) { stub() }
-  let(:executor) { stub() }
+  let(:tracker) { stub }
+  let(:executor) { stub }
   let(:connection_listener) do
-    stub(subscription_group: subscription_group
-    )
+    stub(subscription_group: subscription_group)
   end
 
   let(:consumer_group) do
@@ -37,8 +36,7 @@ describe_current do
   let(:subscription_group) do
     stub(id: subscription_group_id,
       consumer_group: consumer_group,
-      topics: [routing_topic]
-    )
+      topics: [routing_topic])
   end
 
   let(:routing_topic) do
@@ -50,8 +48,8 @@ describe_current do
   let(:topic_name) { "test_topic" }
   let(:partition_id) { 0 }
 
-  let(:client) { stub() }
-  let(:command) { stub() }
+  let(:client) { stub }
+  let(:command) { stub }
 
   let(:rdkafka_partition) do
     stub(partition: partition_id)
@@ -66,7 +64,7 @@ describe_current do
 
     Karafka::Web::Pro::Commanding::Handlers::Partitions::Executor.stubs(:new).returns(executor)
 
-    client.stubs(:assignment).returns( stub(to_h: assignments) )
+    client.stubs(:assignment).returns(stub(to_h: assignments))
   end
 
   describe "#on_connection_listener_fetch_loop" do
@@ -86,7 +84,6 @@ describe_current do
       tracker.expects(:each_for).with(consumer_group_id, topic_name, partition_id)
       executor.expects(:call).with(connection_listener, client, command)
       listener.on_connection_listener_fetch_loop(event)
-
     end
 
     context "when no commands exist" do
@@ -136,14 +133,12 @@ describe_current do
     it "queries partition_ids_for to get partitions with pending commands" do
       tracker.expects(:partition_ids_for).with(consumer_group_id, topic_name)
       listener.on_rebalance_partitions_assigned(event)
-
     end
 
     it "rejects pending commands only for partitions returned by partition_ids_for" do
       tracker.expects(:each_for).with(consumer_group_id, topic_name, partition_id)
       executor.expects(:reject).with(command)
       listener.on_rebalance_partitions_assigned(event)
-
     end
 
     context "when multiple partitions have pending commands" do
@@ -160,7 +155,6 @@ describe_current do
         tracker.expects(:each_for).with(consumer_group_id, topic_name, partition_id) # MOCHA_REORDER
 
         tracker.expects(:each_for).with(consumer_group_id, topic_name, partition_id2) # MOCHA_REORDER
-
       end
     end
 
@@ -173,7 +167,6 @@ describe_current do
         tracker.expects(:each_for).never
         executor.expects(:reject).never
         listener.on_rebalance_partitions_assigned(event)
-
       end
     end
   end
@@ -196,7 +189,6 @@ describe_current do
       tracker.expects(:each_for).with(consumer_group_id, topic_name, partition_id)
       executor.expects(:reject).with(command)
       listener.on_rebalance_partitions_revoked(event)
-
     end
 
     it "behaves same as on_rebalance_partitions_assigned" do
@@ -217,7 +209,6 @@ describe_current do
         tracker.expects(:each_for).never
         executor.expects(:reject).never
         listener.on_rebalance_partitions_revoked(event)
-
       end
     end
   end

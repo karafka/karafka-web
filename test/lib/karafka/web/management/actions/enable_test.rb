@@ -14,10 +14,10 @@ describe_current do
   end
 
   context "when tracking is active" do
-    let(:ui_listener) { stub() }
-    let(:routes) { stub() }
-    let(:karafka_monitor) { stub() }
-    let(:app_monitor) { stub() }
+    let(:ui_listener) { stub }
+    let(:routes) { stub }
+    let(:karafka_monitor) { stub }
+    let(:app_monitor) { stub }
 
     before do
       # Config mocks
@@ -45,13 +45,12 @@ describe_current do
     it "expect to subscribe UI listeners to Karafka monitor" do
       karafka_monitor.expects(:subscribe).with(ui_listener)
       enable
-
     end
   end
 
   context "when tracking is not active" do
-    let(:routes) { stub() }
-    let(:karafka_monitor) { stub() }
+    let(:routes) { stub }
+    let(:karafka_monitor) { stub }
 
     before do
       Karafka::Web.config.stubs(:enabled).returns(false, true)
@@ -70,7 +69,6 @@ describe_current do
     it "expect not to subscribe any listeners" do
       karafka_monitor.expects(:subscribe).never
       enable
-
     end
   end
 end

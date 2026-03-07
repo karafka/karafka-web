@@ -20,19 +20,19 @@ describe_current do
 
   describe "#topics_consumers_states" do
     it "returns the configured states topic name" do
-      assert_equal( Karafka::Web.config.topics.consumers.states.name.to_s , context.topics_consumers_states)
+      assert_equal(Karafka::Web.config.topics.consumers.states.name.to_s, context.topics_consumers_states)
     end
   end
 
   describe "#topics_consumers_reports" do
     it "returns the configured reports topic name" do
-      assert_equal( Karafka::Web.config.topics.consumers.reports.name.to_s , context.topics_consumers_reports)
+      assert_equal(Karafka::Web.config.topics.consumers.reports.name.to_s, context.topics_consumers_reports)
     end
   end
 
   describe "#topics_consumers_metrics" do
     it "returns the configured metrics topic name" do
-      assert_equal( Karafka::Web.config.topics.consumers.metrics.name.to_s , context.topics_consumers_metrics)
+      assert_equal(Karafka::Web.config.topics.consumers.metrics.name.to_s, context.topics_consumers_metrics)
     end
   end
 
@@ -44,7 +44,7 @@ describe_current do
 
   describe "#topics_consumers_commands" do
     it "returns the configured commands topic name" do
-      assert_equal( Karafka::Web.config.topics.consumers.commands.name.to_s , context.topics_consumers_commands)
+      assert_equal(Karafka::Web.config.topics.consumers.commands.name.to_s, context.topics_consumers_commands)
     end
   end
 

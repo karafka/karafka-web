@@ -11,8 +11,7 @@ describe Karafka::Web::Ui::Base do
   describe "error handling and reporting" do
     let(:controller) do
       stub(run_before_hooks: nil,
-        run_after_hooks: nil
-      )
+        run_after_hooks: nil)
     end
 
     before do
@@ -49,7 +48,6 @@ describe Karafka::Web::Ui::Base do
         monitor.expects(:instrument).never
         get "dashboard"
 
-
         assert_equal(404, status)
       end
     end
@@ -64,7 +62,6 @@ describe Karafka::Web::Ui::Base do
 
         monitor.expects(:instrument).never
         get "dashboard"
-
 
         assert_equal(402, status)
       end
@@ -81,7 +78,6 @@ describe Karafka::Web::Ui::Base do
         monitor.expects(:instrument).never
         get "dashboard"
 
-
         assert_equal(403, status)
       end
     end
@@ -96,7 +92,6 @@ describe Karafka::Web::Ui::Base do
 
         monitor.expects(:instrument).never
         get "dashboard"
-
 
         assert_equal(404, status)
       end

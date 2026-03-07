@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
-  let(:shell) { stub() }
+  let(:shell) { stub }
 
   # Create a fresh instance for each test to avoid Mocha cross-test stubbing errors
   def os_metrics
@@ -15,10 +15,10 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
       before do
         stub_const("RUBY_PLATFORM", "x86_64-linux")
         IO.stubs(:readlines).with("/proc/#{Process.pid}/status").returns([
-            "Name:\truby\n",
-            "VmRSS:\t123456 kB\n",
-            "VmSize:\t234567 kB\n"
-          ])
+          "Name:\truby\n",
+          "VmRSS:\t123456 kB\n",
+          "VmSize:\t234567 kB\n"
+        ])
       end
 
       it "reads from /proc/PID/status" do

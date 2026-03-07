@@ -25,8 +25,7 @@ describe_current do
 
   let(:current_process_id) { "process-123" }
   let(:message) do
-    stub(payload: { matchers: matchers }
-    )
+    stub(payload: { matchers: matchers })
   end
   let(:matchers) { {} }
 

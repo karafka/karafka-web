@@ -70,7 +70,6 @@ describe_current do
       it "does not fetch again" do
         Karafka::Web::Ui::Models::ConsumersState.expects(:current).never
         check.call
-
       end
 
       it "returns success" do

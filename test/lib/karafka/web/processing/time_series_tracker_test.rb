@@ -9,7 +9,7 @@ describe_current do
   describe "#initialize" do
     context "when initialized with empty data" do
       it "creates empty arrays for all time ranges" do
-        assert_equal( { days: [], hours: [], minutes: [], seconds: [] } , tracker.to_h)
+        assert_equal({ days: [], hours: [], minutes: [], seconds: [] }, tracker.to_h)
       end
     end
 

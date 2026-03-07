@@ -3,9 +3,9 @@
 describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Network do
   let(:network_metrics) { described_class.new(windows) }
 
-  let(:windows) { stub() }
-  let(:m1_window) { stub() }
-  let(:stats) { stub() }
+  let(:windows) { stub }
+  let(:m1_window) { stub }
+  let(:stats) { stub }
 
   before do
     windows.stubs(:m1).returns(m1_window)

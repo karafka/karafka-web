@@ -68,14 +68,14 @@ describe_current do
         hash = { name: "John", age: 30 }
         result = helper.flatten_params("", hash)
 
-        assert_equal( { "name" => "John", "age" => "30" } , result)
+        assert_equal({ "name" => "John", "age" => "30" }, result)
       end
 
       it "converts all values to strings" do
         hash = { count: 42, active: true, score: 3.14 }
         result = helper.flatten_params("", hash)
 
-        assert_equal( { "count" => "42", "active" => "true", "score" => "3.14" } , result)
+        assert_equal({ "count" => "42", "active" => "true", "score" => "3.14" }, result)
       end
     end
 
@@ -93,7 +93,7 @@ describe_current do
 
         result = helper.flatten_params("", hash)
 
-        assert_equal( { "user[name]" => "John", "user[profile][age]" => "30", "user[profile][city]" => "NYC" } , result)
+        assert_equal({ "user[name]" => "John", "user[profile][age]" => "30", "user[profile][city]" => "NYC" }, result)
       end
 
       it "handles deeply nested structures" do
@@ -109,7 +109,7 @@ describe_current do
 
         result = helper.flatten_params("", hash)
 
-        assert_equal( { "level1[level2][level3][value]" => "deep" } , result)
+        assert_equal({ "level1[level2][level3][value]" => "deep" }, result)
       end
     end
 
@@ -121,7 +121,7 @@ describe_current do
 
         result = helper.flatten_params("", hash)
 
-        assert_equal( { "tags[0]" => "ruby", "tags[1]" => "rails", "tags[2]" => "kafka" } , result)
+        assert_equal({ "tags[0]" => "ruby", "tags[1]" => "rails", "tags[2]" => "kafka" }, result)
       end
 
       it "handles arrays of hashes" do
@@ -134,7 +134,7 @@ describe_current do
 
         result = helper.flatten_params("", hash)
 
-        assert_equal( { "users[0][name]" => "John", "users[0][age]" => "30", "users[1][name]" => "Jane", "users[1][age]" => "25" } , result)
+        assert_equal({ "users[0][name]" => "John", "users[0][age]" => "30", "users[1][name]" => "Jane", "users[1][age]" => "25" }, result)
       end
 
       it "handles nested arrays" do
@@ -147,7 +147,7 @@ describe_current do
 
         result = helper.flatten_params("", hash)
 
-        assert_equal( { "matrix[0][0]" => "1", "matrix[0][1]" => "2", "matrix[1][0]" => "3", "matrix[1][1]" => "4" } , result)
+        assert_equal({ "matrix[0][0]" => "1", "matrix[0][1]" => "2", "matrix[1][0]" => "3", "matrix[1][1]" => "4" }, result)
       end
     end
 
@@ -192,7 +192,7 @@ describe_current do
         hash = { name: "John", age: 30 }
         result = helper.flatten_params("user", hash)
 
-        assert_equal( { "user[name]" => "John", "user[age]" => "30" } , result)
+        assert_equal({ "user[name]" => "John", "user[age]" => "30" }, result)
       end
     end
 
@@ -433,7 +433,7 @@ describe_current do
           "details"
         )
 
-        assert_equal( "/web-ui/scheduled_messages/explorer/topics/scheduled-topic/0/100/details" , result)
+        assert_equal("/web-ui/scheduled_messages/explorer/topics/scheduled-topic/0/100/details", result)
       end
     end
 

@@ -14,22 +14,19 @@ describe_current do
   end
 
   let(:consumer_group) do
-    stub(id: "group1"
-    )
+    stub(id: "group1")
   end
 
   let(:subscription_group) do
     stub(id: "sub1",
-      consumer_group: consumer_group
-    )
+      consumer_group: consumer_group)
   end
 
   describe "#on_error_occurred" do
     let(:topic) do
       stub(name: "topic_name",
         consumer_group: consumer_group,
-        subscription_group: subscription_group
-      )
+        subscription_group: subscription_group)
     end
 
     context "when error message string is frozen" do
@@ -122,7 +119,7 @@ describe_current do
         listener.on_error_occurred(event)
         error_details = sampler.errors.last[:details]
 
-        assert_includes(error_details,  topic: "topic_name", consumer_group: "group1", subscription_group: "sub1", partition: 0, first_offset: 5, last_offset: 10, committed_offset: 99 )
+        assert_includes(error_details, topic: "topic_name", consumer_group: "group1", subscription_group: "sub1", partition: 0, first_offset: 5, last_offset: 10, committed_offset: 99)
 
         assert_equal(["tag1"], error_details[:tags].to_a)
       end
@@ -190,7 +187,7 @@ describe_current do
         listener.on_error_occurred(event)
         error_details = sampler.errors.last[:details]
 
-        assert_includes(error_details,  consumer_group: "group1", subscription_group: "sub1", name: "" )
+        assert_includes(error_details, consumer_group: "group1", subscription_group: "sub1", name: "")
       end
     end
 
@@ -209,7 +206,7 @@ describe_current do
         listener.on_error_occurred(event)
         error_details = sampler.errors.last[:details]
 
-        assert_includes(error_details,  consumer_group: "group1", subscription_group: "sub1" )
+        assert_includes(error_details, consumer_group: "group1", subscription_group: "sub1")
       end
     end
 

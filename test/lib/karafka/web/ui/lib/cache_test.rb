@@ -28,6 +28,7 @@ describe_current do
     it "updates the hash after fetching a new key" do
       before_val = cache.hash
       cache.fetch(:foo) { "bar" }
+
       refute_equal(before_val, cache.hash)
     end
   end
@@ -96,6 +97,7 @@ describe_current do
     context "when session timestamp is newer" do
       it "clears the cache" do
         cache.fetch(:foo) { "old" }
+
         assert_nil(cache.clear_if_needed("other", cache.timestamp + 10))
 
         refute(cache.exist?)

@@ -22,8 +22,8 @@
 
 describe_current do
   let(:listener) { described_class.new }
-  let(:iterator_double) { stub() }
-  let(:message) { stub() }
+  let(:iterator_double) { stub }
+  let(:message) { stub }
 
   before do
     Karafka::Pro::Iterator.stubs(:new).returns(iterator_double)
@@ -37,7 +37,8 @@ describe_current do
       it "yields messages from the iterator" do
         yielded_args = nil
         listener.each(proc { |*yargs| yielded_args = yargs })
-        refute_nil(yielded_args, 'Expected block to yield')
+
+        refute_nil(yielded_args, "Expected block to yield")
         assert_equal([message], yielded_args)
       end
     end
@@ -54,7 +55,6 @@ describe_current do
         listener.each do
           listener.stop
         end
-
       end
     end
 
@@ -68,7 +68,6 @@ describe_current do
         iterator_double.expects(:stop)
         listener.stop
         listener.each { |_| }
-
       end
     end
   end

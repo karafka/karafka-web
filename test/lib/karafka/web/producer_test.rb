@@ -3,8 +3,8 @@
 describe_current do
   let(:producer) { described_class.new }
 
-  let(:default_producer) { stub() }
-  let(:variant) { stub() }
+  let(:default_producer) { stub }
+  let(:variant) { stub }
 
   before do
     Karafka.stubs(:producer).returns(default_producer)

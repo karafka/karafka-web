@@ -20,7 +20,7 @@ describe_current do
     }
   end
 
-  let(:producer) { stub() }
+  let(:producer) { stub }
 
   before do
     Karafka::Web.stubs(:producer).returns(producer)
@@ -30,13 +30,12 @@ describe_current do
     it "publishes data asynchronously" do
       producer.stubs(:produce_many_async)
 
-      producer.expects(:produce_many_async).with( instance_of(Array) )
+      producer.expects(:produce_many_async).with(instance_of(Array))
       described_class.publish(consumers_state, consumers_metrics)
-
     end
 
     it "compresses the state payload with zlib" do
-      producer.expects(:produce_many_sync).with( instance_of(Array) )
+      producer.expects(:produce_many_sync).with(instance_of(Array))
       expected_messages = []
 
       producer.stubs(:produce_many_async).with(anything).returns(nil) # TODO: convert do-block stub
@@ -112,7 +111,6 @@ describe_current do
       producer.stubs(:produce_many_sync)
 
       described_class.publish!(consumers_state, consumers_metrics)
-
     end
 
     it "compresses the payloads with zlib" do

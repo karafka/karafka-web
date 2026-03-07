@@ -39,7 +39,7 @@ describe_current do
     end
 
     let(:matcher_instance) { Karafka::Web::Pro::Ui::Lib::Search::Matchers::RawPayloadIncludes.new }
-    let(:iterator_instance) { stub() }
+    let(:iterator_instance) { stub }
 
     4.times do |i|
       let(:"message#{i + 1}") do
@@ -48,8 +48,7 @@ describe_current do
           timestamp: Time.now - 10,
           clean!: nil,
           raw_payload: "",
-          raw_headers: {}
-        )
+          raw_headers: {})
       end
     end
 
@@ -58,7 +57,7 @@ describe_current do
 
       Karafka::Pro::Iterator.stubs(:new).returns(iterator_instance)
 
-      iterator_instance.stubs(:each).yields(message1) .and_yield(message2) .and_yield(message3) .and_yield(message4)
+      iterator_instance.stubs(:each).yields(message1).and_yield(message2).and_yield(message3).and_yield(message4)
 
       iterator_instance.stubs(:stop)
 
@@ -102,7 +101,6 @@ describe_current do
         it "stops the iterator" do
           iterator_instance.expects(:stop).at_least_once
           runner.call
-
         end
       end
 
@@ -114,7 +112,6 @@ describe_current do
         it "stops the current partition in the iterator" do
           iterator_instance.expects(:stop_current_partition).at_least_once
           runner.call
-
         end
       end
     end

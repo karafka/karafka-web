@@ -23,8 +23,8 @@
 describe_current do
   let(:command) { described_class.new(listener, client, request) }
 
-  let(:listener) { stub() }
-  let(:client) { stub() }
+  let(:listener) { stub }
+  let(:client) { stub }
 
   let(:request) do
     Karafka::Web::Pro::Commanding::Request.new(
@@ -32,9 +32,9 @@ describe_current do
     )
   end
 
-  let(:coordinators) { stub() }
-  let(:coordinator) { stub() }
-  let(:pause_tracker) { stub() }
+  let(:coordinators) { stub }
+  let(:coordinator) { stub }
+  let(:pause_tracker) { stub }
   let(:topic) { "topic_name" }
   let(:partition_id) { 1 }
   let(:should_reset_attempts) { false }
@@ -61,7 +61,6 @@ describe_current do
         pause_tracker.expects(:reset).never
         command.expects(:result).with("applied")
         command.call
-
       end
     end
 
@@ -73,7 +72,6 @@ describe_current do
         pause_tracker.expects(:reset)
         command.expects(:result).with("applied")
         command.call
-
       end
     end
   end

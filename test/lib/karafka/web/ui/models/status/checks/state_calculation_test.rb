@@ -77,7 +77,6 @@ describe_current do
       it "does not fetch again" do
         Karafka::Web::Ui::Models::Health.expects(:current).never
         check.call
-
       end
 
       it "returns success" do

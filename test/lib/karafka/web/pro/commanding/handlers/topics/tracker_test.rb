@@ -30,8 +30,7 @@ describe_current do
   # Helper to build command with proper structure
   def build_command(group_id, topic_name)
     stub(to_h: { consumer_group_id: group_id, topic: topic_name },
-      "[]": ->(key) { { consumer_group_id: group_id, topic: topic_name }[key] }
-    ).tap do |cmd|
+      "[]": ->(key) { { consumer_group_id: group_id, topic: topic_name }[key] }).tap do |cmd|
       cmd.stubs(:[]).with(anything).returns(nil) # TODO: convert do-block stub
       # Original: allow(cmd).to receive(:[]) do |key| { consumer_group_id: group_id, topic: topic_name }[key] end
     end

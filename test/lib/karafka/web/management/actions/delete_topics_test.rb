@@ -49,8 +49,9 @@ describe_current do
       before_val = topics.call.include?(consumers_states_topic)
       delete
       after_val = topics.call.include?(consumers_states_topic)
-      assert_equal(true, before_val)
-      assert_equal(false, after_val)
+
+      assert(before_val)
+      refute(after_val)
     end
   end
 
@@ -61,8 +62,9 @@ describe_current do
       before_val = topics.call.include?(consumers_metrics_topic)
       delete
       after_val = topics.call.include?(consumers_metrics_topic)
-      assert_equal(true, before_val)
-      assert_equal(false, after_val)
+
+      assert(before_val)
+      refute(after_val)
     end
   end
 
@@ -73,8 +75,9 @@ describe_current do
       before_val = topics.call.include?(consumers_reports_topic)
       delete
       after_val = topics.call.include?(consumers_reports_topic)
-      assert_equal(true, before_val)
-      assert_equal(false, after_val)
+
+      assert(before_val)
+      refute(after_val)
     end
   end
 
@@ -85,8 +88,9 @@ describe_current do
       before_val = topics.call.include?(errors_topic)
       delete
       after_val = topics.call.include?(errors_topic)
-      assert_equal(true, before_val)
-      assert_equal(false, after_val)
+
+      assert(before_val)
+      refute(after_val)
     end
   end
 end

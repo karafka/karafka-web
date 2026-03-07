@@ -115,6 +115,7 @@ describe_current do
     it "changes state to incompatible" do
       assert_equal("compatible", manager.to_s)
       manager.invalidate!
+
       assert_equal("incompatible", manager.to_s)
     end
 

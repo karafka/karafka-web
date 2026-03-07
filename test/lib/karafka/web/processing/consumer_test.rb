@@ -11,24 +11,24 @@ describe_current do
 
   let(:messages) { [] }
   let(:coordinator) { build(:processing_coordinator) }
-  let(:migrator) { stub() }
+  let(:migrator) { stub }
 
   let(:state_aggregator) do
-    stub()
+    stub
   end
 
   let(:metrics_aggregator) do
-    stub()
+    stub
   end
 
-  let(:schema_manager) { stub() }
+  let(:schema_manager) { stub }
 
   let(:state_contract) do
-    stub()
+    stub
   end
 
   let(:metrics_contract) do
-    stub()
+    stub
   end
 
   before do
@@ -62,24 +62,22 @@ describe_current do
     context "when consuming consumer type messages" do
       let(:message1) do
         stub(payload: {
-            schema_version: "1.5.0",
-            type: "consumer",
-            process: { id: "process-1" },
-            dispatched_at: Time.now.to_f
-          },
-          offset: 100
-        )
+               schema_version: "1.5.0",
+               type: "consumer",
+               process: { id: "process-1" },
+               dispatched_at: Time.now.to_f
+             },
+          offset: 100)
       end
 
       let(:message2) do
         stub(payload: {
-            schema_version: "1.5.0",
-            type: "consumer",
-            process: { id: "process-2" },
-            dispatched_at: Time.now.to_f + 1
-          },
-          offset: 101
-        )
+               schema_version: "1.5.0",
+               type: "consumer",
+               process: { id: "process-2" },
+               dispatched_at: Time.now.to_f + 1
+             },
+          offset: 101)
       end
 
       let(:messages) { [message1, message2] }
@@ -103,7 +101,6 @@ describe_current do
           metrics_aggregator.expects(:add_report).with(message1.payload)
           metrics_aggregator.expects(:add_report).with(message2.payload)
           consumer.consume
-
         end
 
         it "marks last message as consumed on periodic flush" do
@@ -112,7 +109,6 @@ describe_current do
 
           consumer.expects(:mark_as_consumed).with(message2)
           consumer.consume
-
         end
       end
 
@@ -158,25 +154,22 @@ describe_current do
           state_aggregator.expects(:add_state).with(message1.payload, message1.offset) # MOCHA_REORDER
 
           state_aggregator.expects(:add_state).with(message2.payload, message2.offset) # MOCHA_REORDER
-
-
         end
 
         context "with old schema 1.2.x report using process[:name] instead of process[:id]" do
           let(:old_schema_message) do
             stub(payload: {
-                schema_version: "1.2.9",
-                type: "consumer",
-                process: {
-                  name: "old-process:1:1", # Old schema used :name
-                  status: "running",
-                  started_at: Time.now.to_f
-                },
-                dispatched_at: Time.now.to_f,
-                stats: { busy: 0, enqueued: 0 }
-              },
-              offset: 200
-            )
+                   schema_version: "1.2.9",
+                   type: "consumer",
+                   process: {
+                     name: "old-process:1:1", # Old schema used :name
+                     status: "running",
+                     started_at: Time.now.to_f
+                   },
+                   dispatched_at: Time.now.to_f,
+                   stats: { busy: 0, enqueued: 0 }
+                 },
+              offset: 200)
           end
 
           let(:messages) { [old_schema_message] }
@@ -206,7 +199,6 @@ describe_current do
 
             state_aggregator.expects(:add_state)
             consumer.consume
-
           end
         end
       end
@@ -215,8 +207,7 @@ describe_current do
     context "when consuming non-consumer type messages" do
       let(:producer_message) do
         stub(payload: { type: "producer", process: { id: "producer-1" } },
-          offset: 100
-        )
+          offset: 100)
       end
 
       let(:messages) { [producer_message] }
@@ -230,19 +221,17 @@ describe_current do
         state_aggregator.expects(:add).never
         metrics_aggregator.expects(:add_report).never
         consumer.consume
-
       end
     end
 
     context "when handling periodic flush" do
       let(:message) do
         stub(payload: {
-            type: "consumer",
-            process: { id: "process-1" },
-            dispatched_at: Time.now.to_f
-          },
-          offset: 100
-        )
+               type: "consumer",
+               process: { id: "process-1" },
+               dispatched_at: Time.now.to_f
+             },
+          offset: 100)
       end
 
       let(:messages) { [message] }
@@ -261,7 +250,6 @@ describe_current do
         Karafka::Web::Processing::Publisher.stubs(:publish)
 
         consumer.consume
-
       end
 
       it "flushes when interval has passed" do
@@ -270,7 +258,6 @@ describe_current do
         Karafka::Web::Processing::Publisher.stubs(:publish)
 
         consumer.consume
-
       end
     end
   end
@@ -279,12 +266,11 @@ describe_current do
     context "when data has been established" do
       let(:message) do
         stub(payload: {
-            type: "consumer",
-            process: { id: "process-1" },
-            dispatched_at: Time.now.to_f
-          },
-          offset: 100
-        )
+               type: "consumer",
+               process: { id: "process-1" },
+               dispatched_at: Time.now.to_f
+             },
+          offset: 100)
       end
 
       let(:messages) { [message] }
@@ -306,7 +292,6 @@ describe_current do
         Karafka::Web::Processing::Publisher.stubs(:publish)
 
         consumer.shutdown
-
       end
     end
 
@@ -316,7 +301,6 @@ describe_current do
         Karafka::Web::Processing::Publisher.stubs(:publish)
 
         consumer.shutdown
-
       end
     end
   end
@@ -324,8 +308,7 @@ describe_current do
   describe "bootstrap process" do
     let(:message) do
       stub(payload: { type: "consumer", process: { id: "process-1" }, dispatched_at: Time.now.to_f },
-        offset: 100
-      )
+        offset: 100)
     end
 
     let(:messages) { [message] }
@@ -340,7 +323,6 @@ describe_current do
 
       migrator.expects(:call).once
       consumer.consume
-
     end
 
     it "does not run migrator on subsequent consumes" do
@@ -354,7 +336,6 @@ describe_current do
       migrator.expects(:call).once
       consumer.consume
       consumer.consume
-
     end
 
     it "initializes aggregators and contracts" do
@@ -375,15 +356,13 @@ describe_current do
       Karafka::Web::Processing::Consumers::Contracts::Metrics.stubs(:new).returns(metrics_contract)
 
       consumer.consume
-
     end
   end
 
   describe "validation" do
     let(:message) do
       stub(payload: { type: "consumer", process: { id: "process-1" }, dispatched_at: Time.now.to_f },
-        offset: 100
-      )
+        offset: 100)
     end
 
     let(:messages) { [message] }
@@ -402,7 +381,6 @@ describe_current do
 
       state_contract.expects(:validate!).with(has_entries({}))
       consumer.consume
-
     end
 
     it "validates metrics before publishing" do
@@ -410,12 +388,11 @@ describe_current do
 
       metrics_contract.expects(:validate!).with(has_entries({}))
       consumer.consume
-
     end
 
     context "when validation fails" do
       before do
-        state_contract.stubs(:validate!).raises( Karafka::Web::Errors::ContractError, "Invalid state" )
+        state_contract.stubs(:validate!).raises(Karafka::Web::Errors::ContractError, "Invalid state")
       end
 
       it "propagates the validation error" do

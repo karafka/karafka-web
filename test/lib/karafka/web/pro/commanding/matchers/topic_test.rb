@@ -24,8 +24,7 @@ describe_current do
   let(:matcher) { described_class.new(message) }
 
   let(:message) do
-    stub(payload: { matchers: matchers }
-    )
+    stub(payload: { matchers: matchers })
   end
 
   let(:matchers) { { topic: "my_topic" } }
@@ -81,8 +80,7 @@ describe_current do
     context "when there are multiple topic assignments" do
       let(:topic2) do
         stub(name: "second_topic",
-          consumer_group: consumer_group
-        )
+          consumer_group: consumer_group)
       end
 
       let(:assignments) { { topic => [0, 1], topic2 => [0] } }

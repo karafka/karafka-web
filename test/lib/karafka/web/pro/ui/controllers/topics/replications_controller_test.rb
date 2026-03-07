@@ -141,8 +141,7 @@ describe_current do
           read_only?: false,
           sensitive?: false,
           synonym?: true,
-          synonyms: []
-        )
+          synonyms: [])
       end
 
       let(:mock_config) do
@@ -152,8 +151,7 @@ describe_current do
           read_only?: false,
           sensitive?: false,
           synonym?: false,
-          synonyms: [mock_synonym]
-        )
+          synonyms: [mock_synonym])
       end
 
       let(:topic_model) do
@@ -206,8 +204,7 @@ describe_current do
           read_only?: false,
           sensitive?: false,
           synonym?: true,
-          synonyms: []
-        )
+          synonyms: [])
       end
 
       let(:mock_config) do
@@ -217,8 +214,7 @@ describe_current do
           read_only?: false,
           sensitive?: false,
           synonym?: false,
-          synonyms: [mock_synonym]
-        )
+          synonyms: [mock_synonym])
       end
 
       let(:topic_model) do
@@ -270,8 +266,7 @@ describe_current do
           read_only?: false,
           sensitive?: false,
           synonym?: true,
-          synonyms: []
-        )
+          synonyms: [])
       end
 
       let(:mock_config) do
@@ -281,8 +276,7 @@ describe_current do
           read_only?: false,
           sensitive?: false,
           synonym?: false,
-          synonyms: [mock_synonym]
-        )
+          synonyms: [mock_synonym])
       end
 
       let(:topic_model) do

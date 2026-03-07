@@ -24,8 +24,7 @@ describe_current do
   let(:matcher) { described_class.new(message) }
 
   let(:message) do
-    stub(payload: { matchers: matchers }
-    )
+    stub(payload: { matchers: matchers })
   end
 
   let(:matchers) { { consumer_group_id: "my_consumer_group" } }

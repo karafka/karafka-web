@@ -23,9 +23,9 @@
 describe_current do
   let(:base) { described_class.new(listener, client, request) }
 
-  let(:listener) { stub() }
-  let(:client) { stub() }
-  let(:request) { stub() }
+  let(:listener) { stub }
+  let(:client) { stub }
+  let(:request) { stub }
 
   describe "#call" do
     it "raises NotImplementedError" do

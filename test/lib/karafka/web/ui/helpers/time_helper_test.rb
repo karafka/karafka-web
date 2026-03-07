@@ -134,7 +134,7 @@ describe_current do
       it "returns badge without title or time information" do
         result = helper.poll_state_with_change_time_label("active", 1_000)
 
-        assert_equal( %(<span class="badge badge-success">active</span>) , result.strip)
+        assert_equal(%(<span class="badge badge-success">active</span>), result.strip)
       end
     end
 

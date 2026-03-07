@@ -32,9 +32,8 @@ describe_current do
 
     context "without matchers" do
       it "dispatches a request message without key (filtering via matchers)" do
-        Karafka::Web.producer.expects(:produce_async).with( has_entries( topic: commands_topic, partition: 0 ) )
+        Karafka::Web.producer.expects(:produce_async).with(has_entries(topic: commands_topic, partition: 0))
         described_class.request(command_name)
-
       end
     end
 
@@ -42,9 +41,8 @@ describe_current do
       let(:process_id) { "process123" }
 
       it "dispatches request with matchers for filtering" do
-        Karafka::Web.producer.expects(:produce_async).with( has_entries( topic: commands_topic, partition: 0 ) )
+        Karafka::Web.producer.expects(:produce_async).with(has_entries(topic: commands_topic, partition: 0))
         described_class.request(command_name, {}, matchers: { process_id: process_id })
-
       end
     end
   end
@@ -55,9 +53,8 @@ describe_current do
     let(:result) { { success: true } }
 
     it "dispatches a result message with the correct structure" do
-      Karafka::Web.producer.expects(:produce_async).with( has_entries( topic: commands_topic, key: process_id, partition: 0 ) )
+      Karafka::Web.producer.expects(:produce_async).with(has_entries(topic: commands_topic, key: process_id, partition: 0))
       described_class.result(command_name, process_id, result)
-
     end
   end
 end

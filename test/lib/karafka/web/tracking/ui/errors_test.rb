@@ -3,7 +3,7 @@
 describe Karafka::Web::Tracking::Ui::Errors do
   let(:listener) { described_class.new }
 
-  let(:producer) { stub() }
+  let(:producer) { stub }
   let(:error) { StandardError.new("UI error message") }
   let(:event) do
     {
@@ -24,7 +24,10 @@ describe Karafka::Web::Tracking::Ui::Errors do
 
       it "expect to dispatch error to Kafka" do
         captured_params = nil
-        producer.stubs(:produce_async).with { |params| captured_params = params; true }
+        producer.stubs(:produce_async).with { |params|
+          captured_params = params
+          true
+        }
 
         listener.on_error_occurred(event)
 
@@ -51,7 +54,10 @@ describe Karafka::Web::Tracking::Ui::Errors do
 
       it "expect each error to have a unique id" do
         captured_calls = []
-        producer.stubs(:produce_async).with { |params| captured_calls << params; true }
+        producer.stubs(:produce_async).with { |params|
+          captured_calls << params
+          true
+        }
 
         listener.on_error_occurred(event)
         listener.on_error_occurred(event)
@@ -73,7 +79,6 @@ describe Karafka::Web::Tracking::Ui::Errors do
       it "expect not to dispatch to Kafka" do
         producer.expects(:produce_async).never
         listener.on_error_occurred(event)
-
       end
     end
 
@@ -86,7 +91,6 @@ describe Karafka::Web::Tracking::Ui::Errors do
       it "expect to log the error and not raise" do
         Karafka.logger.expects(:error).with(/Failed to report UI error/)
         listener.on_error_occurred(event)
-
       end
     end
   end

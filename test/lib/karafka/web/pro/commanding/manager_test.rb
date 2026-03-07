@@ -29,7 +29,6 @@ describe_current do
     it "expect to start listening for commands asynchronously" do
       manager.expects(:async_call).with("karafka.web.pro.commanding.manager")
       manager.on_app_running(nil)
-
     end
   end
 
@@ -62,11 +61,10 @@ describe_current do
 
     let(:message) do
       stub(payload: {
-          command: {
-            name: command_name
-          }
+        command: {
+          name: command_name
         }
-      )
+      })
     end
 
     before do

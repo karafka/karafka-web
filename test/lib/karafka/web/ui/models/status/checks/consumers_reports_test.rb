@@ -64,7 +64,6 @@ describe_current do
       it "does not fetch again" do
         Karafka::Web::Ui::Models::Processes.expects(:all).never
         check.call
-
       end
 
       it "returns success" do

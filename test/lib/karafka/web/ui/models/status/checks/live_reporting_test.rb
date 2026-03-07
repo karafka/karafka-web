@@ -13,8 +13,8 @@ describe_current do
 
   describe "#call" do
     context "when there are active processes" do
-      let(:process1) { stub() }
-      let(:process2) { stub() }
+      let(:process1) { stub }
+      let(:process2) { stub }
 
       before do
         context.processes = [process1, process2]

@@ -24,10 +24,10 @@ describe_current do
   let(:topic_listener) { described_class.new }
 
   let(:tracker) { Karafka::Web::Pro::Commanding::Handlers::Topics::Tracker.instance }
-  let(:executor) { stub() }
+  let(:executor) { stub }
   let(:consumer_group_id) { SecureRandom.uuid }
   let(:topic_name) { "test_topic" }
-  let(:command) { stub() }
+  let(:command) { stub }
 
   before do
     Karafka::Web::Pro::Commanding::Handlers::Topics::Tracker.stubs(:instance).returns(tracker)
@@ -36,9 +36,9 @@ describe_current do
   end
 
   describe "#on_connection_listener_fetch_loop" do
-    let(:listener) { stub() }
-    let(:client) { stub() }
-    let(:subscription_group) { stub() }
+    let(:listener) { stub }
+    let(:client) { stub }
+    let(:subscription_group) { stub }
     let(:consumer_group) { stub(id: consumer_group_id) }
     let(:topic) { stub(name: topic_name) }
     let(:event) { { caller: listener, client: client } }
@@ -55,17 +55,16 @@ describe_current do
       tracker.expects(:each_for).with(consumer_group_id, topic_name)
       executor.expects(:call).with(listener, client, command)
       topic_listener.on_connection_listener_fetch_loop(event)
-
     end
 
     context "when multiple topics exist in subscription group" do
       let(:topic2) { stub(name: "test_topic2") }
-      let(:command2) { stub() }
+      let(:command2) { stub }
 
       before do
         subscription_group.stubs(:topics).returns([topic, topic2])
 
-        tracker.stubs(:each_for).with(consumer_group_id, "test_topic2") .and_yield(command2)
+        tracker.stubs(:each_for).with(consumer_group_id, "test_topic2").and_yield(command2)
       end
 
       it "checks for commands on all topics" do
@@ -74,13 +73,12 @@ describe_current do
         executor.expects(:call).with(listener, client, command)
         executor.expects(:call).with(listener, client, command2)
         topic_listener.on_connection_listener_fetch_loop(event)
-
       end
     end
   end
 
   describe "#on_rebalance_partitions_assigned" do
-    let(:subscription_group) { stub() }
+    let(:subscription_group) { stub }
     let(:consumer_group) { stub(id: consumer_group_id) }
     let(:topic) { stub(name: topic_name) }
     let(:event) { { subscription_group: subscription_group } }
@@ -96,12 +94,11 @@ describe_current do
       tracker.expects(:each_for).with(consumer_group_id, topic_name)
       executor.expects(:reject).with(command)
       topic_listener.on_rebalance_partitions_assigned(event)
-
     end
   end
 
   describe "#on_rebalance_partitions_revoked" do
-    let(:subscription_group) { stub() }
+    let(:subscription_group) { stub }
     let(:consumer_group) { stub(id: consumer_group_id) }
     let(:topic) { stub(name: topic_name) }
     let(:event) { { subscription_group: subscription_group } }
@@ -117,7 +114,6 @@ describe_current do
       tracker.expects(:each_for).with(consumer_group_id, topic_name)
       executor.expects(:reject).with(command)
       topic_listener.on_rebalance_partitions_revoked(event)
-
     end
   end
 end

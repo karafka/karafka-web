@@ -3,8 +3,8 @@
 describe_current do
   let(:listener) { described_class.new }
 
-  let(:sampler) { stub() }
-  let(:reporter) { stub() }
+  let(:sampler) { stub }
+  let(:reporter) { stub }
 
   before do
     Karafka::Web.config.tracking.producers.stubs(:sampler).returns(sampler)
@@ -118,7 +118,7 @@ describe_current do
 
   describe "configuration integration" do
     context "when producers sampler configuration changes" do
-      let(:new_sampler) { stub() }
+      let(:new_sampler) { stub }
 
       it "uses the newly configured sampler for delegation" do
         # Change configuration and create new instance
@@ -132,7 +132,7 @@ describe_current do
     end
 
     context "when producers reporter configuration changes" do
-      let(:new_reporter) { stub() }
+      let(:new_reporter) { stub }
 
       it "uses the newly configured reporter for delegation" do
         # Change configuration and create new instance

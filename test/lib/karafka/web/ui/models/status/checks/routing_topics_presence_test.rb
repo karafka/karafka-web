@@ -28,7 +28,7 @@ describe_current do
       end
 
       let(:topics_collection) do
-        stub().tap do |tc|
+        stub.tap do |tc|
           tc.stubs(:map).yields(topic).returns([topic])
         end
       end
@@ -57,7 +57,7 @@ describe_current do
       end
 
       let(:topics_collection) do
-        stub().tap do |tc|
+        stub.tap do |tc|
           tc.stubs(:map).yields(missing_topic).returns([missing_topic])
         end
       end
@@ -102,7 +102,7 @@ describe_current do
       end
 
       let(:topics_collection) do
-        stub().tap do |tc|
+        stub.tap do |tc|
           tc.stubs(:map).yields(pattern_topic).returns([pattern_topic])
         end
       end
@@ -131,7 +131,7 @@ describe_current do
       end
 
       let(:topics_collection) do
-        stub().tap do |tc|
+        stub.tap do |tc|
           tc.stubs(:map).yields(inactive_topic).returns([inactive_topic])
         end
       end

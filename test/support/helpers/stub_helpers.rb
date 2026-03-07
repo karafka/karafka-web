@@ -33,7 +33,7 @@ module StubHelpers
         if is_singleton && original_for_restore
           obj.define_singleton_method(method_name, original_for_restore)
         end
-      rescue StandardError
+      rescue
         nil
       end
     end

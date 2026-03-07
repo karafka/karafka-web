@@ -23,7 +23,6 @@ describe_current do
       consumers_reporter.expects(:report).once
       producers_reporter.expects(:report).never
       assert_raises(StandardError) { scheduler.send(:call) }
-
     end
   end
 end

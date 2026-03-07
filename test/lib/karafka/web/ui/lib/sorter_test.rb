@@ -39,6 +39,7 @@ describe_current do
     it "does not change the resource" do
       before_val = resource.dup
       sorting
+
       assert_equal(before_val, resource)
     end
   end
@@ -111,6 +112,7 @@ describe_current do
     it "does not change the resource" do
       before_val = resource.dup
       sorting
+
       assert_equal(before_val, resource)
     end
   end

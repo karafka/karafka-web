@@ -23,8 +23,8 @@
 describe_current do
   let(:command) { described_class.new(listener, client, request) }
 
-  let(:listener) { stub() }
-  let(:client) { stub() }
+  let(:listener) { stub }
+  let(:client) { stub }
   let(:request) do
     Karafka::Web::Pro::Commanding::Request.new(
       offset: desired_offset,
@@ -33,15 +33,15 @@ describe_current do
     )
   end
 
-  let(:coordinators) { stub() }
-  let(:coordinator) { stub() }
-  let(:pause_tracker) { stub() }
+  let(:coordinators) { stub }
+  let(:coordinator) { stub }
+  let(:pause_tracker) { stub }
   let(:topic) { "topic_name" }
   let(:partition_id) { 1 }
   let(:desired_offset) { 100 }
   let(:prevent_overtaking) { false }
   let(:force_resume) { false }
-  let(:seek_message) { stub() }
+  let(:seek_message) { stub }
 
   before do
     listener.stubs(:coordinators).returns(coordinators)
@@ -128,7 +128,6 @@ describe_current do
         pause_tracker.expects(:reset)
         command.expects(:result).with("applied")
         command.call
-
       end
     end
   end

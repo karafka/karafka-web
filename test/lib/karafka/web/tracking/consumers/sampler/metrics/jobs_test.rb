@@ -61,7 +61,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
 
   describe "#jobs_queue_statistics" do
     context "when jobs queue is available with all statistics" do
-      let(:queue) { stub() }
+      let(:queue) { stub }
 
       before do
         Karafka::Server.stubs(:jobs_queue).returns(queue)
@@ -74,7 +74,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
     end
 
     context "when jobs queue is available without waiting stat" do
-      let(:queue) { stub() }
+      let(:queue) { stub }
 
       before do
         Karafka::Server.stubs(:jobs_queue).returns(queue)
@@ -97,7 +97,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
     end
 
     context "when jobs queue is available but statistics is nil" do
-      let(:queue) { stub() }
+      let(:queue) { stub }
 
       before do
         Karafka::Server.stubs(:jobs_queue).returns(queue)

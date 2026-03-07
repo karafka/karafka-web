@@ -24,8 +24,7 @@ describe_current do
   let(:matcher) { described_class.new(message) }
 
   let(:message) do
-    stub(headers: { "type" => message_type }
-    )
+    stub(headers: { "type" => message_type })
   end
 
   describe "#matches?" do

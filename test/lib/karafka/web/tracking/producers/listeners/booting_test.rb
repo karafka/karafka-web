@@ -18,7 +18,6 @@ describe_current do
     it "expect to trigger async call" do
       scheduler.expects(:async_call)
       listener.on_producer_connected(event)
-
     end
   end
 end

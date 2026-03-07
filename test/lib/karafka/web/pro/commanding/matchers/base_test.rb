@@ -26,8 +26,7 @@ describe_current do
   let(:message) do
     stub(key: nil,
       payload: { schema_version: "1.2.0", matchers: {} },
-      headers: { "type" => "request" }
-    )
+      headers: { "type" => "request" })
   end
 
   describe "#matches?" do

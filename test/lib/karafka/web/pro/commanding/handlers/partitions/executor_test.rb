@@ -23,15 +23,15 @@
 describe_current do
   let(:executor) { described_class.new }
 
-  let(:listener) { stub() }
-  let(:client) { stub() }
-  let(:request) { stub() }
+  let(:listener) { stub }
+  let(:client) { stub }
+  let(:request) { stub }
 
   describe "#call" do
     context "when command is resume" do
       let(:command_name) { Karafka::Web::Pro::Commanding::Commands::Partitions::Resume.name }
       let(:command_class) { Karafka::Web::Pro::Commanding::Handlers::Partitions::Commands::Resume }
-      let(:command_instance) { stub() }
+      let(:command_instance) { stub }
 
       before do
         request.stubs(:name).returns(command_name)
@@ -43,14 +43,13 @@ describe_current do
         command_class.expects(:new).with(listener, client, request)
         command_instance.expects(:call)
         executor.call(listener, client, request)
-
       end
     end
 
     context "when command is pause" do
       let(:command_name) { Karafka::Web::Pro::Commanding::Commands::Partitions::Pause.name }
       let(:command_class) { Karafka::Web::Pro::Commanding::Handlers::Partitions::Commands::Pause }
-      let(:command_instance) { stub() }
+      let(:command_instance) { stub }
 
       before do
         request.stubs(:name).returns(command_name)
@@ -62,14 +61,13 @@ describe_current do
         command_class.expects(:new).with(listener, client, request)
         command_instance.expects(:call)
         executor.call(listener, client, request)
-
       end
     end
 
     context "when command is seek" do
       let(:command_name) { Karafka::Web::Pro::Commanding::Commands::Partitions::Seek.name }
       let(:command_class) { Karafka::Web::Pro::Commanding::Handlers::Partitions::Commands::Seek }
-      let(:command_instance) { stub() }
+      let(:command_instance) { stub }
 
       before do
         request.stubs(:name).returns(command_name)
@@ -81,7 +79,6 @@ describe_current do
         command_class.expects(:new).with(listener, client, request)
         command_instance.expects(:call)
         executor.call(listener, client, request)
-
       end
     end
 

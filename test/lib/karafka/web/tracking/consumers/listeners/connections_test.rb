@@ -3,11 +3,11 @@
 describe_current do
   let(:listener) { described_class.new }
 
-  let(:sampler) { stub() }
+  let(:sampler) { stub }
   let(:consumer_groups) { {} }
   let(:subscription_groups) { {} }
-  let(:subscription_group) { stub() }
-  let(:consumer_group) { stub() }
+  let(:subscription_group) { stub }
+  let(:consumer_group) { stub }
   let(:sg_id) { "subscription_group_1" }
   let(:cg_id) { "consumer_group_1" }
 

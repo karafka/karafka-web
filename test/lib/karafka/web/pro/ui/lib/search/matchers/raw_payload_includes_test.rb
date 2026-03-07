@@ -33,8 +33,7 @@ describe_current do
 
     let(:message) do
       stub(raw_payload: raw_payload,
-        raw_headers: headers
-      )
+        raw_headers: headers)
     end
 
     context "when the raw payload includes the phrase" do

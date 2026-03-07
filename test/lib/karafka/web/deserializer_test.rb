@@ -3,7 +3,7 @@
 describe_current do
   let(:parsing) { described_class.new.call(message) }
 
-  let(:message) { stub() }
+  let(:message) { stub }
   let(:raw_payload) { '{"key":"value"}' }
   let(:headers) { {} }
 

@@ -28,8 +28,7 @@ describe_current do
   let(:message) do
     stub(key: message_key,
       payload: message_payload,
-      headers: { "type" => message_payload[:type] }
-    )
+      headers: { "type" => message_payload[:type] })
   end
 
   before do

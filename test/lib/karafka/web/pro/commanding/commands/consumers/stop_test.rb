@@ -28,7 +28,6 @@ describe_current do
   it "expect to send a QUIT signal to the current process" do
     Process.expects(:kill).with("QUIT", Process.pid)
     stop_command.call
-
   end
 
   context "when process to which we send request is not a standalone one" do
@@ -37,7 +36,6 @@ describe_current do
     it "expect to ignore quiet command in a swarm one" do
       Process.expects(:kill).never
       stop_command.call
-
     end
   end
 end

@@ -52,7 +52,6 @@ describe_current do
         Karafka::Web::Pro::Commanding::Contracts::Config.expects(:new).never
         Karafka.monitor.expects(:subscribe).never
         described_class.post_setup(config)
-
       end
     end
 

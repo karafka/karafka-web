@@ -50,7 +50,7 @@ describe_current do
   describe "#call" do
     let(:matcher_instance) { matcher_class.new }
     let(:phrase) { "test phrase" }
-    let(:message) { stub() }
+    let(:message) { stub }
 
     it "raises NotImplementedError" do
       e = assert_raises(NotImplementedError) { matcher_instance.call(phrase, message) }

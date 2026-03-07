@@ -33,7 +33,6 @@ describe_current do
       Karafka::Web.producer.expects(:produce_many_sync).never
       Karafka::Web.producer.expects(:produce_many_async).never
       reporter.report
-
     end
   end
 
@@ -47,7 +46,6 @@ describe_current do
       Karafka::Web.producer.expects(:produce_many_sync).never
       Karafka::Web.producer.expects(:produce_many_async).never
       reporter.report
-
     end
   end
 

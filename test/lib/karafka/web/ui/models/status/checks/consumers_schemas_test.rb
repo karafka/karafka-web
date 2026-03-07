@@ -56,7 +56,7 @@ describe_current do
       it "includes incompatible processes in details" do
         result = check.call
 
-        assert_equal([incompatible_process].sort, (result.details[:incompatible]).sort)
+        assert_equal([incompatible_process].sort, result.details[:incompatible].sort)
       end
     end
 
@@ -77,7 +77,7 @@ describe_current do
         result = check.call
 
         assert_equal(:warning, result.status)
-        assert_equal([incompatible1, incompatible2].sort, (result.details[:incompatible]).sort)
+        assert_equal([incompatible1, incompatible2].sort, result.details[:incompatible].sort)
       end
     end
   end
