@@ -29,14 +29,12 @@ describe_current do
   describe "sampler delegation" do
     describe "#track" do
       it "delegates to sampler with block" do
-        sampler.stubs(:track).yields(sampler)
+        sampler.expects(:track).yields(sampler)
 
-        sampler.expects(:track)
         yielded_sampler = nil
         listener.track do |s|
           yielded_sampler = s
         end
-
 
         assert_equal(sampler, yielded_sampler)
       end
@@ -44,7 +42,7 @@ describe_current do
       it "caches the sampler instance" do
         sampler.stubs(:track)
 
-        Karafka::Web.config.tracking.consumers.expects(:sampler).once
+        Karafka::Web.config.tracking.consumers.expects(:sampler).once.returns(sampler)
         listener.track { nil }
         listener.track { nil }
 
@@ -60,21 +58,15 @@ describe_current do
   describe "reporter delegation" do
     describe "#report" do
       it "delegates to reporter" do
-        reporter.stubs(:report)
-
         reporter.expects(:report)
         listener.report
-
       end
     end
 
     describe "#report!" do
       it "delegates to reporter" do
-        reporter.stubs(:report!)
-
         reporter.expects(:report!)
         listener.report!
-
       end
     end
 
@@ -86,7 +78,7 @@ describe_current do
     it "caches the reporter instance" do
       reporter.stubs(:report)
 
-      Karafka::Web.config.tracking.consumers.expects(:reporter).once
+      Karafka::Web.config.tracking.consumers.expects(:reporter).once.returns(reporter)
       listener.report
       listener.report
 
@@ -116,13 +108,10 @@ describe_current do
       child_listener = child_class.new
       event_data = { message: "test" }
 
-      sampler.stubs(:track).yields(sampler)
-      reporter.stubs(:report)
+      sampler.expects(:track).yields(sampler)
+      reporter.expects(:report)
 
       child_listener.on_some_event(event_data)
-
-      sampler.expects(:track) # MOCHA_REORDER
-      reporter.expects(:report) # MOCHA_REORDER
     end
 
     it "maintains separate listener instances" do
@@ -143,12 +132,11 @@ describe_current do
 
       it "uses the newly configured sampler for delegation" do
         # Change configuration and create new instance
-        new_sampler.expects(:track)
         Karafka::Web.config.tracking.consumers.stubs(:sampler).returns(new_sampler)
         new_listener = described_class.new
 
         # Test that delegation works with new configuration
-        new_sampler.stubs(:track)
+        new_sampler.expects(:track)
         new_listener.track { nil }
       end
     end
@@ -158,12 +146,11 @@ describe_current do
 
       it "uses the newly configured reporter for delegation" do
         # Change configuration and create new instance
-        new_reporter.expects(:report)
         Karafka::Web.config.tracking.consumers.stubs(:reporter).returns(new_reporter)
         new_listener = described_class.new
 
         # Test that delegation works with new configuration
-        new_reporter.stubs(:report)
+        new_reporter.expects(:report)
         new_listener.report
       end
     end

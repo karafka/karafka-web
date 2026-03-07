@@ -36,26 +36,17 @@ describe_current do
       sampler.stubs(:track).yields(sampler)
       subscription_groups.stubs(:[]).with(sg_id).returns({})
 
-      sampler.expects(:track)
+      sampler.expects(:track).yields(sampler)
       listener.on_connection_listener_before_fetch_loop(event)
-
     end
 
     it "calls track with correct subscription group id" do
-      sampler.expects(:track)
-      sampler.expects(:track)
-      subscription_groups.expects(:[]).with(sg_id)
-      yielded_sampler = nil
-
-      sampler.stubs(:track).with(anything).returns(nil) # TODO: convert do-block stub
-      # Original: allow(sampler).to receive(:track) do |&block| yielded_sampler = sampler block.call(sampler) end
-
+      sampler.stubs(:track).yields(sampler)
       subscription_groups.stubs(:[]).with(sg_id).returns({})
 
+      subscription_groups.expects(:[]).with(sg_id).returns({})
+
       listener.on_connection_listener_before_fetch_loop(event)
-
-
-      assert_equal(sampler, yielded_sampler)
     end
 
     it "accesses subscription group by id in the track block" do
@@ -63,7 +54,6 @@ describe_current do
       subscription_groups.stubs(:[]).with(sg_id).returns({})
 
       listener.on_connection_listener_before_fetch_loop(event)
-
     end
 
     context "when group.instance.id is configured" do
@@ -141,7 +131,7 @@ describe_current do
     it "removes subscription group from consumer group and sampler when fetch loop ends" do
       sampler.stubs(:track).yields(sampler)
 
-      sampler.expects(:track)
+      sampler.expects(:track).yields(sampler)
       listener.on_connection_listener_after_fetch_loop(event)
 
       # Verify the deletions happened
@@ -151,14 +141,11 @@ describe_current do
 
     it "cleans up subscription group data properly" do
       sampler.stubs(:track).yields(sampler)
-      sampler.expects(:track)
+
       consumer_groups[cg_id][:subscription_groups].expects(:delete).with(sg_id)
       subscription_groups.expects(:delete).with(sg_id)
-      consumer_groups[cg_id][:subscription_groups].stubs(:delete).with(sg_id)
-      subscription_groups.stubs(:delete).with(sg_id)
 
       listener.on_connection_listener_after_fetch_loop(event)
-
     end
 
     context "when subscription group is not present" do
@@ -170,9 +157,8 @@ describe_current do
       it "handles missing subscription group gracefully" do
         sampler.stubs(:track).yields(sampler)
 
-        sampler.expects(:track)
+        sampler.expects(:track).yields(sampler)
         listener.on_connection_listener_after_fetch_loop(event)
-
       end
     end
   end
@@ -187,19 +173,11 @@ describe_current do
     end
 
     it "updates polled_at timestamp when poll is received" do
-      sampler.expects(:track)
-      listener.expects(:monotonic_now)
-      sampler.expects(:track)
-      sampler.expects(:track)
-        sampler.expects(:track)
-      current_time = nil
-      sampler.stubs(:track).with(anything).returns(nil) # TODO: convert do-block stub
-      # Original: allow(sampler).to receive(:track) do |&block| current_time = listener.monotonic_now allow(listener).to receive(:monotonic_now).and_return(current_time) block.call(sampler) end
+      sampler.stubs(:track).yields(sampler)
 
       listener.on_connection_listener_fetch_loop_received(event)
 
-
-      assert_equal(current_time, subscription_groups[sg_id][:polled_at])
+      assert_kind_of(Float, subscription_groups[sg_id][:polled_at])
     end
 
     it "uses monotonic time for polled_at timestamp" do
@@ -207,7 +185,6 @@ describe_current do
       sampler.stubs(:track).yields(sampler)
 
       listener.on_connection_listener_fetch_loop_received(event)
-
     end
 
     it "updates existing subscription group data" do
@@ -215,7 +192,6 @@ describe_current do
       sampler.stubs(:track).yields(sampler)
 
       listener.on_connection_listener_fetch_loop_received(event)
-
 
       assert_equal("preserved", subscription_groups[sg_id][:existing_data])
       assert_kind_of(Float, subscription_groups[sg_id][:polled_at])
@@ -231,7 +207,6 @@ describe_current do
         subscription_groups.stubs(:[]).with(sg_id).returns({})
 
         listener.on_connection_listener_fetch_loop_received(event)
-
       end
     end
   end

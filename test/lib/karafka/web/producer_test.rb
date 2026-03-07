@@ -23,12 +23,12 @@ describe_current do
       end
 
       it "creates the variant with correct topic_config" do
-        default_producer.expects(:variant).with(topic_config: { acks: 0 })
+        default_producer.expects(:variant).with(topic_config: { acks: 0 }).returns(variant)
         producer.__getobj__
       end
 
       it "caches the result on subsequent calls" do
-        default_producer.expects(:variant).once
+        default_producer.expects(:variant).once.returns(variant)
         3.times { producer.__getobj__ }
       end
     end
@@ -43,13 +43,12 @@ describe_current do
       end
 
       it "does not create a variant" do
-        default_producer.stubs(:variant)
         default_producer.expects(:variant).never
         producer.__getobj__
       end
 
       it "caches the result on subsequent calls" do
-        default_producer.expects(:idempotent?).once
+        default_producer.expects(:idempotent?).once.returns(true)
         3.times { producer.__getobj__ }
       end
     end
@@ -65,13 +64,12 @@ describe_current do
       end
 
       it "does not create a variant" do
-        default_producer.stubs(:variant)
         default_producer.expects(:variant).never
         producer.__getobj__
       end
 
       it "caches the result on subsequent calls" do
-        default_producer.expects(:transactional?).once
+        default_producer.expects(:transactional?).once.returns(true)
         3.times { producer.__getobj__ }
       end
     end
@@ -87,7 +85,7 @@ describe_current do
       end
 
       it "checks idempotent first and short-circuits" do
-        default_producer.expects(:idempotent?)
+        default_producer.expects(:idempotent?).returns(true)
         default_producer.expects(:transactional?).never
         producer.__getobj__
       end
@@ -102,11 +100,8 @@ describe_current do
     end
 
     it "delegates method calls to the underlying producer" do
-      variant.stubs(:produce_async).returns(true)
-
-      variant.expects(:produce_async).with(topic: "test", payload: "data")
+      variant.expects(:produce_async).with(topic: "test", payload: "data").returns(true)
       result = producer.produce_async(topic: "test", payload: "data")
-
 
       assert(result)
     end

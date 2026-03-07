@@ -13,36 +13,36 @@ describe_current do
 
   describe "#on_connection_listener_before_fetch_loop" do
     it do
+      reporter.expects(:report)
       listener.on_connection_listener_before_fetch_loop(event)
-      reporter.expects(:report) # MOCHA_REORDER
     end
   end
 
   describe "#on_app_quieting" do
     it do
+      reporter.expects(:report!)
       listener.on_app_quieting(event)
-      reporter.expects(:report!) # MOCHA_REORDER
     end
   end
 
   describe "#on_app_quiet" do
     it do
+      reporter.expects(:report!)
       listener.on_app_quiet(event)
-      reporter.expects(:report!) # MOCHA_REORDER
     end
   end
 
   describe "#on_app_stopping" do
     it do
+      reporter.expects(:report!)
       listener.on_app_stopping(event)
-      reporter.expects(:report!) # MOCHA_REORDER
     end
   end
 
   describe "#on_app_stopped" do
     it do
+      reporter.expects(:report!)
       listener.on_app_stopped(event)
-      reporter.expects(:report!) # MOCHA_REORDER
     end
   end
 end

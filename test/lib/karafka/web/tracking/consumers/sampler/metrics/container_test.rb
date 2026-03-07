@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
 describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container do
-  let(:container_metrics) { described_class.new(shell) }
-
   let(:shell) { stub() }
+
+  # Create a fresh instance for each test to avoid Mocha cross-test stubbing errors
+  def container_metrics
+    @container_metrics ||= described_class.new(shell)
+  end
+
+  before { @container_metrics = nil }
 
   describe ".active?" do
     before do

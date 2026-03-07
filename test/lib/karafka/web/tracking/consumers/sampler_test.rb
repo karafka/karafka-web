@@ -97,23 +97,25 @@ describe_current do
 
     context "when cgroups are available (simulated)" do
       it "instantiates Container metrics collector" do
-        Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container.expects(:new)
         Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container.stubs(:active?).returns(true)
-        stub_and_passthrough(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container, :new)
+        sampler = described_class.new
 
-        described_class.new
-
+        assert_kind_of(
+          Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container,
+          sampler.instance_variable_get(:@system_metrics)
+        )
       end
     end
 
     context "when cgroups are not available (simulated)" do
       it "instantiates Os metrics collector" do
-        Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os.expects(:new)
         Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container.stubs(:active?).returns(false)
-        stub_and_passthrough(Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os, :new)
+        sampler = described_class.new
 
-        described_class.new
-
+        assert_kind_of(
+          Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os,
+          sampler.instance_variable_get(:@system_metrics)
+        )
       end
     end
   end
