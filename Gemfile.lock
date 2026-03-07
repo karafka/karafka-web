@@ -112,10 +112,7 @@ GEM
       io-console (~> 0.5)
     roda (3.101.0)
       rack
-<<<<<<< HEAD
     ruby2_keywords (0.0.5)
-=======
->>>>>>> bb9655508a0d783c64a4a3ae371f985eb6405ec0
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -151,10 +148,7 @@ DEPENDENCIES
   fugit
   karafka-web!
   minitest
-<<<<<<< HEAD
   mocha
-=======
->>>>>>> bb9655508a0d783c64a4a3ae371f985eb6405ec0
   nokogiri
   ostruct
   rack-test
