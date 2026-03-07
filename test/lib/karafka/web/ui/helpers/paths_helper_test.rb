@@ -171,7 +171,19 @@ describe_current do
 
         result = helper.flatten_params("", hash)
 
-        assert_includes(result,  { "config[servers][0]" => "server1", "config[servers][1]" => "server2", "config[settings][timeout]" => "30", "config[settings][retries]" => "3", "config[settings][features][enabled][0]" => "feature1", "config[settings][features][enabled][1]" => "feature2", "metadata[version]" => "1.0.0" } )
+        expected = {
+          "config[servers][0]" => "server1",
+          "config[servers][1]" => "server2",
+          "config[settings][timeout]" => "30",
+          "config[settings][retries]" => "3",
+          "config[settings][features][enabled][0]" => "feature1",
+          "config[settings][features][enabled][1]" => "feature2",
+          "metadata[version]" => "1.0.0"
+        }
+
+        expected.each do |key, value|
+          assert_equal(value, result[key], "Expected result[#{key.inspect}] to be #{value.inspect}")
+        end
       end
     end
 

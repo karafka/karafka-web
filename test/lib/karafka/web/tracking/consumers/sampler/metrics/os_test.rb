@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
 describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
-  let(:os_metrics) { described_class.new(shell) }
-
   let(:shell) { stub() }
+
+  # Create a fresh instance for each test to avoid Mocha cross-test stubbing errors
+  def os_metrics
+    @os_metrics ||= described_class.new(shell)
+  end
+
+  before { @os_metrics = nil }
 
   describe "#memory_usage" do
     context "when running on Linux" do

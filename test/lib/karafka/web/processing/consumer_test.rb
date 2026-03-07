@@ -400,7 +400,7 @@ describe_current do
     it "validates state before publishing" do
       state_contract.stubs(:validate!)
 
-      state_contract.expects(:validate!).with(hash_including)
+      state_contract.expects(:validate!).with(has_entries({}))
       consumer.consume
 
     end
@@ -408,7 +408,7 @@ describe_current do
     it "validates metrics before publishing" do
       metrics_contract.stubs(:validate!)
 
-      metrics_contract.expects(:validate!).with(hash_including)
+      metrics_contract.expects(:validate!).with(has_entries({}))
       consumer.consume
 
     end

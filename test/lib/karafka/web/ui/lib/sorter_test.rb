@@ -36,7 +36,11 @@ describe_current do
     let(:sort_query) { "clear desc" }
     let(:allowed_attributes) { %w[] }
 
-    it { expect { sorting }.not_to(change { resource }) }
+    it "does not change the resource" do
+      before_val = resource.dup
+      sorting
+      assert_equal(before_val, resource)
+    end
   end
 
   context "when we sort array of values in an asc order" do
@@ -104,6 +108,10 @@ describe_current do
     let(:sort_query) { "a asc" }
     let(:allowed_attributes) { %w[a] }
 
-    it { expect { sorting }.not_to(change { resource }) }
+    it "does not change the resource" do
+      before_val = resource.dup
+      sorting
+      assert_equal(before_val, resource)
+    end
   end
 end
