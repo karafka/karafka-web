@@ -23,8 +23,8 @@
 describe_current do
   let(:command) { described_class.new(listener, client, request) }
 
-  let(:listener) { stub() }
-  let(:client) { stub() }
+  let(:listener) { stub }
+  let(:client) { stub }
 
   let(:request) do
     Karafka::Web::Pro::Commanding::Request.new(
@@ -36,13 +36,13 @@ describe_current do
     )
   end
 
-  let(:coordinators) { stub() }
-  let(:coordinator0) { stub() }
-  let(:coordinator1) { stub() }
-  let(:pause_tracker0) { stub() }
-  let(:pause_tracker1) { stub() }
-  let(:subscription_group) { stub() }
-  let(:consumer_group) { stub() }
+  let(:coordinators) { stub }
+  let(:coordinator0) { stub }
+  let(:coordinator1) { stub }
+  let(:pause_tracker0) { stub }
+  let(:pause_tracker1) { stub }
+  let(:subscription_group) { stub }
+  let(:consumer_group) { stub }
   let(:topic_partition_list) { { topic_name => [partition0, partition1] } }
   let(:partition0) { stub(partition: 0) }
   let(:partition1) { stub(partition: 1) }
@@ -91,21 +91,21 @@ describe_current do
         client.expects(:pause).with(topic_name, 0, nil, duration)
         client.expects(:pause).with(topic_name, 1, nil, duration)
         command.call
-
       end
 
       it "reports applied status with affected partitions" do
+        captured = nil
+        Karafka::Web::Pro::Commanding::Dispatcher.stubs(:result) { |*args| captured = args }
+
         command.call
 
-        # TODO: have_received with block - needs manual conversion
-        # Original: expect(Karafka::Web::Pro::Commanding::Dispatcher) .to have_received(:result) do |name, pid, payload|
-            assert_equal("topics.pause", name)
-            assert_equal("test-process", pid)
-            assert_equal("applied", payload[:status])
-            assert_equal([0, 1].sort, (payload[:partitions_affected]).sort)
+        name, pid, payload = captured
 
-            assert_empty(payload[:partitions_prevented])
-          end
+        assert_equal("topics.pause", name)
+        assert_equal("test-process", pid)
+        assert_equal("applied", payload[:status])
+        assert_equal([0, 1].sort, payload[:partitions_affected].sort)
+        assert_empty(payload[:partitions_prevented])
       end
     end
 
@@ -119,7 +119,6 @@ describe_current do
         client.expects(:pause).with(topic_name, 0, nil, forever_ms)
         client.expects(:pause).with(topic_name, 1, nil, forever_ms)
         command.call
-
       end
     end
 
@@ -137,18 +136,19 @@ describe_current do
         client.expects(:pause).with(topic_name, 0, nil, duration).never
         client.expects(:pause).with(topic_name, 1, nil, duration)
         command.call
-
       end
 
       it "reports affected and prevented partitions" do
+        captured = nil
+        Karafka::Web::Pro::Commanding::Dispatcher.stubs(:result) { |*args| captured = args }
+
         command.call
 
-        # TODO: have_received with block - needs manual conversion
-        # Original: expect(Karafka::Web::Pro::Commanding::Dispatcher) .to have_received(:result) do |_name, _pid, payload|
-            assert_equal("applied", payload[:status])
-            assert_equal([1].sort, (payload[:partitions_affected]).sort)
-            assert_equal([0].sort, (payload[:partitions_prevented]).sort)
-          end
+        _name, _pid, payload = captured
+
+        assert_equal("applied", payload[:status])
+        assert_equal([1].sort, payload[:partitions_affected].sort)
+        assert_equal([0].sort, payload[:partitions_prevented].sort)
       end
     end
 
@@ -165,18 +165,19 @@ describe_current do
         pause_tracker1.expects(:pause).never
         client.expects(:pause).never
         command.call
-
       end
 
       it "reports all partitions as prevented" do
+        captured = nil
+        Karafka::Web::Pro::Commanding::Dispatcher.stubs(:result) { |*args| captured = args }
+
         command.call
 
-        # TODO: have_received with block - needs manual conversion
-        # Original: expect(Karafka::Web::Pro::Commanding::Dispatcher) .to have_received(:result) do |_name, _pid, payload|
-            assert_equal("applied", payload[:status])
-            assert_empty(payload[:partitions_affected])
-            assert_equal([0, 1].sort, (payload[:partitions_prevented]).sort)
-          end
+        _name, _pid, payload = captured
+
+        assert_equal("applied", payload[:status])
+        assert_empty(payload[:partitions_affected])
+        assert_equal([0, 1].sort, payload[:partitions_prevented].sort)
       end
     end
 
@@ -186,13 +187,15 @@ describe_current do
       end
 
       it "reports applied with no affected partitions" do
+        captured = nil
+        Karafka::Web::Pro::Commanding::Dispatcher.stubs(:result) { |*args| captured = args }
+
         command.call
 
-        # TODO: have_received with block - needs manual conversion
-        # Original: expect(Karafka::Web::Pro::Commanding::Dispatcher) .to have_received(:result) do |_name, _pid, payload|
-            assert_equal("applied", payload[:status])
-            assert_empty(payload[:partitions_affected])
-          end
+        _name, _pid, payload = captured
+
+        assert_equal("applied", payload[:status])
+        assert_empty(payload[:partitions_affected])
       end
     end
   end

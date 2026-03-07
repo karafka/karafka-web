@@ -23,8 +23,8 @@
 describe_current do
   let(:command) { described_class.new(listener, client, request) }
 
-  let(:listener) { stub() }
-  let(:client) { stub() }
+  let(:listener) { stub }
+  let(:client) { stub }
 
   let(:request) do
     Karafka::Web::Pro::Commanding::Request.new(
@@ -35,13 +35,13 @@ describe_current do
     )
   end
 
-  let(:coordinators) { stub() }
-  let(:coordinator0) { stub() }
-  let(:coordinator1) { stub() }
-  let(:pause_tracker0) { stub() }
-  let(:pause_tracker1) { stub() }
-  let(:subscription_group) { stub() }
-  let(:consumer_group) { stub() }
+  let(:coordinators) { stub }
+  let(:coordinator0) { stub }
+  let(:coordinator1) { stub }
+  let(:pause_tracker0) { stub }
+  let(:pause_tracker1) { stub }
+  let(:subscription_group) { stub }
+  let(:consumer_group) { stub }
   let(:topic_partition_list) { { topic_name => [partition0, partition1] } }
   let(:partition0) { stub(partition: 0) }
   let(:partition1) { stub(partition: 1) }
@@ -84,19 +84,20 @@ describe_current do
         pause_tracker0.expects(:expire)
         pause_tracker1.expects(:expire)
         command.call
-
       end
 
       it "reports applied status with affected partitions" do
+        captured = nil
+        Karafka::Web::Pro::Commanding::Dispatcher.stubs(:result) { |*args| captured = args }
+
         command.call
 
-        # TODO: have_received with block - needs manual conversion
-        # Original: expect(Karafka::Web::Pro::Commanding::Dispatcher) .to have_received(:result) do |name, pid, payload|
-            assert_equal("topics.resume", name)
-            assert_equal("test-process", pid)
-            assert_equal("applied", payload[:status])
-            assert_equal([0, 1].sort, (payload[:partitions_affected]).sort)
-          end
+        name, pid, payload = captured
+
+        assert_equal("topics.resume", name)
+        assert_equal("test-process", pid)
+        assert_equal("applied", payload[:status])
+        assert_equal([0, 1].sort, payload[:partitions_affected].sort)
       end
 
       context "when reset_attempts is false" do
@@ -106,7 +107,6 @@ describe_current do
           pause_tracker0.expects(:reset).never
           pause_tracker1.expects(:reset).never
           command.call
-
         end
       end
 
@@ -117,7 +117,6 @@ describe_current do
           pause_tracker0.expects(:reset)
           pause_tracker1.expects(:reset)
           command.call
-
         end
       end
     end
@@ -128,13 +127,15 @@ describe_current do
       end
 
       it "reports applied with no affected partitions" do
+        captured = nil
+        Karafka::Web::Pro::Commanding::Dispatcher.stubs(:result) { |*args| captured = args }
+
         command.call
 
-        # TODO: have_received with block - needs manual conversion
-        # Original: expect(Karafka::Web::Pro::Commanding::Dispatcher) .to have_received(:result) do |_name, _pid, payload|
-            assert_equal("applied", payload[:status])
-            assert_empty(payload[:partitions_affected])
-          end
+        _name, _pid, payload = captured
+
+        assert_equal("applied", payload[:status])
+        assert_empty(payload[:partitions_affected])
       end
     end
   end
