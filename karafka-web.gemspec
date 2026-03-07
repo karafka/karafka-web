@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
 
   spec.files = `git ls-files -z`
     .split("\x0")
-    .reject { |f| f.match(%r{^(spec)/}) }
+    .reject { |f| f.match(%r{^(test|spec)/}) }
     .reject { |f| f.include?(".github") }
     .reject { |f| f.start_with?(".") }
     .reject { |f| f.end_with?(".map") }

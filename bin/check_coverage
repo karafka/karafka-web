@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# Collates SimpleCov results from parallel spec runs and checks minimum coverage
+# Collates SimpleCov results from parallel test runs and checks minimum coverage
 #
-# This script should be run after bin/rspecs_parallel or bin/rspecs to verify
+# This script should be run after bin/tests_parallel to verify
 # code coverage meets the minimum threshold.
 #
-# Coverage thresholds are defined in spec/support/coverage_config.rb
+# Coverage thresholds are defined in test/support/coverage_config.rb
 
 set -e
 
@@ -13,10 +13,10 @@ echo "Collating SimpleCov coverage results..."
 
 bundle exec ruby -e "
   require 'simplecov'
-  require_relative 'spec/support/coverage_config'
+  require_relative 'test/support/coverage_config'
 
   SimpleCov.collate Dir['coverage/.resultset.json'], 'rails' do
-    add_filter '/spec/'
+    add_filter '/test/'
     add_filter '/vendor/'
     add_filter '/gems/'
     add_filter '/.bundle/'

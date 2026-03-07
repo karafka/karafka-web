@@ -1,0 +1,369 @@
+# frozen_string_literal: true
+
+# Karafka Pro - Source Available Commercial Software
+# Copyright (c) 2017-present Maciej Mensfeld. All rights reserved.
+#
+# This software is NOT open source. It is source-available commercial software
+# requiring a paid license for use. It is NOT covered by LGPL.
+#
+# PROHIBITED:
+# - Use without a valid commercial license
+# - Redistribution, modification, or derivative works without authorization
+# - Use as training data for AI/ML models or inclusion in datasets
+# - Scraping, crawling, or automated collection for any purpose
+#
+# PERMITTED:
+# - Reading, referencing, and linking for personal or commercial use
+# - Runtime retrieval by AI assistants, coding agents, and RAG systems
+#   for the purpose of providing contextual help to Karafka users
+#
+# License: https://karafka.io/docs/Pro-License-Comm/
+# Contact: contact@karafka.io
+
+describe_current do
+  let(:app) { Karafka::Web::Pro::Ui::App }
+
+  let(:states_topic) { create_topic }
+  let(:reports_topic) { create_topic }
+  let(:consumer_group_id) { "example_app6_app" }
+  let(:topic_name) { "default" }
+  let(:commands_topic) { create_topic }
+  let(:lrj_warn1) { "Manual pause/resume operations are not supported" }
+  let(:lrj_warn2) { "Cannot Manage Long-Running Job Partitions Pausing" }
+  let(:cannot_perform) { "This Operation Cannot Be Performed" }
+  let(:not_active) { "Topic pauses can only be managed using Web UI when" }
+  let(:form) { "<form" }
+  let(:card_detail) { "card-detail-container" }
+
+  before do
+    topics_config.consumers.states.name = states_topic
+    topics_config.consumers.reports.name = reports_topic
+    topics_config.consumers.commands.name = commands_topic
+
+    produce(states_topic, Fixtures.consumers_states_file)
+    produce(reports_topic, Fixtures.consumers_reports_file)
+  end
+
+  describe "#new" do
+    let(:new_path) do
+      [
+        "consumers",
+        "topics",
+        consumer_group_id,
+        topic_name,
+        "pause",
+        "new"
+      ].join("/")
+    end
+
+    before { get(new_path) }
+
+    context "when a process exists and is running" do
+      it "expect to include relevant details" do
+        assert(response.ok?)
+        assert_body(consumer_group_id)
+        assert_body(topic_name)
+        assert_body("Pause Duration:")
+        assert_body("Safety Check:")
+        assert_body(form)
+        assert_body(card_detail)
+        refute_body(lrj_warn1)
+        refute_body(lrj_warn2)
+        refute_body(cannot_perform)
+        refute_body(not_active)
+      end
+    end
+
+    context "when a process exists, is running but topic is lrj" do
+      before do
+        # Capture let values for use inside routes.draw block
+        cg_id = consumer_group_id
+        t_name = topic_name
+
+        # Add routing for the consumer group and topic so LRJ detection works
+        Karafka::App.routes.draw do
+          consumer_group cg_id do
+            topic t_name do
+              consumer Class.new(Karafka::BaseConsumer)
+              long_running_job true
+            end
+          end
+        end
+
+        get(new_path)
+      end
+
+      it "expect to include relevant details" do
+        assert(response.ok?)
+        assert_body(consumer_group_id)
+        assert_body(topic_name)
+        assert_body(lrj_warn1)
+        assert_body(lrj_warn2)
+        refute_body("Pause Duration:")
+        refute_body("Safety Check:")
+        refute_body(form)
+        refute_body(cannot_perform)
+        refute_body(not_active)
+      end
+    end
+
+    context "when consumer group does not exist" do
+      let(:consumer_group_id) { "not-existing" }
+
+      it { assert_equal(404, status) }
+    end
+
+    context "when topic is not correct" do
+      let(:topic_name) { "not-existing" }
+
+      it { assert_equal(404, status) }
+    end
+
+    context "when no process is running" do
+      before do
+        report = Fixtures.consumers_reports_json
+        report[:process][:status] = "stopped"
+        produce(reports_topic, report.to_json)
+
+        get(new_path)
+      end
+
+      it "expect to show not running error message" do
+        assert(response.ok?)
+        assert_body(cannot_perform)
+        assert_body(not_active)
+        refute_body(form)
+      end
+    end
+  end
+
+  describe "#create" do
+    let(:duration) { 60 }
+    let(:prevent_override) { "on" }
+    let(:post_path) do
+      [
+        "consumers",
+        "topics",
+        consumer_group_id,
+        topic_name,
+        "pause"
+      ].join("/")
+    end
+
+    before do
+      post(
+        post_path,
+        duration: duration,
+        prevent_override: prevent_override
+      )
+    end
+
+    context "when a process exists and is running" do
+      it "expect to redirect with success message" do
+        assert_equal(302, response.status)
+        assert_equal("/", response.location)
+        expected_message = "Initiated pause for all partitions of the #{topic_name}"
+
+        assert_includes(flash[:success], expected_message)
+      end
+
+      it "expect to create pause command with correct parameters" do
+        sleep(1)
+        message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
+
+        # Broadcast commands don't need a key
+        assert_nil(message.key)
+        assert_equal("1.2.0", message.payload[:schema_version])
+        assert_equal("request", message.payload[:type])
+        assert_match(/\A[0-9a-f-]{36}\z/, message.payload[:id])
+        refute_nil(message.payload[:dispatched_at])
+
+        # Matchers for filtering which processes handle this command
+        matchers = message.payload.fetch(:matchers)
+
+        assert_equal(consumer_group_id, matchers[:consumer_group_id])
+        assert_equal(topic_name, matchers[:topic])
+
+        command = message.payload.fetch(:command)
+
+        assert_equal(consumer_group_id, command[:consumer_group_id])
+        assert_equal(topic_name, command[:topic])
+        assert_equal(duration * 1_000, command[:duration])
+        assert(command[:prevent_override])
+        assert_equal("topics.pause", command[:name])
+      end
+    end
+
+    context "when consumer group does not exist" do
+      let(:consumer_group_id) { "not-existing" }
+
+      it { assert_equal(404, status) }
+    end
+
+    context "when topic is not correct" do
+      let(:topic_name) { "not-existing" }
+
+      it { assert_equal(404, status) }
+    end
+  end
+
+  describe "#edit" do
+    let(:edit_path) do
+      [
+        "consumers",
+        "topics",
+        consumer_group_id,
+        topic_name,
+        "pause",
+        "edit"
+      ].join("/")
+    end
+
+    before { get(edit_path) }
+
+    context "when a process exists and is running" do
+      it "expect to include relevant details" do
+        assert(response.ok?)
+        assert_body(consumer_group_id)
+        assert_body(topic_name)
+        assert_body(card_detail)
+        assert_body("Reset Counter:")
+        assert_body("Resume All Paused Partitions")
+        assert_body(form)
+        refute_body(lrj_warn1)
+        refute_body(lrj_warn2)
+        refute_body(cannot_perform)
+        refute_body(not_active)
+      end
+    end
+
+    context "when a process exists, is running but topic is lrj" do
+      before do
+        # Capture let values for use inside routes.draw block
+        cg_id = consumer_group_id
+        t_name = topic_name
+
+        # Add routing for the consumer group and topic so LRJ detection works
+        Karafka::App.routes.draw do
+          consumer_group cg_id do
+            topic t_name do
+              consumer Class.new(Karafka::BaseConsumer)
+              long_running_job true
+            end
+          end
+        end
+
+        get(edit_path)
+      end
+
+      it "expect to include relevant details" do
+        assert(response.ok?)
+        assert_body(consumer_group_id)
+        assert_body(topic_name)
+        assert_body(lrj_warn1)
+        assert_body(lrj_warn2)
+        refute_body("Reset Counter:")
+        refute_body("Resume All Paused Partitions")
+        refute_body(form)
+        refute_body(cannot_perform)
+        refute_body(not_active)
+      end
+    end
+
+    context "when consumer group does not exist" do
+      let(:consumer_group_id) { "not-existing" }
+
+      it { assert_equal(404, status) }
+    end
+
+    context "when topic is not correct" do
+      let(:topic_name) { "not-existing" }
+
+      it { assert_equal(404, status) }
+    end
+
+    context "when no process is running" do
+      before do
+        report = Fixtures.consumers_reports_json
+        report[:process][:status] = "stopped"
+        produce(reports_topic, report.to_json)
+
+        get(edit_path)
+      end
+
+      it "expect to show not running error message" do
+        assert(response.ok?)
+        assert_body(cannot_perform)
+        assert_body(not_active)
+        refute_body(form)
+      end
+    end
+  end
+
+  describe "#delete" do
+    let(:reset_attempts) { "yes" }
+    let(:delete_path) do
+      [
+        "consumers",
+        "topics",
+        consumer_group_id,
+        topic_name,
+        "pause"
+      ].join("/")
+    end
+
+    before do
+      delete(
+        delete_path,
+        reset_attempts: reset_attempts
+      )
+    end
+
+    context "when a process exists and is running" do
+      it "expect to redirect with success message" do
+        assert_equal(302, response.status)
+        assert_equal("/", response.location)
+        expected_message = "Initiated resume for all partitions of the #{topic_name}"
+
+        assert_includes(flash[:success], expected_message)
+      end
+
+      it "expect to create resume command with correct parameters" do
+        sleep(1)
+        message = Karafka::Admin.read_topic(commands_topic, 0, 1, -1).first
+
+        # Broadcast commands don't need a key
+        assert_nil(message.key)
+        assert_equal("1.2.0", message.payload[:schema_version])
+        assert_equal("request", message.payload[:type])
+        assert_match(/\A[0-9a-f-]{36}\z/, message.payload[:id])
+        refute_nil(message.payload[:dispatched_at])
+
+        # Matchers for filtering which processes handle this command
+        matchers = message.payload.fetch(:matchers)
+
+        assert_equal(consumer_group_id, matchers[:consumer_group_id])
+        assert_equal(topic_name, matchers[:topic])
+
+        command = message.payload.fetch(:command)
+
+        assert_equal(consumer_group_id, command[:consumer_group_id])
+        assert_equal(topic_name, command[:topic])
+        assert(command[:reset_attempts])
+        assert_equal("topics.resume", command[:name])
+      end
+    end
+
+    context "when consumer group does not exist" do
+      let(:consumer_group_id) { "not-existing" }
+
+      it { assert_equal(404, status) }
+    end
+
+    context "when topic is not correct" do
+      let(:topic_name) { "not-existing" }
+
+      it { assert_equal(404, status) }
+    end
+  end
+end

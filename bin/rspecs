@@ -1,20 +1,17 @@
 #!/usr/bin/env bash
 
-# Runs all specs sequentially (regular then pro)
-# For parallel execution, use bin/rspecs_parallel
+# Runs all tests sequentially (regular then pro)
+# For parallel execution, use bin/tests_parallel
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-echo "Running specs in sequential mode..."
+echo "Running tests in sequential mode..."
 
-SPECS_TYPE=regular bundle exec rspec \
-  spec/lib \
-  --exclude-pattern "**/pro/**/*_spec.rb"
+SPECS_TYPE=regular bundle exec rake test
 
-SPECS_TYPE=pro bundle exec rspec \
-  spec/lib/karafka/web/pro
+SPECS_TYPE=pro bundle exec rake test
 
 # Run coverage check
 "$SCRIPT_DIR/check_coverage"
