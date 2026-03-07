@@ -53,12 +53,6 @@ class LinksValidator
   # Initialize the set of visited links
   def initialize
     @visited_links = Set.new
-    @wants_to_quit = false
-  end
-
-  # Signal that we should stop validating (e.g. after a failure)
-  def wants_to_quit!
-    @wants_to_quit = true
   end
 
   # Processes a response by extracting and validating all links
@@ -108,8 +102,6 @@ class LinksValidator
   #
   # @param link [String]
   def validate!(link)
-    return if @wants_to_quit
-
     # Skip if one of exceptions
     return if EXCEPTIONS.any? do |exception|
       if exception.is_a?(String)
