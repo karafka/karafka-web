@@ -27,6 +27,7 @@ describe_current do
   let(:client) { stub }
   let(:request) do
     Karafka::Web::Pro::Commanding::Request.new(
+      name: 'partitions.seek',
       offset: desired_offset,
       prevent_overtaking: prevent_overtaking,
       force_resume: force_resume
@@ -85,7 +86,7 @@ describe_current do
         let(:current_seek_offset) { desired_offset - 1 }
 
         it "executes seek operation" do
-          client.expects(:mark_as_consumed!)
+          client.expects(:mark_as_consumed!).returns(marking_success)
           command.expects(:result).with("applied")
           command.call
         end
@@ -122,7 +123,7 @@ describe_current do
 
     context "when all operations succeed" do
       it "executes the seek operation fully" do
-        client.expects(:mark_as_consumed!)
+        client.expects(:mark_as_consumed!).returns(marking_success)
         client.expects(:seek)
         coordinator.expects(:seek_offset=).with(desired_offset)
         pause_tracker.expects(:reset)
