@@ -25,8 +25,6 @@ describe_current do
 
   let(:commands_topic) { generate_topic_name }
 
-  before { Karafka::Web.producer.stubs(:produce_async) }
-
   describe ".request" do
     let(:command_name) { "quiet" }
 

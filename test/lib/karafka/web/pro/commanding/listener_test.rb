@@ -36,7 +36,7 @@ describe_current do
 
       it "yields messages from the iterator" do
         yielded_args = nil
-        listener.each(proc { |*yargs| yielded_args = yargs })
+        listener.each { |*yargs| yielded_args = yargs }
 
         refute_nil(yielded_args, "Expected block to yield")
         assert_equal([message], yielded_args)

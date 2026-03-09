@@ -57,7 +57,7 @@ describe_current do
 
     command.stubs(:topic).returns(topic)
     command.stubs(:partition_id).returns(partition_id)
-    command.stubs(:result).returns(nil)
+    Karafka::Web::Pro::Commanding::Dispatcher.stubs(:result)
 
     Karafka::Messages::Seek.stubs(:new).returns(seek_message)
     client.stubs(:mark_as_consumed!).returns(marking_success)

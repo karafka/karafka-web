@@ -23,7 +23,7 @@
 describe_current do
   let(:topic_listener) { described_class.new }
 
-  let(:tracker) { Karafka::Web::Pro::Commanding::Handlers::Topics::Tracker.instance }
+  let(:tracker) { stub }
   let(:executor) { stub }
   let(:consumer_group_id) { SecureRandom.uuid }
   let(:topic_name) { "test_topic" }

@@ -81,7 +81,7 @@ describe_current do
     end
 
     it "executes commands for each assigned partition" do
-      tracker.expects(:each_for).with(consumer_group_id, topic_name, partition_id)
+      tracker.expects(:each_for).with(consumer_group_id, topic_name, partition_id).yields(command)
       executor.expects(:call).with(connection_listener, client, command)
       listener.on_connection_listener_fetch_loop(event)
     end
@@ -129,12 +129,12 @@ describe_current do
     end
 
     it "queries partition_ids_for to get partitions with pending commands" do
-      tracker.expects(:partition_ids_for).with(consumer_group_id, topic_name)
+      tracker.expects(:partition_ids_for).with(consumer_group_id, topic_name).returns([partition_id])
       listener.on_rebalance_partitions_assigned(event)
     end
 
     it "rejects pending commands only for partitions returned by partition_ids_for" do
-      tracker.expects(:each_for).with(consumer_group_id, topic_name, partition_id)
+      tracker.expects(:each_for).with(consumer_group_id, topic_name, partition_id).yields(command)
       executor.expects(:reject).with(command)
       listener.on_rebalance_partitions_assigned(event)
     end
@@ -180,8 +180,8 @@ describe_current do
     end
 
     it "rejects all pending commands" do
-      tracker.expects(:partition_ids_for).with(consumer_group_id, topic_name)
-      tracker.expects(:each_for).with(consumer_group_id, topic_name, partition_id)
+      tracker.expects(:partition_ids_for).with(consumer_group_id, topic_name).returns([partition_id])
+      tracker.expects(:each_for).with(consumer_group_id, topic_name, partition_id).yields(command)
       executor.expects(:reject).with(command)
       listener.on_rebalance_partitions_revoked(event)
     end

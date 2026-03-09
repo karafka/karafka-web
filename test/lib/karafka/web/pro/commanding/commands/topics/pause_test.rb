@@ -25,7 +25,7 @@ describe_current do
 
   let(:command_request) { Karafka::Web::Pro::Commanding::Request.new(command_details) }
   let(:command_details) { { test: true } }
-  let(:tracker) { Karafka::Web::Pro::Commanding::Handlers::Topics::Tracker.instance }
+  let(:tracker) { stub }
 
   before do
     Karafka::Web::Pro::Commanding::Handlers::Topics::Tracker.stubs(:instance).returns(tracker)

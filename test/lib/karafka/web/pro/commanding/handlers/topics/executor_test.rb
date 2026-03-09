@@ -41,7 +41,7 @@ describe_current do
       end
 
       it "executes resume command" do
-        command_class.expects(:new).with(listener, client, request)
+        command_class.expects(:new).with(listener, client, request).returns(command_instance)
         command_instance.expects(:call)
         executor.call(listener, client, request)
       end
@@ -59,7 +59,7 @@ describe_current do
       end
 
       it "executes pause command" do
-        command_class.expects(:new).with(listener, client, request)
+        command_class.expects(:new).with(listener, client, request).returns(command_instance)
         command_instance.expects(:call)
         executor.call(listener, client, request)
       end
