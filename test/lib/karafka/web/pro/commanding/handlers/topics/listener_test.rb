@@ -47,12 +47,12 @@ describe_current do
       listener.stubs(:subscription_group).returns(subscription_group)
       subscription_group.stubs(:consumer_group).returns(consumer_group)
       subscription_group.stubs(:topics).returns([topic])
-      tracker.stubs(:each_for).with(consumer_group_id, topic_name).and_yield(command)
+      tracker.stubs(:each_for).with(consumer_group_id, topic_name).yields(command)
       executor.stubs(:call)
     end
 
     it "executes queued commands for each topic in the subscription group" do
-      tracker.expects(:each_for).with(consumer_group_id, topic_name)
+      tracker.expects(:each_for).with(consumer_group_id, topic_name).yields(command)
       executor.expects(:call).with(listener, client, command)
       topic_listener.on_connection_listener_fetch_loop(event)
     end
@@ -64,12 +64,12 @@ describe_current do
       before do
         subscription_group.stubs(:topics).returns([topic, topic2])
 
-        tracker.stubs(:each_for).with(consumer_group_id, "test_topic2").and_yield(command2)
+        tracker.stubs(:each_for).with(consumer_group_id, "test_topic2").yields(command2)
       end
 
       it "checks for commands on all topics" do
-        tracker.expects(:each_for).with(consumer_group_id, topic_name)
-        tracker.expects(:each_for).with(consumer_group_id, "test_topic2")
+        tracker.expects(:each_for).with(consumer_group_id, topic_name).yields(command)
+        tracker.expects(:each_for).with(consumer_group_id, "test_topic2").yields(command2)
         executor.expects(:call).with(listener, client, command)
         executor.expects(:call).with(listener, client, command2)
         topic_listener.on_connection_listener_fetch_loop(event)
@@ -86,12 +86,12 @@ describe_current do
     before do
       subscription_group.stubs(:consumer_group).returns(consumer_group)
       subscription_group.stubs(:topics).returns([topic])
-      tracker.stubs(:each_for).with(consumer_group_id, topic_name).and_yield(command)
+      tracker.stubs(:each_for).with(consumer_group_id, topic_name).yields(command)
       executor.stubs(:reject)
     end
 
     it "rejects pending commands due to rebalance" do
-      tracker.expects(:each_for).with(consumer_group_id, topic_name)
+      tracker.expects(:each_for).with(consumer_group_id, topic_name).yields(command)
       executor.expects(:reject).with(command)
       topic_listener.on_rebalance_partitions_assigned(event)
     end
@@ -106,12 +106,12 @@ describe_current do
     before do
       subscription_group.stubs(:consumer_group).returns(consumer_group)
       subscription_group.stubs(:topics).returns([topic])
-      tracker.stubs(:each_for).with(consumer_group_id, topic_name).and_yield(command)
+      tracker.stubs(:each_for).with(consumer_group_id, topic_name).yields(command)
       executor.stubs(:reject)
     end
 
     it "rejects pending commands due to revocation" do
-      tracker.expects(:each_for).with(consumer_group_id, topic_name)
+      tracker.expects(:each_for).with(consumer_group_id, topic_name).yields(command)
       executor.expects(:reject).with(command)
       topic_listener.on_rebalance_partitions_revoked(event)
     end

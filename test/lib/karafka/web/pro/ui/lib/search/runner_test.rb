@@ -57,7 +57,7 @@ describe_current do
 
       Karafka::Pro::Iterator.stubs(:new).returns(iterator_instance)
 
-      iterator_instance.stubs(:each).yields(message1).and_yield(message2).and_yield(message3).and_yield(message4)
+      iterator_instance.stubs(:each).multiple_yields([message1], [message2], [message3], [message4])
 
       iterator_instance.stubs(:stop)
 
