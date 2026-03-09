@@ -27,7 +27,7 @@ describe_current do
   let(:client) { stub }
   let(:request) do
     Karafka::Web::Pro::Commanding::Request.new(
-      name: 'partitions.seek',
+      name: "partitions.seek",
       offset: desired_offset,
       prevent_overtaking: prevent_overtaking,
       force_resume: force_resume
