@@ -38,7 +38,7 @@ describe_current do
       }
     end
 
-    let(:matcher_instance) { Karafka::Web::Pro::Ui::Lib::Search::Matchers::RawPayloadIncludes.new }
+    let(:matcher_instance) { stub(call: false) }
     let(:iterator_instance) { stub }
 
     4.times do |i|
