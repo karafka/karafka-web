@@ -54,7 +54,6 @@ describe_current do
     context "when messages are empty" do
       it "does not dispatch" do
         Karafka::Web::Processing::Publisher.expects(:publish).never
-        Karafka::Web::Processing::Publisher.stubs(:publish)
         consumer.consume
       end
     end
@@ -123,15 +122,13 @@ describe_current do
         end
 
         it "invalidates schema manager" do
-          schema_manager.stubs(:invalidate!)
+          schema_manager.expects(:invalidate!)
 
           begin
             consumer.consume
           rescue Karafka::Web::Errors::Processing::IncompatibleSchemaError
             # Expected
           end
-
-          schema_manager.expects(:invalidate!) # MOCHA_REORDER
         end
       end
 
@@ -143,17 +140,11 @@ describe_current do
         end
 
         it "only tracks state without full processing" do
-          state_aggregator.stubs(:add_state)
-          state_aggregator.stubs(:add)
-          metrics_aggregator.stubs(:add_report)
-
           state_aggregator.expects(:add).never
           metrics_aggregator.expects(:add_report).never
+          state_aggregator.expects(:add_state).with(message1.payload, message1.offset)
+          state_aggregator.expects(:add_state).with(message2.payload, message2.offset)
           consumer.consume
-
-          state_aggregator.expects(:add_state).with(message1.payload, message1.offset) # MOCHA_REORDER
-
-          state_aggregator.expects(:add_state).with(message2.payload, message2.offset) # MOCHA_REORDER
         end
 
         context "with old schema 1.2.x report using process[:name] instead of process[:id]" do
@@ -181,24 +172,37 @@ describe_current do
           end
 
           it "migrates process[:name] to process[:id] before passing to aggregator" do
-            state_aggregator.stubs(:add_state)
+            captured = nil
+            state_aggregator.stubs(:add_state).with { |report, offset|
+              captured = [report, offset]
+              true
+            }
 
             consumer.consume
 
-            # Verify the migrated report was passed to add_state
-            # TODO: have_received with block - needs manual conversion
-            # Original: expect(state_aggregator).to have_received(:add_state) do |report, offset| assert_equal("old-process:1:1", report[:process][:id]) refute(report[:process].key?(:name)) assert_equal(200, offset) end
+            assert(captured, "Expected add_state to have been called")
+            report, offset = captured
+
+            assert_equal("old-process:1:1", report[:process][:id])
+            refute(report[:process].key?(:name))
+            assert_equal(200, offset)
           end
 
           it "fixes the exact issue from #851 where to_sym was called on nil" do
             # This test ensures that the crash described in issue #851 is fixed:
             # "undefined method 'to_sym' for nil" when processing old reports
             # The migration system should prevent this by renaming :name to :id
-            state_aggregator.stubs(:add_state).with(anything).returns(nil) # TODO: convert do-block stub
-            # Original: allow(state_aggregator).to receive(:add_state) do |report, _offset| # This would have crashed in v0.11.3 without the migration # because report[:process][:id] would be nil refute_nil(report[:process][:id]) report[:process][:id].to_sym end
+            captured = nil
+            state_aggregator.stubs(:add_state).with { |report, _offset|
+              captured = report
+              true
+            }
 
-            state_aggregator.expects(:add_state)
             consumer.consume
+
+            refute_nil(captured)
+            refute_nil(captured[:process][:id])
+            captured[:process][:id].to_sym
           end
         end
       end
@@ -247,7 +251,6 @@ describe_current do
       it "does not flush when interval has not passed" do
         consumer.stubs(:periodic_flush?).returns(false)
         Karafka::Web::Processing::Publisher.expects(:publish).never
-        Karafka::Web::Processing::Publisher.stubs(:publish)
 
         consumer.consume
       end
@@ -255,7 +258,6 @@ describe_current do
       it "flushes when interval has passed" do
         consumer.stubs(:periodic_flush?).returns(true)
         Karafka::Web::Processing::Publisher.expects(:publish)
-        Karafka::Web::Processing::Publisher.stubs(:publish)
 
         consumer.consume
       end
@@ -289,7 +291,6 @@ describe_current do
 
       it "dispatches final state" do
         Karafka::Web::Processing::Publisher.expects(:publish)
-        Karafka::Web::Processing::Publisher.stubs(:publish)
 
         consumer.shutdown
       end
@@ -298,7 +299,6 @@ describe_current do
     context "when no data has been established" do
       it "does not dispatch" do
         Karafka::Web::Processing::Publisher.expects(:publish).never
-        Karafka::Web::Processing::Publisher.stubs(:publish)
 
         consumer.shutdown
       end
@@ -344,16 +344,11 @@ describe_current do
       state_aggregator.stubs(:stats).returns({})
       metrics_aggregator.stubs(:add_report)
       metrics_aggregator.stubs(:add_stats)
-      Karafka::Web::Processing::Consumers::SchemaManager.expects(:new).once
-      Karafka::Web::Processing::Consumers::Aggregators::State.expects(:new).once
-      Karafka::Web::Processing::Consumers::Aggregators::Metrics.expects(:new).once
-      Karafka::Web::Processing::Consumers::Contracts::State.expects(:new).once
-      Karafka::Web::Processing::Consumers::Contracts::Metrics.expects(:new).once
-      Karafka::Web::Processing::Consumers::SchemaManager.stubs(:new).returns(schema_manager)
-      Karafka::Web::Processing::Consumers::Aggregators::State.stubs(:new).returns(state_aggregator)
-      Karafka::Web::Processing::Consumers::Aggregators::Metrics.stubs(:new).returns(metrics_aggregator)
-      Karafka::Web::Processing::Consumers::Contracts::State.stubs(:new).returns(state_contract)
-      Karafka::Web::Processing::Consumers::Contracts::Metrics.stubs(:new).returns(metrics_contract)
+      Karafka::Web::Processing::Consumers::SchemaManager.expects(:new).once.returns(schema_manager)
+      Karafka::Web::Processing::Consumers::Aggregators::State.expects(:new).once.returns(state_aggregator)
+      Karafka::Web::Processing::Consumers::Aggregators::Metrics.expects(:new).once.returns(metrics_aggregator)
+      Karafka::Web::Processing::Consumers::Contracts::State.expects(:new).once.returns(state_contract)
+      Karafka::Web::Processing::Consumers::Contracts::Metrics.expects(:new).once.returns(metrics_contract)
 
       consumer.consume
     end

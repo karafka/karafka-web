@@ -284,7 +284,7 @@ describe_current do
 
       it "handles errors during to_s conversion" do
         error = StandardError.new("message")
-        message_mock = double
+        message_mock = stub
         error.stubs(:message).returns(message_mock)
         message_mock.stubs(:to_s).raises(StandardError)
 

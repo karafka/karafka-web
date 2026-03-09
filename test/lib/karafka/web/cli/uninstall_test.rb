@@ -3,11 +3,10 @@
 describe_current do
   let(:cli) { described_class.new }
 
-  let(:installer) { Karafka::Web::Installer.new }
+  let(:installer) { stub(uninstall: nil) }
 
   before do
     Karafka::Web::Installer.stubs(:new).returns(installer)
-    installer.stubs(:uninstall)
   end
 
   it "expect to uninstall using installer" do

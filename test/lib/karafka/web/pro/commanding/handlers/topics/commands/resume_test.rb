@@ -88,7 +88,10 @@ describe_current do
 
       it "reports applied status with affected partitions" do
         captured = nil
-        Karafka::Web::Pro::Commanding::Dispatcher.stubs(:result) { |*args| captured = args }
+        Karafka::Web::Pro::Commanding::Dispatcher.stubs(:result).with { |*args|
+          captured = args
+          true
+        }
 
         command.call
 
@@ -128,7 +131,10 @@ describe_current do
 
       it "reports applied with no affected partitions" do
         captured = nil
-        Karafka::Web::Pro::Commanding::Dispatcher.stubs(:result) { |*args| captured = args }
+        Karafka::Web::Pro::Commanding::Dispatcher.stubs(:result).with { |*args|
+          captured = args
+          true
+        }
 
         command.call
 

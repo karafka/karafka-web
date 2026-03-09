@@ -24,12 +24,25 @@ describe Karafka::Web::Ui::Base do
       end
 
       it "expect to report the error to Karafka monitoring and show 500 page" do
+        captured_event = nil
+        captured_payload = nil
         stub_and_passthrough(monitor, :instrument)
+        original_instrument = monitor.method(:instrument)
+        monitor.define_singleton_method(:instrument) do |*args, **kwargs, &blk|
+          if args.first == "error.occurred"
+            captured_event = args.first
+            captured_payload = args[1].is_a?(Hash) ? args[1] : kwargs
+          end
+          original_instrument.call(*args, **kwargs, &blk)
+        end
 
         get "dashboard"
 
-        # TODO: have_received with block - needs manual conversion
-        # Original: expect(monitor).to have_received(:instrument) do |event, payload| assert_equal("error.occurred", event) assert_equal("web.ui.error", payload[:type]) assert_kind_of(StandardError, payload[:error]) assert_equal("Unexpected error in UI", payload[:error].message) end
+        assert(captured_event, "Expected monitor.instrument to have been called with 'error.occurred'")
+        assert_equal("error.occurred", captured_event)
+        assert_equal("web.ui.error", captured_payload[:type])
+        assert_kind_of(StandardError, captured_payload[:error])
+        assert_equal("Unexpected error in UI", captured_payload[:error].message)
 
         assert_equal(500, status)
         assert_body("500")

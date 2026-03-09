@@ -32,11 +32,10 @@ describe_current do
 
   # Helper to build command with proper structure
   def build_command(cg_id, topic_name, part_id)
-    stub(to_h: { consumer_group_id: cg_id, topic: topic_name, partition_id: part_id },
-      "[]": ->(key) { { consumer_group_id: cg_id, topic: topic_name, partition_id: part_id }[key] }).tap do |cmd|
-      cmd.stubs(:[]).with(anything).returns(nil) # TODO: convert do-block stub
-      # Original: allow(cmd).to receive(:[]) do |key| { consumer_group_id: cg_id, topic: topic_name, partition_id: part_id }[key] end
-    end
+    data = { consumer_group_id: cg_id, topic: topic_name, partition_id: part_id }
+    cmd = stub(to_h: data)
+    cmd.define_singleton_method(:[]) { |key| data[key] }
+    cmd
   end
 
   describe "#<<" do
@@ -120,8 +119,10 @@ describe_current do
     before { tracker << command }
 
     it "yields each command for given consumer group, topic, and partition" do
-      expect { |b| tracker.each_for(consumer_group_id, topic, partition_id, &b) }
-        .to yield_with_args(command)
+      yielded = []
+      tracker.each_for(consumer_group_id, topic, partition_id) { |cmd| yielded << cmd }
+
+      assert_equal([command], yielded)
     end
 
     it "removes processed commands after iteration" do
@@ -139,8 +140,10 @@ describe_current do
       let(:non_existent_cg) { "non_existent_group" }
 
       it "yields nothing" do
-        expect { |b| tracker.each_for(non_existent_cg, topic, partition_id, &b) }
-          .not_to yield_control
+        yielded = false
+        tracker.each_for(non_existent_cg, topic, partition_id) { yielded = true }
+
+        refute(yielded)
       end
     end
 

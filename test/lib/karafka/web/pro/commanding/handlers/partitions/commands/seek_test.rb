@@ -50,7 +50,7 @@ describe_current do
 
     coordinator.stubs(:pause_tracker).returns(pause_tracker)
     coordinator.stubs(:seek_offset).returns(current_seek_offset)
-    # TODO: could not parse receive_messages pair: "seek_offset=": nil
+    coordinator.stubs(:seek_offset=)
 
     pause_tracker.stubs(:reset).returns(true)
     pause_tracker.stubs(:expire).returns(true)

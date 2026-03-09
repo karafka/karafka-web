@@ -62,9 +62,8 @@ describe_current do
       before { sampler.errors << valid_error }
 
       it "expect to dispatch via async" do
+        producer.expects(:produce_many_async).with([{ key: "my-process", payload: valid_error.to_json, topic: errors_topic }])
         reporter.report
-
-        producer.expects(:produce_many_async).with([{ key: "my-process", payload: valid_error.to_json, topic: errors_topic }]) # MOCHA_REORDER
       end
     end
 
@@ -78,9 +77,8 @@ describe_current do
       before { 26.times { sampler.errors << valid_error } }
 
       it "expect to dispatch via sync" do
+        producer.expects(:produce_many_sync).with(dispatch)
         reporter.report
-
-        producer.expects(:produce_many_sync).with(dispatch) # MOCHA_REORDER
       end
     end
 

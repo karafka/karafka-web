@@ -90,11 +90,9 @@ describe_current do
     end
 
     it "dispatches rejection result with rebalance status" do
-      executor.reject(request)
-
       expected_payload = request_hash.merge(status: "rebalance_rejected")
-
-      Karafka::Web::Pro::Commanding::Dispatcher.expects(:result).with(command_name, process_id, expected_payload) # MOCHA_REORDER
+      Karafka::Web::Pro::Commanding::Dispatcher.expects(:result).with(command_name, process_id, expected_payload)
+      executor.reject(request)
     end
   end
 end

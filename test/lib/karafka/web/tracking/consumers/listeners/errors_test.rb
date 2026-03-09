@@ -119,7 +119,9 @@ describe_current do
         listener.on_error_occurred(event)
         error_details = sampler.errors.last[:details]
 
-        assert_includes(error_details, topic: "topic_name", consumer_group: "group1", subscription_group: "sub1", partition: 0, first_offset: 5, last_offset: 10, committed_offset: 99)
+        expected = { topic: "topic_name", consumer_group: "group1", subscription_group: "sub1", partition: 0, first_offset: 5, last_offset: 10, committed_offset: 99 }
+
+        expected.each { |k, v| assert_equal(v, error_details[k], "Expected details[:#{k}] to equal #{v.inspect}") }
 
         assert_equal(["tag1"], error_details[:tags].to_a)
       end
@@ -187,7 +189,9 @@ describe_current do
         listener.on_error_occurred(event)
         error_details = sampler.errors.last[:details]
 
-        assert_includes(error_details, consumer_group: "group1", subscription_group: "sub1", name: "")
+        expected = { consumer_group: "group1", subscription_group: "sub1", name: "" }
+
+        expected.each { |k, v| assert_equal(v, error_details[k], "Expected details[:#{k}] to equal #{v.inspect}") }
       end
     end
 
@@ -206,7 +210,9 @@ describe_current do
         listener.on_error_occurred(event)
         error_details = sampler.errors.last[:details]
 
-        assert_includes(error_details, consumer_group: "group1", subscription_group: "sub1")
+        expected = { consumer_group: "group1", subscription_group: "sub1" }
+
+        expected.each { |k, v| assert_equal(v, error_details[k], "Expected details[:#{k}] to equal #{v.inspect}") }
       end
     end
 

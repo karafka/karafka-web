@@ -85,11 +85,10 @@ describe Karafka::Web::Tracking::Ui::Errors do
     context "when dispatch fails" do
       before do
         producer.stubs(:produce_async).raises(StandardError, "Kafka unavailable")
-        Karafka.logger.stubs(:error)
       end
 
       it "expect to log the error and not raise" do
-        Karafka.logger.expects(:error).with(/Failed to report UI error/)
+        Karafka.logger.expects(:error).with(regexp_matches(/Failed to report UI error/))
         listener.on_error_occurred(event)
       end
     end

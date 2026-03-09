@@ -38,20 +38,48 @@ describe_current do
   end
 
   it "expect to collect and publish threads backtraces to Kafka" do
+    captured = nil
+    dispatcher.stubs(:result).with { |*args|
+      captured = args
+      true
+    }
+
     trace_command.call
 
-    # TODO: have_received with block - needs manual conversion
-    # Original: expect(dispatcher).to have_received(:result) do |action, pid, threads_info| assert_kind_of(Hash, threads_info) assert_equal(process_pid, pid) assert_equal("consumers.trace", action) thread_info = threads_info.values.first assert_includes(thread_info[:label], "Thread TID-") assert_kind_of(String, thread_info[:backtrace]) end
+    action, pid, threads_info = captured
+
+    assert_kind_of(Hash, threads_info)
+    assert_equal(process_pid, pid)
+    assert_equal("consumers.trace", action)
+
+    thread_info = threads_info.values.first
+
+    assert_includes(thread_info[:label], "Thread TID-")
+    assert_kind_of(String, thread_info[:backtrace])
   end
 
   context "when process to which we send request is an embedded one" do
     before { Karafka::Process.stubs(:tags).returns(%w[embedded]) }
 
     it "expect to handle it without any issues" do
+      captured = nil
+      dispatcher.stubs(:result).with { |*args|
+        captured = args
+        true
+      }
+
       trace_command.call
 
-      # TODO: have_received with block - needs manual conversion
-      # Original: expect(dispatcher).to have_received(:result) do |action, pid, threads_info| assert_kind_of(Hash, threads_info) assert_equal(process_pid, pid) assert_equal("consumers.trace", action) thread_info = threads_info.values.first assert_includes(thread_info[:label], "Thread TID-") assert_kind_of(String, thread_info[:backtrace]) end
+      action, pid, threads_info = captured
+
+      assert_kind_of(Hash, threads_info)
+      assert_equal(process_pid, pid)
+      assert_equal("consumers.trace", action)
+
+      thread_info = threads_info.values.first
+
+      assert_includes(thread_info[:label], "Thread TID-")
+      assert_kind_of(String, thread_info[:backtrace])
     end
   end
 end

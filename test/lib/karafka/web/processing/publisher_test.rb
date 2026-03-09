@@ -35,11 +35,12 @@ describe_current do
     end
 
     it "compresses the state payload with zlib" do
-      producer.expects(:produce_many_sync).with(instance_of(Array))
-      expected_messages = []
+      expected_messages = nil
 
-      producer.stubs(:produce_many_async).with(anything).returns(nil) # TODO: convert do-block stub
-      # Original: allow(producer).to receive(:produce_many_async) do |messages| expected_messages = messages end
+      producer.stubs(:produce_many_async).with { |messages|
+        expected_messages = messages
+        true
+      }
 
       described_class.publish(consumers_state, consumers_metrics)
 
@@ -53,10 +54,12 @@ describe_current do
     end
 
     it "compresses the metrics payload with zlib" do
-      expected_messages = []
+      expected_messages = nil
 
-      producer.stubs(:produce_many_async).with(anything).returns(nil) # TODO: convert do-block stub
-      # Original: allow(producer).to receive(:produce_many_async) do |messages| expected_messages = messages end
+      producer.stubs(:produce_many_async).with { |messages|
+        expected_messages = messages
+        true
+      }
 
       described_class.publish(consumers_state, consumers_metrics)
 
@@ -70,10 +73,12 @@ describe_current do
     end
 
     it "uses correct topics" do
-      expected_messages = []
+      expected_messages = nil
 
-      producer.stubs(:produce_many_async).with(anything).returns(nil) # TODO: convert do-block stub
-      # Original: allow(producer).to receive(:produce_many_async) do |messages| expected_messages = messages end
+      producer.stubs(:produce_many_async).with { |messages|
+        expected_messages = messages
+        true
+      }
 
       described_class.publish(consumers_state, consumers_metrics)
 
@@ -82,10 +87,12 @@ describe_current do
     end
 
     it "uses topic names as keys for compaction" do
-      expected_messages = []
+      expected_messages = nil
 
-      producer.stubs(:produce_many_async).with(anything).returns(nil) # TODO: convert do-block stub
-      # Original: allow(producer).to receive(:produce_many_async) do |messages| expected_messages = messages end
+      producer.stubs(:produce_many_async).with { |messages|
+        expected_messages = messages
+        true
+      }
 
       described_class.publish(consumers_state, consumers_metrics)
 
@@ -94,10 +101,12 @@ describe_current do
     end
 
     it "publishes to partition 0" do
-      expected_messages = []
+      expected_messages = nil
 
-      producer.stubs(:produce_many_async).with(anything).returns(nil) # TODO: convert do-block stub
-      # Original: allow(producer).to receive(:produce_many_async) do |messages| expected_messages = messages end
+      producer.stubs(:produce_many_async).with { |messages|
+        expected_messages = messages
+        true
+      }
 
       described_class.publish(consumers_state, consumers_metrics)
 
@@ -114,10 +123,12 @@ describe_current do
     end
 
     it "compresses the payloads with zlib" do
-      expected_messages = []
+      expected_messages = nil
 
-      producer.stubs(:produce_many_sync).with(anything).returns(nil) # TODO: convert do-block stub
-      # Original: allow(producer).to receive(:produce_many_sync) do |messages| expected_messages = messages end
+      producer.stubs(:produce_many_sync).with { |messages|
+        expected_messages = messages
+        true
+      }
 
       described_class.publish!(consumers_state, consumers_metrics)
 
@@ -129,10 +140,12 @@ describe_current do
     end
 
     it "uses correct topics and keys" do
-      expected_messages = []
+      expected_messages = nil
 
-      producer.stubs(:produce_many_sync).with(anything).returns(nil) # TODO: convert do-block stub
-      # Original: allow(producer).to receive(:produce_many_sync) do |messages| expected_messages = messages end
+      producer.stubs(:produce_many_sync).with { |messages|
+        expected_messages = messages
+        true
+      }
 
       described_class.publish!(consumers_state, consumers_metrics)
 
@@ -164,10 +177,12 @@ describe_current do
     end
 
     it "compresses large payloads efficiently" do
-      expected_messages = []
+      expected_messages = nil
 
-      producer.stubs(:produce_many_async).with(anything).returns(nil) # TODO: convert do-block stub
-      # Original: allow(producer).to receive(:produce_many_async) do |messages| expected_messages = messages end
+      producer.stubs(:produce_many_async).with { |messages|
+        expected_messages = messages
+        true
+      }
 
       described_class.publish(consumers_state, consumers_metrics)
 

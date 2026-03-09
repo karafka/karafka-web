@@ -29,11 +29,10 @@ describe_current do
 
   # Helper to build command with proper structure
   def build_command(group_id, topic_name)
-    stub(to_h: { consumer_group_id: group_id, topic: topic_name },
-      "[]": ->(key) { { consumer_group_id: group_id, topic: topic_name }[key] }).tap do |cmd|
-      cmd.stubs(:[]).with(anything).returns(nil) # TODO: convert do-block stub
-      # Original: allow(cmd).to receive(:[]) do |key| { consumer_group_id: group_id, topic: topic_name }[key] end
-    end
+    data = { consumer_group_id: group_id, topic: topic_name }
+    cmd = stub(to_h: data)
+    cmd.define_singleton_method(:[]) { |key| data[key] }
+    cmd
   end
 
   describe "#<<" do
@@ -100,8 +99,10 @@ describe_current do
     before { tracker << command }
 
     it "yields each command for given consumer group and topic" do
-      expect { |b| tracker.each_for(consumer_group_id, topic, &b) }
-        .to yield_with_args(command)
+      yielded = []
+      tracker.each_for(consumer_group_id, topic) { |cmd| yielded << cmd }
+
+      assert_equal([command], yielded)
     end
 
     it "removes processed commands after iteration" do
@@ -120,13 +121,17 @@ describe_current do
       let(:non_existent_topic) { SecureRandom.uuid }
 
       it "yields nothing for non-existent consumer group" do
-        expect { |b| tracker.each_for(non_existent_group, topic, &b) }
-          .not_to yield_control
+        yielded = false
+        tracker.each_for(non_existent_group, topic) { yielded = true }
+
+        refute(yielded)
       end
 
       it "yields nothing for non-existent topic" do
-        expect { |b| tracker.each_for(consumer_group_id, non_existent_topic, &b) }
-          .not_to yield_control
+        yielded = false
+        tracker.each_for(consumer_group_id, non_existent_topic) { yielded = true }
+
+        refute(yielded)
       end
     end
 

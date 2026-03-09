@@ -103,7 +103,7 @@ describe_current do
       let(:next_offset) { false }
 
       it "returns 0" do
-        expect(pagination.next_offset).to be 0
+        assert_equal(0, pagination.next_offset)
       end
     end
   end

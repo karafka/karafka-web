@@ -32,9 +32,8 @@ describe_current do
       end
 
       it "subscribes the Commanding Manager to the Karafka monitor" do
+        Karafka.monitor.expects(:subscribe).with(Karafka::Web::Pro::Commanding::Manager.instance)
         described_class.post_setup(config)
-
-        Karafka.monitor.expects(:subscribe).with(Karafka::Web::Pro::Commanding::Manager.instance) # MOCHA_REORDER
       end
     end
 

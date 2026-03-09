@@ -108,11 +108,9 @@ describe_current do
       end
 
       it "iterates over all partitions" do
+        tracker.expects(:each_for).with(consumer_group_id, topic_name, partition_id).yields(command)
+        tracker.expects(:each_for).with(consumer_group_id, topic_name, partition2_id).yields(command)
         listener.on_connection_listener_fetch_loop(event)
-
-        tracker.expects(:each_for).with(consumer_group_id, topic_name, partition_id) # MOCHA_REORDER
-
-        tracker.expects(:each_for).with(consumer_group_id, topic_name, partition2_id) # MOCHA_REORDER
       end
     end
   end
@@ -149,12 +147,9 @@ describe_current do
       end
 
       it "iterates only over partitions with commands" do
-        tracker.expects(:each_for).twice
+        tracker.expects(:each_for).with(consumer_group_id, topic_name, partition_id).yields(command)
+        tracker.expects(:each_for).with(consumer_group_id, topic_name, partition_id2).yields(command)
         listener.on_rebalance_partitions_assigned(event)
-
-        tracker.expects(:each_for).with(consumer_group_id, topic_name, partition_id) # MOCHA_REORDER
-
-        tracker.expects(:each_for).with(consumer_group_id, topic_name, partition_id2) # MOCHA_REORDER
       end
     end
 
