@@ -7,7 +7,7 @@ describe_current do
   let(:sampler) { Karafka::Web.config.tracking.consumers.sampler }
   let(:sg_details) { sampler.consumer_groups["cgid"][:subscription_groups] }
   let(:default_p0) { sg_details["sgid"][:topics]["default"][:partitions][0] }
-  let(:test2_p0) { sg_details["sgid"][:topics]["test2"][:partitions][0] }
+  let(:topic2_p0) { sg_details["sgid"][:topics]["test2"][:partitions][0] }
   let(:visits_p0) { sg_details["sgid"][:topics]["visits"][:partitions][0] }
   let(:event) do
     {
@@ -51,16 +51,16 @@ describe_current do
   it { assert_equal("active", default_p0[:poll_state]) }
   it { assert_equal(2_859_193, default_p0[:stored_offset]) }
 
-  it { assert_equal(-1_001, test2_p0[:committed_offset]) }
-  it { assert_equal("active", test2_p0[:fetch_state]) }
-  it { assert_equal(0, test2_p0[:hi_offset]) }
-  it { assert_equal(0, test2_p0[:id]) }
-  it { assert_equal(-1, test2_p0[:lag]) }
-  it { assert_equal(0, test2_p0[:lag_d]) }
-  it { assert_equal(-1, test2_p0[:lag_stored]) }
-  it { assert_equal(0, test2_p0[:lag_stored_d]) }
-  it { assert_equal("active", test2_p0[:poll_state]) }
-  it { assert_equal(-1_001, test2_p0[:stored_offset]) }
+  it { assert_equal(-1_001, topic2_p0[:committed_offset]) }
+  it { assert_equal("active", topic2_p0[:fetch_state]) }
+  it { assert_equal(0, topic2_p0[:hi_offset]) }
+  it { assert_equal(0, topic2_p0[:id]) }
+  it { assert_equal(-1, topic2_p0[:lag]) }
+  it { assert_equal(0, topic2_p0[:lag_d]) }
+  it { assert_equal(-1, topic2_p0[:lag_stored]) }
+  it { assert_equal(0, topic2_p0[:lag_stored_d]) }
+  it { assert_equal("active", topic2_p0[:poll_state]) }
+  it { assert_equal(-1_001, topic2_p0[:stored_offset]) }
 
   it { assert_equal(52, visits_p0[:committed_offset]) }
   it { assert_equal("active", visits_p0[:fetch_state]) }

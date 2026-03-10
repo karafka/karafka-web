@@ -94,7 +94,17 @@ describe_current do
       end
 
       context "when the total checked limit reach the limit" do
-        let(:search_criteria) { super().merge(limit: 1) }
+        let(:search_criteria) do
+          {
+            matcher: Karafka::Web::Pro::Ui::Lib::Search::Matchers::RawPayloadIncludes.name,
+            limit: 1,
+            offset: 0,
+            offset_type: "latest",
+            partitions: %w[0 1],
+            phrase: "test phrase",
+            timestamp: (Time.now.to_f * 1_000).to_i
+          }
+        end
 
         before { iterator_instance.stubs(:stop) }
 
@@ -105,7 +115,17 @@ describe_current do
       end
 
       context "when the checked limit for a partition reach the limit" do
-        let(:search_criteria) { super().merge(limit: 3) }
+        let(:search_criteria) do
+          {
+            matcher: Karafka::Web::Pro::Ui::Lib::Search::Matchers::RawPayloadIncludes.name,
+            limit: 3,
+            offset: 0,
+            offset_type: "latest",
+            partitions: %w[0 1],
+            phrase: "test phrase",
+            timestamp: (Time.now.to_f * 1_000).to_i
+          }
+        end
 
         before { iterator_instance.stubs(:stop_current_partition) }
 
