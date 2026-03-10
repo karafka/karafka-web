@@ -20,23 +20,25 @@ module StubHelpers
     PASSTHROUGH_REGISTRY << [obj, method_name, original_for_restore, is_singleton]
   end
 
-  # Clean up passthrough stubs
-  def self.cleanup!
-    PASSTHROUGH_REGISTRY.each do |obj, method_name, original_for_restore, is_singleton|
-      begin
-        obj.singleton_class.remove_method(method_name)
-      rescue NameError
-        nil
-      end
-
-      begin
-        if is_singleton && original_for_restore
-          obj.define_singleton_method(method_name, original_for_restore)
+  class << self
+    # Clean up passthrough stubs
+    def cleanup!
+      PASSTHROUGH_REGISTRY.each do |obj, method_name, original_for_restore, is_singleton|
+        begin
+          obj.singleton_class.remove_method(method_name)
+        rescue NameError
+          nil
         end
-      rescue
-        nil
+
+        begin
+          if is_singleton && original_for_restore
+            obj.define_singleton_method(method_name, original_for_restore)
+          end
+        rescue
+          nil
+        end
       end
+      PASSTHROUGH_REGISTRY.clear
     end
-    PASSTHROUGH_REGISTRY.clear
   end
 end

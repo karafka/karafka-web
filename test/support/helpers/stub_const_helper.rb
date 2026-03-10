@@ -31,12 +31,14 @@ module StubConstHelper
     StubConstHelper::CONST_REGISTRY << [parent, const, original]
   end
 
-  # Clean up stubbed constants
-  def self.cleanup!
-    CONST_REGISTRY.each do |parent, const, original|
-      parent.send(:remove_const, const) if parent.const_defined?(const, false)
-      parent.const_set(const, original) unless original == :__not_defined__
+  class << self
+    # Clean up stubbed constants
+    def cleanup!
+      CONST_REGISTRY.each do |parent, const, original|
+        parent.send(:remove_const, const) if parent.const_defined?(const, false)
+        parent.const_set(const, original) unless original == :__not_defined__
+      end
+      CONST_REGISTRY.clear
     end
-    CONST_REGISTRY.clear
   end
 end
