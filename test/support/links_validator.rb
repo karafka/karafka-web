@@ -128,9 +128,13 @@ class LinksValidator
       return
     end
 
-    status = @context.last_response.status
+    resp = @context.last_response
+    status = resp.status
 
-    assert_msg = "Link '#{link}' returned #{status} status"
+    return if ALLOWED_RESPONSES.include?(status)
+
+    body_snippet = resp.body.to_s[0, 500].gsub(/\s+/, " ").strip
+    assert_msg = "Link '#{link}' returned #{status} status.\nBody: #{body_snippet}"
     @context.assert_includes(ALLOWED_RESPONSES, status, assert_msg)
   end
 

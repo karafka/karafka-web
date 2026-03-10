@@ -238,7 +238,7 @@ Minitest::Spec.class_eval do
     if respond_to?(:last_response) && respond_to?(:app)
       begin
         resp = last_response
-        if failures.none? && resp&.content_type&.include?("text/html")
+        if failures.none? && resp&.ok? && resp&.content_type&.include?("text/html")
           validator = LinksValidator.instance
           validator.context = self
           validator.description = name
