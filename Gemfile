@@ -6,12 +6,13 @@ gemspec
 
 group :test do
   gem "byebug"
-  gem "factory_bot"
   gem "fugit"
+  gem "mocha"
   # Needed for links extraction for visits verification
   gem "nokogiri"
   gem "ostruct"
   gem "rack-test"
-  gem "rspec"
+  gem "minitest"
   gem "simplecov"
+  gem "warning"
 end

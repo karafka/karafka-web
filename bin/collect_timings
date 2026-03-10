@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# Collects timing data from RSpec runs for both regular and pro specs.
-# Results are stored in spec/timings/{regular,pro}.json for use by bin/balance_specs.
+# Collects timing data from Minitest runs for both regular and pro tests.
+# Results are stored in test/timings/{regular,pro}.json for use by bin/balance_tests.
 #
 # Usage: bin/collect_timings
 
@@ -10,58 +10,54 @@ require 'json'
 require 'open3'
 require 'fileutils'
 
-TIMINGS_DIR = File.expand_path('../spec/timings', __dir__)
+TIMINGS_DIR = File.expand_path('../test/timings', __dir__)
 
-# Returns spec files for the given type
+# Returns test files for the given type
 #
-# @param specs_type [String] 'regular' or 'pro'
-# @return [Array<String>] sorted array of spec file paths
-def spec_files(specs_type)
-  all_specs = Dir.glob('spec/lib/karafka/web/**/*_spec.rb').sort
+# @param tests_type [String] 'regular' or 'pro'
+# @return [Array<String>] sorted array of test file paths
+def test_files(tests_type)
+  all_tests = Dir.glob('test/lib/karafka/web/**/*_test.rb').sort
 
-  case specs_type
-  when 'pro' then all_specs.select { |f| f.include?('/pro/') }
-  when 'regular' then all_specs.reject { |f| f.include?('/pro/') }
+  case tests_type
+  when 'pro' then all_tests.select { |f| f.include?('/pro/') }
+  when 'regular' then all_tests.reject { |f| f.include?('/pro/') }
   end
 end
 
-# Collects timing data by running specs with JSON output
+# Collects timing data by running tests with verbose output
 #
-# @param specs_type [String] 'regular' or 'pro'
+# @param tests_type [String] 'regular' or 'pro'
 # @return [Hash<String, Float>] file paths to execution times in seconds
-def collect_timings(specs_type)
-  puts "Collecting #{specs_type} specs timings..."
+def collect_timings(tests_type)
+  puts "Collecting #{tests_type} test timings..."
 
-  env = { 'SPECS_TYPE' => specs_type }
-  files = spec_files(specs_type)
+  env = { 'SPECS_TYPE' => tests_type }
+  files = test_files(tests_type)
 
-  puts "  Running #{files.size} spec files..."
+  puts "  Running #{files.size} test files..."
 
-  # Run all specs at once with JSON output
-  cmd = ['bundle', 'exec', 'rspec', *files, '--format', 'json']
-  stdout, _stderr, _status = Open3.capture3(env, *cmd)
-
-  # Parse timing from JSON output
-  data = JSON.parse(stdout)
   timings = {}
 
-  data['examples'].each do |example|
-    file = example['file_path']
-    timings[file] ||= 0
-    timings[file] += example['run_time'] || 0
+  files.each do |file|
+    start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    cmd = ['bundle', 'exec', 'ruby', '-Itest', '-Ilib', file]
+    _stdout, _stderr, _status = Open3.capture3(env, *cmd)
+    elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+    timings[file] = elapsed.round(3)
+    puts "    #{file}: #{elapsed.round(3)}s"
   end
 
-  timings.transform_values! { |v| v.round(3) }
   timings
 end
 
 # Saves timing data to JSON file
 #
-# @param specs_type [String] 'regular' or 'pro'
+# @param tests_type [String] 'regular' or 'pro'
 # @param timings [Hash<String, Float>] timing data
-def save_timings(specs_type, timings)
+def save_timings(tests_type, timings)
   FileUtils.mkdir_p(TIMINGS_DIR)
-  file_path = File.join(TIMINGS_DIR, "#{specs_type}.json")
+  file_path = File.join(TIMINGS_DIR, "#{tests_type}.json")
 
   sorted = timings.sort_by { |_, time| -time }.to_h
   File.write(file_path, JSON.pretty_generate(sorted))
@@ -71,12 +67,12 @@ def save_timings(specs_type, timings)
 end
 
 # Main
-puts '=== Collecting Spec Timings ==='
+puts '=== Collecting Test Timings ==='
 puts
 
-%w[regular pro].each do |specs_type|
-  timings = collect_timings(specs_type)
-  save_timings(specs_type, timings)
+%w[regular pro].each do |tests_type|
+  timings = collect_timings(tests_type)
+  save_timings(tests_type, timings)
   puts
 end
 
