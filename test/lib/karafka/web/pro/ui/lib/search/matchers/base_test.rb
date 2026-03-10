@@ -50,10 +50,10 @@ describe_current do
   describe "#call" do
     let(:matcher_instance) { matcher_class.new }
     let(:phrase) { "test phrase" }
-    let(:message) { stub }
+    let(:msg) { stub }
 
     it "raises NotImplementedError" do
-      e = assert_raises(NotImplementedError) { matcher_instance.call(phrase, message) }
+      e = assert_raises(NotImplementedError) { matcher_instance.call(phrase, msg) }
       assert_includes(e.message, "Implement in a subclass")
     end
   end

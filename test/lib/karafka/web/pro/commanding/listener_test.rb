@@ -23,7 +23,7 @@
 describe_current do
   let(:listener) { described_class.new }
   let(:iterator_double) { stub }
-  let(:message) { stub }
+  let(:msg) { stub }
 
   before do
     Karafka::Pro::Iterator.stubs(:new).returns(iterator_double)
@@ -32,20 +32,20 @@ describe_current do
 
   describe "#each" do
     context "when all good" do
-      before { iterator_double.stubs(:each).yields(message) }
+      before { iterator_double.stubs(:each).yields(msg) }
 
       it "yields messages from the iterator" do
         yielded_args = nil
         listener.each { |*yargs| yielded_args = yargs }
 
         refute_nil(yielded_args, "Expected block to yield")
-        assert_equal([message], yielded_args)
+        assert_equal([msg], yielded_args)
       end
     end
 
     context "when an error occurs" do
       before do
-        iterator_double.stubs(:each).yields(message).then.raises(StandardError)
+        iterator_double.stubs(:each).yields(msg).then.raises(StandardError)
 
         Karafka.monitor.stubs(:instrument)
       end
@@ -60,7 +60,7 @@ describe_current do
 
     context "when stop is requested" do
       before do
-        iterator_double.stubs(:each).yields(message)
+        iterator_double.stubs(:each).yields(msg)
         iterator_double.stubs(:stop)
       end
 

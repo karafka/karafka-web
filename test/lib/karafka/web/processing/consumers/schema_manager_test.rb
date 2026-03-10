@@ -3,7 +3,7 @@
 describe_current do
   let(:manager) { described_class.new }
 
-  let(:message) do
+  let(:msg) do
     Struct.new(:payload).new(
       { schema_version: schema_version }
     )
@@ -21,11 +21,11 @@ describe_current do
         let(:schema_version) { Karafka::Web::Tracking::Consumers::Sampler::SCHEMA_VERSION }
 
         it "returns :current" do
-          assert_equal(:current, manager.call(message))
+          assert_equal(:current, manager.call(msg))
         end
 
         it "remains compatible after processing" do
-          manager.call(message)
+          manager.call(msg)
 
           assert_equal("compatible", manager.to_s)
         end
@@ -35,11 +35,11 @@ describe_current do
         let(:schema_version) { "1.1.0" }
 
         it "returns :older" do
-          assert_equal(:older, manager.call(message))
+          assert_equal(:older, manager.call(msg))
         end
 
         it "remains compatible after processing" do
-          manager.call(message)
+          manager.call(msg)
 
           assert_equal("compatible", manager.to_s)
         end
@@ -49,11 +49,11 @@ describe_current do
         let(:schema_version) { "111.1.0" }
 
         it "returns :newer" do
-          assert_equal(:newer, manager.call(message))
+          assert_equal(:newer, manager.call(msg))
         end
 
         it "remains compatible after processing" do
-          manager.call(message)
+          manager.call(msg)
 
           assert_equal("compatible", manager.to_s)
         end
@@ -63,7 +63,7 @@ describe_current do
         let(:schema_version) { nil }
 
         it "returns :older when comparing nil version" do
-          assert_equal(:older, manager.call(message))
+          assert_equal(:older, manager.call(msg))
         end
       end
 
@@ -71,7 +71,7 @@ describe_current do
         let(:schema_version) { "" }
 
         it "returns :older when comparing empty version" do
-          assert_equal(:older, manager.call(message))
+          assert_equal(:older, manager.call(msg))
         end
       end
 
@@ -79,7 +79,7 @@ describe_current do
         let(:schema_version) { "2.0.0-alpha" }
 
         it "handles pre-release versions correctly" do
-          assert_equal(:newer, manager.call(message))
+          assert_equal(:newer, manager.call(msg))
         end
       end
     end
@@ -90,13 +90,13 @@ describe_current do
       let(:schema_version) { Karafka::Web::Tracking::Consumers::Sampler::SCHEMA_VERSION }
 
       it "still returns version comparison result" do
-        result = manager.call(message)
+        result = manager.call(msg)
 
         assert_equal(:current, result)
       end
 
       it "remains incompatible after processing" do
-        manager.call(message)
+        manager.call(msg)
 
         assert_equal("incompatible", manager.to_s)
       end
@@ -106,7 +106,7 @@ describe_current do
       let(:schema_version) { "not-a-version" }
 
       it "raises error for malformed versions" do
-        assert_raises(ArgumentError) { manager.call(message) }
+        assert_raises(ArgumentError) { manager.call(msg) }
       end
     end
   end

@@ -21,10 +21,10 @@
 # Contact: contact@karafka.io
 
 describe_current do
-  let(:matcher) { described_class.new(message) }
+  let(:matcher) { described_class.new(msg) }
 
   let(:current_process_id) { "process-123" }
-  let(:message) do
+  let(:msg) do
     stub(payload: { matchers: matchers })
   end
   let(:matchers) { {} }

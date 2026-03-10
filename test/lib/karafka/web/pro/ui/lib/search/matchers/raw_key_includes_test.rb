@@ -29,13 +29,13 @@ describe_current do
 
   describe "#call" do
     let(:phrase) { "test phrase" }
-    let(:message) { stub(raw_key: raw_key) }
+    let(:msg) { stub(raw_key: raw_key) }
 
     context "when the raw key includes the phrase" do
       let(:raw_key) { "This is a test phrase in the key." }
 
       it "returns true" do
-        assert(matcher.call(message, phrase))
+        assert(matcher.call(msg, phrase))
       end
     end
 
@@ -43,7 +43,7 @@ describe_current do
       let(:raw_key) { "This key does not contain the search term." }
 
       it "returns false" do
-        refute(matcher.call(message, phrase))
+        refute(matcher.call(msg, phrase))
       end
     end
 
@@ -52,7 +52,7 @@ describe_current do
       let(:phrase) { "test phrase-ó".encode("UTF-8") }
 
       it "returns false" do
-        refute(matcher.call(message, phrase))
+        refute(matcher.call(msg, phrase))
       end
     end
   end

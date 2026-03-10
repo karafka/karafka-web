@@ -59,7 +59,7 @@ describe_current do
     let(:matcher) { Karafka::Web::Pro::Commanding::Matcher.new }
     let(:unsupported_command_name) { "unsupported_command" }
 
-    let(:message) do
+    let(:msg) do
       stub(payload: {
         command: {
           name: command_name
@@ -70,8 +70,8 @@ describe_current do
     before do
       listener.class.stubs(:new).returns(listener)
       matcher.class.stubs(:new).returns(matcher)
-      listener.stubs(:each).yields(message)
-      matcher.stubs(:matches?).with(message).returns(true)
+      listener.stubs(:each).yields(msg)
+      matcher.stubs(:matches?).with(msg).returns(true)
     end
 
     context "when command is trace" do

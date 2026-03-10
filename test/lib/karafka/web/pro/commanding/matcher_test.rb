@@ -25,7 +25,7 @@ describe_current do
 
   let(:process_id) { "1234" }
   let(:schema_version) { "1.2.0" }
-  let(:message) do
+  let(:msg) do
     stub(key: message_key,
       payload: message_payload,
       headers: { "type" => message_payload[:type] })
@@ -41,7 +41,7 @@ describe_current do
     let(:message_key) { nil }
     let(:message_payload) { { type: "request", schema_version: schema_version } }
 
-    it { assert(matcher.matches?(message)) }
+    it { assert(matcher.matches?(msg)) }
   end
 
   context "when process_id in matchers matches current process" do
@@ -50,7 +50,7 @@ describe_current do
       { type: "request", schema_version: schema_version, matchers: { process_id: process_id } }
     end
 
-    it { assert(matcher.matches?(message)) }
+    it { assert(matcher.matches?(msg)) }
   end
 
   context "when process_id in matchers does not match current process" do
@@ -63,21 +63,21 @@ describe_current do
       }
     end
 
-    it { refute(matcher.matches?(message)) }
+    it { refute(matcher.matches?(msg)) }
   end
 
   context "when message type is not command" do
     let(:message_key) { nil }
     let(:message_payload) { { type: "result", schema_version: schema_version } }
 
-    it { refute(matcher.matches?(message)) }
+    it { refute(matcher.matches?(msg)) }
   end
 
   context "when message schema version does not match" do
     let(:message_key) { nil }
     let(:message_payload) { { type: "request", schema_version: "2.0" } }
 
-    it { refute(matcher.matches?(message)) }
+    it { refute(matcher.matches?(msg)) }
   end
 
   describe "matchers filtering" do
@@ -102,7 +102,7 @@ describe_current do
         { type: "request", schema_version: schema_version }
       end
 
-      it { assert(matcher.matches?(message)) }
+      it { assert(matcher.matches?(msg)) }
     end
 
     context "when matchers is empty hash" do
@@ -110,7 +110,7 @@ describe_current do
         { type: "request", schema_version: schema_version, matchers: {} }
       end
 
-      it { assert(matcher.matches?(message)) }
+      it { assert(matcher.matches?(msg)) }
     end
 
     context "with consumer_group_id matcher" do
@@ -123,7 +123,7 @@ describe_current do
           }
         end
 
-        it { assert(matcher.matches?(message)) }
+        it { assert(matcher.matches?(msg)) }
       end
 
       context "when consumer_group_id does not match any assignment" do
@@ -135,7 +135,7 @@ describe_current do
           }
         end
 
-        it { refute(matcher.matches?(message)) }
+        it { refute(matcher.matches?(msg)) }
       end
     end
 
@@ -149,7 +149,7 @@ describe_current do
           }
         end
 
-        it { assert(matcher.matches?(message)) }
+        it { assert(matcher.matches?(msg)) }
       end
 
       context "when topic does not match any assignment" do
@@ -161,7 +161,7 @@ describe_current do
           }
         end
 
-        it { refute(matcher.matches?(message)) }
+        it { refute(matcher.matches?(msg)) }
       end
     end
 
@@ -178,7 +178,7 @@ describe_current do
           }
         end
 
-        it { assert(matcher.matches?(message)) }
+        it { assert(matcher.matches?(msg)) }
       end
 
       context "when one matcher fails" do
@@ -193,7 +193,7 @@ describe_current do
           }
         end
 
-        it { refute(matcher.matches?(message)) }
+        it { refute(matcher.matches?(msg)) }
       end
 
       context "when all matchers fail" do
@@ -208,7 +208,7 @@ describe_current do
           }
         end
 
-        it { refute(matcher.matches?(message)) }
+        it { refute(matcher.matches?(msg)) }
       end
     end
 
@@ -222,7 +222,7 @@ describe_current do
       end
 
       it "ignores unknown matchers for forward compatibility" do
-        assert(matcher.matches?(message))
+        assert(matcher.matches?(msg))
       end
     end
 
@@ -239,7 +239,7 @@ describe_current do
           }
         end
 
-        it { assert(matcher.matches?(message)) }
+        it { assert(matcher.matches?(msg)) }
       end
 
       context "when known matcher fails" do
@@ -254,7 +254,7 @@ describe_current do
           }
         end
 
-        it { refute(matcher.matches?(message)) }
+        it { refute(matcher.matches?(msg)) }
       end
     end
 
@@ -270,7 +270,7 @@ describe_current do
           }
         end
 
-        it { refute(matcher.matches?(message)) }
+        it { refute(matcher.matches?(msg)) }
       end
 
       context "with topic matcher" do
@@ -282,7 +282,7 @@ describe_current do
           }
         end
 
-        it { refute(matcher.matches?(message)) }
+        it { refute(matcher.matches?(msg)) }
       end
     end
   end

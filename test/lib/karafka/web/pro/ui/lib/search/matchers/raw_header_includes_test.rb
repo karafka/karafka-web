@@ -29,13 +29,13 @@ describe_current do
 
   describe "#call" do
     let(:phrase) { "test phrase" }
-    let(:message) { stub(raw_headers: raw_headers) }
+    let(:msg) { stub(raw_headers: raw_headers) }
 
     context "when the raw headers include the phrase in a key" do
       let(:raw_headers) { { "test phrase" => "some value" } }
 
       it "returns true" do
-        assert(matcher.call(message, phrase))
+        assert(matcher.call(msg, phrase))
       end
     end
 
@@ -43,7 +43,7 @@ describe_current do
       let(:raw_headers) { { "some key" => "test phrase" } }
 
       it "returns true" do
-        assert(matcher.call(message, phrase))
+        assert(matcher.call(msg, phrase))
       end
     end
 
@@ -51,7 +51,7 @@ describe_current do
       let(:raw_headers) { { "some key" => "some value" } }
 
       it "returns false" do
-        refute(matcher.call(message, phrase))
+        refute(matcher.call(msg, phrase))
       end
     end
 
@@ -59,7 +59,7 @@ describe_current do
       let(:raw_headers) { { "some key" => ["test phrase", "xda"] } }
 
       it "returns true" do
-        assert(matcher.call(message, phrase))
+        assert(matcher.call(msg, phrase))
       end
     end
 
@@ -67,7 +67,7 @@ describe_current do
       let(:raw_headers) { { "some key" => ["some value", "xda"] } }
 
       it "returns false" do
-        refute(matcher.call(message, phrase))
+        refute(matcher.call(msg, phrase))
       end
     end
 
@@ -76,7 +76,7 @@ describe_current do
       let(:phrase) { "test phrase-ó".encode("UTF-8") }
 
       it "returns false" do
-        refute(matcher.call(message, phrase))
+        refute(matcher.call(msg, phrase))
       end
     end
 
@@ -85,7 +85,7 @@ describe_current do
       let(:phrase) { "test phrase-ó".encode("UTF-8") }
 
       it "returns false" do
-        refute(matcher.call(message, phrase))
+        refute(matcher.call(msg, phrase))
       end
     end
   end

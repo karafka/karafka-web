@@ -75,51 +75,6 @@ module MinitestDescribedClass
   end
 end
 
-# Relax Minitest::Spec let restrictions for RSpec migrated tests
-# Allows let(:message) etc. which RSpec permitted but Minitest blocks
-# Still protects critical Minitest internals like :run that would break test execution
-# When overriding internal methods (e.g. :message), the method is dispatched by arity:
-# called with no args returns the memoized let value, with args delegates to the original
-MINITEST_CRITICAL_METHODS = %w[run setup teardown].freeze
-
-Minitest::Spec::DSL.class_eval do
-  def let(name, &block)
-    name = name.to_s
-    pre, post = "let '#{name}' cannot ", ". Please use another name."
-
-    raise ArgumentError, "#{pre}override a critical Minitest method#{post}" if
-      MINITEST_CRITICAL_METHODS.include?(name)
-
-    original = begin
-      instance_method(name)
-    rescue NameError
-      nil
-    end
-
-    # Define raw method using the block directly to preserve super() resolution.
-    # When a child describe overrides a parent's let, super() in the block
-    # properly calls the parent's method because define_method preserves MRO.
-    define_method(name, &block)
-    raw = instance_method(name)
-
-    if original
-      define_method(name) do |*args, **kwargs, &blk|
-        if args.empty? && kwargs.empty? && blk.nil?
-          @_memoized ||= {}
-          @_memoized.fetch(name) { |k| @_memoized[k] = raw.bind_call(self) }
-        else
-          original.bind_call(self, *args, **kwargs, &blk)
-        end
-      end
-    else
-      define_method(name) do
-        @_memoized ||= {}
-        @_memoized.fetch(name) { |k| @_memoized[k] = raw.bind_call(self) }
-      end
-    end
-  end
-end
-
 # Add context as alias for describe, and include helpers
 class Minitest::Spec
   include MinitestDescribedClass

@@ -31,7 +31,7 @@ describe_current do
     let(:phrase) { "test phrase" }
     let(:headers) { {} }
 
-    let(:message) do
+    let(:msg) do
       stub(raw_payload: raw_payload,
         raw_headers: headers)
     end
@@ -40,7 +40,7 @@ describe_current do
       let(:raw_payload) { "This is a test phrase in the message." }
 
       it "returns true" do
-        assert(matcher.call(message, phrase))
+        assert(matcher.call(msg, phrase))
       end
     end
 
@@ -48,7 +48,7 @@ describe_current do
       let(:raw_payload) { nil }
 
       it "returns false" do
-        refute(matcher.call(message, phrase))
+        refute(matcher.call(msg, phrase))
       end
     end
 
@@ -56,7 +56,7 @@ describe_current do
       let(:raw_payload) { "This message does not contain the search term." }
 
       it "returns false" do
-        refute(matcher.call(message, phrase))
+        refute(matcher.call(msg, phrase))
       end
     end
 
@@ -65,7 +65,7 @@ describe_current do
       let(:phrase) { "test phrase-ó".encode("UTF-8") }
 
       it "returns false" do
-        refute(matcher.call(message, phrase))
+        refute(matcher.call(msg, phrase))
       end
     end
 
@@ -74,7 +74,7 @@ describe_current do
       let(:headers) { { "zlib" => "true" } }
 
       it "returns true on match" do
-        assert(matcher.call(message, phrase))
+        assert(matcher.call(msg, phrase))
       end
     end
 
@@ -83,7 +83,7 @@ describe_current do
       let(:headers) { { "zlib" => "true" } }
 
       it "returns true on match" do
-        assert(matcher.call(message, phrase))
+        assert(matcher.call(msg, phrase))
       end
     end
 
@@ -91,7 +91,7 @@ describe_current do
       let(:raw_payload) { Zlib.deflate("This is a test phrase in the message.") }
 
       it "returns false on match" do
-        refute(matcher.call(message, phrase))
+        refute(matcher.call(msg, phrase))
       end
     end
   end

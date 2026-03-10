@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 describe_current do
-  let(:parsing) { described_class.new.call(message) }
+  let(:parsing) { described_class.new.call(msg) }
 
-  let(:message) { stub }
+  let(:msg) { stub }
   let(:raw_payload) { '{"key":"value"}' }
   let(:headers) { {} }
 
   before do
-    message.stubs(:raw_payload).returns(raw_payload)
-    message.stubs(:headers).returns(headers)
+    msg.stubs(:raw_payload).returns(raw_payload)
+    msg.stubs(:headers).returns(headers)
   end
 
   context "when JSON is parsed successfully" do

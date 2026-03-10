@@ -10,28 +10,28 @@ describe_current do
   let(:watermark_offsets) { Karafka::Web::Ui::Models::WatermarkOffsets.find(topic, partition) }
 
   describe "#find" do
-    let(:message) { described_class.find(topic, partition, offset) }
+    let(:msg) { described_class.find(topic, partition, offset) }
 
     context "when topic does not exist" do
       let(:topic) { generate_topic_name }
       let(:partition) { 0 }
       let(:offset) { 1 }
 
-      it { assert_raises(Rdkafka::RdkafkaError) { message } }
+      it { assert_raises(Rdkafka::RdkafkaError) { msg } }
     end
 
     context "when partition does not exist" do
       let(:partition) { 1 }
       let(:offset) { 1 }
 
-      it { assert_raises(Rdkafka::RdkafkaError) { message } }
+      it { assert_raises(Rdkafka::RdkafkaError) { msg } }
     end
 
     context "when offset does not exist" do
       let(:partition) { 0 }
       let(:offset) { 1 }
 
-      it { assert_raises(Karafka::Web::Errors::Ui::NotFoundError) { message } }
+      it { assert_raises(Karafka::Web::Errors::Ui::NotFoundError) { msg } }
     end
 
     context "when message exists" do
@@ -41,8 +41,8 @@ describe_current do
       before { 2.times { |i| produce(topic, i.to_s) } }
 
       it do
-        assert_equal("1", message.raw_payload)
-        assert_equal(1, message.offset)
+        assert_equal("1", msg.raw_payload)
+        assert_equal(1, msg.offset)
       end
     end
   end

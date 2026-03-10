@@ -21,9 +21,9 @@
 # Contact: contact@karafka.io
 
 describe_current do
-  let(:matcher) { described_class.new(message) }
+  let(:matcher) { described_class.new(msg) }
 
-  let(:message) do
+  let(:msg) do
     stub(key: nil,
       payload: { schema_version: "1.2.0", matchers: {} },
       headers: { "type" => "request" })

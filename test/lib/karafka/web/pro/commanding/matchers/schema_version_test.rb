@@ -21,10 +21,10 @@
 # Contact: contact@karafka.io
 
 describe_current do
-  let(:matcher) { described_class.new(message) }
+  let(:matcher) { described_class.new(msg) }
 
   let(:current_schema_version) { "1.2.0" }
-  let(:message) do
+  let(:msg) do
     stub(payload: { schema_version: schema_version_value })
   end
 

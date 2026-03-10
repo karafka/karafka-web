@@ -33,43 +33,43 @@ describe_current do
 
   describe "#payload?" do
     context "when encryption is off" do
-      let(:message) { Struct.new(:headers).new({}) }
+      let(:msg) { Struct.new(:headers).new({}) }
 
-      it { assert(policy.payload?(message)) }
+      it { assert(policy.payload?(msg)) }
     end
 
     context "when encryption is on" do
-      let(:message) { Struct.new(:headers).new({ "encryption" => true }) }
+      let(:msg) { Struct.new(:headers).new({ "encryption" => true }) }
 
-      it { refute(policy.payload?(message)) }
+      it { refute(policy.payload?(msg)) }
     end
   end
 
   describe "#download?" do
     context "when encryption is off" do
-      let(:message) { Struct.new(:headers).new({}) }
+      let(:msg) { Struct.new(:headers).new({}) }
 
-      it { assert(policy.download?(message)) }
+      it { assert(policy.download?(msg)) }
     end
 
     context "when encryption is on" do
-      let(:message) { Struct.new(:headers).new({ "encryption" => true }) }
+      let(:msg) { Struct.new(:headers).new({ "encryption" => true }) }
 
-      it { refute(policy.download?(message)) }
+      it { refute(policy.download?(msg)) }
     end
   end
 
   describe "#export?" do
     context "when encryption is off" do
-      let(:message) { Struct.new(:headers).new({}) }
+      let(:msg) { Struct.new(:headers).new({}) }
 
-      it { assert(policy.export?(message)) }
+      it { assert(policy.export?(msg)) }
     end
 
     context "when encryption is on" do
-      let(:message) { Struct.new(:headers).new({ "encryption" => true }) }
+      let(:msg) { Struct.new(:headers).new({ "encryption" => true }) }
 
-      it { refute(policy.export?(message)) }
+      it { refute(policy.export?(msg)) }
     end
   end
 

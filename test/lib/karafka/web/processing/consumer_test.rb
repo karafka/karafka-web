@@ -229,7 +229,7 @@ describe_current do
     end
 
     context "when handling periodic flush" do
-      let(:message) do
+      let(:msg) do
         stub(payload: {
                type: "consumer",
                process: { id: "process-1" },
@@ -238,7 +238,7 @@ describe_current do
           offset: 100)
       end
 
-      let(:messages) { [message] }
+      let(:messages) { [msg] }
 
       before do
         schema_manager.stubs(:call).returns(:current)
@@ -266,7 +266,7 @@ describe_current do
 
   describe "#shutdown" do
     context "when data has been established" do
-      let(:message) do
+      let(:msg) do
         stub(payload: {
                type: "consumer",
                process: { id: "process-1" },
@@ -275,7 +275,7 @@ describe_current do
           offset: 100)
       end
 
-      let(:messages) { [message] }
+      let(:messages) { [msg] }
 
       before do
         schema_manager.stubs(:call).returns(:current)
@@ -306,12 +306,12 @@ describe_current do
   end
 
   describe "bootstrap process" do
-    let(:message) do
+    let(:msg) do
       stub(payload: { type: "consumer", process: { id: "process-1" }, dispatched_at: Time.now.to_f },
         offset: 100)
     end
 
-    let(:messages) { [message] }
+    let(:messages) { [msg] }
 
     it "runs migrator on first consume" do
       schema_manager.stubs(:call).returns(:current)
@@ -355,12 +355,12 @@ describe_current do
   end
 
   describe "validation" do
-    let(:message) do
+    let(:msg) do
       stub(payload: { type: "consumer", process: { id: "process-1" }, dispatched_at: Time.now.to_f },
         offset: 100)
     end
 
-    let(:messages) { [message] }
+    let(:messages) { [msg] }
 
     before do
       schema_manager.stubs(:call).returns(:current)
