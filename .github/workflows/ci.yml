@@ -78,6 +78,9 @@ jobs:
           KARAFKA_PRO_LICENSE_TOKEN: ${{ secrets.KARAFKA_PRO_LICENSE_TOKEN }}
         run: bin/tests_parallel
 
+      - name: Check coverage
+        run: bin/check_coverage
+
       - name: Check Kafka logs for unexpected warnings
         run: bin/verify_kafka_warnings
 

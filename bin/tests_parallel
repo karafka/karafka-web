@@ -122,6 +122,3 @@ echo ""
 echo "=========================================="
 echo "          ALL TESTS PASSED!               "
 echo "=========================================="
-
-# Run coverage check
-"$SCRIPT_DIR/check_coverage"
