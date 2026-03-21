@@ -14,9 +14,8 @@
 
 <% safe_key = ::Karafka::Web::Pro::Ui::Lib::SafeRunner.new { message.key } %>
 
-<tr>
-  <% if message.is_a?(Array) %>
-
+<% if message.is_a?(Array) %>
+  <tr>
     <td class="text-muted">
       <%= message[0] %>
     </td>
@@ -26,9 +25,9 @@
     <td colspan="4" class="text-center text-muted">
       This offset does not contain any data. The message may have been compacted or is a system entry.
     </td>
-
-  <% else %>
-
+  </tr>
+<% else %>
+  <tr>
     <td>
       <%= message.partition %>
     </td>
@@ -60,6 +59,5 @@
         )
       %>
     </td>
-
-  <% end %>
-</tr>
+  </tr>
+<% end %>

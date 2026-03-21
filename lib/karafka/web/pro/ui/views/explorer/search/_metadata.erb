@@ -53,36 +53,30 @@
           <tr>
             <td>Partition <%= k %></td>
             <td><%= v[:checked] %></td>
-            <td>
-              <% if v[:first_message] %>
+            <% if v[:first_message] %>
+              <td>
                 <%= v[:first_message].offset %>
                 -
                 <%= v[:last_message].offset %>
-              <% else %>
-                N/A
-              <% end %>
-            </td>
-            <td>
-              <% if v[:first_message] %>
+              </td>
+              <td>
                 <%
                   time_s = (
                     v[:last_message].timestamp.to_f - v[:first_message].timestamp.to_f
                   ).round(2)
                 %>
                 <span title="<%= time_s %> seconds">
-                  <%= human_readable_time(time_s) %>
+                  <%=
+                    human_readable_time(time_s)
+                  %>
                 </span>
-              <% else %>
-                N/A
-              <% end %>
-            </td>
-            <td>
-              <% if v[:first_message] %>
-                <%= v[:matched] %>
-              <% else %>
-                N/A
-              <% end %>
-            </td>
+              </td>
+              <td><%= v[:matched] %></td>
+            <% else %>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>N/A</td>
+            <% end %>
           </tr>
         <% end %>
       </tbody>

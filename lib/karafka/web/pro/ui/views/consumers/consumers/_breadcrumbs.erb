@@ -41,19 +41,17 @@
     </a>
   </li>
 
-  <li>
-    <% if current_path.include?('/subscriptions') %>
-
+  <% if current_path.include?('/subscriptions') %>
+    <li>
       <a href="<%= consumer_path(@process.id, 'subscriptions') %>">
         Subscriptions
       </a>
-
-    <% else %>
-
+    </li>
+  <% else %>
+    <li>
       <a href="<%= consumer_path(@process.id, 'details') %>">
         Details
       </a>
-
-    <% end %>
-  </li>
+    </li>
+  <% end %>
 <% end %>

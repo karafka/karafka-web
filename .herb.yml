@@ -40,6 +40,10 @@ linter:
       enabled: false
     erb-no-raw-output-in-attribute-value:
       enabled: false
+    erb-no-duplicate-branch-elements:
+      enabled: false
+    erb-no-then-in-control-flow:
+      enabled: false
 
 formatter:
   enabled: false
