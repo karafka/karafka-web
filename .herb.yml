@@ -10,7 +10,7 @@
 # Configuration: https://herb-tools.dev/configuration
 # GitHub Repo: https://github.com/marcoroth/herb
 
-version: 0.8.5
+version: 0.9.2
 
 files:
   # Include all .erb files in lib directory
@@ -31,6 +31,14 @@ linter:
     erb-prefer-image-tag-helper:
       enabled: false
     html-no-underscores-in-attribute-names:
+      enabled: false
+    erb-no-instance-variables-in-partials:
+      enabled: false
+    erb-no-interpolated-class-names:
+      enabled: false
+    erb-no-output-in-attribute-position:
+      enabled: false
+    erb-no-raw-output-in-attribute-value:
       enabled: false
 
 formatter:

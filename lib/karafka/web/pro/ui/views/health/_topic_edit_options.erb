@@ -13,7 +13,11 @@
 <%# Contact: contact@karafka.io %>
 
 <%
-  feature_class = features.commanding? ? '' : 'btn-disabled'
+  if features.commanding?
+    feature_class = ''
+  else
+    feature_class = 'btn-disabled'
+  end
 
   partitions = topic_details[:partitions]
 

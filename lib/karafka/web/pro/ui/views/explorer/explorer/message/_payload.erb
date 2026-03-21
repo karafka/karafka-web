@@ -25,11 +25,7 @@
   <% if (@message.raw_payload&.bytesize || 0) > Karafka::Web.config.ui.max_visible_payload_size %>
     <%== partial('explorer/explorer/message/too_big_to_be_displayed') %>
   <% else %>
-    <% if @safe_payload.failure? %>
-      <pre class="code"><code class="json"><%= @message.raw_payload %></code></pre>
-    <% else %>
-      <pre class="code"><code class="json"><%= JSON.pretty_generate(@safe_payload.result) %></code></pre>
-    <% end %>
+    <pre class="code"><code class="json"><% if @safe_payload.failure? %><%= @message.raw_payload %><% else %><%= JSON.pretty_generate(@safe_payload.result) %><% end %></code></pre>
   <% end %>
 <% else %>
   <%== partial 'explorer/explorer/filtered' %>
