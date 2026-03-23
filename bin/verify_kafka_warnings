@@ -10,6 +10,7 @@ allowed_patterns=(
    "Replayed PartitionRecord for"
    "Previous leader None and previous leader epoch"
    "Creating new"
+   "Auto topic creation failed for __consumer_offsets with error 'TOPIC_ALREADY_EXISTS'"
 )
 
 # Get all warnings
