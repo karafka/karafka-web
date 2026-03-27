@@ -5,6 +5,7 @@ require "rack/test"
 require "ostruct"
 require "nokogiri"
 require "singleton"
+require "digest"
 
 # Are we running regular tests or pro tests
 SPECS_TYPE = ENV.fetch("SPECS_TYPE", "default")

@@ -2,11 +2,6 @@
 
 # Extra methods for topics management in specs
 module TopicsManagerHelper
-  # Root path of the karafka-web gem used to compute relative test file paths
-  GEM_ROOT = File.expand_path(File.join(__dir__, '..', '..', '..'))
-
-  private_constant :GEM_ROOT
-
   # @return [String] random name of a topic with the integration suite prefix
   # @note Includes a short hash derived from the calling test file path so topics
   #   can be traced back to the test that created them in Kafka logs
@@ -76,9 +71,9 @@ module TopicsManagerHelper
   # to find the originating test file rather than $PROGRAM_NAME.
   # @return [String] 6-character hex hash of the caller's relative path
   def caller_spec_hash
-    path = caller_locations.find { |loc| loc.path.end_with?('_test.rb') }&.absolute_path
-    path ||= File.expand_path($PROGRAM_NAME)
-    relative_path = path.sub("#{GEM_ROOT}/", '')
+    loc = caller_locations.find { |l| l.path.end_with?("_test.rb") }
+    path = loc && (loc.absolute_path || loc.path) || File.expand_path($PROGRAM_NAME)
+    relative_path = path.delete_prefix("#{Karafka::Web.gem_root}/")
     Digest::MD5.hexdigest(relative_path)[0, 6]
   end
 end
