@@ -3,8 +3,10 @@
 # Extra methods for topics management in specs
 module TopicsManagerHelper
   # @return [String] random name of a topic with the integration suite prefix
+  # @note Includes a short hash derived from the calling test file path so topics
+  #   can be traced back to the test that created them in Kafka logs
   def generate_topic_name
-    "it-#{SecureRandom.uuid}"
+    "it-#{caller_spec_hash}-#{SecureRandom.uuid}"
   end
 
   # @param topic_name [String] topic name. Default will generate automatically
@@ -60,5 +62,18 @@ module TopicsManagerHelper
   # Draws expected routes
   def draw_routes(&)
     Karafka::App.routes.draw(&)
+  end
+
+  private
+
+  # Short hash (6 chars) derived from the calling test file path for topic name traceability.
+  # Since karafka-web runs all tests in a single minitest process, we use caller_locations
+  # to find the originating test file rather than $PROGRAM_NAME.
+  # @return [String] 6-character hex hash of the caller's relative path
+  def caller_spec_hash
+    loc = caller_locations.find { |l| l.path.end_with?("_test.rb") }
+    path = loc && (loc.absolute_path || loc.path) || File.expand_path($PROGRAM_NAME)
+    relative_path = path.delete_prefix("#{Karafka::Web.gem_root}/")
+    Digest::MD5.hexdigest(relative_path)[0, 6]
   end
 end
