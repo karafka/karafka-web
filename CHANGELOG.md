@@ -3,6 +3,7 @@
 ## 0.11.7 (Unreleased)
 - [Enhancement] Track `poll_interval` (max.poll.interval.ms) per subscription group alongside `poll_age` to help users monitor how close they are to the polling timeout limit. Consumer schema version bumped to 1.7.0.
 - [Enhancement] Replace token-based CSRF protection (`route_csrf` plugin) with header-based protection using `Sec-Fetch-Site` header (`sec_fetch_site_csrf` plugin). This eliminates the need for CSRF tokens by leveraging browser-enforced headers that cannot be forged from cross-origin requests. Modern browsers automatically include this header, providing simpler and more robust CSRF protection.
+- [Enhancement] Include a short spec file hash in generated test topic names for traceability. Topic names now follow the `it-{hash}-{uuid}` format, making it easy to identify which test file created a given topic in Kafka logs.
 - [Change] Require Roda `>= 3.100` (previously `~> 3.69`).
 
 ## 0.11.6 (2026-02-01)
