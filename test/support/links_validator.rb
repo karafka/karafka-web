@@ -14,7 +14,7 @@ class LinksValidator
   # in other ways
   EXCEPTIONS = [
     %r{explorer/topics/\w+/\d+},
-    %r{explorer/topics/it-[a-f0-9-]+/\d+},
+    %r{explorer/topics/it-[a-f0-9-]+},
     %r{consumers/[a-z0-9-]+:[a-z0-9]+(:[a-z0-9]+)?/subscriptions},
     "/explorer/topics/test3",
     %r{/consumers/[a-f0-9-]+/subscriptions}
@@ -42,7 +42,7 @@ class LinksValidator
   # There is no point in visiting same urls for different uuids (like topic views). We use those
   # regexps as a baseline to build visited keys so we know that we visited one and worked
   KEY_TRANSFORMERS = [
-    /it-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
+    /it-[0-9a-f]{6}-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
     /[a-z0-9]+:\d+:\d+/
   ].freeze
 
