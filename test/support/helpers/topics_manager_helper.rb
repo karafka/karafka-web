@@ -90,7 +90,7 @@ module TopicsManagerHelper
       ui_ready = begin
         Karafka::Web::Ui::Models::ConsumersState.current &&
           Karafka::Web::Ui::Models::ConsumersMetrics.current
-      rescue StandardError
+      rescue
         false
       end
 
@@ -98,7 +98,7 @@ module TopicsManagerHelper
         Karafka::Web::Processing::Consumers::State.current!
         Karafka::Web::Processing::Consumers::Metrics.current!
         true
-      rescue StandardError
+      rescue
         false
       end
 
