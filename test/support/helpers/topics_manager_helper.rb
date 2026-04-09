@@ -84,7 +84,7 @@ module TopicsManagerHelper
   #
   # @param timeout [Numeric] maximum time to wait in seconds
   def wait_for_state_data(timeout: 10)
-    deadline = Time.now + timeout
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
 
     loop do
       ui_ready = begin
@@ -104,7 +104,7 @@ module TopicsManagerHelper
 
       return if ui_ready && processing_ready
 
-      if Time.now > deadline
+      if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
         raise "Timed out after #{timeout}s waiting for consumers state/metrics to be readable"
       end
 
