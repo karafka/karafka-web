@@ -64,6 +64,30 @@ module TopicsManagerHelper
     Karafka::App.routes.draw(&)
   end
 
+  # Waits until the consumers state and metrics are readable from the currently configured
+  # Web UI topics. After producing to a freshly created topic, there is a small window where
+  # the just-produced messages are not yet visible to a fresh consumer (admin read) due to
+  # broker metadata propagation. Tests that mutate the states/metrics topics and immediately
+  # hit the UI need to ensure the data is actually visible to avoid flakes.
+  #
+  # @param timeout [Numeric] maximum time to wait in seconds
+  def wait_for_state_data(timeout: 10)
+    deadline = Time.now + timeout
+
+    loop do
+      state = Karafka::Web::Ui::Models::ConsumersState.current
+      metrics = Karafka::Web::Ui::Models::ConsumersMetrics.current
+
+      return if state && metrics
+
+      if Time.now > deadline
+        raise "Timed out after #{timeout}s waiting for consumers state/metrics to be readable"
+      end
+
+      sleep(0.1)
+    end
+  end
+
   private
 
   # Short hash (6 chars) derived from the calling test file path for topic name traceability.

@@ -55,6 +55,7 @@ describe_current do
 
       Karafka::Web::Management::Actions::CreateInitialStates.new.call
       Karafka::Web::Management::Actions::MigrateStatesData.new.call
+      wait_for_state_data
 
       get "dashboard"
     end
@@ -77,6 +78,7 @@ describe_current do
       Karafka::Web::Management::Actions::CreateInitialStates.new.call
       produce(metrics_topic, Fixtures.consumers_metrics_file("v1.0.0_single.json"))
       Karafka::Web::Management::Actions::MigrateStatesData.new.call
+      wait_for_state_data
 
       get "dashboard"
     end
@@ -154,6 +156,7 @@ describe_current do
       Karafka::Web::Management::Actions::CreateInitialStates.new.call
       produce(metrics_topic, Fixtures.consumers_metrics_file("v1.3.0_pace_gaps.json"))
       Karafka::Web::Management::Actions::MigrateStatesData.new.call
+      wait_for_state_data
 
       get "dashboard"
     end
