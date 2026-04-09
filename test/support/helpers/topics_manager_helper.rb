@@ -84,14 +84,14 @@ module TopicsManagerHelper
 
     loop do
       ui_ready = Karafka::Web::Ui::Models::ConsumersState.current &&
-                 Karafka::Web::Ui::Models::ConsumersMetrics.current
+        Karafka::Web::Ui::Models::ConsumersMetrics.current
 
       processing_ready = begin
         Karafka::Web::Processing::Consumers::State.current!
         Karafka::Web::Processing::Consumers::Metrics.current!
         true
       rescue Karafka::Web::Errors::Processing::MissingConsumersStateError,
-             Karafka::Web::Errors::Processing::MissingConsumersMetricsError
+        Karafka::Web::Errors::Processing::MissingConsumersMetricsError
         false
       end
 
