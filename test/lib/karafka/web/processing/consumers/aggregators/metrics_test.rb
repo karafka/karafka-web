@@ -27,6 +27,7 @@ describe_current do
     before do
       Karafka::Web::Management::Actions::CreateInitialStates.new.call
       Karafka::Web::Management::Actions::MigrateStatesData.new.call
+      wait_for_state_data
     end
 
     it "expect to have basic empty stats" do
@@ -55,6 +56,7 @@ describe_current do
     before do
       Karafka::Web::Management::Actions::CreateInitialStates.new.call
       Karafka::Web::Management::Actions::MigrateStatesData.new.call
+      wait_for_state_data
 
       [process1_report, process2_report].each_with_index do |report, index|
         state_aggregator.add(report, index)

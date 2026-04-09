@@ -64,6 +64,54 @@ module TopicsManagerHelper
     Karafka::App.routes.draw(&)
   end
 
+  # Waits until the consumers state and metrics are readable from the currently configured
+  # Web UI topics. After producing to a freshly created topic, there is a small window where
+  # the just-produced messages are not yet visible to a fresh consumer (admin read) due to
+  # broker metadata propagation. Tests that mutate the states/metrics topics and immediately
+  # read them back (via the UI or via processing aggregators) need to ensure the data is
+  # actually visible to avoid flakes.
+  #
+  # The Web UI read path is especially race-prone because it uses a short
+  # `fetch.wait.max.ms` (100ms vs the default 500ms), so it gives up faster when the broker
+  # has not yet propagated the just-produced message.
+  #
+  # Both the UI and the processing read paths are checked here so that the helper can be
+  # used in UI controller tests as well as in processing aggregator tests. We rescue
+  # `StandardError` because we may briefly read a state from before migrations were applied
+  # (e.g. the initial `schema_version: "0.0.0"` state) which crashes `ConsumersState.current`
+  # on missing fields like `:processes`. In that case we simply keep polling until the
+  # migrated state becomes visible.
+  #
+  # @param timeout [Numeric] maximum time to wait in seconds
+  def wait_for_state_data(timeout: 10)
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
+
+    loop do
+      ui_ready = begin
+        Karafka::Web::Ui::Models::ConsumersState.current &&
+          Karafka::Web::Ui::Models::ConsumersMetrics.current
+      rescue
+        false
+      end
+
+      processing_ready = begin
+        Karafka::Web::Processing::Consumers::State.current!
+        Karafka::Web::Processing::Consumers::Metrics.current!
+        true
+      rescue
+        false
+      end
+
+      return if ui_ready && processing_ready
+
+      if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
+        raise "Timed out after #{timeout}s waiting for consumers state/metrics to be readable"
+      end
+
+      sleep(0.1)
+    end
+  end
+
   private
 
   # Short hash (6 chars) derived from the calling test file path for topic name traceability.

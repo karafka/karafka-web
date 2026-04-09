@@ -15,6 +15,7 @@ describe_current do
 
     Karafka::Web::Management::Actions::CreateInitialStates.new.call
     Karafka::Web::Management::Actions::MigrateStatesData.new.call
+    wait_for_state_data
   end
 
   describe "#add_state" do

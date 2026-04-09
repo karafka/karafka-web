@@ -74,6 +74,7 @@ describe_current do
         Karafka::Web::Management::Actions::CreateInitialStates.new.call
         produce(metrics_topic, Fixtures.consumers_metrics_file)
         Karafka::Web::Management::Actions::MigrateStatesData.new.call
+        wait_for_state_data
 
         get "status"
       end
