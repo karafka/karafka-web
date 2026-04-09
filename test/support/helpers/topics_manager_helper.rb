@@ -76,22 +76,29 @@ module TopicsManagerHelper
   # has not yet propagated the just-produced message.
   #
   # Both the UI and the processing read paths are checked here so that the helper can be
-  # used in UI controller tests as well as in processing aggregator tests.
+  # used in UI controller tests as well as in processing aggregator tests. We rescue
+  # `StandardError` because we may briefly read a state from before migrations were applied
+  # (e.g. the initial `schema_version: "0.0.0"` state) which crashes `ConsumersState.current`
+  # on missing fields like `:processes`. In that case we simply keep polling until the
+  # migrated state becomes visible.
   #
   # @param timeout [Numeric] maximum time to wait in seconds
   def wait_for_state_data(timeout: 10)
     deadline = Time.now + timeout
 
     loop do
-      ui_ready = Karafka::Web::Ui::Models::ConsumersState.current &&
-        Karafka::Web::Ui::Models::ConsumersMetrics.current
+      ui_ready = begin
+        Karafka::Web::Ui::Models::ConsumersState.current &&
+          Karafka::Web::Ui::Models::ConsumersMetrics.current
+      rescue StandardError
+        false
+      end
 
       processing_ready = begin
         Karafka::Web::Processing::Consumers::State.current!
         Karafka::Web::Processing::Consumers::Metrics.current!
         true
-      rescue Karafka::Web::Errors::Processing::MissingConsumersStateError,
-        Karafka::Web::Errors::Processing::MissingConsumersMetricsError
+      rescue StandardError
         false
       end
 
