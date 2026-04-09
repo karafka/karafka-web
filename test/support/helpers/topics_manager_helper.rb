@@ -68,17 +68,34 @@ module TopicsManagerHelper
   # Web UI topics. After producing to a freshly created topic, there is a small window where
   # the just-produced messages are not yet visible to a fresh consumer (admin read) due to
   # broker metadata propagation. Tests that mutate the states/metrics topics and immediately
-  # hit the UI need to ensure the data is actually visible to avoid flakes.
+  # read them back (via the UI or via processing aggregators) need to ensure the data is
+  # actually visible to avoid flakes.
+  #
+  # The Web UI read path is especially race-prone because it uses a short
+  # `fetch.wait.max.ms` (100ms vs the default 500ms), so it gives up faster when the broker
+  # has not yet propagated the just-produced message.
+  #
+  # Both the UI and the processing read paths are checked here so that the helper can be
+  # used in UI controller tests as well as in processing aggregator tests.
   #
   # @param timeout [Numeric] maximum time to wait in seconds
   def wait_for_state_data(timeout: 10)
     deadline = Time.now + timeout
 
     loop do
-      state = Karafka::Web::Ui::Models::ConsumersState.current
-      metrics = Karafka::Web::Ui::Models::ConsumersMetrics.current
+      ui_ready = Karafka::Web::Ui::Models::ConsumersState.current &&
+                 Karafka::Web::Ui::Models::ConsumersMetrics.current
 
-      return if state && metrics
+      processing_ready = begin
+        Karafka::Web::Processing::Consumers::State.current!
+        Karafka::Web::Processing::Consumers::Metrics.current!
+        true
+      rescue Karafka::Web::Errors::Processing::MissingConsumersStateError,
+             Karafka::Web::Errors::Processing::MissingConsumersMetricsError
+        false
+      end
+
+      return if ui_ready && processing_ready
 
       if Time.now > deadline
         raise "Timed out after #{timeout}s waiting for consumers state/metrics to be readable"
