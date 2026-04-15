@@ -6,6 +6,7 @@
 - [Enhancement] Replace token-based CSRF protection (`route_csrf` plugin) with header-based protection using `Sec-Fetch-Site` header (`sec_fetch_site_csrf` plugin). This eliminates the need for CSRF tokens by leveraging browser-enforced headers that cannot be forged from cross-origin requests. Modern browsers automatically include this header, providing simpler and more robust CSRF protection.
 - [Enhancement] Include a short spec file hash in generated test topic names for traceability. Topic names now follow the `it-{hash}-{uuid}` format, making it easy to identify which test file created a given topic in Kafka logs.
 - [Change] Require Roda `>= 3.100` (previously `~> 3.69`).
+- [Fix] Remove `cgi` as no longer needed.
 - [Fix] Exclude `test/` directory from gem releases to reduce package size.
 - [Fix] Update LinksValidator regexes to match the new `it-{hash}-{uuid}` test topic naming format, fixing test-order dependent failures in explorer controller specs.
 
