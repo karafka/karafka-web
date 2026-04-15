@@ -70,7 +70,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Server do
 
   describe "#workers" do
     before do
-      Karafka::App.config.stubs(:concurrency).returns(10)
+      Karafka::Server.workers.stubs(:size).returns(10)
     end
 
     it "returns configured concurrency" do

@@ -17,7 +17,7 @@ describe_current do
     it { assert_includes(process[:id], Socket.gethostname) }
     it { assert_equal("initialized", process[:status]) }
     it { assert_equal({ active: 0, standby: 0 }, process[:listeners]) }
-    it { assert_equal(5, process[:workers]) }
+    it { assert_equal(0, process[:workers]) }
     it { assert_equal(0, process[:memory_usage]) }
     it { assert_equal(0, process[:memory_total_usage]) }
     it { refute_nil(process[:memory_size]) }
