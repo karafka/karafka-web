@@ -173,9 +173,9 @@ module Karafka
           end
 
           # @return [Metrics::Jobs] jobs metrics instance
-          # @note Lazy initialization since it depends on started_at and workers
+          # @note Lazy initialization since it depends on started_at
           def jobs_metrics
-            @jobs_metrics ||= Metrics::Jobs.new(@windows, started_at, workers)
+            @jobs_metrics ||= Metrics::Jobs.new(@windows, started_at)
           end
 
           # @return [Integer] memory used by this process in kilobytes
@@ -213,8 +213,9 @@ module Karafka
           end
 
           # @return [Integer] number of threads that process work
+          # @note Not memoized because the thread pool can be dynamically scaled at runtime
           def workers
-            @workers ||= Karafka::App.config.concurrency
+            Karafka::Server.workers.size
           end
 
           # Loads our ps results into memory so we can extract from them whatever we need

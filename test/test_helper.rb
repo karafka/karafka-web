@@ -45,6 +45,10 @@ if ENV["SPECS_TYPE"] == "pro"
     def self.token
       ENV.fetch("KARAFKA_PRO_LICENSE_TOKEN")
     end
+
+    def self.version
+      ENV.fetch("KARAFKA_PRO_LICENSE_VERSION")
+    end
   end
 
   Karafka.const_set(:License, mod)
@@ -163,6 +167,7 @@ Minitest::Spec.class_eval do
     # We do this because some of the tests extend routing and we do not want them to interfere
     # with each other.
     Karafka::App.routes.clear
+    Karafka::Server.workers = Karafka::Processing::WorkersPool.new
     draw_defaults
     Karafka::Web::Management::Actions::Enable.new.send(:extend_routing)
 

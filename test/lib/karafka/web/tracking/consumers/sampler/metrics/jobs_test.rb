@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
-  let(:jobs_metrics) { described_class.new(windows, started_at, workers) }
+  let(:jobs_metrics) { described_class.new(windows, started_at) }
 
   let(:windows) { Karafka::Web::Tracking::Helpers::Ttls::Windows.new }
   let(:started_at) { Time.now.to_f }
-  let(:workers) { 5 }
+
+  before { Karafka::Server.workers.stubs(:size).returns(5) }
 
   describe "#utilization" do
     context "when there are no processed totals" do

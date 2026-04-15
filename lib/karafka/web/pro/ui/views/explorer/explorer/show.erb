@@ -22,7 +22,6 @@
   <% view_title "Message with offset #{@offset} from partition #{@partition_id}" %>
 
   <%
-    republish_path = explorer_messages_path(@message.topic, @message.partition, @message.offset, 'republish')
     surrounding_path = explorer_topics_path(@message.topic, @message.partition, @message.offset, 'surrounding')
   %>
   <div class="col-span-12">
