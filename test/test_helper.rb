@@ -45,6 +45,10 @@ if ENV["SPECS_TYPE"] == "pro"
     def self.token
       ENV.fetch("KARAFKA_PRO_LICENSE_TOKEN")
     end
+
+    def self.version
+      "test"
+    end
   end
 
   Karafka.const_set(:License, mod)
