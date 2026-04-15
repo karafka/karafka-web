@@ -47,7 +47,7 @@ if ENV["SPECS_TYPE"] == "pro"
     end
 
     def self.version
-      "test"
+      ENV.fetch("KARAFKA_PRO_LICENSE_VERSION")
     end
   end
 
