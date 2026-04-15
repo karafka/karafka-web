@@ -21,8 +21,9 @@ module Karafka
               end
 
               # @return [Integer] number of threads that process work
+              # @note Not memoized because the thread pool can be dynamically scaled at runtime
               def workers
-                Karafka::App.config.concurrency
+                Karafka::Server.workers.size
               end
             end
           end

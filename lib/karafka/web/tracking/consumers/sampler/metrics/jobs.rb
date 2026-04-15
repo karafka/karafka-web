@@ -12,12 +12,10 @@ module Karafka
 
               # @param windows [Helpers::Ttls::Windows] time windows for aggregating metrics
               # @param started_at [Float] process start time
-              # @param workers [Integer] number of worker threads
-              def initialize(windows, started_at, workers)
+              def initialize(windows, started_at)
                 super()
                 @windows = windows
                 @started_at = started_at
-                @workers = workers
               end
 
               # @return [Numeric] % utilization of all the threads. 100% means all the threads are
@@ -50,7 +48,13 @@ module Karafka
 
               private
 
-              attr_reader :windows, :started_at, :workers
+              attr_reader :windows, :started_at
+
+              # @return [Integer] current number of worker threads
+              # @note Not memoized because the thread pool can be dynamically scaled at runtime
+              def workers
+                Karafka::Server.workers.size
+              end
             end
           end
         end
