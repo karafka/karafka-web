@@ -6,7 +6,7 @@ require "etc"
 require "open3"
 require "zlib"
 require "securerandom"
-require "cgi"
+require "cgi/escape"
 require "uri"
 
 module Karafka
