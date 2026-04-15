@@ -1,6 +1,11 @@
 PATH
   remote: .
   specs:
+    karafka (2.5.10)
+      karafka-core (>= 2.5.13, < 2.6.0)
+      karafka-rdkafka (>= 0.26.1)
+      waterdrop (>= 2.8.14, < 3.0.0)
+      zeitwerk (~> 2.3)
     karafka-web (0.11.6)
       erubi (~> 1.4)
       karafka (>= 2.5.10.rc1, < 2.6.0)
@@ -11,7 +16,6 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    base64 (0.3.0)
     byebug (13.0.0)
       reline (>= 0.6.0)
     concurrent-ruby (1.3.5)
@@ -21,55 +25,22 @@ GEM
     et-orbi (1.4.0)
       tzinfo
     ffi (1.17.2)
-    ffi (1.17.2-aarch64-linux-gnu)
-    ffi (1.17.2-aarch64-linux-musl)
-    ffi (1.17.2-arm-linux-gnu)
-    ffi (1.17.2-arm-linux-musl)
-    ffi (1.17.2-arm64-darwin)
-    ffi (1.17.2-x86-linux-gnu)
-    ffi (1.17.2-x86-linux-musl)
-    ffi (1.17.2-x86_64-darwin)
     ffi (1.17.2-x86_64-linux-gnu)
-    ffi (1.17.2-x86_64-linux-musl)
     fugit (1.12.1)
       et-orbi (~> 1.4)
       raabro (~> 1.4)
     io-console (0.8.2)
     json (2.16.0)
-    karafka (2.5.2)
-      base64 (~> 0.2)
-      karafka-core (>= 2.5.6, < 2.6.0)
-      karafka-rdkafka (>= 0.22.0)
-      waterdrop (>= 2.8.9, < 3.0.0)
-      zeitwerk (~> 2.3)
-    karafka-core (2.5.7)
+    karafka-core (2.5.13)
       karafka-rdkafka (>= 0.20.0)
       logger (>= 1.6.0)
-    karafka-rdkafka (0.23.0)
+    karafka-rdkafka (0.26.1)
       ffi (~> 1.17.1)
       json (> 2.0)
       logger
       mini_portile2 (~> 2.6)
       rake (> 12)
-    karafka-rdkafka (0.23.0-aarch64-linux-gnu)
-      ffi (~> 1.17.1)
-      json (> 2.0)
-      logger
-      mini_portile2 (~> 2.6)
-      rake (> 12)
-    karafka-rdkafka (0.23.0-arm64-darwin)
-      ffi (~> 1.17.1)
-      json (> 2.0)
-      logger
-      mini_portile2 (~> 2.6)
-      rake (> 12)
-    karafka-rdkafka (0.23.0-x86_64-linux-gnu)
-      ffi (~> 1.17.1)
-      json (> 2.0)
-      logger
-      mini_portile2 (~> 2.6)
-      rake (> 12)
-    karafka-rdkafka (0.23.0-x86_64-linux-musl)
+    karafka-rdkafka (0.26.1-x86_64-linux-gnu)
       ffi (~> 1.17.1)
       json (> 2.0)
       logger
@@ -85,21 +56,7 @@ GEM
     nokogiri (1.19.1)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.19.1-aarch64-linux-gnu)
-      racc (~> 1.4)
-    nokogiri (1.19.1-aarch64-linux-musl)
-      racc (~> 1.4)
-    nokogiri (1.19.1-arm-linux-gnu)
-      racc (~> 1.4)
-    nokogiri (1.19.1-arm-linux-musl)
-      racc (~> 1.4)
-    nokogiri (1.19.1-arm64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.19.1-x86_64-darwin)
-      racc (~> 1.4)
     nokogiri (1.19.1-x86_64-linux-gnu)
-      racc (~> 1.4)
-    nokogiri (1.19.1-x86_64-linux-musl)
       racc (~> 1.4)
     ostruct (0.6.3)
     prism (1.9.0)
@@ -127,25 +84,16 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     warning (1.5.0)
-    waterdrop (2.8.13)
-      karafka-core (>= 2.4.9, < 3.0.0)
-      karafka-rdkafka (>= 0.20.0)
+    waterdrop (2.9.0)
+      karafka-core (>= 2.5.12, < 3.0.0)
+      karafka-rdkafka (>= 0.24.0)
       zeitwerk (~> 2.3)
     webrick (1.9.1)
     zeitwerk (2.7.3)
 
 PLATFORMS
-  aarch64-linux-gnu
-  aarch64-linux-musl
-  arm-linux-gnu
-  arm-linux-musl
-  arm64-darwin
   ruby
-  x86-linux-gnu
-  x86-linux-musl
-  x86_64-darwin
-  x86_64-linux-gnu
-  x86_64-linux-musl
+  x86_64-linux
 
 DEPENDENCIES
   byebug
