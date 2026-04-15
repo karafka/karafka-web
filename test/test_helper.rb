@@ -163,6 +163,7 @@ Minitest::Spec.class_eval do
     # We do this because some of the tests extend routing and we do not want them to interfere
     # with each other.
     Karafka::App.routes.clear
+    Karafka::Server.workers = Karafka::Processing::WorkersPool.new
     draw_defaults
     Karafka::Web::Management::Actions::Enable.new.send(:extend_routing)
 

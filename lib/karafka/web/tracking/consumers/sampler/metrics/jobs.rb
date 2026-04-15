@@ -28,9 +28,14 @@ module Karafka
 
                 timefactor = [float_now - started_at, 60].min
 
+                workers_count = workers
+
+                # If downscaled completely (edge case) we return 0 because no way to compute
+                return 0 if workers_count.zero?
+
                 # We divide by 1_000 to convert from milliseconds
                 # We multiply by 100 to have it in % scale
-                (totals.sum / 1_000 / workers / timefactor * 100).round(2)
+                (totals.sum / 1_000 / workers_count / timefactor * 100).round(2)
               end
 
               # @return [Hash] job queue statistics
