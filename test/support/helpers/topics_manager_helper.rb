@@ -83,16 +83,24 @@ module TopicsManagerHelper
   # migrated state becomes visible.
   #
   # @param timeout [Numeric] maximum time to wait in seconds
-  def wait_for_state_data(timeout: 10)
+  # @param require_ui [Boolean] whether to also require the UI read path to succeed. Must be
+  #   set to `false` in contexts where only `CreateInitialStates` has run without
+  #   `MigrateStatesData`, since `ConsumersState.current` crashes on the pre-migration
+  #   `schema_version: "0.0.0"` state and would otherwise loop until timeout.
+  def wait_for_state_data(timeout: 10, require_ui: true)
     deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
 
     loop do
-      ui_ready = begin
-        Karafka::Web::Ui::Models::ConsumersState.current &&
-          Karafka::Web::Ui::Models::ConsumersMetrics.current
-      rescue
-        false
-      end
+      ui_ready = if require_ui
+                   begin
+                     Karafka::Web::Ui::Models::ConsumersState.current &&
+                       Karafka::Web::Ui::Models::ConsumersMetrics.current
+                   rescue
+                     false
+                   end
+                 else
+                   true
+                 end
 
       processing_ready = begin
         Karafka::Web::Processing::Consumers::State.current!

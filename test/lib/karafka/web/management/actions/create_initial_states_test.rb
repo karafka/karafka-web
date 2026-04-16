@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 describe_current do
-  let(:create) { described_class.new.call }
+  let(:create) do
+    described_class.new.call
+    # Freshly produced records on newly created topics can be briefly invisible to admin reads
+    # due to broker metadata propagation. `require_ui: false` is used because this test does
+    # not run migrations, so the pre-migration state would fail the UI read check indefinitely.
+    wait_for_state_data(require_ui: false)
+  end
 
   let(:consumers_states_topic) { create_topic }
   let(:consumers_metrics_topic) { create_topic }
