@@ -120,6 +120,31 @@ module TopicsManagerHelper
     end
   end
 
+  # Polls `Karafka::Web::Ui::Models::Message.find` until the message becomes visible to admin
+  # reads or the timeout elapses. This compensates for the small window between a sync produce
+  # to a freshly created topic and the moment the message is visible to a fresh consumer
+  # (admin read), caused by broker metadata propagation. Without this, tests that produce to a
+  # topic and immediately read it back via the UI model can intermittently raise
+  # `Karafka::Web::Errors::Ui::NotFoundError`.
+  #
+  # @param topic [String] topic name
+  # @param partition [Integer] partition id
+  # @param offset [Integer] offset to look up
+  # @param timeout [Numeric] maximum time to wait in seconds
+  # @return [Karafka::Messages::Message] the found message
+  def wait_for_message(topic, partition, offset, timeout: 10)
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
+
+    begin
+      Karafka::Web::Ui::Models::Message.find(topic, partition, offset)
+    rescue Karafka::Web::Errors::Ui::NotFoundError
+      raise if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
+
+      sleep(0.1)
+      retry
+    end
+  end
+
   private
 
   # Short hash (6 chars) derived from the calling test file path for topic name traceability.

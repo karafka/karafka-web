@@ -73,7 +73,7 @@ describe_current do
     end
 
     context "when message exists" do
-      let(:republished) { Karafka::Web::Ui::Models::Message.find(target_topic, 0, 0) }
+      let(:republished) { wait_for_message(target_topic, 0, 0) }
       let(:payload) { rand.to_s }
       let(:target_partition) { 0 }
       let(:include_source_headers) { "on" }
@@ -124,7 +124,7 @@ describe_current do
 
       context "when we specify target partition" do
         let(:target_partition) { 1 }
-        let(:republished) { Karafka::Web::Ui::Models::Message.find(target_topic, 1, 0) }
+        let(:republished) { wait_for_message(target_topic, 1, 0) }
         let(:target_topic) { create_topic(partitions: 2) }
 
         before do
