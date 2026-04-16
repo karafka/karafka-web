@@ -83,15 +83,23 @@ module TopicsManagerHelper
   # migrated state becomes visible.
   #
   # @param timeout [Numeric] maximum time to wait in seconds
-  def wait_for_state_data(timeout: 10)
+  # @param require_ui [Boolean] whether to also require the UI read path to succeed. Must be
+  #   set to `false` in contexts where only `CreateInitialStates` has run without
+  #   `MigrateStatesData`, since `ConsumersState.current` crashes on the pre-migration
+  #   `schema_version: "0.0.0"` state and would otherwise loop until timeout.
+  def wait_for_state_data(timeout: 10, require_ui: true)
     deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
 
     loop do
-      ui_ready = begin
-        Karafka::Web::Ui::Models::ConsumersState.current &&
-          Karafka::Web::Ui::Models::ConsumersMetrics.current
-      rescue
-        false
+      ui_ready = if require_ui
+        begin
+          Karafka::Web::Ui::Models::ConsumersState.current &&
+            Karafka::Web::Ui::Models::ConsumersMetrics.current
+        rescue
+          false
+        end
+      else
+        true
       end
 
       processing_ready = begin
@@ -109,6 +117,31 @@ module TopicsManagerHelper
       end
 
       sleep(0.1)
+    end
+  end
+
+  # Polls `Karafka::Web::Ui::Models::Message.find` until the message becomes visible to admin
+  # reads or the timeout elapses. This compensates for the small window between a sync produce
+  # to a freshly created topic and the moment the message is visible to a fresh consumer
+  # (admin read), caused by broker metadata propagation. Without this, tests that produce to a
+  # topic and immediately read it back via the UI model can intermittently raise
+  # `Karafka::Web::Errors::Ui::NotFoundError`.
+  #
+  # @param topic [String] topic name
+  # @param partition [Integer] partition id
+  # @param offset [Integer] offset to look up
+  # @param timeout [Numeric] maximum time to wait in seconds
+  # @return [Karafka::Messages::Message] the found message
+  def wait_for_message(topic, partition, offset, timeout: 10)
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
+
+    begin
+      Karafka::Web::Ui::Models::Message.find(topic, partition, offset)
+    rescue Karafka::Web::Errors::Ui::NotFoundError
+      raise if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
+
+      sleep(0.1)
+      retry
     end
   end
 
