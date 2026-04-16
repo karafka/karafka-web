@@ -92,15 +92,15 @@ module TopicsManagerHelper
 
     loop do
       ui_ready = if require_ui
-                   begin
-                     Karafka::Web::Ui::Models::ConsumersState.current &&
-                       Karafka::Web::Ui::Models::ConsumersMetrics.current
-                   rescue
-                     false
-                   end
-                 else
-                   true
-                 end
+        begin
+          Karafka::Web::Ui::Models::ConsumersState.current &&
+            Karafka::Web::Ui::Models::ConsumersMetrics.current
+        rescue
+          false
+        end
+      else
+        true
+      end
 
       processing_ready = begin
         Karafka::Web::Processing::Consumers::State.current!
