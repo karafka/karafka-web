@@ -29,23 +29,25 @@ module Karafka
           def estimate_errors_count
             estimated = 0
 
-            MAX_ERROR_PARTITIONS.times do |partition|
-              begin
-                offsets = Lib::Admin.read_watermark_offsets(
-                  ::Karafka::Web.config.topics.errors.name,
-                  partition
-                )
-              # We estimate that way instead of using `#cluster_info` to get the partitions count
-              # inside the errors topic, because it is around 90x faster to query for invalid
-              # partition and get the error, instead of querying for all topics on a big cluster
-              #
-              # Most of the users use one or few error partitions at most, so this is fairly
-              # efficient and not problematic
-              rescue Rdkafka::RdkafkaError => e
-                (e.code == :unknown_partition) ? break : raise
-              end
+            Lib::Admin.with_consumer do |consumer|
+              MAX_ERROR_PARTITIONS.times do |partition|
+                begin
+                  offsets = consumer.query_watermark_offsets(
+                    ::Karafka::Web.config.topics.errors.name,
+                    partition
+                  )
+                # We estimate that way instead of using `#cluster_info` to get the partitions count
+                # inside the errors topic, because it is around 90x faster to query for invalid
+                # partition and get the error, instead of querying for all topics on a big cluster
+                #
+                # Most of the users use one or few error partitions at most, so this is fairly
+                # efficient and not problematic
+                rescue Rdkafka::RdkafkaError => e
+                  (e.code == :unknown_partition) ? break : raise
+                end
 
-              estimated += offsets.last - offsets.first
+                estimated += offsets.last - offsets.first
+              end
             end
 
             estimated
