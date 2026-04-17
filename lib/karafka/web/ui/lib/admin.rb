@@ -18,7 +18,7 @@ module Karafka
             extend Forwardable
 
             def_delegators ::Karafka::Admin,
-                          :read_watermark_offsets, :cluster_info, :topic_info, :with_consumer
+              :read_watermark_offsets, :cluster_info, :topic_info, :with_consumer
 
             # Allows us to read messages from the topic
             #
