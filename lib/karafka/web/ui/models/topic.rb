@@ -57,8 +57,10 @@ module Karafka
           def distribution(partitions)
             sum = 0.0
 
+            all_offsets = Admin.read_watermark_offsets(topic_name => partitions)
+
             counts = partitions.map do |partition_id|
-              offsets = Admin.read_watermark_offsets(topic_name, partition_id)
+              offsets = all_offsets.fetch(topic_name).fetch(partition_id)
               count = offsets.last - offsets.first
 
               sum += count

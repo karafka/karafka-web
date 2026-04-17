@@ -53,8 +53,10 @@ module Karafka
                   @topic.partition_count, @params.current_page
                 )
 
+                all_offsets = Admin.read_watermark_offsets(topic_name => @active_partitions)
+
                 offsets = @active_partitions.map do |partition_id|
-                  part_offsets = Admin.read_watermark_offsets(topic_name, partition_id)
+                  part_offsets = all_offsets.fetch(topic_name).fetch(partition_id)
 
                   {
                     partition_id: partition_id,
