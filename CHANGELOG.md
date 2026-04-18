@@ -1,6 +1,7 @@
 # Karafka Web Changelog
 
 ## 0.11.7 (Unreleased)
+- [Enhancement] Allow for zero value in number of workers to support dynamic scaling of Karafka workers.
 - [Enhancement] Align concurrency tracking with dynamic thread pool scaling. Workers count is now read from `Karafka::Server.workers.size` instead of the static `Karafka::App.config.concurrency`, so the Web UI accurately reflects runtime thread pool changes.
 - [Enhancement] Track `poll_interval` (max.poll.interval.ms) per subscription group alongside `poll_age` to help users monitor how close they are to the polling timeout limit. Consumer schema version bumped to 1.7.0.
 - [Enhancement] Replace token-based CSRF protection (`route_csrf` plugin) with header-based protection using `Sec-Fetch-Site` header (`sec_fetch_site_csrf` plugin). This eliminates the need for CSRF tokens by leveraging browser-enforced headers that cannot be forged from cross-origin requests. Modern browsers automatically include this header, providing simpler and more robust CSRF protection.
@@ -9,6 +10,7 @@
 - [Fix] Remove `cgi` as no longer needed.
 - [Fix] Exclude `test/` directory from gem releases to reduce package size.
 - [Fix] Update LinksValidator regexes to match the new `it-{hash}-{uuid}` test topic naming format, fixing test-order dependent failures in explorer controller specs.
+- [Fix] Fix alerts formatting for the distribution view.
 
 ## 0.11.6 (2026-02-01)
 - **[Feature]** Provide ability to pause/resume all partitions of a topic at once across all consumer processes via the Health Overview page (Pro). Topic-level commands are broadcast to all processes, and each process applies the command to partitions it owns within the specified consumer group. This simplifies bulk operations compared to pausing/resuming individual partitions one by one.
