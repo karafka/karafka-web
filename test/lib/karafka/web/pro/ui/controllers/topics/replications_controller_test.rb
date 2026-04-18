@@ -182,7 +182,9 @@ describe_current do
         topic_model.stubs(:distribution).returns(distribution_result)
         stub_and_passthrough(Karafka::Web::Ui::Models::Topic, :find)
         Karafka::Web::Ui::Models::Topic.stubs(:find).with(topic).returns(topic_model)
-        Karafka::Admin.stubs(:read_watermark_offsets).returns([0, 100])
+        Karafka::Admin.stubs(:read_watermark_offsets).returns(
+          { topic => { 0 => [0, 100], 1 => [0, 100] } }
+        )
         Karafka.env.stubs(:production?).returns(true)
 
         get "topics/#{topic}/replication"
@@ -245,7 +247,9 @@ describe_current do
         topic_model.stubs(:distribution).returns(distribution_result)
         stub_and_passthrough(Karafka::Web::Ui::Models::Topic, :find)
         Karafka::Web::Ui::Models::Topic.stubs(:find).with(topic).returns(topic_model)
-        Karafka::Admin.stubs(:read_watermark_offsets).returns([0, 100])
+        Karafka::Admin.stubs(:read_watermark_offsets).returns(
+          { topic => { 0 => [0, 100], 1 => [0, 100] } }
+        )
         Karafka.env.stubs(:production?).returns(true)
         get "topics/#{topic}/replication"
       end
@@ -307,7 +311,9 @@ describe_current do
         topic_model.stubs(:distribution).returns(distribution_result)
         stub_and_passthrough(Karafka::Web::Ui::Models::Topic, :find)
         Karafka::Web::Ui::Models::Topic.stubs(:find).with(topic).returns(topic_model)
-        Karafka::Admin.stubs(:read_watermark_offsets).returns([0, 100])
+        Karafka::Admin.stubs(:read_watermark_offsets).returns(
+          { topic => { 0 => [0, 100], 1 => [0, 100] } }
+        )
         get "topics/#{topic}/replication"
       end
 
