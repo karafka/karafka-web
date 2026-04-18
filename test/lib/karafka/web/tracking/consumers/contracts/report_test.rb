@@ -332,8 +332,14 @@ describe_current do
     it { refute(contract.call(report).success?) }
   end
 
-  context "when process.workers is non-positive" do
+  context "when process.workers is zero" do
     before { report[:process][:workers] = 0 }
+
+    it { assert(contract.call(report).success?) }
+  end
+
+  context "when process.workers is negative" do
+    before { report[:process][:workers] = -1 }
 
     it { refute(contract.call(report).success?) }
   end

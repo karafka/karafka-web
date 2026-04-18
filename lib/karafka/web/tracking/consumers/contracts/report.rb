@@ -27,7 +27,7 @@ module Karafka
               required(:memory_size) { |val| val.is_a?(Integer) && val >= 0 }
               required(:status) { |val| ::Karafka::Status::STATES.key?(val.to_s.to_sym) }
               required(:threads) { |val| val.is_a?(Integer) && val >= 0 }
-              required(:workers) { |val| val.is_a?(Integer) && val.positive? }
+              required(:workers) { |val| val.is_a?(Integer) && val >= 0 }
               required(:tags) { |val| val.is_a?(Karafka::Core::Taggable::Tags) }
               required(:execution_mode) { |val| val.is_a?(String) && !val.empty? }
 
