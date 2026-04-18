@@ -339,7 +339,7 @@ describe_current do
   end
 
   context "when process.workers is negative" do
-    before { report[:process][:workers] = 0 }
+    before { report[:process][:workers] = -1 }
 
     it { refute(contract.call(report).success?) }
   end
