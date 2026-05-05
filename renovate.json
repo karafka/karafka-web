@@ -9,6 +9,7 @@
     "Gemfile.lint",
     "karafka-web.gemspec",
     "package.json",
+    "package-lock.json",
     ".github/workflows/**",
     "docker-compose*.yml"
   ],
