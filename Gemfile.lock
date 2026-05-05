@@ -81,7 +81,7 @@ GEM
       rake (> 12)
     logger (1.7.0)
     mini_portile2 (2.8.9)
-    minitest (6.0.2)
+    minitest (6.0.6)
       drb (~> 2.0)
       prism (~> 1.5)
     mocha (3.1.0)
