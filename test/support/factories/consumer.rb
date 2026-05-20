@@ -11,6 +11,7 @@ module Factories
     def build(coordinator: nil, messages: nil, **)
       coordinator ||= Factories::Processing.build_coordinator(seek_offset: 1)
 
+      now = Time.now
       batch_metadata = Karafka::Messages::BatchMetadata.new(
         size: 10,
         first_offset: 0,
@@ -18,9 +19,9 @@ module Factories
         deserializers: nil,
         partition: 1,
         topic: coordinator.topic.name,
-        created_at: Time.now,
-        scheduled_at: Time.now - 1,
-        processed_at: Time.now
+        created_at: now,
+        scheduled_at: now - 1,
+        processed_at: now
       )
 
       messages ||= Struct.new(:size, :metadata).new(1, batch_metadata)
