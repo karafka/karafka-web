@@ -1,6 +1,7 @@
 # Karafka Web Changelog
 
 ## 0.11.7 (Unreleased)
+- [Enhancement] Replace sequential per-partition `query_watermark_offsets` consumer calls in `Counters#estimate_errors_count` with a single targeted `topic_info` metadata call followed by a batch `read_watermark_offsets` admin call. This eliminates the consumer connection overhead and reduces Kafka roundtrips from up to N+1 sequential calls to 3 regardless of partition count.
 - [Enhancement] Allow for zero value in number of workers to support dynamic scaling of Karafka workers.
 - [Enhancement] Align concurrency tracking with dynamic thread pool scaling. Workers count is now read from `Karafka::Server.workers.size` instead of the static `Karafka::App.config.concurrency`, so the Web UI accurately reflects runtime thread pool changes.
 - [Enhancement] Track `poll_interval` (max.poll.interval.ms) per subscription group alongside `poll_age` to help users monitor how close they are to the polling timeout limit. Consumer schema version bumped to 1.7.0.

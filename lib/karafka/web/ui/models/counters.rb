@@ -6,11 +6,6 @@ module Karafka
       module Models
         # Represents the top counters bar values on the consumers view
         class Counters < Lib::HashProxy
-          # Max errors partitions we support for estimations
-          MAX_ERROR_PARTITIONS = 100
-
-          private_constant :MAX_ERROR_PARTITIONS
-
           # @param state [Hash]
           def initialize(state)
             super(state[:stats])
@@ -26,31 +21,32 @@ module Karafka
           private
 
           # Estimates the number of errors present in the errors topic.
+          #
+          # Uses a single targeted metadata call to discover partition count followed by one
+          # batch ListOffsets admin call, rather than up to N sequential per-partition
+          # query_watermark_offsets consumer calls. This avoids opening a consumer connection
+          # and eliminates the N sequential Kafka roundtrips.
           def estimate_errors_count
-            estimated = 0
+            errors_topic = ::Karafka::Web.config.topics.errors.name
 
-            Lib::Admin.with_consumer do |consumer|
-              MAX_ERROR_PARTITIONS.times do |partition|
-                begin
-                  offsets = consumer.query_watermark_offsets(
-                    ::Karafka::Web.config.topics.errors.name,
-                    partition
-                  )
-                # We estimate that way instead of using `#cluster_info` to get the partitions count
-                # inside the errors topic, because it is around 90x faster to query for invalid
-                # partition and get the error, instead of querying for all topics on a big cluster
-                #
-                # Most of the users use one or few error partitions at most, so this is fairly
-                # efficient and not problematic
-                rescue Rdkafka::RdkafkaError => e
-                  (e.code == :unknown_partition) ? break : raise
-                end
+            begin
+              info = ::Karafka::Admin.topic_info(errors_topic)
+            rescue Rdkafka::RdkafkaError => e
+              return 0 if e.code == :unknown_topic_or_part
 
-                estimated += offsets.last - offsets.first
-              end
+              raise
             end
 
-            estimated
+            partition_count = info[:partition_count]
+            return 0 if partition_count.zero?
+
+            partition_ids = (0...partition_count).to_a
+            all_offsets = ::Karafka::Admin.read_watermark_offsets(errors_topic => partition_ids)
+
+            partition_ids.sum do |partition_id|
+              low, high = all_offsets.dig(errors_topic, partition_id) || [0, 0]
+              high - low
+            end
           end
         end
       end
