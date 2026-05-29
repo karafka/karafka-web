@@ -34,7 +34,7 @@ GEM
       et-orbi (~> 1.4)
       raabro (~> 1.4)
     io-console (0.8.2)
-    json (2.19.5)
+    json (2.19.7)
     karafka (2.5.10.rc1)
       karafka-core (>= 2.5.13, < 2.6.0)
       karafka-rdkafka (>= 0.26.1)
@@ -165,4 +165,4 @@ DEPENDENCIES
   warning
 
 BUNDLED WITH
-   2.7.1
+  4.0.12
