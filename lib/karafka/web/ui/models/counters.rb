@@ -44,7 +44,7 @@ module Karafka
             all_offsets = ::Karafka::Admin.read_watermark_offsets(errors_topic => partition_ids)
 
             partition_ids.sum do |partition_id|
-              low, high = all_offsets.dig(errors_topic, partition_id) || [0, 0]
+              low, high = all_offsets.fetch(errors_topic).fetch(partition_id)
               high - low
             end
           end
