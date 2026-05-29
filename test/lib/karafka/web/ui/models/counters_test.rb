@@ -8,8 +8,12 @@ describe_current do
     context "when errors topic does not exist in Kafka" do
       before { Karafka::Web.config.topics.errors.name = generate_topic_name }
 
-      it "expect to return zero" do
+      it "expect to return zero errors and load other stats from state correctly" do
+        assert_equal(0, stats[:errors])
         assert_equal(0, stats.errors)
+        assert_equal(16_351, stats.batches)
+        assert_equal(0, stats.dead)
+        assert_equal(2, stats.processes)
       end
     end
 
