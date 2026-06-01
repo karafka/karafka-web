@@ -183,7 +183,7 @@ describe_current do
         stub_and_passthrough(Karafka::Web::Ui::Models::Topic, :find)
         Karafka::Web::Ui::Models::Topic.stubs(:find).with(topic).returns(topic_model)
         Karafka::Admin.stubs(:read_watermark_offsets) do |*args|
-          args.first.is_a?(Hash) ? args.first.transform_values { |ids| ids.index_with { [0, 0] } } : [0, 0]
+          args.first.is_a?(Hash) ? args.first.transform_values { |ids| ids.each_with_object({}) { |id, h| h[id] = [0, 0] } } : [0, 0]
         end
         Karafka::Admin
           .stubs(:read_watermark_offsets)
@@ -252,7 +252,7 @@ describe_current do
         stub_and_passthrough(Karafka::Web::Ui::Models::Topic, :find)
         Karafka::Web::Ui::Models::Topic.stubs(:find).with(topic).returns(topic_model)
         Karafka::Admin.stubs(:read_watermark_offsets) do |*args|
-          args.first.is_a?(Hash) ? args.first.transform_values { |ids| ids.index_with { [0, 0] } } : [0, 0]
+          args.first.is_a?(Hash) ? args.first.transform_values { |ids| ids.each_with_object({}) { |id, h| h[id] = [0, 0] } } : [0, 0]
         end
         Karafka::Admin
           .stubs(:read_watermark_offsets)
@@ -320,7 +320,7 @@ describe_current do
         stub_and_passthrough(Karafka::Web::Ui::Models::Topic, :find)
         Karafka::Web::Ui::Models::Topic.stubs(:find).with(topic).returns(topic_model)
         Karafka::Admin.stubs(:read_watermark_offsets) do |*args|
-          args.first.is_a?(Hash) ? args.first.transform_values { |ids| ids.index_with { [0, 0] } } : [0, 0]
+          args.first.is_a?(Hash) ? args.first.transform_values { |ids| ids.each_with_object({}) { |id, h| h[id] = [0, 0] } } : [0, 0]
         end
         Karafka::Admin
           .stubs(:read_watermark_offsets)
