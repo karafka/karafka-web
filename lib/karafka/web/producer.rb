@@ -27,7 +27,8 @@ module Karafka
 
       # @return [WaterDrop::Producer, WaterDrop::Producer::Variant] the underlying producer
       #   or its low-ack variant
-      def __getobj__
+      # @note accept block to avoid Ruby 3.4's `strict_unused_block` warning from SimpleDelegator.
+      def __getobj__(&)
         unless @initialized
           @delegate_sd_obj = build_producer
           @initialized = true
