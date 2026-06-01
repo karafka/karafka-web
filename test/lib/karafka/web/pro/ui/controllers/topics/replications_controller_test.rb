@@ -182,13 +182,6 @@ describe_current do
         topic_model.stubs(:distribution).returns(distribution_result)
         stub_and_passthrough(Karafka::Web::Ui::Models::Topic, :find)
         Karafka::Web::Ui::Models::Topic.stubs(:find).with(topic).returns(topic_model)
-        Karafka::Admin.stubs(:read_watermark_offsets) do |*args|
-          args.first.is_a?(Hash) ? args.first.transform_values { |ids| ids.each_with_object({}) { |id, h| h[id] = [0, 0] } } : [0, 0]
-        end
-        Karafka::Admin
-          .stubs(:read_watermark_offsets)
-          .with(topic => [0, 1])
-          .returns({ topic => { 0 => [0, 100], 1 => [0, 100] } })
         Karafka.env.stubs(:production?).returns(true)
 
         get "topics/#{topic}/replication"
@@ -251,13 +244,6 @@ describe_current do
         topic_model.stubs(:distribution).returns(distribution_result)
         stub_and_passthrough(Karafka::Web::Ui::Models::Topic, :find)
         Karafka::Web::Ui::Models::Topic.stubs(:find).with(topic).returns(topic_model)
-        Karafka::Admin.stubs(:read_watermark_offsets) do |*args|
-          args.first.is_a?(Hash) ? args.first.transform_values { |ids| ids.each_with_object({}) { |id, h| h[id] = [0, 0] } } : [0, 0]
-        end
-        Karafka::Admin
-          .stubs(:read_watermark_offsets)
-          .with(topic => [0, 1])
-          .returns({ topic => { 0 => [0, 100], 1 => [0, 100] } })
         Karafka.env.stubs(:production?).returns(true)
         get "topics/#{topic}/replication"
       end
@@ -319,13 +305,6 @@ describe_current do
         topic_model.stubs(:distribution).returns(distribution_result)
         stub_and_passthrough(Karafka::Web::Ui::Models::Topic, :find)
         Karafka::Web::Ui::Models::Topic.stubs(:find).with(topic).returns(topic_model)
-        Karafka::Admin.stubs(:read_watermark_offsets) do |*args|
-          args.first.is_a?(Hash) ? args.first.transform_values { |ids| ids.each_with_object({}) { |id, h| h[id] = [0, 0] } } : [0, 0]
-        end
-        Karafka::Admin
-          .stubs(:read_watermark_offsets)
-          .with(topic => [0, 1])
-          .returns({ topic => { 0 => [0, 100], 1 => [0, 100] } })
         get "topics/#{topic}/replication"
       end
 
