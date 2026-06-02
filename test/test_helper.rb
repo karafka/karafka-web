@@ -8,6 +8,12 @@ require "singleton"
 require "digest"
 require "warning"
 
+# Enable all opt-in warning categories. Warning.categories is available
+# since Ruby 3.4; on older Rubies this is a no-op.
+if Warning.respond_to?(:categories)
+  (Warning.categories - %i[deprecated experimental]).each { |cat| Warning[cat] = true }
+end
+
 Warning.process do |warning|
   next unless warning.include?(Dir.pwd)
   # Allow OpenStruct usage only in tests
@@ -15,6 +21,10 @@ Warning.process do |warning|
   next if warning.include?("vendor/")
   next if warning.include?("minitest_locator.rb")
   next if warning.include?("fixture_file")
+  # Both Roda app classes (OSS and Pro) intentionally accumulate many object
+  # shapes because different routes set different subsets of controller response
+  # attributes. Restructuring them to avoid this would be significantly complex.
+  next if warning.include?("shape variations") && warning.include?("Ui::App")
 
   raise "Warning in your code: #{warning}"
 end

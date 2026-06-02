@@ -1,7 +1,9 @@
 # Karafka Web Changelog
 
 ## 0.11.7 (Unreleased)
+- [Fix] Add `initialize` to `Status::Context` that defines all instance variables upfront in a consistent order, giving every instance the same Ruby object shape and eliminating the `:performance` shape-variation warning.
 - [Enhancement] Add `Warning.process` block to the test helper to turn Ruby warnings originating from the project code into test failures.
+- [Enhancement] Enable all opt-in Ruby warning categories in the test helper via `Warning.categories` (available since Ruby 3.4), so any new categories added in future Ruby versions are automatically enabled without code changes.
 - [Enhancement] Replace sequential per-partition `query_watermark_offsets` consumer calls in `Counters#estimate_errors_count` with a single targeted `topic_info` metadata call followed by a batch `read_watermark_offsets` admin call. This eliminates the consumer connection overhead and reduces Kafka roundtrips from up to N+1 sequential calls to 3 regardless of partition count.
 - [Enhancement] Allow for zero value in number of workers to support dynamic scaling of Karafka workers.
 - [Enhancement] Align concurrency tracking with dynamic thread pool scaling. Workers count is now read from `Karafka::Server.workers.size` instead of the static `Karafka::App.config.concurrency`, so the Web UI accurately reflects runtime thread pool changes.
