@@ -33,8 +33,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container do
 
     context "when cgroup v2 is available (simulated)" do
       it "returns true" do
-        stub_and_passthrough(File, :exist?)
-        File.stubs(:exist?).with("/sys/fs/cgroup/cgroup.controllers").returns(true)
+        described_class.stubs(:cgroup_version).returns(:v2)
 
         assert(described_class.active?)
       end
@@ -42,9 +41,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container do
 
     context "when cgroup v1 is available (simulated)" do
       it "returns true" do
-        stub_and_passthrough(File, :exist?)
-        File.stubs(:exist?).with("/sys/fs/cgroup/cgroup.controllers").returns(false)
-        File.stubs(:exist?).with("/sys/fs/cgroup/memory/memory.limit_in_bytes").returns(true)
+        described_class.stubs(:cgroup_version).returns(:v1)
 
         assert(described_class.active?)
       end

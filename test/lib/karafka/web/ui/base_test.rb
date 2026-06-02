@@ -26,15 +26,17 @@ describe Karafka::Web::Ui::Base do
       it "expect to report the error to Karafka monitoring and show 500 page" do
         captured_event = nil
         captured_payload = nil
-        stub_and_passthrough(monitor, :instrument)
-        original_instrument = monitor.method(:instrument)
+        # Capture the real original before installing the singleton so we can
+        # call through without a double define_singleton_method redefinition.
+        real_instrument = monitor.method(:instrument)
         monitor.define_singleton_method(:instrument) do |*args, **kwargs, &blk|
           if args.first == "error.occurred"
             captured_event = args.first
             captured_payload = args[1].is_a?(Hash) ? args[1] : kwargs
           end
-          original_instrument.call(*args, **kwargs, &blk)
+          real_instrument.call(*args, **kwargs, &blk)
         end
+        StubHelpers::PASSTHROUGH_REGISTRY << [monitor, :instrument, nil, false]
 
         get "dashboard"
 

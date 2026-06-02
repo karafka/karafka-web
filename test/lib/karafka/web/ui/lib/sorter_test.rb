@@ -9,7 +9,7 @@ describe_current do
         @attrs = attrs
         attrs.each do |key, value|
           instance_variable_set("@#{key}", value)
-          self.class.define_method(key) { instance_variable_get("@#{key}") }
+          self.class.define_method(key) { instance_variable_get("@#{key}") } unless self.class.method_defined?(key)
         end
       end
 

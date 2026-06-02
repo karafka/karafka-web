@@ -138,6 +138,20 @@ module Karafka
         end
 
         before do
+          # Pre-initialize every possible response attribute to nil so that all
+          # request instances share the same Ruby object shape.  Without this,
+          # different routes set different subsets of instance variables, which
+          # creates distinct shapes and eventually triggers the :performance
+          # "N shape variations" warning once the class reaches Ruby's threshold.
+          @aggregated = @aggregated_charts = @breadcrums_scope = @brokers = nil
+          @cluster_info = @content = @counters = nil
+          @current_action_name = @current_controller_name = nil
+          @current_search = @current_state = @error = @error_message = nil
+          @jobs = @jobs_counters = @offset = @pagination = @partition_id = nil
+          @partitions = @processes = @routes = nil
+          @sampler = @session = @status = @topic = @topics = nil
+          @topics_charts = @watermark_offsets = nil
+
           check_sec_fetch_site!
           store_paths_history(request, session)
         end

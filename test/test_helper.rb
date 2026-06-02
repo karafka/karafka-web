@@ -8,11 +8,18 @@ require "singleton"
 require "digest"
 require "warning"
 
-# Enable opt-in warning categories so they are caught by the process block below.
-# :performance is available since Ruby 3.3 and flags patterns like string mutation on frozen literals.
-# :strict_unused_block is available since Ruby 3.4 and flags blocks passed to methods that never use them.
-Warning[:performance] = true if RUBY_VERSION >= "3.3"
-Warning[:strict_unused_block] = true if RUBY_VERSION >= "3.4"
+# Enable opt-in warning categories. We rescue ArgumentError rather than
+# gating on RUBY_VERSION strings so this works on any Ruby version without
+# maintenance: unknown categories are silently skipped, and adding a newly
+# introduced category to the list is all that's needed when a new Ruby ships.
+%i[
+  performance
+  strict_unused_block
+].each do |category|
+  Warning[category] = true
+rescue ArgumentError
+  # not a recognised category in this Ruby version
+end
 
 Warning.process do |warning|
   next unless warning.include?(Dir.pwd)
