@@ -6,6 +6,7 @@ require "ostruct"
 require "nokogiri"
 require "singleton"
 require "digest"
+require "warning"
 
 Warning.process do |warning|
   next unless warning.include?(Dir.pwd)
