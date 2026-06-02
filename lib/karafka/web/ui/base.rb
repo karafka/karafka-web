@@ -138,34 +138,6 @@ module Karafka
         end
 
         before do
-          # Pre-initialize every possible response attribute to nil so that all
-          # request instances share the same Ruby object shape.  Without this,
-          # different routes set different subsets of instance variables, which
-          # creates distinct shapes and eventually triggers the :performance
-          # "N shape variations" warning once the class reaches Ruby's threshold.
-          @active_partitions = @aggregated = @aggregated_charts = nil
-          @any_process_running = @assigned = @breadcrums_scope = @broker = nil
-          @brokers = @cluster_info = @command_message = @configs = nil
-          @consumer_group_id = @content = @counters = nil
-          @current_action_name = @current_controller_name = nil
-          @current_search = @current_state = @distribution = nil
-          @dlq_topics = @error = @error_message = @errors = nil
-          @form_error = @has_low_durability = @has_no_redundancy = nil
-          @has_resilience_issue = @has_zero_fault_tolerance = nil
-          @jobs = @jobs_counters = @limited = @limits = nil
-          @matchers = @message = @min_isr = @offset = @offsets = nil
-          @pagination = @partition_id = @partition_stats = nil
-          @partitions = @partitions_count = @pending_jobs = @process = nil
-          @property = @replication_factor = @routes = @routing_topic = nil
-          @running_jobs = @safe_headers = @safe_key = @safe_payload = nil
-          @sampler = @schedule = @schedule_name = @schema_version = nil
-          @search_criteria = @search_details = @session = nil
-          @states = @states_postfix = @stats = @stats_info = nil
-          @stats_topic_name = @status = @target_partition = @target_topic = nil
-          @tasks = @topic = @topic_id = @topic_lrj = @topic_name = nil
-          @topic_stats = @topics = @topics_charts = nil
-          @visibility_filter = @watermark_offsets = nil
-
           check_sec_fetch_site!
           store_paths_history(request, session)
         end

@@ -1,7 +1,6 @@
 # Karafka Web Changelog
 
 ## 0.11.7 (Unreleased)
-- [Fix] Pre-initialize all response instance variables to `nil` in the Roda `before` hook so every request shares the same Ruby object shape, eliminating the `:performance` "N shape variations" warning that fires when a class accumulates 8+ distinct instance-variable layouts.
 - [Fix] Add `initialize` to `Status::Context` that defines all instance variables upfront in a consistent order, giving every instance the same Ruby object shape and eliminating the `:performance` shape-variation warning.
 - [Enhancement] Add `Warning.process` block to the test helper to turn Ruby warnings originating from the project code into test failures.
 - [Enhancement] Enable all opt-in Ruby warning categories in the test helper via `Warning.categories` (available since Ruby 3.4), so any new categories added in future Ruby versions are automatically enabled without code changes.
