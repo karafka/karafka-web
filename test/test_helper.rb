@@ -8,6 +8,12 @@ require "singleton"
 require "digest"
 require "warning"
 
+# Enable opt-in warning categories so they are caught by the process block below.
+# :performance is available since Ruby 3.3 and flags patterns like string mutation on frozen literals.
+# :strict_unused_block is available since Ruby 3.4 and flags blocks passed to methods that never use them.
+Warning[:performance] = true if RUBY_VERSION >= "3.3"
+Warning[:strict_unused_block] = true if RUBY_VERSION >= "3.4"
+
 Warning.process do |warning|
   next unless warning.include?(Dir.pwd)
   # Allow OpenStruct usage only in tests
