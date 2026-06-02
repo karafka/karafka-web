@@ -21,10 +21,10 @@ Warning.process do |warning|
   next if warning.include?("vendor/")
   next if warning.include?("minitest_locator.rb")
   next if warning.include?("fixture_file")
-  # The Roda app class intentionally accumulates many object shapes because
-  # different routes set different subsets of controller response attributes.
-  # Restructuring it to avoid this would make the code significantly more complex.
-  next if warning.include?("shape variations") && warning.include?("Karafka::Web::Ui::App")
+  # Both Roda app classes (OSS and Pro) intentionally accumulate many object
+  # shapes because different routes set different subsets of controller response
+  # attributes. Restructuring them to avoid this would be significantly complex.
+  next if warning.include?("shape variations") && warning.include?("Ui::App")
 
   raise "Warning in your code: #{warning}"
 end
