@@ -6,6 +6,18 @@ require "ostruct"
 require "nokogiri"
 require "singleton"
 require "digest"
+require "warning"
+
+Warning.process do |warning|
+  next unless warning.include?(Dir.pwd)
+  # Allow OpenStruct usage only in tests
+  next if warning.include?("OpenStruct use") && warning.include?("/test/")
+  next if warning.include?("vendor/")
+  next if warning.include?("minitest_locator.rb")
+  next if warning.include?("fixture_file")
+
+  raise "Warning in your code: #{warning}"
+end
 
 # Are we running regular tests or pro tests
 SPECS_TYPE = ENV.fetch("SPECS_TYPE", "default")
