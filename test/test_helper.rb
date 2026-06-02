@@ -8,6 +8,19 @@ require "singleton"
 require "digest"
 require "warning"
 
+# Enable opt-in warning categories. We rescue ArgumentError rather than
+# gating on RUBY_VERSION strings so this works on any Ruby version without
+# maintenance: unknown categories are silently skipped, and adding a newly
+# introduced category to the list is all that's needed when a new Ruby ships.
+%i[
+  performance
+  strict_unused_block
+].each do |category|
+  Warning[category] = true
+rescue ArgumentError
+  # not a recognised category in this Ruby version
+end
+
 Warning.process do |warning|
   next unless warning.include?(Dir.pwd)
   # Allow OpenStruct usage only in tests
