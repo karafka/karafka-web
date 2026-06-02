@@ -28,6 +28,18 @@ module Karafka
           #     end
           #   end
           class Context
+            # Initialize all instance variables upfront so every instance has the same
+            # object shape, avoiding Ruby's `:performance` "shape variations" warning.
+            def initialize
+              @cluster_info = nil
+              @connection_time = nil
+              @current_state = nil
+              @current_metrics = nil
+              @processes = nil
+              @subscriptions = nil
+              @topics_details = nil
+            end
+
             # @return [Object, nil] cluster metadata from Kafka
             attr_accessor :cluster_info
 
