@@ -90,6 +90,21 @@ describe_current do
         producer.__getobj__
       end
     end
+
+    # `SimpleDelegator#method_missing` always passes a block to `__getobj__`.
+    # `SimpleDelegator#__getobj__` implicitly accepts the block via `block_given?` and
+    # `yield`, but our block-ignoring subclass must explicitly accept a block to avoid
+    # Ruby 3.4's `strict_unused_block` warning on every delegated call.
+    it "accepts a block to preserve the SimpleDelegator __getobj__ contract" do
+      params = described_class.instance_method(:__getobj__).parameters
+
+      assert(
+        params.any? { |type, _| type == :block },
+        "Expected __getobj__ to declare a block parameter to avoid " \
+          "`strict_unused_block` warnings from SimpleDelegator#method_missing, " \
+          "got parameters: #{params.inspect}"
+      )
+    end
   end
 
   describe "delegation" do
