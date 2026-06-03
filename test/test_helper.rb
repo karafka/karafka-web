@@ -11,7 +11,7 @@ require "warning"
 # Enable all opt-in warning categories. Warning.categories is available
 # since Ruby 3.4; on older Rubies this is a no-op.
 if Warning.respond_to?(:categories)
-  (Warning.categories - %i[deprecated experimental]).each { |cat| Warning[cat] = true }
+  (Warning.categories - %i[experimental]).each { |cat| Warning[cat] = true }
 end
 
 Warning.process do |warning|
