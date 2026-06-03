@@ -26,6 +26,7 @@ describe_current do
   context "when there are initial metrics but no other data" do
     before do
       Karafka::Web::Management::Actions::CreateInitialStates.new.call
+      wait_for_state_data(require_ui: false)
       Karafka::Web::Management::Actions::MigrateStatesData.new.call
       wait_for_state_data
     end
@@ -55,6 +56,7 @@ describe_current do
 
     before do
       Karafka::Web::Management::Actions::CreateInitialStates.new.call
+      wait_for_state_data(require_ui: false)
       Karafka::Web::Management::Actions::MigrateStatesData.new.call
       wait_for_state_data
 
