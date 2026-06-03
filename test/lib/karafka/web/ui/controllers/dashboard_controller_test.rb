@@ -25,6 +25,7 @@ describe_current do
       topics_config.consumers.metrics.name = metrics_topic
 
       Karafka::Web::Management::Actions::CreateInitialStates.new.call
+      wait_for_state_data(require_ui: false)
       Karafka::Web::Management::Actions::MigrateStatesData.new.call
       wait_for_state_data
 
