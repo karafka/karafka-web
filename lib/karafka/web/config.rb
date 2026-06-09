@@ -63,8 +63,7 @@ module Karafka
             # We do not need to to store this data for longer than 1 day as this data is only
             # used to materialize the end states
             # On the other hand we do not want to have it really short-living because in case
-            # of a consumer crash, we may want to use this info to catch up and backfill the
-            # state.
+            # of a consumer crash, we may want to use this info to catch up and backfill the state.
             #
             # In case its not consumed because no processes are running, it also usually means
             # there's no data to consume because no karafka servers report

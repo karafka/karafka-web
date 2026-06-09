@@ -43,8 +43,7 @@ module Karafka
 
                 # Declares that this check depends on another check.
                 #
-                # When a check has a dependency, it will be halted if the dependency
-                # fails.
+                # When a check has a dependency, it will be halted if the dependency fails.
                 #
                 # @param check_name [Symbol] the name of the check this depends on
                 # @return [Symbol] the dependency name

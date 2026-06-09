@@ -185,8 +185,7 @@ module Karafka
                     [rss_kb, thcount, pid]
                   end
                 # thcount is not available on macos ps
-                # because of that we inject 0 as threads count similar to how
-                # we do on windows
+                # because of that we inject 0 as threads count similar to how we do on windows
                 when /darwin|bsd/
                   shell
                     .call("ps -A -o rss=,pid=")

@@ -151,8 +151,7 @@ module Karafka
                 when "offset"
                   offset
                 when "timestamp"
-                  # Kafka timestamp of message is in ms, we need a second precision for
-                  # `Time#at`
+                  # Kafka timestamp of message is in ms, we need a second precision for `Time#at`
                   Time.at(timestamp / 1_000.to_f)
                 else
                   # This should never happen. Contact us if you see this.
