@@ -39,8 +39,7 @@ module Karafka
                 return false unless candidate
 
                 # If the deserializer is not our dedicated recurring tasks deserializer, it means
-                # that routing for recurring tasks was not loaded, so recurring tasks are not
-                # active
+                # that routing for recurring tasks was not loaded, so recurring tasks are not active
                 #
                 # User might have used recurring tasks previously and disabled them, but still may
                 # navigate to them and then we should not show anything because without the

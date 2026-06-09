@@ -70,8 +70,7 @@ module Karafka
                   manual_offset_management true
                   # Start from the most recent data, do not materialize historical states
                   # This prevents us from dealing with cases, where client id would be changed and
-                  # consumer group name would be renamed and we would start consuming all
-                  # historical
+                  # consumer group name would be renamed and we would start consuming all historical
                   initial_offset "latest"
                   # Increase backoff time on errors. Incompatible schema errors are not recoverable
                   # until rolling upgrade completes, so we use a longer max timeout to prevent

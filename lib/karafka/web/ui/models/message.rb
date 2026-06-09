@@ -65,8 +65,7 @@ module Karafka
               high_offset = watermark_offsets.high
 
               # If we start from offset -1, it means we want first page with the most recent
-              # results. We obtain this page by using the offset based on the high watermark
-              # off
+              # results. We obtain this page by using the offset based on the high watermark off
               start_offset = high_offset - per_page if start_offset == -1
 
               # No previous pages, no data, and no more offsets

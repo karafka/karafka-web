@@ -112,8 +112,7 @@ module Karafka
             times = grouped.values.map(&:first)
 
             # Inject the most recent to always have it in each reporting range
-            # Otherwise for a longer time ranges we would not have the most recent state
-            # available
+            # Otherwise for a longer time ranges we would not have the most recent state available
             times << values.last unless values.empty?
 
             # Keep the most recent state out of many that would come from the same time moment

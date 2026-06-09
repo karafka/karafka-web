@@ -53,8 +53,7 @@ module Karafka
               end
             end
 
-            # Tags virtual partitioned consumers and adds extra info if operates in a collapsed
-            # mode
+            # Tags virtual partitioned consumers and adds extra info if operates in a collapsed mode
             #
             # @param consumer [Karafka::BaseConsumer]
             def tag_virtual_partitions(consumer)
