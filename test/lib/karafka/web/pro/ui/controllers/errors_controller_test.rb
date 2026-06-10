@@ -282,6 +282,17 @@ describe_current do
       end
     end
 
+    context "when error report payload contains non-UTF-8 encoded string values" do
+      before do
+        produce(errors_topic, Fixtures.binfile("payloads/invalid_utf8.bin"), partition: 0)
+        get "errors/0/0"
+      end
+
+      it do
+        assert(response.ok?)
+      end
+    end
+
     context "when visiting error offset with a transactional record in range" do
       before do
         produce(errors_topic, error_report, partition: 0, type: :transactional)

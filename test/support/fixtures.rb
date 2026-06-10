@@ -33,6 +33,15 @@ class Fixtures
       )
     end
 
+    # Reads a fixture file in binary mode (ASCII-8BIT encoding). Use this for fixtures
+    # that intentionally contain invalid UTF-8 sequences.
+    #
+    # @param file_name [String] fixture file name
+    # @return [String] binary fixture content (ASCII-8BIT encoding)
+    def binfile(file_name)
+      path(file_name).then { |fixture_path| File.binread(fixture_path) }
+    end
+
     %i[
       consumers_reports
       consumers_metrics
