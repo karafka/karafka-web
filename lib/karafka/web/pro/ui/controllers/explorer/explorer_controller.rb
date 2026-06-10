@@ -131,6 +131,9 @@ module Karafka
                   @safe_key = Web::Pro::Ui::Lib::SafeRunner.new { @message.key }.tap(&:call)
                   @safe_headers = Web::Pro::Ui::Lib::SafeRunner.new { @message.headers }.tap(&:call)
                   @safe_payload = Web::Pro::Ui::Lib::SafeRunner.new { @message.payload }.tap(&:call)
+                  @safe_pretty_payload = Web::Pro::Ui::Lib::SafeRunner.new do
+                    JSON.pretty_generate(@safe_payload.result)
+                  end.tap(&:call)
                 end
 
                 # This may be off for certain views like recent view where we are interested only
