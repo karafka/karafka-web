@@ -723,6 +723,31 @@ describe_current do
       end
     end
 
+    context "when message payload is JSON with non-UTF-8 encoded string values" do
+      before do
+        # Fixture is a binary JSON payload captured from an actual crash of
+        # JSON.pretty_generate raising JSON::GeneratorError: source sequence is
+        # illegal/malformed utf-8. The byte 0xE9 (Latin-1 'é') at offset 49 is the
+        # culprit: JSON.parse accepts it from an ASCII-8BIT string and returns a
+        # UTF-8-declared Ruby string whose bytes are invalid, then
+        # JSON.pretty_generate is wrapped in @safe_pretty_payload SafeRunner which
+        # catches the error and falls back to displaying the raw bytes with a warning.
+        produce(topic, Fixtures.binfile("payloads/invalid_utf8.bin"))
+        get "explorer/topics/#{topic}/0/0"
+      end
+
+      it do
+        assert(response.ok?)
+        assert_body(breadcrumbs)
+        assert_body("Metadata")
+        assert_body('<code class="json')
+        assert_body("We could not deserialize the")
+        assert_body("JSON::GeneratorError")
+        refute_body(pagination)
+        refute_body(support_message)
+      end
+    end
+
     context "when key exists but cannot be deserialized" do
       let(:cannot_deserialize) { "We could not deserialize the <strong>key</strong> due" }
 

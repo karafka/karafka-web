@@ -26,15 +26,22 @@
         locals: { attribute: 'payload', error: @safe_payload.error }
       )
     %>
+  <% elsif @safe_pretty_payload.failure? %>
+    <%==
+      partial(
+        'explorer/explorer/failed_deserialization',
+        locals: { attribute: 'payload', error: @safe_pretty_payload.error }
+      )
+    %>
   <% end %>
 
   <% if (@message.raw_payload&.bytesize || 0) > Karafka::Web.config.ui.max_visible_payload_size %>
     <%== partial('explorer/explorer/message/too_big_to_be_displayed') %>
   <% else %>
-    <% if @safe_payload.failure? %>
+    <% if @safe_payload.failure? || @safe_pretty_payload.failure? %>
       <pre class="code"><code class="json"><%= @message.raw_payload %></code></pre>
     <% else %>
-      <pre class="code"><code class="json"><%= JSON.pretty_generate(@safe_payload.result) %></code></pre>
+      <pre class="code"><code class="json"><%= @safe_pretty_payload.result %></code></pre>
     <% end %>
   <% end %>
 <% else %>
