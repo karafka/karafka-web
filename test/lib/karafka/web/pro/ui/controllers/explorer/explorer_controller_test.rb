@@ -806,6 +806,7 @@ describe_current do
       context "when recent is on the first partition" do
         before do
           produce(topic, payload1, partition: 1)
+          sleep(0.1)
           produce(topic, payload2, partition: 0)
           get "explorer/topics/#{topic}/recent"
         end
