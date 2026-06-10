@@ -5,7 +5,7 @@ describe_current do
 
   it { assert(sampler.ruby_version.start_with?("ruby ")) }
   it { assert_includes(sampler.karafka_version, "2.5.") }
-  it { assert_includes(sampler.karafka_web_version, "0.11.") }
+  it { assert_includes(sampler.karafka_web_version, "1.0..") }
   it { assert_includes(sampler.karafka_core_version, "2.5.") }
   it { assert(sampler.rdkafka_version.start_with?("0.2")) }
   it { assert(sampler.librdkafka_version.start_with?("2.")) }
