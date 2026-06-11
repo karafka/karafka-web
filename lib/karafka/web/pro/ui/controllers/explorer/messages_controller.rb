@@ -139,14 +139,12 @@ module Karafka
                 # Payload may deserialize correctly but still not be serializable back to JSON,
                 # for example when it contains non-UTF-8 byte sequences. In such cases there is
                 # no JSON representation that could be exported
-                payload_json = begin
-                  message.payload.to_json
-                rescue
-                  not_found!(topic_id)
-                end
+                payload_json = Lib::SafeRunner.new { message.payload.to_json }.tap(&:call)
+
+                not_found!(topic_id) unless payload_json.success?
 
                 file(
-                  payload_json,
+                  payload_json.result,
                   "#{topic_id}_#{partition_id}_#{offset}_payload.json"
                 )
               end
