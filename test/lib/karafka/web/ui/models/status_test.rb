@@ -785,9 +785,10 @@ describe_current do
 
       context "when all topics are present" do
         before do
-          routes = Karafka::App.routes
-          # We are interested only in stubbing the result on the last execution
-          Karafka::App.stubs(:routes).returns(routes, routes, routes, [])
+          # Warm up the dependency chain with the real routes, then stub the
+          # routes to be empty so only the final routing presence lookup sees []
+          status.consumers_reports_schema_state
+          Karafka::App.stubs(:routes).returns([])
         end
 
         it "expect all to be ok" do
