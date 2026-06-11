@@ -1,6 +1,6 @@
 # Karafka Web Changelog
 
-## 0.11.7 (Unreleased)
+## 1.0.0 (Unreleased)
 - [Fix] Add `initialize` to `Status::Context` that defines all instance variables upfront in a consistent order, giving every instance the same Ruby object shape and eliminating the `:performance` shape-variation warning.
 - [Enhancement] Add `Warning.process` block to the test helper to turn Ruby warnings originating from the project code into test failures.
 - [Enhancement] Enable all opt-in Ruby warning categories in the test helper via `Warning.categories` (available since Ruby 3.4), so any new categories added in future Ruby versions are automatically enabled without code changes.
@@ -17,6 +17,7 @@
 - [Fix] Update LinksValidator regexes to match the new `it-{hash}-{uuid}` test topic naming format, fixing test-order dependent failures in explorer controller specs.
 - [Fix] Fix alerts formatting for the distribution view.
 - [Fix] Fix 500 error in the Pro Explorer when a message payload parses as valid JSON but contains strings with invalid UTF-8 byte sequences. `JSON.pretty_generate` would raise `JSON::GeneratorError` outside of any error boundary and propagate as an unhandled 500. The pretty-print step is now wrapped in a dedicated `@safe_pretty_payload` SafeRunner; on failure the raw bytes are displayed alongside a deserialization warning.
+- [Fix] Fix 500 error in the Pro Explorer message JSON export when a payload deserializes correctly but cannot be serialized back to JSON (for example when it contains strings with invalid UTF-8 byte sequences). The export endpoint now responds with 404 in such cases and the export action button is no longer rendered for such messages.
 
 ## 0.11.6 (2026-02-01)
 - **[Feature]** Provide ability to pause/resume all partitions of a topic at once across all consumer processes via the Health Overview page (Pro). Topic-level commands are broadcast to all processes, and each process applies the command to partitions it owns within the specified consumer group. This simplifies bulk operations compared to pausing/resuming individual partitions one by one.

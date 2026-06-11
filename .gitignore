@@ -22,6 +22,7 @@ db/*.sqlite3
 .byebug_history
 .redcar/
 .capistrano/
+.pnpm-store/
 .sass-cache
 /config/god/sidekiq.rb
 /config/puma.rb

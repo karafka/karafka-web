@@ -55,7 +55,7 @@
         </a>
       <% end %>
 
-      <% if @visibility_filter.export?(@message) && @safe_payload.success? %>
+      <% if @visibility_filter.export?(@message) && @safe_payload.success? && @safe_pretty_payload.success? %>
         <a
           href="<%= explorer_messages_path(@message.topic, @message.partition, @message.offset, 'export') %>"
           class="btn-action"

@@ -745,6 +745,7 @@ describe_current do
         assert_body("JSON::GeneratorError")
         refute_body(pagination)
         refute_body(support_message)
+        refute_body("Export as JSON")
       end
     end
 

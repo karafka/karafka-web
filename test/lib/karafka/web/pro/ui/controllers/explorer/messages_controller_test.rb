@@ -275,5 +275,20 @@ describe_current do
         assert_equal(403, response.status)
       end
     end
+
+    context "when message payload is JSON with non-UTF-8 encoded string values" do
+      before do
+        # JSON.parse accepts this payload but the resulting hash contains strings with invalid
+        # UTF-8 bytes, so serializing it back with #to_json raises JSON::GeneratorError. There
+        # is no JSON representation that could be exported, hence 404
+        produce(topic, Fixtures.binfile("payloads/invalid_utf8.bin"))
+        get "explorer/messages/#{topic}/0/0/export"
+      end
+
+      it do
+        refute(response.ok?)
+        assert_equal(404, response.status)
+      end
+    end
   end
 end
