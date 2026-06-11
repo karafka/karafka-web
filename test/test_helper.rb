@@ -279,5 +279,16 @@ Karafka::Web::Ui::Base.plugin(:sec_fetch_site_csrf, check_request_methods: [])
 Karafka::Web::Ui::App.plugin(:sec_fetch_site_csrf, check_request_methods: [])
 Karafka::Web::Pro::Ui::App.plugin(:sec_fetch_site_csrf, check_request_methods: []) if Karafka.pro?
 
+# Stash CLI args for Minitest before clearing ARGV
+# (Karafka CLI tests would otherwise report invalid options)
 # We need to clear argv because otherwise we would get reports on invalid options for CLI tests
+minitest_args = ARGV.dup
 ARGV.clear
+
+Minitest.singleton_class.prepend(
+  Module.new do
+    define_method(:run) do |args = []|
+      super(minitest_args)
+    end
+  end
+)
