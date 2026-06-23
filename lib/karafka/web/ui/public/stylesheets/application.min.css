@@ -11,7 +11,7 @@
 .air-datepicker{--adp-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";--adp-font-size: 14px;--adp-width: 246px;--adp-z-index: 100;--adp-padding: 4px;--adp-grid-areas: "nav" "body" "timepicker" "buttons";--adp-transition-duration: .3s;--adp-transition-ease: ease-out;--adp-transition-offset: 8px;--adp-background-color: #fff;--adp-background-color-hover: #f0f0f0;--adp-background-color-active: #eaeaea;--adp-background-color-in-range: rgba(92, 196, 239, .1);--adp-background-color-in-range-focused: rgba(92, 196, 239, .2);--adp-background-color-selected-other-month-focused: #8ad5f4;--adp-background-color-selected-other-month: #a2ddf6;--adp-color: #4a4a4a;--adp-color-secondary: #9c9c9c;--adp-accent-color: #4eb5e6;--adp-color-current-date: var(--adp-accent-color);--adp-color-other-month: #dedede;--adp-color-disabled: #aeaeae;--adp-color-disabled-in-range: #939393;--adp-color-other-month-hover: #c5c5c5;--adp-border-color: #dbdbdb;--adp-border-color-inner: #efefef;--adp-border-radius: 4px;--adp-border-color-inline: #d7d7d7;--adp-nav-height: 32px;--adp-nav-arrow-color: var(--adp-color-secondary);--adp-nav-action-size: 32px;--adp-nav-color-secondary: var(--adp-color-secondary);--adp-day-name-color: #ff9a19;--adp-day-name-color-hover: #8ad5f4;--adp-day-cell-width: 1fr;--adp-day-cell-height: 32px;--adp-month-cell-height: 42px;--adp-year-cell-height: 56px;--adp-pointer-size: 10px;--adp-poiner-border-radius: 2px;--adp-pointer-offset: 14px;--adp-cell-border-radius: 4px;--adp-cell-background-color-hover: var(--adp-background-color-hover);--adp-cell-background-color-selected: #5cc4ef;--adp-cell-background-color-selected-hover: #45bced;--adp-cell-background-color-in-range: rgba(92, 196, 239, 0.1);--adp-cell-background-color-in-range-hover: rgba(92, 196, 239, 0.2);--adp-cell-border-color-in-range: var(--adp-cell-background-color-selected);--adp-btn-height: 32px;--adp-btn-color: var(--adp-accent-color);--adp-btn-color-hover: var(--adp-color);--adp-btn-border-radius: var(--adp-border-radius);--adp-btn-background-color-hover: var(--adp-background-color-hover);--adp-btn-background-color-active: var(--adp-background-color-active);--adp-time-track-height: 1px;--adp-time-track-color: #dedede;--adp-time-track-color-hover: #b1b1b1;--adp-time-thumb-size: 12px;--adp-time-padding-inner: 10px;--adp-time-day-period-color: var(--adp-color-secondary);--adp-mobile-font-size: 16px;--adp-mobile-nav-height: 40px;--adp-mobile-width: 320px;--adp-mobile-day-cell-height: 38px;--adp-mobile-month-cell-height: 48px;--adp-mobile-year-cell-height: 64px}.air-datepicker-overlay{--adp-overlay-background-color: rgba(0, 0, 0, .3);--adp-overlay-transition-duration: .3s;--adp-overlay-transition-ease: ease-out;--adp-overlay-z-index: 99}
 .air-datepicker{background:var(--adp-background-color);border:1px solid var(--adp-border-color);box-shadow:0 4px 12px rgba(0,0,0,.15);border-radius:var(--adp-border-radius);box-sizing:content-box;display:grid;grid-template-columns:1fr;grid-template-rows:repeat(4, max-content);grid-template-areas:var(--adp-grid-areas);font-family:var(--adp-font-family),sans-serif;font-size:var(--adp-font-size);color:var(--adp-color);width:var(--adp-width);position:absolute;transition:opacity var(--adp-transition-duration) var(--adp-transition-ease),transform var(--adp-transition-duration) var(--adp-transition-ease);z-index:var(--adp-z-index)}.air-datepicker:not(.-custom-position-){opacity:0}.air-datepicker.-from-top-{transform:translateY(calc(var(--adp-transition-offset) * -1))}.air-datepicker.-from-right-{transform:translateX(var(--adp-transition-offset))}.air-datepicker.-from-bottom-{transform:translateY(var(--adp-transition-offset))}.air-datepicker.-from-left-{transform:translateX(calc(var(--adp-transition-offset) * -1))}.air-datepicker.-active-:not(.-custom-position-){transform:translate(0, 0);opacity:1}.air-datepicker.-active-.-custom-position-{transition:none}.air-datepicker.-inline-{border-color:var(--adp-border-color-inline);box-shadow:none;position:static;left:auto;right:auto;opacity:1;transform:none}.air-datepicker.-inline- .air-datepicker--pointer{display:none}.air-datepicker.-is-mobile-{--adp-font-size: var(--adp-mobile-font-size);--adp-day-cell-height: var(--adp-mobile-day-cell-height);--adp-month-cell-height: var(--adp-mobile-month-cell-height);--adp-year-cell-height: var(--adp-mobile-year-cell-height);--adp-nav-height: var(--adp-mobile-nav-height);--adp-nav-action-size: var(--adp-mobile-nav-height);position:fixed;width:var(--adp-mobile-width);border:none}.air-datepicker.-is-mobile- *{-webkit-tap-highlight-color:rgba(0,0,0,0)}.air-datepicker.-is-mobile- .air-datepicker--pointer{display:none}.air-datepicker.-is-mobile-:not(.-custom-position-){transform:translate(-50%, calc(-50% + var(--adp-transition-offset)))}.air-datepicker.-is-mobile-.-active-:not(.-custom-position-){transform:translate(-50%, -50%)}.air-datepicker.-custom-position-{transition:none}.air-datepicker-global-container{position:absolute;left:0;top:0}.air-datepicker--pointer{--pointer-half-size: calc(var(--adp-pointer-size) / 2);position:absolute;width:var(--adp-pointer-size);height:var(--adp-pointer-size);z-index:-1}.air-datepicker--pointer:after{content:"";position:absolute;background:#fff;border-top:1px solid var(--adp-border-color-inline);border-right:1px solid var(--adp-border-color-inline);border-top-right-radius:var(--adp-poiner-border-radius);width:var(--adp-pointer-size);height:var(--adp-pointer-size);box-sizing:border-box}.-top-left- .air-datepicker--pointer,.-top-center- .air-datepicker--pointer,.-top-right- .air-datepicker--pointer,[data-popper-placement^=top] .air-datepicker--pointer{top:calc(100% - var(--pointer-half-size) + 1px)}.-top-left- .air-datepicker--pointer:after,.-top-center- .air-datepicker--pointer:after,.-top-right- .air-datepicker--pointer:after,[data-popper-placement^=top] .air-datepicker--pointer:after{transform:rotate(135deg)}.-right-top- .air-datepicker--pointer,.-right-center- .air-datepicker--pointer,.-right-bottom- .air-datepicker--pointer,[data-popper-placement^=right] .air-datepicker--pointer{right:calc(100% - var(--pointer-half-size) + 1px)}.-right-top- .air-datepicker--pointer:after,.-right-center- .air-datepicker--pointer:after,.-right-bottom- .air-datepicker--pointer:after,[data-popper-placement^=right] .air-datepicker--pointer:after{transform:rotate(225deg)}.-bottom-left- .air-datepicker--pointer,.-bottom-center- .air-datepicker--pointer,.-bottom-right- .air-datepicker--pointer,[data-popper-placement^=bottom] .air-datepicker--pointer{bottom:calc(100% - var(--pointer-half-size) + 1px)}.-bottom-left- .air-datepicker--pointer:after,.-bottom-center- .air-datepicker--pointer:after,.-bottom-right- .air-datepicker--pointer:after,[data-popper-placement^=bottom] .air-datepicker--pointer:after{transform:rotate(315deg)}.-left-top- .air-datepicker--pointer,.-left-center- .air-datepicker--pointer,.-left-bottom- .air-datepicker--pointer,[data-popper-placement^=left] .air-datepicker--pointer{left:calc(100% - var(--pointer-half-size) + 1px)}.-left-top- .air-datepicker--pointer:after,.-left-center- .air-datepicker--pointer:after,.-left-bottom- .air-datepicker--pointer:after,[data-popper-placement^=left] .air-datepicker--pointer:after{transform:rotate(45deg)}.-top-left- .air-datepicker--pointer,.-bottom-left- .air-datepicker--pointer{left:var(--adp-pointer-offset)}.-top-right- .air-datepicker--pointer,.-bottom-right- .air-datepicker--pointer{right:var(--adp-pointer-offset)}.-top-center- .air-datepicker--pointer,.-bottom-center- .air-datepicker--pointer{left:calc(50% - var(--adp-pointer-size)/2)}.-left-top- .air-datepicker--pointer,.-right-top- .air-datepicker--pointer{top:var(--adp-pointer-offset)}.-left-bottom- .air-datepicker--pointer,.-right-bottom- .air-datepicker--pointer{bottom:var(--adp-pointer-offset)}.-left-center- .air-datepicker--pointer,.-right-center- .air-datepicker--pointer{top:calc(50% - var(--adp-pointer-size)/2)}.air-datepicker--navigation{grid-area:nav}.air-datepicker--content{box-sizing:content-box;padding:var(--adp-padding);grid-area:body}.-only-timepicker- .air-datepicker--content{display:none}.air-datepicker--time{grid-area:timepicker}.air-datepicker--buttons{grid-area:buttons}.air-datepicker--buttons,.air-datepicker--time{padding:var(--adp-padding);border-top:1px solid var(--adp-border-color-inner)}.air-datepicker-overlay{position:fixed;background:var(--adp-overlay-background-color);left:0;top:0;width:0;height:0;opacity:0;transition:opacity var(--adp-overlay-transition-duration) var(--adp-overlay-transition-ease),left 0s,height 0s,width 0s;transition-delay:0s,var(--adp-overlay-transition-duration),var(--adp-overlay-transition-duration),var(--adp-overlay-transition-duration);z-index:var(--adp-overlay-z-index)}.air-datepicker-overlay.-active-{opacity:1;width:100%;height:100%;transition:opacity var(--adp-overlay-transition-duration) var(--adp-overlay-transition-ease),height 0s,width 0s}
 
-/*! tailwindcss v4.3.0 | MIT License | https://tailwindcss.com */
+/*! tailwindcss v4.3.1 | MIT License | https://tailwindcss.com */
 @layer properties;
 @layer theme, base, components, utilities;
 @layer theme {
@@ -349,18 +349,18 @@
       transition: opacity 0.2s ease-out 0.1s allow-discrete, visibility 0.3s ease-out 0.1s allow-discrete;
       height: 100vh;
       height: 100dvh;
-      > .drawer-overlay {
+       > .drawer-overlay {
         position: sticky;
         top: calc(0.25rem * 0);
         cursor: pointer;
         place-self: stretch;
         background-color: oklch(0% 0 0 / 40%);
       }
-      > * {
+       > * {
         grid-column-start: 1;
         grid-row-start: 1;
       }
-      > :not(.drawer-overlay) {
+       > :not(.drawer-overlay) {
         will-change: transform;
         transition: translate 0.3s ease-out, width 0.2s ease-out;
         translate: -100%;
@@ -372,8 +372,8 @@
   }
   .drawer-open {
     @layer daisyui.l1.l2.l3 {
-      > .drawer-toggle:checked {
-        ~ .drawer-side {
+       > .drawer-toggle:checked {
+         ~ .drawer-side {
           scrollbar-color: revert-layer;
         }
         :root:has(&) {
@@ -388,12 +388,12 @@
       }
     }
     @layer daisyui.l1.l2 {
-      > .drawer-side {
+       > .drawer-side {
         overflow-y: auto;
       }
-      > .drawer-toggle {
+       > .drawer-toggle {
         display: none;
-        ~ .drawer-side {
+         ~ .drawer-side {
           pointer-events: auto;
           visibility: visible;
           position: sticky;
@@ -401,7 +401,7 @@
           width: auto;
           overscroll-behavior: auto;
           opacity: 100%;
-          > .drawer-overlay {
+           > .drawer-overlay {
             cursor: default;
             background-color: transparent;
           }
@@ -413,7 +413,7 @@
       }
     }
     @layer daisyui.l1 {
-      > .drawer-toggle ~ .drawer-side > :not(.drawer-overlay) {
+       > .drawer-toggle ~ .drawer-side > :not(.drawer-overlay) {
         translate: 0%;
         [dir="rtl"] & {
           translate: 0%;
@@ -433,7 +433,7 @@
         @supports (color: color-mix(in lab, red, red)) {
           scrollbar-color: color-mix(in oklch, currentColor 35%, #0000) oklch(0 0 0 / calc(var(--page-has-backdrop, 0) * 0.4));
         }
-        > :not(.drawer-overlay) {
+         > :not(.drawer-overlay) {
           transform: none;
           will-change: auto;
         }
@@ -454,7 +454,7 @@
         visibility: visible;
         overflow-y: auto;
         opacity: 100%;
-        > :not(.drawer-overlay) {
+         > :not(.drawer-overlay) {
           translate: 0%;
         }
       }
@@ -522,7 +522,7 @@
       }
     }
     @layer daisyui.l1.l2 {
-      > .tooltip-content, &[data-tip]:before {
+       > .tooltip-content, &[data-tip]:before {
         transform: translateX(-50%) translateY(var(--tt-pos, 0.25rem));
         inset: auto auto var(--tt-off) 50%;
       }
@@ -590,7 +590,7 @@
           display: block;
         }
       }
-      &:not( :checked, label:has(:checked), :hover, .tab-active, [aria-selected="true"], [aria-current="true"], [aria-current="page"] ) {
+      &:not(:checked, label:has(:checked), :hover, .tab-active, [aria-selected="true"], [aria-current="true"], [aria-current="page"] ) {
         color: var(--color-base-content);
         @supports (color: color-mix(in lab, red, red)) {
           color: color-mix(in oklab, var(--color-base-content) 50%, transparent);
@@ -711,7 +711,7 @@
         rotate: 45deg;
         translate: 0 1px;
       }
-      :where( li:not(.menu-title, .disabled) > *:not(ul, details, .menu-title), li:not(.menu-title, .disabled) > details > summary:not(.menu-title) ):not(.menu-active, :active, .btn) {
+      :where(li:not(.menu-title, .disabled) > *:not(ul, details, .menu-title), li:not(.menu-title, .disabled) > details > summary:not(.menu-title) ):not(.menu-active, :active, .btn) {
         &.menu-focus, &:focus-visible {
           cursor: pointer;
           background-color: var(--color-base-content);
@@ -727,7 +727,7 @@
           }
         }
       }
-      :where( li:not(.menu-title, .disabled) > *:not(ul, details, .menu-title):not(.menu-active, :active, .btn):hover, li:not(.menu-title, .disabled) > details > summary:not(.menu-title):not(.menu-active, :active, .btn):hover ) {
+      :where(li:not(.menu-title, .disabled) > *:not(ul, details, .menu-title):not(.menu-active, :active, .btn):hover, li:not(.menu-title, .disabled) > details > summary:not(.menu-title):not(.menu-active, :active, .btn):hover ) {
         cursor: pointer;
         background-color: var(--color-base-content);
         @supports (color: color-mix(in lab, red, red)) {
@@ -797,7 +797,7 @@
   }
   .collapse-arrow {
     @layer daisyui.l1.l2 {
-      > .collapse-title:after {
+       > .collapse-title:after {
         position: absolute;
         display: block;
         height: 0.5rem;
@@ -819,7 +819,7 @@
   }
   .collapse-plus {
     @layer daisyui.l1.l2 {
-      > .collapse-title:after {
+       > .collapse-title:after {
         position: absolute;
         display: block;
         height: 0.5rem;
@@ -842,7 +842,7 @@
       position: relative;
       display: inline-block;
       position-area: var(--anchor-v, bottom) var(--anchor-h, span-right);
-      & > *:not(:has(~ [class*="dropdown-content"])):focus {
+      & > *:not(:has( ~ [class*="dropdown-content"])):focus {
         --tw-outline-style: none;
         outline-style: none;
         @media (forced-colors: active) {
@@ -877,7 +877,7 @@
       }
       &:not(.dropdown-close) {
         &.dropdown-open, &:not(.dropdown-hover):focus, &:focus-within {
-          > [tabindex]:first-child {
+           > [tabindex]:first-child {
             pointer-events: none;
           }
           .dropdown-content {
@@ -1115,7 +1115,7 @@
       @media (prefers-reduced-motion: no-preference) {
         transition: grid-template-rows 0.2s;
       }
-      > input:is([type="checkbox"], [type="radio"]) {
+       > input:is([type="checkbox"], [type="radio"]) {
         grid-column-start: 1;
         grid-row-start: 1;
         appearance: none;
@@ -1127,40 +1127,40 @@
         min-height: 1lh;
         transition: background-color 0.2s ease-out;
       }
-      &:is( [open], [tabindex]:focus:not(.collapse-close), [tabindex]:focus-within:not(.collapse-close) ), &:not(.collapse-close):has(> input:is([type="checkbox"], [type="radio"]):checked) {
+      &:is([open], [tabindex]:focus:not(.collapse-close), [tabindex]:focus-within:not(.collapse-close) ), &:not(.collapse-close):has( > input:is([type="checkbox"], [type="radio"]):checked) {
         grid-template-rows: max-content 1fr;
       }
-      &:is( [open], [tabindex]:focus:not(.collapse-close), [tabindex]:focus-within:not(.collapse-close) ) > .collapse-content, &:not(.collapse-close) > :where(input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-content) {
+      &:is([open], [tabindex]:focus:not(.collapse-close), [tabindex]:focus-within:not(.collapse-close) ) > .collapse-content, &:not(.collapse-close) > :where(input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-content) {
         content-visibility: visible;
         min-height: fit-content;
         @supports not (content-visibility: visible) {
           visibility: visible;
         }
       }
-      &:focus-visible, &:has(> input:is([type="checkbox"], [type="radio"]):focus-visible), &:has(summary:focus-visible) {
+      &:focus-visible, &:has( > input:is([type="checkbox"], [type="radio"]):focus-visible), &:has(summary:focus-visible) {
         outline-color: var(--color-base-content);
         outline-style: solid;
         outline-width: 2px;
         outline-offset: 2px;
       }
       &:not(.collapse-close) {
-        > input[type="checkbox"], > input[type="radio"]:not(:checked), > .collapse-title {
+         > input[type="checkbox"],  > input[type="radio"]:not(:checked),  > .collapse-title {
           cursor: pointer;
         }
       }
       &[tabindex]:focus:not(.collapse-close, .collapse[open]), &[tabindex]:focus-within:not(.collapse-close, .collapse[open]) {
-        > .collapse-title {
+         > .collapse-title {
           cursor: unset;
         }
       }
-      &:is( [open], [tabindex]:focus:not(.collapse-close), [tabindex]:focus-within:not(.collapse-close) ) > :where(.collapse-content), &:not(.collapse-close) > :where(input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-content) {
+      &:is([open], [tabindex]:focus:not(.collapse-close), [tabindex]:focus-within:not(.collapse-close) ) > :where(.collapse-content), &:not(.collapse-close) > :where(input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-content) {
         padding-bottom: 1rem;
       }
     }
     @layer daisyui.l1.l2 {
       &:is([open]) {
         &.collapse-arrow {
-          > .collapse-title:after {
+           > .collapse-title:after {
             @media (prefers-reduced-motion: no-preference) {
               transform: translateY(-50%) rotate(225deg);
             }
@@ -1169,45 +1169,45 @@
       }
       &.collapse-open {
         &.collapse-arrow {
-          > .collapse-title:after {
+           > .collapse-title:after {
             @media (prefers-reduced-motion: no-preference) {
               transform: translateY(-50%) rotate(225deg);
             }
           }
         }
         &.collapse-plus {
-          > .collapse-title:after {
+           > .collapse-title:after {
             --tw-content: "−";
             content: var(--tw-content);
           }
         }
       }
       &[tabindex].collapse-arrow:focus:not(.collapse-close), &.collapse-arrow[tabindex]:focus-within:not(.collapse-close) {
-        > .collapse-title:after {
+         > .collapse-title:after {
           transform: translateY(-50%) rotate(225deg);
         }
       }
       &.collapse-arrow:not(.collapse-close) {
-        > input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-title:after {
+         > input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-title:after {
           transform: translateY(-50%) rotate(225deg);
         }
       }
       &[open] {
         &.collapse-plus {
-          > .collapse-title:after {
+           > .collapse-title:after {
             --tw-content: "−";
             content: var(--tw-content);
           }
         }
       }
       &[tabindex].collapse-plus:focus:not(.collapse-close) {
-        > .collapse-title:after {
+         > .collapse-title:after {
           --tw-content: "−";
           content: var(--tw-content);
         }
       }
       &.collapse-plus:not(.collapse-close) {
-        > input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-title:after {
+         > input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-title:after {
           --tw-content: "−";
           content: var(--tw-content);
         }
@@ -1270,7 +1270,7 @@
   .collapse-open {
     @layer daisyui.l1.l2 {
       grid-template-rows: max-content 1fr;
-      > .collapse-content {
+       > .collapse-content {
         content-visibility: visible;
         min-height: fit-content;
         padding-bottom: 1rem;
@@ -1378,7 +1378,7 @@
           --list-grid-cols: minmax(0, auto) minmax(0, auto) minmax(0, auto) minmax(0, auto)
           minmax(0, auto) 1fr;
         }
-        > * {
+         > * {
           grid-row-start: 1;
         }
       }
@@ -1416,7 +1416,7 @@
       --size: calc(var(--size-selector, 0.25rem) * 6);
       width: calc((var(--size) * 2) - (var(--border) + var(--toggle-p)) * 2);
       height: var(--size);
-      > * {
+       > * {
         z-index: 1;
         grid-column: span 1 / span 1;
         grid-column-start: 2;
@@ -1447,11 +1447,11 @@
         }
       }
       &:has(:checked) {
-        > :nth-child(2) {
+         > :nth-child(2) {
           opacity: 0%;
           rotate: 15deg;
         }
-        > :nth-child(3) {
+         > :nth-child(3) {
           opacity: 100%;
           rotate: 0deg;
         }
@@ -1494,7 +1494,7 @@
         outline: 2px solid currentColor;
         outline-offset: 2px;
       }
-      &:checked, &[aria-checked="true"], &:has(> input:checked) {
+      &:checked, &[aria-checked="true"], &:has( > input:checked) {
         grid-template-columns: 1fr 1fr 0fr;
         background-color: var(--color-base-100);
         --input-color: var(--color-base-content);
@@ -1594,7 +1594,7 @@
           }
         }
       }
-      &:has(> input[disabled]), &:is(:disabled, [disabled]), fieldset:disabled & {
+      &:has( > input[disabled]), &:is(:disabled, [disabled]), fieldset:disabled & {
         cursor: not-allowed;
         border-color: var(--color-base-200);
         background-color: var(--color-base-200);
@@ -1610,7 +1610,7 @@
         }
         box-shadow: none;
       }
-      &:has(> input[disabled]) > input[disabled] {
+      &:has( > input[disabled]) > input[disabled] {
         cursor: not-allowed;
       }
       &::-webkit-date-and-time-value {
@@ -1626,7 +1626,7 @@
         position: absolute;
         inset-inline-end: 0.75em;
       }
-      &:has(> input[type="date"]) {
+      &:has( > input[type="date"]) {
         :where(input[type="date"]) {
           display: inline-flex;
           webkit-appearance: none;
@@ -1764,7 +1764,7 @@
       border-right-color: var(--color-gray-300);
     }
     & .badge {
-      margin-top: calc(var(--spacing) * 1);
+      margin-top: var(--spacing);
       @layer daisyui.l1.l2 {
         --size: calc(var(--size-selector, 0.25rem) * 5);
         font-size: 0.75rem;
@@ -1852,7 +1852,7 @@
     border-color: var(--color-gray-300);
     background-color: var(--color-base-100);
     & .badge {
-      margin-top: calc(var(--spacing) * 1);
+      margin-top: var(--spacing);
       @layer daisyui.l1.l2 {
         --size: calc(var(--size-selector, 0.25rem) * 5);
         font-size: 0.75rem;
@@ -2021,7 +2021,7 @@
           content: "";
           margin-inline-start: -100%;
         }
-        > .step-icon, &:not(:has(.step-icon)):after {
+         > .step-icon, &:not(:has(.step-icon)):after {
           --tw-content: counter(step);
           content: var(--tw-content);
           counter-increment: step;
@@ -2051,49 +2051,49 @@
     }
     @layer daisyui.l1.l2 {
       .step-neutral {
-        + .step-neutral:before, &:after, > .step-icon {
+         + .step-neutral:before, &:after,  > .step-icon {
           --step-bg: var(--color-neutral);
           --step-fg: var(--color-neutral-content);
         }
       }
       .step-primary {
-        + .step-primary:before, &:after, > .step-icon {
+         + .step-primary:before, &:after,  > .step-icon {
           --step-bg: var(--color-primary);
           --step-fg: var(--color-primary-content);
         }
       }
       .step-secondary {
-        + .step-secondary:before, &:after, > .step-icon {
+         + .step-secondary:before, &:after,  > .step-icon {
           --step-bg: var(--color-secondary);
           --step-fg: var(--color-secondary-content);
         }
       }
       .step-accent {
-        + .step-accent:before, &:after, > .step-icon {
+         + .step-accent:before, &:after,  > .step-icon {
           --step-bg: var(--color-accent);
           --step-fg: var(--color-accent-content);
         }
       }
       .step-info {
-        + .step-info:before, &:after, > .step-icon {
+         + .step-info:before, &:after,  > .step-icon {
           --step-bg: var(--color-info);
           --step-fg: var(--color-info-content);
         }
       }
       .step-success {
-        + .step-success:before, &:after, > .step-icon {
+         + .step-success:before, &:after,  > .step-icon {
           --step-bg: var(--color-success);
           --step-fg: var(--color-success-content);
         }
       }
       .step-warning {
-        + .step-warning:before, &:after, > .step-icon {
+         + .step-warning:before, &:after,  > .step-icon {
           --step-bg: var(--color-warning);
           --step-fg: var(--color-warning-content);
         }
       }
       .step-error {
-        + .step-error:before, &:after, > .step-icon {
+         + .step-error:before, &:after,  > .step-icon {
           --step-bg: var(--color-error);
           --step-fg: var(--color-error-content);
         }
@@ -2281,7 +2281,7 @@
         outline-offset: 2px;
         isolation: isolate;
       }
-      &:has(> select[disabled]), &:is(:disabled, [disabled]), fieldset:disabled & {
+      &:has( > select[disabled]), &:is(:disabled, [disabled]), fieldset:disabled & {
         cursor: not-allowed;
         border-color: var(--color-base-200);
         background-color: var(--color-base-200);
@@ -2296,7 +2296,7 @@
           }
         }
       }
-      &:has(> select[disabled]) > select[disabled] {
+      &:has( > select[disabled]) > select[disabled] {
         cursor: not-allowed;
       }
       &, & select {
@@ -2368,14 +2368,14 @@
     @layer daisyui.l1.l2.l3 {
       position: relative;
       display: flex;
-      > li {
+       > li {
         position: relative;
         display: grid;
         flex-shrink: 0;
         align-items: center;
         grid-template-rows: var(--timeline-row-start, minmax(0, 1fr)) auto var( --timeline-row-end, minmax(0, 1fr) );
         grid-template-columns: var(--timeline-col-start, minmax(0, 1fr)) auto var( --timeline-col-end, minmax(0, 1fr) );
-        > hr {
+         > hr {
           border: none;
           width: 100%;
           &:first-child {
@@ -2691,11 +2691,11 @@
         align-items: center;
         justify-content: center;
       }
-      &:has(> input:is(input[type="checkbox"], input[type="radio"])) {
+      &:has( > input:is(input[type="checkbox"], input[type="radio"])) {
         cursor: pointer;
         user-select: none;
       }
-      &:has(> :checked) {
+      &:has( > :checked) {
         outline: 2px solid currentColor;
       }
     }
@@ -2706,7 +2706,7 @@
     border-width: 1px;
     border-color: var(--color-gray-300);
     background-color: var(--color-base-100);
-    padding: calc(var(--spacing) * 1);
+    padding: var(--spacing);
   }
   .drawer {
     @layer daisyui.l1.l2.l3 {
@@ -2756,11 +2756,11 @@
         align-items: center;
         justify-content: center;
       }
-      &:has(> input:is(input[type="checkbox"], input[type="radio"])) {
+      &:has( > input:is(input[type="checkbox"], input[type="radio"])) {
         cursor: pointer;
         user-select: none;
       }
-      &:has(> :checked) {
+      &:has( > :checked) {
         outline: 2px solid currentColor;
       }
     }
@@ -2810,11 +2810,11 @@
         align-items: center;
         justify-content: center;
       }
-      &:has(> input:is(input[type="checkbox"], input[type="radio"])) {
+      &:has( > input:is(input[type="checkbox"], input[type="radio"])) {
         cursor: pointer;
         user-select: none;
       }
-      &:has(> :checked) {
+      &:has( > :checked) {
         outline: 2px solid currentColor;
       }
     }
@@ -2892,7 +2892,7 @@
   }
   .tooltip-bottom {
     @layer daisyui.l1.l2 {
-      > .tooltip-content, &[data-tip]:before {
+       > .tooltip-content, &[data-tip]:before {
         transform: translateX(-50%) translateY(var(--tt-pos, -0.25rem));
         inset: var(--tt-off) auto auto 50%;
       }
@@ -2904,7 +2904,7 @@
   }
   .tooltip-left {
     @layer daisyui.l1.l2 {
-      > .tooltip-content, &[data-tip]:before {
+       > .tooltip-content, &[data-tip]:before {
         transform: translateX(calc(var(--tt-pos, 0.25rem) - 0.25rem)) translateY(-50%);
         inset: 50% var(--tt-off) auto auto;
       }
@@ -2916,7 +2916,7 @@
   }
   .tooltip-right {
     @layer daisyui.l1.l2 {
-      > .tooltip-content, &[data-tip]:before {
+       > .tooltip-content, &[data-tip]:before {
         transform: translateX(calc(var(--tt-pos, -0.25rem) + 0.25rem)) translateY(-50%);
         inset: 50% auto auto var(--tt-off);
       }
@@ -2928,7 +2928,7 @@
   }
   .tooltip-top {
     @layer daisyui.l1.l2 {
-      > .tooltip-content, &[data-tip]:before {
+       > .tooltip-content, &[data-tip]:before {
         transform: translateX(-50%) translateY(var(--tt-pos, 0.25rem));
         inset: auto auto var(--tt-off) 50%;
       }
@@ -3035,7 +3035,7 @@
         --join-ee: var(--radius-field);
       }
     }
-    > .join-item:where(:first-child) {
+     > .join-item:where(:first-child) {
       --join-ss: var(--radius-field);
       --join-se: 0;
       --join-es: var(--radius-field);
@@ -3049,7 +3049,7 @@
         --join-ee: 0;
       }
     }
-    > .join-item:where(:last-child) {
+     > .join-item:where(:last-child) {
       --join-ss: 0;
       --join-se: var(--radius-field);
       --join-es: 0;
@@ -3063,7 +3063,7 @@
         --join-ee: var(--radius-field);
       }
     }
-    > .join-item:where(:only-child) {
+     > .join-item:where(:only-child) {
       --join-ss: var(--radius-field);
       --join-se: var(--radius-field);
       --join-es: var(--radius-field);
@@ -3077,11 +3077,11 @@
         --join-ee: var(--radius-field);
       }
     }
-    > :where(:focus, :has(:focus)) {
+     > :where(:focus, :has(:focus)) {
       z-index: 1;
     }
     @media (hover: hover) {
-      > :where(.btn:hover, :has(.btn:hover)) {
+       > :where(.btn:hover, :has(.btn:hover)) {
         isolation: isolate;
       }
     }
@@ -3140,7 +3140,7 @@
           }
         }
       }
-      &:has(> textarea[disabled]), &:is(:disabled, [disabled]) {
+      &:has( > textarea[disabled]), &:is(:disabled, [disabled]) {
         cursor: not-allowed;
         border-color: var(--color-base-200);
         background-color: var(--color-base-200);
@@ -3156,7 +3156,7 @@
         }
         box-shadow: none;
       }
-      &:has(> textarea[disabled]) > textarea[disabled] {
+      &:has( > textarea[disabled]) > textarea[disabled] {
         cursor: not-allowed;
       }
     }
@@ -3198,7 +3198,7 @@
     }
     @layer daisyui.l1.l2 {
       &, &.stack-bottom {
-        > * {
+         > * {
           grid-column: 3 / 4;
           grid-row: 3 / 6;
           &:nth-child(2) {
@@ -3212,7 +3212,7 @@
         }
       }
       &.stack-top {
-        > * {
+         > * {
           grid-column: 3 / 4;
           grid-row: 1 / 4;
           &:nth-child(2) {
@@ -3226,7 +3226,7 @@
         }
       }
       &.stack-start {
-        > * {
+         > * {
           grid-column: 1 / 4;
           grid-row: 3 / 4;
           &:nth-child(2) {
@@ -3240,7 +3240,7 @@
         }
       }
       &.stack-end {
-        > * {
+         > * {
           grid-column: 3 / 6;
           grid-row: 3 / 4;
           &:nth-child(2) {
@@ -3279,7 +3279,7 @@
     }
     @layer daisyui.l1.l2 {
       &, &.stack-bottom {
-        > * {
+         > * {
           grid-column: 3 / 4 !important;
           grid-row: 3 / 6 !important;
           &:nth-child(2) {
@@ -3293,7 +3293,7 @@
         }
       }
       &.stack-top {
-        > * {
+         > * {
           grid-column: 3 / 4 !important;
           grid-row: 1 / 4 !important;
           &:nth-child(2) {
@@ -3307,7 +3307,7 @@
         }
       }
       &.stack-start {
-        > * {
+         > * {
           grid-column: 1 / 4 !important;
           grid-row: 3 / 4 !important;
           &:nth-child(2) {
@@ -3321,7 +3321,7 @@
         }
       }
       &.stack-end {
-        > * {
+         > * {
           grid-column: 3 / 6 !important;
           grid-row: 3 / 4 !important;
           &:nth-child(2) {
@@ -3414,15 +3414,15 @@
   .drawer-end {
     @layer daisyui.l1.l2 {
       grid-auto-columns: auto max-content;
-      > .drawer-toggle {
-        ~ .drawer-content {
+       > .drawer-toggle {
+         ~ .drawer-content {
           grid-column-start: 1;
         }
-        ~ .drawer-side {
+         ~ .drawer-side {
           grid-column-start: 2;
           justify-items: end;
         }
-        ~ .drawer-side > :not(.drawer-overlay) {
+         ~ .drawer-side > :not(.drawer-overlay) {
           translate: 100%;
           [dir="rtl"] & {
             translate: -100%;
@@ -3483,7 +3483,7 @@
     }
   }
   .m-0 {
-    margin: calc(var(--spacing) * 0);
+    margin: 0;
   }
   .m-5 {
     margin: calc(var(--spacing) * 5);
@@ -3597,15 +3597,15 @@
       max-width: 100%;
       overflow-x: auto;
       padding-block: calc(0.25rem * 2);
-      > menu, > ul, > ol {
+       > menu,  > ul,  > ol {
         display: flex;
         min-height: min-content;
         align-items: center;
         white-space: nowrap;
-        > li {
+         > li {
           display: flex;
           align-items: center;
-          > * {
+           > * {
             display: flex;
             cursor: pointer;
             align-items: center;
@@ -3758,23 +3758,23 @@
     justify-content: center;
     padding: calc(var(--spacing) * 3);
     & badge {
-      margin-top: calc(var(--spacing) * 1);
-      margin-bottom: calc(var(--spacing) * 1);
+      margin-top: var(--spacing);
+      margin-bottom: var(--spacing);
     }
   }
   .badge {
-    margin-bottom: calc(var(--spacing) * 1);
+    margin-bottom: var(--spacing);
     border-radius: var(--radius-md);
     white-space: nowrap;
     .data-table & {
-      margin-top: calc(var(--spacing) * 1);
+      margin-top: var(--spacing);
       @layer daisyui.l1.l2 {
         --size: calc(var(--size-selector, 0.25rem) * 5);
         font-size: 0.75rem;
       }
     }
     .row-table & {
-      margin-top: calc(var(--spacing) * 1);
+      margin-top: var(--spacing);
       @layer daisyui.l1.l2 {
         --size: calc(var(--size-selector, 0.25rem) * 5);
         font-size: 0.75rem;
@@ -3794,10 +3794,10 @@
     }
   }
   .mt-0 {
-    margin-top: calc(var(--spacing) * 0);
+    margin-top: 0;
   }
   .mt-1 {
-    margin-top: calc(var(--spacing) * 1);
+    margin-top: var(--spacing);
   }
   .mt-2 {
     margin-top: calc(var(--spacing) * 2);
@@ -3900,7 +3900,7 @@
     }
   }
   .topic-tile-text {
-    margin-bottom: calc(var(--spacing) * 0);
+    margin-bottom: 0;
     padding: calc(var(--spacing) * 2);
   }
   .h2 {
@@ -3939,15 +3939,15 @@
     }
   }
   .card-summary-value {
-    margin-bottom: calc(var(--spacing) * 0);
+    margin-bottom: 0;
     font-size: var(--text-lg);
     line-height: var(--tw-leading, var(--text-lg--line-height));
   }
   .mb-0 {
-    margin-bottom: calc(var(--spacing) * 0);
+    margin-bottom: 0;
   }
   .mb-1 {
-    margin-bottom: calc(var(--spacing) * 1);
+    margin-bottom: var(--spacing);
   }
   .mb-2 {
     margin-bottom: calc(var(--spacing) * 2);
@@ -4023,7 +4023,7 @@
     }
   }
   .ml-1 {
-    margin-left: calc(var(--spacing) * 1);
+    margin-left: var(--spacing);
   }
   .ml-2 {
     margin-left: calc(var(--spacing) * 2);
@@ -4715,7 +4715,7 @@
   .btn-action {
     border-radius: var(--radius-md);
     padding-inline: calc(var(--spacing) * 3);
-    padding-block: calc(var(--spacing) * 1);
+    padding-block: var(--spacing);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     color: var(--color-gray-500);
@@ -4834,8 +4834,8 @@
   .space-y-1 {
     :where(& > :not(:last-child)) {
       --tw-space-y-reverse: 0;
-      margin-block-start: calc(calc(var(--spacing) * 1) * var(--tw-space-y-reverse));
-      margin-block-end: calc(calc(var(--spacing) * 1) * calc(1 - var(--tw-space-y-reverse)));
+      margin-block-start: calc(var(--spacing) * var(--tw-space-y-reverse));
+      margin-block-end: calc(var(--spacing) * calc(1 - var(--tw-space-y-reverse)));
     }
   }
   .space-y-2 {
@@ -4855,8 +4855,8 @@
   .space-x-1 {
     :where(& > :not(:last-child)) {
       --tw-space-x-reverse: 0;
-      margin-inline-start: calc(calc(var(--spacing) * 1) * var(--tw-space-x-reverse));
-      margin-inline-end: calc(calc(var(--spacing) * 1) * calc(1 - var(--tw-space-x-reverse)));
+      margin-inline-start: calc(var(--spacing) * var(--tw-space-x-reverse));
+      margin-inline-end: calc(var(--spacing) * calc(1 - var(--tw-space-x-reverse)));
     }
   }
   .space-x-2 {
@@ -5414,10 +5414,10 @@
     }
   }
   .p-0 {
-    padding: calc(var(--spacing) * 0);
+    padding: 0;
   }
   .p-1 {
-    padding: calc(var(--spacing) * 1);
+    padding: var(--spacing);
   }
   .p-2 {
     padding: calc(var(--spacing) * 2);
@@ -5513,7 +5513,7 @@
     }
   }
   .px-1 {
-    padding-inline: calc(var(--spacing) * 1);
+    padding-inline: var(--spacing);
   }
   .px-2 {
     padding-inline: calc(var(--spacing) * 2);
@@ -5525,10 +5525,10 @@
     padding-block: calc(var(--spacing) * 0.5);
   }
   .py-1 {
-    padding-block: calc(var(--spacing) * 1);
+    padding-block: var(--spacing);
   }
   .breadcrumbs {
-    padding-top: calc(var(--spacing) * 0);
+    padding-top: 0;
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
   }
@@ -5816,7 +5816,7 @@
   .tooltip-accent {
     @layer daisyui.l1.l2 {
       --tt-bg: var(--color-accent);
-      > .tooltip-content, &[data-tip]:before {
+       > .tooltip-content, &[data-tip]:before {
         color: var(--color-accent-content);
       }
     }
@@ -5824,7 +5824,7 @@
   .tooltip-error {
     @layer daisyui.l1.l2 {
       --tt-bg: var(--color-error);
-      > .tooltip-content, &[data-tip]:before {
+       > .tooltip-content, &[data-tip]:before {
         color: var(--color-error-content);
       }
     }
@@ -5832,7 +5832,7 @@
   .tooltip-info {
     @layer daisyui.l1.l2 {
       --tt-bg: var(--color-info);
-      > .tooltip-content, &[data-tip]:before {
+       > .tooltip-content, &[data-tip]:before {
         color: var(--color-info-content);
       }
     }
@@ -5840,7 +5840,7 @@
   .tooltip-primary {
     @layer daisyui.l1.l2 {
       --tt-bg: var(--color-primary);
-      > .tooltip-content, &[data-tip]:before {
+       > .tooltip-content, &[data-tip]:before {
         color: var(--color-primary-content);
       }
     }
@@ -5848,7 +5848,7 @@
   .tooltip-secondary {
     @layer daisyui.l1.l2 {
       --tt-bg: var(--color-secondary);
-      > .tooltip-content, &[data-tip]:before {
+       > .tooltip-content, &[data-tip]:before {
         color: var(--color-secondary-content);
       }
     }
@@ -5856,7 +5856,7 @@
   .tooltip-success {
     @layer daisyui.l1.l2 {
       --tt-bg: var(--color-success);
-      > .tooltip-content, &[data-tip]:before {
+       > .tooltip-content, &[data-tip]:before {
         color: var(--color-success-content);
       }
     }
@@ -5864,7 +5864,7 @@
   .tooltip-warning {
     @layer daisyui.l1.l2 {
       --tt-bg: var(--color-warning);
-      > .tooltip-content, &[data-tip]:before {
+       > .tooltip-content, &[data-tip]:before {
         color: var(--color-warning-content);
       }
     }
@@ -6039,7 +6039,7 @@
   }
   .btn-outline {
     @layer daisyui.l1 {
-      &:not( .btn-active, :hover, :active:focus, :focus-visible, input:checked:not(.filter .btn), :disabled, [disabled], .btn-disabled ) {
+      &:not(.btn-active, :hover, :active:focus, :focus-visible, input:checked:not(.filter .btn), :disabled, [disabled], .btn-disabled ) {
         --btn-shadow: "";
         --btn-bg: #0000;
         --btn-fg: var(--btn-color);
@@ -6472,8 +6472,8 @@
   .lg\:drawer-open {
     @media (width >= 64rem) {
       @layer daisyui.l1.l2.l3 {
-        > .drawer-toggle:checked {
-          ~ .drawer-side {
+         > .drawer-toggle:checked {
+           ~ .drawer-side {
             scrollbar-color: revert-layer;
           }
           :root:has(&) {
@@ -6488,12 +6488,12 @@
         }
       }
       @layer daisyui.l1.l2 {
-        > .drawer-side {
+         > .drawer-side {
           overflow-y: auto;
         }
-        > .drawer-toggle {
+         > .drawer-toggle {
           display: none;
-          ~ .drawer-side {
+           ~ .drawer-side {
             pointer-events: auto;
             visibility: visible;
             position: sticky;
@@ -6501,7 +6501,7 @@
             width: auto;
             overscroll-behavior: auto;
             opacity: 100%;
-            > .drawer-overlay {
+             > .drawer-overlay {
               cursor: default;
               background-color: transparent;
             }
@@ -6513,7 +6513,7 @@
         }
       }
       @layer daisyui.l1 {
-        > .drawer-toggle ~ .drawer-side > :not(.drawer-overlay) {
+         > .drawer-toggle ~ .drawer-side > :not(.drawer-overlay) {
           translate: 0%;
           [dir="rtl"] & {
             translate: 0%;
@@ -6559,7 +6559,7 @@
   }
   .lg\:pb-0 {
     @media (width >= 64rem) {
-      padding-bottom: calc(var(--spacing) * 0);
+      padding-bottom: 0;
     }
   }
   .lg\:text-2xl {
