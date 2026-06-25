@@ -1,6 +1,7 @@
 # Karafka Web Changelog
 
 ## 1.0.0 (Unreleased)
+- [Fix] Wrap long topic names in the Pro Explorer topics list. Dotted/underscored names (e.g. `my.really.long.topic.name`) have no natural break opportunities, so they overflowed their narrow grid cell and appeared cut off. Add `overflow-wrap: anywhere` to the `topic-tile-text` utility so names wrap inside the tile, and add a `title` tooltip with the full name to the tile link.
 - [Fix] Add `initialize` to `Status::Context` that defines all instance variables upfront in a consistent order, giving every instance the same Ruby object shape and eliminating the `:performance` shape-variation warning.
 - [Enhancement] Add `Warning.process` block to the test helper to turn Ruby warnings originating from the project code into test failures.
 - [Enhancement] Enable all opt-in Ruby warning categories in the test helper via `Warning.categories` (available since Ruby 3.4), so any new categories added in future Ruby versions are automatically enabled without code changes.
