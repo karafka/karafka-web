@@ -13,6 +13,7 @@ describe_current do
       errors: 3,
       busy: 4,
       enqueued: 6,
+      waiting: 8,
       workers: 5,
       processes: 2,
       rss: 512.45,
@@ -29,7 +30,7 @@ describe_current do
   end
 
   %i[
-    batches jobs messages retries dead errors busy enqueued workers processes
+    batches jobs messages retries dead errors busy enqueued waiting workers processes
   ].each do |key|
     context "when #{key} is negative" do
       before { stats[key] = -1 }
