@@ -195,6 +195,40 @@ describe_current do
     end
   end
 
+  describe "waiting jobs aggregation" do
+    # Regression coverage for the dashboard "Pending" counter being undercounted.
+    # Counters#pending is `enqueued + waiting`, but the state aggregator never summed
+    # `waiting` from incoming reports, so the materialized state always reported
+    # `stats[:waiting] == 0` and Pending silently ignored jobs sitting in the
+    # scheduler (advanced/recurring/scheduled-message schedulers).
+    def report_with_waiting(waiting:, process_id:)
+      data = Fixtures.consumers_reports_json("multi_partition/v1.4.1_process_1")
+      data[:dispatched_at] = Time.now.to_f
+      data[:process][:id] = process_id
+      data[:stats][:waiting] = waiting
+      data
+    end
+
+    it "sums waiting jobs from a single report into the aggregated stats" do
+      state_aggregator.add(report_with_waiting(waiting: 7, process_id: "process-1"), 42)
+
+      assert_equal(7, state_aggregator.stats[:waiting])
+    end
+
+    it "sums waiting jobs across multiple active reports" do
+      state_aggregator.add(report_with_waiting(waiting: 7, process_id: "process-1"), 42)
+      state_aggregator.add(report_with_waiting(waiting: 5, process_id: "process-2"), 43)
+
+      assert_equal(12, state_aggregator.stats[:waiting])
+    end
+
+    it "resets waiting to zero when reports carry no waiting jobs" do
+      state_aggregator.add(report_with_waiting(waiting: 0, process_id: "process-1"), 42)
+
+      assert_equal(0, state_aggregator.stats[:waiting])
+    end
+  end
+
   describe "#to_h and #stats" do
     it "includes schema version" do
       state = state_aggregator.to_h

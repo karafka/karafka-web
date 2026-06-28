@@ -128,6 +128,7 @@ module Karafka
 
               stats[:busy] = 0
               stats[:enqueued] = 0
+              stats[:waiting] = 0
               stats[:workers] = 0
               stats[:processes] = 0
               stats[:rss] = 0
@@ -155,6 +156,7 @@ module Karafka
 
                   stats[:busy] += report_stats[:busy]
                   stats[:enqueued] += report_stats[:enqueued]
+                  stats[:waiting] += report_stats[:waiting] || 0
                   stats[:workers] += report_process[:workers] || 0
                   stats[:bytes_received] += report_process[:bytes_received] || 0
                   stats[:bytes_sent] += report_process[:bytes_sent] || 0

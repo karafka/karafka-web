@@ -18,6 +18,7 @@ module Karafka
             required(:errors) { |val| val.is_a?(Integer) && val >= 0 }
             required(:busy) { |val| val.is_a?(Integer) && val >= 0 }
             required(:enqueued) { |val| val.is_a?(Integer) && val >= 0 }
+            required(:waiting) { |val| val.is_a?(Integer) && val >= 0 }
             required(:workers) { |val| val.is_a?(Integer) && val >= 0 }
             required(:processes) { |val| val.is_a?(Integer) && val >= 0 }
             required(:rss) { |val| val.is_a?(Numeric) && val >= 0 }
