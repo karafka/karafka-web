@@ -156,7 +156,10 @@ module Karafka
 
                   # We check if not zero just in case something would be off there
                   # We do not want to divide by zero
-                  metrics[:batch_size] = batches.zero? ? 0 : metrics[:messages] / batches
+                  # We use float division and round so the average batch size is not floored
+                  # (both messages and batches are integer deltas, so integer division would
+                  # systematically under-report values like 21.28 as 21)
+                  metrics[:batch_size] = batches.zero? ? 0 : (metrics[:messages].to_f / batches).round(2)
                 end
               end
             end
