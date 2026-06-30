@@ -19,7 +19,11 @@ module Karafka
                 def call(array, current_page)
                   slices = array.each_slice(per_page).to_a
                   current_data = slices[current_page - 1] || []
-                  last_page = !(slices.count >= current_page - 1 && current_data.size >= per_page)
+                  # We are on the last page when there is no slice after the current one. The
+                  # previous check keyed off "is the current page full?", which wrongly reported
+                  # a next page whenever the final page was exactly `per_page` long (total size
+                  # an exact multiple of per_page), surfacing a "Next" link to an empty page.
+                  last_page = current_page >= slices.length
 
                   [current_data, last_page]
                 end

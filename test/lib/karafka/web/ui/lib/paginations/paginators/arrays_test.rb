@@ -42,4 +42,31 @@ describe_current do
     it { assert_equal([], pagination[0]) }
     it { assert(pagination[1]) }
   end
+
+  # Regression: when the total size is an exact multiple of per_page the final page is
+  # exactly full, which previously reported "not last page" and rendered a Next link to an
+  # empty page.
+  context "when the data is an exact multiple of per_page (single full page)" do
+    let(:array) { (0..24).to_a }
+    let(:page) { 1 }
+
+    it { assert_equal((0..24).to_a, pagination[0]) }
+    it { assert(pagination[1]) }
+  end
+
+  context "when the data is an exact multiple of per_page (first of two full pages)" do
+    let(:array) { (0..49).to_a }
+    let(:page) { 1 }
+
+    it { assert_equal((0..24).to_a, pagination[0]) }
+    it { refute(pagination[1]) }
+  end
+
+  context "when the data is an exact multiple of per_page (last of two full pages)" do
+    let(:array) { (0..49).to_a }
+    let(:page) { 2 }
+
+    it { assert_equal((25..49).to_a, pagination[0]) }
+    it { assert(pagination[1]) }
+  end
 end
