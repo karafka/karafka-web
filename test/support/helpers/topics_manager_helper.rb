@@ -16,13 +16,24 @@ module TopicsManagerHelper
     Karafka::Admin.create_topic(topic_name, partitions, 1)
 
     # Topic synchronization may take some time, especially when there are hundreds of partitions,
-    # hence we check if topic is available and if not we wait
-    # Slow topic creation can happen especially on CI
+    # hence we wait until it is fully ready. Waiting only for the topic name to appear in the
+    # cluster metadata is NOT enough: for multi-partition topics the partition leaders propagate
+    # after the name does, so reading watermark offsets too early raises Rdkafka::RdkafkaError
+    # (surfaced by the Web UI as a 404), which makes multi-partition specs flaky. We therefore
+    # also wait until the expected partition count is visible and the partitions are actually
+    # readable (the same operation the UI performs).
+    # Slow topic creation can happen especially on CI.
     loop do
-      topics = Karafka::Admin.cluster_info.topics
-      found = topics.find { |topic| topic[:topic_name] == topic_name }
+      info = Karafka::Admin.cluster_info.topics.find { |topic| topic[:topic_name] == topic_name }
 
-      break if found
+      if info && info[:partition_count] == partitions
+        begin
+          Karafka::Admin.read_watermark_offsets(topic_name => (0...partitions).to_a)
+          break
+        rescue Rdkafka::RdkafkaError
+          # Partition leaders are not ready yet, keep waiting
+        end
+      end
 
       sleep(0.1)
     end
