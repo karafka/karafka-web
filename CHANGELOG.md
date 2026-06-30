@@ -1,6 +1,7 @@
 # Karafka Web Changelog
 
 ## 1.0.0 (Unreleased)
+- [Fix] Stop the array paginator from offering a "Next" link to an empty page when the last page is exactly full. `Paginators::Arrays` decided "is there a next page?" from whether the current page was full, so any list whose total size was an exact multiple of `per_page` (25/50/75/...) surfaced a Next link leading to an empty page. It now reports the last page based on whether a further slice actually exists.
 - [Fix] Compute the dashboard average batch size with float division so it is no longer floored. `Metrics::Aggregated` divided the per-window message delta by the batch delta using integer division, so e.g. 1000 messages over 47 batches charted as `21` instead of `21.28`, systematically under-reporting the average. It now uses float division rounded to 2 decimals.
 - [Fix] Include jobs in the `waiting` state when aggregating the dashboard "Pending" counter. `State#refresh_current_stats` now resets and sums `stats[:waiting]` from incoming consumer reports (previously it was never aggregated and stayed `0`), so `Counters#pending` (`enqueued + waiting`) no longer undercounts jobs sitting in advanced/recurring/scheduled-message schedulers. `:waiting` is now also validated by the `AggregatedStats` contract.
 - [Fix] Add `initialize` to `Status::Context` that defines all instance variables upfront in a consistent order, giving every instance the same Ruby object shape and eliminating the `:performance` shape-variation warning.
