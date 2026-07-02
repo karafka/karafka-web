@@ -220,7 +220,6 @@ describe_current do
           refute_body("#{topic}/#{i}/24")
           refute_body("#{topic}/#{i}/30")
         end
-
       end
     end
 
@@ -246,7 +245,6 @@ describe_current do
           refute_body("#{topic}/#{i}/5")
           refute_body("#{topic}/#{i}/6")
         end
-
       end
     end
 
