@@ -57,7 +57,6 @@ describe_current do
         assert_body(topic)
         assert_body("message-republish-form")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
   end

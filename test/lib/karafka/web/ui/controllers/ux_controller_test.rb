@@ -8,7 +8,6 @@ describe_current do
 
     it do
       assert(response.ok?)
-      assert_body(support_message)
       assert_body(breadcrumbs)
     end
   end

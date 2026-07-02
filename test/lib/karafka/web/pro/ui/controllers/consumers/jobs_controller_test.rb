@@ -54,7 +54,6 @@ describe_current do
         assert_body("This process has no running jobs at the moment")
         refute_body("Karafka::Pro::ActiveJob::Consumer")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -65,7 +64,6 @@ describe_current do
         assert(response.ok?)
         assert_body("Karafka::Pro::ActiveJob::Consumer")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -84,7 +82,6 @@ describe_current do
         assert(response.ok?)
         assert_body("Karafka::Pro::ActiveJob::Consumer")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -104,7 +101,6 @@ describe_current do
         assert(response.ok?)
         assert_body("This process has no running jobs at the moment")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -138,7 +134,6 @@ describe_current do
         assert_body("This process has no pending jobs at the moment")
         refute_body("Karafka::Pro::ActiveJob::Consumer")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -160,7 +155,6 @@ describe_current do
         assert(response.ok?)
         assert_body("Karafka::Pro::ActiveJob::Consumer")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -182,7 +176,6 @@ describe_current do
         assert(response.ok?)
         assert_body("Karafka::Pro::ActiveJob::Consumer")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -202,7 +195,6 @@ describe_current do
         assert(response.ok?)
         assert_body("This process has no pending jobs at the moment")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 

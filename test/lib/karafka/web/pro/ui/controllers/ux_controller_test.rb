@@ -36,7 +36,6 @@ describe_current do
 
     it do
       assert(response.ok?)
-      refute_body(support_message)
       assert_body(breadcrumbs)
     end
   end

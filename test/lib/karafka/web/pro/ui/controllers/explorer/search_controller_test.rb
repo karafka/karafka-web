@@ -73,7 +73,6 @@ describe_current do
       refute_body(search_modal_errors)
       refute_body("table")
       refute_body(pagination)
-      refute_body(support_message)
       refute_body(metadata_button)
     end
   end
@@ -96,7 +95,6 @@ describe_current do
       refute_body(search_modal_errors)
       refute_body("table")
       refute_body(pagination)
-      refute_body(support_message)
       refute_body(metadata_button)
     end
   end
@@ -115,7 +113,6 @@ describe_current do
       refute_body(search_modal_errors)
       refute_body("table")
       refute_body(pagination)
-      refute_body(support_message)
       refute_body(metadata_button)
     end
   end
@@ -134,7 +131,6 @@ describe_current do
       refute_body(search_modal_errors)
       refute_body("table")
       refute_body(pagination)
-      refute_body(support_message)
       refute_body(metadata_button)
     end
   end
@@ -151,7 +147,6 @@ describe_current do
       assert_body(search_modal_errors)
       refute_body("table")
       refute_body(pagination)
-      refute_body(support_message)
       refute_body(metadata_button)
     end
   end
@@ -176,7 +171,6 @@ describe_current do
       refute_body(search_modal_errors)
       refute_body("matcher: is invalid")
       refute_body(pagination)
-      refute_body(support_message)
     end
   end
 
@@ -208,7 +202,6 @@ describe_current do
       refute_body(search_modal_errors)
       refute_body("matcher: is invalid")
       refute_body(pagination)
-      refute_body(support_message)
     end
   end
 
@@ -251,7 +244,6 @@ describe_current do
       refute_body(search_modal_errors)
       refute_body("matcher: is invalid")
       refute_body(pagination)
-      refute_body(support_message)
     end
   end
 
@@ -293,7 +285,6 @@ describe_current do
       refute_body(search_modal_errors)
       refute_body("matcher: is invalid")
       refute_body(pagination)
-      refute_body(support_message)
     end
   end
 
@@ -339,7 +330,6 @@ describe_current do
       refute_body(search_modal_errors)
       refute_body("matcher: is invalid")
       refute_body(pagination)
-      refute_body(support_message)
     end
   end
 
@@ -382,7 +372,6 @@ describe_current do
       refute_body(search_modal_errors)
       refute_body("matcher: is invalid")
       refute_body(pagination)
-      refute_body(support_message)
     end
   end
 end

@@ -51,7 +51,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body(topic)
         assert_body("max.message.bytes")
         assert_body("retention.ms")
@@ -77,7 +76,6 @@ describe_current do
           assert_body(breadcrumbs)
           assert_body("Topic #{topic_name} - Edit #{property_name}")
           refute_body(pagination)
-          refute_body(support_message)
 
           # Form elements and structure
           assert_body('method="post"')

@@ -68,4 +68,23 @@
       target="_blank"
     >Go to Karafka GitHub</a>
   </div>
+
+  <% unless Karafka.pro? %>
+    <div class="card-support">
+      <h3>
+        <%== icon(:heart) %>
+
+        <span>Karafka Pro</span>
+      </h3>
+
+      <p>
+        Karafka is free and open-source, sustained by the Pro subscription. If Karafka provides value to your business, consider supporting its development by upgrading to Pro for additional features and dedicated support.
+      </p>
+
+      <a
+        href="https://karafka.io/#become-pro"
+        target="_blank"
+      >Learn about Karafka Pro</a>
+    </div>
+  <% end %>
 </div>

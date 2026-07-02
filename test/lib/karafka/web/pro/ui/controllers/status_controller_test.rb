@@ -37,7 +37,6 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_body(support_message)
         assert_body(breadcrumbs)
       end
     end
@@ -54,7 +53,6 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_body(support_message)
         assert_body(breadcrumbs)
       end
     end
@@ -82,7 +80,6 @@ describe_current do
       it "displays successful status with topic information" do
         assert(response.ok?)
         assert_body("Status")
-        refute_body(support_message)
         assert_body(breadcrumbs)
         assert_body(states_topic)
         assert_body(metrics_topic)

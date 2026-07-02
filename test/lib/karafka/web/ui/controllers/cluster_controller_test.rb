@@ -29,7 +29,6 @@ describe_current do
     it do
       assert(response.ok?)
       assert_body("ID")
-      assert_body(support_message)
       assert_body(breadcrumbs)
     end
   end
@@ -39,7 +38,6 @@ describe_current do
 
     it do
       assert(response.ok?)
-      assert_body(support_message)
       assert_body(breadcrumbs)
     end
 
@@ -51,7 +49,6 @@ describe_current do
 
         it do
           assert(response.ok?)
-          assert_body(support_message)
           assert_body(breadcrumbs)
           assert_body(pagination)
         end
@@ -63,7 +60,6 @@ describe_current do
         it do
           assert(response.ok?)
           assert_body(pagination)
-          assert_body(support_message)
           assert_body(no_meaningful_results)
         end
       end
@@ -74,7 +70,6 @@ describe_current do
         it "defaults to first page" do
           assert(response.ok?)
           assert_body("Replication")
-          assert_body(support_message)
         end
       end
 
@@ -84,7 +79,6 @@ describe_current do
         it "defaults to first page" do
           assert(response.ok?)
           assert_body("Replication")
-          assert_body(support_message)
         end
       end
     end
@@ -115,7 +109,6 @@ describe_current do
       it "respects custom page size" do
         assert(response.ok?)
         assert_body(pagination)
-        assert_body(support_message)
       end
     end
   end

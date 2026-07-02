@@ -32,11 +32,6 @@ module ControllerHelper
     last_response
   end
 
-  # @return [String] Part of support message string to match against its presence
-  def support_message
-    '<div id="help-us"'
-  end
-
   # @return [String]
   def only_pro_feature
     "This feature is available only to"

@@ -51,7 +51,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body(topic)
         assert_body("Replica Count")
         assert_body("In Sync Brokers")
