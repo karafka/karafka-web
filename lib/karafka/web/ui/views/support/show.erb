@@ -1,5 +1,13 @@
 <% view_title 'Support' %>
 
+<% unless Karafka.pro? %>
+  <div class="mb-8">
+    <% alert_box_primary('Karafka Pro') do %>
+      Karafka is free and open-source, sustained by the Pro subscription. If Karafka provides value to your business, consider supporting its development by upgrading to <a target="_blank" href="https://karafka.io/#become-pro" class="underline">Karafka Pro</a> for additional features and dedicated support.
+    <% end %>
+  </div>
+<% end %>
+
 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
   <div class="card-support">
     <h3>
@@ -68,23 +76,4 @@
       target="_blank"
     >Go to Karafka GitHub</a>
   </div>
-
-  <% unless Karafka.pro? %>
-    <div class="card-support">
-      <h3>
-        <%== icon(:heart) %>
-
-        <span>Karafka Pro</span>
-      </h3>
-
-      <p>
-        Karafka is free and open-source, sustained by the Pro subscription. If Karafka provides value to your business, consider supporting its development by upgrading to Pro for additional features and dedicated support.
-      </p>
-
-      <a
-        href="https://karafka.io/#become-pro"
-        target="_blank"
-      >Learn about Karafka Pro</a>
-    </div>
-  <% end %>
 </div>
