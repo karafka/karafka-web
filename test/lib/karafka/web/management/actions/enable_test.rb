@@ -16,6 +16,7 @@ describe_current do
   context "when tracking is active" do
     let(:ui_listener) { stub }
     let(:routes) { stub }
+    let(:declaratives) { stub }
     let(:karafka_monitor) { stub }
     let(:app_monitor) { stub }
 
@@ -32,12 +33,14 @@ describe_current do
       Karafka::Web.config.tracking.consumers.stubs(:listeners).returns([])
       Karafka::Web.config.tracking.producers.stubs(:listeners).returns([])
 
-      # Mock routing and monitors
+      # Mock routing, declaratives and monitors
       routes.stubs(:draw)
+      declaratives.stubs(:draw)
       karafka_monitor.stubs(:subscribe)
       app_monitor.stubs(:subscribe)
 
       Karafka::App.stubs(:routes).returns(routes)
+      Karafka::App.stubs(:declaratives).returns(declaratives)
       Karafka::App.stubs(:monitor).returns(app_monitor)
       Karafka.stubs(:monitor).returns(karafka_monitor)
     end
@@ -50,6 +53,7 @@ describe_current do
 
   context "when tracking is not active" do
     let(:routes) { stub }
+    let(:declaratives) { stub }
     let(:karafka_monitor) { stub }
 
     before do
@@ -60,9 +64,11 @@ describe_current do
       Karafka::Web.config.tracking.stubs(:active=)
 
       routes.stubs(:draw)
+      declaratives.stubs(:draw)
       karafka_monitor.stubs(:subscribe)
 
       Karafka::App.stubs(:routes).returns(routes)
+      Karafka::App.stubs(:declaratives).returns(declaratives)
       Karafka.stubs(:monitor).returns(karafka_monitor)
     end
 

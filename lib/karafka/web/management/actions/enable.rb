@@ -18,6 +18,7 @@ module Karafka
             ::Karafka::Web.config.enabled = true
 
             extend_routing
+            extend_declaratives
             setup_tracking_activity
 
             # Do not subscribe monitors or do anything else if tracking is disabled
@@ -56,7 +57,6 @@ module Karafka
               consumer_group ::Karafka::Web.config.group_id do
                 # Topic we listen on to materialize the states
                 topic ::Karafka::Web.config.topics.consumers.reports.name do
-                  config(active: false)
                   active ::Karafka::Web.config.processing.active
                   # Since we materialize state in intervals, we can poll for half of this time
                   # without impacting the reporting responsiveness
@@ -87,27 +87,50 @@ module Karafka
                 # We define those three here without consumption, so Web understands how to
                 # deserialize them when used / viewed
                 topic ::Karafka::Web.config.topics.consumers.states.name do
-                  config(active: false)
                   active false
                   deserializers(payload: payload_deserializer)
                 end
 
                 topic ::Karafka::Web.config.topics.consumers.metrics.name do
-                  config(active: false)
                   active false
                   deserializers(payload: payload_deserializer)
                 end
 
                 topic ::Karafka::Web.config.topics.consumers.commands.name do
-                  config(active: false)
                   active false
                   deserializers(payload: payload_deserializer)
                 end
 
                 topic ::Karafka::Web.config.topics.errors.name do
-                  config(active: false)
                   active false
                   deserializers(payload: payload_deserializer)
+                end
+              end
+            end
+          end
+
+          # Registers the Web UI topics in the standalone declaratives repository.
+          #
+          # They are all declared as `active false` on purpose. Web UI manages the creation and
+          # configuration of its topics on its own (via `karafka-web install` / `karafka-web
+          # migrate`), because it computes the replication factor at runtime based on the cluster
+          # size and populates the initial states right after the topics are created. Declaring
+          # them here (rather than relying on the legacy routing `config(...)` bridge) makes their
+          # existence explicit in the new declaratives subsystem while keeping them out of the
+          # generic `karafka declaratives` CLI management.
+          def extend_declaratives
+            topics = [
+              ::Karafka::Web.config.topics.errors,
+              ::Karafka::Web.config.topics.consumers.reports,
+              ::Karafka::Web.config.topics.consumers.states,
+              ::Karafka::Web.config.topics.consumers.metrics,
+              ::Karafka::Web.config.topics.consumers.commands
+            ]
+
+            ::Karafka::App.declaratives.draw do
+              topics.each do |web_topic|
+                topic web_topic.name do
+                  active false
                 end
               end
             end
