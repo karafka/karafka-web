@@ -453,6 +453,7 @@
 
 @utility topic-tile-text {
   @apply mb-0 p-2;
+  overflow-wrap: anywhere;
 }
 
 @utility topic-tile-link {
