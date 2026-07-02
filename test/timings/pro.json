@@ -78,5 +78,6 @@
   "test/lib/karafka/web/pro/commanding/handlers/partitions/commands/base_test.rb": 0.006,
   "test/lib/karafka/web/pro/commanding/commands/partitions/seek_test.rb": 0.005,
   "test/lib/karafka/web/pro/ui/lib/policies/requests_test.rb": 0.004,
+  "test/lib/karafka/web/pro/ui/controllers/support_controller_test.rb": 0.003,
   "test/lib/karafka/web/pro/commanding/handlers/partitions/commands/pause_test.rb": 0.0
 }
