@@ -45,7 +45,6 @@ describe_current do
         assert_body(breadcrumbs)
         refute_body("total: 1")
         refute_body(pagination)
-        refute_body(support_message)
         refute_body(search_button)
       end
     end
@@ -62,7 +61,6 @@ describe_current do
         assert_body(breadcrumbs)
         assert_body(search_button)
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -79,7 +77,6 @@ describe_current do
         assert_body(search_button)
         assert_body("This offset does not contain any recognized data type.")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -96,7 +93,6 @@ describe_current do
         assert_body(breadcrumbs)
         assert_body(search_button)
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -125,7 +121,6 @@ describe_current do
         assert_body(breadcrumbs)
         assert_body("[Deserialization Failed]")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -141,7 +136,6 @@ describe_current do
         assert_body(breadcrumbs)
         assert_body(pagination)
         assert_body("#{topic}/0/5")
-        refute_body(support_message)
       end
     end
 
@@ -166,7 +160,6 @@ describe_current do
         assert_body(search_button)
         refute_body("#{topic}/0/30")
         refute_body("#{topic}/0/4")
-        refute_body(support_message)
       end
     end
   end
@@ -194,7 +187,6 @@ describe_current do
         refute_body("low: 0")
         refute_body("Watermark offsets")
         refute_body(pagination)
-        refute_body(support_message)
         refute_body(search_button)
       end
     end
@@ -214,7 +206,6 @@ describe_current do
         assert_body(search_button)
         refute_body(no_data)
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -232,7 +223,6 @@ describe_current do
         assert_body("low: 0")
         refute_body(no_data)
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -253,7 +243,6 @@ describe_current do
         assert_body("low: 0")
         refute_body(no_data)
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -274,7 +263,6 @@ describe_current do
           refute_body("/explorer/topics/#{topic}/0/98")
           refute_body("/explorer/topics/#{topic}/0/100")
           refute_body(no_data)
-          refute_body(support_message)
         end
       end
 
@@ -293,7 +281,6 @@ describe_current do
           refute_body("/explorer/topics/#{topic}/0/100")
           refute_body("/explorer/topics/#{topic}/0/74")
           refute_body(no_data)
-          refute_body(support_message)
           # 26 because 25 for details + one for breadcrumbs
           assert_equal(26, body.scan("href=\"/explorer/topics/#{topic}/0/").count)
         end
@@ -315,7 +302,6 @@ describe_current do
           refute_body("/explorer/topics/#{topic}/0/75")
           refute_body("/explorer/topics/#{topic}/0/25")
           refute_body(no_data)
-          refute_body(support_message)
           # 26 because 25 for details + one for breadcrumbs
           assert_equal(26, body.scan("href=\"/explorer/topics/#{topic}/0/").count)
         end
@@ -334,7 +320,6 @@ describe_current do
           refute_body(pagination)
           refute_body("/explorer/topics/#{topic}/0/99")
           refute_body("/explorer/topics/#{topic}/0/100")
-          refute_body(support_message)
         end
       end
     end

@@ -57,7 +57,6 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_body(support_message)
         refute_body(pagination)
         assert_body(breadcrumbs)
         assert_body(no_commands)
@@ -75,7 +74,6 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_body(support_message)
         refute_body(no_commands)
         refute_body(pagination)
         refute_body('<span class="badge badge-primary">')
@@ -91,7 +89,6 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_body(support_message)
         refute_body(no_commands)
         refute_body(pagination)
         assert_body(breadcrumbs)
@@ -130,7 +127,6 @@ describe_current do
         it do
           assert(response.ok?)
           assert_body(pagination)
-          refute_body(support_message)
           assert_body("commands/99")
           assert_body("trace")
           assert_body("quiet")
@@ -144,13 +140,11 @@ describe_current do
         it do
           assert(response.ok?)
           assert_body(pagination)
-          refute_body(support_message)
           assert_body("commands/53")
           refute_body("commands/99")
           assert_body("trace")
           assert_body("quiet")
           assert_body("stop")
-          refute_body(support_message)
         end
       end
 
@@ -161,7 +155,6 @@ describe_current do
           assert(response.ok?)
           refute_body(pagination)
           assert_body(no_commands)
-          refute_body(support_message)
         end
       end
     end
@@ -200,7 +193,6 @@ describe_current do
           assert(response.ok?)
           assert_body(breadcrumbs)
           refute_body(pagination)
-          refute_body(support_message)
           assert_body("<td>Type</td>")
           assert_body('<code class="json"')
           # quiet_all and stop_all display just stop with a wildcard target
@@ -222,7 +214,6 @@ describe_current do
           assert(response.ok?)
           assert_body(breadcrumbs)
           refute_body(pagination)
-          refute_body(support_message)
           refute_body("<td>Type</td>")
           refute_body('<code class="json"')
           refute_body("<td>#{command}</td>")
@@ -245,7 +236,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         refute_body(incompatible_message)
         assert_body("rb:539:in `rd_kafka_consumer_poll")
         assert_body("Metadata")
@@ -267,7 +257,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body(incompatible_message)
       end
     end
@@ -306,7 +295,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body("<td>Type</td>")
         assert_body('<code class="json"')
         assert_body("<td>consumers.")

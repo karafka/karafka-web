@@ -47,7 +47,6 @@ describe_current do
       assert(response.ok?)
       assert_body(breadcrumbs)
       refute_body(pagination)
-      refute_body(support_message)
       assert_body(topics_config.consumers.states.name)
       assert_body(topics_config.consumers.metrics.name)
       assert_body(topics_config.consumers.reports.name)
@@ -65,7 +64,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body("There are no available topics in the current cluster")
       end
     end
@@ -81,7 +79,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body(topics_config.consumers.states.name)
         assert_body(topics_config.consumers.metrics.name)
         assert_body(topics_config.consumers.reports.name)
@@ -101,7 +98,6 @@ describe_current do
         assert_body(breadcrumbs)
         refute_body("total: 1")
         refute_body(pagination)
-        refute_body(support_message)
         refute_body(search_button)
       end
     end
@@ -118,7 +114,6 @@ describe_current do
         assert_body(breadcrumbs)
         assert_body(search_button)
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -147,7 +142,6 @@ describe_current do
         assert_body(breadcrumbs)
         assert_body("[Deserialization Failed]")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -165,7 +159,6 @@ describe_current do
         assert_body("#{topic}/0/29")
         refute_body("#{topic}/0/30")
         refute_body("#{topic}/0/4")
-        refute_body(support_message)
       end
     end
 
@@ -185,7 +178,6 @@ describe_current do
         assert_body(search_button)
         refute_body("#{topic}/0/30")
         refute_body("#{topic}/0/4")
-        refute_body(support_message)
       end
     end
 
@@ -203,7 +195,6 @@ describe_current do
         refute_body("#{topic}/0/30")
         refute_body("#{topic}/0/5")
         refute_body("#{topic}/0/29")
-        refute_body(support_message)
       end
     end
 
@@ -229,8 +220,6 @@ describe_current do
           refute_body("#{topic}/#{i}/24")
           refute_body("#{topic}/#{i}/30")
         end
-
-        refute_body(support_message)
       end
     end
 
@@ -256,8 +245,6 @@ describe_current do
           refute_body("#{topic}/#{i}/5")
           refute_body("#{topic}/#{i}/6")
         end
-
-        refute_body(support_message)
       end
     end
 
@@ -272,7 +259,6 @@ describe_current do
         assert_body(breadcrumbs)
         assert_body(pagination)
         assert_body(no_meaningful_results)
-        refute_body(support_message)
       end
     end
   end
@@ -309,7 +295,6 @@ describe_current do
         refute_body("low: 0")
         refute_body("Watermark offsets")
         refute_body(pagination)
-        refute_body(support_message)
         refute_body(search_button)
       end
     end
@@ -329,7 +314,6 @@ describe_current do
         assert_body(search_button)
         refute_body(no_data)
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -347,7 +331,6 @@ describe_current do
         assert_body("low: 0")
         refute_body(no_data)
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -369,7 +352,6 @@ describe_current do
         assert_body(removed_or_compacted)
         refute_body(no_data)
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -390,7 +372,6 @@ describe_current do
           refute_body("/explorer/topics/#{topic}/0/98")
           refute_body("/explorer/topics/#{topic}/0/100")
           refute_body(no_data)
-          refute_body(support_message)
         end
       end
 
@@ -409,7 +390,6 @@ describe_current do
           refute_body("/explorer/topics/#{topic}/0/100")
           refute_body("/explorer/topics/#{topic}/0/74")
           refute_body(no_data)
-          refute_body(support_message)
           # 26 because 25 for details + one for breadcrumbs
           assert_equal(26, body.scan("href=\"/explorer/topics/#{topic}/0/").count)
         end
@@ -431,7 +411,6 @@ describe_current do
           refute_body("/explorer/topics/#{topic}/0/75")
           refute_body("/explorer/topics/#{topic}/0/25")
           refute_body(no_data)
-          refute_body(support_message)
           # 26 because 25 for details + one for breadcrumbs
           assert_equal(26, body.scan("href=\"/explorer/topics/#{topic}/0/").count)
         end
@@ -450,7 +429,6 @@ describe_current do
           refute_body(pagination)
           refute_body("/explorer/topics/#{topic}/0/99")
           refute_body("/explorer/topics/#{topic}/0/100")
-          refute_body(support_message)
         end
       end
     end
@@ -493,7 +471,6 @@ describe_current do
         assert_body("Republish")
         refute_body(cannot_deserialize)
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -524,7 +501,6 @@ describe_current do
         assert_body("tadam2")
         refute_body(cannot_deserialize)
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -546,7 +522,6 @@ describe_current do
         refute_body("Republish")
         refute_body(cannot_deserialize)
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -574,7 +549,6 @@ describe_current do
         assert_body("16d6d5c5-d8a8-45fc-ae1d-34e134772b98")
         refute_body(cannot_deserialize)
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -595,7 +569,6 @@ describe_current do
         refute_body("Download raw")
         refute_body(cannot_deserialize)
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -616,7 +589,6 @@ describe_current do
         refute_body("Export as JSON")
         refute_body(cannot_deserialize)
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -632,7 +604,6 @@ describe_current do
         assert_body('<code class="json')
         assert_body("Metadata")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -649,7 +620,6 @@ describe_current do
         assert_body(pagination)
         refute_body('<code class="json')
         refute_body("Metadata")
-        refute_body(support_message)
       end
     end
 
@@ -682,7 +652,6 @@ describe_current do
         assert_body("Metadata")
         assert_body("Message payloads larger than")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -700,7 +669,6 @@ describe_current do
         assert_body('<code class="json')
         assert_body("Metadata")
         refute_body(pagination)
-        refute_body(support_message)
         assert_body("Not Available")
       end
     end
@@ -718,7 +686,6 @@ describe_current do
         assert_body('<code class="json')
         assert_body(cannot_deserialize)
         refute_body(pagination)
-        refute_body(support_message)
         refute_body("Export as JSON")
       end
     end
@@ -744,7 +711,6 @@ describe_current do
         assert_body("We could not deserialize the")
         assert_body("JSON::GeneratorError")
         refute_body(pagination)
-        refute_body(support_message)
         refute_body("Export as JSON")
       end
     end
@@ -774,7 +740,6 @@ describe_current do
         assert_body("")
         assert_body("Export as JSON")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -800,7 +765,6 @@ describe_current do
         assert_body("Metadata")
         assert_body("0.001 KB")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -817,7 +781,6 @@ describe_current do
         assert_body("Metadata")
         assert_body("0.0977 KB")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
   end
@@ -844,7 +807,6 @@ describe_current do
           assert_body(topic)
           refute_body(payload1)
           refute_body(pagination)
-          refute_body(support_message)
         end
       end
 
@@ -863,7 +825,6 @@ describe_current do
           assert_body(topic)
           refute_body(payload1)
           refute_body(pagination)
-          refute_body(support_message)
         end
       end
     end
@@ -881,7 +842,6 @@ describe_current do
         assert_body(topic)
         refute_body(payload2)
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
   end

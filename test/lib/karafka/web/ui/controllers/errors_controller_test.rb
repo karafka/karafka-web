@@ -27,7 +27,6 @@ describe_current do
       it do
         assert(response.ok?)
         assert_body(no_errors)
-        assert_body(support_message)
         assert_body(breadcrumbs)
         refute_body(pagination)
       end
@@ -46,7 +45,6 @@ describe_current do
         assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(3, body.scan("StandardError:").size)
         refute_body(pagination)
-        assert_body(support_message)
         assert_body("high: 3")
         assert_body("low: 0")
         assert_body(breadcrumbs)
@@ -66,7 +64,6 @@ describe_current do
         assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(25, body.scan("StandardError:").size)
         assert_body(pagination)
-        assert_body(support_message)
         assert_body("high: 30")
         assert_body("low: 0")
         assert_body(breadcrumbs)
@@ -86,7 +83,6 @@ describe_current do
         assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(25, body.scan("StandardError:").size)
         assert_body(pagination)
-        assert_body(support_message)
         assert_body("high: 30")
         assert_body("low: 0")
         assert_body(breadcrumbs)
@@ -106,7 +102,6 @@ describe_current do
         assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(1, body.scan("StandardError:").size)
         assert_body(pagination)
-        assert_body(support_message)
         assert_body("high: 30")
         assert_body("low: 0")
         assert_body(breadcrumbs)
@@ -126,7 +121,6 @@ describe_current do
         assert_equal(0, body.scan("StandardError:").size)
         refute_body(pagination)
         assert_body("high: 30")
-        assert_body(support_message)
         assert_body("low: 0")
         assert_body(breadcrumbs)
       end
@@ -177,7 +171,6 @@ describe_current do
         assert_body(breadcrumbs)
         assert_body(pagination)
         assert_body("The message has been removed")
-        assert_body(support_message)
       end
     end
 

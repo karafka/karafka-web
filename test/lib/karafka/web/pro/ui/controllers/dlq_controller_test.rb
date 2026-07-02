@@ -44,7 +44,6 @@ describe_current do
         assert_body("No Dead Letter Queue topics exist in Kafka")
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -64,7 +63,6 @@ describe_current do
         assert_body(dlq_topic)
         refute_body("No Dead Letter Queue topics exist in Kafka")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -87,7 +85,6 @@ describe_current do
         refute_body("#{topic.name}\"")
         refute_body("No Dead Letter Queue topics exist in Kafka")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -107,7 +104,6 @@ describe_current do
         assert_body(dlq_topic)
         refute_body("No Dead Letter Queue topics exist in Kafka")
         refute_body(pagination)
-        refute_body(support_message)
         refute_body("#{topic_name}\"")
       end
     end

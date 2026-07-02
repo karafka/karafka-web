@@ -35,7 +35,6 @@ describe_current do
     it do
       assert(response.ok?)
       assert_body("There Needs to Be More Data to Draw Meaningful Graphs")
-      assert_body(support_message)
       refute_body(breadcrumbs)
       assert_body('id="refreshable"')
       assert_body('<div id="refreshable" class="col-span-12 mb-10">')
@@ -58,7 +57,6 @@ describe_current do
     it do
       assert(response.ok?)
       assert_body("There Needs to Be More Data to Draw Meaningful Graphs")
-      assert_body(support_message)
       refute_body(breadcrumbs)
       assert_body('id="refreshable"')
       assert_body('<div id="refreshable" class="col-span-12 mb-10">')
@@ -70,7 +68,6 @@ describe_current do
 
     it do
       assert(response.ok?)
-      assert_body(support_message)
       refute_body(breadcrumbs)
       assert_body(only_pro_feature)
       assert_body("Pace")
@@ -102,7 +99,6 @@ describe_current do
 
     it do
       assert(response.ok?)
-      assert_body(support_message)
       refute_body(breadcrumbs)
       assert_body(only_pro_feature)
       assert_body("Pace")

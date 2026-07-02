@@ -43,7 +43,6 @@ describe_current do
         assert_body(topics_config.errors.name)
         assert_body("karafka_web")
         assert_body(breadcrumbs)
-        refute_body(support_message)
       end
     end
 
@@ -62,7 +61,6 @@ describe_current do
         assert_body(topics_config.errors.name)
         assert_body("karafka_web")
         assert_body(breadcrumbs)
-        refute_body(support_message)
       end
     end
 
@@ -91,7 +89,6 @@ describe_current do
         assert_body(topics_config.errors.name)
         assert_body("karafka_web")
         assert_body(breadcrumbs)
-        refute_body(support_message)
       end
     end
   end
@@ -104,7 +101,6 @@ describe_current do
       assert_body("kafka.topic.metadata.refresh.interval.ms")
       assert_body(breadcrumbs)
       assert_body("kafka.statistics.interval.ms")
-      refute_body(support_message)
     end
 
     context "when given route is not available" do
@@ -140,7 +136,6 @@ describe_current do
         assert_body("kafka.sasl.username")
         assert_body("***")
         assert_body(breadcrumbs)
-        refute_body(support_message)
       end
     end
 
@@ -166,7 +161,6 @@ describe_current do
         assert_body("kafka.ssl.key.password")
         assert_body("***")
         assert_body(breadcrumbs)
-        refute_body(support_message)
       end
     end
   end

@@ -14,7 +14,6 @@ describe_current do
       assert_body(topics_config.errors.name)
       assert_body("karafka_web")
       assert_body(breadcrumbs)
-      assert_body(support_message)
     end
   end
 
@@ -26,7 +25,6 @@ describe_current do
       assert_body("kafka.topic.metadata.refresh.interval.ms")
       assert_body(breadcrumbs)
       assert_body("kafka.statistics.interval.ms")
-      assert_body(support_message)
     end
 
     context "when given route is not available" do
@@ -61,7 +59,6 @@ describe_current do
         assert(response.ok?)
         assert_body("kafka.sasl.username")
         assert_body("***")
-        assert_body(support_message)
         assert_body(breadcrumbs)
       end
     end
@@ -87,7 +84,6 @@ describe_current do
         assert(response.ok?)
         assert_body("kafka.ssl.key.password")
         assert_body("***")
-        assert_body(support_message)
         assert_body(breadcrumbs)
       end
     end
@@ -110,7 +106,6 @@ describe_current do
         assert(response.ok?)
         assert_body("manual_offset_management")
         assert_body("true")
-        assert_body(support_message)
         assert_body(breadcrumbs)
       end
     end
@@ -139,7 +134,6 @@ describe_current do
         assert_body("1000")
         assert_body("initial_offset")
         assert_body("earliest")
-        assert_body(support_message)
       end
     end
 
@@ -162,7 +156,6 @@ describe_current do
         assert(response.ok?)
         assert_body("subscription_group_details.name")
         assert_body("critical")
-        assert_body(support_message)
       end
     end
   end

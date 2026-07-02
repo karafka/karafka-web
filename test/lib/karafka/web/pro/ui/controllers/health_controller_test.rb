@@ -57,7 +57,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body("No health data is available")
       end
     end
@@ -69,7 +68,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body("Not available until first offset")
         assert_body("327355")
       end
@@ -217,7 +215,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body("Not available until first offset")
         assert_body("327355")
       end
@@ -236,7 +233,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body("No health data is available")
         refute_body("badge-warning")
         refute_body("badge-error")
@@ -250,7 +246,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body("213731273")
         refute_body("badge-error")
       end
@@ -307,7 +302,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body("Not available until first offset")
         assert_body("213731273")
         refute_body("badge-error")
@@ -326,7 +320,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body("No health data is available")
         refute_body("badge-warning")
         refute_body("badge-error")
@@ -340,7 +333,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body("-1")
       end
     end
@@ -358,7 +350,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body("No health data is available")
         refute_body("badge-warning")
         refute_body("badge-error")
@@ -372,7 +363,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body("Not available until first offset")
         assert_body("327355")
         refute_body("badge-warning")
@@ -431,7 +421,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body("Not available until first offset")
         assert_body("327355")
         refute_body("badge-warning")
@@ -460,7 +449,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body("Not available until first offset")
         assert_body("badge-warning")
         assert_body("at_risk")
@@ -490,7 +478,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body("Not available until first offset")
         assert_body("badge-error")
         assert_body("stopped")
@@ -512,7 +499,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body("No health data is available")
         refute_body("badge-warning")
         refute_body("badge-error")
@@ -526,7 +512,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body("Pause state change")
         assert_body("N/A")
         assert_body("2690818656.575513")
@@ -584,7 +569,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body("Pause state change")
         assert_body("Changes")
       end
@@ -610,7 +594,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body("Until manual resume")
       end
     end

@@ -66,7 +66,6 @@ describe_current do
       assert_body(no_meaningful)
       assert_body('id="refreshable"')
       assert_body('<div id="refreshable" class="col-span-12 mb-10">')
-      refute_body(support_message)
       refute_body(breadcrumbs)
     end
   end
@@ -87,7 +86,6 @@ describe_current do
     it do
       assert(response.ok?)
       assert_body(no_meaningful)
-      refute_body(support_message)
       refute_body(breadcrumbs)
       assert_body('id="refreshable"')
       assert_body('<div id="refreshable" class="col-span-12 mb-10">')
@@ -110,7 +108,6 @@ describe_current do
       assert_body("Data transfers")
       assert_body('id="refreshable"')
       assert_body('<div id="refreshable" class="col-span-12 mb-10">')
-      refute_body(support_message)
       refute_body(breadcrumbs)
       refute_body(only_pro_feature)
     end
@@ -142,7 +139,6 @@ describe_current do
       assert_body("Data transfers")
       assert_body('id="refreshable"')
       assert_body('<div id="refreshable" class="col-span-12 mb-10">')
-      refute_body(support_message)
       refute_body(breadcrumbs)
       refute_body(only_pro_feature)
     end

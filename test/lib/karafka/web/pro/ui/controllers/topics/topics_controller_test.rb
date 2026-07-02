@@ -44,7 +44,6 @@ describe_current do
       assert(response.ok?)
       assert_body(breadcrumbs)
       refute_body(pagination)
-      refute_body(support_message)
       assert_body(topics_config.consumers.states.name)
       assert_body(topics_config.consumers.metrics.name)
       assert_body(topics_config.consumers.reports.name)
@@ -62,7 +61,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body("There are no available topics in the current cluster")
       end
     end
@@ -78,7 +76,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body(topics_config.consumers.states.name)
         assert_body(topics_config.consumers.metrics.name)
         assert_body(topics_config.consumers.reports.name)
@@ -108,7 +105,6 @@ describe_current do
         assert_body('maxlength="249"') # Topic name length limit
         assert_body('min="1"') # Minimum partitions/replication
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -258,7 +254,6 @@ describe_current do
         assert_body(breadcrumbs)
         assert_body("Topic #{topic_name} Removal Confirmation")
         refute_body(pagination)
-        refute_body(support_message)
 
         # Topic details
         assert_body("You are about to delete topic:")

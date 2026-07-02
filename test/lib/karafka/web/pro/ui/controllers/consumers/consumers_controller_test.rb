@@ -68,7 +68,6 @@ describe_current do
       it do
         refute_body("Pro Feature")
         assert(response.ok?)
-        refute_body(support_message)
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body(no_processes)
@@ -119,7 +118,6 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_body(support_message)
         assert_body(breadcrumbs)
         refute_body(no_processes)
         refute_body(pagination)
@@ -157,7 +155,6 @@ describe_current do
         assert(response.ok?)
         assert_body("0-50")
         assert_body("default-[0-50] (51 partitions total)")
-        refute_body(support_message)
         assert_body(breadcrumbs)
         refute_body(no_processes)
         refute_body(pagination)
@@ -181,7 +178,6 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_body(support_message)
         assert_body(breadcrumbs)
         refute_body(no_processes)
         refute_body(pagination)
@@ -228,7 +224,6 @@ describe_current do
           assert_body("shinra:11:11")
           assert_body("shinra:12:12")
           assert_equal(50, body.scan("shinra:").size)
-          refute_body(support_message)
         end
       end
 
@@ -243,7 +238,6 @@ describe_current do
           assert_body("shinra:35:35")
           assert_body("shinra:35:35")
           assert_equal(50, body.scan("shinra:").size)
-          refute_body(support_message)
         end
       end
 
@@ -255,7 +249,6 @@ describe_current do
           assert_body(pagination)
           assert_body(no_meaningful_results)
           assert_equal(0, body.scan("shinra:").size)
-          refute_body(support_message)
         end
       end
     end
@@ -284,7 +277,6 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_body(support_message)
         refute_body(pagination)
         assert_body(breadcrumbs)
         assert_body(no_processes)
@@ -310,7 +302,6 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_body(support_message)
         refute_body(no_processes)
         refute_body(pagination)
         assert_body(breadcrumbs)
@@ -344,7 +335,6 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_body(support_message)
         refute_body(no_processes)
         refute_body(pagination)
         assert_body(breadcrumbs)
@@ -395,7 +385,6 @@ describe_current do
           assert_body("shinra:11:11")
           assert_body("shinra:12:12")
           assert_equal(50, body.scan("shinra:").size)
-          refute_body(support_message)
         end
       end
 
@@ -410,7 +399,6 @@ describe_current do
           assert_body("shinra:35:35")
           assert_body("shinra:35:35")
           assert_equal(50, body.scan("shinra:").size)
-          refute_body(support_message)
         end
       end
 
@@ -422,7 +410,6 @@ describe_current do
           assert_body(pagination)
           assert_body(no_meaningful_results)
           assert_equal(0, body.scan("shinra:").size)
-          refute_body(support_message)
         end
       end
     end
@@ -451,7 +438,6 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_body(support_message)
         refute_body(pagination)
         assert_body(breadcrumbs)
         assert_body(no_processes)
@@ -463,7 +449,6 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_body(support_message)
         refute_body(no_processes)
         refute_body(pagination)
         assert_body(breadcrumbs)
@@ -504,7 +489,6 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_body(support_message)
         refute_body(no_processes)
         refute_body(pagination)
         assert_body(breadcrumbs)
@@ -546,7 +530,6 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_body(support_message)
         refute_body(no_processes)
         refute_body(pagination)
         assert_body(breadcrumbs)
@@ -581,7 +564,6 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_body(support_message)
         refute_body(no_processes)
         refute_body(pagination)
         assert_body(breadcrumbs)
@@ -632,7 +614,6 @@ describe_current do
           assert_body("shinra:11:11")
           assert_body("shinra:12:12")
           assert_equal(125, body.scan("shinra:").size)
-          refute_body(support_message)
         end
       end
 
@@ -647,7 +628,6 @@ describe_current do
           assert_body("shinra:35:35")
           assert_body("shinra:35:35")
           assert_equal(125, body.scan("shinra:").size)
-          refute_body(support_message)
         end
       end
 
@@ -659,7 +639,6 @@ describe_current do
           assert_body(pagination)
           assert_body(no_meaningful_results)
           assert_equal(0, body.scan("shinra:").size)
-          refute_body(support_message)
         end
       end
     end
@@ -673,7 +652,6 @@ describe_current do
         assert(response.ok?)
         assert_body('<code class="json p-0 m-0"')
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -741,7 +719,6 @@ describe_current do
         assert(response.ok?)
         assert_body('<code class="json p-0 m-0"')
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -775,7 +752,6 @@ describe_current do
         assert_body("Rebalance count")
         assert_body("This process does not consume any")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -799,7 +775,6 @@ describe_current do
         assert_body("Unknown")
         assert_body("This process does not consume any")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -819,7 +794,6 @@ describe_current do
         assert_body("Rebalance count")
         assert_body("This process does not consume any")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -855,7 +829,6 @@ describe_current do
         assert(response.ok?)
         assert_body("This process is not subscribed to any topics")
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 

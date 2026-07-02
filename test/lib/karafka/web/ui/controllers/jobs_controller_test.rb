@@ -41,7 +41,6 @@ describe_current do
         assert(response.ok?)
         assert_body("2023-08-01T09:47:51")
         assert_body("ActiveJob::Consumer")
-        assert_body(support_message)
         assert_body(breadcrumbs)
         refute_body(pagination)
       end
@@ -66,7 +65,6 @@ describe_current do
         assert(response.ok?)
         assert_body("There are no running jobs at the moment")
         refute_body("ActiveJob::Consumer")
-        assert_body(support_message)
         assert_body(breadcrumbs)
         refute_body(pagination)
       end
@@ -91,7 +89,6 @@ describe_current do
 
       it do
         assert(response.ok?)
-        assert_body(support_message)
         assert_body(breadcrumbs)
         assert_body("N/A")
         refute_body(pagination)
@@ -119,7 +116,6 @@ describe_current do
       it do
         assert(response.ok?)
         assert_body("eofed")
-        assert_body(support_message)
         assert_body(breadcrumbs)
         assert_body("N/A")
         refute_body(pagination)
@@ -158,7 +154,6 @@ describe_current do
           assert(response.ok?)
           assert_body("2023-08-01T09:47:51")
           assert_equal(25, body.scan("ActiveJob::Consumer").size)
-          assert_body(support_message)
           assert_body(breadcrumbs)
           assert_body(pagination)
           assert_body("shinra:0:0")
@@ -184,7 +179,6 @@ describe_current do
           assert(response.ok?)
           assert_body("2023-08-01T09:47:51")
           assert_equal(25, body.scan("ActiveJob::Consumer").size)
-          assert_body(support_message)
           assert_body(breadcrumbs)
           assert_body(pagination)
           assert_body("shinra:0:0")
@@ -201,7 +195,6 @@ describe_current do
         it do
           assert(response.ok?)
           assert_body(pagination)
-          assert_body(support_message)
           assert_body("shinra:32:32")
           assert_body("shinra:34:34")
           assert_body("shinra:35:35")
@@ -216,7 +209,6 @@ describe_current do
         it do
           assert(response.ok?)
           assert_body(pagination)
-          assert_body(support_message)
           assert_equal(0, body.scan("shinra:").size)
           assert_body(no_meaningful_results)
         end
@@ -260,7 +252,6 @@ describe_current do
         assert(response.ok?)
         assert_body("2023-08-01T09:47:51")
         assert_body("ActiveJob::Consumer")
-        assert_body(support_message)
         assert_body(breadcrumbs)
         refute_body(pagination)
       end
@@ -285,7 +276,6 @@ describe_current do
         assert(response.ok?)
         assert_body("There are no pending jobs at the moment")
         refute_body("ActiveJob::Consumer")
-        assert_body(support_message)
         assert_body(breadcrumbs)
         refute_body(pagination)
       end
@@ -324,7 +314,6 @@ describe_current do
           assert(response.ok?)
           assert_body("2023-08-01T09:47:51")
           assert_equal(25, body.scan("ActiveJob::Consumer").size)
-          assert_body(support_message)
           assert_body(breadcrumbs)
           assert_body(pagination)
           assert_body("shinra:0:0")
@@ -350,7 +339,6 @@ describe_current do
           assert(response.ok?)
           assert_body("2023-08-01T09:47:51")
           assert_equal(25, body.scan("ActiveJob::Consumer").size)
-          assert_body(support_message)
           assert_body(breadcrumbs)
           assert_body(pagination)
           assert_body("shinra:0:0")
@@ -367,7 +355,6 @@ describe_current do
         it do
           assert(response.ok?)
           assert_body(pagination)
-          assert_body(support_message)
           assert_body("shinra:32:32")
           assert_body("shinra:34:34")
           assert_body("shinra:35:35")
@@ -382,7 +369,6 @@ describe_current do
         it do
           assert(response.ok?)
           assert_body(pagination)
-          assert_body(support_message)
           assert_equal(0, body.scan("shinra:").size)
           assert_body(no_meaningful_results)
         end

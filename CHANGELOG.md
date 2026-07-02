@@ -1,6 +1,7 @@
 # Karafka Web Changelog
 
 ## 1.0.0 (Unreleased)
+- [Enhancement] Remove the OSS "support Karafka Pro" banner that was rendered on every Web UI page for non-Pro users. It's no longer needed at this stage since users are already aware of the Pro offering.
 - [Enhancement] Migrate the Web UI topic declarations to Karafka's new standalone `Karafka::App.declaratives.draw` API (Karafka `2.6.0.beta1`). The Web UI topics are declared as `active false` (Web UI manages their creation and runtime replication factor itself), replacing the deprecated routing-based `config(active: false)` bridge that was previously called on each routing topic.
 - [Fix] Make the `create_topic` test helper wait until a freshly created topic's partitions are actually readable (expected partition count visible and watermark offsets queryable), not just until the topic name appears in cluster metadata. This removes a flaky failure in multi-partition specs (e.g. the topics distribution controller) that intermittently 404'd because watermark offsets were read before the partition leaders had propagated.
 - [Fix] Stop the array paginator from offering a "Next" link to an empty page when the last page is exactly full. `Paginators::Arrays` decided "is there a next page?" from whether the current page was full, so any list whose total size was an exact multiple of `per_page` (25/50/75/...) surfaced a Next link leading to an empty page. It now reports the last page based on whether a further slice actually exists.

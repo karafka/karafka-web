@@ -58,7 +58,6 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_body(support_message)
         refute_body(pagination)
         assert_body(breadcrumbs)
         assert_body(no_processes)
@@ -70,7 +69,6 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_body(support_message)
         refute_body(no_processes)
         refute_body(pagination)
         assert_body(breadcrumbs)
@@ -111,7 +109,6 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_body(support_message)
         refute_body(no_processes)
         refute_body(pagination)
         assert_body(breadcrumbs)
@@ -154,7 +151,6 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_body(support_message)
         refute_body(no_processes)
         refute_body(pagination)
         assert_body(breadcrumbs)
@@ -190,7 +186,6 @@ describe_current do
 
       it do
         assert(response.ok?)
-        refute_body(support_message)
         refute_body(no_processes)
         refute_body(pagination)
         assert_body(breadcrumbs)
@@ -241,7 +236,6 @@ describe_current do
           assert_body("shinra:11:11")
           assert_body("shinra:12:12")
           assert_equal(125, body.scan("shinra:").size)
-          refute_body(support_message)
         end
       end
 
@@ -256,7 +250,6 @@ describe_current do
           assert_body("shinra:35:35")
           assert_body("shinra:35:35")
           assert_equal(125, body.scan("shinra:").size)
-          refute_body(support_message)
         end
       end
 
@@ -268,7 +261,6 @@ describe_current do
           assert_body(pagination)
           assert_body(no_meaningful_results)
           assert_equal(0, body.scan("shinra:").size)
-          refute_body(support_message)
         end
       end
     end

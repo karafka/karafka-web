@@ -57,7 +57,6 @@ describe_current do
         assert(response.ok?)
         assert_body(breadcrumbs)
         refute_body(pagination)
-        refute_body(support_message)
         assert_body(not_operable)
       end
     end
@@ -70,7 +69,6 @@ describe_current do
         assert_body(breadcrumbs)
         assert_body(not_operable)
         refute_body(pagination)
-        refute_body(support_message)
         refute_body("Schedule 1.0.0")
       end
     end
@@ -266,7 +264,6 @@ describe_current do
         assert_body(breadcrumbs)
         assert_body(no_logs)
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -286,7 +283,6 @@ describe_current do
         assert_body('<span class="badge  badge-success">Success</span>')
         refute_body(no_logs)
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -306,7 +302,6 @@ describe_current do
         assert_body('<span class="badge  badge-error">Error</span>')
         refute_body(no_logs)
         refute_body(pagination)
-        refute_body(support_message)
       end
     end
 
@@ -329,7 +324,6 @@ describe_current do
         assert_body('<span class="badge  badge-error">Error</span>')
         assert_body(pagination)
         refute_body(no_logs)
-        refute_body(support_message)
       end
     end
 
@@ -352,7 +346,6 @@ describe_current do
         assert_body('<span class="badge  badge-error">Error</span>')
         assert_body(pagination)
         refute_body(no_logs)
-        refute_body(support_message)
       end
     end
   end
