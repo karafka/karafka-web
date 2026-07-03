@@ -18,12 +18,10 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<% alert_box_info('Recurring Tasks Data Unavailable') do %>
-  <p class="mb-2">
-    We are unable to display data related to recurring tasks. Please ensure that:
-  </p>
+<% empty_state('Recurring Tasks Data Unavailable', icon: 'gear') do %>
+  We are unable to display data related to recurring tasks. Please ensure that:
 
-  <ul class="list-disc list-inside">
+  <ul class="list-disc list-inside mt-2 text-left">
     <li>Recurring Tasks are enabled in your routing configuration.</li>
     <li>The necessary Kafka topics have been created.</li>
     <li>A schedule has been defined.</li>

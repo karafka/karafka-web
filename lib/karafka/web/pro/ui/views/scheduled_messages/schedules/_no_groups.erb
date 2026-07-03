@@ -18,12 +18,10 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<% alert_box_info 'Scheduled Messages Data Not Available' do %>
-  <p class="mb-2">
-    We are unable to display data related to scheduled messages. Please ensure that:
-  </p>
+<% empty_state 'Scheduled Messages Data Not Available', icon: 'gear' do %>
+  We are unable to display data related to scheduled messages. Please ensure that:
 
-  <ul class="list-disc list-inside">
+  <ul class="list-disc list-inside mt-2 text-left">
     <li>Scheduled Messages are enabled in your routing configuration.</li>
     <li>The necessary Kafka topics have been created.</li>
     <li>Your Karafka server, with scheduled messages awareness, is running and has persisted the state.</li>

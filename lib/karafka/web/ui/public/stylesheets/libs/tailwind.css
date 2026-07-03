@@ -43,6 +43,7 @@
 @source inline('steps{,-horizontal,-vertical}');
 @source inline('step{,-primary,-secondary,-accent,-success,-warning,-error,-info,-neutral}');
 @source inline('form-control');
+@source inline('size-12');
 @source inline('label{,-text,-text-alt}');
 
 /*
@@ -451,6 +452,12 @@
 
 @utility badge-secondary {
   @apply text-base-100;
+}
+
+@utility btn-active {
+  &.btn-outline {
+    color: var(--btn-fg);
+  }
 }
 
 @utility actions {
