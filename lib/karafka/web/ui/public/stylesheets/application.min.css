@@ -3491,6 +3491,7 @@
   .breadcrumbs-wrapper {
     grid-column: span 12 / span 12;
     margin-bottom: calc(var(--spacing) * 3);
+    min-width: 0;
   }
   .tab-container-wrapper {
     grid-column: span 12 / span 12;
@@ -5588,6 +5589,15 @@
     padding-top: 0;
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
+    & > ul,
+  & > ol,
+  & > menu {
+      flex-wrap: wrap;
+      white-space: normal;
+    }
+    & a {
+      overflow-wrap: anywhere;
+    }
   }
   .pt-5 {
     padding-top: calc(var(--spacing) * 5);
@@ -5672,6 +5682,9 @@
   .font-normal {
     --tw-font-weight: var(--font-weight-normal);
     font-weight: var(--font-weight-normal);
+  }
+  .page-title {
+    overflow-wrap: anywhere;
   }
   .topic-tile-link {
     color: var(--color-blue-500);
