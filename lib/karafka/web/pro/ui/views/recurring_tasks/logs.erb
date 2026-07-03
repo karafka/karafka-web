@@ -24,7 +24,7 @@
 
 <div class="col-span-12">
   <% if @logs.empty? && params.current_page <= 1 %>
-    <%== alert_info('There are no available logs.') %>
+    <% empty_state('There are no available logs.', icon: 'document') %>
   <% elsif @logs.empty? %>
     <%== partial 'shared/no_paginated_data' %>
   <% else %>
