@@ -27,7 +27,7 @@
     <% end %>
   </td>
   <td class="wrap-text"><%= config.value %></td>
-  <td><%= config.default? %></td>
-  <td><%= config.sensitive? %></td>
-  <td><%= config.read_only? %></td>
+  <td><%== config.default? ? badge_success(true) : badge_secondary(false) %></td>
+  <td><%== config.sensitive? ? badge_success(true) : badge_secondary(false) %></td>
+  <td><%== config.read_only? ? badge_success(true) : badge_secondary(false) %></td>
 </tr>
