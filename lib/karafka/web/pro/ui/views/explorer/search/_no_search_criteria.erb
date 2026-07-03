@@ -19,7 +19,5 @@
 <%# Contact: contact@karafka.io %>
 
 <div id="no-search-criteria">
-  <%==
-    alert_info('No search criteria provided. Press the Edit button to perform a search.')
-  %>
+  <% empty_state('No search criteria provided. Press the Search button to perform a search.', icon: 'search') %>
 </div>

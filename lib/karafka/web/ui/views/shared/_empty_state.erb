@@ -1,0 +1,26 @@
+<%# Standardized empty state display. Icons: inbox, document, search, folder, key %>
+<%
+  icon_name ||= 'inbox'
+  description ||= nil
+  action ||= nil
+  action_path ||= nil
+  card = true if card.nil?
+%>
+
+<div class="<%= card ? 'card bg-base-100 border border-gray-300' : '' %>">
+  <div class="<%= card ? 'card-body' : '' %> items-center text-center py-12 flex flex-col">
+    <div class="text-base-content/30 mx-auto">
+      <%== icon(icon_name == 'search' ? :magnifying_glass : icon_name.to_sym, size: 12) %>
+    </div>
+
+    <p class="text-base-content/60 mt-2"><%== message %></p>
+
+    <% if description %>
+      <div class="text-base-content/40 text-sm mt-1"><%== description %></div>
+    <% end %>
+
+    <% if action && action_path %>
+      <%== link_button_primary_sm(action, action_path, classes: 'mt-4') %>
+    <% end %>
+  </div>
+</div>

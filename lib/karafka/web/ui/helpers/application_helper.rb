@@ -304,9 +304,46 @@ module Karafka
 
           # Renders the svg icon out of our icon set
           # @param name [String, Symbol] name of the icon
+          # @param size [Integer, nil] optional size override (defaults to the icon's own size)
           # @return [String] svg icon
-          def icon(name)
-            render "shared/icons/_#{name}"
+          def icon(name, size: nil)
+            render "shared/icons/_#{name}", locals: { size: size }
+          end
+
+          # Renders the standardized "nothing here" empty state (icon + message, optionally with
+          # a description and a call-to-action button). The description can also be given as a
+          # block, in which case it may contain arbitrary markup (e.g. a checklist).
+          #
+          # @param message [String] primary message describing what's empty
+          # @param icon [String, Symbol] one of: inbox, document, search, folder, key
+          # @param description [String, nil] optional secondary, smaller explanatory text
+          # @param action [String, nil] optional call-to-action button label
+          # @param action_path [String, nil] path the call-to-action button should link to
+          # @param card [Boolean, nil] whether to wrap the state in a bordered card (default true)
+          # @param block [Proc] optional block producing the description markup
+          # @return [String] empty state html
+          def empty_state(
+            message,
+            icon: "inbox",
+            description: nil,
+            action: nil,
+            action_path: nil,
+            card: nil,
+            &block
+          )
+            description = capture_erb(&block) if block
+
+            inject_erb partial(
+              "shared/empty_state",
+              locals: {
+                message: message,
+                icon_name: icon,
+                description: description,
+                action: action,
+                action_path: action_path,
+                card: card
+              }
+            )
           end
 
           # Merges two hashes deeply, combining nested hashes recursively.

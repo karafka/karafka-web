@@ -1,0 +1,41 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+  <% %w[inbox document search folder key].each do |icon_name| %>
+    <div>
+      <% empty_state("No #{icon_name} data", icon: icon_name) %>
+    </div>
+  <% end %>
+</div>
+
+<div class="mb-6"></div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div>
+    <% empty_state('With a description', description: 'A smaller, muted line of supporting text.') %>
+  </div>
+
+  <div>
+    <% empty_state('With a call to action', action: 'Create One', action_path: '#dummy') %>
+  </div>
+</div>
+
+<div class="mb-6"></div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div>
+    <% empty_state('Without the card wrapper', card: false) %>
+  </div>
+
+  <div>
+    <% empty_state('With a checklist description', icon: 'gear') do %>
+      Please ensure that:
+
+      <ul class="list-disc list-inside mt-2 text-left">
+        <li>The first condition is met.</li>
+        <li>The second condition is met.</li>
+        <li>The third condition is met.</li>
+      </ul>
+    <% end %>
+  </div>
+</div>
+
+<div class="mb-6"></div>

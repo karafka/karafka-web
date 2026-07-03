@@ -117,9 +117,7 @@
 
 <% if subscription_group.topics.empty? %>
   <div class="mb-6">
-    <%==
-      alert_info('This process does not consume any messages from any topics of this subscription group.')
-    %>
+    <% empty_state('This process does not consume any messages from any topics of this subscription group.', icon: 'folder') %>
   </div>
 <% else %>
   <% subscription_group.topics.each do |topic| %>
