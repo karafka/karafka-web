@@ -85,10 +85,26 @@
 
 @utility breadcrumbs-wrapper {
   @apply col-span-12 mb-3;
+  min-width: 0;
 }
 
 @utility breadcrumbs {
   @apply text-sm pt-0;
+
+  & > ul,
+  & > ol,
+  & > menu {
+    flex-wrap: wrap;
+    white-space: normal;
+  }
+
+  & a {
+    overflow-wrap: anywhere;
+  }
+}
+
+@utility page-title {
+  overflow-wrap: anywhere;
 }
 
 @utility custom-tab {
