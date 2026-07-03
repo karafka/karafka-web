@@ -70,10 +70,6 @@
     @apply mt-1 badge-sm;
   }
 
-  .row-table & {
-    @apply mt-1 badge-sm;
-  }
-
   .table_metadata & {
     @apply badge-sm;
   }
@@ -389,67 +385,11 @@
     @apply text-right;
   }
 
-  .row-table td:has(&) {
-    @apply text-right;
-  }
-
   .data-table th:has(&) {
     @apply text-right;
   }
 
-  .row-table th:has(&) {
-    @apply text-right;
-  }
-
   @apply font-normal;
-}
-
-@utility row-table {
-  @apply table w-full bg-base-100 border border-gray-300 rounded-md mb-5;
-
-  [data-theme='corporate'] & thead {
-    @apply bg-gray-100;
-  }
-
-  [data-theme='corporate'] & tbody tr {
-    @apply even:bg-gray-50 hover:bg-base-200;
-  }
-
-  & thead th {
-    @apply border border-gray-300 p-2;
-  }
-
-  & thead tr {
-    @apply align-middle;
-  }
-
-  [data-theme='dark'] & tbody tr {
-    @apply even:bg-base-200 hover:bg-base-300;
-  }
-
-  & tbody td {
-    @apply border border-y-gray-300 p-2 border-x-gray-100;
-  }
-
-  & tbody td:first-child {
-    @apply border-l-gray-300;
-  }
-
-  & tbody td:last-child {
-    @apply border-r-gray-300;
-  }
-
-  & .badge {
-    @apply mt-1 badge-sm;
-  }
-
-  & td:has(.btn) {
-    @apply text-center;
-  }
-}
-
-@utility row-table-wrapper {
-  @apply col-span-12 mb-3 overflow-x-auto;
 }
 
 @utility table_metadata {
