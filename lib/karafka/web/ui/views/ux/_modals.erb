@@ -1,0 +1,31 @@
+<div>
+  <button
+    type="button"
+    class="btn btn-primary btn-sm"
+    data-modal-open="ux-modal-demo"
+  >
+    Open .modal
+  </button>
+
+  <dialog id="ux-modal-demo" class="modal">
+    <form method="dialog" class="modal-backdrop">
+      <button class="cursor-default"></button>
+    </form>
+
+    <div class="modal-box modal-box w-11/12 max-w-3xl">
+      <form method="dialog" class="modal-backdrop">
+        <button class="btn-action btn-ghost absolute right-4 top-4">
+          <%== icon(:x_mark) %>
+        </button>
+      </form>
+
+      <h3 class="text-lg mb-3">.modal .modal-box</h3>
+
+      <p class="text-base-content/70">
+        This is a `&lt;dialog class="modal"&gt;` opened via the native `showModal()` API, matching
+        the Explorer search modal markup.
+      </p>
+    </div>
+  </dialog>
+</div>
+<div class="mb-6"></div>

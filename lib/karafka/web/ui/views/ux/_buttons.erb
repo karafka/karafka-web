@@ -45,3 +45,27 @@
   <% end %>
 </div>
 <div class="mb-6"></div>
+
+<div>
+  <span class="btn btn-ghost">.btn .btn-ghost</span>
+  <button type="button" class="btn btn-square btn-ghost">
+    <%== icon(:x_mark) %>
+  </button>
+</div>
+<div class="mb-6"></div>
+
+<div class="actions justify-start">
+  <a href="#dummy" class="btn-action" title=".btn-action (icon-only)">
+    <%== icon(:pencil) %>
+  </a>
+  <a href="#dummy" class="btn-action active" title=".btn-action.active">
+    <%== icon(:trash) %>
+  </a>
+</div>
+<div class="mb-6"></div>
+
+<div>
+  <button type="button" class="btn btn-primary btn-sm btn-lockable">.btn-lockable (click me)</button>
+  <a href="#dummy" class="btn btn-error btn-sm confirm-action">.confirm-action (click me)</a>
+</div>
+<div class="mb-6"></div>

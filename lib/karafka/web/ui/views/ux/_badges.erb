@@ -19,3 +19,35 @@
   <%== badge_error '#badge_error' %>
 </div>
 <div class="mb-6"></div>
+
+<div>
+  <% %w[running quiet stopped].each do |status| %>
+    <span class="badge <%= status_badge(status) %>">status_badge('<%= status %>')</span>
+  <% end %>
+</div>
+<div class="mb-6"></div>
+
+<div>
+  <% { -1 => 'negative', 0 => 'zero', 1 => 'positive' }.each do |trend, label| %>
+    <span class="badge <%= lag_trend_badge(trend) %>">lag_trend_badge(<%= label %>)</span>
+  <% end %>
+</div>
+<div class="mb-6"></div>
+
+<div>
+  <% %w[active down].each do |state| %>
+    <span class="badge <%= kafka_state_badge(state) %>">kafka_state_badge('<%= state %>')</span>
+  <% end %>
+</div>
+<div class="mb-6"></div>
+
+<div>
+  <% [:active, :at_risk, :stopped].each do |risk_state| %>
+    <%
+      details = Struct.new(:lso_risk_state).new(risk_state)
+      classes = lso_risk_state_badge(details)
+    %>
+    <span class="badge <%= classes %>">lso_risk_state_badge(<%= risk_state %>)</span>
+  <% end %>
+</div>
+<div class="mb-6"></div>
