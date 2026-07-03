@@ -45,17 +45,23 @@ module TopicsManagerHelper
   # @param topic [String] topic name
   # @param payload [String, nil] data we want to send
   # @param details [Hash] other details
+  # @return [Rdkafka::Producer::DeliveryReport] delivery report of the produced message
   def produce(topic, payload = SecureRandom.uuid, details = {})
     type = details.delete(:type) || :regular
 
-    PRODUCERS.public_send(type).produce_sync(
+    report = PRODUCERS.public_send(type).produce_sync(
       **details,
       topic: topic,
       payload: payload
     )
 
-    # Transactional messages may need a moment to become visible under heavy load
-    sleep(0.1) if type == :transactional
+    # A transactional produce also writes a commit control record at the next offset. Poll
+    # until it is actually visible instead of relying on a fixed sleep, which is a race under
+    # CI load: a slow broker/runner can leave the control record not yet propagated once a
+    # fixed sleep elapses, intermittently failing tests that immediately read it back.
+    wait_for_offset_visible(topic, report.partition, report.offset + 1) if type == :transactional
+
+    report
   end
 
   # Sends multiple messages to kafka efficiently
@@ -153,6 +159,32 @@ module TopicsManagerHelper
 
       sleep(0.1)
       retry
+    end
+  end
+
+  # Polls the partition high watermark offset until it moves past the given offset or the
+  # timeout elapses. Used after a transactional produce to wait until its commit control record
+  # (written at `report.offset + 1`) is actually visible to a fresh consumer, instead of relying
+  # on a fixed sleep that can be too short under CI load.
+  #
+  # @param topic [String] topic name
+  # @param partition [Integer] partition id
+  # @param offset [Integer] offset that should become visible (readable)
+  # @param timeout [Numeric] maximum time to wait in seconds
+  def wait_for_offset_visible(topic, partition, offset, timeout: 10)
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
+
+    loop do
+      _low, high = Karafka::Admin.read_watermark_offsets(topic, partition)
+
+      return if high > offset
+
+      if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
+        raise "Timed out after #{timeout}s waiting for offset #{offset} to become visible " \
+              "on #{topic}/#{partition}"
+      end
+
+      sleep(0.1)
     end
   end
 
