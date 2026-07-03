@@ -266,7 +266,7 @@ describe_current do
         assert_body("Consumer group offsets associated with this topic will be lost")
 
         # Pre-deletion checklist
-        assert_body("Before proceeding, ensure that:")
+        assert_body("Before Proceeding, Ensure That")
         assert_body("All applications consuming from this topic have been properly")
         assert_body("All producers to this topic have been stopped")
         assert_body("You have backed up any critical data if needed")

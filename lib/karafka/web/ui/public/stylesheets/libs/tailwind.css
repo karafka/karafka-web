@@ -559,7 +559,7 @@
 
 @utility status-row-stopping {
   table & td:first-child {
-    @apply border-l border-l-error;
+    @apply border-l border-l-warning;
   }
 }
 

@@ -30,7 +30,7 @@
   <td><%== config.default? ? badge_success(true) : badge_secondary(false) %></td>
   <td><%== config.sensitive? ? badge_success(true) : badge_secondary(false) %></td>
   <td><%== config.read_only? ? badge_success(true) : badge_secondary(false) %></td>
-  <td>
+  <td class="options">
     <% link_class = config.read_only? ? 'btn-disabled' : '' %>
     <a
       href="<%= topics_path(@topic.topic_name, 'config', config.name, 'edit') %>"

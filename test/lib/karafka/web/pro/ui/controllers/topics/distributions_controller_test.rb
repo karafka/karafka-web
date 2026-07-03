@@ -194,7 +194,7 @@ describe_current do
         assert_body("Changes may take several minutes to be visible")
 
         # Hints
-        assert_body("Before increasing partitions:")
+        assert_body("Before Increasing Partitions")
         assert_body("Ensure all consumers support dynamic partition detection")
         assert_body("Consider increasing partitions during low-traffic periods")
       end

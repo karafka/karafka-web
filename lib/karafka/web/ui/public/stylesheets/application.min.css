@@ -5074,7 +5074,7 @@
     table & td:first-child {
       border-left-style: var(--tw-border-style);
       border-left-width: 1px;
-      border-left-color: var(--color-error);
+      border-left-color: var(--color-warning);
     }
   }
   .status-row-warning {

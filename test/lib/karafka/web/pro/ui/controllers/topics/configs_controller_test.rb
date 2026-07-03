@@ -87,7 +87,7 @@ describe_current do
           assert_body("Configuration Update Warning")
           assert_body("Changing topic configurations may affect topic behavior")
           assert_body("Some changes may take time to propagate")
-          assert_body("Before updating this configuration:")
+          assert_body("Before Updating This Configuration")
         end
       end
 

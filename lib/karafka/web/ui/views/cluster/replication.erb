@@ -1,4 +1,4 @@
-<% view_title 'Cluster Informations' %>
+<% view_title 'Cluster' %>
 
 <%== partial 'cluster/tabs' %>
 
@@ -8,7 +8,7 @@
   <% elsif @partitions.empty? %>
     <%== partial 'shared/no_paginated_data' %>
   <% else %>
-    <div class="data-table-wraper">
+    <div class="data-table-wrapper">
       <table class="data-table">
         <thead>
           <tr>
