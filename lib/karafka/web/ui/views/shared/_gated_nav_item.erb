@@ -1,18 +1,11 @@
 <li>
-  <div class="dropdown">
-    <button type="button" class="sidebar-nav-item disabled w-full flex items-center gap-2 text-left" title="Pro Feature">
-      <%== icon(icon_name) %>
-      <span class="sidebar-nav-item-label"><%= label %></span>
-    </button>
-
-    <div class="dropdown-content p-4 bg-base-100 w-64 border border-base-300 shadow-lg z-50 rounded-box text-sm text-base-content">
-      <p class="font-semibold mb-1">Pro Feature</p>
-
-      <p class="text-base-content/70 mb-3"><%= label %> is available only to Karafka Pro users.</p>
-
-      <a href="https://karafka.io/#become-pro" target="_blank" class="link link-primary">
-        Learn more about Pro &rarr;
-      </a>
-    </div>
-  </div>
+  <button
+    type="button"
+    class="sidebar-nav-item disabled w-full flex items-center gap-2 text-left cursor-default"
+    title="Available in Karafka Pro"
+    disabled
+  >
+    <%== icon(icon_name) %>
+    <span class="sidebar-nav-item-label"><%= label %></span>
+  </button>
 </li>

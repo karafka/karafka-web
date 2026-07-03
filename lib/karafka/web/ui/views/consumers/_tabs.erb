@@ -3,33 +3,20 @@
     <a
       href="<%= consumers_path('overview') %>"
       class="custom-tab <%= nav_class(include: 'overview') %>"
-      title="Pro Feature"
     >
       Overview
     </a>
 
-    <a
-      href="<%= consumers_path('performance') %>"
-      class="custom-tab disabled <%= nav_class(include: 'performance') %>"
-      title="Pro Feature"
-    >
+    <button type="button" class="custom-tab disabled cursor-default" title="Available in Karafka Pro" disabled>
       Performance
-    </a>
+    </button>
 
-    <a
-      href="<%= consumers_path('controls') %>"
-      class="custom-tab disabled <%= nav_class(include: 'controls') %>"
-      title="Pro Feature"
-    >
+    <button type="button" class="custom-tab disabled cursor-default" title="Available in Karafka Pro" disabled>
       Controls
-    </a>
+    </button>
 
-    <a
-      href="<%= consumers_path('commands') %>"
-      class="custom-tab disabled <%= nav_class(include: 'commands') %>"
-      title="Pro Feature"
-    >
+    <button type="button" class="custom-tab disabled cursor-default" title="Available in Karafka Pro" disabled>
       Commands
-    </a>
+    </button>
   </div>
 </div>

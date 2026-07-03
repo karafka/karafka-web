@@ -9,15 +9,15 @@
           ***
         <% elsif k2.to_s == 'tags' %>
           <%== tags(v2) %>
-        <% elsif k2.to_s == 'first_offset' %>
+        <% elsif k2.to_s == 'first_offset' && Karafka.pro? %>
           <a href="<%= explorer_topics_path(v[:topic], v[:partition], v[:first_offset]) %>">
             <%= v2 %>
           </a>
-        <% elsif k2.to_s == 'last_offset' %>
+        <% elsif k2.to_s == 'last_offset' && Karafka.pro? %>
           <a href="<%= explorer_topics_path(v[:topic], v[:partition], v[:last_offset]) %>">
             <%= v2 %>
           </a>
-        <% elsif k2.to_s == 'committed_offset' && v2 >=0 %>
+        <% elsif k2.to_s == 'committed_offset' && v2 >= 0 && Karafka.pro? %>
           <a href="<%= explorer_topics_path(v[:topic], v[:partition], v[:committed_offset]) %>">
             <%= v2 %>
           </a>

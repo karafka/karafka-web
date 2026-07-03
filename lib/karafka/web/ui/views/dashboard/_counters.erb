@@ -24,12 +24,19 @@
             </a>
           </li>
           <li class="p-1">
-            <a href="<%= root_path('health/lags') %>" class="hover:text-primary">
+            <% if Karafka.pro? %>
+              <a href="<%= root_path('health/lags') %>" class="hover:text-primary">
+                <div class="count mb-1 text-md">
+                  <%= number_with_delimiter @counters.lag_hybrid, ' ' %>
+                </div>
+                <div class="desc text-base-content/70">Total lag</div>
+              </a>
+            <% else %>
               <div class="count mb-1 text-md">
                 <%= number_with_delimiter @counters.lag_hybrid, ' ' %>
               </div>
               <div class="desc text-base-content/70">Total lag</div>
-            </a>
+            <% end %>
           </li>
           <li class="p-1">
             <a href="<%= root_path('jobs/running') %>" class="hover:text-primary">
@@ -62,12 +69,19 @@
             <div class="desc text-base-content/70">Retries</div>
           </li>
           <li class="p-1">
-            <a href="<%= root_path('dlq') %>" class="hover:text-primary">
+            <% if Karafka.pro? %>
+              <a href="<%= root_path('dlq') %>" class="hover:text-primary">
+                <div class="count mb-1 text-md">
+                  <%= number_with_delimiter @counters.dead, ' ' %>
+                </div>
+                <div class="desc text-base-content/70">Dead</div>
+              </a>
+            <% else %>
               <div class="count mb-1 text-md">
                 <%= number_with_delimiter @counters.dead, ' ' %>
               </div>
               <div class="desc text-base-content/70">Dead</div>
-            </a>
+            <% end %>
           </li>
         </ul>
       </div>

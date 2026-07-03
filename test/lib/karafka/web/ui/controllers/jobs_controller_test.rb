@@ -160,7 +160,7 @@ describe_current do
           assert_body("shinra:1:1")
           assert_body("shinra:11:11")
           assert_body("shinra:12:12")
-          assert_equal(50, body.scan("shinra:").size)
+          assert_equal(25, body.scan("shinra:").size)
         end
       end
 
@@ -185,7 +185,7 @@ describe_current do
           assert_body("shinra:1:1")
           assert_body("shinra:11:11")
           assert_body("shinra:12:12")
-          assert_equal(50, body.scan("shinra:").size)
+          assert_equal(25, body.scan("shinra:").size)
         end
       end
 
@@ -199,7 +199,7 @@ describe_current do
           assert_body("shinra:34:34")
           assert_body("shinra:35:35")
           assert_body("shinra:35:35")
-          assert_equal(50, body.scan("shinra:").size)
+          assert_equal(25, body.scan("shinra:").size)
         end
       end
 
@@ -320,7 +320,7 @@ describe_current do
           assert_body("shinra:1:1")
           assert_body("shinra:11:11")
           assert_body("shinra:12:12")
-          assert_equal(50, body.scan("shinra:").size)
+          assert_equal(25, body.scan("shinra:").size)
         end
       end
 
@@ -345,7 +345,7 @@ describe_current do
           assert_body("shinra:1:1")
           assert_body("shinra:11:11")
           assert_body("shinra:12:12")
-          assert_equal(50, body.scan("shinra:").size)
+          assert_equal(25, body.scan("shinra:").size)
         end
       end
 
@@ -359,7 +359,7 @@ describe_current do
           assert_body("shinra:34:34")
           assert_body("shinra:35:35")
           assert_body("shinra:35:35")
-          assert_equal(50, body.scan("shinra:").size)
+          assert_equal(25, body.scan("shinra:").size)
         end
       end
 

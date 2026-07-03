@@ -1,8 +1,6 @@
 <tr>
   <td>
-    <a href="<%= consumer_path(job.process.id, 'subscriptions') %>">
-      <%== truncate(job.process.id, strategy: :middle) %>
-    </a>
+    <%== truncate(job.process.id, strategy: :middle) %>
   </td>
   <td>
     <span class="badge badge-secondary" title="Consumer group: <%= job.consumer_group %>">

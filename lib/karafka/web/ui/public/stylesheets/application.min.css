@@ -55,7 +55,6 @@
     --text-8xl--line-height: 1;
     --font-weight-light: 300;
     --font-weight-normal: 400;
-    --font-weight-semibold: 600;
     --font-weight-bold: 700;
     --radius-sm: 0.25rem;
     --radius-md: 0.375rem;
@@ -5492,10 +5491,6 @@
     --tw-font-weight: var(--font-weight-normal);
     font-weight: var(--font-weight-normal);
   }
-  .font-semibold {
-    --tw-font-weight: var(--font-weight-semibold);
-    font-weight: var(--font-weight-semibold);
-  }
   .page-title {
     overflow-wrap: anywhere;
   }
@@ -5804,9 +5799,6 @@
     @layer daisyui.l1.l2 {
       color: var(--color-warning);
     }
-  }
-  .text-base-content {
-    color: var(--color-base-content);
   }
   .text-base-content\/30 {
     color: var(--color-base-content);
