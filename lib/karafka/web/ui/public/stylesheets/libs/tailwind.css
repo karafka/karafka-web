@@ -141,6 +141,11 @@
 
 @utility alert {
   @apply rounded-sm;
+
+  & span {
+    overflow-wrap: anywhere;
+    min-width: 0;
+  }
 }
 
 @utility alert-primary {

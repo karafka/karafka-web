@@ -4977,6 +4977,10 @@
   }
   .alert {
     border-radius: var(--radius-sm);
+    & span {
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
   }
   .rounded {
     border-radius: 0.25rem;
