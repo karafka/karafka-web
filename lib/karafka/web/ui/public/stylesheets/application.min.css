@@ -3933,6 +3933,7 @@
   .topic-tile-text {
     margin-bottom: 0;
     padding: calc(var(--spacing) * 2);
+    overflow-wrap: anywhere;
   }
   .h2 {
     margin-bottom: calc(var(--spacing) * 4);
@@ -4976,6 +4977,10 @@
   }
   .alert {
     border-radius: var(--radius-sm);
+    & span {
+      overflow-wrap: anywhere;
+      min-width: 0;
+    }
   }
   .rounded {
     border-radius: 0.25rem;
