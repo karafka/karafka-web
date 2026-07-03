@@ -32,16 +32,7 @@
       </a>
     </li>
 
-    <li>
-      <a
-        class="sidebar-nav-item disabled"
-        href="<%= root_path('health/overview') %>"
-        title="Pro Feature"
-      >
-        <%== icon(:heart) %>
-        <span class="sidebar-nav-item-label">Health</span>
-      </a>
-    </li>
+    <%== partial 'shared/gated_nav_item', locals: { icon_name: :heart, label: 'Health' } %>
 
     <li>
       <a
@@ -53,37 +44,11 @@
       </a>
     </li>
 
-    <li>
-      <a
-        class="sidebar-nav-item disabled menu-<%= nav_class(start_with: '/explorer') %>"
-        href="<%= explorer_path %>"
-        title="Pro Feature"
-      >
-        <%== icon(:document_glass) %>
-        <span class="sidebar-nav-item-label">Explorer</span>
-      </a>
-    </li>
+    <%== partial 'shared/gated_nav_item', locals: { icon_name: :document_glass, label: 'Explorer' } %>
 
-    <li>
-      <a
-        class="sidebar-nav-item disabled menu-<%= nav_class(start_with: '/recurring_tasks') %>"
-        href="<%= root_path('recurring_tasks') %>"
-        title="Pro Feature"
-      >
-        <%== icon(:arrow_path_rounded) %>
-        <span class="sidebar-nav-item-label">Cron</span>
-      </a>
-    </li>
+    <%== partial 'shared/gated_nav_item', locals: { icon_name: :arrow_path_rounded, label: 'Cron' } %>
 
-    <li>
-      <a
-        class="sidebar-nav-item disabled menu-<%= nav_class(start_with: '/scheduled_messages') %>"
-        href="<%= root_path('scheduled_messages') %>"
-      >
-        <%== icon(:calendar) %>
-        <span class="sidebar-nav-item-label">Schedules</span>
-      </a>
-    </li>
+    <%== partial 'shared/gated_nav_item', locals: { icon_name: :calendar, label: 'Schedules' } %>
 
     <li>
       <a
@@ -95,16 +60,7 @@
       </a>
     </li>
 
-    <li>
-      <a
-        class="sidebar-nav-item disabled menu-<%= nav_class(start_with: '/dlq') %>"
-        href="<%= root_path('dlq') %>"
-        title="Pro Feature"
-      >
-        <%== icon(:x_circle) %>
-        <span class="sidebar-nav-item-label">Dead</span>
-      </a>
-    </li>
+    <%== partial 'shared/gated_nav_item', locals: { icon_name: :x_circle, label: 'Dead' } %>
 
     <li>
       <a
@@ -116,16 +72,7 @@
       </a>
     </li>
 
-    <li>
-      <a
-        class="sidebar-nav-item disabled menu-<%= nav_class(start_with: '/topics') %>"
-        href="<%= root_path('topics') %>"
-        title="Pro Feature"
-      >
-        <%== icon(:list_bullets) %>
-        <span class="sidebar-nav-item-label">Topics</span>
-      </a>
-    </li>
+    <%== partial 'shared/gated_nav_item', locals: { icon_name: :list_bullets, label: 'Topics' } %>
 
     <li>
       <a
