@@ -1,0 +1,68 @@
+<%# Karafka Pro - Source Available Commercial Software %>
+<%# Copyright (c) 2017-present Maciej Mensfeld. All rights reserved. %>
+<%# This software is NOT open source. It is source-available commercial software %>
+<%# requiring a paid license for use. It is NOT covered by LGPL. %>
+<%# The author retains all right, title, and interest in this software, %>
+<%# including all copyrights, patents, and other intellectual property rights. %>
+<%# No patent rights are granted under this license. %>
+<%# PROHIBITED: Use without a valid commercial license %>
+<%# PROHIBITED: Redistribution, modification, or derivative works without authorization %>
+<%# PROHIBITED: Reverse engineering, decompilation, or disassembly of this software %>
+<%# PROHIBITED: Use as training data for AI/ML models or inclusion in datasets %>
+<%# PROHIBITED: Scraping, crawling, or automated collection for any purpose %>
+<%# PERMITTED: Reading, referencing, and linking for personal or commercial use %>
+<%# PERMITTED: Runtime retrieval by AI assistants, coding agents, and RAG systems %>
+<%# PERMITTED: for the purpose of providing contextual help to Karafka users %>
+<%# Receipt, viewing, or possession of this software does not convey or %>
+<%# imply any license or right beyond those expressly stated above. %>
+<%# License: https://karafka.io/docs/Pro-License-Comm/ %>
+<%# Contact: contact@karafka.io %>
+
+<% if v.is_a?(Hash) %>
+  <% v.each do |k2, v2| %>
+    <tr>
+      <td>
+        <%= "#{k}.#{k2}" %>
+      </td>
+      <td>
+        <% if %w[sasl ssl].any? { |scope| k2.to_s.include?(scope) } %>
+          ***
+        <% elsif k2.to_s == 'tags' %>
+          <%== tags(v2) %>
+        <% elsif k2.to_s == 'first_offset' %>
+          <a href="<%= explorer_topics_path(v[:topic], v[:partition], v[:first_offset]) %>">
+            <%= v2 %>
+          </a>
+        <% elsif k2.to_s == 'last_offset' %>
+          <a href="<%= explorer_topics_path(v[:topic], v[:partition], v[:last_offset]) %>">
+            <%= v2 %>
+          </a>
+        <% elsif k2.to_s == 'committed_offset' && v2 >= 0 %>
+          <a href="<%= explorer_topics_path(v[:topic], v[:partition], v[:committed_offset]) %>">
+            <%= v2 %>
+          </a>
+        <% else %>
+          <%= v2 %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+<% else %>
+  <tr>
+    <td>
+      <%= k %>
+    </td>
+    <td>
+      <% case k %>
+      <% when :occurred_at %>
+        <%== relative_time v %>
+      <% when :error_class %>
+        <code><%= v %></code>
+      <% when :type %>
+        <%== badge_secondary v %>
+      <% else %>
+        <%= v %>
+      <% end %>
+    </td>
+  </tr>
+<% end %>

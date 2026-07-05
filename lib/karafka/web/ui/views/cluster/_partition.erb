@@ -2,22 +2,10 @@
 
 <tr>
   <td>
-    <% if Karafka.pro? %>
-      <a href="<%= explorer_topics_path(topic[:topic_name]) %>">
-        <%= topic[:topic_name] %>
-      </a>
-    <% else %>
-      <%= topic[:topic_name] %>
-    <% end %>
+    <%= topic[:topic_name] %>
   </td>
   <td>
-    <% if Karafka.pro? %>
-      <a href="<%= explorer_topics_path(topic[:topic_name], partition[:partition_id]) %>">
-        <%= partition[:partition_id] %>
-      </a>
-    <% else %>
-      <%= partition[:partition_id] %>
-    <% end %>
+    <%= partition[:partition_id] %>
   </td>
   <td>
     <%= partition[:leader] %>
