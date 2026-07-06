@@ -53,7 +53,7 @@ describe_current do
 
     before do
       listener.stubs(:subscription_group).returns(subscription_group)
-      subscription_group.stubs(:consumer_group).returns(consumer_group)
+      subscription_group.stubs(:group).returns(consumer_group)
       subscription_group.stubs(:topics).returns([topic])
       tracker.stubs(:each_for).with(consumer_group_id, topic_name).yields(command)
       executor.stubs(:call)
@@ -92,7 +92,7 @@ describe_current do
     let(:event) { { subscription_group: subscription_group } }
 
     before do
-      subscription_group.stubs(:consumer_group).returns(consumer_group)
+      subscription_group.stubs(:group).returns(consumer_group)
       subscription_group.stubs(:topics).returns([topic])
       tracker.stubs(:each_for).with(consumer_group_id, topic_name).yields(command)
       executor.stubs(:reject)
@@ -112,7 +112,7 @@ describe_current do
     let(:event) { { subscription_group: subscription_group } }
 
     before do
-      subscription_group.stubs(:consumer_group).returns(consumer_group)
+      subscription_group.stubs(:group).returns(consumer_group)
       subscription_group.stubs(:topics).returns([topic])
       tracker.stubs(:each_for).with(consumer_group_id, topic_name).yields(command)
       executor.stubs(:reject)

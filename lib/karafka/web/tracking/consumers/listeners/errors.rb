@@ -77,7 +77,7 @@ module Karafka
             def extract_consumer_info(consumer)
               {
                 topic: consumer.topic.name,
-                consumer_group: consumer.topic.consumer_group.id,
+                consumer_group: consumer.topic.group.id,
                 subscription_group: consumer.topic.subscription_group.id,
                 partition: consumer.partition,
                 first_offset: consumer.messages.metadata.first_offset,
@@ -95,7 +95,7 @@ module Karafka
             # @return [Hash] hash with client specific info for details of error
             def extract_client_info(client)
               {
-                consumer_group: client.subscription_group.consumer_group.id,
+                consumer_group: client.subscription_group.group.id,
                 subscription_group: client.subscription_group.id,
                 name: client.name,
                 id: client.id
@@ -106,7 +106,7 @@ module Karafka
             # @return [Hash] hash with listener specific info for details of error
             def extract_listener_info(listener)
               {
-                consumer_group: listener.subscription_group.consumer_group.id,
+                consumer_group: listener.subscription_group.group.id,
                 subscription_group: listener.subscription_group.id,
                 id: listener.id
               }

@@ -43,7 +43,7 @@ describe_current do
 
   let(:subscription_group) do
     stub(id: subscription_group_id,
-      consumer_group: consumer_group,
+      group: consumer_group,
       topics: [routing_topic])
   end
 

@@ -50,7 +50,7 @@ module Karafka
                 listener = event[:caller]
                 client = event[:client]
                 subscription_group = listener.subscription_group
-                consumer_group_id = subscription_group.consumer_group.id
+                consumer_group_id = subscription_group.group.id
 
                 # Iterate over all topics in this subscription group and check for commands
                 subscription_group.topics.each do |topic|
@@ -67,7 +67,7 @@ module Karafka
               # @param event [Karafka::Core::Monitoring::Event]
               def on_rebalance_partitions_assigned(event)
                 subscription_group = event[:subscription_group]
-                consumer_group_id = subscription_group.consumer_group.id
+                consumer_group_id = subscription_group.group.id
 
                 subscription_group.topics.each do |topic|
                   @tracker.each_for(consumer_group_id, topic.name) do |command|

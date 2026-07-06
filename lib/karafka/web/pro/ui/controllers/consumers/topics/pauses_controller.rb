@@ -149,7 +149,7 @@ module Karafka
                   routing_topics = Karafka::App.routes.flat_map(&:topics).flat_map(&:to_a)
 
                   @routing_topic = routing_topics.find do |r_topic|
-                    r_topic.consumer_group.id == @consumer_group_id &&
+                    r_topic.group.id == @consumer_group_id &&
                       r_topic.name == @topic
                   end
 

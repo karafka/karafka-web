@@ -35,7 +35,7 @@ module Karafka
             def on_connection_listener_after_fetch_loop(event)
               subscription_group = event[:subscription_group]
               sg_id = subscription_group.id
-              cg_id = subscription_group.consumer_group.id
+              cg_id = subscription_group.group.id
 
               track do |sampler|
                 sampler.consumer_groups[cg_id][:subscription_groups].delete(sg_id)

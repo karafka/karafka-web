@@ -224,7 +224,7 @@ module Karafka
                 # will be further away than the total messages count for a particular VP
                 messages: consumer.messages.size,
                 consumer: consumer.class.to_s,
-                consumer_group: consumer.topic.consumer_group.id,
+                consumer_group: consumer.topic.group.id,
                 type: type,
                 tags: consumer.tags,
                 status: "running"
