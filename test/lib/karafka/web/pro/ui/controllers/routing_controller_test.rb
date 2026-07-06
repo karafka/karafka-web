@@ -36,7 +36,7 @@ describe_current do
       before { get "routing" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(topics_config.consumers.states.name)
         assert_body(topics_config.consumers.metrics.name)
         assert_body(topics_config.consumers.reports.name)
@@ -54,7 +54,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(topics_config.consumers.states.name)
         assert_body(topics_config.consumers.metrics.name)
         assert_body(topics_config.consumers.reports.name)
@@ -85,7 +85,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(topics_config.errors.name)
         assert_body("karafka_web")
         assert_body(breadcrumbs)
@@ -97,7 +97,7 @@ describe_current do
     before { get "routing/#{Karafka::App.routes.first.topics.first.id}" }
 
     it "expect to display details, including the injectable once" do
-      assert(response.ok?)
+      assert_ok
       assert_body("kafka.topic.metadata.refresh.interval.ms")
       assert_body(breadcrumbs)
       assert_body("kafka.statistics.interval.ms")
@@ -132,7 +132,7 @@ describe_current do
       end
 
       it "expect to hide them" do
-        assert(response.ok?)
+        assert_ok
         assert_body("kafka.sasl.username")
         assert_body("***")
         assert_body(breadcrumbs)
@@ -157,7 +157,7 @@ describe_current do
       end
 
       it "expect to hide them" do
-        assert(response.ok?)
+        assert_ok
         assert_body("kafka.ssl.key.password")
         assert_body("***")
         assert_body(breadcrumbs)

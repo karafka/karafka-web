@@ -41,7 +41,7 @@ describe_current do
     end
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body(breadcrumbs)
       refute_body(pagination)
       assert_body(topics_config.consumers.states.name)
@@ -58,7 +58,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("There are no available topics in the current cluster")
@@ -73,7 +73,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body(topics_config.consumers.states.name)
@@ -90,7 +90,7 @@ describe_current do
       before { get "topics/new" }
 
       it "renders successfully" do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("Creating New Topic")
         assert_body("Topic Name:")
@@ -181,7 +181,7 @@ describe_current do
       before { post "topics", default_params }
 
       it "renders form with errors" do
-        assert(response.ok?)
+        assert_ok
         assert_body("Creating New Topic")
         assert_body("Please Correct the Following Errors Before Continuing")
         assert_body(error_message)
@@ -201,7 +201,7 @@ describe_current do
           before { post "topics", default_params.merge(params_override) }
 
           it "renders form" do
-            assert(response.ok?)
+            assert_ok
             assert_body("Creating New Topic")
           end
         end
@@ -230,7 +230,7 @@ describe_current do
               assert_equal(302, response.status)
               assert(response.location.end_with?("/topics"))
             else
-              assert(response.ok?)
+              assert_ok
               assert_body("Creating New Topic")
             end
           end
@@ -250,7 +250,7 @@ describe_current do
       end
 
       it "renders removal confirmation page with all required elements" do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("Topic #{topic_name} Removal Confirmation")
         refute_body(pagination)

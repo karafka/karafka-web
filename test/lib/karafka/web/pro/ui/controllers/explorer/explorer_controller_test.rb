@@ -44,7 +44,7 @@ describe_current do
     end
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body(breadcrumbs)
       refute_body(pagination)
       assert_body(topics_config.consumers.states.name)
@@ -61,7 +61,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("There are no available topics in the current cluster")
@@ -76,7 +76,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body(topics_config.consumers.states.name)
@@ -93,7 +93,7 @@ describe_current do
       before { get "explorer/topics/#{topic}" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("This topic is empty and does not contain any data")
         assert_body(breadcrumbs)
         refute_body("total: 1")
@@ -109,7 +109,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("total: 1")
         assert_body(breadcrumbs)
         assert_body(search_button)
@@ -137,7 +137,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("total: 1")
         assert_body(breadcrumbs)
         assert_body("[Deserialization Failed]")
@@ -152,7 +152,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(pagination)
         assert_body("#{topic}/0/5")
@@ -169,7 +169,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(pagination)
         assert_body("#{topic}/0/6")
@@ -188,7 +188,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(pagination)
         assert_body("#{topic}/0/4")
@@ -207,7 +207,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(pagination)
 
@@ -232,7 +232,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(pagination)
 
@@ -255,7 +255,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(pagination)
         assert_body(no_meaningful_results)
@@ -288,7 +288,7 @@ describe_current do
       before { get "explorer/topics/#{topic}/0" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(no_data)
         refute_body("high: 0")
@@ -306,7 +306,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("Watermark offsets")
         assert_body("high: 1")
@@ -324,7 +324,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("Watermark offsets")
         assert_body("high: 2")
@@ -344,7 +344,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("Watermark offsets")
         assert_body("high: 1")
@@ -362,7 +362,7 @@ describe_current do
         before { get "explorer/topics/#{topic}/0?offset=99" }
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body(breadcrumbs)
           assert_body("Watermark offsets")
           assert_body("high: 100")
@@ -379,7 +379,7 @@ describe_current do
         before { get "explorer/topics/#{topic}/0?offset=75" }
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body(breadcrumbs)
           assert_body("Watermark offsets")
           assert_body("high: 100")
@@ -399,7 +399,7 @@ describe_current do
         before { get "explorer/topics/#{topic}/0?offset=0" }
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body(breadcrumbs)
           assert_body("Watermark offsets")
           assert_body("high: 100")
@@ -420,7 +420,7 @@ describe_current do
         before { get "explorer/topics/#{topic}/0?offset=1000" }
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body(breadcrumbs)
           assert_body("This page does not contain any data")
           refute_body("Watermark offsets")
@@ -462,7 +462,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body('<code class="json')
         assert_body("Metadata")
@@ -488,7 +488,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body('<code class="json')
         assert_body("Metadata")
@@ -513,7 +513,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body('<code class="json')
         assert_body("Metadata")
@@ -540,7 +540,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body('<code class="json')
         assert_body("Metadata")
@@ -561,7 +561,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body('<code class="json')
         assert_body("Metadata")
@@ -581,7 +581,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body('<code class="json')
         assert_body("Metadata")
@@ -599,7 +599,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body('<code class="json')
         assert_body("Metadata")
@@ -614,7 +614,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("The message has been removed through")
         assert_body(pagination)
@@ -646,7 +646,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body('<code class="json')
         assert_body("Metadata")
@@ -664,7 +664,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body('<code class="json')
         assert_body("Metadata")
@@ -680,7 +680,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("Metadata")
         assert_body('<code class="json')
@@ -704,7 +704,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("Metadata")
         assert_body('<code class="json')
@@ -733,7 +733,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("Metadata")
         assert_body('<code class="json')
@@ -759,7 +759,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body('<code class="json')
         assert_body("Metadata")
@@ -775,7 +775,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body('<code class="json')
         assert_body("Metadata")
@@ -801,7 +801,7 @@ describe_current do
         end
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body(breadcrumbs)
           assert_body(payload2)
           assert_body(topic)
@@ -819,7 +819,7 @@ describe_current do
         end
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body(breadcrumbs)
           assert_body(payload2)
           assert_body(topic)
@@ -831,12 +831,13 @@ describe_current do
 
     context "when getting recent for the partition" do
       before do
-        produce(topic, payload1, partition: 0)
+        report = produce(topic, payload1, partition: 0)
+        wait_for_message(topic, report.partition, report.offset)
         get "explorer/topics/#{topic}/0/recent"
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(payload1)
         assert_body(topic)

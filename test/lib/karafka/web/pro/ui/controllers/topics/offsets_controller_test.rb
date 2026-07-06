@@ -48,7 +48,7 @@ describe_current do
       before { get "topics/#{topic}/offsets" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body(topic)
@@ -63,7 +63,7 @@ describe_current do
       before { get "topics/#{topic}/offsets" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(pagination)
         assert_body(topic)
@@ -79,7 +79,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body('<table class="data-table">')
@@ -99,7 +99,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(pagination)
         assert_body('<table class="data-table">')

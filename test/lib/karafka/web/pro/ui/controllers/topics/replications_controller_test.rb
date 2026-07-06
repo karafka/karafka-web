@@ -48,7 +48,7 @@ describe_current do
       before { get "topics/#{topic}/replication" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body(topic)
@@ -75,7 +75,7 @@ describe_current do
       before { get "topics/#{topic}/replication" }
 
       it "displays all partitions" do
-        assert(response.ok?)
+        assert_ok
         assert_body(topic)
         assert_body("0")
         assert_body("1")
@@ -102,7 +102,7 @@ describe_current do
         end
 
         it "displays the no redundancy warning with production severity" do
-          assert(response.ok?)
+          assert_ok
           assert_body("No Replication Redundancy")
           assert_body("replication factor of")
           assert_body("redundant copies")
@@ -123,7 +123,7 @@ describe_current do
         end
 
         it "displays the no redundancy warning with development context" do
-          assert(response.ok?)
+          assert_ok
           assert_body("No Replication Redundancy")
           assert_body("replication factor of")
           assert_body("acceptable for development")
@@ -191,7 +191,7 @@ describe_current do
       end
 
       it "displays the zero fault tolerance warning" do
-        assert(response.ok?)
+        assert_ok
         assert_body("Replication Resilience Issue Detected")
         assert_body("zero")
         assert_body("fault tolerance")
@@ -256,7 +256,7 @@ describe_current do
       end
 
       it "displays the low durability warning" do
-        assert(response.ok?)
+        assert_ok
         assert_body("Low Data Durability Configuration")
         assert_body("min.insync.replicas")
         assert_body("replication factor of")
@@ -320,7 +320,7 @@ describe_current do
       end
 
       it "displays the success message" do
-        assert(response.ok?)
+        assert_ok
         assert_body("Replication Configuration is Fault Tolerant")
         assert_body("broker failure")
       end

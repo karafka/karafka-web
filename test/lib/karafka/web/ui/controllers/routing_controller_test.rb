@@ -7,7 +7,7 @@ describe_current do
     before { get "routing" }
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body(topics_config.consumers.states.name)
       assert_body(topics_config.consumers.metrics.name)
       assert_body(topics_config.consumers.reports.name)
@@ -21,7 +21,7 @@ describe_current do
     before { get "routing/#{Karafka::App.routes.first.topics.first.id}" }
 
     it "expect to display details, including the injectable once" do
-      assert(response.ok?)
+      assert_ok
       assert_body("kafka.topic.metadata.refresh.interval.ms")
       assert_body(breadcrumbs)
       assert_body("kafka.statistics.interval.ms")
@@ -56,7 +56,7 @@ describe_current do
       end
 
       it "expect to hide them" do
-        assert(response.ok?)
+        assert_ok
         assert_body("kafka.sasl.username")
         assert_body("***")
         assert_body(breadcrumbs)
@@ -81,7 +81,7 @@ describe_current do
       end
 
       it "expect to hide them" do
-        assert(response.ok?)
+        assert_ok
         assert_body("kafka.ssl.key.password")
         assert_body("***")
         assert_body(breadcrumbs)
@@ -103,7 +103,7 @@ describe_current do
       end
 
       it "displays manual offset management setting" do
-        assert(response.ok?)
+        assert_ok
         assert_body("manual_offset_management")
         assert_body("true")
         assert_body(breadcrumbs)
@@ -127,7 +127,7 @@ describe_current do
       end
 
       it "displays processing settings" do
-        assert(response.ok?)
+        assert_ok
         assert_body("max_messages")
         assert_body("100")
         assert_body("max_wait_time")
@@ -153,7 +153,7 @@ describe_current do
       end
 
       it "displays subscription group information" do
-        assert(response.ok?)
+        assert_ok
         assert_body("subscription_group_details.name")
         assert_body("critical")
       end

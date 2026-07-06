@@ -35,7 +35,7 @@ describe_current do
     before { get "cluster" }
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body("ID")
       assert_body(breadcrumbs)
     end
@@ -68,7 +68,7 @@ describe_current do
       before { get "cluster/1" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("advertised.listeners")
         assert_body("controller.quota.window.num")
@@ -82,7 +82,7 @@ describe_current do
     before { get "cluster/replication" }
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body(breadcrumbs)
     end
 
@@ -93,7 +93,7 @@ describe_current do
         before { get "cluster/replication?page=2" }
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body(breadcrumbs)
           assert_body(pagination)
         end
@@ -103,7 +103,7 @@ describe_current do
         before { get "cluster/replication?page=100000000" }
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body(pagination)
           assert_body(no_meaningful_results)
         end

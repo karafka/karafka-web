@@ -49,7 +49,7 @@ describe_current do
       before { get "scheduled_messages/schedules" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(no_groups)
         assert_body(breadcrumbs)
         refute_body(pagination)
@@ -66,7 +66,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(no_groups)
         assert_body(breadcrumbs)
         refute_body(pagination)
@@ -89,7 +89,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(messages_topic)
         assert_body(breadcrumbs)
         refute_body(no_groups)
@@ -118,7 +118,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(messages_topic1)
         assert_body(messages_topic2)
         assert_body(breadcrumbs)
@@ -146,7 +146,7 @@ describe_current do
       before { get "scheduled_messages/schedules/#{messages_topic}" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(messages_topic)
         assert_body(breadcrumbs)
         assert_body(no_states)
@@ -163,7 +163,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(messages_topic)
         assert_body(breadcrumbs)
         assert_body("2024-09-02")

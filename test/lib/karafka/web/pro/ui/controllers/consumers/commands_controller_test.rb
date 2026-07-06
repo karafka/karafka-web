@@ -56,7 +56,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body(pagination)
         assert_body(breadcrumbs)
         assert_body(no_commands)
@@ -73,7 +73,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body(no_commands)
         refute_body(pagination)
         refute_body('<span class="badge badge-primary">')
@@ -88,7 +88,7 @@ describe_current do
       before { get "consumers/commands" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body(no_commands)
         refute_body(pagination)
         assert_body(breadcrumbs)
@@ -125,7 +125,7 @@ describe_current do
         before { get "consumers/commands" }
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body(pagination)
           assert_body("commands/99")
           assert_body("trace")
@@ -138,7 +138,7 @@ describe_current do
         before { get "consumers/commands/overview?offset=52" }
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body(pagination)
           assert_body("commands/53")
           refute_body("commands/99")
@@ -152,7 +152,7 @@ describe_current do
         before { get "consumers/commands/overview?offset=200" }
 
         it do
-          assert(response.ok?)
+          assert_ok
           refute_body(pagination)
           assert_body(no_commands)
         end
@@ -190,7 +190,7 @@ describe_current do
         end
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body(breadcrumbs)
           refute_body(pagination)
           assert_body("<td>Type</td>")
@@ -211,7 +211,7 @@ describe_current do
         end
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body(breadcrumbs)
           refute_body(pagination)
           refute_body("<td>Type</td>")
@@ -233,7 +233,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         refute_body(incompatible_message)
@@ -254,7 +254,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body(incompatible_message)
@@ -292,7 +292,7 @@ describe_current do
       before { get "consumers/commands/recent" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("<td>Type</td>")

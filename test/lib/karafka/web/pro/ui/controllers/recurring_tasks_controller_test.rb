@@ -54,7 +54,7 @@ describe_current do
       before { get "recurring_tasks/schedule" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body(not_operable)
@@ -65,7 +65,7 @@ describe_current do
       before { get "recurring_tasks/schedule" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(not_operable)
         refute_body(pagination)
@@ -81,7 +81,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(not_operable)
         refute_body("Schedule 1.0.0")
@@ -100,7 +100,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(not_operable)
         assert_body("Schedule 1.0.0")
@@ -121,7 +121,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(not_operable)
         assert_body("Schedule 1.0.0")
@@ -142,7 +142,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(not_operable)
         refute_body("Schedule 1.0.0")
@@ -161,7 +161,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("Never")
         assert_body("* * * * *")
@@ -187,7 +187,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("Never")
         assert_body("* * * * *")
@@ -213,7 +213,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("* * * * *")
         assert_body("*/2 * * *")
@@ -239,7 +239,7 @@ describe_current do
       end
 
       it "expect not to crash" do
-        assert(response.ok?)
+        assert_ok
       end
     end
   end
@@ -260,7 +260,7 @@ describe_current do
       before { get "recurring_tasks/logs" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(no_logs)
         refute_body(pagination)
@@ -276,7 +276,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("test1")
         assert_body("1.0.1")
@@ -295,7 +295,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("test2")
         assert_body("1.0.1")
@@ -316,7 +316,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("test1")
         assert_body("test2")
@@ -338,7 +338,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("test1")
         assert_body("test2")

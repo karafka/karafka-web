@@ -62,7 +62,7 @@ describe_current do
     end
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body(no_meaningful)
       assert_body('id="refreshable"')
       assert_body('<div id="refreshable" class="col-span-12 mb-10">')
@@ -84,7 +84,7 @@ describe_current do
     end
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body(no_meaningful)
       refute_body(breadcrumbs)
       assert_body('id="refreshable"')
@@ -96,7 +96,7 @@ describe_current do
     before { get "dashboard" }
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body("Pace")
       assert_body("Batches")
       assert_body("Jobs")
@@ -127,7 +127,7 @@ describe_current do
     end
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body("Pace")
       assert_body("Batches")
       assert_body("Jobs")
@@ -159,7 +159,7 @@ describe_current do
     end
 
     it do
-      assert(response.ok?)
+      assert_ok
     end
   end
 end

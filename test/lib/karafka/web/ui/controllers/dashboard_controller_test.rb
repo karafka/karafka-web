@@ -33,7 +33,7 @@ describe_current do
     end
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body("There Needs to Be More Data to Draw Meaningful Graphs")
       refute_body(breadcrumbs)
       assert_body('id="refreshable"')
@@ -55,7 +55,7 @@ describe_current do
     end
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body("There Needs to Be More Data to Draw Meaningful Graphs")
       refute_body(breadcrumbs)
       assert_body('id="refreshable"')
@@ -67,7 +67,7 @@ describe_current do
     before { get "dashboard" }
 
     it do
-      assert(response.ok?)
+      assert_ok
       refute_body(breadcrumbs)
       assert_body(only_pro_feature)
       assert_body("Pace")
@@ -98,7 +98,7 @@ describe_current do
     end
 
     it do
-      assert(response.ok?)
+      assert_ok
       refute_body(breadcrumbs)
       assert_body(only_pro_feature)
       assert_body("Pace")

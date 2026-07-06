@@ -48,7 +48,7 @@ describe_current do
       before { get "topics/#{topic}/config" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body(topic)
@@ -72,7 +72,7 @@ describe_current do
         end
 
         it "renders edit form with all required elements" do
-          assert(response.ok?)
+          assert_ok
           assert_body(breadcrumbs)
           assert_body("Topic #{topic_name} - Edit #{property_name}")
           refute_body(pagination)
@@ -162,7 +162,7 @@ describe_current do
         end
 
         it "renders edit form with error messages" do
-          assert(response.ok?)
+          assert_ok
           assert_body("Configuration Update Warning")
           assert_body(error_message)
           assert_body(topic_name)
