@@ -831,7 +831,8 @@ describe_current do
 
     context "when getting recent for the partition" do
       before do
-        produce(topic, payload1, partition: 0)
+        report = produce(topic, payload1, partition: 0)
+        wait_for_message(topic, report.partition, report.offset)
         get "explorer/topics/#{topic}/0/recent"
       end
 
