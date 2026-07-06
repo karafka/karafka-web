@@ -91,7 +91,7 @@ describe_current do
       end
 
       let(:topic2) do
-        stub(name: "topic2", consumer_group: consumer_group2)
+        stub(name: "topic2", group: consumer_group2)
       end
 
       let(:assignments) { { topic => [0, 1], topic2 => [0] } }
