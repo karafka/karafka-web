@@ -1,9 +1,7 @@
 <tr class="status-row-<%= process.status %>">
   <td>
     <p>
-      <a href="<%= consumer_path(process.id, 'subscriptions') %>">
-        <%== truncate(process.id, strategy: :middle) %>
-      </a>
+      <%== truncate(process.id, strategy: :middle) %>
     </p>
 
     <p class="mt-1">

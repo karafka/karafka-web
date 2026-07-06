@@ -1,6 +1,19 @@
 <% active ||= false %>
 <% disabled ||= false %>
 
-<span class="custom-tab <%= 'active' if active %> <%= 'disabled' if disabled %>" id="<%= id %>-tab" data-target="<%= id %>">
-  <%= title %>
-</span>
+<% if disabled %>
+  <button
+    type="button"
+    class="custom-tab disabled cursor-default"
+    id="<%= id %>-tab"
+    data-target="<%= id %>"
+    title="Available in Karafka Pro"
+    disabled
+  >
+    <%= title %>
+  </button>
+<% else %>
+  <span class="custom-tab <%= 'active' if active %>" id="<%= id %>-tab" data-target="<%= id %>">
+    <%= title %>
+  </span>
+<% end %>
