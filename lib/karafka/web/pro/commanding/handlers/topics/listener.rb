@@ -37,6 +37,8 @@ module Karafka
             # Listener that hooks to the connection listener fetch loop flow to adjust it prior
             # to the next polling or on rebalances to execute the topic specific commands.
             class Listener
+              include Handlers::GroupIdExtractor
+
               def initialize
                 @tracker = Tracker.instance
                 @executor = Executor.new
@@ -50,7 +52,7 @@ module Karafka
                 listener = event[:caller]
                 client = event[:client]
                 subscription_group = listener.subscription_group
-                consumer_group_id = subscription_group.group.id
+                consumer_group_id = group_id_of(subscription_group)
 
                 # Iterate over all topics in this subscription group and check for commands
                 subscription_group.topics.each do |topic|
@@ -67,7 +69,7 @@ module Karafka
               # @param event [Karafka::Core::Monitoring::Event]
               def on_rebalance_partitions_assigned(event)
                 subscription_group = event[:subscription_group]
-                consumer_group_id = subscription_group.group.id
+                consumer_group_id = group_id_of(subscription_group)
 
                 subscription_group.topics.each do |topic|
                   @tracker.each_for(consumer_group_id, topic.name) do |command|

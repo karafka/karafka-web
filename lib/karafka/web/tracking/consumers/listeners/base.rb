@@ -25,6 +25,12 @@ module Karafka
             def reporter
               @reporter ||= ::Karafka::Web.config.tracking.consumers.reporter
             end
+
+            # @param groupable [Object] topic or subscription group instance
+            # @return [String] id of the consumer group the given object belongs to
+            def group_id_of(groupable)
+              groupable.group.id
+            end
           end
         end
       end

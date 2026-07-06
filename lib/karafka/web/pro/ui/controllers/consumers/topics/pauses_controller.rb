@@ -146,12 +146,7 @@ module Karafka
                   @topic_stats || raise(Karafka::Web::Errors::Ui::NotFoundError)
 
                   # Check if topic is LRJ from routing
-                  routing_topics = Karafka::App.routes.flat_map(&:topics).flat_map(&:to_a)
-
-                  @routing_topic = routing_topics.find do |r_topic|
-                    r_topic.group.id == @consumer_group_id &&
-                      r_topic.name == @topic
-                  end
+                  @routing_topic = find_routing_topic(@consumer_group_id, @topic)
 
                   # May not be found when not all routing is available. In such cases we assume
                   # that topic is not LRJ and it's up to the end user to handle this correctly.
