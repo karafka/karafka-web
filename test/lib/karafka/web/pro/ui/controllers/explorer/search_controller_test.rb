@@ -62,7 +62,7 @@ describe_current do
     before { get "explorer/#{topic}/search" }
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body(breadcrumbs)
       assert_body(no_search_criteria)
       assert_body(search_modal)
@@ -85,7 +85,7 @@ describe_current do
     end
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body(breadcrumbs)
       assert_body(no_search_criteria)
       assert_body(search_modal)
@@ -106,7 +106,7 @@ describe_current do
     end
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body(breadcrumbs)
       assert_body(no_search_criteria)
       assert_body(search_modal)
@@ -124,7 +124,7 @@ describe_current do
     end
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body(breadcrumbs)
       assert_body(no_search_criteria)
       assert_body(search_modal)
@@ -139,7 +139,7 @@ describe_current do
     before { get "explorer/#{topic}/search?search[matcher]=invalid" }
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body(breadcrumbs)
       assert_body(search_modal)
       assert_body("matcher: must match the existing matchers names")
@@ -155,7 +155,7 @@ describe_current do
     before { get "explorer/#{topic}/search?#{valid_search}" }
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body(breadcrumbs)
       assert_body(search_modal)
       assert_body("table")
@@ -185,7 +185,7 @@ describe_current do
     end
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body(breadcrumbs)
       assert_body(search_modal)
       assert_body("table")
@@ -228,7 +228,7 @@ describe_current do
     end
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body(breadcrumbs)
       assert_body(search_modal)
       assert_body("table")
@@ -268,7 +268,7 @@ describe_current do
     end
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body(breadcrumbs)
       assert_body(search_modal)
       assert_body("table")
@@ -312,7 +312,7 @@ describe_current do
     end
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body(breadcrumbs)
       assert_body(search_modal)
       assert_body("table")
@@ -355,7 +355,7 @@ describe_current do
     end
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body(breadcrumbs)
       assert_body(search_modal)
       assert_body("table")

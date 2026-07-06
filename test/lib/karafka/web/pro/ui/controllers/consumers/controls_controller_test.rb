@@ -57,7 +57,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body(pagination)
         assert_body(breadcrumbs)
         assert_body(no_processes)
@@ -68,7 +68,7 @@ describe_current do
       before { get "consumers/controls" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body(no_processes)
         refute_body(pagination)
         assert_body(breadcrumbs)
@@ -85,7 +85,7 @@ describe_current do
       context "when sorting" do
         before { get "consumers/controls?sort=id+desc" }
 
-        it { assert(response.ok?) }
+        it { assert_ok }
       end
     end
 
@@ -108,7 +108,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body(no_processes)
         refute_body(pagination)
         assert_body(breadcrumbs)
@@ -127,7 +127,7 @@ describe_current do
       context "when sorting" do
         before { get "consumers/controls?sort=id+desc" }
 
-        it { assert(response.ok?) }
+        it { assert_ok }
       end
     end
 
@@ -150,7 +150,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body(no_processes)
         refute_body(pagination)
         assert_body(breadcrumbs)
@@ -169,7 +169,7 @@ describe_current do
       context "when sorting" do
         before { get "consumers/controls?sort=id+desc" }
 
-        it { assert(response.ok?) }
+        it { assert_ok }
       end
     end
 
@@ -185,7 +185,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body(no_processes)
         refute_body(pagination)
         assert_body(breadcrumbs)
@@ -229,7 +229,7 @@ describe_current do
         before { get "consumers/controls" }
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body(pagination)
           assert_body("shinra:0:0")
           assert_body("shinra:1:1")
@@ -243,7 +243,7 @@ describe_current do
         before { get "consumers/controls?page=2" }
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body(pagination)
           assert_body("shinra:32:32")
           assert_body("shinra:34:34")
@@ -257,7 +257,7 @@ describe_current do
         before { get "consumers/controls?page=100" }
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body(pagination)
           assert_body(no_meaningful_results)
           assert_equal(0, body.scan("shinra:").size)

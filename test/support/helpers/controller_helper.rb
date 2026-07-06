@@ -62,6 +62,17 @@ module ControllerHelper
     refute_includes(body, expected)
   end
 
+  # Asserts that the response is successful (2xx), printing the actual status and a body excerpt
+  # on failure instead of a bare "Expected false to be truthy". A plain `assert(response.ok?)`
+  # gives no clue whether a failure is a 404, a 500, or something else, which makes intermittent
+  # CI-only failures much harder to diagnose than they need to be.
+  def assert_ok
+    assert(
+      response.ok?,
+      "Expected a successful response, got #{status}. Body excerpt: #{body[0, 500].inspect}"
+    )
+  end
+
   # @return [String] breadcrumbs string part to match for presence
   def breadcrumbs
     '<div class="breadcrumbs">'

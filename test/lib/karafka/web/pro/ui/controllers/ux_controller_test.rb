@@ -35,7 +35,7 @@ describe_current do
     before { get "ux" }
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body(breadcrumbs)
     end
   end

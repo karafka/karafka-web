@@ -53,7 +53,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(topic)
         assert_body("message-republish-form")
         refute_body(pagination)
@@ -180,7 +180,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_equal(expected_disposition, response.headers["content-disposition"])
         assert_equal("application/octet-stream", response.headers["content-type"])
         assert_equal(payload, response.body)
@@ -225,7 +225,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_equal(expected_disposition, response.headers["content-disposition"])
         assert_equal("application/octet-stream", response.headers["content-type"])
         assert_equal(payload, response.body)
@@ -252,7 +252,7 @@ describe_current do
       end
 
       it "expect to use custom deserializer" do
-        assert(response.ok?)
+        assert_ok
         assert_equal(expected_disposition, response.headers["content-disposition"])
         assert_equal("application/octet-stream", response.headers["content-type"])
         assert_equal('"1"', response.body)

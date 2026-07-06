@@ -36,7 +36,7 @@ describe_current do
       before { get "status" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
       end
     end
@@ -52,7 +52,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
       end
     end
@@ -78,7 +78,7 @@ describe_current do
       end
 
       it "displays successful status with topic information" do
-        assert(response.ok?)
+        assert_ok
         assert_body("Status")
         assert_body(breadcrumbs)
         assert_body(states_topic)
@@ -107,7 +107,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("Commands topic presence")
         assert_body("does not exist")
         assert_body("required for Pro commanding features")

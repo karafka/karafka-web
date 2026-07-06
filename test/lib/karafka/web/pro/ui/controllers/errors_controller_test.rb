@@ -54,7 +54,7 @@ describe_current do
       before { get "errors" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("This topic is empty and does not contain any data")
         assert_body(breadcrumbs)
         refute_body(pagination)
@@ -69,7 +69,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body(no_errors)
         assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(3, body.scan("StandardError:").size)
@@ -88,7 +88,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body(no_errors)
         assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(6, body.scan("StandardError:").size)
@@ -107,7 +107,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body(no_errors)
         assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(25, body.scan("StandardError:").size)
@@ -126,7 +126,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body(no_errors)
         assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(25, body.scan("StandardError:").size)
@@ -141,7 +141,7 @@ describe_current do
       before { get "errors/1" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(no_errors)
         assert_body(breadcrumbs)
         refute_body(pagination)
@@ -156,7 +156,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body(no_errors)
         assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(3, body.scan("StandardError:").size)
@@ -175,7 +175,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body(no_errors)
         assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(25, body.scan("StandardError:").size)
@@ -194,7 +194,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body(no_errors)
         assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(25, body.scan("StandardError:").size)
@@ -213,7 +213,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body(no_errors)
         assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(1, body.scan("StandardError:").size)
@@ -232,7 +232,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body(no_errors)
         assert_equal(0, body.scan("StandardError:").size)
         refute_body(pagination)
@@ -261,7 +261,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("shinra:1555833:4e8f7174ae53")
         assert_equal(3, body.scan("StandardError").size)
         assert_body(breadcrumbs)
@@ -278,7 +278,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body("shinra:1555833:4e8f7174ae53")
         refute_body("StandardError")
         assert_body(breadcrumbs)

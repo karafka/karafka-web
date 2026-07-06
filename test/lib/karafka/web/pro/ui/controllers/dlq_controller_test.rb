@@ -40,7 +40,7 @@ describe_current do
       before { get "dlq" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("No Dead Letter Queue topics exist in Kafka")
         assert_body(breadcrumbs)
         refute_body(pagination)
@@ -58,7 +58,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(dlq_topic)
         refute_body("No Dead Letter Queue topics exist in Kafka")
@@ -79,7 +79,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(dlq_topic)
         refute_body("#{topic.name}\"")
@@ -99,7 +99,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(dlq_topic)
         refute_body("No Dead Letter Queue topics exist in Kafka")

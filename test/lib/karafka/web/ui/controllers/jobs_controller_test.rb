@@ -38,7 +38,7 @@ describe_current do
       before { get "jobs/running" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("2023-08-01T09:47:51")
         assert_body("ActiveJob::Consumer")
         assert_body(breadcrumbs)
@@ -62,7 +62,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("There are no running jobs at the moment")
         refute_body("ActiveJob::Consumer")
         assert_body(breadcrumbs)
@@ -88,7 +88,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("N/A")
         refute_body(pagination)
@@ -114,7 +114,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("eofed")
         assert_body(breadcrumbs)
         assert_body("N/A")
@@ -151,7 +151,7 @@ describe_current do
         before { get "jobs/running" }
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body("2023-08-01T09:47:51")
           assert_equal(25, body.scan("ActiveJob::Consumer").size)
           assert_body(breadcrumbs)
@@ -176,7 +176,7 @@ describe_current do
         end
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body("2023-08-01T09:47:51")
           assert_equal(25, body.scan("ActiveJob::Consumer").size)
           assert_body(breadcrumbs)
@@ -193,7 +193,7 @@ describe_current do
         before { get "jobs/running?page=2" }
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body(pagination)
           assert_body("shinra:32:32")
           assert_body("shinra:34:34")
@@ -207,7 +207,7 @@ describe_current do
         before { get "jobs/running?page=100" }
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body(pagination)
           assert_equal(0, body.scan("shinra:").size)
           assert_body(no_meaningful_results)
@@ -249,7 +249,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("2023-08-01T09:47:51")
         assert_body("ActiveJob::Consumer")
         assert_body(breadcrumbs)
@@ -273,7 +273,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("There are no pending jobs at the moment")
         refute_body("ActiveJob::Consumer")
         assert_body(breadcrumbs)
@@ -311,7 +311,7 @@ describe_current do
         before { get "jobs/pending" }
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body("2023-08-01T09:47:51")
           assert_equal(25, body.scan("ActiveJob::Consumer").size)
           assert_body(breadcrumbs)
@@ -336,7 +336,7 @@ describe_current do
         end
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body("2023-08-01T09:47:51")
           assert_equal(25, body.scan("ActiveJob::Consumer").size)
           assert_body(breadcrumbs)
@@ -353,7 +353,7 @@ describe_current do
         before { get "jobs/pending?page=2" }
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body(pagination)
           assert_body("shinra:32:32")
           assert_body("shinra:34:34")
@@ -367,7 +367,7 @@ describe_current do
         before { get "jobs/pending?page=100" }
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body(pagination)
           assert_equal(0, body.scan("shinra:").size)
           assert_body(no_meaningful_results)

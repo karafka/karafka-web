@@ -7,7 +7,7 @@ describe_current do
     before { get "support" }
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body(breadcrumbs)
       assert_body("Karafka Pro")
     end

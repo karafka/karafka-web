@@ -51,7 +51,7 @@ describe_current do
       before { get "topics/#{topic}/distribution" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         refute_body("chartjs-bar")
@@ -66,7 +66,7 @@ describe_current do
       before { get "topics/#{topic}/distribution" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(pagination)
         refute_body("chartjs-bar")
@@ -83,7 +83,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         refute_body("chartjs-bar")
@@ -103,7 +103,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("chartjs-bar")
@@ -124,7 +124,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(pagination)
         assert_body("chartjs-bar")
@@ -145,7 +145,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body(pagination)
         assert_body("chartjs-bar")
@@ -169,7 +169,7 @@ describe_current do
       end
 
       it "renders partition increase form with all required elements" do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("Topic #{topic_name} - Increase Partitions")
         refute_body(pagination)
@@ -259,7 +259,7 @@ describe_current do
           end
 
           it "renders edit form" do
-            assert(response.ok?)
+            assert_ok
             assert_body("Topic")
             assert_body("Increase Partitions")
           end
@@ -272,7 +272,7 @@ describe_current do
           end
 
           it "renders edit form with error" do
-            assert(response.ok?)
+            assert_ok
             assert_body("Topic")
             assert_body("Increase Partitions")
             assert_body("new_total_cnt")

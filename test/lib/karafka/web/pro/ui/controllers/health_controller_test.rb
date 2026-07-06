@@ -54,7 +54,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("No health data is available")
@@ -65,7 +65,7 @@ describe_current do
       before { get "health/overview" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("Not available until first offset")
@@ -75,7 +75,7 @@ describe_current do
       context "when sorted" do
         before { get "health/overview?sort=id+desc" }
 
-        it { assert(response.ok?) }
+        it { assert_ok }
       end
 
       context "when commanding is enabled" do
@@ -86,7 +86,7 @@ describe_current do
         end
 
         it "expect to show topic pause controls without disabled state" do
-          assert(response.ok?)
+          assert_ok
           assert_body("Pause All")
           refute_body("btn-warning btn-sm btn-disabled")
         end
@@ -106,7 +106,7 @@ describe_current do
         after { Karafka::Web.config.commanding.active = true }
 
         it "expect to show topic pause controls in disabled state" do
-          assert(response.ok?)
+          assert_ok
           assert_body("Pause All")
           assert_body("btn-warning btn-sm btn-disabled")
         end
@@ -133,7 +133,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("No data available")
         assert_equal(2, body.scan("No data available").size) # partitions 1 and 2
       end
@@ -155,7 +155,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body("No data available")
       end
     end
@@ -176,7 +176,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("my-static-member-id-123")
         assert_body("Static Membership ID")
       end
@@ -198,7 +198,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body("Static Membership ID")
       end
     end
@@ -212,7 +212,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("Not available until first offset")
@@ -230,7 +230,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("No health data is available")
@@ -243,7 +243,7 @@ describe_current do
       before { get "health/lags" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("213731273")
@@ -265,7 +265,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("No data available")
         assert_equal(2, body.scan("No data available").size)
       end
@@ -285,7 +285,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body("No data available")
       end
     end
@@ -299,7 +299,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("Not available until first offset")
@@ -317,7 +317,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("No health data is available")
@@ -330,7 +330,7 @@ describe_current do
       before { get "health/lags" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("-1")
@@ -347,7 +347,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("No health data is available")
@@ -360,7 +360,7 @@ describe_current do
       before { get "health/offsets" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("Not available until first offset")
@@ -384,7 +384,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("No data available")
         assert_equal(2, body.scan("No data available").size)
       end
@@ -404,7 +404,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body("No data available")
       end
     end
@@ -418,7 +418,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("Not available until first offset")
@@ -446,7 +446,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("Not available until first offset")
@@ -475,7 +475,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("Not available until first offset")
@@ -496,7 +496,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("No health data is available")
@@ -509,7 +509,7 @@ describe_current do
       before { get "health/changes" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("Pause state change")
@@ -532,7 +532,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("No data available")
         assert_equal(2, body.scan("No data available").size)
       end
@@ -552,7 +552,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         refute_body("No data available")
       end
     end
@@ -566,7 +566,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("Pause state change")
@@ -591,7 +591,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("Until manual resume")

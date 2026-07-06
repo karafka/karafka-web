@@ -27,7 +27,7 @@ describe_current do
     before { get "cluster/brokers" }
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body("ID")
       assert_body(breadcrumbs)
     end
@@ -37,7 +37,7 @@ describe_current do
     before { get "cluster/replication" }
 
     it do
-      assert(response.ok?)
+      assert_ok
       assert_body(breadcrumbs)
     end
 
@@ -48,7 +48,7 @@ describe_current do
         before { get "cluster/replication?page=2" }
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body(breadcrumbs)
           assert_body(pagination)
         end
@@ -58,7 +58,7 @@ describe_current do
         before { get "cluster/replication?page=100000000" }
 
         it do
-          assert(response.ok?)
+          assert_ok
           assert_body(pagination)
           assert_body(no_meaningful_results)
         end
@@ -68,7 +68,7 @@ describe_current do
         before { get "cluster/replication?page=abc" }
 
         it "defaults to first page" do
-          assert(response.ok?)
+          assert_ok
           assert_body("Replication")
         end
       end
@@ -77,7 +77,7 @@ describe_current do
         before { get "cluster/replication?page=-1" }
 
         it "defaults to first page" do
-          assert(response.ok?)
+          assert_ok
           assert_body("Replication")
         end
       end
@@ -92,7 +92,7 @@ describe_current do
       end
 
       it "displays partition information correctly" do
-        assert(response.ok?)
+        assert_ok
         assert_body("Partition")
         assert_body("Leader")
         assert_body("In sync brokers")
@@ -107,7 +107,7 @@ describe_current do
       end
 
       it "respects custom page size" do
-        assert(response.ok?)
+        assert_ok
         assert_body(pagination)
       end
     end

@@ -12,7 +12,7 @@ describe_current do
       before { get "status" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body("The initial state of the consumers appears to")
 
@@ -56,7 +56,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
 
         # Enhanced assertions - missing topics should still show the table structure
@@ -84,7 +84,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("Please ensure all those topics have a replication")
         assert_body("alert-box-warning")
@@ -104,7 +104,7 @@ describe_current do
       before { get "status" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         refute_body("Please ensure all those topics have a replication")
       end
@@ -122,7 +122,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("The initial state of the consumers appears to")
       end
@@ -139,7 +139,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("The initial state of the consumers metrics appears to")
       end
@@ -149,7 +149,7 @@ describe_current do
       before { get "status?debug=true&refresh=1" }
 
       it "ignores query parameters and shows normal status" do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
       end
     end
@@ -162,7 +162,7 @@ describe_current do
       end
 
       it "always shows fresh status" do
-        assert(response.ok?)
+        assert_ok
       end
     end
 
@@ -170,7 +170,7 @@ describe_current do
       before { get "status" }
 
       it "shows Karafka and Web UI versions" do
-        assert(response.ok?)
+        assert_ok
         assert_body(Karafka::VERSION)
         assert_body(Karafka::Web::VERSION)
       end
@@ -183,7 +183,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("Karafka Web-UI is not part of your")
         assert_body("alert-box-error")
@@ -198,7 +198,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("Web UI was not able to establish a connection")
         assert_body("alert-box-error")
@@ -216,7 +216,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("need to be configured with")
         assert_body("exactly")
@@ -244,7 +244,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("There are no Karafka consumer processes actively reporting")
       end
@@ -277,7 +277,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("were not located in the Kafka cluster")
         assert_body(non_existing_topic)
@@ -292,7 +292,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("Karafka Pro subscription")
         assert_body("alert-box-warning")
@@ -317,7 +317,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         # Corrupted reports data leads to failure in consumers_reports check
         assert_body("alert-box-error")
@@ -352,7 +352,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("Incompatible consumer reports detected")
         assert_body("alert-box-error")
@@ -385,7 +385,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("Some consumers are using schema versions")
         assert_body("alert-box-warning")
@@ -420,7 +420,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("significant lag in materializing")
         assert_body("alert-box-error")
@@ -446,7 +446,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body(breadcrumbs)
         assert_body("is subscribed to handle")
       end

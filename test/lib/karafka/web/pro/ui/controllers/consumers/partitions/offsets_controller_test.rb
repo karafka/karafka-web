@@ -65,7 +65,7 @@ describe_current do
 
     context "when a process exists and is running" do
       it "expect to include relevant details" do
-        assert(response.ok?)
+        assert_ok
         assert_body(consumer_group_id)
         assert_body(topic_name)
         assert_body(partition_id.to_s)
@@ -117,7 +117,7 @@ describe_current do
       end
 
       it "expect to show not running error message" do
-        assert(response.ok?)
+        assert_ok
         assert_body("This Operation Cannot Be Performed")
         assert_body("Consumer offsets can only be modified using Web UI when the")
         refute_body(form)

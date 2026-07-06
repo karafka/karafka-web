@@ -50,7 +50,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("This process has no running jobs at the moment")
         refute_body("Karafka::Pro::ActiveJob::Consumer")
         refute_body(pagination)
@@ -61,7 +61,7 @@ describe_current do
       before { get "consumers/shinra:1:1/jobs/running" }
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("Karafka::Pro::ActiveJob::Consumer")
         refute_body(pagination)
       end
@@ -79,7 +79,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("Karafka::Pro::ActiveJob::Consumer")
         refute_body(pagination)
       end
@@ -98,7 +98,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("This process has no running jobs at the moment")
         refute_body(pagination)
       end
@@ -130,7 +130,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("This process has no pending jobs at the moment")
         refute_body("Karafka::Pro::ActiveJob::Consumer")
         refute_body(pagination)
@@ -152,7 +152,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("Karafka::Pro::ActiveJob::Consumer")
         refute_body(pagination)
       end
@@ -173,7 +173,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("Karafka::Pro::ActiveJob::Consumer")
         refute_body(pagination)
       end
@@ -192,7 +192,7 @@ describe_current do
       end
 
       it do
-        assert(response.ok?)
+        assert_ok
         assert_body("This process has no pending jobs at the moment")
         refute_body(pagination)
       end
