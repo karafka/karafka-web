@@ -162,10 +162,18 @@ module TopicsManagerHelper
     end
   end
 
-  # Polls the partition high watermark offset until it moves past the given offset or the
-  # timeout elapses. Used after a transactional produce to wait until its commit control record
-  # (written at `report.offset + 1`) is actually visible to a fresh consumer, instead of relying
-  # on a fixed sleep that can be too short under CI load.
+  # Polls the partition high watermark offset until it moves past the given offset and the
+  # Web UI's own read path settles on it without raising, or the timeout elapses. Used after a
+  # transactional produce to wait until its commit control record (written at
+  # `report.offset + 1`) is actually visible to a fresh consumer, instead of relying on a fixed
+  # sleep that can be too short under CI load.
+  #
+  # @note The admin watermark offset only proves the broker has appended the record. The Web UI
+  #   reads with a much shorter `fetch.wait.max.ms` than the admin client used here (see
+  #   `Karafka::Web::Ui::Lib::Admin`), and for a just-written transactional control record can
+  #   still raise on this exact offset if the broker (or its transaction coordinator) has not
+  #   fully settled, even once the watermark has advanced. We therefore also exercise the same
+  #   read the UI itself will perform and require it to complete without error before returning.
   #
   # @param topic [String] topic name
   # @param partition [Integer] partition id
@@ -173,15 +181,27 @@ module TopicsManagerHelper
   # @param timeout [Numeric] maximum time to wait in seconds
   def wait_for_offset_visible(topic, partition, offset, timeout: 10)
     deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
+    last_error = nil
 
     loop do
       _low, high = Karafka::Admin.read_watermark_offsets(topic, partition)
 
-      return if high > offset
+      if high > offset
+        begin
+          Karafka::Web::Ui::Lib::Admin.read_topic(topic, partition, 1, offset)
+          return
+        rescue => e
+          # Not ready yet from the UI's own read path, fall through and retry below
+          last_error = e
+        end
+      end
 
       if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
-        raise "Timed out after #{timeout}s waiting for offset #{offset} to become visible " \
-              "on #{topic}/#{partition}"
+        message = "Timed out after #{timeout}s waiting for offset #{offset} to become visible " \
+                  "on #{topic}/#{partition}"
+        message += " (last error: #{last_error.class}: #{last_error.message})" if last_error
+
+        raise message
       end
 
       sleep(0.1)
