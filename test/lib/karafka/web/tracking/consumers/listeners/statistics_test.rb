@@ -11,7 +11,7 @@ describe_current do
   let(:visits_p0) { sg_details["sgid"][:topics]["visits"][:partitions][0] }
   let(:event) do
     {
-      consumer_group_id: "cgid",
+      group_id: "cgid",
       subscription_group_id: "sgid",
       statistics: statistics
     }

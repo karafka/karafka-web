@@ -62,7 +62,7 @@ describe_current do
     listener.stubs(:coordinators).returns(coordinators)
     listener.stubs(:subscription_group).returns(subscription_group)
 
-    subscription_group.stubs(:consumer_group).returns(consumer_group)
+    subscription_group.stubs(:group).returns(consumer_group)
 
     consumer_group.stubs(:id).returns(consumer_group_id)
 

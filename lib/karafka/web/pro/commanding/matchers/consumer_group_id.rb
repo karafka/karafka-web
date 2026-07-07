@@ -48,7 +48,7 @@ module Karafka
             # @return [Boolean] true if this process has partitions assigned for the consumer group
             def matches?
               ::Karafka::App.assignments.any? do |topic, _partitions|
-                topic.consumer_group.id == consumer_group_id
+                topic.group.id == consumer_group_id
               end
             end
 

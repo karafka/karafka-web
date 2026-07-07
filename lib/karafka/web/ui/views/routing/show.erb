@@ -1,5 +1,5 @@
 <%
-  title = [@topic.consumer_group.name, @topic.subscription_group, @topic.name].join(': ')
+  title = [@topic.group.name, @topic.subscription_group, @topic.name].join(': ')
   view_title title
 %>
 

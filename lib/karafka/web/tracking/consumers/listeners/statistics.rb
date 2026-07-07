@@ -14,7 +14,7 @@ module Karafka
               statistics = event[:statistics]
               topics = statistics.fetch("topics")
               cgrp = statistics.fetch("cgrp")
-              cg_id = event[:consumer_group_id]
+              cg_id = event[:group_id]
               sg_id = event[:subscription_group_id]
               sg_details = extract_sg_details(sg_id, cgrp)
 

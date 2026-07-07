@@ -31,27 +31,15 @@
 module Karafka
   module Web
     module Pro
-      module Ui
-        module Controllers
-          # Namespace for all controllers related to consumers operations
-          module Consumers
-            # Base controller for all consumer related controllers
-            class BaseController < Controllers::BaseController
-              private
-
-              # Finds the routing topic instance matching a given consumer group and topic name
-              #
-              # @param consumer_group_id [String] consumer group id to match
-              # @param topic_name [String] topic name to match
-              # @return [Karafka::Routing::Topic, nil] matching routing topic or nil if not
-              #   found (may happen when not all routing is available)
-              def find_routing_topic(consumer_group_id, topic_name)
-                Karafka::App
-                  .routes
-                  .flat_map(&:topics)
-                  .flat_map(&:to_a)
-                  .find { |r_topic| r_topic.group.id == consumer_group_id && r_topic.name == topic_name }
-              end
+      module Commanding
+        module Handlers
+          # Module containing a helper for extracting the consumer group id out of a
+          # subscription group, shared by the commanding fetch-loop listeners
+          module GroupIdExtractor
+            # @param subscription_group [Karafka::Routing::SubscriptionGroup]
+            # @return [String] id of the consumer group the subscription group belongs to
+            def group_id_of(subscription_group)
+              subscription_group.group.id
             end
           end
         end

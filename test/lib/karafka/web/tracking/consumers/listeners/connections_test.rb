@@ -18,7 +18,7 @@ describe_current do
     sampler.stubs(:subscription_groups).returns(subscription_groups)
 
     subscription_group.stubs(:id).returns(sg_id)
-    subscription_group.stubs(:consumer_group).returns(consumer_group)
+    subscription_group.stubs(:group).returns(consumer_group)
     subscription_group.stubs(:kafka).returns({})
 
     consumer_group.stubs(:id).returns(cg_id)

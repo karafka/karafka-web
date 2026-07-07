@@ -8,7 +8,7 @@
   <li>
     <a href="<%= root_path('routing', @topic.id) %>">
       <%=
-        title = [@topic.consumer_group.id, @topic.subscription_group, @topic.name].join(': ')
+        title = [@topic.group.id, @topic.subscription_group, @topic.name].join(': ')
       %>
     </a>
   </li>

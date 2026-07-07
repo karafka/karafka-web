@@ -183,7 +183,7 @@ describe_current do
       assert_equal(0, job[:committed_offset])
       assert_equal(1, job[:messages])
       assert_equal(caller.class.to_s, job[:consumer])
-      assert_equal(caller.topic.consumer_group.id, job[:consumer_group])
+      assert_equal(caller.topic.group.id, job[:consumer_group])
       assert_equal("consume", job[:type])
       assert_equal(caller.tags, job[:tags])
     end
@@ -230,7 +230,7 @@ describe_current do
       assert_equal(0, job[:committed_offset])
       assert_equal(1, job[:messages])
       assert_equal(caller.class.to_s, job[:consumer])
-      assert_equal(caller.topic.consumer_group.id, job[:consumer_group])
+      assert_equal(caller.topic.group.id, job[:consumer_group])
       assert_equal("eofed", job[:type])
       assert_equal(caller.tags, job[:tags])
     end
@@ -275,7 +275,7 @@ describe_current do
       assert_equal(0, job[:committed_offset])
       assert_equal(1, job[:messages])
       assert_equal(caller.class.to_s, job[:consumer])
-      assert_equal(caller.topic.consumer_group.id, job[:consumer_group])
+      assert_equal(caller.topic.group.id, job[:consumer_group])
       assert_equal("revoked", job[:type])
       assert_equal(caller.tags, job[:tags])
     end
@@ -320,7 +320,7 @@ describe_current do
       assert_equal(0, job[:committed_offset])
       assert_equal(1, job[:messages])
       assert_equal(caller.class.to_s, job[:consumer])
-      assert_equal(caller.topic.consumer_group.id, job[:consumer_group])
+      assert_equal(caller.topic.group.id, job[:consumer_group])
       assert_equal("shutdown", job[:type])
       assert_equal(caller.tags, job[:tags])
     end

@@ -19,13 +19,13 @@ describe_current do
 
   let(:subscription_group) do
     stub(id: "sub1",
-      consumer_group: consumer_group)
+      group: consumer_group)
   end
 
   describe "#on_error_occurred" do
     let(:topic) do
       stub(name: "topic_name",
-        consumer_group: consumer_group,
+        group: consumer_group,
         subscription_group: subscription_group)
     end
 
@@ -73,7 +73,7 @@ describe_current do
       end
 
       let(:routing_subscription_group) do
-        Struct.new(:id, :consumer_group).new("sub1", routing_consumer_group)
+        Struct.new(:id, :group).new("sub1", routing_consumer_group)
       end
 
       let(:routing_topic) do
