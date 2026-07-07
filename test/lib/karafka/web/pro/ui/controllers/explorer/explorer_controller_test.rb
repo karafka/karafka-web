@@ -795,8 +795,8 @@ describe_current do
       context "when recent is on the first partition" do
         before do
           produce(topic, payload1, partition: 1)
-          sleep(0.1)
-          produce(topic, payload2, partition: 0)
+          report = produce(topic, payload2, partition: 0)
+          wait_for_message(topic, report.partition, report.offset)
           get "explorer/topics/#{topic}/recent"
         end
 
@@ -813,8 +813,8 @@ describe_current do
       context "when recent is on another partition" do
         before do
           produce(topic, payload1, partition: 0)
-          sleep(0.1)
-          produce(topic, payload2, partition: 1)
+          report = produce(topic, payload2, partition: 1)
+          wait_for_message(topic, report.partition, report.offset)
           get "explorer/topics/#{topic}/recent"
         end
 
