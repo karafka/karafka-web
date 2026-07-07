@@ -111,4 +111,47 @@ describe_current do
       assert_includes(topics, errors_topic)
     end
   end
+
+  describe "#min_insync_replicas" do
+    let(:action) { described_class.new }
+
+    it "expect to return an integer no greater than the given replication factor" do
+      result = action.send(:min_insync_replicas, 1)
+
+      assert_kind_of(Integer, result)
+      assert_operator(result, :<=, 1)
+    end
+
+    it "expect to never exceed a higher requested replication factor either" do
+      result = action.send(:min_insync_replicas, 3)
+
+      assert_kind_of(Integer, result)
+      assert_operator(result, :<=, 3)
+    end
+  end
+
+  context "when a topic is created" do
+    let(:consumers_states_topic) { generate_topic_name }
+    let(:expected_min_isr) { described_class.new.send(:min_insync_replicas, 1) }
+
+    let(:persisted_min_isr) do
+      resource = Karafka::Admin::Configs::Resource.new(type: :topic, name: consumers_states_topic)
+
+      Karafka::Admin::Configs
+        .describe(resource)
+        .first
+        .configs
+        .find { |config| config.name == "min.insync.replicas" }
+        .value
+        .to_i
+    end
+
+    before { Karafka::Web.config.topics.consumers.states.name = consumers_states_topic }
+
+    it "expect the persisted min.insync.replicas to match the computed value" do
+      create
+
+      assert_equal(expected_min_isr, persisted_min_isr)
+    end
+  end
 end

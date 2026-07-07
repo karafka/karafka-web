@@ -23,6 +23,8 @@ module Karafka
             consumers_commands_topic = ::Karafka::Web.config.topics.consumers.commands
             errors_topic = ::Karafka::Web.config.topics.errors
 
+            min_isr = min_insync_replicas(replication_factor)
+
             if existing_topics_names.include?(errors_topic.name)
               exists(errors_topic.name)
             else
@@ -35,7 +37,7 @@ module Karafka
                 errors_topic.name,
                 1,
                 replication_factor,
-                errors_topic.config
+                with_min_insync_replicas(errors_topic.config, min_isr)
               )
               created(errors_topic.name)
             end
@@ -49,7 +51,7 @@ module Karafka
                 consumers_reports_topic.name,
                 1,
                 replication_factor,
-                consumers_reports_topic.config
+                with_min_insync_replicas(consumers_reports_topic.config, min_isr)
               )
               created(consumers_reports_topic.name)
             end
@@ -64,7 +66,7 @@ module Karafka
                 consumers_metrics_topic.name,
                 1,
                 replication_factor,
-                consumers_metrics_topic.config
+                with_min_insync_replicas(consumers_metrics_topic.config, min_isr)
               )
               created(consumers_metrics_topic.name)
             end
@@ -79,7 +81,7 @@ module Karafka
                 consumers_commands_topic.name,
                 1,
                 replication_factor,
-                consumers_commands_topic.config
+                with_min_insync_replicas(consumers_commands_topic.config, min_isr)
               )
               created(consumers_commands_topic.name)
             end
@@ -94,13 +96,55 @@ module Karafka
                 consumers_states_topic.name,
                 1,
                 replication_factor,
-                consumers_states_topic.config
+                with_min_insync_replicas(consumers_states_topic.config, min_isr)
               )
               created(consumers_states_topic.name)
             end
           end
 
           private
+
+          # Reads the cluster's own broker-level `min.insync.replicas` default so it can be
+          # applied explicitly to the Web UI's own topics, capped to their replication factor.
+          #
+          # Kafka applies the broker-level default automatically when a topic has no explicit
+          # `min.insync.replicas` override, so a cluster configured for higher durability (e.g.
+          # `min.insync.replicas: 2`) would silently make a topic created with
+          # `replication_factor: 1` unwritable once produced to with `acks: all`. Capping the
+          # explicit override to the replication factor keeps the Web UI's own topics writable
+          # regardless of the cluster-wide default.
+          #
+          # @param replication_factor [Integer] replication factor picked for the Web UI topics
+          # @return [Integer, nil] `min.insync.replicas` value safe to use, or `nil` when the
+          #   cluster default could not be established, in which case no explicit override is
+          #   applied and the broker default is left to apply as before
+          def min_insync_replicas(replication_factor)
+            broker_id = ::Karafka::Admin.cluster_info.brokers.first.fetch(:broker_id)
+            resource = ::Karafka::Admin::Configs::Resource.new(type: :broker, name: broker_id.to_s)
+
+            cluster_default = ::Karafka::Admin::Configs
+              .describe(resource)
+              .first
+              .configs
+              .find { |config| config.name == "min.insync.replicas" }
+              &.value
+
+            return nil unless cluster_default
+
+            [Integer(cluster_default), replication_factor].min
+          rescue Rdkafka::RdkafkaError
+            nil
+          end
+
+          # @param topic_config [Hash] topic config as defined for a given Web UI topic
+          # @param min_isr [Integer, nil] `min.insync.replicas` value to apply or `nil` if none
+          #   should be applied
+          # @return [Hash] topic config with `min.insync.replicas` applied when available
+          def with_min_insync_replicas(topic_config, min_isr)
+            return topic_config unless min_isr
+
+            topic_config.merge("min.insync.replicas": min_isr)
+          end
 
           # @param topic_name [String] name of the topic that exists
           # @return [String] formatted message

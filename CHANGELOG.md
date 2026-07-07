@@ -1,6 +1,7 @@
 # Karafka Web Changelog
 
 ## 1.0.0 (Unreleased)
+- [Enhancement] Use the cluster's own broker-level `min.insync.replicas` default to set an explicit, safe `min.insync.replicas` on the Web UI's own topics at install/reset/migrate time, capped to their replication factor. Previously these topics never set this config explicitly, so they silently inherited the broker default; in a cluster configured for higher durability (e.g. `min.insync.replicas: 2`) that made a topic created with `replication_factor: 1` unwritable under `acks: all`. Closes #348.
 - [Enhancement] Remove the OSS "support Karafka Pro" banner that was rendered on every Web UI page for non-Pro users. It's no longer needed at this stage since users are already aware of the Pro offering.
 - [Enhancement] Migrate the Web UI topic declarations to Karafka's new standalone `Karafka::App.declaratives.draw` API (Karafka `2.6.0.beta1`). The Web UI topics are declared as `active false` (Web UI manages their creation and runtime replication factor itself), replacing the deprecated routing-based `config(active: false)` bridge that was previously called on each routing topic.
 - [Enhancement] Add `Warning.process` block to the test helper to turn Ruby warnings originating from the project code into test failures.
