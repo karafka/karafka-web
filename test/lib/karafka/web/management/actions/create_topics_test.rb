@@ -128,6 +128,59 @@ describe_current do
       assert_kind_of(Integer, result)
       assert_operator(result, :<=, 3)
     end
+
+    context "when there are no brokers reported" do
+      before { Karafka::Admin.stubs(:cluster_info).returns(OpenStruct.new(brokers: [])) }
+
+      it { assert_nil(action.send(:min_insync_replicas, 1)) }
+    end
+
+    context "when describing the broker config raises an Rdkafka error" do
+      before { Karafka::Admin::Configs.stubs(:describe).raises(Rdkafka::RdkafkaError.new(1)) }
+
+      it { assert_nil(action.send(:min_insync_replicas, 1)) }
+    end
+
+    context "when the cluster default is not a valid integer" do
+      before do
+        config = Karafka::Admin::Configs::Config.new(name: "min.insync.replicas", value: "n/a")
+        resource = Karafka::Admin::Configs::Resource.new(type: :broker, name: "1")
+        resource.configs << config
+
+        Karafka::Admin::Configs.stubs(:describe).returns([resource])
+      end
+
+      it { assert_nil(action.send(:min_insync_replicas, 1)) }
+    end
+  end
+
+  describe "#with_min_insync_replicas" do
+    let(:action) { described_class.new }
+
+    it "expect to leave the config untouched when min_isr is nil" do
+      config = { "cleanup.policy": "delete" }
+
+      result = action.send(:with_min_insync_replicas, config, nil)
+
+      assert_equal(config, result)
+      refute(result.key?(:"min.insync.replicas"))
+    end
+
+    it "expect to apply min_isr when the config does not already set it" do
+      config = { "cleanup.policy": "delete" }
+
+      result = action.send(:with_min_insync_replicas, config, 2)
+
+      assert_equal(2, result[:"min.insync.replicas"])
+    end
+
+    it "expect not to override an already present min.insync.replicas" do
+      config = { "cleanup.policy": "delete", "min.insync.replicas": 5 }
+
+      result = action.send(:with_min_insync_replicas, config, 2)
+
+      assert_equal(5, result[:"min.insync.replicas"])
+    end
   end
 
   context "when a topic is created" do

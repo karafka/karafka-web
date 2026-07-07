@@ -119,36 +119,43 @@ module Karafka
           #   cluster default could not be established, in which case no explicit override is
           #   applied and the broker default is left to apply as before
           def min_insync_replicas(replication_factor)
-            broker_id = ::Karafka::Admin.cluster_info.brokers.first.fetch(:broker_id)
+            broker_id = ::Karafka::Admin.cluster_info.brokers.first&.fetch(:broker_id, nil)
+
+            return nil unless broker_id
+
             resource = ::Karafka::Admin::Configs::Resource.new(type: :broker, name: broker_id.to_s)
 
             # Kafka-compatible systems aren't Kafka. Redpanda, Azure Event Hubs' Kafka endpoint,
             # WarpStream, and various managed proxies implement the admin protocol with varying
-            # completeness. Some return a partial config set for broker resources or don't
-            # support broker-level DescribeConfigs well at all, so `min.insync.replicas` may
-            # simply be absent from the result. Karafka Web runs against plenty of these in the
-            # wild, so we treat a missing entry as "could not be established" (see `return nil`
-            # below) rather than raising.
+            # completeness. Some return a partial (or empty) config set for broker resources or
+            # don't support broker-level DescribeConfigs well at all, so `min.insync.replicas`
+            # may simply be absent from the result. Karafka Web runs against plenty of these in
+            # the wild, so we treat a missing entry as "could not be established" (see
+            # `return nil` below) rather than raising.
             cluster_default = ::Karafka::Admin::Configs
               .describe(resource)
               .first
-              .configs
-              .find { |config| config.name == "min.insync.replicas" }
+              &.configs
+              &.find { |config| config.name == "min.insync.replicas" }
               &.value
 
             return nil unless cluster_default
 
             [Integer(cluster_default), replication_factor].min
-          rescue Rdkafka::RdkafkaError
+          rescue Rdkafka::RdkafkaError, ArgumentError
+            # ArgumentError covers a broker returning a non-integer-looking value for
+            # min.insync.replicas, which is the same "can't fully trust a Kafka-compatible
+            # system's admin responses" concern as above.
             nil
           end
 
           # @param topic_config [Hash] topic config as defined for a given Web UI topic
           # @param min_isr [Integer, nil] `min.insync.replicas` value to apply or `nil` if none
           #   should be applied
-          # @return [Hash] topic config with `min.insync.replicas` applied when available
+          # @return [Hash] topic config with `min.insync.replicas` applied when available and not
+          #   already explicitly set by the user
           def with_min_insync_replicas(topic_config, min_isr)
-            return topic_config unless min_isr
+            return topic_config if min_isr.nil? || topic_config.key?(:"min.insync.replicas")
 
             topic_config.merge("min.insync.replicas": min_isr)
           end
