@@ -66,11 +66,19 @@ module ControllerHelper
   # on failure instead of a bare "Expected false to be truthy". A plain `assert(response.ok?)`
   # gives no clue whether a failure is a 404, a 500, or something else, which makes intermittent
   # CI-only failures much harder to diagnose than they need to be.
+  #
+  # On a 500, also includes the actual exception (class, message, backtrace) captured via the
+  # `error.occurred` monitor event (see `LastUiError` in test_helper.rb) instead of just the
+  # generic static error page body, which is otherwise the only thing a failure here shows.
   def assert_ok
-    assert(
-      response.ok?,
-      "Expected a successful response, got #{status}. Body excerpt: #{body[0, 500].inspect}"
-    )
+    message = "Expected a successful response, got #{status}. Body excerpt: #{body[0, 500].inspect}"
+
+    if (error = LastUiError.error)
+      message += "\nCaptured error: #{error.class}: #{error.message}\n" \
+                 "#{Array(error.backtrace).first(15).join("\n")}"
+    end
+
+    assert(response.ok?, message)
   end
 
   # @return [String] breadcrumbs string part to match for presence

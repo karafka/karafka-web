@@ -200,6 +200,8 @@ Minitest::Spec.class_eval do
 
     Karafka::Web.config.ui.cache.clear
 
+    LastUiError.clear
+
     # Set existing topics
     Karafka::Web.config.topics.consumers.states.name = TOPICS[0]
     Karafka::Web.config.topics.consumers.metrics.name = TOPICS[1]
@@ -272,6 +274,25 @@ produce(TOPICS[3], Fixtures.consumers_commands_file("consumers/current.json"))
 Karafka::Web::Management::Actions::MigrateStatesData.new.call
 
 Karafka::Web.enable!
+
+# Captures the most recently instrumented Web UI unhandled error (dispatched via the same
+# `error.occurred` monitor event the production error handler already uses), so `assert_ok`
+# can surface the actual exception on a 500 instead of just a generic HTML body dump. This has
+# been the main blocker in diagnosing rare CI-only flakes in the Explorer controller specs,
+# where the failure only ever showed the static error page body.
+module LastUiError
+  class << self
+    attr_accessor :error
+
+    def clear
+      self.error = nil
+    end
+  end
+end
+
+Karafka.monitor.subscribe("error.occurred") do |event|
+  LastUiError.error = event[:error] if event[:type] == "web.ui.error"
+end
 
 # Disable CSRF checks for tests
 # Must configure on all classes due to Roda's opts inheritance
