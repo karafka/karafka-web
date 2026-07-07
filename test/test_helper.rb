@@ -275,23 +275,29 @@ Karafka::Web::Management::Actions::MigrateStatesData.new.call
 
 Karafka::Web.enable!
 
-# Captures the most recently instrumented Web UI unhandled error (dispatched via the same
+# Captures every Web UI unhandled error instrumented during a test (dispatched via the same
 # `error.occurred` monitor event the production error handler already uses), so `assert_ok`
-# can surface the actual exception on a 500 instead of just a generic HTML body dump. This has
-# been the main blocker in diagnosing rare CI-only flakes in the Explorer controller specs,
+# can surface the actual exception(s) on a 500 instead of just a generic HTML body dump. This
+# has been the main blocker in diagnosing rare CI-only flakes in the Explorer controller specs,
 # where the failure only ever showed the static error page body.
+#
+# @note We keep all errors captured during a test, not just the last one, in case more than one
+#   occurs (e.g. a request that triggers an error and a subsequent teardown/link-validation pass
+#   that trips on the resulting page).
 module LastUiError
   class << self
-    attr_accessor :error
+    attr_accessor :errors
 
     def clear
-      self.error = nil
+      self.errors = []
     end
   end
+
+  clear
 end
 
 Karafka.monitor.subscribe("error.occurred") do |event|
-  LastUiError.error = event[:error] if event[:type] == "web.ui.error"
+  LastUiError.errors << event[:error] if event[:type] == "web.ui.error"
 end
 
 # Disable CSRF checks for tests
