@@ -122,6 +122,13 @@ module Karafka
             broker_id = ::Karafka::Admin.cluster_info.brokers.first.fetch(:broker_id)
             resource = ::Karafka::Admin::Configs::Resource.new(type: :broker, name: broker_id.to_s)
 
+            # Kafka-compatible systems aren't Kafka. Redpanda, Azure Event Hubs' Kafka endpoint,
+            # WarpStream, and various managed proxies implement the admin protocol with varying
+            # completeness. Some return a partial config set for broker resources or don't
+            # support broker-level DescribeConfigs well at all, so `min.insync.replicas` may
+            # simply be absent from the result. Karafka Web runs against plenty of these in the
+            # wild, so we treat a missing entry as "could not be established" (see `return nil`
+            # below) rather than raising.
             cluster_default = ::Karafka::Admin::Configs
               .describe(resource)
               .first
