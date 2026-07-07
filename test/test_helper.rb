@@ -200,6 +200,8 @@ Minitest::Spec.class_eval do
 
     Karafka::Web.config.ui.cache.clear
 
+    LastUiError.clear
+
     # Set existing topics
     Karafka::Web.config.topics.consumers.states.name = TOPICS[0]
     Karafka::Web.config.topics.consumers.metrics.name = TOPICS[1]
@@ -272,6 +274,13 @@ produce(TOPICS[3], Fixtures.consumers_commands_file("consumers/current.json"))
 Karafka::Web::Management::Actions::MigrateStatesData.new.call
 
 Karafka::Web.enable!
+
+# Wires LastUiError (see test/support/helpers/last_ui_error.rb) into the same error.occurred
+# monitor event the production error handler already uses to dispatch Web UI errors, so
+# assert_ok can surface the actual exception on a 500 instead of just a generic HTML body dump.
+Karafka.monitor.subscribe("error.occurred") do |event|
+  LastUiError.errors << event[:error] if event[:type] == "web.ui.error"
+end
 
 # Disable CSRF checks for tests
 # Must configure on all classes due to Roda's opts inheritance
