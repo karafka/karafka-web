@@ -1,6 +1,7 @@
 # Karafka Web Changelog
 
 ## 1.0.0 (Unreleased)
+- [Enhancement] Make `assert_ok` surface the actual captured exception (class, message, backtrace) on a 500, not just the generic static error page body. Subscribes to the same `error.occurred` monitor event the production error handler already dispatches web UI errors through, capturing the last one per test. This has been the main blocker in diagnosing rare CI-only flakes in the Pro Explorer controller specs, where a failure only ever showed the generic HTML error page with no indication of what actually broke.
 - [Enhancement] Remove the OSS "support Karafka Pro" banner that was rendered on every Web UI page for non-Pro users. It's no longer needed at this stage since users are already aware of the Pro offering.
 - [Enhancement] Migrate the Web UI topic declarations to Karafka's new standalone `Karafka::App.declaratives.draw` API (Karafka `2.6.0.beta1`). The Web UI topics are declared as `active false` (Web UI manages their creation and runtime replication factor itself), replacing the deprecated routing-based `config(active: false)` bridge that was previously called on each routing topic.
 - [Enhancement] Add `Warning.process` block to the test helper to turn Ruby warnings originating from the project code into test failures.
