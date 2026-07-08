@@ -122,6 +122,7 @@
   "test/lib/karafka/web/management/migrations/consumers_metrics/1699543515_fill_missing_received_and_sent_bytes_test.rb": 0.007,
   "test/lib/karafka/web/ui/models/status/checks/topics_test.rb": 0.007,
   "test/lib/karafka/web/tracking/consumers/listeners/tags_test.rb": 0.007,
+  "test/lib/karafka/web/management/migrations/consumers_states/1783534028_add_paused_partitions_lag_test.rb": 0.007,
   "test/lib/karafka/web/ui/models/status/checks/consumers_reports_schema_state_test.rb": 0.006,
   "test/lib/karafka/web/ui/models/status/checks/materializing_lag_test.rb": 0.006,
   "test/lib/karafka/web/tracking/consumers/listeners/status_test.rb": 0.006,
