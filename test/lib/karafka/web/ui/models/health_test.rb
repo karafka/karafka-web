@@ -108,4 +108,111 @@ describe_current do
       assert_equal(keys, sg[:topics][:default][:partitions][:"0"].keys.sort)
     end
   end
+
+  describe "paused partitions lag compensation" do
+    let(:cg) { "example_app6_app" }
+    let(:sg) { "c4ca4238a0b9_0" }
+
+    # The "default" fixture topic/partition is flipped to paused with fresh committed/stored
+    # offsets. "test2" and "visits" are left as-is (still "active") to act as controls, and
+    # "visits" conveniently already has `lag_stored: -1` (unknown), useful for the
+    # only-`lag`-available scenario below.
+    let(:paused_report) do
+      built_report = Fixtures.consumers_reports_json
+
+      partition = built_report[:consumer_groups][cg.to_sym][:subscription_groups][sg.to_sym][:topics][:default][:partitions][:"0"]
+      partition[:poll_state] = "paused"
+      partition[:committed_offset] = 100
+      partition[:stored_offset] = 90
+
+      built_report
+    end
+
+    before { produce(reports_topic, paused_report.to_json) }
+
+    context "when a fresh correction is available" do
+      let(:state) do
+        built_state = Fixtures.consumers_states_json
+
+        built_state[:paused_partitions_lag] = {
+          cg.to_sym => { default: { "0": { lag: 5_000, lag_stored: 4_000 } } }
+        }
+
+        built_state
+      end
+
+      it "overrides lag, lag_stored and lag_hybrid, and zeroes out the deltas" do
+        partition_data = stats[cg][:topics]["default"][:partitions][0]
+
+        assert_equal(5_000, partition_data[:lag])
+        assert_equal(4_000, partition_data[:lag_stored])
+        assert_equal(4_000, partition_data[:lag_hybrid])
+        assert_equal(0, partition_data[:lag_d])
+        assert_equal(0, partition_data[:lag_stored_d])
+        assert_equal(0, partition_data[:lag_hybrid_d])
+      end
+
+      it "leaves non-paused partitions untouched" do
+        other = stats[cg][:topics]["test2"][:partitions][0]
+
+        assert_equal(-1, other[:lag])
+        assert_equal(-1, other[:lag_stored])
+        assert_equal(0, other[:lag_d])
+      end
+    end
+
+    context "when the correction only has lag (lag_stored unavailable)" do
+      let(:paused_report) do
+        built_report = Fixtures.consumers_reports_json
+
+        partition = built_report[:consumer_groups][cg.to_sym][:subscription_groups][sg.to_sym][:topics][:visits][:partitions][:"0"]
+        partition[:poll_state] = "paused"
+
+        built_report
+      end
+
+      let(:state) do
+        built_state = Fixtures.consumers_states_json
+
+        built_state[:paused_partitions_lag] = {
+          cg.to_sym => { visits: { "0": { lag: 500 } } }
+        }
+
+        built_state
+      end
+
+      it "overrides only lag and hybrid falls back to it since lag_stored is still negative" do
+        partition_data = stats[cg][:topics]["visits"][:partitions][0]
+
+        assert_equal(500, partition_data[:lag])
+        assert_equal(-1, partition_data[:lag_stored])
+        assert_equal(500, partition_data[:lag_hybrid])
+      end
+    end
+
+    context "when no correction exists for the paused partition" do
+      let(:state) { Fixtures.consumers_states_json }
+
+      it "leaves the self-reported (stale) values untouched" do
+        partition_data = stats[cg][:topics]["default"][:partitions][0]
+
+        assert_equal(13, partition_data[:lag])
+        assert_equal(213_731_273, partition_data[:lag_stored])
+      end
+    end
+
+    context "when paused_partitions_lag is absent from state entirely" do
+      let(:state) do
+        built_state = Fixtures.consumers_states_json
+        built_state.delete(:paused_partitions_lag)
+        built_state
+      end
+
+      it "does not raise and leaves partitions untouched" do
+        partition_data = stats[cg][:topics]["default"][:partitions][0]
+
+        assert_equal(13, partition_data[:lag])
+      end
+    end
+  end
 end

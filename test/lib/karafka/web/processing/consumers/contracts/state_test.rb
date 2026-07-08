@@ -29,7 +29,8 @@ describe_current do
         lag_hybrid: 50,
         lag: 10
       },
-      processes: {}
+      processes: {},
+      paused_partitions_lag: {}
     }
   end
 
@@ -309,6 +310,42 @@ describe_current do
       before { params[:schema_state] = 123 }
 
       it { refute(contract.call(params).success?) }
+    end
+  end
+
+  context "when validating paused_partitions_lag" do
+    context "when paused_partitions_lag is missing" do
+      before { params.delete(:paused_partitions_lag) }
+
+      it { refute(contract.call(params).success?) }
+    end
+
+    context "when paused_partitions_lag is not a hash" do
+      before { params[:paused_partitions_lag] = [] }
+
+      it { refute(contract.call(params).success?) }
+    end
+
+    context "when paused_partitions_lag is nil" do
+      before { params[:paused_partitions_lag] = nil }
+
+      it { refute(contract.call(params).success?) }
+    end
+
+    context "when paused_partitions_lag is empty" do
+      before { params[:paused_partitions_lag] = {} }
+
+      it { assert(contract.call(params).success?) }
+    end
+
+    context "when paused_partitions_lag has nested correction data" do
+      before do
+        params[:paused_partitions_lag] = {
+          my_cg: { my_topic: { "0": { lag: 100, lag_stored: 90 } } }
+        }
+      end
+
+      it { assert(contract.call(params).success?) }
     end
   end
 

@@ -86,6 +86,12 @@ module Karafka
 
           # Extra Kafka setup for our processing consumer
           required(:kafka) { |val| val.is_a?(Hash) }
+
+          nested(:paused_partitions_lag) do
+            required(:min_pause_duration) { |val| val.is_a?(Integer) && val.positive? }
+            required(:refresh_interval) { |val| val.is_a?(Integer) && val.positive? }
+            required(:query_timeout) { |val| val.is_a?(Integer) && val.positive? }
+          end
         end
 
         nested(:ui) do

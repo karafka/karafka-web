@@ -40,10 +40,11 @@ describe_current do
       migrate
     end
 
-    it "expect to migrate consumers states to 1.4.0 with all needed details" do
-      assert_equal("1.4.0", states_state[:schema_version])
+    it "expect to migrate consumers states to 1.5.0 with all needed details" do
+      assert_equal("1.5.0", states_state[:schema_version])
       assert_equal("accepted", states_state[:schema_state])
       assert_equal({}, states_state[:processes])
+      assert_equal({}, states_state[:paused_partitions_lag])
       assert(states_state[:dispatched_at] < Time.now.to_f)
       assert_equal({ active: 0, standby: 0 }, states_state[:stats][:listeners])
 

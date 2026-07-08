@@ -14,6 +14,7 @@ module Karafka
 
               fetch_topics_data(state, stats)
               fetch_rebalance_ages(state, stats)
+              compensate_paused_partitions_lag(state, stats)
 
               sort_structure(stats)
             end
@@ -90,6 +91,60 @@ module Karafka
               stats.each_value do |details|
                 details[:rebalanced_at] = details[:rebalance_ages].max
               end
+            end
+
+            # Overlays freshly-queried lag data (computed by the materializer for partitions
+            # that have been paused long enough for their librdkafka high watermark cache to go
+            # stale) on top of the self-reported values for those partitions.
+            #
+            # @param state [Hash]
+            # @param stats [Hash] hash where we will store all the aggregated data
+            # @note Consumer group ids, topic names and stringified partition ids in
+            #   `state[:paused_partitions_lag]` come back from `state` as symbols because it went
+            #   through a JSON round-trip via our deserializer, unlike the string/integer keys
+            #   used in `stats`.
+            def compensate_paused_partitions_lag(state, stats)
+              corrections = state[:paused_partitions_lag]
+
+              return if corrections.nil? || corrections.empty?
+
+              stats.each do |cg_id, cg_data|
+                cg_corrections = corrections[cg_id.to_sym]
+
+                next unless cg_corrections
+
+                cg_data[:topics].each do |t_name, t_data|
+                  topic_corrections = cg_corrections[t_name.to_sym]
+
+                  next unless topic_corrections
+
+                  t_data[:partitions].each do |pt_id, partition|
+                    next unless partition[:poll_state] == "paused"
+
+                    correction = topic_corrections[pt_id.to_s.to_sym]
+
+                    next unless correction
+
+                    apply_paused_partition_lag_correction(partition, correction)
+                  end
+                end
+              end
+            end
+
+            # @param partition [Partition]
+            # @param correction [Hash] freshly computed `lag`/`lag_stored`, whichever were
+            #   available at the time the materializer queried the cluster
+            def apply_paused_partition_lag_correction(partition, correction)
+              partition[:lag] = correction[:lag] if correction[:lag]
+              partition[:lag_stored] = correction[:lag_stored] if correction[:lag_stored]
+
+              # Same hybrid-selection rule as `Partition#lag_hybrid`
+              partition[:lag_hybrid] = partition[:lag_stored].negative? ? partition[:lag] : partition[:lag_stored]
+
+              # A substituted single-point value has no meaningful trend
+              partition[:lag_d] = 0
+              partition[:lag_stored_d] = 0
+              partition[:lag_hybrid_d] = 0
             end
 
             # Iterates over all partitions, yielding with extra expanded details
