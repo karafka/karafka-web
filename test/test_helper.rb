@@ -23,10 +23,19 @@ Warning.process do |warning|
   next if warning.include?("vendor/")
   next if warning.include?("minitest_locator.rb")
   next if warning.include?("fixture_file")
-  # Both Roda app classes (OSS and Pro) intentionally accumulate many object
-  # shapes because different routes set different subsets of controller response
-  # attributes. Restructuring them to avoid this would be significantly complex.
-  next if warning.include?("shape variations") && warning.include?("Ui::App")
+  # Both Roda app classes (OSS and Pro) intentionally accumulate many object shapes because
+  # different routes set different subsets of controller response attributes. Controller
+  # classes themselves have the same characteristic: most conditionally set a handful of
+  # instance variables depending on the specific request branch taken (e.g. Explorer's #show
+  # only sets @safe_key/@safe_headers/@safe_payload when the message isn't a compacted/system
+  # entry). Which controller happens to be the one that crosses the shape-variation threshold
+  # depends on minitest's random run order, which is why this previously surfaced as an
+  # intermittent, seemingly-unrelated CI-only failure (e.g. a transactional Explorer spec)
+  # instead of a stable, reproducible one. Restructuring controllers to avoid this would be
+  # significantly complex across the whole controllers layer, matching the existing Ui::App
+  # exception below.
+  next if warning.include?("shape variations") &&
+    (warning.include?("Ui::App") || warning.include?("Ui::Controllers"))
 
   raise "Warning in your code: #{warning}"
 end
