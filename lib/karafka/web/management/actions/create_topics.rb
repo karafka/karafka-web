@@ -23,8 +23,6 @@ module Karafka
             consumers_commands_topic = ::Karafka::Web.config.topics.consumers.commands
             errors_topic = ::Karafka::Web.config.topics.errors
 
-            min_isr = min_insync_replicas(replication_factor)
-
             if existing_topics_names.include?(errors_topic.name)
               exists(errors_topic.name)
             else
@@ -37,7 +35,7 @@ module Karafka
                 errors_topic.name,
                 1,
                 replication_factor,
-                with_min_insync_replicas(errors_topic.config, min_isr)
+                with_min_insync_replicas(errors_topic.config, replication_factor)
               )
               created(errors_topic.name)
             end
@@ -51,7 +49,7 @@ module Karafka
                 consumers_reports_topic.name,
                 1,
                 replication_factor,
-                with_min_insync_replicas(consumers_reports_topic.config, min_isr)
+                with_min_insync_replicas(consumers_reports_topic.config, replication_factor)
               )
               created(consumers_reports_topic.name)
             end
@@ -66,7 +64,7 @@ module Karafka
                 consumers_metrics_topic.name,
                 1,
                 replication_factor,
-                with_min_insync_replicas(consumers_metrics_topic.config, min_isr)
+                with_min_insync_replicas(consumers_metrics_topic.config, replication_factor)
               )
               created(consumers_metrics_topic.name)
             end
@@ -81,7 +79,7 @@ module Karafka
                 consumers_commands_topic.name,
                 1,
                 replication_factor,
-                with_min_insync_replicas(consumers_commands_topic.config, min_isr)
+                with_min_insync_replicas(consumers_commands_topic.config, replication_factor)
               )
               created(consumers_commands_topic.name)
             end
@@ -96,7 +94,7 @@ module Karafka
                 consumers_states_topic.name,
                 1,
                 replication_factor,
-                with_min_insync_replicas(consumers_states_topic.config, min_isr)
+                with_min_insync_replicas(consumers_states_topic.config, replication_factor)
               )
               created(consumers_states_topic.name)
             end
@@ -104,60 +102,28 @@ module Karafka
 
           private
 
-          # Reads the cluster's own broker-level `min.insync.replicas` default so it can be
-          # applied explicitly to the Web UI's own topics, capped to their replication factor.
-          #
-          # Kafka applies the broker-level default automatically when a topic has no explicit
-          # `min.insync.replicas` override, so a cluster configured for higher durability (e.g.
-          # `min.insync.replicas: 2`) would silently make a topic created with
-          # `replication_factor: 1` unwritable once produced to with `acks: all`. Capping the
-          # explicit override to the replication factor keeps the Web UI's own topics writable
-          # regardless of the cluster-wide default.
-          #
-          # @param replication_factor [Integer] replication factor picked for the Web UI topics
-          # @return [Integer, nil] `min.insync.replicas` value safe to use, or `nil` when the
-          #   cluster default could not be established, in which case no explicit override is
-          #   applied and the broker default is left to apply as before
-          def min_insync_replicas(replication_factor)
-            broker_id = ::Karafka::Admin.cluster_info.brokers.first&.fetch(:broker_id, nil)
+          # Durability floor for the Web UI's own topics' `min.insync.replicas`, matching
+          # Kafka's own common recommendation. Always capped to the topic's own replication
+          # factor (see `#with_min_insync_replicas`) so it can never make a topic unwritable.
+          MIN_INSYNC_REPLICAS = 2
 
-            return nil unless broker_id
-
-            resource = ::Karafka::Admin::Configs::Resource.new(type: :broker, name: broker_id.to_s)
-
-            # Kafka-compatible systems aren't Kafka. Redpanda, Azure Event Hubs' Kafka endpoint,
-            # WarpStream, and various managed proxies implement the admin protocol with varying
-            # completeness. Some return a partial (or empty) config set for broker resources or
-            # don't support broker-level DescribeConfigs well at all, so `min.insync.replicas`
-            # may simply be absent from the result. Karafka Web runs against plenty of these in
-            # the wild, so we treat a missing entry as "could not be established" (see
-            # `return nil` below) rather than raising.
-            cluster_default = ::Karafka::Admin::Configs
-              .describe(resource)
-              .first
-              &.configs
-              &.find { |config| config.name == "min.insync.replicas" }
-              &.value
-
-            return nil unless cluster_default
-
-            [Integer(cluster_default), replication_factor].min
-          rescue Rdkafka::RdkafkaError, ArgumentError
-            # ArgumentError covers a broker returning a non-integer-looking value for
-            # min.insync.replicas, which is the same "can't fully trust a Kafka-compatible
-            # system's admin responses" concern as above.
-            nil
-          end
+          private_constant :MIN_INSYNC_REPLICAS
 
           # @param topic_config [Hash] topic config as defined for a given Web UI topic
-          # @param min_isr [Integer, nil] `min.insync.replicas` value to apply or `nil` if none
-          #   should be applied
-          # @return [Hash] topic config with `min.insync.replicas` applied when available and not
-          #   already explicitly set by the user
-          def with_min_insync_replicas(topic_config, min_isr)
-            return topic_config if min_isr.nil? || topic_config.key?(:"min.insync.replicas")
+          # @param replication_factor [Integer] replication factor picked for the Web UI topics
+          # @return [Hash] topic config with `min.insync.replicas` applied, unless already
+          #   explicitly set by the user
+          #
+          # @note Kafka applies the broker-level default automatically when a topic has no
+          #   explicit `min.insync.replicas` override, so a cluster configured for higher
+          #   durability (e.g. `min.insync.replicas: 2`) would silently make a topic created
+          #   with `replication_factor: 1` unwritable once produced to with `acks: all`. Setting
+          #   an explicit value here, capped to the replication factor by construction, keeps
+          #   the Web UI's own topics writable regardless of the cluster-wide default.
+          def with_min_insync_replicas(topic_config, replication_factor)
+            return topic_config if topic_config.key?(:"min.insync.replicas")
 
-            topic_config.merge("min.insync.replicas": min_isr)
+            topic_config.merge("min.insync.replicas": [replication_factor, MIN_INSYNC_REPLICAS].min)
           end
 
           # @param topic_name [String] name of the topic that exists
