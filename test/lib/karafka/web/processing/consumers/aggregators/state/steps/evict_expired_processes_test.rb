@@ -56,4 +56,23 @@ describe_current do
       assert_includes(active_reports.keys, :stopped)
     end
   end
+
+  context "when the configured ttl has sub-second precision" do
+    let(:original_ttl) { Karafka::Web.config.ttl }
+
+    before { Karafka::Web.config.ttl = 30_999 }
+    after { Karafka::Web.config.ttl = original_ttl }
+
+    # 30.5s old: within the configured 30.999s ttl, but would be wrongly evicted if
+    # `ttl / 1_000` used integer division and truncated the ttl down to 30s
+    let(:processes) { { borderline: { dispatched_at: aggregated_from - 30.5 } } }
+    let(:active_reports_data) { { borderline: { dispatched_at: aggregated_from - 30.5 } } }
+
+    it "keeps a process whose age falls within the truncated-precision gap" do
+      step.call
+
+      assert_includes(state[:processes].keys, :borderline)
+      assert_includes(active_reports.keys, :borderline)
+    end
+  end
 end
