@@ -103,4 +103,47 @@ describe_current do
       end
     end
   end
+
+  describe "#evict_expired_processes" do
+    context "when the configured ttl has sub-second precision" do
+      let(:original_ttl) { Karafka::Web.config.ttl }
+      let(:base_time) { Time.now.to_f }
+
+      let(:old_report) do
+        data = Fixtures.consumers_reports_json("multi_partition/v1.4.1_process_1")
+        data[:process][:id] = "old-process"
+        data[:dispatched_at] = base_time
+        data
+      end
+
+      let(:new_report) do
+        data = Fixtures.consumers_reports_json("multi_partition/v1.4.1_process_2")
+        data[:process][:id] = "new-process"
+        # 30.5s later: within the configured 30.999s ttl, but would wrongly evict
+        # `old_report` if `ttl / 1_000` used integer division and truncated the ttl to 30s
+        data[:dispatched_at] = base_time + 30.5
+        data
+      end
+
+      before do
+        Karafka::Web.config.ttl = 30_999
+
+        Karafka::Web::Management::Actions::CreateInitialStates.new.call
+        wait_for_state_data(require_ui: false)
+        Karafka::Web::Management::Actions::MigrateStatesData.new.call
+        wait_for_state_data
+
+        metrics_aggregator.add_report(old_report)
+        metrics_aggregator.add_report(new_report)
+      end
+
+      after { Karafka::Web.config.ttl = original_ttl }
+
+      it "keeps the older report, since its age falls within the truncated-precision gap" do
+        active_reports = metrics_aggregator.instance_variable_get(:@active_reports)
+
+        assert_includes(active_reports.keys, "old-process")
+      end
+    end
+  end
 end

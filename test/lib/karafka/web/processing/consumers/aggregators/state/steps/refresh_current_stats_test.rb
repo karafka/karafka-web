@@ -90,7 +90,29 @@ describe_current do
       assert_equal(0, state[:stats][:busy])
       assert_equal(0, state[:stats][:enqueued])
       assert_equal(0, state[:stats][:processes])
-      assert_equal(0, state[:stats][:utilization])
+      assert_in_delta(0.0, state[:stats][:utilization])
+    end
+  end
+
+  context "when computing utilization across active reports" do
+    let(:active_reports) do
+      {
+        p1: build_report,
+        p2: build_report,
+        p3: build_report
+      }
+    end
+
+    def build_report(utilization: 3.0, **kwargs)
+      report = super(**kwargs)
+      report[:stats][:utilization] = utilization
+      report
+    end
+
+    it "divides exactly, without an epsilon-induced underestimate" do
+      step.call
+
+      assert_in_delta(3.0, state[:stats][:utilization])
     end
   end
 end

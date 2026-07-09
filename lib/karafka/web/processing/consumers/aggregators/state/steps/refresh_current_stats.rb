@@ -62,7 +62,7 @@ module Karafka
                       utilization += report_stats[:utilization]
                     end
 
-                  stats[:utilization] = utilization / (stats[:processes] + 0.0001)
+                  stats[:utilization] = stats[:processes].zero? ? 0.0 : utilization / stats[:processes]
                 end
 
                 private
