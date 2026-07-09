@@ -14,6 +14,8 @@ module Karafka
               # first few seconds but it is much more optimal from performance perspective than
               # computing this fetching all data from Kafka for each view.
               class RefreshCurrentStats < Base
+                # Resets and recomputes the `context.state[:stats]` snapshot from
+                # `context.active_reports`
                 def call
                   stats = context.state[:stats]
 

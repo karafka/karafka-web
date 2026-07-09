@@ -9,6 +9,7 @@ module Karafka
             module Steps
               # Increments the total counters based on the provided report.
               class IncrementCounters < Base
+                # Increments `context.state[:stats]` totals from `context.report[:stats][:total]`
                 def call
                   context.report[:stats][:total].each do |key, value|
                     context.state[:stats][key] ||= 0

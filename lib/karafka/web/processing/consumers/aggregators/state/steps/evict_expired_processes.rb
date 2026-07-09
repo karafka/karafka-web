@@ -15,6 +15,8 @@ module Karafka
               #   stopped processes for extra time within the ttl limitations. This makes
               #   tracking of things from UX perspective nicer.
               class EvictExpiredProcesses < Base
+                # Deletes ttl-expired entries from `context.state[:processes]` and
+                # `context.active_reports`
                 def call
                   max_ttl = context.aggregated_from - (::Karafka::Web.config.ttl / 1_000)
 

@@ -9,6 +9,7 @@ module Karafka
             module Steps
               # Registers or updates the given process state based on the report.
               class RegisterProcess < Base
+                # Registers or updates `context.state[:processes]` for the reporting process
                 def call
                   # When we deserialize the keys from the stored state, because we convert keys
                   # into symbols, we may have given process state already stored. This means
