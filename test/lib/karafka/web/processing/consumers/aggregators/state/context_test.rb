@@ -6,6 +6,8 @@ describe_current do
   let(:aggregated_from) { 123.456 }
   let(:report) { { process: { id: "p1" } } }
   let(:offset) { 42 }
+  let(:paused_since) { {} }
+  let(:paused_partitions_lag_refreshed_at) { nil }
 
   let(:context) do
     described_class.new(
@@ -13,7 +15,9 @@ describe_current do
       active_reports: active_reports,
       aggregated_from: aggregated_from,
       report: report,
-      offset: offset
+      offset: offset,
+      paused_since: paused_since,
+      paused_partitions_lag_refreshed_at: paused_partitions_lag_refreshed_at
     )
   end
 
@@ -23,6 +27,8 @@ describe_current do
     it { assert_equal(aggregated_from, context.aggregated_from) }
     it { assert_same(report, context.report) }
     it { assert_equal(offset, context.offset) }
+    it { assert_same(paused_since, context.paused_since) }
+    it { assert_nil(context.paused_partitions_lag_refreshed_at) }
   end
 
   describe "mutation visibility" do
@@ -30,6 +36,20 @@ describe_current do
       context.state[:processes][:p1] = { offset: 1 }
 
       assert_equal({ p1: { offset: 1 } }, state[:processes])
+    end
+
+    it "exposes paused_since as the same mutable object across reads" do
+      context.paused_since[[:cg, :topic, 0]] = 100.0
+
+      assert_equal({ [:cg, :topic, 0] => 100.0 }, paused_since)
+    end
+  end
+
+  describe "paused_partitions_lag_refreshed_at writer" do
+    it "allows reassignment, since it is a scalar throttle timestamp" do
+      context.paused_partitions_lag_refreshed_at = 456.789
+
+      assert_in_delta(456.789, context.paused_partitions_lag_refreshed_at)
     end
   end
 end

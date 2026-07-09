@@ -23,6 +23,8 @@ module Karafka
               class RefreshPausedPartitionsLag < Base
                 include PartitionIterator
 
+                # Refreshes (throttled) `context.state[:paused_partitions_lag]` for eligible
+                # paused partitions
                 def call
                   settings = ::Karafka::Web.config.processing.paused_partitions_lag
                   refreshed_at = context.paused_partitions_lag_refreshed_at
