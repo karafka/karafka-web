@@ -18,9 +18,6 @@ module Karafka
                 # Deletes ttl-expired entries from `context.state[:processes]` and
                 # `context.active_reports`
                 def call
-                  # Use float division: `ttl` is milliseconds and integer division would
-                  # truncate sub-second precision, shrinking the effective ttl window and
-                  # evicting entries earlier than configured.
                   max_ttl = context.aggregated_from - (::Karafka::Web.config.ttl / 1_000.0)
 
                   context.state[:processes].delete_if do |_id, details|

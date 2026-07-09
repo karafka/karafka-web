@@ -68,9 +68,6 @@ module Karafka
             #   care about what a stopped process was doing and we can also remove it from active
             #   reports.
             def evict_expired_processes
-              # Use float division: `ttl` is milliseconds and integer division would truncate
-              # sub-second precision, shrinking the effective ttl window and evicting entries
-              # earlier than configured.
               max_ttl = @aggregated_from - (::Karafka::Web.config.ttl / 1_000.0)
 
               @active_reports.delete_if do |_id, report|
