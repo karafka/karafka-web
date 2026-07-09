@@ -22,6 +22,19 @@ module Karafka
             # migrations
             SCHEMA_VERSION = "1.4.0"
 
+            # Ordered, unconditional pipeline of steps that enrich the shared `Context` on each
+            # incoming report. Order here IS the contract: `RegisterProcess` runs before
+            # `EvictExpiredProcesses` because we want to evict using expired (stopped) data as it
+            # was valid previously (this can happen when the web consumer had a lag and is
+            # catching up), and `RefreshCurrentStats` runs last because it recomputes the
+            # snapshot from whatever is left in `active_reports` after eviction.
+            STEPS = [
+              Steps::IncrementCounters,
+              Steps::RegisterProcess,
+              Steps::EvictExpiredProcesses,
+              Steps::RefreshCurrentStats
+            ].freeze
+
             # @param schema_manager [Karafka::Web::Processing::Consumers::SchemaManager] schema
             #   manager that tracks the compatibility of schemas.
             def initialize(schema_manager)
@@ -35,15 +48,7 @@ module Karafka
             #   needed as we need to be able to get all the consumers reports from a given offset.
             def add(report, offset)
               super(report)
-              increment_total_counters(report)
-              add_state(report, offset)
-              # We always evict after counters updates because we want to use expired (stopped)
-              # data for counters as it was valid previously. This can happen only when web consumer
-              # had a lag and is catching up.
-              evict_expired_processes
-              # current means current in the context of processing window (usually now but in case
-              # of lag, this state may be from the past)
-              refresh_current_stats
+              run_pipeline(report, offset)
             end
 
             # Registers or updates the given process state based on the report
@@ -51,16 +56,7 @@ module Karafka
             # @param report [Hash]
             # @param offset [Integer]
             def add_state(report, offset)
-              # When we deserialize the keys from the stored state, because we convert keys into
-              # symbols, we may have given process state already stored. This means that in order
-              # to update it, we do need to have the new report process id also as a symbol to
-              # act as the key
-              process_id = report[:process][:id].to_sym
-
-              state[:processes][process_id] = {
-                dispatched_at: report[:dispatched_at],
-                offset: offset
-              }
+              Steps::RegisterProcess.new(context(report, offset)).call
             end
 
             # @return [Array<Hash, Float>] aggregated current stats value and time from which this
@@ -92,96 +88,29 @@ module Karafka
               @state ||= Consumers::State.current!
             end
 
-            # Increments the total counters based on the provided report
+            # Builds a fresh, per-call context shared across pipeline steps.
+            #
             # @param report [Hash]
-            def increment_total_counters(report)
-              report[:stats][:total].each do |key, value|
-                state[:stats][key] ||= 0
-                state[:stats][key] += value
-              end
+            # @param offset [Integer]
+            # @return [Context]
+            def context(report, offset)
+              Context.new(
+                state: state,
+                active_reports: @active_reports,
+                aggregated_from: @aggregated_from,
+                report: report,
+                offset: offset
+              )
             end
 
-            # Evicts expired processes from the current state
-            # We consider processes dead if they do not report often enough
-            # @note We do not evict based on states (stopped), because we want to report the
-            #   stopped processes for extra time within the ttl limitations. This makes tracking of
-            #   things from UX perspective nicer.
-            def evict_expired_processes
-              max_ttl = @aggregated_from - (::Karafka::Web.config.ttl / 1_000)
-
-              state[:processes].delete_if do |_id, details|
-                details[:dispatched_at] < max_ttl
-              end
-
-              @active_reports.delete_if do |_id, details|
-                details[:dispatched_at] < max_ttl
-              end
-            end
-
-            # Refreshes the counters that are computed based on incoming reports and not a
-            # total sum.
-            # For this we use active reports we have in memory. It may not be accurate for the first
-            # few seconds but it is much more optimal from performance perspective than computing
-            # this fetching all data from Kafka for each view.
-            def refresh_current_stats
-              stats = state[:stats]
-
-              stats[:busy] = 0
-              stats[:enqueued] = 0
-              stats[:waiting] = 0
-              stats[:workers] = 0
-              stats[:processes] = 0
-              stats[:rss] = 0
-              stats[:listeners] = { active: 0, standby: 0 }
-              stats[:lag_hybrid] = 0
-              stats[:bytes_received] = 0
-              stats[:bytes_sent] = 0
-              utilization = 0
-
-              @active_reports
-                .values
-                .reject { |report| report[:process][:status] == "stopped" }
-                .each do |report|
-                  report_stats = report[:stats]
-                  report_process = report[:process]
-
-                  lags_hybrid = []
-
-                  iterate_partitions(report) do |partition_stats|
-                    lag_stored = partition_stats[:lag_stored]
-                    lag = partition_stats[:lag]
-
-                    lags_hybrid << (lag_stored.negative? ? lag : lag_stored)
-                  end
-
-                  stats[:busy] += report_stats[:busy]
-                  stats[:enqueued] += report_stats[:enqueued]
-                  stats[:waiting] += report_stats[:waiting] || 0
-                  stats[:workers] += report_process[:workers] || 0
-                  stats[:bytes_received] += report_process[:bytes_received] || 0
-                  stats[:bytes_sent] += report_process[:bytes_sent] || 0
-                  stats[:listeners][:active] += report_process[:listeners][:active]
-                  stats[:listeners][:standby] += report_process[:listeners][:standby]
-                  stats[:processes] += 1
-                  stats[:rss] += report_process[:memory_usage]
-                  stats[:lag_hybrid] += lags_hybrid.compact.reject(&:negative?).sum
-                  utilization += report_stats[:utilization]
-                end
-
-              stats[:utilization] = utilization / (stats[:processes] + 0.0001)
-            end
-
+            # Runs the full pipeline of steps, enriching the shared context in order.
+            #
             # @param report [Hash]
-            # @param block [Proc]
-            # @yieldparam partition_stats [Hash] statistics for a single partition
-            def iterate_partitions(report, &block)
-              report[:consumer_groups].each_value do |consumer_group|
-                consumer_group[:subscription_groups].each_value do |subscription_group|
-                  subscription_group[:topics].each_value do |topic|
-                    topic[:partitions].each_value(&block)
-                  end
-                end
-              end
+            # @param offset [Integer]
+            def run_pipeline(report, offset)
+              ctx = context(report, offset)
+
+              STEPS.each { |step_class| step_class.new(ctx).call }
             end
           end
         end
