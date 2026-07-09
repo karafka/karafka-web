@@ -20,23 +20,19 @@ module Karafka
             # Current schema version
             # This can be used in the future for detecting incompatible changes and writing
             # migrations
-            SCHEMA_VERSION = "1.5.0"
+            SCHEMA_VERSION = "1.4.0"
 
             # Ordered, unconditional pipeline of steps that enrich the shared `Context` on each
             # incoming report. Order here IS the contract: `RegisterProcess` runs before
             # `EvictExpiredProcesses` because we want to evict using expired (stopped) data as it
             # was valid previously (this can happen when the web consumer had a lag and is
-            # catching up), `RefreshCurrentStats` runs after eviction because it recomputes the
-            # snapshot from whatever is left in `active_reports`, and the paused-partitions steps
-            # run last since they only need the same settled `active_reports`/`state` the earlier
-            # steps already established.
+            # catching up), and `RefreshCurrentStats` runs last because it recomputes the
+            # snapshot from whatever is left in `active_reports` after eviction.
             STEPS = [
               Steps::IncrementCounters,
               Steps::RegisterProcess,
               Steps::EvictExpiredProcesses,
-              Steps::RefreshCurrentStats,
-              Steps::TrackPausedPartitions,
-              Steps::RefreshPausedPartitionsLag
+              Steps::RefreshCurrentStats
             ].freeze
 
             # @param schema_manager [Karafka::Web::Processing::Consumers::SchemaManager] schema
@@ -44,10 +40,6 @@ module Karafka
             def initialize(schema_manager)
               super()
               @schema_manager = schema_manager
-              # [cg_id, topic_name, partition_id] => @aggregated_from value when we first
-              # observed that partition as paused. See Steps::TrackPausedPartitions.
-              @paused_since = {}
-              @paused_partitions_lag_refreshed_at = nil
             end
 
             # Uses provided process state report to update the current materialized state
@@ -107,9 +99,7 @@ module Karafka
                 active_reports: @active_reports,
                 aggregated_from: @aggregated_from,
                 report: report,
-                offset: offset,
-                paused_since: @paused_since,
-                paused_partitions_lag_refreshed_at: @paused_partitions_lag_refreshed_at
+                offset: offset
               )
             end
 
@@ -121,11 +111,6 @@ module Karafka
               ctx = context(report, offset)
 
               STEPS.each { |step_class| step_class.new(ctx).call }
-
-              # `paused_since` is a Hash, mutated in place by steps, so it stays in sync on its
-              # own. `paused_partitions_lag_refreshed_at` is a scalar throttle timestamp that
-              # steps reassign rather than mutate, so it needs to be written back explicitly.
-              @paused_partitions_lag_refreshed_at = ctx.paused_partitions_lag_refreshed_at
             end
           end
         end

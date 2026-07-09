@@ -10,9 +10,7 @@ describe_current do
       active_reports: {},
       aggregated_from: Time.now.to_f,
       report: report,
-      offset: 1,
-      paused_since: {},
-      paused_partitions_lag_refreshed_at: nil
+      offset: 1
     )
   end
 

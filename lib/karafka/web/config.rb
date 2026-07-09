@@ -208,28 +208,6 @@ module Karafka
           # having it set to true if user users it.
           "enable.partition.eof": false
         }.freeze
-
-        # Settings controlling compensation for stale self-reported lag on long-paused
-        # partitions. A paused partition's own librdkafka connection stops updating its cached
-        # view of the topic's high watermark once fetching stops, freezing lag/lag_stored at
-        # pause time even though the real lag keeps growing. We periodically ask the cluster
-        # directly for a fresh watermark for such partitions and use it (combined with the
-        # still-accurate self-reported committed/stored offsets) to compute a corrected lag.
-        setting :paused_partitions_lag do
-          # Minimum time (ms) a partition must have been continuously paused before we bother
-          # refreshing its lag from the cluster. Prevents short pause/resume cycles from
-          # triggering unnecessary admin calls.
-          setting :min_pause_duration, default: 60_000
-
-          # Minimum time (ms) between cluster-side lag refresh attempts, regardless of how many
-          # reports we process in between (they arrive far more often than this).
-          setting :refresh_interval, default: 30_000
-
-          # Max time (ms) we allow the underlying admin call to take before giving up for this
-          # cycle. On timeout (or any other failure) we skip the refresh and keep using the
-          # previous (possibly stale) correction rather than blocking state materialization.
-          setting :query_timeout, default: 60_000
-        end
       end
 
       setting :ui do

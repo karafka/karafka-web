@@ -23,9 +23,7 @@ describe_current do
       active_reports: active_reports,
       aggregated_from: dispatched_at,
       report: report,
-      offset: offset,
-      paused_since: {},
-      paused_partitions_lag_refreshed_at: nil
+      offset: offset
     )
   end
 
@@ -53,9 +51,7 @@ describe_current do
         active_reports: active_reports,
         aggregated_from: updated_report[:dispatched_at],
         report: updated_report,
-        offset: 200,
-        paused_since: {},
-        paused_partitions_lag_refreshed_at: nil
+        offset: 200
       )
 
       described_class.new(updated_context).call

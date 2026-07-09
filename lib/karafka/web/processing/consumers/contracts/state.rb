@@ -27,8 +27,6 @@ module Karafka
               val.keys.all?(Symbol)
             end
 
-            required(:paused_partitions_lag) { |val| val.is_a?(Hash) }
-
             virtual do |data, errors|
               next unless errors.empty?
 

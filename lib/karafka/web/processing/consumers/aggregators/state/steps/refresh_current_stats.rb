@@ -14,8 +14,6 @@ module Karafka
               # first few seconds but it is much more optimal from performance perspective than
               # computing this fetching all data from Kafka for each view.
               class RefreshCurrentStats < Base
-                include PartitionIterator
-
                 # Resets and recomputes the `context.state[:stats]` snapshot from
                 # `context.active_reports`
                 def call
@@ -65,6 +63,21 @@ module Karafka
                     end
 
                   stats[:utilization] = stats[:processes].zero? ? 0.0 : utilization / stats[:processes]
+                end
+
+                private
+
+                # @param report [Hash]
+                # @param block [Proc]
+                # @yieldparam partition_stats [Hash] statistics for a single partition
+                def iterate_partitions(report, &block)
+                  report[:consumer_groups].each_value do |consumer_group|
+                    consumer_group[:subscription_groups].each_value do |subscription_group|
+                      subscription_group[:topics].each_value do |topic|
+                        topic[:partitions].each_value(&block)
+                      end
+                    end
+                  end
                 end
               end
             end

@@ -51,12 +51,7 @@ describe_current do
       processing: {
         active: true,
         interval: 3_000,
-        kafka: {},
-        paused_partitions_lag: {
-          min_pause_duration: 60_000,
-          refresh_interval: 30_000,
-          query_timeout: 60_000
-        }
+        kafka: {}
       },
       ui: {
         sessions: {
@@ -216,26 +211,6 @@ describe_current do
       before { params[:processing][:kafka] = nil }
 
       it { refute(contract.call(params).success?) }
-    end
-
-    context "when validating paused_partitions_lag related settings" do
-      context "when min_pause_duration is not a positive integer" do
-        before { params[:processing][:paused_partitions_lag][:min_pause_duration] = 0 }
-
-        it { refute(contract.call(params).success?) }
-      end
-
-      context "when refresh_interval is not a positive integer" do
-        before { params[:processing][:paused_partitions_lag][:refresh_interval] = -1 }
-
-        it { refute(contract.call(params).success?) }
-      end
-
-      context "when query_timeout is not a positive integer" do
-        before { params[:processing][:paused_partitions_lag][:query_timeout] = "60000" }
-
-        it { refute(contract.call(params).success?) }
-      end
     end
   end
 

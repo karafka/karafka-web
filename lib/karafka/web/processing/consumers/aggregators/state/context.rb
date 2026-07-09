@@ -21,29 +21,15 @@ module Karafka
               # @param aggregated_from [Float] time from which this aggregation run comes
               # @param report [Hash] the incoming consumer process state report
               # @param offset [Integer] offset of the message with the state report
-              # @param paused_since [Hash] `[cg_id, topic_name, partition_id] => aggregated_from`
-              #   the moment we first observed each partition as paused (mutated in place)
-              # @param paused_partitions_lag_refreshed_at [Float, nil] `aggregated_from` value of
-              #   the last successful paused partitions lag refresh, or `nil` if none happened yet
-              def initialize(
-                state:, active_reports:, aggregated_from:, report:, offset:, paused_since:,
-                paused_partitions_lag_refreshed_at:
-              )
+              def initialize(state:, active_reports:, aggregated_from:, report:, offset:)
                 @state = state
                 @active_reports = active_reports
                 @aggregated_from = aggregated_from
                 @report = report
                 @offset = offset
-                @paused_since = paused_since
-                @paused_partitions_lag_refreshed_at = paused_partitions_lag_refreshed_at
               end
 
-              attr_reader :state, :active_reports, :aggregated_from, :report, :offset,
-                :paused_since
-              # `paused_since` (a Hash) is mutated in place by steps and needs no writer, but
-              # this is a scalar that steps reassign, so its new value must be readable back by
-              # `State#run_pipeline` to persist across calls.
-              attr_accessor :paused_partitions_lag_refreshed_at
+              attr_reader :state, :active_reports, :aggregated_from, :report, :offset
             end
           end
         end

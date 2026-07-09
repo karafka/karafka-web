@@ -13,9 +13,7 @@ describe_current do
       active_reports: active_reports,
       aggregated_from: aggregated_from,
       report: {},
-      offset: 1,
-      paused_since: {},
-      paused_partitions_lag_refreshed_at: nil
+      offset: 1
     )
   end
 
