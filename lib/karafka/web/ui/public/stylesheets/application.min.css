@@ -776,7 +776,7 @@
             box-shadow: 0 2px calc(var(--depth) * 3px) -2px var(--menu-active-bg);
           }
         }
-        &.menu-disabled {
+        &.menu-disabled, [disabled] {
           pointer-events: none;
           color: var(--color-base-content);
           @supports (color: color-mix(in lab, red, red)) {
@@ -1666,9 +1666,12 @@
         &::-webkit-calendar-picker-indicator {
           inset-inline-end: -0.15em;
         }
-        &::-webkit-inner-spin-button {
-          margin-inline-end: -0.15em;
-        }
+      }
+      &::-webkit-inner-spin-button {
+        margin-inline-end: -10px;
+      }
+      &::-webkit-calendar-picker-indicator {
+        inset-inline-end: 0.75em;
       }
       input&, input {
         position: relative;
@@ -1683,12 +1686,10 @@
           text-align: inherit;
         }
         &::-webkit-inner-spin-button {
-          margin-inline-end: calc(0.25rem * -3);
           margin-block: calc(0.25rem * var(--spin-my));
         }
         &::-webkit-calendar-picker-indicator {
           position: absolute;
-          inset-inline-end: 0.75em;
           width: 1em;
           height: 1em;
           cursor: pointer;
