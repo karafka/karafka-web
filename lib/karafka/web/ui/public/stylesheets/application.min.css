@@ -1065,7 +1065,6 @@
       );
         }
         --btn-border-style: solid;
-        --btn-inset: var(--btn-active-inset, 0 0 0 0 oklch(0% 0 0/0));
         --btn-shadow: var(--btn-active-shadow, 0 0 0 0 oklch(0% 0 0/0));
       }
       &:where(:checked:not(.filter [type="radio"].btn), :not([type="radio"], [type="checkbox"]):focus-visible ) {
@@ -1677,7 +1676,7 @@
         position: relative;
         display: inline-flex;
         &[type="url"], &[type="email"] {
-          direction: ltr;
+          text-align: left;
         }
         &::-webkit-datetime-edit, &::-webkit-date-and-time-value {
           display: grid;
@@ -6695,7 +6694,6 @@ table td.options {
       );
         }
         --btn-border-style: solid;
-        --btn-inset: var(--btn-active-inset, 0 0 0 0 oklch(0% 0 0/0));
         --btn-shadow: var(--btn-active-shadow, 0 0 0 0 oklch(0% 0 0/0));
       }
       &:where(:checked:not(.filter [type="radio"].btn), :not([type="radio"], [type="checkbox"]):focus-visible ) {
