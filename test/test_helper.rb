@@ -48,12 +48,12 @@ PARALLEL_GROUP_ID = ENV.fetch("PARALLEL_GROUP_ID", "")
 
 # Don't include unnecessary stuff into rcov
 SimpleCov.start do
-  add_filter "/test/"
-  add_filter "/vendor/"
-  add_filter "/gems/"
-  add_filter "/.bundle/"
-  add_filter "/doc/"
-  add_filter "/config/"
+  skip "/test/"
+  skip "/vendor/"
+  skip "/gems/"
+  skip "/.bundle/"
+  skip "/doc/"
+  skip "/config/"
 
   # Use unique command name per parallel group for proper merging
   cmd_name = PARALLEL_GROUP_ID.empty? ? SPECS_TYPE : "#{SPECS_TYPE}-#{PARALLEL_GROUP_ID}"
