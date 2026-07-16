@@ -215,7 +215,12 @@ describe_current do
     end
 
     context "when message exists" do
-      let(:payload) { rand.to_s }
+      # Export deserializes the payload (default JSON deserializer) and re-serializes it with
+      # `#to_json`. A bare numeric payload like `rand.to_s` is not a JSON serialization fixed
+      # point: Ruby's `Float#to_s` and the json gem's float encoder occasionally disagree (e.g.
+      # scientific notation or precision), so `assert_equal(payload, response.body)` was flaky
+      # for roughly 1-in-2000 random values. A JSON string literal round-trips identically.
+      let(:payload) { rand.to_s.to_json }
       let(:expected_file_name) { "#{topic}_0_0_payload.json" }
       let(:expected_disposition) { "attachment; filename=\"#{expected_file_name}\"" }
 
