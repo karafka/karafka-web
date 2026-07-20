@@ -2762,6 +2762,9 @@
         &::-moz-progress-bar {
           border-radius: var(--radius-box);
           background-color: currentcolor;
+          @media (prefers-reduced-motion: no-preference) {
+            transition: inline-size 0.3s ease;
+          }
         }
       }
       @supports (-webkit-appearance: none) {
@@ -2772,6 +2775,9 @@
         &::-webkit-progress-value {
           border-radius: var(--radius-box);
           background-color: currentColor;
+          @media (prefers-reduced-motion: no-preference) {
+            transition: inline-size 0.3s ease;
+          }
         }
       }
     }
