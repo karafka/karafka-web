@@ -32,7 +32,6 @@ module Karafka
   module Web
     module Pro
       module Commanding
-        # Namespace for commands the process can react to
         module Commands
           module Consumers
             # Collects all backtraces from the available Ruby threads and publishes their details

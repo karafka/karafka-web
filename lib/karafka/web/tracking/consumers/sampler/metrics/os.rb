@@ -128,9 +128,8 @@ module Karafka
               # @return [Array<Array<Integer, Integer, Integer>>, false] array of
               #   [rss_kb, threads, pid] for each process, or false if unavailable
               #
-              # This method reads information about ALL processes on the system
-              # (or in the container).
-              # The data is used by multiple metrics:
+              # This method reads information about ALL processes on the system (or in the
+              # container). The data is used by multiple metrics:
               # - memory_total_usage: sums RSS across all processes
               # - threads: extracts thread count for current process
               #

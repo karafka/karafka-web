@@ -8,10 +8,9 @@ module Karafka
           module Checks
             # Checks if topics have adequate replication factors.
             #
-            # In production environments, replication factor < 2 is a potential
-            # problem because data could be lost if a broker fails. This check
-            # warns about low replication but doesn't fail because it's not
-            # critical for functionality.
+            # In production environments, replication factor < 2 is a potential problem because
+            # data could be lost if a broker fails. This check warns about low replication but
+            # doesn't fail because it's not critical for functionality.
             #
             # @note Low replication is only a warning in production environments.
             #   In non-production environments, replication of 1 is acceptable.

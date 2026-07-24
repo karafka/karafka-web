@@ -5,8 +5,7 @@ module Karafka
     module Tracking
       module Consumers
         module Contracts
-          # Expected data for each subscription group
-          # It's mostly about topics details
+          # Expected data for each subscription group. It's mostly about topics details
           class SubscriptionGroup < Web::Contracts::Base
             configure
 

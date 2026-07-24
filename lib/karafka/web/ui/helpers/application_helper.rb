@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# @see https://github.com/mperham/sidekiq/blob/main/lib/sidekiq/web/helpers.rb
 module Karafka
   module Web
     module Ui

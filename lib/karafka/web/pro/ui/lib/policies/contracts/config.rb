@@ -33,7 +33,6 @@ module Karafka
     module Pro
       module Ui
         module Lib
-          # Policies related contracts
           module Policies
             # Namespace with policies related contracts
             module Contracts

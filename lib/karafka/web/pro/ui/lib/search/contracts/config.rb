@@ -33,7 +33,6 @@ module Karafka
     module Pro
       module Ui
         module Lib
-          # Search related contracts
           module Search
             # Namespace with search related contracts
             module Contracts

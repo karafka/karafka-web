@@ -32,7 +32,6 @@ module Karafka
   module Web
     module Pro
       module Ui
-        # Namespace for Pro controllers
         module Controllers
           # Cluster details controller
           class ClusterController < Web::Ui::Controllers::ClusterController

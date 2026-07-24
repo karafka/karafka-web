@@ -32,7 +32,6 @@ module Karafka
   module Web
     module Pro
       module Commanding
-        # Namespace for commands the process can react to
         module Commands
           # Namespace for commands related to consumers themselves
           module Consumers

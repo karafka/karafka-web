@@ -15,8 +15,7 @@ module Karafka
           class << self
             # First version that should **NOT** be affected by this migration
             attr_accessor :versions_until
-            # What resource does it relate it
-            # One migration should modify only one resource type
+            # What resource does it relate it. One migration should modify only one resource type
             attr_accessor :type
 
             # @param version [String] sem-ver version

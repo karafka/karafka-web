@@ -8,6 +8,7 @@ require "zlib"
 require "securerandom"
 require "uri"
 
+# Karafka framework main namespace
 module Karafka
   # Karafka Web UI + Karafka web monitoring
   module Web

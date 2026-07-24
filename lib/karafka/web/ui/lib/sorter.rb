@@ -4,8 +4,7 @@ module Karafka
   module Web
     module Ui
       module Lib
-        # Sorting engine for deep in-memory structures
-        # It supports hashes, arrays and hash proxies.
+        # Sorting engine for deep in-memory structures. It supports hashes, arrays and hash proxies.
         #
         # @note It handles sorting in place by mutating appropriate resources and sub-components
         class Sorter

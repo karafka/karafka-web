@@ -33,7 +33,6 @@ module Karafka
     module Pro
       module Commanding
         module Handlers
-          # Namespace for commands related to specific partitions
           module Partitions
             # Namespace for partitions related commands
             module Commands

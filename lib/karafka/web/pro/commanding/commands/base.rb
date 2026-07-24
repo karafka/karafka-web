@@ -27,6 +27,7 @@
 #
 # License: https://karafka.io/docs/Pro-License-Comm/
 # Contact: contact@karafka.io
+
 module Karafka
   module Web
     module Pro

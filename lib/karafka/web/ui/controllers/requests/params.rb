@@ -8,8 +8,7 @@ module Karafka
         module Requests
           # Internal representation of params with sane sanitization
           class Params
-            # What ranges we support for charts
-            # Anything else will be rejected
+            # What ranges we support for charts. Anything else will be rejected
             ALLOWED_RANGES = %w[
               seconds
               minutes
