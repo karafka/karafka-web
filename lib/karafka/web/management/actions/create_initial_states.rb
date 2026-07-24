@@ -7,8 +7,7 @@ module Karafka
         # Creates the records needed for the Web-UI to operate.
         # It creates "almost" empty states because the rest is handled via migrations
         class CreateInitialStates < Base
-          # Whole default empty state
-          # This will be further migrated by the migrator
+          # Whole default empty state. This will be further migrated by the migrator
           DEFAULT_STATE = {
             schema_version: "0.0.0"
           }.freeze

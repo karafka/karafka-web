@@ -31,9 +31,8 @@ module Karafka
 
           # Fetches or computes and stores a value under the given key.
           #
-          # If the key already exists, returns the cached value.
-          # Otherwise, computes it via the provided block, stores it,
-          # and updates metadata (timestamp + hash).
+          # If the key already exists, returns the cached value. Otherwise, computes it via the
+          # provided block, stores it, and updates metadata (timestamp + hash).
           #
           # @param key [Object]
           # @yield block to compute the value if key is not present

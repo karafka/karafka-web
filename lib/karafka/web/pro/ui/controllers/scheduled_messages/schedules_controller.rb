@@ -33,7 +33,6 @@ module Karafka
     module Pro
       module Ui
         module Controllers
-          # Namespace for all controllers related to scheduled messages
           module ScheduledMessages
             # Controller to display list of schedules (groups) and details about each
             class SchedulesController < BaseController

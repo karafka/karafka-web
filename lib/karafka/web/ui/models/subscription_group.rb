@@ -3,7 +3,6 @@
 module Karafka
   module Web
     module Ui
-      # Namespace for models representing pieces of data about Karafka setup
       module Models
         # Representation of data of a Karafka subscription group
         class SubscriptionGroup < Lib::HashProxy

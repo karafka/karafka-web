@@ -3,7 +3,6 @@
 module Karafka
   module Web
     module Tracking
-      # Namespace for tracking related helpers
       module Helpers
         # Module containing some helper methods useful for extracting extra errors info
         module ErrorInfo

@@ -3,7 +3,6 @@
 module Karafka
   module Web
     module Ui
-      # Namespace for Ui related sub-routes
       module Routes
         # Manages the assets related routes
         class Assets < Base

@@ -4,9 +4,8 @@ module Karafka
   module Web
     module Ui
       module Controllers
-        # Errors displaying controller
-        # It supports only scenarios with a single partition for errors
-        # If you have high load of errors, consider going Pro
+        # Errors displaying controller. It supports only scenarios with a single partition for
+        # errors. If you have high load of errors, consider going Pro
         class ErrorsController < BaseController
           # Lists first page of the errors
           def index

@@ -16,8 +16,7 @@ module Karafka
               # Paths for cgroup detection and reading
               CGROUP_V2_CONTROLLERS = "/sys/fs/cgroup/cgroup.controllers"
 
-              # Memory paths
-              # Path to cgroup v1 memory limit file
+              # Memory paths. Path to cgroup v1 memory limit file
               CGROUP_V1_MEMORY_LIMIT = "/sys/fs/cgroup/memory/memory.limit_in_bytes"
               # Path to cgroup v2 memory limit file
               CGROUP_V2_MEMORY_LIMIT = "/sys/fs/cgroup/memory.max"

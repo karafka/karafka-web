@@ -172,7 +172,7 @@ module Karafka
 
         # Allows us to build current path with additional params + it merges existing params into
         # the query data. Query data takes priority over request params.
-        # @param query_data [Hash] query params we want to add to the current path
+        # query_data - query params we want to add to the current path
         path :current do |query_data = {}|
           # Merge existing request parameters with new query data
           merged_params = deep_merge(request.params, query_data)
