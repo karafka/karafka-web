@@ -5,6 +5,10 @@ module Karafka
     module Ui
       module Controllers
         module Requests
+          # @example
+          #   controller = SomeController.new
+          #   wrapper = ExecutionWrapper.new(controller)
+          #   wrapper.call # will run before(:call), call, then after(:call)
           # @note This class is used internally by the Web UI to wrap controllers
           #   and inject execution hooks around any method call (before/after filters).
           #
@@ -12,11 +16,6 @@ module Karafka
           # Before and after each invocation, it runs the controller's registered hooks.
           #
           # This allows for cleaner separation of concerns and reusable hook logic.
-          #
-          # @example
-          #   controller = SomeController.new
-          #   wrapper = ExecutionWrapper.new(controller)
-          #   wrapper.call # will run before(:call), call, then after(:call)
           class ExecutionWrapper
             # @param controller [Object] a controller instance responding to method calls
             def initialize(controller)
