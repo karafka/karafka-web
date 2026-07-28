@@ -1109,9 +1109,7 @@
   }
   .collapse:not(td, tr, colgroup) {
     visibility: revert-layer;
-  }
-  @layer daisyui.l1.l2.l3 {
-    .collapse {
+    @layer daisyui.l1.l2.l3 {
       display: grid;
       position: relative;
       border-radius: var(--radius-box, 1rem);
@@ -1119,111 +1117,137 @@
       grid-template-rows: max-content 0fr;
       grid-template-columns: minmax(0, 1fr);
       isolation: isolate;
-    }
-    @media (prefers-reduced-motion: no-preference) {
-      .collapse {
+      @media (prefers-reduced-motion: no-preference) {
         transition: grid-template-rows 0.2s;
       }
-    }
-    .collapse  > input:is([type="checkbox"], [type="radio"]) {
-      grid-column-start: 1;
-      grid-row-start: 1;
-      appearance: none;
-      opacity: 0;
-      z-index: 1;
-      width: 100%;
-      padding: 1rem;
-      padding-inline-end: 3rem;
-      min-height: 1lh;
-      transition: background-color 0.2s ease-out;
-    }
-    .collapse:is([open], [tabindex]:focus:not(.collapse-close), [tabindex]:focus-within:not(.collapse-close) ), .collapse:not(.collapse-close):has( > input:is([type="checkbox"], [type="radio"]):checked) {
-      grid-template-rows: max-content 1fr;
-    }
-    .collapse:is([open], [tabindex]:focus:not(.collapse-close), [tabindex]:focus-within:not(.collapse-close) ) > .collapse-content, .collapse:not(.collapse-close) > :where(input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-content) {
-      --overflow-delay: 0.2s;
-      overflow: revert-layer;
-      content-visibility: visible;
-      min-height: fit-content;
-      @supports not (content-visibility: visible) {
-        visibility: visible;
+       > input:is([type="checkbox"], [type="radio"]) {
+        grid-column-start: 1;
+        grid-row-start: 1;
+        appearance: none;
+        opacity: 0;
+        z-index: 1;
+        width: 100%;
+        padding: 1rem;
+        padding-inline-end: 3rem;
+        min-height: 1lh;
+        transition: background-color 0.2s ease-out;
       }
-    }
-    .collapse:focus-visible, .collapse:has( > input:is([type="checkbox"], [type="radio"]):focus-visible), .collapse:has(summary:focus-visible) {
-      outline-color: var(--color-base-content);
-      outline-style: solid;
-      outline-width: 2px;
-      outline-offset: 2px;
-    }
-    .collapse:not(.collapse-close)  > input[type="checkbox"], .collapse:not(.collapse-close)   > input[type="radio"]:not(:checked), .collapse:not(.collapse-close)   > .collapse-title {
-      cursor: pointer;
-    }
-    :is(.collapse[tabindex]:focus:not(.collapse-close, .collapse[open]), .collapse[tabindex]:focus-within:not(.collapse-close, .collapse[open]))  > .collapse-title {
-      cursor: unset;
-    }
-    .collapse:is([open], [tabindex]:focus:not(.collapse-close), [tabindex]:focus-within:not(.collapse-close) ) > :where(.collapse-content), .collapse:not(.collapse-close) > :where(input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-content) {
-      padding-bottom: 1rem;
-    }
-    .collapse:is(details) {
-      width: 100%;
-      &::details-content {
-        --overflow-delay: 0s;
-        overflow: clip;
-        height: 0;
+      &:is([open], [tabindex]:focus:not(.collapse-close), [tabindex]:focus-within:not(.collapse-close) ), &:not(.collapse-close):has( > input:is([type="checkbox"], [type="radio"]):checked) {
+        grid-template-rows: max-content 1fr;
       }
-      &:where([open])::details-content {
+      &:is([open], [tabindex]:focus:not(.collapse-close), [tabindex]:focus-within:not(.collapse-close) ) > .collapse-content, &:not(.collapse-close) > :where(input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-content) {
+        --overflow-delay: 0.2s;
         overflow: revert-layer;
-        height: auto;
+        content-visibility: visible;
+        min-height: fit-content;
+        @supports not (content-visibility: visible) {
+          visibility: visible;
+        }
       }
-      @media (prefers-reduced-motion: no-preference) {
+      &:focus-visible, &:has( > input:is([type="checkbox"], [type="radio"]):focus-visible), &:has(summary:focus-visible) {
+        outline-color: var(--color-base-content);
+        outline-style: solid;
+        outline-width: 2px;
+        outline-offset: 2px;
+      }
+      &:not(.collapse-close) {
+         > input[type="checkbox"],  > input[type="radio"]:not(:checked),  > .collapse-title {
+          cursor: pointer;
+        }
+      }
+      &[tabindex]:focus:not(.collapse-close, .collapse[open]), &[tabindex]:focus-within:not(.collapse-close, .collapse[open]) {
+         > .collapse-title {
+          cursor: unset;
+        }
+      }
+      &:is([open], [tabindex]:focus:not(.collapse-close), [tabindex]:focus-within:not(.collapse-close) ) > :where(.collapse-content), &:not(.collapse-close) > :where(input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-content) {
+        padding-bottom: 1rem;
+      }
+      &:is(details) {
+        width: 100%;
         &::details-content {
-          transition: overflow 0.2s allow-discrete var(--overflow-delay), content-visibility 0.2s allow-discrete, visibility 0.2s allow-discrete, min-height 0.2s ease-out allow-discrete, padding 0.1s ease-out 20ms, background-color 0.2s ease-out, height 0.2s;
-          interpolate-size: allow-keywords;
+          --overflow-delay: 0s;
+          overflow: clip;
+          height: 0;
         }
         &:where([open])::details-content {
-          --overflow-delay: 0.2s;
+          overflow: revert-layer;
+          height: auto;
+        }
+        @media (prefers-reduced-motion: no-preference) {
+          &::details-content {
+            transition: overflow 0.2s allow-discrete var(--overflow-delay), content-visibility 0.2s allow-discrete, visibility 0.2s allow-discrete, min-height 0.2s ease-out allow-discrete, padding 0.1s ease-out 20ms, background-color 0.2s ease-out, height 0.2s;
+            interpolate-size: allow-keywords;
+          }
+          &:where([open])::details-content {
+            --overflow-delay: 0.2s;
+          }
+        }
+         > summary {
+          position: relative;
+          display: block;
+          outline: none;
+          &::-webkit-details-marker {
+            display: none;
+          }
         }
       }
-       > summary {
-        position: relative;
-        display: block;
-        outline: none;
-        &::-webkit-details-marker {
-          display: none;
+    }
+    @layer daisyui.l1.l2 {
+      &:is([open]) {
+        &.collapse-arrow {
+           > .collapse-title:after {
+            @media (prefers-reduced-motion: no-preference) {
+              transform: translateY(-50%) rotate(225deg);
+            }
+          }
         }
       }
-    }
-  }
-  @layer daisyui.l1.l2 {
-    @media (prefers-reduced-motion: no-preference) {
-      .collapse:is([open]).collapse-arrow  > .collapse-title:after {
-        transform: translateY(-50%) rotate(225deg);
+      &.collapse-open {
+        &.collapse-arrow {
+           > .collapse-title:after {
+            @media (prefers-reduced-motion: no-preference) {
+              transform: translateY(-50%) rotate(225deg);
+            }
+          }
+        }
+        &.collapse-plus {
+           > .collapse-title:after {
+            --tw-content: "−";
+            content: var(--tw-content);
+          }
+        }
       }
-      .collapse.collapse-open.collapse-arrow  > .collapse-title:after {
-        transform: translateY(-50%) rotate(225deg);
+      &[tabindex].collapse-arrow:focus:not(.collapse-close), &.collapse-arrow[tabindex]:focus-within:not(.collapse-close) {
+         > .collapse-title:after {
+          transform: translateY(-50%) rotate(225deg);
+        }
       }
-    }
-    .collapse.collapse-open.collapse-plus  > .collapse-title:after {
-      --tw-content: "−";
-      content: var(--tw-content);
-    }
-    :is(.collapse[tabindex].collapse-arrow:focus:not(.collapse-close), .collapse.collapse-arrow[tabindex]:focus-within:not(.collapse-close))  > .collapse-title:after {
-      transform: translateY(-50%) rotate(225deg);
-    }
-    .collapse.collapse-arrow:not(.collapse-close)  > input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-title:after {
-      transform: translateY(-50%) rotate(225deg);
-    }
-    .collapse[open].collapse-plus  > .collapse-title:after {
-      --tw-content: "−";
-      content: var(--tw-content);
-    }
-    .collapse[tabindex].collapse-plus:focus:not(.collapse-close)  > .collapse-title:after {
-      --tw-content: "−";
-      content: var(--tw-content);
-    }
-    .collapse.collapse-plus:not(.collapse-close)  > input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-title:after {
-      --tw-content: "−";
-      content: var(--tw-content);
+      &.collapse-arrow:not(.collapse-close) {
+         > input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-title:after {
+          transform: translateY(-50%) rotate(225deg);
+        }
+      }
+      &[open] {
+        &.collapse-plus {
+           > .collapse-title:after {
+            --tw-content: "−";
+            content: var(--tw-content);
+          }
+        }
+      }
+      &[tabindex].collapse-plus:focus:not(.collapse-close) {
+         > .collapse-title:after {
+          --tw-content: "−";
+          content: var(--tw-content);
+        }
+      }
+      &.collapse-plus:not(.collapse-close) {
+         > input:is([type="checkbox"], [type="radio"]):checked ~ .collapse-title:after {
+          --tw-content: "−";
+          content: var(--tw-content);
+        }
+      }
     }
   }
   @layer daisyui.l1.l2.l3 {
@@ -2967,27 +2991,25 @@
     }
     .btn-active {
       --btn-bg: var(--btn-color, var(--color-base-200));
-      color: var(--btn-fg, var(--color-base-content));
-      --btn-border: var(--btn-bg);
     }
     @supports (color: color-mix(in lab, red, red)) {
       .btn-active {
-        --btn-border: color-mix(in oklab, var(--btn-bg), #000 calc(var(--depth) * 5%));
+        --btn-bg: color-mix(in oklab, var(--btn-color, var(--color-base-200)), #000 5%);
+      }
+    }
+    .btn-active {
+      color: var(--btn-fg, var(--color-base-content));
+      --btn-border: var(--btn-color, var(--color-base-200));
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .btn-active {
+        --btn-border: color-mix(in oklab, var(--btn-color, var(--color-base-200)), #000 7%);
       }
     }
     .btn-active {
       --btn-border-style: solid;
-      --btn-inset: 0 0.5px 0 0.5px oklch(100% 0 0 / calc(var(--depth) * 6%));
-      --btn-shadow: 0 3px 2px -2px var(--btn-bg),
-      0 4px 3px -2px var(--btn-bg);
-    }
-    @supports (color: color-mix(in lab, red, red)) {
-      .btn-active {
-        --btn-shadow: 0 3px 2px -2px color-mix(in oklab, var(--btn-bg) calc(var(--depth) * 30%), #0000),
-      0 4px 3px -2px color-mix(in oklab, var(--btn-bg) calc(var(--depth) * 30%), #0000);
-      }
-    }
-    .btn-active {
+      --btn-inset: 0 0 0 0 oklch(0% 0 0/0);
+      --btn-shadow: 0 0 0 0 oklch(0% 0 0/0);
       isolation: isolate;
     }
   }
@@ -3831,14 +3853,6 @@
       place-items: start;
       gap: calc(0.25rem * 2);
     }
-    .footer.footer-center {
-      grid-auto-flow: column dense;
-      place-items: center;
-      text-align: center;
-      & > *:not(script, style, template) {
-        place-items: center;
-      }
-    }
     .stat {
       display: inline-grid;
       width: 100%;
@@ -4590,6 +4604,9 @@
       padding-block: calc(0.25rem * 1.5);
       font-size: 1.125rem;
     }
+    .menu-lg details[open] > summary:before {
+      font-size: 1.125rem;
+    }
     .menu-lg .menu-title {
       padding-inline: calc(0.25rem * 6);
       padding-block: calc(0.25rem * 3);
@@ -4598,6 +4615,9 @@
       border-radius: var(--radius-field);
       padding-inline: calc(0.25rem * 3);
       padding-block: calc(0.25rem * 1.5);
+      font-size: 0.875rem;
+    }
+    .menu-md details[open] > summary:before {
       font-size: 0.875rem;
     }
     .menu-md .menu-title {
@@ -4610,6 +4630,9 @@
       padding-block: 0.25rem;
       font-size: 0.75rem;
     }
+    .menu-sm details[open] > summary:before {
+      font-size: 0.75rem;
+    }
     .menu-sm .menu-title {
       padding-inline: calc(0.25rem * 3);
       padding-block: calc(0.25rem * 2);
@@ -4618,6 +4641,9 @@
       border-radius: var(--radius-field);
       padding-inline: calc(0.25rem * 2);
       padding-block: 0.25rem;
+      font-size: 0.6875rem;
+    }
+    .menu-xs details[open] > summary:before {
       font-size: 0.6875rem;
     }
     .menu-xs .menu-title {
@@ -6303,6 +6329,19 @@ table td.options {
     --depth: 1;
     --noise: 0;
   }
+  :root, [data-theme] {
+    background-color: var(--root-bg);
+    color: var(--color-base-content);
+  }
+  :root {
+    background-color: var(--page-scroll-bg, var(--root-bg));
+  }
+  :where(:root, [data-theme]) {
+    --root-bg: var(--color-base-100);
+  }
+  :root {
+    --fx-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.34' numOctaves='4' stitchTiles='stitch'%3E%3C/feTurbulence%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23a)' opacity='0.2'%3E%3C/rect%3E%3C/svg%3E");
+  }
   @property --radialprogress {
     syntax: "<percentage>";
     inherits: true;
@@ -6312,18 +6351,6 @@ table td.options {
     syntax: "<angle>";
     inherits: false;
     initial-value: 0deg;
-  }
-  :root {
-    scrollbar-color: currentColor #0000;
-    @supports (color: color-mix(in lab, red, red)) {
-      scrollbar-color: color-mix(in oklch, currentColor 35%, #0000) #0000;
-    }
-    --fx-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.34' numOctaves='4' stitchTiles='stitch'%3E%3C/feTurbulence%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23a)' opacity='0.2'%3E%3C/rect%3E%3C/svg%3E");
-    --page-scroll-lock: initial;
-    --page-overflow: var(--page-scroll-lock) hidden;
-  }
-  :root:not(span) {
-    overflow: var(--page-overflow);
   }
   :root {
     --page-has-backdrop: var(--page-scroll-lock) 1;
@@ -6345,15 +6372,45 @@ table td.options {
       --page-has-scroll:  ;
     }
   }
-  :root, [data-theme] {
-    background-color: var(--root-bg);
-    color: var(--color-base-content);
-  }
   :root {
-    background-color: var(--page-scroll-bg, var(--root-bg));
+    scrollbar-color: currentColor #0000;
+    @supports (color: color-mix(in lab, red, red)) {
+      scrollbar-color: color-mix(in oklch, currentColor 35%, #0000) #0000;
+    }
+    --page-scroll-lock: initial;
+    --page-overflow: var(--page-scroll-lock) hidden;
   }
-  :where(:root, [data-theme]) {
-    --root-bg: var(--color-base-100);
+  :root:not(span) {
+    overflow: var(--page-overflow);
+  }
+}
+@keyframes progress {
+  50% {
+    background-position-x: -115%;
+  }
+}
+@keyframes rating {
+  0%, 40% {
+    scale: 1.1;
+    filter: brightness(1.05) contrast(1.05);
+  }
+}
+@keyframes toast {
+  0% {
+    scale: 0.9;
+    opacity: 0;
+  }
+  100% {
+    scale: 1;
+    opacity: 1;
+  }
+}
+@keyframes radio {
+  0% {
+    padding: 5px;
+  }
+  50% {
+    padding: 3px;
   }
 }
 @keyframes dropdown {
@@ -6372,22 +6429,9 @@ table td.options {
     translate: 0 -100%;
   }
 }
-@keyframes radio {
+@keyframes menu {
   0% {
-    padding: 5px;
-  }
-  50% {
-    padding: 3px;
-  }
-}
-@keyframes toast {
-  0% {
-    scale: 0.9;
     opacity: 0;
-  }
-  100% {
-    scale: 1;
-    opacity: 1;
   }
 }
 @keyframes skeleton {
@@ -6396,17 +6440,6 @@ table td.options {
   }
   100% {
     background-position: -50%;
-  }
-}
-@keyframes progress {
-  50% {
-    background-position-x: -115%;
-  }
-}
-@keyframes rating {
-  0%, 40% {
-    scale: 1.1;
-    filter: brightness(1.05) contrast(1.05);
   }
 }
 @keyframes aura {
@@ -6433,11 +6466,6 @@ table td.options {
   50% {
     opacity: 0.6;
     filter: blur(1.5rem);
-  }
-}
-@keyframes menu {
-  0% {
-    opacity: 0;
   }
 }
 @property --tw-border-style {
