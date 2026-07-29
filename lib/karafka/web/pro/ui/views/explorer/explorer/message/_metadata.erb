@@ -74,13 +74,29 @@
 
       <% special = %i[received_at timestamp raw_key raw_headers message deserializers] %>
       <% @message.metadata.to_h.except(*special).each do |k, v| %>
-        <% if k == :partition && @message.topic && !v.nil? %>
+        <%
+          # Link the topic/partition/offset identifiers to the Explorer. The offset points at
+          # the message currently being viewed, but we keep it linked for consistency so the
+          # whole coordinate (topic/partition/offset) is navigable.
+          explorer_link =
+            case k
+            when :topic
+              v.nil? ? nil : explorer_topics_path(v)
+            when :partition
+              @message.topic && !v.nil? ? explorer_topics_path(@message.topic, v) : nil
+            when :offset
+              if @message.topic && !@message.partition.nil? && !v.nil?
+                explorer_topics_path(@message.topic, @message.partition, v)
+              end
+            end
+        %>
+        <% if explorer_link %>
           <tr>
             <td>
               <%= k %>
             </td>
             <td>
-              <a href="<%= explorer_topics_path(@message.topic, v) %>">
+              <a href="<%= explorer_link %>">
                 <%= v %>
               </a>
             </td>

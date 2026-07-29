@@ -473,9 +473,11 @@ describe_current do
         refute_body(pagination)
       end
 
-      it "expect the partition in the metadata to link to the partition in the Explorer" do
-        # The link appears twice: once in the breadcrumbs and once in the metadata table
+      it "expect the topic, partition and offset in the metadata to link to the Explorer" do
+        # Each link appears twice: once in the breadcrumbs and once in the metadata table
+        assert_equal(2, body.scan("href=\"/explorer/topics/#{topic}\"").count)
         assert_equal(2, body.scan("href=\"/explorer/topics/#{topic}/0\"").count)
+        assert_equal(2, body.scan("href=\"/explorer/topics/#{topic}/0/0\"").count)
       end
     end
 
