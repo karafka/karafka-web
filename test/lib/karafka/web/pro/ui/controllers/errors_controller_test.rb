@@ -268,6 +268,37 @@ describe_current do
         refute_body(pagination)
         refute_body("This feature is available only")
       end
+
+      it "expect the topic, partition and offsets to link to the Explorer" do
+        # Details from the errors/current.json fixture
+        assert_body('href="/explorer/topics/default"')
+        assert_body('href="/explorer/topics/default/0"')
+        assert_body('href="/explorer/topics/default/0/3788358"')
+        assert_body('href="/explorer/topics/default/0/3788359"')
+        assert_body('href="/explorer/topics/default/0/3788357"')
+      end
+    end
+
+    context "when visiting a producer dispatch error with a singular offset" do
+      let(:producer_error) do
+        Fixtures.errors_json.merge(
+          type: "librdkafka.dispatch_error",
+          details: { topic: "default", partition: 2, offset: 100 }
+        ).to_json
+      end
+
+      before do
+        produce(errors_topic, producer_error, partition: 0)
+
+        get "errors/0/0"
+      end
+
+      it "expect the topic, partition and the singular offset to link to the Explorer" do
+        assert_ok
+        assert_body('href="/explorer/topics/default"')
+        assert_body('href="/explorer/topics/default/2"')
+        assert_body('href="/explorer/topics/default/2/100"')
+      end
     end
 
     context "when visiting error offset with a transactional record in range" do

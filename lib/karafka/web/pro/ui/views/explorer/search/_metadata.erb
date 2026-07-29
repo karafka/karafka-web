@@ -57,7 +57,11 @@
       <tbody>
         <% @search_details[:partitions].sort.to_h.each do |k, v| %>
           <tr>
-            <td>Partition <%= k %></td>
+            <td>
+              <a href="<%= explorer_topics_path(@topic_id, k) %>">
+                Partition <%= k %>
+              </a>
+            </td>
             <td><%= v[:checked] %></td>
             <% if v[:first_message] %>
               <td>
