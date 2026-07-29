@@ -29,6 +29,10 @@
           ***
         <% elsif k2.to_s == 'tags' %>
           <%== tags(v2) %>
+        <% elsif k2.to_s == 'topic' && !v2.nil? %>
+          <a href="<%= explorer_topics_path(v2) %>">
+            <%= v2 %>
+          </a>
         <% elsif k2.to_s == 'partition' && v[:topic] && !v2.nil? %>
           <a href="<%= explorer_topics_path(v[:topic], v2) %>">
             <%= v2 %>
