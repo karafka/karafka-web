@@ -472,6 +472,11 @@ describe_current do
         refute_body(cannot_deserialize)
         refute_body(pagination)
       end
+
+      it "expect the partition in the metadata to link to the partition in the Explorer" do
+        # The link appears twice: once in the breadcrumbs and once in the metadata table
+        assert_equal(2, body.scan("href=\"/explorer/topics/#{topic}/0\"").count)
+      end
     end
 
     context "when requested message exists and has array headers" do

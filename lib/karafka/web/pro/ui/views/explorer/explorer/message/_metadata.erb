@@ -74,15 +74,28 @@
 
       <% special = %i[received_at timestamp raw_key raw_headers message deserializers] %>
       <% @message.metadata.to_h.except(*special).each do |k, v| %>
-        <%==
-          partial(
-            'explorer/explorer/messages/detail',
-            locals: {
-              k: k,
-              v: v
-            }
-          )
-        %>
+        <% if k == :partition && @message.topic && !v.nil? %>
+          <tr>
+            <td>
+              <%= k %>
+            </td>
+            <td>
+              <a href="<%= explorer_topics_path(@message.topic, v) %>">
+                <%= v %>
+              </a>
+            </td>
+          </tr>
+        <% else %>
+          <%==
+            partial(
+              'explorer/explorer/messages/detail',
+              locals: {
+                k: k,
+                v: v
+              }
+            )
+          %>
+        <% end %>
       <% end %>
 
       <tr>
