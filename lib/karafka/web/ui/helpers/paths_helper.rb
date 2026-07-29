@@ -85,6 +85,28 @@ module Karafka
             explorer_path(*["messages", args.compact].flatten)
           end
 
+          # Builds the explorer path for a single message metadata key/value pair. Used to link
+          # the topic/partition/offset coordinates of a message to the Explorer. Any other key,
+          # or a coordinate that cannot be resolved (missing topic/partition or a nil value),
+          # is not linkable and returns nil so the caller can fall back to plain rendering.
+          #
+          # @param key [Symbol] metadata key
+          # @param value [Object] metadata value for the given key
+          # @param message [::Karafka::Messages::Message] message the metadata belongs to
+          # @return [String, nil] explorer path or nil when the pair is not a linkable coordinate
+          def explorer_metadata_path(key, value, message)
+            case key
+            when :topic
+              value.nil? ? nil : explorer_topics_path(value)
+            when :partition
+              message.topic && !value.nil? ? explorer_topics_path(message.topic, value) : nil
+            when :offset
+              if message.topic && !message.partition.nil? && !value.nil?
+                explorer_topics_path(message.topic, message.partition, value)
+              end
+            end
+          end
+
           # Helps build topics paths
           #
           # @return [String] topics scope path

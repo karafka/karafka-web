@@ -23,17 +23,7 @@
   # the Explorer. The offset points at the message currently being viewed, but we keep it
   # linked for consistency so the whole coordinate (topic/partition/offset) is navigable.
   # Any other key falls back to the plain detail rendering.
-  explorer_link =
-    case k
-    when :topic
-      v.nil? ? nil : explorer_topics_path(v)
-    when :partition
-      message.topic && !v.nil? ? explorer_topics_path(message.topic, v) : nil
-    when :offset
-      if message.topic && !message.partition.nil? && !v.nil?
-        explorer_topics_path(message.topic, message.partition, v)
-      end
-    end
+  explorer_link = explorer_metadata_path(k, v, message)
 %>
 
 <% if explorer_link %>
