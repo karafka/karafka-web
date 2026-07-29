@@ -17,6 +17,9 @@ class LinksValidator
     %r{explorer/topics/it-[a-f0-9-]+},
     %r{consumers/[a-z0-9-]+:[a-z0-9]+(:[a-z0-9]+)?/subscriptions},
     "/explorer/topics/test3",
+    # Fixture-based topic name (errors/consumers reports) that does not exist in the test
+    # cluster, so the bare topic link (no partition/offset segment) always 404s
+    "/explorer/topics/default",
     %r{/consumers/[a-f0-9-]+/subscriptions}
   ].freeze
 
