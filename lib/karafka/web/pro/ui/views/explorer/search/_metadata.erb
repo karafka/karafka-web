@@ -61,9 +61,9 @@
             <td><%= v[:checked] %></td>
             <% if v[:first_message] %>
               <td>
-                <%= v[:first_message].offset %>
+                <%== offset_with_label(@topic_id, k, v[:first_message].offset, explore: true) %>
                 -
-                <%= v[:last_message].offset %>
+                <%== offset_with_label(@topic_id, k, v[:last_message].offset, explore: true) %>
               </td>
               <td>
                 <%

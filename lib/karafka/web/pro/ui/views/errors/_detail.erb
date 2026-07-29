@@ -29,16 +29,24 @@
           ***
         <% elsif k2.to_s == 'tags' %>
           <%== tags(v2) %>
-        <% elsif k2.to_s == 'first_offset' %>
-          <a href="<%= explorer_topics_path(v[:topic], v[:partition], v[:first_offset]) %>">
+        <% elsif k2.to_s == 'partition' && v[:topic] && !v2.nil? %>
+          <a href="<%= explorer_topics_path(v[:topic], v2) %>">
             <%= v2 %>
           </a>
-        <% elsif k2.to_s == 'last_offset' %>
-          <a href="<%= explorer_topics_path(v[:topic], v[:partition], v[:last_offset]) %>">
+        <% elsif k2.to_s == 'offset' && v[:topic] && v[:partition] && !v2.nil? && v2 >= 0 %>
+          <a href="<%= explorer_topics_path(v[:topic], v[:partition], v2) %>">
             <%= v2 %>
           </a>
-        <% elsif k2.to_s == 'committed_offset' && v2 >= 0 %>
-          <a href="<%= explorer_topics_path(v[:topic], v[:partition], v[:committed_offset]) %>">
+        <% elsif k2.to_s == 'first_offset' && v[:topic] && v[:partition] && !v2.nil? && v2 >= 0 %>
+          <a href="<%= explorer_topics_path(v[:topic], v[:partition], v2) %>">
+            <%= v2 %>
+          </a>
+        <% elsif k2.to_s == 'last_offset' && v[:topic] && v[:partition] && !v2.nil? && v2 >= 0 %>
+          <a href="<%= explorer_topics_path(v[:topic], v[:partition], v2) %>">
+            <%= v2 %>
+          </a>
+        <% elsif k2.to_s == 'committed_offset' && v[:topic] && v[:partition] && !v2.nil? && v2 >= 0 %>
+          <a href="<%= explorer_topics_path(v[:topic], v[:partition], v2) %>">
             <%= v2 %>
           </a>
         <% else %>
