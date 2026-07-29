@@ -76,10 +76,11 @@
       <% @message.metadata.to_h.except(*special).each do |k, v| %>
         <%==
           partial(
-            'explorer/explorer/messages/detail',
+            'explorer/explorer/messages/linked_detail',
             locals: {
               k: k,
-              v: v
+              v: v,
+              message: @message
             }
           )
         %>

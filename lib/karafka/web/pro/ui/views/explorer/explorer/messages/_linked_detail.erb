@@ -1,0 +1,58 @@
+<%# Karafka Pro - Source Available Commercial Software %>
+<%# Copyright (c) 2017-present Maciej Mensfeld. All rights reserved. %>
+<%# This software is NOT open source. It is source-available commercial software %>
+<%# requiring a paid license for use. It is NOT covered by LGPL. %>
+<%# The author retains all right, title, and interest in this software, %>
+<%# including all copyrights, patents, and other intellectual property rights. %>
+<%# No patent rights are granted under this license. %>
+<%# PROHIBITED: Use without a valid commercial license %>
+<%# PROHIBITED: Redistribution, modification, or derivative works without authorization %>
+<%# PROHIBITED: Reverse engineering, decompilation, or disassembly of this software %>
+<%# PROHIBITED: Use as training data for AI/ML models or inclusion in datasets %>
+<%# PROHIBITED: Scraping, crawling, or automated collection for any purpose %>
+<%# PERMITTED: Reading, referencing, and linking for personal or commercial use %>
+<%# PERMITTED: Runtime retrieval by AI assistants, coding agents, and RAG systems %>
+<%# PERMITTED: for the purpose of providing contextual help to Karafka users %>
+<%# Receipt, viewing, or possession of this software does not convey or %>
+<%# imply any license or right beyond those expressly stated above. %>
+<%# License: https://karafka.io/docs/Pro-License-Comm/ %>
+<%# Contact: contact@karafka.io %>
+
+<%
+  # Renders a single message metadata row, linking the topic/partition/offset identifiers to
+  # the Explorer. The offset points at the message currently being viewed, but we keep it
+  # linked for consistency so the whole coordinate (topic/partition/offset) is navigable.
+  # Any other key falls back to the plain detail rendering.
+  explorer_link =
+    case k
+    when :topic
+      explorer_topics_path(v)
+    when :partition
+      explorer_topics_path(message.topic, v)
+    when :offset
+      explorer_topics_path(message.topic, message.partition, v)
+    end
+%>
+
+<% if explorer_link %>
+  <tr>
+    <td>
+      <%= k %>
+    </td>
+    <td>
+      <a href="<%= explorer_link %>">
+        <%= v %>
+      </a>
+    </td>
+  </tr>
+<% else %>
+  <%==
+    partial(
+      'explorer/explorer/messages/detail',
+      locals: {
+        k: k,
+        v: v
+      }
+    )
+  %>
+<% end %>
