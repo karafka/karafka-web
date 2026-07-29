@@ -99,7 +99,7 @@ module Karafka
             when :topic
               value.nil? ? nil : explorer_topics_path(value)
             when :partition
-              message.topic && !value.nil? ? explorer_topics_path(message.topic, value) : nil
+              (message.topic && !value.nil?) ? explorer_topics_path(message.topic, value) : nil
             when :offset
               if message.topic && !message.partition.nil? && !value.nil?
                 explorer_topics_path(message.topic, message.partition, value)
