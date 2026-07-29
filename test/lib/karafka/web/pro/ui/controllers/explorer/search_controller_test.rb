@@ -194,6 +194,11 @@ describe_current do
       assert_body("Total Messages Checked")
       assert_body("Partition 0")
       assert_body("Partition 1")
+      # Each partition row and its scanned offset range links to the Explorer
+      assert_body("href=\"/explorer/topics/#{topic}/0\"")
+      assert_body("href=\"/explorer/topics/#{topic}/1\"")
+      assert_body("href=\"/explorer/topics/#{topic}/0/")
+      assert_body("href=\"/explorer/topics/#{topic}/1/")
       assert_body(metadata_button)
       assert_body(search_metadata)
       assert_body("<td>3</td>")
@@ -364,6 +369,11 @@ describe_current do
       assert_body("Total Messages Checked")
       assert_body("Partition 0")
       assert_body("Partition 1")
+      # Each partition row and its scanned offset range links to the Explorer
+      assert_body("href=\"/explorer/topics/#{topic}/0\"")
+      assert_body("href=\"/explorer/topics/#{topic}/1\"")
+      assert_body("href=\"/explorer/topics/#{topic}/0/")
+      assert_body("href=\"/explorer/topics/#{topic}/1/")
       assert_body(metadata_button)
       assert_body(search_metadata)
       assert_body("<td>3</td>")

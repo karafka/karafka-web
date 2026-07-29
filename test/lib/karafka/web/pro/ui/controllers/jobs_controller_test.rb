@@ -72,6 +72,13 @@ describe_current do
         assert_body(breadcrumbs)
         refute_body(pagination)
       end
+
+      it "expect the first, last and committed offsets to link to the Explorer" do
+        # Job details from the consumers_reports/current.json fixture
+        assert_body('href="/explorer/topics/default/0/327359"')
+        assert_body('href="/explorer/topics/default/0/327361"')
+        assert_body('href="/explorer/topics/default/0/327358"')
+      end
     end
 
     context "when we have only jobs different than running" do
