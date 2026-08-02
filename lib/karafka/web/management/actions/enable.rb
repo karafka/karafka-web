@@ -76,11 +76,9 @@ module Karafka
                   # until rolling upgrade completes, so we use a longer max timeout to prevent
                   # spamming errors in logs.
                   # We set this ourselves so user settings do not impact frequency of retrying
-                  pause(
-                    timeout: 5_000,
-                    max_timeout: 60_000,
-                    with_exponential_backoff: true
-                  )
+                  pause_timeout 5_000
+                  pause_max_timeout 60_000
+                  pause_with_exponential_backoff true
                   # We use the defaults + our config alterations that may not align with what
                   # user wants for his topics.
                   kafka kafka_config
