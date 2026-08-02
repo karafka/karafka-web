@@ -62,7 +62,7 @@ module Karafka
             rescue => e
               report_error(e)
 
-              sleep(c_config.pause_timeout / 1_000)
+              sleep(c_config.pause.timeout / 1_000)
 
               next
             end
@@ -71,7 +71,7 @@ module Karafka
 
             return if done?
 
-            sleep(c_config.pause_timeout / 1_000)
+            sleep(c_config.pause.timeout / 1_000)
 
             retry
           end

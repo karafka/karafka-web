@@ -51,7 +51,9 @@ module Karafka
           # This should not happen often so waiting that long should not pose significant risks
           # and should not cause issues with the user-experience, since this is only commanding
           # connection
-          setting :pause_timeout, default: 10_000
+          setting :pause do
+            setting :timeout, default: 10_000
+          end
 
           # The underlying iterator requires specific settings, do not change this unless you know
           # what you area doing

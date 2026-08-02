@@ -42,7 +42,7 @@ describe_current do
     {
       commanding: {
         active: true,
-        pause_timeout: 30,
+        pause: { timeout: 30 },
         max_wait_time: 100,
         kafka: valid_kafka_config,
         consumer_group: "valid_consumer_group"
@@ -65,9 +65,9 @@ describe_current do
       end
     end
 
-    context "when pause_timeout is not a positive integer" do
+    context "when pause timeout is not a positive integer" do
       it "expect to fail" do
-        invalid_params = valid_params.merge(commanding: { pause_timeout: -5 })
+        invalid_params = valid_params.merge(commanding: { pause: { timeout: -5 } })
 
         refute(contract.call(invalid_params).success?)
       end
