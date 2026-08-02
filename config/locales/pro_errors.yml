@@ -7,7 +7,7 @@ en:
       commanding.active_format: needs to be either true or false
       commanding.consumer_group_format: 'needs to be a string with a Kafka accepted format'
       commanding.max_wait_time_format: needs to be an integer bigger than 0
-      commanding.pause_timeout_format: needs to be an integer bigger than 0
+      commanding.pause.timeout_format: needs to be an integer bigger than 0
       commanding.kafka_format: needs to be a filled hash
 
       ui.search.matchers_must_have_name_and_call: 'must respond to #name and its instance to #call'

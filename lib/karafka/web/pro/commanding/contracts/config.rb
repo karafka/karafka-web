@@ -44,9 +44,12 @@ module Karafka
 
             nested(:commanding) do
               required(:active) { |val| [true, false].include?(val) }
-              required(:pause_timeout) { |val| val.is_a?(Integer) && val.positive? }
               required(:max_wait_time) { |val| val.is_a?(Integer) && val.positive? }
               required(:kafka) { |val| val.is_a?(Hash) }
+
+              nested(:pause) do
+                required(:timeout) { |val| val.is_a?(Integer) && val.positive? }
+              end
             end
 
             # Ensure all commanding kafka keys are symbols
