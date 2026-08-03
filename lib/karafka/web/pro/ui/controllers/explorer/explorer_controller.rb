@@ -226,6 +226,10 @@ module Karafka
                 target = Web::Ui::Lib::Admin.read_topic(topic_id, partition_id, 1, time).first
 
                 partition_path = "explorer/topics/#{topic_id}/#{partition_id}"
+                # When the requested time is beyond the last message (no match), we leave the offset
+                # off so the Explorer lands on its default view - the latest page of results - which
+                # is the closest data to a future time. Karafka 2.6's `read_topic` returns nothing
+                # for such a time (it used to return the newest message).
                 partition_path += "?offset=#{target.offset}" if target
 
                 redirect(partition_path)
