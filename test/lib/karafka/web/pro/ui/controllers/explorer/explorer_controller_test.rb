@@ -969,7 +969,7 @@ describe_current do
 
       it do
         assert_equal(302, response.status)
-        assert_equal("/explorer/topics/#{topic}/0?offset=0", response.location)
+        assert_equal("/explorer/topics/#{topic}/0", response.location)
       end
     end
 
@@ -993,7 +993,7 @@ describe_current do
 
       it do
         assert_equal(302, response.status)
-        assert_equal("/explorer/topics/#{topic}/0?offset=0", response.location)
+        assert_equal("/explorer/topics/#{topic}/0", response.location)
       end
     end
 
@@ -1057,7 +1057,7 @@ describe_current do
 
       it do
         assert_equal(302, response.status)
-        assert_equal("/explorer/topics/#{topic}/0?offset=99", response.location)
+        assert_equal("/explorer/topics/#{topic}/0", response.location)
       end
     end
 
@@ -1069,7 +1069,7 @@ describe_current do
 
       it do
         assert_equal(302, response.status)
-        assert_equal("/explorer/topics/#{topic}/0?offset=99", response.location)
+        assert_equal("/explorer/topics/#{topic}/0", response.location)
       end
     end
 
