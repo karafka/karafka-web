@@ -1,6 +1,6 @@
 # Karafka Web Changelog
 
-## 1.0.0 (Unreleased)
+## 1.0.0 (2026-08-05)
 - **[Breaking]** Namespace the commanding pause configuration under `config.commanding.pause`. The flat `config.commanding.pause_timeout` setting has been removed in favor of the nested `config.commanding.pause.timeout` namespace, mirroring the pause configuration namespacing introduced in Karafka.
 - [Enhancement] Link the topic, partition and offset in the Explorer's single-message metadata table to the Explorer, matching the linking on the Errors detail view. The offset points at the message currently being viewed but is kept linked so the whole topic/partition/offset coordinate is navigable (#1179).
 - [Enhancement] Link the topic, partition and offsets on the Errors detail view to the Explorer, so you can jump straight from an error to the corresponding topic/partition/message. The `topic` links to the topic in the Explorer, the `partition` links to the partition, and the producer dispatch-error `offset` is now linked as well (previously only `first_offset`/`last_offset`/`committed_offset` were, and only when valid). Also linked the partition and its scanned offset range shown in the Search results metadata to the Explorer (#1179).
