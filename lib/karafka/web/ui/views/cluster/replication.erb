@@ -8,6 +8,8 @@
   <% elsif @partitions.empty? %>
     <%== partial 'shared/no_paginated_data' %>
   <% else %>
+    <%== partial 'shared/replication_legend' %>
+
     <div class="data-table-wrapper">
       <table class="data-table">
         <thead>
@@ -15,8 +17,8 @@
             <th><%== sort_link(:topic_name) %></th>
             <th><%== sort_link(:partition_id) %></th>
             <th><%== sort_link(:leader) %></th>
-            <th><%== sort_link(:replica_count) %></th>
-            <th><%== sort_link('In sync brokers', :in_sync_replica_brokers) %></th>
+            <th><%== sort_link('Replicas', :replica_count) %></th>
+            <th><%== sort_link('In-Sync (ISR)', :in_sync_replica_brokers) %></th>
           </tr>
         </thead>
         <tbody>

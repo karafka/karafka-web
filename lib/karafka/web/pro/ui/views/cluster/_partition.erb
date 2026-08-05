@@ -35,9 +35,11 @@
     <%= partition[:leader] %>
   </td>
   <td>
-    <%= partition[:replica_count] %>
+    <%== partition_replica_brokers(partition) %>
+    <div><small class="text-muted"><%= partition[:replica_count] %> replicas</small></div>
   </td>
   <td>
-    <%= partition[:in_sync_replica_brokers] %>
+    <%== partition_in_sync_brokers(partition) %>
+    <div><small class="text-muted"><%= partition[:in_sync_replica_brokers] %> in-sync</small></div>
   </td>
 </tr>

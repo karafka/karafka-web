@@ -168,6 +168,58 @@ module Karafka
             value.negative? ? "N/A" : value.to_s
           end
 
+          # Renders the assigned replica broker ids for a partition as badges. The leader is
+          # emphasized and any replica that is not part of the in-sync set (ISR) is highlighted
+          # as a warning, turning the replication view into an at-a-glance health signal.
+          #
+          # On older karafka-rdkafka (< 0.28.0) the broker id arrays are not exposed
+          # (`partition[:replicas]` is `nil`), so we gracefully fall back to the numeric count.
+          #
+          # @param partition [Hash, Ui::Models::Partition] partition metadata
+          # @return [String] replica broker ids as badges or the replica count as a fallback
+          def partition_replica_brokers(partition)
+            replicas = partition[:replicas]
+
+            return partition[:replica_count].to_s if replicas.nil?
+            return %(<span class="text-muted">&mdash;</span>) if replicas.empty?
+
+            leader = partition[:leader]
+            isrs = partition[:isrs] || []
+
+            replicas.map do |broker_id|
+              css = if broker_id == leader
+                "badge-primary"
+              elsif isrs.include?(broker_id)
+                "badge-info"
+              else
+                "badge-warning"
+              end
+
+              %(<span class="badge #{css}">#{broker_id}</span>)
+            end.join(" ")
+          end
+
+          # Renders the in-sync (ISR) broker ids for a partition as badges, with the leader
+          # emphasized. Falls back to the numeric in-sync count on older karafka-rdkafka
+          # (< 0.28.0) where `partition[:isrs]` is not available.
+          #
+          # @param partition [Hash, Ui::Models::Partition] partition metadata
+          # @return [String] in-sync broker ids as badges or the in-sync count as a fallback
+          def partition_in_sync_brokers(partition)
+            isrs = partition[:isrs]
+
+            return partition[:in_sync_replica_brokers].to_s if isrs.nil?
+            return %(<span class="text-muted">&mdash;</span>) if isrs.empty?
+
+            leader = partition[:leader]
+
+            isrs.map do |broker_id|
+              css = (broker_id == leader) ? "badge-primary" : "badge-success"
+
+              %(<span class="badge #{css}">#{broker_id}</span>)
+            end.join(" ")
+          end
+
           # @param details [::Karafka::Web::Ui::Models::Partition] partition information with
           #   lso risk state info
           # @return [String] background classes for row marking

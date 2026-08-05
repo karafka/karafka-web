@@ -52,8 +52,8 @@ describe_current do
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body(topic)
-        assert_body("Replica Count")
-        assert_body("In Sync Brokers")
+        assert_body("Replicas")
+        assert_body("In-Sync (ISR)")
       end
 
       it "shows partition details" do
@@ -66,6 +66,15 @@ describe_current do
         assert_body("Replication Factor")
         assert_body("Min In-Sync Replicas")
         assert_body("Fault Tolerance")
+      end
+
+      it "renders the broker roles legend and actual replica broker id badges" do
+        assert_ok
+        assert_body("Broker roles:")
+        # Single-broker cluster: the leader broker id is rendered as a badge
+        assert_body('<span class="badge badge-primary">')
+        assert_body("replicas")
+        assert_body("in-sync")
       end
     end
 
@@ -85,8 +94,8 @@ describe_current do
       end
 
       it "shows replication details for each partition" do
-        assert_body("Replica Count")
-        assert_body("In Sync Brokers")
+        assert_body("Replicas")
+        assert_body("In-Sync (ISR)")
         assert_body("Leader")
       end
     end

@@ -95,8 +95,16 @@ describe_current do
         assert_ok
         assert_body("Partition")
         assert_body("Leader")
-        assert_body("In sync brokers")
+        assert_body("Replicas")
+        assert_body("In-Sync (ISR)")
         # The topic might not always be visible immediately, but column headers should be present
+      end
+
+      it "renders the replication legend and per-partition replica/in-sync counts" do
+        assert_ok
+        assert_body("Broker roles:")
+        assert_body("replicas")
+        assert_body("in-sync")
       end
     end
 

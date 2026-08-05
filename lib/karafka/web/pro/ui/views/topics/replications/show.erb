@@ -24,14 +24,16 @@
 
 <%== partial 'topics/replications/replication_info' %>
 
+<%== partial 'shared/replication_legend' %>
+
 <div class="data-table-wrapper">
   <table class="data-table">
     <thead>
       <tr>
         <th><%== sort_link(:partition_id) %></th>
         <th><%== sort_link(:leader) %></th>
-        <th><%== sort_link(:replica_count) %></th>
-        <th><%== sort_link('In Sync Brokers', :in_sync_replica_brokers) %></th>
+        <th><%== sort_link('Replicas', :replica_count) %></th>
+        <th><%== sort_link('In-Sync (ISR)', :in_sync_replica_brokers) %></th>
       </tr>
     </thead>
     <tbody>
