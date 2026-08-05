@@ -4,7 +4,7 @@ PATH
     karafka-web (1.0.0.rc2)
       erubi (~> 1.4)
       karafka (>= 2.6.0, < 2.7.0)
-      karafka-core (>= 2.6.0, < 2.7.0)
+      karafka-core (>= 2.6.2, < 2.7.0)
       roda (>= 3.100, < 4.0)
       tilt (~> 2.0)
 

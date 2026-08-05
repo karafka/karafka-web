@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "erubi", "~> 1.4"
   spec.add_dependency "karafka", ">= 2.6.0", "< 2.7.0"
-  spec.add_dependency "karafka-core", ">= 2.6.0", "< 2.7.0"
+  spec.add_dependency "karafka-core", ">= 2.6.2", "< 2.7.0"
   spec.add_dependency "roda", ">= 3.100", "< 4.0"
   spec.add_dependency "tilt", "~> 2.0"
 
