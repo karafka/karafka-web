@@ -48,6 +48,7 @@ module Karafka
             self.filterable_attributes = %w[
               name
               value
+              topic_name
             ].freeze
 
             # Lists available brokers in the cluster

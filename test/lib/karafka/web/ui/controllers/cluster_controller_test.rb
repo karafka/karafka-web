@@ -96,6 +96,44 @@ describe_current do
       end
     end
 
+    context "when filtering by topic name" do
+      let(:partition) do
+        { partition_id: 0, leader: 1, replica_count: 1, in_sync_replica_brokers: 1, replicas: [1], isrs: [1] }
+      end
+      let(:fake_topics) do
+        [
+          { topic_name: "orders_topic", partitions: [partition] },
+          { topic_name: "payments_topic", partitions: [partition] }
+        ]
+      end
+      let(:fake_brokers) do
+        [{ broker_id: 1, broker_name: "10.0.0.1", broker_port: 9092 }]
+      end
+
+      before do
+        Karafka::Web::Ui::Models::ClusterInfo
+          .stubs(:fetch)
+          .returns(stub(topics: fake_topics, brokers: fake_brokers))
+      end
+
+      it "keeps only the matching topic" do
+        get "cluster/replication?filter=orders"
+
+        assert_ok
+        assert_body("orders_topic")
+        refute_body("payments_topic")
+        assert_body('name="filter"')
+      end
+
+      it "shows the no-results state when nothing matches" do
+        get "cluster/replication?filter=zzz-no-such-topic"
+
+        assert_ok
+        assert_body("No results match your filter")
+        refute_body("orders_topic")
+      end
+    end
+
     context "when there are many pages with topics" do
       before { 30.times { create_topic } }
 

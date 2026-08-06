@@ -19,6 +19,7 @@ module Karafka
 
           self.filterable_attributes = %w[
             broker_name
+            topic_name
           ].freeze
 
           # Cluster state should always be fresh and not from cache
@@ -46,7 +47,7 @@ module Karafka
             end
 
             @partitions, last_page = Paginators::Arrays.call(
-              refine(partitions_total),
+              filter(refine(partitions_total)),
               @params.current_page
             )
 

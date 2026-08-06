@@ -2,9 +2,17 @@
 
 <%== partial 'cluster/tabs' %>
 
+<% if filtering? || !@partitions.empty? %>
+  <div class="col-span-12 mb-3">
+    <%== filter_box(placeholder: 'Filter by topic name...') %>
+  </div>
+<% end %>
+
 <div class="col-span-12 mb-3">
-  <% if @partitions.empty? && params.current_page <= 1 %>
+  <% if @partitions.empty? && !filtering? && params.current_page <= 1 %>
     <%== partial 'cluster/no_partitions' %>
+  <% elsif @partitions.empty? && filtering? %>
+    <%== partial 'shared/no_filter_results' %>
   <% elsif @partitions.empty? %>
     <%== partial 'shared/no_paginated_data' %>
   <% else %>
