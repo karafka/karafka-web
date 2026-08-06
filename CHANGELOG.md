@@ -1,6 +1,7 @@
 # Karafka Web Changelog
 
 ## 1.0.1 (Unreleased)
+- [Enhancement] Report the details Karafka publishes on a forceful shutdown (which listeners were still active and which jobs were still in processing, with their blocking status) in the Web UI error details, so a `ForcefulShutdownError` shows what was still blocking (#979).
 - [Enhancement] Show the actual replica and in-sync (ISR) broker ids (not just their counts) in the cluster and topic replication partition views. The leader is emphasized and replicas that have fallen out of sync are highlighted, turning the replication views into an at-a-glance health signal. In Pro, each broker badge links to its broker details page (#1084).
 - [Maintenance] Split the oversized `ApplicationHelper` into focused helper modules (`SortingHelper`, `FormattingHelper`, `BadgesHelper`, `PartitionsHelper`), leaving `ApplicationHelper` with only app/layout/hash utilities.
 

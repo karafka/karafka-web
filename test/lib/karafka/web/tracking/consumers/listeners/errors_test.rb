@@ -225,6 +225,97 @@ describe_current do
         assert_equal({}, sampler.errors.last[:details])
       end
     end
+
+    context "when it is a forceful shutdown error" do
+      let(:caller_ref) { Karafka::Server }
+
+      # @param id [String] listener id
+      # @param subscription_group_id [String] subscription group id
+      def build_listener(id, subscription_group_id)
+        stub(id: id, subscription_group: stub(id: subscription_group_id))
+      end
+
+      # The job type is derived from the job class name, so we build classes named like real
+      # processing jobs instead of anonymous mocks (whose names would be meaningless).
+      def build_job(class_name, topic, partition, non_blocking)
+        klass = Class.new do
+          define_method(:non_blocking?) { non_blocking }
+
+          define_method(:executor) do
+            Struct.new(:topic, :partition).new(Struct.new(:name).new(topic), partition)
+          end
+        end
+
+        klass.define_singleton_method(:name) { class_name }
+        klass.new
+      end
+
+      let(:active_listeners) do
+        [
+          build_listener("listener-1", "sub-group-1"),
+          build_listener("listener-2", "sub-group-2")
+        ]
+      end
+
+      let(:in_processing) do
+        {
+          "sub-group-1" => [build_job("Karafka::Processing::Jobs::Consume", "orders", 0, false)],
+          "sub-group-2" => [build_job("Karafka::Processing::Jobs::Shutdown", "payments", 1, true)]
+        }
+      end
+
+      let(:event) do
+        {
+          type: "app.stopping.error",
+          error: error,
+          caller: caller_ref,
+          active_listeners: active_listeners,
+          alive_workers: [Object.new, Object.new],
+          in_processing: in_processing
+        }
+      end
+
+      before { listener.on_error_occurred(event) }
+
+      let(:details) { sampler.errors.last[:details] }
+
+      it "expect to keep the app.stopping.error type" do
+        assert_equal("app.stopping.error", sampler.errors.last[:type])
+      end
+
+      it "expect to report all active listeners by subscription group id, joined" do
+        assert_equal(
+          "listener-1 (sub-group-1), listener-2 (sub-group-2)",
+          details[:active_listeners]
+        )
+      end
+
+      it "expect to report the alive workers count" do
+        assert_equal(2, details[:alive_workers])
+      end
+
+      it "expect to report all in-processing jobs with their blocking status, joined" do
+        assert_equal(
+          "Consume orders/0 (sub-group-1, blocking); " \
+          "Shutdown payments/1 (sub-group-2, non-blocking)",
+          details[:in_processing]
+        )
+      end
+
+      context "when there are no active listeners nor jobs in processing" do
+        let(:active_listeners) { [] }
+        let(:in_processing) { {} }
+
+        it "expect to omit the empty listener and job details" do
+          refute(details.key?(:active_listeners))
+          refute(details.key?(:in_processing))
+        end
+
+        it "expect to still report the alive workers count" do
+          assert_equal(2, details[:alive_workers])
+        end
+      end
+    end
   end
 
   describe "#on_dead_letter_queue_dispatched" do

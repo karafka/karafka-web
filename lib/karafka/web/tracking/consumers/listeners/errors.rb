@@ -18,20 +18,11 @@ module Karafka
             #
             # @param event [Karafka::Core::Monitoring::Event]
             def on_error_occurred(event)
-              caller_ref = event[:caller]
-
-              # Collect extra info if it was a consumer related error.
-              # Those come from user code
-              details = case caller_ref
-              when Karafka::BaseConsumer
-                extract_consumer_info(caller_ref)
-              when Karafka::Connection::Client
-                extract_client_info(caller_ref)
-              when Karafka::Connection::Listener
-                extract_listener_info(caller_ref)
-              else
-                {}
-              end
+              # Error details come from two independent sources that we merge together:
+              # - the caller: the user code context in which the error happened
+              # - the error type: extra diagnostics some error types carry in the event payload
+              details = extract_caller_details(event[:caller])
+                .merge(extract_type_details(event))
 
               error_class, error_message, backtrace = extract_error_info(event[:error])
 
@@ -72,6 +63,38 @@ module Karafka
 
             private
 
+            # Collects error details based on who reported the error, that is the user code
+            # context in which it happened (consumer, client or listener).
+            #
+            # @param caller_ref [Object] object that reported the error
+            # @return [Hash] hash with caller specific info for details of error
+            def extract_caller_details(caller_ref)
+              case caller_ref
+              when Karafka::BaseConsumer
+                extract_consumer_info(caller_ref)
+              when Karafka::Connection::Client
+                extract_client_info(caller_ref)
+              when Karafka::Connection::Listener
+                extract_listener_info(caller_ref)
+              else
+                {}
+              end
+            end
+
+            # Collects error details based on the error type. Some error types carry extra
+            # diagnostics in the event payload that do not come from the caller.
+            #
+            # @param event [Karafka::Core::Monitoring::Event]
+            # @return [Hash] hash with type specific info for details of error
+            def extract_type_details(event)
+              case event[:type]
+              when "app.stopping.error"
+                extract_forceful_shutdown_info(event)
+              else
+                {}
+              end
+            end
+
             # @param consumer [::Karafka::BaseConsumer]
             # @return [Hash] hash with consumer specific info for details of error
             def extract_consumer_info(consumer)
@@ -110,6 +133,49 @@ module Karafka
                 subscription_group: listener.subscription_group.id,
                 id: listener.id
               }
+            end
+
+            # Extracts details about what was still blocking when Karafka forcefully terminated.
+            # Karafka publishes the listeners that were still active and the jobs that were still
+            # in the processing pipeline alongside the forceful shutdown error.
+            #
+            # The lists are formatted into readable strings so they render as regular rows in the
+            # generic error details table (same presentation as every other error).
+            #
+            # @param event [Karafka::Core::Monitoring::Event]
+            # @return [Hash] hash with forceful shutdown diagnostics for details of error
+            def extract_forceful_shutdown_info(event)
+              active_listeners = event[:active_listeners] || []
+              alive_workers = event[:alive_workers] || []
+              in_processing = event[:in_processing] || {}
+
+              listeners = active_listeners.map do |listener|
+                "#{listener.id} (#{listener.subscription_group.id})"
+              end
+
+              jobs = in_processing.flat_map do |group_id, group_jobs|
+                group_jobs.map { |job| format_in_processing_job(group_id, job) }
+              end
+
+              # Only include the listener/job lists when there is something to show, so we do not
+              # render empty rows in the error details table
+              details = { alive_workers: alive_workers.size }
+              details[:active_listeners] = listeners.join(", ") unless listeners.empty?
+              details[:in_processing] = jobs.join("; ") unless jobs.empty?
+              details
+            end
+
+            # Formats a single job that was still in processing into a readable description.
+            #
+            # @param group_id [String] subscription group id the job belongs to
+            # @param job [Object] job that was still in the processing pipeline
+            # @return [String] readable job description
+            def format_in_processing_job(group_id, job)
+              status = job.non_blocking? ? "non-blocking" : "blocking"
+              job_type = job.class.name.split("::").last
+
+              "#{job_type} #{job.executor.topic.name}/#{job.executor.partition} " \
+                "(#{group_id}, #{status})"
             end
           end
         end
