@@ -151,21 +151,85 @@ module Karafka
               ::Karafka.monitor.subscribe(listener)
             end
 
-            # Installs all the producer related listeners into Karafka default listener and
-            # into Karafka::Web listener in case it would be different than the Karafka one
-            ::Karafka::Web.config.tracking.producers.listeners.each do |listener|
-              ::Karafka.producer.monitor.subscribe(listener)
-
-              # Do not instrument twice in case only one default producer is used
-              next if ::Karafka.producer == ::Karafka::Web.producer
-
-              ::Karafka::Web.producer.monitor.subscribe(listener)
-            end
+            # Installs all the producer related listeners so that we track errors from every
+            # producer and not only the default and the Web UI ones
+            subscribe_to_producers
 
             # Installs all the UI related listeners for tracking errors from web processes
             # These listen on Karafka monitor to catch instrumented UI errors
             ::Karafka::Web.config.tracking.ui.listeners.each do |listener|
               ::Karafka.monitor.subscribe(listener)
+            end
+          end
+
+          # Subscribes the producer tracking listeners to every WaterDrop producer.
+          #
+          # Historically we only instrumented `Karafka.producer` and `Karafka::Web.producer`, so
+          # errors published by any other producer a user created (a secondary producer, a
+          # transactional one, etc.) never reached the Web UI. WaterDrop's class-level monitor
+          # announces every producer as it is configured, so we hook into it and attach our
+          # listeners to each producer's own monitor. Producers that already exist by the time Web
+          # is enabled are not announced again, so we also attach to them explicitly.
+          def subscribe_to_producers
+            @producers_tracking_mutex = Mutex.new
+
+            # A forked child inherits this Enable instance (captured by the subscriptions below)
+            # together with the tracking mutex. Had the parent been mid-subscription while forking,
+            # the child would inherit a locked mutex and deadlock on its first producer
+            # subscription. Karafka forks single-threaded, so we swap in a fresh mutex right after
+            # the fork, before any producer can be announced in the child.
+            ::Karafka.monitor.subscribe("swarm.node.after_fork") do
+              @producers_tracking_mutex = Mutex.new
+            end
+
+            # Any producer configured from now on is announced here; attach to it as it appears
+            ::WaterDrop.monitor.subscribe("producer.configured") do |event|
+              subscribe_producer_listeners(event[:producer])
+            end
+
+            # Producers that already exist will not be re-announced, so attach to them directly.
+            # `Karafka::Web.producer` is either the default producer or a variant of it, so it
+            # shares the default producer's monitor; the per-listener guard below keeps us from
+            # subscribing the same monitor twice.
+            subscribe_producer_listeners(::Karafka.producer)
+            subscribe_producer_listeners(::Karafka::Web.producer)
+          end
+
+          # Subscribes the producer tracking listeners to a single producer's monitor, skipping any
+          # listener that is already subscribed to it. This one guard covers every double-subscribe
+          # case: a variant sharing its parent's monitor, the default and Web producers being the
+          # same monitor, a producer re-announced by the global monitor, and a user having wired
+          # the Web UI producer tracking to their own producer by hand. Subscribing twice would
+          # track each of the producer's events twice.
+          #
+          # @param producer [WaterDrop::Producer, WaterDrop::Producer::Variant] producer whose
+          #   monitor we want to instrument
+          def subscribe_producer_listeners(producer)
+            monitor = producer.monitor
+
+            @producers_tracking_mutex.synchronize do
+              ::Karafka::Web.config.tracking.producers.listeners.each do |listener|
+                next if producer_listener_subscribed?(monitor, listener)
+
+                monitor.subscribe(listener)
+              end
+            end
+          end
+
+          # @param monitor [Object] producer monitor
+          # @param listener [Object] producer tracking listener
+          # @return [Boolean] true if the listener is already subscribed to any of the monitor
+          #   events, false otherwise
+          def producer_listener_subscribed?(monitor, listener)
+            # The default monitor exposes its subscribers, but a non-default notifications backend
+            # may not. When we cannot inspect them, we subscribe rather than risk missing errors.
+            return false unless monitor.respond_to?(:listeners)
+
+            # Snapshot the per-event listener arrays (`#values`) before scanning them, so a
+            # concurrent subscription to the same monitor from outside this class cannot mutate
+            # what we iterate.
+            monitor.listeners.values.any? do |event_listeners|
+              event_listeners.include?(listener)
             end
           end
 
