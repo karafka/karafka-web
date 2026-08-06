@@ -8,9 +8,10 @@ module Karafka
         #   also in the context of other processes types and not only karafka server, because it
         #   installs producers instrumentation and routing as well.
         class Enable < Base
-          # Serializes producer listener subscriptions. Producers can be created (and thus
-          # announced by WaterDrop's global monitor) from many threads, so we make the
-          # "subscribe unless already subscribed" check-and-act atomic to never double-subscribe.
+          # Guards producer listener subscriptions. Producers can be created (and thus announced by
+          # WaterDrop's global monitor) from many threads, so the "subscribe unless already
+          # subscribed" check-and-act runs under this mutex to stay atomic and never
+          # double-subscribe.
           PRODUCERS_TRACKING_MUTEX = Mutex.new
 
           private_constant :PRODUCERS_TRACKING_MUTEX
