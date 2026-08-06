@@ -38,6 +38,10 @@ module Karafka
             class TopicsController < BaseController
               self.sortable_attributes = [].freeze
 
+              self.filterable_attributes = %w[
+                topic_name
+              ].freeze
+
               after(:create, :delete) { cache.clear }
 
               # Displays list of topics we can work with
@@ -47,6 +51,8 @@ module Karafka
                 unless ::Karafka::Web.config.ui.visibility.internal_topics
                   @topics.delete_if { |topic| topic[:topic_name].start_with?("__") }
                 end
+
+                @topics = filter(@topics)
 
                 render
               end
