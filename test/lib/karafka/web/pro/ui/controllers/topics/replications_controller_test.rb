@@ -52,8 +52,8 @@ describe_current do
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body(topic)
-        assert_body("Replica Count")
-        assert_body("In Sync Brokers")
+        assert_body("Replicas")
+        assert_body("In-Sync (ISR)")
       end
 
       it "shows partition details" do
@@ -66,6 +66,22 @@ describe_current do
         assert_body("Replication Factor")
         assert_body("Min In-Sync Replicas")
         assert_body("Fault Tolerance")
+      end
+
+      it "renders the broker roles legend and actual replica broker id badges" do
+        assert_ok
+        assert_body("Broker roles:")
+        # Single-broker cluster: the leader broker id is rendered as a badge
+        assert_body('<span class="badge badge-primary">')
+        assert_body("replicas")
+        assert_body("in-sync")
+      end
+
+      it "links the broker badges to their broker details page" do
+        assert_ok
+        # Single-broker cluster: leader/replica/isr are all broker 1
+        assert_body('title="Broker 1 details"')
+        assert_body("cluster/1\"")
       end
     end
 
@@ -85,8 +101,8 @@ describe_current do
       end
 
       it "shows replication details for each partition" do
-        assert_body("Replica Count")
-        assert_body("In Sync Brokers")
+        assert_body("Replicas")
+        assert_body("In-Sync (ISR)")
         assert_body("Leader")
       end
     end
@@ -139,7 +155,9 @@ describe_current do
     end
 
     context "when replication factor equals min.insync.replicas (zero fault tolerance)" do
-      let(:partitions_data) { [{ replica_count: 2, leader: 1, in_sync_replica_brokers: "1,2" }] }
+      let(:partitions_data) do
+        [{ partition_id: 0, leader: 1, replica_count: 2, in_sync_replica_brokers: 2, replicas: [1, 2], isrs: [1, 2] }]
+      end
 
       let(:mock_synonym) do
         stub(name: "default.replication.factor",
@@ -205,7 +223,9 @@ describe_current do
     end
 
     context "when min.insync.replicas is 1 with higher replication factor (low durability)" do
-      let(:partitions_data) { [{ replica_count: 3, leader: 1, in_sync_replica_brokers: "1,2,3" }] }
+      let(:partitions_data) do
+        [{ partition_id: 0, leader: 1, replica_count: 3, in_sync_replica_brokers: 3, replicas: [1, 2, 3], isrs: [1, 2, 3] }]
+      end
 
       let(:mock_synonym) do
         stub(name: "default.replication.factor",
@@ -270,7 +290,9 @@ describe_current do
     end
 
     context "when configuration is healthy (RF > minISR and minISR > 1)" do
-      let(:partitions_data) { [{ replica_count: 3, leader: 1, in_sync_replica_brokers: "1,2,3" }] }
+      let(:partitions_data) do
+        [{ partition_id: 0, leader: 1, replica_count: 3, in_sync_replica_brokers: 3, replicas: [1, 2, 3], isrs: [1, 2, 3] }]
+      end
 
       let(:mock_synonym) do
         stub(name: "default.replication.factor",

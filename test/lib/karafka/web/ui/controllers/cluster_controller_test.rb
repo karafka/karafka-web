@@ -41,6 +41,61 @@ describe_current do
       assert_body(breadcrumbs)
     end
 
+    context "when the cluster has multiple brokers (simulated metadata)" do
+      let(:fake_topics) do
+        [
+          {
+            topic_name: "multi-broker-topic",
+            partitions: [
+              # Fully in-sync: leader 1, replicas 1,2,3 all in ISR
+              {
+                partition_id: 0, leader: 1, replica_count: 3, in_sync_replica_brokers: 3,
+                replicas: [1, 2, 3], isrs: [1, 2, 3]
+              },
+              # Under-replicated: leader 2, broker 3 has fallen out of the ISR set
+              {
+                partition_id: 1, leader: 2, replica_count: 3, in_sync_replica_brokers: 2,
+                replicas: [2, 3, 1], isrs: [2, 1]
+              }
+            ]
+          }
+        ]
+      end
+
+      # The after-test link crawler follows the "cluster/brokers" tab link, which reads
+      # cluster_info.brokers, so the stubbed cluster info must answer that too.
+      let(:fake_brokers) do
+        [
+          { broker_id: 1, broker_name: "10.0.0.1", broker_port: 9092 },
+          { broker_id: 2, broker_name: "10.0.0.2", broker_port: 9092 },
+          { broker_id: 3, broker_name: "10.0.0.3", broker_port: 9092 }
+        ]
+      end
+
+      before do
+        Karafka::Web::Ui::Models::ClusterInfo
+          .stubs(:fetch)
+          .returns(stub(topics: fake_topics, brokers: fake_brokers))
+        get "cluster/replication"
+      end
+
+      it "renders replica broker id badges with health highlighting" do
+        assert_ok
+        assert_body("multi-broker-topic")
+        # Leader emphasized
+        assert_body('<span class="badge badge-primary">1</span>')
+        # In-sync (non-leader) replica
+        assert_body('<span class="badge badge-info">2</span>')
+        # Out-of-sync replica (broker 3 is a replica of p1 but not in its ISR set)
+        assert_body('<span class="badge badge-warning">3</span>')
+      end
+
+      it "does not link the broker badges in OSS (no per-broker details view)" do
+        assert_ok
+        refute_body('title="Broker 1 details"')
+      end
+    end
+
     context "when there are many pages with topics" do
       before { 30.times { create_topic } }
 
@@ -95,8 +150,16 @@ describe_current do
         assert_ok
         assert_body("Partition")
         assert_body("Leader")
-        assert_body("In sync brokers")
+        assert_body("Replicas")
+        assert_body("In-Sync (ISR)")
         # The topic might not always be visible immediately, but column headers should be present
+      end
+
+      it "renders the replication legend and per-partition replica/in-sync counts" do
+        assert_ok
+        assert_body("Broker roles:")
+        assert_body("replicas")
+        assert_body("in-sync")
       end
     end
 
