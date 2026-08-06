@@ -3,6 +3,11 @@
 describe_current do
   include described_class
 
+  # `link: true` badges use PathsHelper#root_path (mixed into the app at runtime); stub it here
+  def root_path(*args)
+    "/karafka/#{args.join("/")}"
+  end
+
   describe "#partition_replica_brokers" do
     let(:result) { partition_replica_brokers(partition) }
 
@@ -27,6 +32,23 @@ describe_current do
 
       it "highlights out-of-sync replicas as a warning" do
         assert_includes(result, '<span class="badge badge-warning">3</span>')
+      end
+
+      it "does not link the badges by default" do
+        refute_includes(result, "<a ")
+      end
+
+      context "when link: true is passed (Pro broker details available)" do
+        let(:result) { partition_replica_brokers(partition, link: true) }
+
+        it "links each broker badge to its broker details page" do
+          assert_includes(
+            result,
+            '<a href="/karafka/cluster/1" title="Broker 1 details">' \
+            '<span class="badge badge-primary">1</span></a>'
+          )
+          assert_includes(result, '<a href="/karafka/cluster/3" title="Broker 3 details">')
+        end
       end
     end
 
@@ -71,6 +93,22 @@ describe_current do
 
       it "does not render out-of-sync brokers" do
         refute_includes(result, ">3</span>")
+      end
+
+      it "does not link the badges by default" do
+        refute_includes(result, "<a ")
+      end
+
+      context "when link: true is passed (Pro broker details available)" do
+        let(:result) { partition_in_sync_brokers(partition, link: true) }
+
+        it "links each in-sync broker badge to its broker details page" do
+          assert_includes(
+            result,
+            '<a href="/karafka/cluster/2" title="Broker 2 details">' \
+            '<span class="badge badge-success">2</span></a>'
+          )
+        end
       end
     end
 

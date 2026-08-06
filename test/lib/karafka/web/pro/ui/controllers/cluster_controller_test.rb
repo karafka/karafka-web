@@ -79,11 +79,23 @@ describe_current do
   end
 
   describe "#replication" do
-    before { get "cluster/replication" }
+    let(:topic) { create_topic(partitions: 1) }
+
+    before do
+      topic
+      get "cluster/replication"
+    end
 
     it do
       assert_ok
       assert_body(breadcrumbs)
+    end
+
+    it "links the replica/in-sync broker badges to the broker details page" do
+      assert_ok
+      # Single-broker cluster: leader/replica/isr are all broker 1
+      assert_body('title="Broker 1 details"')
+      assert_body("cluster/1\"")
     end
 
     context "when there are many pages with topics" do

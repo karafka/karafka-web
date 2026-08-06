@@ -1,7 +1,7 @@
 # Karafka Web Changelog
 
 ## 1.0.1 (Unreleased)
-- [Enhancement] Show the actual replica and in-sync (ISR) broker ids (not just their counts) in the cluster and topic replication partition views. The leader is emphasized and replicas that have fallen out of sync are highlighted, turning the replication views into an at-a-glance health signal. Falls back to the numeric counts on older `karafka-rdkafka` where the broker id arrays are unavailable (#1084).
+- [Enhancement] Show the actual replica and in-sync (ISR) broker ids (not just their counts) in the cluster and topic replication partition views. The leader is emphasized and replicas that have fallen out of sync are highlighted, turning the replication views into an at-a-glance health signal. In Pro, each broker badge links to its broker details page. Falls back to the numeric counts on older `karafka-rdkafka` where the broker id arrays are unavailable (#1084).
 - [Maintenance] Split the oversized `ApplicationHelper` into focused helper modules (`SortingHelper`, `FormattingHelper`, `BadgesHelper`, `PartitionsHelper`), leaving `ApplicationHelper` with only app/layout/hash utilities.
 
 ## 1.0.0 (2026-08-05)

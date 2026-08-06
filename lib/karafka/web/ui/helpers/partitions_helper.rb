@@ -15,8 +15,10 @@ module Karafka
           # (`partition[:replicas]` is `nil`), so we gracefully fall back to the numeric count.
           #
           # @param partition [Hash, Ui::Models::Partition] partition metadata
+          # @param link [Boolean] when true, each broker badge links to its broker details page
+          #   (Pro-only; OSS has no per-broker view so it renders plain badges)
           # @return [String] replica broker ids as badges or the replica count as a fallback
-          def partition_replica_brokers(partition)
+          def partition_replica_brokers(partition, link: false)
             replicas = partition[:replicas]
 
             return partition[:replica_count].to_s if replicas.nil?
@@ -34,7 +36,7 @@ module Karafka
                 "badge-warning"
               end
 
-              %(<span class="badge #{css}">#{broker_id}</span>)
+              broker_id_badge(broker_id, css, link: link)
             end.join(" ")
           end
 
@@ -43,8 +45,10 @@ module Karafka
           # (< 0.28.0) where `partition[:isrs]` is not available.
           #
           # @param partition [Hash, Ui::Models::Partition] partition metadata
+          # @param link [Boolean] when true, each broker badge links to its broker details page
+          #   (Pro-only; OSS has no per-broker view so it renders plain badges)
           # @return [String] in-sync broker ids as badges or the in-sync count as a fallback
-          def partition_in_sync_brokers(partition)
+          def partition_in_sync_brokers(partition, link: false)
             isrs = partition[:isrs]
 
             return partition[:in_sync_replica_brokers].to_s if isrs.nil?
@@ -55,7 +59,7 @@ module Karafka
             isrs.map do |broker_id|
               css = (broker_id == leader) ? "badge-primary" : "badge-success"
 
-              %(<span class="badge #{css}">#{broker_id}</span>)
+              broker_id_badge(broker_id, css, link: link)
             end.join(" ")
           end
 
@@ -129,6 +133,23 @@ module Karafka
           # @return [String] input value if not negative or N/A
           def normalized_metric(value)
             value.negative? ? "N/A" : value.to_s
+          end
+
+          private
+
+          # Renders a single broker id badge, optionally wrapped in a link to the broker details
+          # page. Linking is Pro-only (OSS has no per-broker view), so it is opt-in via `link`.
+          #
+          # @param broker_id [Integer] broker id
+          # @param css [String] badge style class
+          # @param link [Boolean] whether to link the badge to the broker details page
+          # @return [String] badge html (optionally linked)
+          def broker_id_badge(broker_id, css, link:)
+            badge = %(<span class="badge #{css}">#{broker_id}</span>)
+
+            return badge unless link
+
+            %(<a href="#{root_path("cluster", broker_id)}" title="Broker #{broker_id} details">#{badge}</a>)
           end
         end
       end

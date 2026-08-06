@@ -41,6 +41,49 @@ describe_current do
       assert_body(breadcrumbs)
     end
 
+    context "when the cluster has multiple brokers (simulated metadata)" do
+      let(:fake_topics) do
+        [
+          {
+            topic_name: "multi-broker-topic",
+            partitions: [
+              # Fully in-sync: leader 1, replicas 1,2,3 all in ISR
+              {
+                partition_id: 0, leader: 1, replica_count: 3, in_sync_replica_brokers: 3,
+                replicas: [1, 2, 3], isrs: [1, 2, 3]
+              },
+              # Under-replicated: leader 2, broker 3 has fallen out of the ISR set
+              {
+                partition_id: 1, leader: 2, replica_count: 3, in_sync_replica_brokers: 2,
+                replicas: [2, 3, 1], isrs: [2, 1]
+              }
+            ]
+          }
+        ]
+      end
+
+      before do
+        Karafka::Web::Ui::Models::ClusterInfo.stubs(:fetch).returns(stub(topics: fake_topics))
+        get "cluster/replication"
+      end
+
+      it "renders replica broker id badges with health highlighting" do
+        assert_ok
+        assert_body("multi-broker-topic")
+        # Leader emphasized
+        assert_body('<span class="badge badge-primary">1</span>')
+        # In-sync (non-leader) replica
+        assert_body('<span class="badge badge-info">2</span>')
+        # Out-of-sync replica (broker 3 is a replica of p1 but not in its ISR set)
+        assert_body('<span class="badge badge-warning">3</span>')
+      end
+
+      it "does not link the broker badges in OSS (no per-broker details view)" do
+        assert_ok
+        refute_body('title="Broker 1 details"')
+      end
+    end
+
     context "when there are many pages with topics" do
       before { 30.times { create_topic } }
 
