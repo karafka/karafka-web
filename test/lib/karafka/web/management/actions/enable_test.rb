@@ -133,6 +133,27 @@ describe_current do
         assert_equal(1, late_producer_monitor.subscribed_count(producer_listener))
       end
     end
+
+    context "when the process is forked" do
+      it "expect to subscribe to swarm.node.after_fork to reset the tracking mutex" do
+        karafka_monitor.expects(:subscribe).with("swarm.node.after_fork")
+        enable
+      end
+
+      context "when the after-fork callback fires" do
+        before do
+          # Simulate a fork by firing the after-fork callback the moment it is registered; the
+          # tracking mutex is swapped for a fresh one so the child never inherits a locked one
+          karafka_monitor.stubs(:subscribe).with("swarm.node.after_fork").yields
+        end
+
+        it "expect producer listeners to still subscribe (fresh, unlocked mutex)" do
+          enable
+
+          assert_equal(1, producer_monitor.subscribed_count(producer_listener))
+        end
+      end
+    end
   end
 
   context "when tracking is not active" do
@@ -186,6 +207,11 @@ describe_current do
       error
     end
 
+    # Every producer created after the Web UI is enabled now reports into this shared sampler, so
+    # we scope assertions to our own producer id instead of the whole sampler to stay isolated
+    # from any other producer's errors.
+    let(:tracked_errors) { sampler.errors.select { |error| error[:producer_id] == producer.id } }
+
     before { sampler.clear }
 
     after { producer.close }
@@ -205,8 +231,8 @@ describe_current do
     it "expect its errors to be tracked by the Web UI producers sampler" do
       dispatch_error
 
-      assert_equal(1, sampler.errors.size)
-      assert_equal(producer.id, sampler.errors.first[:producer_id])
+      assert_equal(1, tracked_errors.size)
+      assert_equal(producer.id, tracked_errors.first[:producer_id])
     end
 
     it "expect the tracked error to match the error contract" do
@@ -214,13 +240,13 @@ describe_current do
 
       schema = Karafka::Web::Tracking::Contracts::Error.new
 
-      assert(schema.call(sampler.errors.first).success?)
+      assert(schema.call(tracked_errors.first).success?)
     end
 
     it "expect to track the error exactly once (no double subscription)" do
       dispatch_error
 
-      assert_equal(1, sampler.errors.size)
+      assert_equal(1, tracked_errors.size)
     end
   end
 end
