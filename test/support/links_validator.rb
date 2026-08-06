@@ -32,7 +32,12 @@ class LinksValidator
     "StatusController" => [/.*/],
     # Also deals with invalid state that affects dashboard
     "RoutingController" => [%r{/dashboard}, %r{/jobs}, %r{/health}],
-    "ClusterController" => [%r{/explorer}]
+    "ClusterController" => [%r{/explorer}],
+    # Replication rows render broker-id badges that link to per-broker detail pages. In specs
+    # the topic metadata is stubbed with hypothetical multi-broker replica sets, so those broker
+    # ids may not exist in the single-broker test cluster. Broker detail pages are validated
+    # directly by the cluster controller specs.
+    "ReplicationsController" => [%r{/cluster/\d+}]
   }.freeze
 
   # Descriptions that indicate some features disabled
