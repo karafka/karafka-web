@@ -154,6 +154,37 @@ describe_current do
       end
     end
 
+    context "when visiting a forceful shutdown error carrying blocking details" do
+      let(:error_report) do
+        Fixtures.errors_json.merge(
+          type: "app.stopping.error",
+          error_class: "Karafka::Errors::ForcefulShutdownError",
+          details: {
+            alive_workers: 2,
+            active_listeners: "listener-1 (sub-group-1)",
+            in_processing: "Consume orders/0 (sub-group-1, blocking)"
+          }
+        ).to_json
+      end
+
+      before do
+        produce(errors_topic, error_report)
+        get "errors/0"
+      end
+
+      it "expect to render the forceful shutdown blocking details" do
+        assert_ok
+        assert_body("app.stopping.error")
+        assert_body("ForcefulShutdownError")
+        # The details are rendered as regular rows in the generic error details table
+        assert_body("active_listeners")
+        assert_body("listener-1 (sub-group-1)")
+        assert_body("in_processing")
+        assert_body("Consume orders/0 (sub-group-1, blocking)")
+        assert_body("alive_workers")
+      end
+    end
+
     context "when visiting error offset with a transactional record in range" do
       before do
         produce(errors_topic, error_report, partition: 0, type: :transactional)
