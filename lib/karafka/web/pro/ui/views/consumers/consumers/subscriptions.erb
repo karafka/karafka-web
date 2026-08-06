@@ -28,13 +28,27 @@
   <%== partial 'consumers/consumers/consumer/tabs' %>
 
   <% if @process.subscribed? %>
-    <%==
-      render_each(
-        @process.consumer_groups,
-        'consumers/consumers/consumer/_consumer_group',
-        local: :consumer_group
-      )
+    <%== filter_box(placeholder: 'Filter by topic or consumer group...') %>
+
+    <%
+      any_visible = @process.consumer_groups.any? do |cg|
+        cg.subscription_groups.any? do |sg|
+          visible_topics(sg.topics, cg.id, sg.id).any?
+        end
+      end
     %>
+
+    <% if filtering? && !any_visible %>
+      <%== partial 'shared/no_filter_results' %>
+    <% else %>
+      <%==
+        render_each(
+          @process.consumer_groups,
+          'consumers/consumers/consumer/_consumer_group',
+          local: :consumer_group
+        )
+      %>
+    <% end %>
   <% else %>
     <%== partial 'consumers/consumers/consumer/no_subscriptions' %>
   <% end %>

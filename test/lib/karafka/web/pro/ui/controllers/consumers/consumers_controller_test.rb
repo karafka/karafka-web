@@ -755,6 +755,41 @@ describe_current do
       end
     end
 
+    context "when filtering by a matching topic name" do
+      before { get "consumers/shinra:1:1/subscriptions?filter=default" }
+
+      it do
+        assert_ok
+        assert_body("default")
+        # The matching subscription group renders; subscription groups without a matching topic
+        # (including the empty one) are hidden
+        assert_body("Rebalance count")
+        refute_body("This process does not consume any")
+        assert_body('name="filter"')
+      end
+    end
+
+    context "when filtering by a matching consumer group name" do
+      before { get "consumers/shinra:1:1/subscriptions?filter=example_app6_app" }
+
+      it do
+        assert_ok
+        # Matching the consumer group name keeps all of its subscription groups/topics
+        assert_body("Rebalance count")
+      end
+    end
+
+    context "when filtering by a non-matching keyword" do
+      before { get "consumers/shinra:1:1/subscriptions?filter=zzz-nope-zzz" }
+
+      it do
+        assert_ok
+        assert_body("No results match your filter")
+        refute_body("Rebalance count")
+        assert_body('name="filter"')
+      end
+    end
+
     context "when subscription has an unknown rebalance reason" do
       before do
         topics_config.consumers.reports.name = reports_topic
