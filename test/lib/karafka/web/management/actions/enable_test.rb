@@ -176,7 +176,7 @@ describe_current do
     let(:producer) do
       WaterDrop::Producer.new do |config|
         config.deliver = false
-        config.kafka = {"bootstrap.servers": "127.0.0.1:9092"}
+        config.kafka = { "bootstrap.servers": "127.0.0.1:9092" }
       end
     end
 
