@@ -218,7 +218,8 @@ module Karafka
           # @return [Boolean] true if the listener is already subscribed to any of the monitor
           #   events, false otherwise
           def producer_listener_subscribed?(monitor, listener)
-            # Exotic custom monitors may not expose their listeners; when in doubt we subscribe
+            # The default monitor exposes its subscribers, but a non-default notifications backend
+            # may not. When we cannot inspect them, we subscribe rather than risk missing errors.
             return false unless monitor.respond_to?(:listeners)
 
             monitor.listeners.each_value.any? do |event_listeners|
