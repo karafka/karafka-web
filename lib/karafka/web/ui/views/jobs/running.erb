@@ -3,7 +3,11 @@
 <%== partial 'jobs/tabs' %>
 
 <div class="col-span-12">
-  <% if @jobs.empty? && params.current_page <= 1 %>
+  <% if !@jobs.empty? || filtering? %>
+    <%== filter_box(placeholder: 'Filter by process id, topic, consumer or type...') %>
+  <% end %>
+
+  <% if @jobs.empty? && !filtering? && params.current_page <= 1 %>
     <%== partial 'jobs/no_jobs', locals: { type: 'running' } %>
   <% elsif @jobs.empty? %>
     <%== partial 'shared/no_paginated_data' %>

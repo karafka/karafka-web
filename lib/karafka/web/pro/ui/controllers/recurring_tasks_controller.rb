@@ -43,11 +43,16 @@ module Karafka
               next_time
             ].freeze
 
+            self.filterable_attributes = %w[
+              id
+              cron
+            ].freeze
+
             # Displays the current schedule
             def schedule
               @schedule = Models::RecurringTasks::Schedule.current
 
-              @tasks = refine(@schedule.tasks) if @schedule
+              @tasks = filter(refine(@schedule.tasks)) if @schedule
 
               render
             end

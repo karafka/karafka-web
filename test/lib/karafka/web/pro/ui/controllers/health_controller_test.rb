@@ -78,6 +78,32 @@ describe_current do
         it { assert_ok }
       end
 
+      context "when filtering by a matching topic name" do
+        before { get "health/overview?filter=default" }
+
+        it do
+          assert_ok
+          # The matching topic and its data are preserved (match-propagation keeps the branch)
+          assert_body("default")
+          assert_body("327355")
+          # The filtering box is rendered with the active keyword
+          assert_body('name="filter"')
+          assert_body('value="default"')
+        end
+      end
+
+      context "when filtering by a non-matching keyword" do
+        before { get "health/overview?filter=this-topic-does-not-exist" }
+
+        it do
+          assert_ok
+          # Everything is pruned, so we fall back to the empty state, but still offer the filter box
+          assert_body("No health data is available")
+          assert_body('name="filter"')
+          refute_body("327355")
+        end
+      end
+
       context "when commanding is enabled" do
         before do
           Karafka::Web.config.commanding.active = true

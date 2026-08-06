@@ -4,7 +4,11 @@
 <%== partial 'consumers/tabs' %>
 
 <div class="col-span-12">
-  <% if @processes.empty? && params.current_page <= 1 %>
+  <% if !@processes.empty? || filtering? %>
+    <%== filter_box(placeholder: 'Filter by process id...') %>
+  <% end %>
+
+  <% if @processes.empty? && !filtering? && params.current_page <= 1 %>
     <%== partial 'consumers/no_consumers' %>
   <% elsif @processes.empty? %>
     <%== partial 'shared/no_paginated_data' %>

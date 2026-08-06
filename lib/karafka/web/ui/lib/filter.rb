@@ -1,0 +1,279 @@
+# frozen_string_literal: true
+
+module Karafka
+  module Web
+    module Ui
+      module Lib
+        # Filtering engine for deep in-memory structures. It supports hashes, arrays and hash
+        # proxies. It is a companion to the [[Sorter]] and follows the same wiring
+        # (a per-controller allow-list plus an in-place `call`), but instead of reordering a
+        # structure it removes the elements that do not match a keyword query.
+        #
+        # Matching is a case-insensitive substring check performed against the allowed attributes
+        # of each element (via `public_send` or hash lookup) and against hash keys (so structural
+        # labels such as topic or consumer group names are searchable).
+        #
+        # It uses match-propagation: a container (array/hash) is kept when it matches directly or
+        # when any of its descendants match. That way filtering a nested structure by a topic name
+        # keeps that topic with all of its children while dropping the branches that have nothing
+        # in common with the query.
+        #
+        # @note It handles filtering in place by mutating appropriate resources and sub-components,
+        #   exactly like the [[Sorter]]. Because of that it must only be used on structures that
+        #   are safe to mutate (per-request data), never on shared/live structures like the app
+        #   routing.
+        class Filter
+          # Max depth for nested filtering. Matches the sorter so both engines agree on how deep
+          # they are willing to dive into a structure.
+          MAX_DEPTH = 8
+
+          private_constant :MAX_DEPTH
+
+          # @param filter_query [String] keyword based on which we filter or empty string when no
+          #   filtering is needed
+          # @param allowed_attributes [Array<String>] attributes on which we allow to filter. Since
+          #   we can filter on method invocations, this needs to be limited and provided on a per
+          #   controller basis (same contract as the sorter).
+          def initialize(filter_query, allowed_attributes:)
+            @query = filter_query.to_s.downcase.strip
+            @allowed = allowed_attributes
+
+            # Things we have already seen and filtered. Prevents crashing (and infinite loops) on
+            # circular dependencies when the same resources are present in different parts of the
+            # tree. We cache the match result so a second visit returns the same answer.
+            @seen = {}
+          end
+
+          # Filters the structure in place and returns it.
+          #
+          # @param resource [Hash, Array, Lib::HashProxy] structure we want to filter
+          # @return [Hash, Array, Lib::HashProxy] the same structure with non-matching elements
+          #   removed
+          def call(resource)
+            # Skip if there is nothing to filter on
+            return resource if @query.empty?
+            # Skip if there are no attributes we are allowed to filter on. Just like the sorter
+            # ignores a disallowed field, we do not want to prune anything when we have no criteria
+            # to match records against.
+            return resource if @allowed.empty?
+
+            keep?(resource, 0)
+
+            resource
+          end
+
+          private
+
+          # Recursively decides whether a given resource should be kept, pruning its non-matching
+          # children in place along the way.
+          #
+          # @param resource [Object] structure or leaf we are evaluating
+          # @param current_depth [Integer] current depth from the root
+          # @return [Boolean] true if the resource (or any of its descendants) matches the query
+          def keep?(resource, current_depth)
+            # Do not prune beyond the max depth. We report a match so we never delete data we
+            # refused to look into.
+            return true if current_depth > MAX_DEPTH
+
+            object_id = resource.object_id
+            # Break circular references by returning the (optimistic) cached answer
+            return @seen[object_id] if @seen.key?(object_id)
+
+            @seen[object_id] = true
+
+            result =
+              case resource
+              when Hash
+                keep_hash!(resource, current_depth)
+              when Lib::HashProxy
+                # A hash proxy represents a single record (a process, a topic, a job). We match on
+                # its allowed attributes and treat it as a leaf, we do not dive into its internals.
+                record_match?(resource)
+              when Array
+                keep_array!(resource, current_depth)
+              when String
+                record_match?(resource)
+              when Enumerable
+                # Custom collections (e.g. the `Jobs` model) can be pruned only when they support
+                # in-place selection. Otherwise we treat them as an opaque leaf record.
+                if resource.respond_to?(:select!)
+                  keep_array!(resource, current_depth)
+                else
+                  record_match?(resource)
+                end
+              else
+                record_match?(resource)
+              end
+
+            @seen[object_id] = result
+            result
+          end
+
+          # Filters an array in place, keeping only the elements that match (directly or through a
+          # descendant).
+          #
+          # @param array [Array] array we want to filter
+          # @param current_depth [Integer] current depth from the root
+          # @return [Boolean] true if any element was kept
+          # @note This method modifies the array in place (mutates the caller).
+          def keep_array!(array, current_depth)
+            # We only prune arrays whose elements we can actually reason about (records or nested
+            # containers). Arrays of bare, non-matchable scalars are left untouched so we never
+            # empty a collection we have no criteria for. This mirrors the sorter only acting on
+            # collections it knows how to compare.
+            return false unless array.any? { |element| actionable?(element) }
+
+            any_kept = false
+
+            array.select! do |element|
+              kept = keep?(element, current_depth + 1)
+              any_kept ||= kept
+              kept
+            end
+
+            any_kept
+          end
+
+          # Filters a hash in place.
+          #
+          # A hash can play two roles. When it is a record (a row such as `{ name: ..., active:
+          # ... }`) we match it as a whole on its allowed attributes and never prune its entries.
+          # When it is a structural container (a nested map such as `consumer_group => topics`) we
+          # prune its entries: an entry is kept when its key matches the query (in which case the
+          # whole value subtree is preserved) or when its value subtree contains a match.
+          #
+          # @param hash [Hash] hash we want to filter
+          # @param current_depth [Integer] current depth from the root
+          # @return [Boolean] true if the hash matches directly or keeps at least one entry
+          # @note This method modifies the hash in place (mutates the caller).
+          def keep_hash!(hash, current_depth)
+            return record_match?(hash) unless structural_hash?(hash)
+
+            any_kept = false
+
+            hash.select! do |key, value|
+              if matches?(key)
+                # The key (a structural label such as a topic name) matches, so we keep the whole
+                # branch untouched
+                any_kept = true
+                true
+              elsif prunable?(value)
+                kept = keep?(value, current_depth + 1)
+                any_kept ||= kept
+                kept
+              else
+                # Sibling values that are not prunable are metadata (counts, timestamps, sets of
+                # scalars) that live next to the nested collections we prune (e.g. `partitions_count`
+                # next to `partitions`, or `rebalance_ages` next to `topics`). We never delete them
+                # so we do not corrupt the records we keep, but on their own they do not keep the
+                # parent branch alive.
+                true
+              end
+            end
+
+            any_kept
+          end
+
+          # A hash is treated as a structural container (to be pruned) rather than a record (to be
+          # matched as a whole) when it does not expose any allowed attribute as a key and at least
+          # one of its values is itself a nested container.
+          #
+          # @param hash [Hash] hash we want to classify
+          # @return [Boolean] true if the hash should be pruned entry by entry
+          def structural_hash?(hash)
+            return false if @allowed.any? { |attribute| hash.key?(attribute) || hash.key?(attribute.to_sym) }
+
+            hash.any? { |_key, value| prunable?(value) }
+          end
+
+          # Decides whether a value is something we should recurse into and prune. Plain hashes and
+          # hash proxies (records) always are. Collections are only prunable when they hold
+          # actionable elements, so a set/array of bare scalars (metadata) is left alone rather than
+          # emptied.
+          #
+          # @param value [Object] value we want to classify
+          # @return [Boolean] true if we should recurse into the value and prune it
+          def prunable?(value)
+            case value
+            when Hash, Lib::HashProxy
+              true
+            when String
+              false
+            when Array
+              value.any? { |element| actionable?(element) }
+            when Enumerable
+              value.respond_to?(:select!) && value.any? { |element| actionable?(element) }
+            else
+              false
+            end
+          end
+
+          # @param element [Object] element we want to classify
+          # @return [Boolean] true if the element is something we can prune on: a nested container
+          #   or a record exposing at least one allowed attribute
+          def actionable?(element)
+            case element
+            when Hash, Lib::HashProxy, Array, Enumerable
+              true
+            else
+              matchable_record?(element)
+            end
+          end
+
+          # @param element [Object] element we want to classify
+          # @return [Boolean] true if the element responds to (or holds) at least one allowed
+          #   attribute
+          def matchable_record?(element)
+            @allowed.any? { |attribute| attribute_value(element, attribute) != NO_VALUE }
+          end
+
+          # Checks whether a record matches the query on any of its allowed attributes.
+          #
+          # @param element [Object] record we want to check
+          # @return [Boolean] true if any allowed attribute value includes the query
+          def record_match?(element)
+            @allowed.any? do |attribute|
+              value = attribute_value(element, attribute)
+
+              value != NO_VALUE && matches?(value)
+            end
+          end
+
+          # Extracts an allowed attribute value from a record, supporting both method invocations
+          # and hash lookups (string and symbol keys).
+          #
+          # @param element [Object] record we want to read from
+          # @param attribute [String] allowed attribute name
+          # @return [Object] the attribute value or {NO_VALUE} when the record does not expose it
+          def attribute_value(element, attribute)
+            if element.respond_to?(attribute)
+              element.public_send(attribute)
+            elsif element.respond_to?(:key?)
+              if element.key?(attribute)
+                element[attribute]
+              elsif element.key?(attribute.to_sym)
+                element[attribute.to_sym]
+              else
+                NO_VALUE
+              end
+            else
+              NO_VALUE
+            end
+          end
+
+          # @param value [Object] value we want to match against the query
+          # @return [Boolean] true if the stringified value includes the query (case-insensitive)
+          def matches?(value)
+            value.to_s.downcase.include?(@query)
+          end
+
+          # Sentinel used to distinguish "attribute is absent" from an attribute that legitimately
+          # holds a `nil`/`false` value.
+          NO_VALUE = Object.new.freeze
+
+          private_constant :NO_VALUE
+        end
+      end
+    end
+  end
+end

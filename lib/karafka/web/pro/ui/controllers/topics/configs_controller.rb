@@ -44,13 +44,18 @@ module Karafka
                 read_only?
               ].freeze
 
+              self.filterable_attributes = %w[
+                name
+                value
+              ].freeze
+
               # Displays requested topic config details
               #
               # @param topic_name [String] topic we're interested in
               def index(topic_name)
                 @topic = Models::Topic.find(topic_name)
 
-                @configs = refine(@topic.configs)
+                @configs = filter(refine(@topic.configs))
 
                 render
               end

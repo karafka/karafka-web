@@ -14,6 +14,13 @@ module Karafka
             updated_at
           ].freeze
 
+          self.filterable_attributes = %w[
+            id
+            topic
+            consumer
+            type
+          ].freeze
+
           # Lists running jobs
           def running
             current_state = Models::ConsumersState.current!
@@ -30,7 +37,7 @@ module Karafka
             end
 
             @jobs, last_page = Paginators::Arrays.call(
-              refine(jobs_total),
+              filter(refine(jobs_total)),
               @params.current_page
             )
 
@@ -55,7 +62,7 @@ module Karafka
             end
 
             @jobs, last_page = Paginators::Arrays.call(
-              refine(jobs_total),
+              filter(refine(jobs_total)),
               @params.current_page
             )
 

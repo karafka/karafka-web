@@ -50,6 +50,12 @@ module Karafka
                 updated_at
               ].freeze
 
+              self.filterable_attributes = %w[
+                topic
+                consumer
+                type
+              ].freeze
+
               # Shows all running jobs of a consumer
               # @param process_id [String]
               def running(process_id)
@@ -57,7 +63,7 @@ module Karafka
 
                 @running_jobs = @process.jobs.running
 
-                refine(@running_jobs)
+                filter(refine(@running_jobs))
 
                 render
               end
@@ -69,7 +75,7 @@ module Karafka
 
                 @pending_jobs = @process.jobs.pending
 
-                refine(@pending_jobs)
+                filter(refine(@pending_jobs))
 
                 render
               end

@@ -69,13 +69,17 @@ module Karafka
                 pending_jobs_count
               ].freeze
 
+              self.filterable_attributes = %w[
+                id
+              ].freeze
+
               # Consumers list
               def index
                 @current_state = Models::ConsumersState.current!
                 @counters = Models::Counters.new(@current_state)
 
                 @processes, last_page = Paginators::Arrays.call(
-                  refine(Models::Processes.active(@current_state)),
+                  filter(refine(Models::Processes.active(@current_state))),
                   @params.current_page
                 )
 

@@ -18,9 +18,15 @@ module Karafka
           class << self
             # Attributes on which we can sort in a given controller
             attr_accessor :sortable_attributes
+
+            # Attributes on which we can filter in a given controller. Since we can filter on
+            # method invocations, this needs to be limited and provided on a per controller basis
+            # (same contract as `sortable_attributes`).
+            attr_accessor :filterable_attributes
           end
 
           self.sortable_attributes = []
+          self.filterable_attributes = []
 
           # Detect that the state of the cache has changed
           before do
@@ -136,6 +142,20 @@ module Karafka
             Lib::Sorter.new(
               @params.current_sort,
               allowed_attributes: self.class.sortable_attributes
+            ).call(resources)
+          end
+
+          # Filters the provided resources in place based on the current filtering keyword and the
+          # attributes allowed for filtering in a given controller.
+          #
+          # @param resources [Hash, Array, Lib::HashProxy] object for filtering
+          # @return [Hash, Array, Lib::HashProxy] filtered results
+          # @note It mutates the provided resources in place, so it must not be used on shared
+          #   structures like the app routing.
+          def filter(resources)
+            Lib::Filter.new(
+              @params.current_filter,
+              allowed_attributes: self.class.filterable_attributes || []
             ).call(resources)
           end
 

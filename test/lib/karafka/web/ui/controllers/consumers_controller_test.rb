@@ -50,6 +50,31 @@ describe_current do
     end
   end
 
+  context "when filtering consumers by a matching keyword" do
+    before { get "consumers?filter=shinra" }
+
+    it do
+      assert_ok
+      assert_body("shinra:1:1")
+      # The filtering box should be rendered with the active keyword
+      assert_body('name="filter"')
+      assert_body('value="shinra"')
+    end
+  end
+
+  context "when filtering consumers by a non-matching keyword" do
+    before { get "consumers?filter=this-does-not-exist" }
+
+    it do
+      assert_ok
+      refute_body("shinra:1:1")
+      # We still render the filtering box (with a clear option) and not the "no consumers at all"
+      # empty state, since consumers do exist, they are just filtered out
+      assert_body('name="filter"')
+      refute_body(no_processes)
+    end
+  end
+
   context "when there is an active consumer but without any partitions assigned yet" do
     before do
       topics_config.consumers.states.name = states_topic

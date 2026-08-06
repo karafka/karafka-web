@@ -20,6 +20,12 @@
 
 <% view_title @broker.full_name %>
 
+<% if filtering? || !@configs.empty? %>
+  <div class="col-span-12 mb-3">
+    <%== filter_box(placeholder: 'Filter by config name or value...') %>
+  </div>
+<% end %>
+
 <div class="data-table-wrapper">
   <table class="data-table">
     <thead>

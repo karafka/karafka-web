@@ -33,6 +33,10 @@
 <% end %>
 
 <div class="col-span-12">
+  <% if @schedule && (filtering? || !@tasks.empty?) %>
+    <%== filter_box(placeholder: 'Filter by task id or cron...') %>
+  <% end %>
+
   <% if @schedule && !@tasks.empty? %>
     <div class="data-table-wrapper">
       <table class="data-table">

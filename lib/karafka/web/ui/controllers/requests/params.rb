@@ -75,6 +75,11 @@ module Karafka
               @current_sort ||= @request_params["sort"].to_s.downcase
             end
 
+            # @return [String] filtering keyword or empty string when no filtering is requested
+            def current_filter
+              @current_filter ||= @request_params["filter"].to_s.strip
+            end
+
             # @return [Integer] current page for paginated views
             # @note It does basic sanitization
             def current_page

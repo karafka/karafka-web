@@ -46,6 +46,39 @@ describe_current do
       end
     end
 
+    context "when filtering by a matching topic name" do
+      before { get "routing?filter=#{topics_config.errors.name}" }
+
+      it do
+        assert_ok
+        # The matching topic stays visible, non-matching ones are hidden (non-destructively)
+        assert_body(topics_config.errors.name)
+        refute_body(topics_config.consumers.states.name)
+        assert_body('name="filter"')
+      end
+    end
+
+    context "when filtering by a non-matching keyword" do
+      before { get "routing?filter=zzz-nonexistent-topic-zzz" }
+
+      it do
+        assert_ok
+        # No topic matches, so all consumer groups are hidden, but the filter box remains
+        assert_body('name="filter"')
+        refute_body(topics_config.errors.name)
+      end
+
+      it "does not mutate the live app routing" do
+        topic_names = -> { Karafka::App.routes.flat_map { |cg| cg.topics.map(&:name) }.sort }
+
+        before_topics = topic_names.call
+        get "routing?filter=zzz-nonexistent-topic-zzz"
+        after_topics = topic_names.call
+
+        assert_equal(before_topics, after_topics)
+      end
+    end
+
     context "when there is no consumers state" do
       before do
         Karafka::Web::Ui::Models::ConsumersState.stubs(:current).returns(false)

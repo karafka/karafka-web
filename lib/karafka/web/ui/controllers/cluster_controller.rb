@@ -17,12 +17,16 @@ module Karafka
             in_sync_replica_brokers
           ].freeze
 
+          self.filterable_attributes = %w[
+            broker_name
+          ].freeze
+
           # Cluster state should always be fresh and not from cache
           before { cache.clear }
 
           # Lists available brokers in the cluster
           def brokers
-            @brokers = refine(cluster_info.brokers)
+            @brokers = filter(refine(cluster_info.brokers))
 
             render
           end

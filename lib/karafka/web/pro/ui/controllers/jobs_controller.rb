@@ -46,6 +46,13 @@ module Karafka
               committed_offset
               updated_at
             ].freeze
+
+            self.filterable_attributes = %w[
+              id
+              topic
+              consumer
+              type
+            ].freeze
           end
         end
       end

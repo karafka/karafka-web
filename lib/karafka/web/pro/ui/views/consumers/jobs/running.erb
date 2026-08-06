@@ -27,6 +27,10 @@
 
   <%== partial 'consumers/consumers/consumer/tabs' %>
 
+  <% if filtering? || !@running_jobs.empty? %>
+    <%== filter_box(placeholder: 'Filter by topic, consumer or type...') %>
+  <% end %>
+
   <% if @running_jobs.empty? %>
     <%== partial 'consumers/jobs/no_jobs', locals: { type: 'running' } %>
   <% else %>

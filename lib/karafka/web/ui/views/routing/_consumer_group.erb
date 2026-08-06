@@ -1,21 +1,29 @@
-<div class="col-span-12 mb-3">
-  <h2 class="h2">
-    <%= consumer_group.id %>
-  </h2>
+<%
+  visible_pairs = consumer_group.subscription_groups.flat_map do |subscription_group|
+    visible_routing_topics(subscription_group.topics).map do |topic|
+      [subscription_group, topic]
+    end
+  end
+%>
 
-  <div class="data-table-wrapper">
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>Subscription group</th>
-          <th><%== sort_link('Topic', :name) %></th>
-          <th><%== sort_link(:active?) %></th>
-          <th class="options">Options</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% consumer_group.subscription_groups.each do |subscription_group| %>
-          <% subscription_group.topics.each do |topic| %>
+<% unless filtering? && visible_pairs.empty? %>
+  <div class="col-span-12 mb-3">
+    <h2 class="h2">
+      <%= consumer_group.id %>
+    </h2>
+
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Subscription group</th>
+            <th><%== sort_link('Topic', :name) %></th>
+            <th><%== sort_link(:active?) %></th>
+            <th class="options">Options</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% visible_pairs.each do |subscription_group, topic| %>
             <%==
               partial(
                 'routing/topic',
@@ -26,8 +34,8 @@
               )
             %>
           <% end %>
-        <% end %>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
+<% end %>

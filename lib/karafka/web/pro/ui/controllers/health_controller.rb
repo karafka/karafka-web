@@ -58,6 +58,13 @@ module Karafka
               poll_state_ch
             ].freeze
 
+            # We filter on the consumer group and topic names (the structural keys of the stats
+            # tree) plus the process/partition id exposed by the leaf records. Match-propagation
+            # keeps a consumer group or topic when any of its descendants matches.
+            self.filterable_attributes = %w[
+              id
+            ].freeze
+
             # Displays the current system state
             def overview
               current_state = Models::ConsumersState.current!
@@ -67,6 +74,11 @@ module Karafka
               @stats.each_value do |cg_details|
                 cg_details.each_value { |topic_details| refine(topic_details) }
               end
+
+              # Narrow down the whole tree to the consumer groups/topics/partitions matching the
+              # filtering keyword (if any). It is safe to prune in place here as the stats are built
+              # fresh per request.
+              filter(@stats)
 
               render
             end
@@ -88,6 +100,8 @@ module Karafka
               @stats.each_value do |cg_details|
                 cg_details.each_value { |topic_details| refine(topic_details) }
               end
+
+              filter(@stats)
 
               render
             end
