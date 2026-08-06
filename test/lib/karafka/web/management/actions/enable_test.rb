@@ -1,5 +1,24 @@
 # frozen_string_literal: true
 
+# Minimal stand-in for a producer monitor. It records subscriptions and reflects them through
+# `#listeners` the same way a real monitor does, so idempotency ("subscribed at most once") can be
+# asserted against actual state rather than mock call counts.
+class FakeProducerMonitor
+  attr_reader :listeners
+
+  def initialize
+    @listeners = Hash.new { |hash, key| hash[key] = [] }
+  end
+
+  def subscribe(listener)
+    @listeners["error.occurred"] << listener
+  end
+
+  def subscribed_count(listener)
+    @listeners.each_value.sum { |event_listeners| event_listeners.count(listener) }
+  end
+end
+
 describe_current do
   let(:enable) { described_class.new.call }
 
@@ -21,7 +40,7 @@ describe_current do
     let(:karafka_monitor) { stub }
     let(:app_monitor) { stub }
     let(:wd_monitor) { stub }
-    let(:producer_monitor) { stub }
+    let(:producer_monitor) { FakeProducerMonitor.new }
     let(:producer) { stub(monitor: producer_monitor) }
 
     before do
@@ -43,8 +62,6 @@ describe_current do
       karafka_monitor.stubs(:subscribe)
       app_monitor.stubs(:subscribe)
       wd_monitor.stubs(:subscribe)
-      producer_monitor.stubs(:subscribe)
-      producer_monitor.stubs(:listeners).returns({})
 
       Karafka::App.stubs(:routes).returns(routes)
       Karafka::App.stubs(:declaratives).returns(declaratives)
@@ -52,8 +69,8 @@ describe_current do
       Karafka.stubs(:monitor).returns(karafka_monitor)
 
       # Producers instrumentation. The default and the Web producer share a single monitor here
-      # (in production the Web producer is the default producer or a variant of it), so the
-      # per-monitor guard should subscribe our listeners to it only once.
+      # (in production the Web producer is the default producer or a variant of it), so our
+      # listeners should end up subscribed to it only once.
       WaterDrop.stubs(:monitor).returns(wd_monitor)
       Karafka.stubs(:producer).returns(producer)
       Karafka::Web.stubs(:producer).returns(producer)
@@ -70,31 +87,32 @@ describe_current do
     end
 
     it "expect to subscribe producer listeners to the producer monitor" do
-      producer_monitor.expects(:subscribe).with(producer_listener).once
       enable
+
+      assert_equal(1, producer_monitor.subscribed_count(producer_listener))
     end
 
     context "when the default and Web producers share the same monitor" do
       it "expect not to subscribe the same monitor more than once" do
-        producer_monitor.expects(:subscribe).with(producer_listener).once
         enable
+
+        assert_equal(1, producer_monitor.subscribed_count(producer_listener))
       end
     end
 
     context "when the Web producer uses a separate monitor" do
-      let(:web_producer_monitor) { stub }
+      let(:web_producer_monitor) { FakeProducerMonitor.new }
       let(:web_producer) { stub(monitor: web_producer_monitor) }
 
       before do
-        web_producer_monitor.stubs(:subscribe)
-        web_producer_monitor.stubs(:listeners).returns({})
         Karafka::Web.stubs(:producer).returns(web_producer)
       end
 
-      it "expect to subscribe producer listeners to both monitors" do
-        producer_monitor.expects(:subscribe).with(producer_listener).once
-        web_producer_monitor.expects(:subscribe).with(producer_listener).once
+      it "expect to subscribe producer listeners to both monitors once each" do
         enable
+
+        assert_equal(1, producer_monitor.subscribed_count(producer_listener))
+        assert_equal(1, web_producer_monitor.subscribed_count(producer_listener))
       end
     end
 
@@ -102,23 +120,21 @@ describe_current do
       before do
         # Simulate a user (or an older setup) having wired the Web UI producer tracking to the
         # producer monitor by hand
-        producer_monitor.stubs(:listeners).returns("error.occurred" => [producer_listener])
+        producer_monitor.subscribe(producer_listener)
       end
 
       it "expect not to subscribe it again so errors are not tracked twice" do
-        producer_monitor.expects(:subscribe).with(producer_listener).never
         enable
+
+        assert_equal(1, producer_monitor.subscribed_count(producer_listener))
       end
     end
 
     context "when a producer is announced later via the global monitor" do
-      let(:late_producer_monitor) { stub }
+      let(:late_producer_monitor) { FakeProducerMonitor.new }
       let(:late_producer) { stub(monitor: late_producer_monitor) }
 
       before do
-        late_producer_monitor.stubs(:subscribe)
-        late_producer_monitor.stubs(:listeners).returns({})
-
         # Capture the block subscribed to `producer.configured` so we can simulate a producer
         # being configured after the Web UI has already been enabled.
         wd_monitor.stubs(:subscribe).with("producer.configured").yields(
@@ -131,8 +147,9 @@ describe_current do
       end
 
       it "expect to attach the producer listeners to the newly announced producer" do
-        late_producer_monitor.expects(:subscribe).with(producer_listener).once
         enable
+
+        assert_equal(1, late_producer_monitor.subscribed_count(producer_listener))
       end
     end
   end

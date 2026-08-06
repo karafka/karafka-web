@@ -8,6 +8,13 @@ module Karafka
         #   also in the context of other processes types and not only karafka server, because it
         #   installs producers instrumentation and routing as well.
         class Enable < Base
+          # Serializes producer listener subscriptions. Producers can be created (and thus
+          # announced by WaterDrop's global monitor) from many threads, so we make the
+          # "subscribe unless already subscribed" check-and-act atomic to never double-subscribe.
+          PRODUCERS_TRACKING_MUTEX = Mutex.new
+
+          private_constant :PRODUCERS_TRACKING_MUTEX
+
           # Enables routing consumer group and subscribes Web-UI listeners
           def call
             ensure_karafka_initialized!
@@ -171,11 +178,6 @@ module Karafka
           # listeners to each producer's own monitor. Producers that already exist by the time Web
           # is enabled are not announced again, so we also attach to them explicitly.
           def subscribe_to_producers
-            # Initialize the bookkeeping before wiring the global monitor so a producer configured
-            # from another thread cannot race the lazy memoization below
-            tracked_producer_monitors
-            producers_tracking_mutex
-
             # Any producer configured from now on is announced here; attach to it as it appears
             ::WaterDrop.monitor.subscribe("producer.configured") do |event|
               subscribe_producer_listeners(event[:producer])
@@ -183,61 +185,44 @@ module Karafka
 
             # Producers that already exist will not be re-announced, so attach to them directly.
             # `Karafka::Web.producer` is either the default producer or a variant of it, so it
-            # shares the default producer's monitor; the per-monitor guard keeps us from
+            # shares the default producer's monitor; the per-listener guard below keeps us from
             # subscribing the same monitor twice.
             subscribe_producer_listeners(::Karafka.producer)
             subscribe_producer_listeners(::Karafka::Web.producer)
           end
 
-          # Subscribes all producer tracking listeners to a single producer's monitor, at most once
-          # per monitor. Producers can be created from multiple threads, so the bookkeeping is
-          # guarded by a mutex.
+          # Subscribes the producer tracking listeners to a single producer's monitor, skipping any
+          # listener that is already subscribed to it. This one guard covers every double-subscribe
+          # case: a variant sharing its parent's monitor, the default and Web producers being the
+          # same monitor, a producer re-announced by the global monitor, and a user having wired
+          # the Web UI producer tracking to their own producer by hand. Subscribing twice would
+          # track each of the producer's events twice.
           #
           # @param producer [WaterDrop::Producer, WaterDrop::Producer::Variant] producer whose
           #   monitor we want to instrument
           def subscribe_producer_listeners(producer)
             monitor = producer.monitor
 
-            producers_tracking_mutex.synchronize do
-              # A variant shares its parent producer's monitor and the default and Web producers
-              # often are the same monitor, so guard on the monitor to never double-subscribe.
-              return unless tracked_producer_monitors.add?(monitor.object_id)
-            end
+            PRODUCERS_TRACKING_MUTEX.synchronize do
+              ::Karafka::Web.config.tracking.producers.listeners.each do |listener|
+                next if producer_listener_subscribed?(monitor, listener)
 
-            ::Karafka::Web.config.tracking.producers.listeners.each do |listener|
-              # Failsafe: never subscribe a listener that is already registered on this monitor.
-              # A user may have wired the Web UI producer tracking to their own producer by hand
-              # (or an older setup did), and subscribing it again would track each error twice.
-              next if producer_listener_subscribed?(monitor, listener)
-
-              monitor.subscribe(listener)
+                monitor.subscribe(listener)
+              end
             end
           end
 
-          # Checks whether a given tracking listener is already subscribed to a producer monitor,
-          # so we can avoid subscribing it (and thus double-tracking its events) a second time.
-          #
           # @param monitor [Object] producer monitor
           # @param listener [Object] producer tracking listener
           # @return [Boolean] true if the listener is already subscribed to any of the monitor
           #   events, false otherwise
           def producer_listener_subscribed?(monitor, listener)
-            # Older monitors may not expose their listeners; when in doubt we subscribe
+            # Exotic custom monitors may not expose their listeners; when in doubt we subscribe
             return false unless monitor.respond_to?(:listeners)
 
             monitor.listeners.each_value.any? do |event_listeners|
               event_listeners.include?(listener)
             end
-          end
-
-          # @return [Set<Integer>] object ids of producer monitors we have already instrumented
-          def tracked_producer_monitors
-            @tracked_producer_monitors ||= Set.new
-          end
-
-          # @return [Mutex] mutex guarding the tracked producer monitors bookkeeping
-          def producers_tracking_mutex
-            @producers_tracking_mutex ||= Mutex.new
           end
 
           # In most cases we want to close the producer if possible.
