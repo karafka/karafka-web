@@ -34,6 +34,10 @@ describe_current do
         assert_includes(result, '<span class="badge badge-warning">3</span>')
       end
 
+      it "appends the replica count as subtext" do
+        assert_includes(result, "3 replicas")
+      end
+
       it "does not link the badges by default" do
         refute_includes(result, "<a ")
       end
@@ -63,8 +67,9 @@ describe_current do
     context "when the broker id arrays are unavailable (older karafka-rdkafka)" do
       let(:partition) { { leader: 1, replica_count: 3, in_sync_replica_brokers: 2 } }
 
-      it "falls back to the numeric replica count" do
+      it "falls back to the bare numeric count without duplicating it as subtext" do
         assert_equal("3", result)
+        refute_includes(result, "replicas")
       end
     end
   end
@@ -95,6 +100,10 @@ describe_current do
         refute_includes(result, ">3</span>")
       end
 
+      it "appends the in-sync count as subtext" do
+        assert_includes(result, "2 in-sync")
+      end
+
       it "does not link the badges by default" do
         refute_includes(result, "<a ")
       end
@@ -123,8 +132,9 @@ describe_current do
     context "when the broker id arrays are unavailable (older karafka-rdkafka)" do
       let(:partition) { { leader: 1, replica_count: 3, in_sync_replica_brokers: 2 } }
 
-      it "falls back to the numeric in-sync count" do
+      it "falls back to the bare numeric count without duplicating it as subtext" do
         assert_equal("2", result)
+        refute_includes(result, "in-sync")
       end
     end
   end

@@ -21,13 +21,16 @@ module Karafka
           def partition_replica_brokers(partition, link: false)
             replicas = partition[:replicas]
 
+            # Older karafka-rdkafka does not expose the broker id array; render just the count
+            # (the surrounding count subtext is only added alongside the badges below, so the
+            # number is not shown twice).
             return partition[:replica_count].to_s if replicas.nil?
             return %(<span class="text-muted">&mdash;</span>) if replicas.empty?
 
             leader = partition[:leader]
             isrs = partition[:isrs] || []
 
-            replicas.map do |broker_id|
+            badges = replicas.map do |broker_id|
               css = if broker_id == leader
                 "badge-primary"
               elsif isrs.include?(broker_id)
@@ -38,6 +41,8 @@ module Karafka
 
               broker_id_badge(broker_id, css, link: link)
             end.join(" ")
+
+            "#{badges}#{broker_count_note(replicas.size, "replicas")}"
           end
 
           # Renders the in-sync (ISR) broker ids for a partition as badges, with the leader
@@ -51,16 +56,19 @@ module Karafka
           def partition_in_sync_brokers(partition, link: false)
             isrs = partition[:isrs]
 
+            # Older karafka-rdkafka does not expose the broker id array; render just the count
             return partition[:in_sync_replica_brokers].to_s if isrs.nil?
             return %(<span class="text-muted">&mdash;</span>) if isrs.empty?
 
             leader = partition[:leader]
 
-            isrs.map do |broker_id|
+            badges = isrs.map do |broker_id|
               css = (broker_id == leader) ? "badge-primary" : "badge-success"
 
               broker_id_badge(broker_id, css, link: link)
             end.join(" ")
+
+            "#{badges}#{broker_count_note(isrs.size, "in-sync")}"
           end
 
           # @param details [::Karafka::Web::Ui::Models::Partition] partition information with
@@ -136,6 +144,17 @@ module Karafka
           end
 
           private
+
+          # Renders the small muted "N replicas" / "N in-sync" summary shown under the broker
+          # badges. Kept next to the badge rendering so the count is never duplicated with the
+          # numeric fallback used for older karafka-rdkafka.
+          #
+          # @param count [Integer] number of brokers
+          # @param label [String] summary label (e.g. "replicas", "in-sync")
+          # @return [String] count subtext html
+          def broker_count_note(count, label)
+            %(<div><small class="text-muted">#{count} #{label}</small></div>)
+          end
 
           # Renders a single broker id badge, optionally wrapped in a link to the broker details
           # page. Linking is Pro-only (OSS has no per-broker view), so it is opt-in via `link`.

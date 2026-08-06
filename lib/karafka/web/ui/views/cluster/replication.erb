@@ -8,7 +8,15 @@
   <% elsif @partitions.empty? %>
     <%== partial 'shared/no_paginated_data' %>
   <% else %>
-    <%== partial 'shared/replication_legend' %>
+    <div class="mb-3 flex justify-end">
+      <small class="text-muted">
+        Broker roles:
+        <span class="badge badge-primary">leader</span>
+        <span class="badge badge-info">replica</span>
+        <span class="badge badge-success">in-sync</span>
+        <span class="badge badge-warning">out-of-sync</span>
+      </small>
+    </div>
 
     <div class="data-table-wrapper">
       <table class="data-table">
