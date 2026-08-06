@@ -62,8 +62,20 @@ describe_current do
         ]
       end
 
+      # The after-test link crawler follows the "cluster/brokers" tab link, which reads
+      # cluster_info.brokers, so the stubbed cluster info must answer that too.
+      let(:fake_brokers) do
+        [
+          { broker_id: 1, broker_name: "10.0.0.1", broker_port: 9092 },
+          { broker_id: 2, broker_name: "10.0.0.2", broker_port: 9092 },
+          { broker_id: 3, broker_name: "10.0.0.3", broker_port: 9092 }
+        ]
+      end
+
       before do
-        Karafka::Web::Ui::Models::ClusterInfo.stubs(:fetch).returns(stub(topics: fake_topics))
+        Karafka::Web::Ui::Models::ClusterInfo
+          .stubs(:fetch)
+          .returns(stub(topics: fake_topics, brokers: fake_brokers))
         get "cluster/replication"
       end
 
