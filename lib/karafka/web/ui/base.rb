@@ -7,6 +7,10 @@ module Karafka
       class Base < Roda
         include Helpers::PathsHelper
         include Helpers::ApplicationHelper
+        include Helpers::BadgesHelper
+        include Helpers::FormattingHelper
+        include Helpers::PartitionsHelper
+        include Helpers::SortingHelper
         include Helpers::TimeHelper
         include Helpers::TopicsHelper
         include Helpers::TailwindHelper

@@ -2,6 +2,7 @@
 
 ## 1.0.1 (Unreleased)
 - [Enhancement] Show the actual replica and in-sync (ISR) broker ids (not just their counts) in the cluster and topic replication partition views. The leader is emphasized and replicas that have fallen out of sync are highlighted, turning the replication views into an at-a-glance health signal. Falls back to the numeric counts on older `karafka-rdkafka` where the broker id arrays are unavailable (#1084).
+- [Maintenance] Split the oversized `ApplicationHelper` into focused helper modules (`SortingHelper`, `FormattingHelper`, `BadgesHelper`, `PartitionsHelper`), leaving `ApplicationHelper` with only app/layout/hash utilities.
 
 ## 1.0.0 (2026-08-05)
 - **[Breaking]** Namespace the commanding pause configuration under `config.commanding.pause`. The flat `config.commanding.pause_timeout` setting has been removed in favor of the nested `config.commanding.pause.timeout` namespace, mirroring the pause configuration namespacing introduced in Karafka.
