@@ -20,8 +20,16 @@
 
 <% view_title 'Dead Letter Queue Topics' %>
 
-<% if @dlq_topics.empty? %>
+<% if filtering? || !@dlq_topics.empty? %>
+  <div class="col-span-12 mb-3">
+    <%== filter_box(placeholder: 'Filter by topic name...') %>
+  </div>
+<% end %>
+
+<% if @dlq_topics.empty? && !filtering? %>
   <%== partial 'dlq/no_topics' %>
+<% elsif @dlq_topics.empty? %>
+  <%== partial 'shared/no_filter_results' %>
 <% else %>
   <div class="topic-tiles">
     <%==

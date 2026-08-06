@@ -68,6 +68,28 @@ describe_current do
       end
     end
 
+    context "when filtering by a matching topic name" do
+      before { get "explorer/topics?filter=#{topics_config.errors.name}" }
+
+      it do
+        assert_ok
+        assert_body(topics_config.errors.name)
+        refute_body(topics_config.consumers.states.name)
+        assert_body('name="filter"')
+      end
+    end
+
+    context "when filtering by a non-matching keyword" do
+      before { get "explorer/topics?filter=this-topic-does-not-exist" }
+
+      it do
+        assert_ok
+        refute_body(topics_config.errors.name)
+        assert_body("No results match your filter")
+        assert_body('name="filter"')
+      end
+    end
+
     context "when internal topics should be displayed" do
       before do
         Karafka::Web.config.ui.visibility.stubs(:internal_topics).returns(true)

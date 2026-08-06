@@ -21,8 +21,14 @@
 <% view_title 'Schedules' %>
 
 <div class="col-span-12">
-  <% if @topics.empty? %>
+  <% if filtering? || !@topics.empty? %>
+    <%== filter_box(placeholder: 'Filter by topic name...') %>
+  <% end %>
+
+  <% if @topics.empty? && !filtering? %>
     <%== partial 'scheduled_messages/schedules/no_groups' %>
+  <% elsif @topics.empty? %>
+    <%== partial 'shared/no_filter_results' %>
   <% else %>
     <% @topics.each do |topic| %>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">

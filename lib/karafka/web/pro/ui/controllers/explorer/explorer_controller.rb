@@ -36,6 +36,10 @@ module Karafka
           module Explorer
             # Data explorer controller
             class ExplorerController < BaseController
+              self.filterable_attributes = %w[
+                topic_name
+              ].freeze
+
               # Lists all the topics we can explore
               def index
                 @topics = Models::ClusterInfo
@@ -45,6 +49,8 @@ module Karafka
                 unless ::Karafka::Web.config.ui.visibility.internal_topics
                   @topics.reject! { |topic| topic[:topic_name].start_with?("__") }
                 end
+
+                @topics = filter(@topics)
 
                 render
               end
