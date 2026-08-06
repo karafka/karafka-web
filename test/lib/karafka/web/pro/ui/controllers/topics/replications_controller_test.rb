@@ -155,7 +155,9 @@ describe_current do
     end
 
     context "when replication factor equals min.insync.replicas (zero fault tolerance)" do
-      let(:partitions_data) { [{ replica_count: 2, leader: 1, in_sync_replica_brokers: "1,2" }] }
+      let(:partitions_data) do
+        [{ partition_id: 0, leader: 1, replica_count: 2, in_sync_replica_brokers: 2, replicas: [1, 2], isrs: [1, 2] }]
+      end
 
       let(:mock_synonym) do
         stub(name: "default.replication.factor",
@@ -221,7 +223,9 @@ describe_current do
     end
 
     context "when min.insync.replicas is 1 with higher replication factor (low durability)" do
-      let(:partitions_data) { [{ replica_count: 3, leader: 1, in_sync_replica_brokers: "1,2,3" }] }
+      let(:partitions_data) do
+        [{ partition_id: 0, leader: 1, replica_count: 3, in_sync_replica_brokers: 3, replicas: [1, 2, 3], isrs: [1, 2, 3] }]
+      end
 
       let(:mock_synonym) do
         stub(name: "default.replication.factor",
@@ -286,7 +290,9 @@ describe_current do
     end
 
     context "when configuration is healthy (RF > minISR and minISR > 1)" do
-      let(:partitions_data) { [{ replica_count: 3, leader: 1, in_sync_replica_brokers: "1,2,3" }] }
+      let(:partitions_data) do
+        [{ partition_id: 0, leader: 1, replica_count: 3, in_sync_replica_brokers: 3, replicas: [1, 2, 3], isrs: [1, 2, 3] }]
+      end
 
       let(:mock_synonym) do
         stub(name: "default.replication.factor",

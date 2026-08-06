@@ -63,15 +63,6 @@ describe_current do
         assert_includes(result, "&mdash;")
       end
     end
-
-    context "when the broker id arrays are unavailable (older karafka-rdkafka)" do
-      let(:partition) { { leader: 1, replica_count: 3, in_sync_replica_brokers: 2 } }
-
-      it "falls back to the bare numeric count without duplicating it as subtext" do
-        assert_equal("3", result)
-        refute_includes(result, "replicas")
-      end
-    end
   end
 
   describe "#partition_in_sync_brokers" do
@@ -121,20 +112,11 @@ describe_current do
       end
     end
 
-    context "when the isrs array is empty" do
-      let(:partition) { { leader: 1, in_sync_replica_brokers: 0, replicas: [], isrs: [] } }
+    context "when the isrs array is empty (fully under-replicated partition)" do
+      let(:partition) { { leader: 1, in_sync_replica_brokers: 0, replicas: [1], isrs: [] } }
 
       it "renders a muted placeholder" do
         assert_includes(result, "&mdash;")
-      end
-    end
-
-    context "when the broker id arrays are unavailable (older karafka-rdkafka)" do
-      let(:partition) { { leader: 1, replica_count: 3, in_sync_replica_brokers: 2 } }
-
-      it "falls back to the bare numeric count without duplicating it as subtext" do
-        assert_equal("2", result)
-        refute_includes(result, "in-sync")
       end
     end
   end

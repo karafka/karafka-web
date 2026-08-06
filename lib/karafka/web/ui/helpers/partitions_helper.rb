@@ -11,24 +11,17 @@ module Karafka
           # emphasized and any replica that is not part of the in-sync set (ISR) is highlighted
           # as a warning, turning the replication view into an at-a-glance health signal.
           #
-          # On older karafka-rdkafka (< 0.28.0) the broker id arrays are not exposed
-          # (`partition[:replicas]` is `nil`), so we gracefully fall back to the numeric count.
-          #
           # @param partition [Hash, Ui::Models::Partition] partition metadata
           # @param link [Boolean] when true, each broker badge links to its broker details page
           #   (Pro-only; OSS has no per-broker view so it renders plain badges)
-          # @return [String] replica broker ids as badges or the replica count as a fallback
+          # @return [String] replica broker ids as badges with a count subtext
           def partition_replica_brokers(partition, link: false)
             replicas = partition[:replicas]
 
-            # Older karafka-rdkafka does not expose the broker id array; render just the count
-            # (the surrounding count subtext is only added alongside the badges below, so the
-            # number is not shown twice).
-            return partition[:replica_count].to_s if replicas.nil?
             return %(<span class="text-muted">&mdash;</span>) if replicas.empty?
 
             leader = partition[:leader]
-            isrs = partition[:isrs] || []
+            isrs = partition[:isrs]
 
             badges = replicas.map do |broker_id|
               css = if broker_id == leader
@@ -46,18 +39,15 @@ module Karafka
           end
 
           # Renders the in-sync (ISR) broker ids for a partition as badges, with the leader
-          # emphasized. Falls back to the numeric in-sync count on older karafka-rdkafka
-          # (< 0.28.0) where `partition[:isrs]` is not available.
+          # emphasized. An empty ISR set (fully under-replicated partition) renders a dash.
           #
           # @param partition [Hash, Ui::Models::Partition] partition metadata
           # @param link [Boolean] when true, each broker badge links to its broker details page
           #   (Pro-only; OSS has no per-broker view so it renders plain badges)
-          # @return [String] in-sync broker ids as badges or the in-sync count as a fallback
+          # @return [String] in-sync broker ids as badges with a count subtext
           def partition_in_sync_brokers(partition, link: false)
             isrs = partition[:isrs]
 
-            # Older karafka-rdkafka does not expose the broker id array; render just the count
-            return partition[:in_sync_replica_brokers].to_s if isrs.nil?
             return %(<span class="text-muted">&mdash;</span>) if isrs.empty?
 
             leader = partition[:leader]
