@@ -205,7 +205,28 @@ module Karafka
             end
 
             ::Karafka::Web.config.tracking.producers.listeners.each do |listener|
+              # Failsafe: never subscribe a listener that is already registered on this monitor.
+              # A user may have wired the Web UI producer tracking to their own producer by hand
+              # (or an older setup did), and subscribing it again would track each error twice.
+              next if producer_listener_subscribed?(monitor, listener)
+
               monitor.subscribe(listener)
+            end
+          end
+
+          # Checks whether a given tracking listener is already subscribed to a producer monitor,
+          # so we can avoid subscribing it (and thus double-tracking its events) a second time.
+          #
+          # @param monitor [Object] producer monitor
+          # @param listener [Object] producer tracking listener
+          # @return [Boolean] true if the listener is already subscribed to any of the monitor
+          #   events, false otherwise
+          def producer_listener_subscribed?(monitor, listener)
+            # Older monitors may not expose their listeners; when in doubt we subscribe
+            return false unless monitor.respond_to?(:listeners)
+
+            monitor.listeners.each_value.any? do |event_listeners|
+              event_listeners.include?(listener)
             end
           end
 

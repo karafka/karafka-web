@@ -44,6 +44,7 @@ describe_current do
       app_monitor.stubs(:subscribe)
       wd_monitor.stubs(:subscribe)
       producer_monitor.stubs(:subscribe)
+      producer_monitor.stubs(:listeners).returns({})
 
       Karafka::App.stubs(:routes).returns(routes)
       Karafka::App.stubs(:declaratives).returns(declaratives)
@@ -86,6 +87,7 @@ describe_current do
 
       before do
         web_producer_monitor.stubs(:subscribe)
+        web_producer_monitor.stubs(:listeners).returns({})
         Karafka::Web.stubs(:producer).returns(web_producer)
       end
 
@@ -96,12 +98,26 @@ describe_current do
       end
     end
 
+    context "when a producer listener is already subscribed to the monitor" do
+      before do
+        # Simulate a user (or an older setup) having wired the Web UI producer tracking to the
+        # producer monitor by hand
+        producer_monitor.stubs(:listeners).returns("error.occurred" => [producer_listener])
+      end
+
+      it "expect not to subscribe it again so errors are not tracked twice" do
+        producer_monitor.expects(:subscribe).with(producer_listener).never
+        enable
+      end
+    end
+
     context "when a producer is announced later via the global monitor" do
       let(:late_producer_monitor) { stub }
       let(:late_producer) { stub(monitor: late_producer_monitor) }
 
       before do
         late_producer_monitor.stubs(:subscribe)
+        late_producer_monitor.stubs(:listeners).returns({})
 
         # Capture the block subscribed to `producer.configured` so we can simulate a producer
         # being configured after the Web UI has already been enabled.
