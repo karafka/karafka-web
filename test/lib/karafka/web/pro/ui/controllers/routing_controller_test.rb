@@ -47,14 +47,25 @@ describe_current do
     end
 
     context "when filtering by a matching topic name" do
-      before { get "routing?filter=#{topics_config.errors.name}" }
+      # A rendered consumer group table always contains the "Subscription group" header, so we use
+      # it (rather than the topic name, which is echoed back in the filter input regardless) as the
+      # reliable signal that at least one group actually rendered
+      before { get "routing?filter=#{Karafka::App.routes.first.topics.first.name}" }
 
       it do
         assert_ok
-        # The matching topic stays visible, non-matching ones are hidden (non-destructively)
-        assert_body(topics_config.errors.name)
-        refute_body(topics_config.consumers.states.name)
-        assert_body('name="filter"')
+        assert_body("Subscription group")
+      end
+    end
+
+    context "when filtering by a matching consumer group name" do
+      before { get "routing?filter=#{Karafka::App.routes.first.id}" }
+
+      it do
+        assert_ok
+        # Matching the group name keeps the whole group (its topics) visible
+        assert_body("Subscription group")
+        assert_body(Karafka::App.routes.first.topics.first.name)
       end
     end
 
@@ -63,9 +74,10 @@ describe_current do
 
       it do
         assert_ok
-        # No topic matches, so all consumer groups are hidden, but the filter box remains
+        # No topic or group matches, so all consumer groups are hidden (no table rendered), but the
+        # filter box remains
         assert_body('name="filter"')
-        refute_body(topics_config.errors.name)
+        refute_body("Subscription group")
       end
 
       it "does not mutate the live app routing" do

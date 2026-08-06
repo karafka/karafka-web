@@ -1,6 +1,6 @@
 <%
   visible_pairs = consumer_group.subscription_groups.flat_map do |subscription_group|
-    visible_routing_topics(subscription_group.topics).map do |topic|
+    visible_topics(subscription_group.topics, consumer_group.id, subscription_group.id).map do |topic|
       [subscription_group, topic]
     end
   end

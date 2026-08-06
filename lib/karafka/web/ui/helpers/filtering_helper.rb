@@ -53,19 +53,30 @@ module Karafka
             HTML
           end
 
-          # Non-destructively narrows a routing topics collection down to the ones matching the
-          # current filtering keyword (by topic name).
+          # Non-destructively narrows a topics collection (routing or a consumer subscription) down
+          # to the ones matching the current filtering keyword.
           #
-          # The routing views operate on the live `Karafka::App.routes`, which we must never mutate
-          # (unlike the per-request structures the [[Filter]] engine prunes in place). That is why
-          # filtering here returns a new array and leaves the routing untouched.
+          # A topic is kept when its own name matches or when any of the provided parent labels
+          # (the consumer group and/or subscription group names shown as the section headers) match
+          # the keyword. Matching a parent label keeps all of its topics, which is what a user
+          # filtering by their consumer group name expects to see.
           #
-          # @param topics [Enumerable] routing topics of a subscription/consumer group
+          # This is used for views that render the live `Karafka::App.routes` (which we must never
+          # mutate, unlike the per-request structures the [[Filter]] engine prunes in place) as well
+          # as the per-process subscriptions view, so it always returns a new array and leaves the
+          # source untouched.
+          #
+          # @param topics [Enumerable] topics of a subscription/consumer group
+          # @param parent_labels [Array<String>] group names that, when matched, keep all the topics
           # @return [Array] all topics when no filtering is active, otherwise only the matching ones
-          def visible_routing_topics(topics)
+          def visible_topics(topics, *parent_labels)
             return topics.to_a unless filtering?
 
             keyword = params.current_filter.downcase
+
+            if parent_labels.any? { |label| label.to_s.downcase.include?(keyword) }
+              return topics.to_a
+            end
 
             topics.select { |topic| topic.name.to_s.downcase.include?(keyword) }
           end

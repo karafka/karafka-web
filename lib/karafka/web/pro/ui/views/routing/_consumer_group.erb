@@ -18,7 +18,7 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<% topics = visible_routing_topics(consumer_group.topics) %>
+<% topics = visible_topics(consumer_group.topics, consumer_group.id) %>
 
 <% unless filtering? && topics.empty? %>
   <div class="col-span-12 mb-3">
