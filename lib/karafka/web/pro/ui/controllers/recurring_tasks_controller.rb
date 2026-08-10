@@ -37,7 +37,7 @@ module Karafka
           class RecurringTasksController < Web::Ui::Controllers::ClusterController
             # This Pro controller inherits the OSS cluster controller (which has no filtering), so it
             # pulls in the Pro-only filtering concern directly
-            include Filterable
+            include Lib::Filtering
 
             self.sortable_attributes = %w[
               id

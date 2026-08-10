@@ -37,7 +37,7 @@ module Karafka
           class JobsController < Web::Ui::Controllers::JobsController
             # This Pro controller inherits the OSS jobs controller (which has no filtering), so it
             # pulls in the Pro-only filtering concern directly
-            include Filterable
+            include Lib::Filtering
 
             self.sortable_attributes = %w[
               id

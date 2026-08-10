@@ -32,14 +32,14 @@ module Karafka
   module Web
     module Pro
       module Ui
-        module Controllers
+        module Lib
           # Filtering (search) is a Pro-only feature, so all of its wiring lives in this concern and
           # is mixed only into Pro controllers. OSS controllers never gain filtering.
           #
           # It is included by the Pro base controller (covering every standalone Pro controller) and,
           # because a few Pro controllers inherit OSS controllers directly (and thus bypass the Pro
           # base controller), by those explicitly.
-          module Filterable
+          module Filtering
             # @param base [Class] the controller including this concern
             def self.included(base)
               # Attributes on which we can filter in a given controller. Since we can filter on
