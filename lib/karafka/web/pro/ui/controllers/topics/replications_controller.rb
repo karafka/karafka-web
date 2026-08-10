@@ -49,7 +49,7 @@ module Karafka
               def show(topic_name)
                 @topic = Models::Topic.find(topic_name)
 
-                @partitions = refine(@topic[:partitions])
+                @partitions = sort(@topic[:partitions])
 
                 # Extract replication factor from the first partition (same for all partitions)
                 # The partitions data is an array of hashes with :replica_count key

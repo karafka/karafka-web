@@ -52,7 +52,7 @@ module Karafka
             def schedule
               @schedule = Models::RecurringTasks::Schedule.current
 
-              @tasks = filter(refine(@schedule.tasks)) if @schedule
+              @tasks = filter(sort(@schedule.tasks)) if @schedule
 
               render
             end

@@ -46,7 +46,7 @@ module Karafka
 
               @routes = Karafka::App.routes
               @routes.each do |consumer_group|
-                refine(consumer_group.topics)
+                sort(consumer_group.topics)
               end
 
               current_state = Models::ConsumersState.current

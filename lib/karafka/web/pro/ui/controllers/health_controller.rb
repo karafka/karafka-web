@@ -70,9 +70,9 @@ module Karafka
               current_state = Models::ConsumersState.current!
               @stats = Models::Health.current(current_state)
 
-              # Refine only on a per topic basis not to resort higher levels
+              # Sort only on a per topic basis not to resort higher levels
               @stats.each_value do |cg_details|
-                cg_details.each_value { |topic_details| refine(topic_details) }
+                cg_details.each_value { |topic_details| sort(topic_details) }
               end
 
               # Narrow down the whole tree to the consumer groups/topics/partitions matching the
@@ -98,7 +98,7 @@ module Karafka
               @stats = Models::Health.cluster_lags_with_offsets
 
               @stats.each_value do |cg_details|
-                cg_details.each_value { |topic_details| refine(topic_details) }
+                cg_details.each_value { |topic_details| sort(topic_details) }
               end
 
               filter(@stats)

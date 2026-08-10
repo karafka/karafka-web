@@ -27,7 +27,7 @@ module Karafka
 
           # Lists available brokers in the cluster
           def brokers
-            @brokers = filter(refine(cluster_info.brokers))
+            @brokers = filter(sort(cluster_info.brokers))
 
             render
           end
@@ -47,7 +47,7 @@ module Karafka
             end
 
             @partitions, last_page = Paginators::Arrays.call(
-              filter(refine(partitions_total)),
+              filter(sort(partitions_total)),
               @params.current_page
             )
 

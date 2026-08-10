@@ -24,7 +24,7 @@ module Karafka
             @current_state = Models::ConsumersState.current!
             @counters = Models::Counters.new(@current_state)
             @processes, last_page = Paginators::Arrays.call(
-              filter(refine(Models::Processes.active(@current_state))),
+              filter(sort(Models::Processes.active(@current_state))),
               @params.current_page
             )
 

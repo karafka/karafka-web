@@ -81,7 +81,7 @@ module Karafka
                 @counters = Models::Counters.new(@current_state)
 
                 @processes, last_page = Paginators::Arrays.call(
-                  filter(refine(Models::Processes.active(@current_state))),
+                  filter(sort(Models::Processes.active(@current_state))),
                   @params.current_page
                 )
 
@@ -116,7 +116,7 @@ module Karafka
                   # the underlying hashes for sorting
                   consumer_group.subscription_groups.flat_map(&:topics).flat_map(&:partitions)
 
-                  refine(consumer_group)
+                  sort(consumer_group)
                 end
 
                 render

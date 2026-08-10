@@ -55,7 +55,7 @@ module Karafka
               def index(topic_name)
                 @topic = Models::Topic.find(topic_name)
 
-                @configs = filter(refine(@topic.configs))
+                @configs = filter(sort(@topic.configs))
 
                 render
               end

@@ -63,7 +63,7 @@ module Karafka
 
                 @running_jobs = @process.jobs.running
 
-                filter(refine(@running_jobs))
+                filter(sort(@running_jobs))
 
                 render
               end
@@ -75,7 +75,7 @@ module Karafka
 
                 @pending_jobs = @process.jobs.pending
 
-                filter(refine(@pending_jobs))
+                filter(sort(@pending_jobs))
 
                 render
               end

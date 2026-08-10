@@ -37,7 +37,7 @@ module Karafka
             end
 
             @jobs, last_page = Paginators::Arrays.call(
-              filter(refine(jobs_total)),
+              filter(sort(jobs_total)),
               @params.current_page
             )
 
@@ -62,7 +62,7 @@ module Karafka
             end
 
             @jobs, last_page = Paginators::Arrays.call(
-              filter(refine(jobs_total)),
+              filter(sort(jobs_total)),
               @params.current_page
             )
 

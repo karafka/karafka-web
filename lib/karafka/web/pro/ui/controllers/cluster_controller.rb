@@ -53,7 +53,7 @@ module Karafka
 
             # Lists available brokers in the cluster
             def index
-              @brokers = filter(refine(Models::Broker.all))
+              @brokers = filter(sort(Models::Broker.all))
 
               render
             end
@@ -64,7 +64,7 @@ module Karafka
             def show(broker_id)
               @broker = Models::Broker.find(broker_id)
 
-              @configs = filter(refine(@broker.configs))
+              @configs = filter(sort(@broker.configs))
 
               render
             end
