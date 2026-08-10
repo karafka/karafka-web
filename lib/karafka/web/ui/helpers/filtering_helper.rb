@@ -16,8 +16,11 @@ module Karafka
           #
           # The form submits via GET to the current path, preserving every other query parameter
           # (most importantly the current sort) as hidden fields while resetting pagination, so
-          # filtering always starts from the first page. When a keyword is active a "clear" link
-          # is rendered next to the input.
+          # filtering always starts from the first page.
+          #
+          # It renders as a compact, right-aligned search field: a small input with an inline
+          # magnifying-glass icon and (when a keyword is active) a small clear (x) control. There is
+          # no submit button, the form is submitted by pressing Enter.
           #
           # @param placeholder [String] input placeholder text
           # @return [String] html of the filtering form
@@ -30,25 +33,30 @@ module Karafka
 
             if filtering?
               clear = <<~HTML
-                <a class="btn btn-ghost font-normal" href="#{current_path(filter: nil, page: nil)}">
-                  Clear
-                </a>
+                <a
+                  href="#{current_path(filter: nil, page: nil)}"
+                  class="opacity-50 hover:opacity-100 cursor-pointer"
+                  title="Clear filter"
+                  aria-label="Clear filter"
+                >#{icon(:x_mark, size: 4)}</a>
               HTML
             end
 
             <<~HTML
-              <form method="get" action="#{h(request.path)}" class="filter-form flex gap-2 mb-3">
+              <form method="get" action="#{h(request.path)}" class="filter-form flex justify-end mb-3">
                 #{hidden}
-                <input
-                  type="text"
-                  name="filter"
-                  value="#{h(params.current_filter)}"
-                  placeholder="#{h(placeholder)}"
-                  class="input input-bordered w-full max-w-md"
-                  autocomplete="off"
-                >
-                <button type="submit" class="btn btn-primary font-normal">Filter</button>
-                #{clear}
+                <label class="input input-sm flex items-center gap-2 w-full max-w-xs">
+                  <span class="opacity-50">#{icon(:magnifying_glass, size: 4)}</span>
+                  <input
+                    type="text"
+                    name="filter"
+                    value="#{h(params.current_filter)}"
+                    placeholder="#{h(placeholder)}"
+                    class="grow"
+                    autocomplete="off"
+                  >
+                  #{clear}
+                </label>
               </form>
             HTML
           end
