@@ -23,7 +23,12 @@
 <%== partial 'consumers/consumers/tabs' %>
 
 <% unless @processes.empty? %>
-  <div class="col-span-12 flex justify-end space-x-2 mb-6">
+  <div class="col-span-12 flex justify-end items-center space-x-2 mb-6">
+    <% if filtering? %>
+      <span class="text-muted text-sm">
+        These actions apply to all processes, not just the filtered ones
+      </span>
+    <% end %>
     <%
       quiet_all_path = consumers_path('commanding', 'quiet_all')
       has_standalone = @processes.any? { |p| p.execution_mode == 'standalone' }
