@@ -40,6 +40,27 @@ module Karafka
           # because a few Pro controllers inherit OSS controllers directly (and thus bypass the Pro
           # base controller), by those explicitly.
           module Filtering
+            # Descriptor for a filterable field that matches nested hash KEYS at a position in the
+            # structure, rather than an attribute on the records. Used for tree-shaped data whose
+            # meaningful labels are keys (e.g. the health stats, where consumer group and topic
+            # names are keys). See {Web::Ui::Lib::Filter} for how the engine consumes it.
+            #
+            # @!attribute name
+            #   @return [String] the field name (shown in the selector, matched against the request)
+            # @!attribute path
+            #   @return [Array] keys to descend from each container before matching that hash's keys
+            KeyField = Struct.new(:name, :path)
+
+            # Builds a {KeyField} descriptor for use in `filterable_attributes`.
+            #
+            # @param name [Symbol, String] field name
+            # @param under [Symbol, String, Array, nil] key(s) to descend before matching keys; nil
+            #   matches the container's own keys
+            # @return [KeyField]
+            def self.key(name, under: nil)
+              KeyField.new(name.to_s, Array(under))
+            end
+
             # @param base [Class] the controller including this concern
             def self.included(base)
               # Attributes on which we can filter in a given controller. Since we can filter on

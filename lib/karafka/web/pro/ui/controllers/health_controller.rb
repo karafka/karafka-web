@@ -58,13 +58,13 @@ module Karafka
               poll_state_ch
             ].freeze
 
-            # The health selector scopes by consumer group and topic name (the structural keys of
-            # the stats tree). The plain keyword form additionally matches the process/partition id
-            # exposed by the leaf records (see `filter_health`), relying on match-propagation to
-            # keep a consumer group or topic when any of its descendants matches.
-            self.filterable_attributes = %i[
-              topic
-              consumer_group
+            # The health stats are a tree keyed by consumer group and then topic name, so we filter
+            # on those keys rather than on record attributes. Topic keys live under `:topics` in the
+            # overview but directly under the consumer group in the cluster lags view; the key alias
+            # descends leniently, so one declaration covers both shapes without reshaping the data.
+            self.filterable_attributes = [
+              Lib::Filtering.key(:topic, under: :topics),
+              Lib::Filtering.key(:consumer_group)
             ].freeze
 
             # Displays the current system state
@@ -77,10 +77,9 @@ module Karafka
                 cg_details.each_value { |topic_details| sort(topic_details) }
               end
 
-              # Narrow down the whole tree to the consumer groups/topics/partitions matching the
-              # current filter (if any). It is safe to prune in place here as the stats are built
-              # fresh per request.
-              filter_health(@stats)
+              # Narrow the whole tree down to the consumer groups/topics matching the current filter
+              # (if any). It is safe to prune in place here as the stats are built fresh per request.
+              filter(@stats)
 
               render
             end
@@ -103,7 +102,7 @@ module Karafka
                 cg_details.each_value { |topic_details| sort(topic_details) }
               end
 
-              filter_health(@stats)
+              filter(@stats)
 
               render
             end
@@ -122,48 +121,6 @@ module Karafka
               overview
 
               render
-            end
-
-            private
-
-            # Narrows the health stats tree by the current filter.
-            #
-            # `topic` and `consumer_group` are structural keys of the tree (not record attributes),
-            # so we scope them here by matching the relevant key. The plain keyword form (no field)
-            # falls back to the generic match-propagation engine, matching keywords against the leaf
-            # partition `id` while its key matching still surfaces topic/consumer group names.
-            #
-            # @param stats [Hash] the health stats tree (mutated in place)
-            # @return [Hash] the filtered stats
-            def filter_health(stats)
-              return stats if @params.current_filter.empty?
-
-              value = @params.current_filter.downcase
-
-              case @params.current_filter_field
-              when "consumer_group"
-                stats.select! { |cg_id, _| cg_id.to_s.downcase.include?(value) }
-              when "topic"
-                stats.each_value do |cg|
-                  health_topics(cg).select! { |name, _| name.to_s.downcase.include?(value) }
-                end
-                stats.reject! { |_cg_id, cg| health_topics(cg).empty? }
-              else
-                filter(stats, fields: %i[id])
-              end
-
-              stats
-            end
-
-            # @param consumer_group_details [Hash] a single consumer group's stats
-            # @return [Hash] its topics hash, regardless of the stats shape (the overview nests them
-            #   under `:topics`, cluster lags keys them directly)
-            def health_topics(consumer_group_details)
-              if consumer_group_details.key?(:topics)
-                consumer_group_details[:topics]
-              else
-                consumer_group_details
-              end
             end
           end
         end

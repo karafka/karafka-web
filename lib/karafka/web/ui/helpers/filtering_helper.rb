@@ -54,7 +54,9 @@ module Karafka
                 %(<a class="btn btn-outline font-normal btn-disabled" aria-disabled="true">Reset</a>)
               end
 
-            fields = Array(@filterable_fields)
+            # A field is either a plain attribute name or a key-alias descriptor; the selector only
+            # cares about its name
+            fields = Array(@filterable_fields).map { |field| filter_field_name(field) }
             # We render the field selector whenever the controller exposes any filterable field, so
             # every search looks consistent (even single-field listings show a one-option select).
             fielded = fields.any?
@@ -148,6 +150,13 @@ module Karafka
           private_constant :FILTER_NAMES
 
           private
+
+          # @param field [String, Symbol, #name] a filterable field: a plain attribute name or a
+          #   key-alias descriptor
+          # @return [String] the field's name
+          def filter_field_name(field)
+            field.respond_to?(:path) ? field.name.to_s : field.to_s
+          end
 
           # @param attribute [String, Symbol] filterable attribute name
           # @param overrides [Hash] per-view label overrides (keyed by attribute)

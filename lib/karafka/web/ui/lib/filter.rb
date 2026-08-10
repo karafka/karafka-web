@@ -31,23 +31,47 @@ module Karafka
 
           # @param filter_query [String] keyword based on which we filter or empty string when no
           #   filtering is needed
-          # @param allowed_attributes [Array<String>, Hash] attributes on which we allow to filter.
-          #   Since we can filter on method invocations, this needs to be limited and provided on a
-          #   per controller basis (same contract as the sorter). It can be an array of attribute
-          #   names or a `{ attribute => label }` hash (in which case only the keys matter here).
+          # @param allowed_attributes [Array<String, #path>, Hash] attributes on which we allow to
+          #   filter. Since we can filter on method invocations, this needs to be limited and
+          #   provided on a per controller basis (same contract as the sorter). It can be an array
+          #   of attribute names or a `{ attribute => label }` hash (in which case only the keys
+          #   matter here). An entry may also be a key-alias descriptor (any object responding to
+          #   `name`/`path`), which matches nested hash keys at a path instead of record attributes
+          #   (used for tree-shaped data whose labels are keys, e.g. the health stats).
           # @param field [String, nil] when provided (and allowed), filtering is scoped to this
-          #   single attribute instead of matching the query against every allowed attribute. Used
-          #   by the field-selectable filter on flat record listings.
+          #   single attribute (or key alias) instead of matching the query against every allowed
+          #   attribute. Used by the field-selectable filter on flat record listings.
           def initialize(filter_query, allowed_attributes:, field: nil)
             @query = filter_query.to_s.downcase.strip
 
             allowed = allowed_attributes.is_a?(Hash) ? allowed_attributes.keys : allowed_attributes
-            # Normalize to strings so symbol keys from controllers and the string field coming from
-            # the request params compare cleanly
-            @allowed = allowed.map(&:to_s)
+
+            # A declared field is either a plain attribute (matched on records) or a key alias
+            # (matched on nested hash keys at a path). Key aliases are duck-typed: they respond to
+            # `path` (a `KeyField`), which nothing else in the allow-list does.
+            @allowed = []
+            @aliases = {}
+
+            Array(allowed).each do |attribute|
+              if attribute.respond_to?(:path)
+                @aliases[attribute.name.to_s] = attribute.path
+              else
+                # Normalize to strings so symbol keys from controllers and the string field coming
+                # from the request params compare cleanly
+                @allowed << attribute.to_s
+              end
+            end
 
             field = field.to_s
-            @field = @allowed.include?(field) ? field : nil
+
+            # When the selected field is a key alias, filtering prunes hash keys at its path instead
+            # of matching record attributes
+            if @aliases.key?(field)
+              @alias_path = @aliases[field]
+            else
+              @alias_path = nil
+              @field = @allowed.include?(field) ? field : nil
+            end
 
             # Things we have already seen and filtered. Prevents crashing (and infinite loops) on
             # circular dependencies when the same resources are present in different parts of the
@@ -63,12 +87,16 @@ module Karafka
           def call(resource)
             # Skip if there is nothing to filter on
             return resource if @query.empty?
-            # Skip if there are no attributes we are allowed to filter on. Just like the sorter
-            # ignores a disallowed field, we do not want to prune anything when we have no criteria
-            # to match records against.
-            return resource if @allowed.empty?
+            # Skip if there are no criteria to match against. Just like the sorter ignores a
+            # disallowed field, we do not want to prune anything with nothing to match on.
+            return resource if @allowed.empty? && @aliases.empty?
 
-            keep?(resource, 0)
+            if @alias_path
+              # Field scoped to a key alias: prune the hash keys at the alias path
+              keep_by_key_alias!(resource, @alias_path)
+            else
+              keep?(resource, 0)
+            end
 
             resource
           end
@@ -118,6 +146,53 @@ module Karafka
 
             @seen[object_id] = result
             result
+          end
+
+          # Prunes a nested hash in place so only the branches whose key at the aliased position
+          # matches the query survive (with match-propagation up the tree). `path` is the sequence
+          # of keys to descend from the container before matching that hash's keys (empty matches
+          # the container's own keys).
+          #
+          # Descent is lenient: a key absent on a node falls back to the node itself, so trees that
+          # nest the same logical level differently (e.g. one endpoint wraps topics under `:topics`,
+          # another keys them directly) resolve without normalizing the data.
+          #
+          # @param hash [Object] structure to prune (a no-op unless it is a Hash)
+          # @param path [Array] keys to descend before matching keys
+          # @return [Boolean] true if anything was kept
+          # @note This method modifies the hash in place (mutates the caller).
+          def keep_by_key_alias!(hash, path)
+            return false unless hash.is_a?(Hash)
+
+            kept_any = false
+
+            hash.select! do |key, value|
+              # At the target level (empty path) we match the key itself; otherwise we descend and
+              # recurse, keeping the branch when its sub-tree keeps anything
+              kept =
+                if path.empty?
+                  matches?(key)
+                else
+                  keep_by_key_alias!(alias_descend(value, path.first), path[1..])
+                end
+
+              kept_any ||= kept
+              kept
+            end
+
+            kept_any
+          end
+
+          # Lenient descent used by the key aliases: dig into `value[key]` when it is present,
+          # otherwise use the value itself.
+          #
+          # @param value [Object] node we descend from
+          # @param key [Object] key we descend into
+          # @return [Object] the descended value (or the original value when the key is absent)
+          def alias_descend(value, key)
+            return value[key] if value.is_a?(Hash) && value.key?(key)
+
+            value
           end
 
           # Filters an array in place, keeping only the elements that match (directly or through a

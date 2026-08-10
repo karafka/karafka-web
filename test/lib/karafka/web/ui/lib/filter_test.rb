@@ -505,4 +505,86 @@ describe_current do
       assert_equal(%w[aaa orders], result.map(&:id).sort)
     end
   end
+
+  # A key alias matches nested hash KEYS at a path (used for tree data whose labels are keys, like
+  # the health stats). Duck-typed via `name`/`path`, so we use a bare Struct here.
+  describe "key alias fields" do
+    let(:key_field) { Struct.new(:name, :path) }
+
+    context "when scoping to a root-level key alias" do
+      let(:resource) do
+        {
+          "group_a" => { "orders" => { 0 => { "lag" => 1 } } },
+          "group_b" => { "payments" => { 0 => { "lag" => 2 } } }
+        }
+      end
+
+      it "keeps only the matching top-level branch, untouched" do
+        field = key_field.new("consumer_group", [])
+        result = described_class
+          .new("group_a", allowed_attributes: [field], field: "consumer_group")
+          .call(resource)
+
+        assert_equal(%w[group_a], result.keys)
+        assert_equal({ "orders" => { 0 => { "lag" => 1 } } }, result["group_a"])
+      end
+    end
+
+    context "when scoping to a nested key alias (topics wrapped under :topics)" do
+      let(:resource) do
+        {
+          "group_a" => {
+            topics: {
+              "orders" => { 0 => { "lag" => 1 } },
+              "payments" => { 0 => { "lag" => 2 } }
+            },
+            rebalanced_at: 123
+          }
+        }
+      end
+
+      it "prunes the topic keys under :topics and keeps the group via propagation" do
+        field = key_field.new("topic", %i[topics])
+        result = described_class
+          .new("orders", allowed_attributes: [field], field: "topic")
+          .call(resource)
+
+        assert_equal(%w[group_a], result.keys)
+        assert_equal(%w[orders], result["group_a"][:topics].keys)
+      end
+    end
+
+    context "when the same nested key alias meets a differently-shaped tree (lenient descent)" do
+      let(:resource) do
+        {
+          "group_a" => {
+            "orders" => [{ id: "0" }],
+            "payments" => [{ id: "0" }]
+          }
+        }
+      end
+
+      it "falls back to the container itself when :topics is absent and still prunes topics" do
+        field = key_field.new("topic", %i[topics])
+        result = described_class
+          .new("orders", allowed_attributes: [field], field: "topic")
+          .call(resource)
+
+        assert_equal(%w[orders], result["group_a"].keys)
+      end
+    end
+
+    context "when nothing matches a key alias" do
+      let(:resource) { { "group_a" => { "orders" => { 0 => {} } } } }
+
+      it "prunes everything" do
+        field = key_field.new("consumer_group", [])
+        result = described_class
+          .new("zzz-nope", allowed_attributes: [field], field: "consumer_group")
+          .call(resource)
+
+        assert_empty(result)
+      end
+    end
+  end
 end
