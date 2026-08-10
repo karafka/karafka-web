@@ -34,7 +34,7 @@
 
 <div class="col-span-12">
   <% if @schedule && (filtering? || !@tasks.empty?) %>
-    <%== filter_box(placeholder: 'Filter by task id or cron...') %>
+    <%== filter_box(labels: { id: 'Task ID' }) %>
   <% end %>
 
   <% if @schedule && !@tasks.empty? %>

@@ -25,8 +25,11 @@ module Karafka
           # pick which attribute to filter on, and the placeholder follows the selected field.
           #
           # @param placeholder [String] input placeholder text
+          # @param labels [Hash] per-view overrides for the field selector labels, e.g.
+          #   `labels: { id: "Task ID" }`. Anything not overridden falls back to the shared
+          #   {FILTER_NAMES} map (and then to a humanized attribute name).
           # @return [String] html of the filtering form
-          def filter_box(placeholder: "Filter...")
+          def filter_box(placeholder: "Filter...", labels: {})
             hidden = preserved_filter_params.map do |key, value|
               "<input type=\"hidden\" name=\"#{h(key)}\" value=\"#{h(value)}\">"
             end.join
@@ -51,7 +54,7 @@ module Karafka
               selected = selected_filter_field(fields)
               # A field selector is present, so the placeholder should reflect the chosen field
               # rather than a fixed one. It follows the selected field on submit.
-              placeholder = "Filter by #{filter_field_label(selected).downcase}..."
+              placeholder = "Filter by #{filter_field_label(selected, labels).downcase}..."
             end
 
             input = <<~HTML
@@ -67,7 +70,7 @@ module Karafka
 
             control =
               if fielded
-                %(<div class="join grow">#{filter_field_selector(fields, selected)}#{input}</div>)
+                %(<div class="join grow">#{filter_field_selector(fields, selected, labels)}#{input}</div>)
               else
                 input
               end
@@ -132,10 +135,16 @@ module Karafka
           private
 
           # @param attribute [String, Symbol] filterable attribute name
-          # @return [String] human friendly label for the attribute
-          def filter_field_label(attribute)
-            FILTER_NAMES.fetch(attribute.to_sym) do
-              attribute.to_s.tr("_", " ").split.map(&:capitalize).join(" ")
+          # @param overrides [Hash] per-view label overrides (keyed by attribute)
+          # @return [String] human friendly label for the attribute: a per-view override if given,
+          #   otherwise the shared {FILTER_NAMES} entry, otherwise a humanized attribute name
+          def filter_field_label(attribute, overrides = {})
+            key = attribute.to_sym
+
+            overrides.transform_keys(&:to_sym).fetch(key) do
+              FILTER_NAMES.fetch(key) do
+                attribute.to_s.tr("_", " ").split.map(&:capitalize).join(" ")
+              end
             end
           end
 
@@ -152,12 +161,13 @@ module Karafka
           #
           # @param fields [Array<String, Symbol>] filterable attributes
           # @param selected [String] the currently selected field
+          # @param overrides [Hash] per-view label overrides (keyed by attribute)
           # @return [String] html of the select element
-          def filter_field_selector(fields, selected)
+          def filter_field_selector(fields, selected, overrides = {})
             options = fields.map do |field|
               key = field.to_s
               chosen = (key == selected) ? " selected" : ""
-              "<option value=\"#{h(key)}\"#{chosen}>#{h(filter_field_label(field))}</option>"
+              "<option value=\"#{h(key)}\"#{chosen}>#{h(filter_field_label(field, overrides))}</option>"
             end.join
 
             <<~HTML
