@@ -52,9 +52,10 @@ module Karafka
 
             if fielded
               selected = selected_filter_field(fields)
-              # A field selector is present, so the placeholder should reflect the chosen field
-              # rather than a fixed one. It follows the selected field on submit.
-              placeholder = "Filter by #{filter_field_label(selected, labels).downcase}..."
+              # The field selector already tells the user which attribute is being filtered, so the
+              # placeholder stays generic. A field-specific placeholder would look stale until the
+              # form is submitted (it is server-rendered and does not follow the select live).
+              placeholder = "Filter..."
             end
 
             input = <<~HTML
