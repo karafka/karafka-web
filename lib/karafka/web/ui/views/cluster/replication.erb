@@ -2,7 +2,7 @@
 
 <%== partial 'cluster/tabs' %>
 
-<% if filtering? || !@partitions.empty? %>
+<% if Karafka.pro? && (filtering? || !@partitions.empty?) %>
   <div class="col-span-12 mb-3">
     <%== filter_box(placeholder: 'Filter by topic name...') %>
   </div>

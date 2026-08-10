@@ -7,8 +7,11 @@ module Karafka
         # Helpers for rendering the keyword filtering (search) box on data tables. Companion to the
         # [[SortingHelper]]: sorting reorders a listing, filtering narrows it down.
         module FilteringHelper
-          # @return [Boolean] true if a filtering keyword is currently active
+          # @return [Boolean] true if a filtering keyword is currently active. Filtering (search) is
+          #   a Pro-only feature, so this is always false in OSS.
           def filtering?
+            return false unless ::Karafka.pro?
+
             !params.current_filter.empty?
           end
 
@@ -30,6 +33,9 @@ module Karafka
           #   {FILTER_NAMES} map (and then to a humanized attribute name).
           # @return [String] html of the filtering form
           def filter_box(placeholder: "Filter...", labels: {})
+            # Filtering (search) is a Pro-only feature, so we render nothing in OSS.
+            return "" unless ::Karafka.pro?
+
             hidden = preserved_filter_params.map do |key, value|
               "<input type=\"hidden\" name=\"#{h(key)}\" value=\"#{h(value)}\">"
             end.join

@@ -157,6 +157,10 @@ module Karafka
           # @note It mutates the provided resources in place, so it must not be used on shared
           #   structures like the app routing.
           def filter(resources)
+            # Filtering (search) is a Pro-only feature. In OSS we return the resources untouched so
+            # inherited controllers keep working without applying any filtering.
+            return resources unless ::Karafka.pro?
+
             # Expose the fields to the view so the filtering box can render the selector
             @filterable_fields = self.class.filterable_attributes || []
 
