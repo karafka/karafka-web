@@ -149,6 +149,55 @@ describe_current do
         refute_body("web-b:2:2")
       end
     end
+
+    context "when the filtered results span multiple pages" do
+      before do
+        topics_config.consumers.states.name = states_topic
+        topics_config.consumers.reports.name = reports_topic
+
+        states = Fixtures.consumers_states_json(symbolize_names: false)
+        states["processes"] = {}
+        base_report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        # 60 processes that all match the "match-me" filter, so the filtered result set spans
+        # more than one page (25 per page)
+        60.times do |i|
+          id = "match-me:#{i}:#{i}"
+          states["processes"][id] = { "dispatched_at" => 2_690_818_669.526_218, "offset" => i }
+
+          report = base_report.dup
+          report["process"] = base_report["process"].merge("id" => id)
+
+          produce(reports_topic, report.to_json, key: id)
+        end
+
+        produce(states_topic, states.to_json)
+      end
+
+      context "when on the first filtered page" do
+        before { get "consumers?filter[field]=id&filter[value]=match-me" }
+
+        it "paginates the filtered set and keeps the filter active" do
+          assert_ok
+          assert_body(pagination)
+          assert_equal(25, body.scan("match-me:").size)
+          assert_body('value="match-me"')
+        end
+      end
+
+      context "when on the second filtered page" do
+        before { get "consumers?filter[field]=id&filter[value]=match-me&page=2" }
+
+        it "shows the next filtered page with the filter still applied" do
+          assert_ok
+          assert_body(pagination)
+          assert_equal(25, body.scan("match-me:").size)
+          # The filter is preserved across pagination
+          assert_body('value="match-me"')
+          assert_body('value="id" selected')
+        end
+      end
+    end
   end
 
   context "when there is an active consumer but without any partitions assigned yet" do
