@@ -86,8 +86,9 @@ describe_current do
           # The matching topic and its data are preserved (match-propagation keeps the branch)
           assert_body("default")
           assert_body("327355")
-          # The filtering box is rendered with the active keyword
-          assert_body('name="filter"')
+          # The filtering box is rendered with a field selector and the active keyword
+          assert_body('name="filter[value]"')
+          assert_body('name="filter[field]"')
           assert_body('value="default"')
         end
       end
@@ -99,8 +100,55 @@ describe_current do
           assert_ok
           # Everything is pruned, so we fall back to the empty state, but still offer the filter box
           assert_body("No health data is available")
-          assert_body('name="filter"')
+          assert_body('name="filter[value]"')
           refute_body("327355")
+        end
+      end
+
+      context "when scoping the filter to the topic field" do
+        context "when the topic matches" do
+          before { get "health/overview?filter[field]=topic&filter[value]=default" }
+
+          it do
+            assert_ok
+            assert_body("default")
+            assert_body("327355")
+            assert_body('value="topic" selected')
+          end
+        end
+
+        context "when the topic does not match" do
+          before { get "health/overview?filter[field]=topic&filter[value]=no-such-topic" }
+
+          it do
+            assert_ok
+            assert_body("No health data is available")
+            refute_body("327355")
+          end
+        end
+      end
+
+      context "when scoping the filter to the consumer group field" do
+        context "when the consumer group matches" do
+          before { get "health/overview?filter[field]=consumer_group&filter[value]=example_app6_app" }
+
+          it do
+            assert_ok
+            # The whole group (its topics) is kept
+            assert_body("example_app6_app")
+            assert_body("default")
+            assert_body("327355")
+          end
+        end
+
+        context "when the consumer group does not match" do
+          before { get "health/overview?filter[field]=consumer_group&filter[value]=no-such-group" }
+
+          it do
+            assert_ok
+            assert_body("No health data is available")
+            refute_body("327355")
+          end
         end
       end
 

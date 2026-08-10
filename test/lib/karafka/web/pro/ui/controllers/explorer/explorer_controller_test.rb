@@ -75,7 +75,7 @@ describe_current do
         assert_ok
         assert_body(topics_config.errors.name)
         refute_body(topics_config.consumers.states.name)
-        assert_body('name="filter"')
+        assert_body('name="filter[value]"')
       end
     end
 
@@ -86,7 +86,7 @@ describe_current do
         assert_ok
         refute_body(topics_config.errors.name)
         assert_body("No results match your filter")
-        assert_body('name="filter"')
+        assert_body('name="filter[value]"')
       end
     end
 

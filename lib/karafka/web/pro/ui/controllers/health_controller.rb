@@ -76,9 +76,9 @@ module Karafka
               end
 
               # Narrow down the whole tree to the consumer groups/topics/partitions matching the
-              # filtering keyword (if any). It is safe to prune in place here as the stats are built
+              # current filter (if any). It is safe to prune in place here as the stats are built
               # fresh per request.
-              filter(@stats)
+              filter_health(@stats)
 
               render
             end
@@ -101,7 +101,7 @@ module Karafka
                 cg_details.each_value { |topic_details| sort(topic_details) }
               end
 
-              filter(@stats)
+              filter_health(@stats)
 
               render
             end
@@ -120,6 +120,58 @@ module Karafka
               overview
 
               render
+            end
+
+            private
+
+            # Fields exposed by the health filtering selector. They map to the two structural levels
+            # of the stats tree (topic and consumer group names) rather than record attributes.
+            HEALTH_FILTERABLE_FIELDS = %i[
+              topic
+              consumer_group
+            ].freeze
+
+            # Narrows the health stats tree by the current filter.
+            #
+            # `topic` and `consumer_group` are structural keys of the tree (not record attributes),
+            # so we scope them here by matching the relevant key. The plain keyword form (no field)
+            # falls back to the generic match-propagation engine, which matches across every level.
+            #
+            # @param stats [Hash] the health stats tree (mutated in place)
+            # @return [Hash] the filtered stats
+            def filter_health(stats)
+              unless @params.current_filter.empty?
+                value = @params.current_filter.downcase
+
+                case @params.current_filter_field
+                when "consumer_group"
+                  stats.select! { |cg_id, _| cg_id.to_s.downcase.include?(value) }
+                when "topic"
+                  stats.each_value do |cg|
+                    health_topics(cg).select! { |name, _| name.to_s.downcase.include?(value) }
+                  end
+                  stats.reject! { |_cg_id, cg| health_topics(cg).empty? }
+                else
+                  filter(stats)
+                end
+              end
+
+              # Expose the selector fields last, so the `filter` call above (which resets
+              # @filterable_fields to the engine's allow-list) does not clobber them
+              @filterable_fields = HEALTH_FILTERABLE_FIELDS
+
+              stats
+            end
+
+            # @param consumer_group_details [Hash] a single consumer group's stats
+            # @return [Hash] its topics hash, regardless of the stats shape (the overview nests them
+            #   under `:topics`, cluster lags keys them directly)
+            def health_topics(consumer_group_details)
+              if consumer_group_details.key?(:topics)
+                consumer_group_details[:topics]
+              else
+                consumer_group_details
+              end
             end
           end
         end

@@ -45,9 +45,9 @@ module Karafka
               end
 
             fields = Array(@filterable_fields)
-            # A field selector only makes sense when there is more than one attribute to pick from;
-            # single-attribute listings keep the plain keyword box.
-            fielded = fields.size >= 2
+            # We render the field selector whenever the controller exposes any filterable field, so
+            # every search looks consistent (even single-field listings show a one-option select).
+            fielded = fields.any?
             value_name = fielded ? "filter[value]" : "filter"
 
             if fielded
