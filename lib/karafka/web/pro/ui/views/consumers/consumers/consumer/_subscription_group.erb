@@ -21,7 +21,7 @@
 <%
   # Non-destructively narrow the topics to the current filtering keyword. A subscription group is
   # kept when the keyword matches its consumer/subscription group name or any of its topics.
-  topics = visible_topics(subscription_group.topics, consumer_group.id, subscription_group.id)
+  topics = visible_topics(subscription_group.topics, consumer_group: consumer_group.id, subscription_group: subscription_group.id)
 %>
 
 <% unless filtering? && topics.empty? %>

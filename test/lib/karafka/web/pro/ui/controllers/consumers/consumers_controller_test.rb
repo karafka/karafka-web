@@ -765,7 +765,7 @@ describe_current do
         # (including the empty one) are hidden
         assert_body("Rebalance count")
         refute_body("This process does not consume any")
-        assert_body('name="filter"')
+        assert_body('name="filter[value]"')
       end
     end
 
@@ -786,7 +786,7 @@ describe_current do
         assert_ok
         assert_body("No results match your filter")
         refute_body("Rebalance count")
-        assert_body('name="filter"')
+        assert_body('name="filter[value]"')
       end
     end
 

@@ -87,12 +87,12 @@ module Karafka
           end
 
           # Non-destructively narrows a topics collection (routing or a consumer subscription) down
-          # to the ones matching the current filtering keyword.
+          # to the ones matching the current filter.
           #
-          # A topic is kept when its own name matches or when any of the provided parent labels
-          # (the consumer group and/or subscription group names shown as the section headers) match
-          # the keyword. Matching a parent label keeps all of its topics, which is what a user
-          # filtering by their consumer group name expects to see.
+          # It is field aware: when the `topic` field is selected only the topic names are matched;
+          # when `consumer_group`/`subscription_group` is selected the whole collection is kept or
+          # dropped based on that group's name. With no explicit field (plain keyword) a topic is
+          # kept when its own name matches or when any of the provided group labels match.
           #
           # This is used for views that render the live `Karafka::App.routes` (which we must never
           # mutate, unlike the per-request structures the [[Filter]] engine prunes in place) as well
@@ -100,18 +100,27 @@ module Karafka
           # source untouched.
           #
           # @param topics [Enumerable] topics of a subscription/consumer group
-          # @param parent_labels [Array<String>] group names that, when matched, keep all the topics
+          # @param consumer_group [String, nil] the consumer group name shown as the section header
+          # @param subscription_group [String, nil] the subscription group name (subscriptions view)
           # @return [Array] all topics when no filtering is active, otherwise only the matching ones
-          def visible_topics(topics, *parent_labels)
+          def visible_topics(topics, consumer_group: nil, subscription_group: nil)
             return topics.to_a unless filtering?
 
             keyword = params.current_filter.downcase
+            by_name = -> { topics.select { |topic| topic.name.to_s.downcase.include?(keyword) } }
+            label_match = ->(label) { label.to_s.downcase.include?(keyword) }
 
-            if parent_labels.any? { |label| label.to_s.downcase.include?(keyword) }
-              return topics.to_a
+            case params.current_filter_field
+            when "consumer_group"
+              label_match.call(consumer_group) ? topics.to_a : []
+            when "subscription_group"
+              label_match.call(subscription_group) ? topics.to_a : []
+            when "topic"
+              by_name.call
+            else
+              # Plain keyword: match the topic name or any of the group labels
+              [consumer_group, subscription_group].any?(&label_match) ? topics.to_a : by_name.call
             end
-
-            topics.select { |topic| topic.name.to_s.downcase.include?(keyword) }
           end
 
           # Human friendly labels for the attributes we allow filtering on. Attributes not listed
@@ -123,6 +132,8 @@ module Karafka
             tags: "Tags",
             topic: "Topic",
             topic_name: "Topic",
+            consumer_group: "Consumer group",
+            subscription_group: "Subscription group",
             consumer: "Consumer",
             type: "Type",
             name: "Name",

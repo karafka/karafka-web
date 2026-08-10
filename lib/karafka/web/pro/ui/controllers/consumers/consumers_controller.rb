@@ -119,6 +119,10 @@ module Karafka
                   sort(consumer_group)
                 end
 
+                # Subscriptions are filtered at the view level (via `visible_topics`), so we expose
+                # the filterable fields here for the filtering box to render its selector
+                @filterable_fields = %i[topic consumer_group subscription_group]
+
                 render
               end
             end

@@ -19,6 +19,10 @@ module Karafka
               sort(consumer_group.topics)
             end
 
+            # Routing is filtered at the view level (via `visible_topics`), so we expose the
+            # filterable fields here for the filtering box to render its selector
+            @filterable_fields = %i[topic consumer_group]
+
             render
           end
 

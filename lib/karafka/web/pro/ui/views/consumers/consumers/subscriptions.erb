@@ -33,7 +33,7 @@
     <%
       any_visible = @process.consumer_groups.any? do |cg|
         cg.subscription_groups.any? do |sg|
-          visible_topics(sg.topics, cg.id, sg.id).any?
+          visible_topics(sg.topics, consumer_group: cg.id, subscription_group: sg.id).any?
         end
       end
     %>

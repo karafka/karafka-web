@@ -69,6 +69,20 @@ describe_current do
       end
     end
 
+    context "when scoping the filter to the consumer group field" do
+      before do
+        get "routing?filter[field]=consumer_group&filter[value]=#{Karafka::App.routes.first.id}"
+      end
+
+      it do
+        assert_ok
+        # The group matches, so its table renders, and the selected field is reflected in the select
+        assert_body("Subscription group")
+        assert_body('name="filter[field]"')
+        assert_body('value="consumer_group" selected')
+      end
+    end
+
     context "when filtering by a non-matching keyword" do
       before { get "routing?filter=zzz-nonexistent-topic-zzz" }
 
@@ -76,7 +90,7 @@ describe_current do
         assert_ok
         # No topic or group matches, so all consumer groups are hidden (no table rendered), but the
         # filter box remains
-        assert_body('name="filter"')
+        assert_body('name="filter[value]"')
         refute_body("Subscription group")
       end
 
