@@ -381,6 +381,103 @@ describe_current do
     end
   end
 
+  context "when a matched attribute value is a present false" do
+    let(:resource) do
+      [
+        record_class.new(name: "orders", active: true),
+        record_class.new(name: "payments", active: false)
+      ]
+    end
+    let(:filter_query) { "false" }
+    let(:allowed_attributes) { %w[active] }
+
+    it "treats false as a real (matchable) value, not an absent attribute" do
+      result = filtering
+
+      assert_equal(%w[payments], result.map(&:name))
+    end
+  end
+
+  context "when a matched attribute is present but nil on the non-matching records" do
+    let(:resource) do
+      [
+        record_class.new(name: "orders"),
+        record_class.new(name: nil)
+      ]
+    end
+    let(:filter_query) { "orders" }
+    let(:allowed_attributes) { %w[name] }
+
+    it "still prunes the present-but-nil record (it is actionable, not metadata)" do
+      result = filtering
+
+      assert_equal(1, result.size)
+      assert_equal("orders", result.first.name)
+    end
+  end
+
+  context "when matching on a numeric attribute value" do
+    let(:resource) do
+      [
+        record_class.new(name: "a", port: 9092),
+        record_class.new(name: "b", port: 9093)
+      ]
+    end
+    let(:filter_query) { "9092" }
+    let(:allowed_attributes) { %w[port] }
+
+    it "matches on the stringified number" do
+      result = filtering
+
+      assert_equal(%w[a], result.map(&:name))
+    end
+  end
+
+  context "when a matching record hash also carries nested children" do
+    let(:resource) do
+      [
+        { "name" => "orders", "config" => { "x" => { "y" => 1 } } },
+        { "name" => "payments", "config" => { "x" => { "y" => 2 } } }
+      ]
+    end
+    let(:filter_query) { "orders" }
+    let(:allowed_attributes) { %w[name] }
+
+    it "keeps the matching record whole (its children are not pruned) and drops the rest" do
+      result = filtering
+
+      assert_equal(1, result.size)
+      assert_equal({ "x" => { "y" => 1 } }, result.first["config"])
+    end
+  end
+
+  context "when the query has surrounding whitespace" do
+    let(:resource) { [{ "name" => "orders" }, { "name" => "payments" }] }
+    let(:filter_query) { "  orders  " }
+    let(:allowed_attributes) { %w[name] }
+
+    it "strips the query before matching" do
+      assert_equal([{ "name" => "orders" }], filtering)
+    end
+  end
+
+  context "when the structure is nested deeper than the max depth" do
+    let(:resource) do
+      # A single non-matching record buried far below the MAX_DEPTH (8) cutoff
+      nested = { "topics" => { "orders" => record_class.new(id: "x", state: "active") } }
+      12.times { |i| nested = { "level_#{i}" => nested } }
+      nested
+    end
+    let(:filter_query) { "zzz-no-match" }
+    let(:allowed_attributes) { %w[id state] }
+
+    it "retains data beyond the max depth instead of pruning it" do
+      # Nothing matches the query, so without the depth guard the whole tree would collapse to {}.
+      # Because part of it lives below MAX_DEPTH we refuse to look that deep and keep it.
+      refute_empty(filtering)
+    end
+  end
+
   context "when filtering is scoped to a specific field" do
     let(:resource) do
       [
