@@ -33,12 +33,13 @@ module Karafka
     module Pro
       module Ui
         module Controllers
-          # Cluster details controller
-          class ClusterController < Web::Ui::Controllers::ClusterController
-            # This Pro controller inherits the OSS cluster controller (which has no filtering), so it
-            # pulls in the Pro-only filtering concern directly
-            include Lib::Filtering
-
+          # Cluster details controller.
+          #
+          # Its node listing and per-broker config views diverged from the OSS cluster controller,
+          # so it stands on its own. Replication is the one action that stays identical to OSS; its
+          # partition data is built by the shared `Models::ClusterInfo.partitions`, so we only add
+          # the Pro-only filtering on top of it here.
+          class ClusterController < BaseController
             self.sortable_attributes = %w[
               id
               name
@@ -50,12 +51,15 @@ module Karafka
             ].freeze
 
             # Each action renders different columns, so we scope the filterable fields per action to
-            # what it actually displays (`replication` is inherited from the OSS controller)
+            # what it actually displays
             self.filterable_attributes = {
               index: %i[id name],
               show: %i[name value],
               replication: %i[topic_name]
             }.freeze
+
+            # Cluster state should always be fresh and not from cache
+            before { cache.clear }
 
             # Lists available brokers in the cluster
             def index
@@ -75,18 +79,16 @@ module Karafka
               render
             end
 
-            private
-
-            # Adds Pro-only filtering on top of the OSS sort/paginate seam
-            #
-            # @param partitions_total [Array<Hash>] partition rows
-            def paginate_partitions(partitions_total)
+            # List partitions replication details (same as OSS, plus Pro filtering)
+            def replication
               @partitions, last_page = Paginators::Arrays.call(
-                filter(sort(partitions_total)),
+                filter(sort(Models::ClusterInfo.partitions)),
                 @params.current_page
               )
 
               paginate(@params.current_page, !last_page)
+
+              render
             end
           end
         end

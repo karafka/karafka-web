@@ -40,8 +40,6 @@ module Karafka
                 controller = build(Controllers::ClusterController)
 
                 r.get "replication" do
-                  # The Pro controller inherits the OSS replication action and layers Pro-only
-                  # filtering on top of it
                   controller.replication
                 end
 
