@@ -50,46 +50,48 @@ describe_current do
     end
   end
 
-  context "when filtering consumers by a matching keyword" do
-    before { get "consumers?filter=shinra" }
+  # The default consumer process (shinra:1:1) is subscribed to the "default", "test2" and "visits"
+  # topics and is tagged "#8cbff36". We use those to exercise filtering on each allowed attribute,
+  # both when it matches and when it does not.
+  describe "filtering" do
+    {
+      "id" => { matching: "shinra", non_matching: "no-such-process" },
+      "subscribed_topics" => { matching: "visits", non_matching: "no-such-topic" },
+      "tags" => { matching: "8cbff36", non_matching: "no-such-tag" }
+    }.each do |field, values|
+      context "when filtering by the #{field} field" do
+        context "when the value matches" do
+          before { get "consumers?filter[field]=#{field}&filter[value]=#{values.fetch(:matching)}" }
 
-    it do
-      assert_ok
-      assert_body("shinra:1:1")
-      # The filtering box should be rendered with the active keyword and a field selector
-      assert_body('name="filter[value]"')
-      assert_body('name="filter[field]"')
-      assert_body('value="shinra"')
-    end
-  end
+          it "keeps the matching process" do
+            assert_ok
+            assert_body("shinra:1:1")
+            # The selected field stays selected in the field dropdown
+            assert_body(%(value="#{field}" selected))
+          end
+        end
 
-  context "when filtering consumers by a non-matching keyword" do
-    before { get "consumers?filter=this-does-not-exist" }
+        context "when the value does not match" do
+          before do
+            get "consumers?filter[field]=#{field}&filter[value]=#{values.fetch(:non_matching)}"
+          end
 
-    it do
-      assert_ok
-      refute_body("shinra:1:1")
-      # We still render the filtering box (with a clear option) and not the "no consumers at all"
-      # empty state, since consumers do exist, they are just filtered out
-      assert_body('name="filter[value]"')
-      refute_body(no_processes)
-    end
-  end
-
-  context "when filtering consumers on the assigned topic field" do
-    context "when the process is assigned to the matching topic" do
-      before { get "consumers?filter[field]=subscribed_topics&filter[value]=default" }
-
-      it do
-        assert_ok
-        assert_body("shinra:1:1")
-        # The selected field stays selected in the dropdown
-        assert_body('value="subscribed_topics" selected')
+          it "filters the process out" do
+            assert_ok
+            refute_body("shinra:1:1")
+            # The filtering box stays rendered (so the filter can be adjusted or reset) and we do
+            # not fall back to the "no consumers at all" empty state, they are just filtered out
+            assert_body('name="filter[value]"')
+            refute_body(no_processes)
+          end
+        end
       end
     end
 
-    context "when the process is not assigned to the topic" do
-      before { get "consumers?filter[field]=subscribed_topics&filter[value]=no-such-topic" }
+    context "when scoping to a field the value does not belong to" do
+      # 'visits' is a subscribed topic, not part of the process id 'shinra:1:1', so scoping to the
+      # id field must exclude it (proving the field scoping actually applies)
+      before { get "consumers?filter[field]=id&filter[value]=visits" }
 
       it do
         assert_ok
@@ -97,14 +99,54 @@ describe_current do
       end
     end
 
-    context "when filtering on a field the process id does not match but the topic does" do
-      # 'default' is a subscribed topic, not part of the process id 'shinra:1:1'; scoping to the
-      # id field must therefore exclude it, proving the field scoping actually applies
-      before { get "consumers?filter[field]=id&filter[value]=default" }
+    context "when filtering with a plain keyword (no field selected)" do
+      context "when it matches on any attribute" do
+        before { get "consumers?filter=8cbff36" }
 
-      it do
+        it do
+          assert_ok
+          assert_body("shinra:1:1")
+        end
+      end
+
+      context "when it does not match anything" do
+        before { get "consumers?filter=nothing-matches-this-keyword" }
+
+        it "filters everything out" do
+          assert_ok
+          refute_body("shinra:1:1")
+          refute_body(no_processes)
+        end
+      end
+    end
+
+    context "when there are multiple processes" do
+      before do
+        topics_config.consumers.states.name = states_topic
+        topics_config.consumers.reports.name = reports_topic
+
+        states = Fixtures.consumers_states_json(symbolize_names: false)
+        states["processes"] = {}
+        base_report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        %w[web-a:1:1 web-b:2:2].each_with_index do |id, index|
+          states["processes"][id] = { "dispatched_at" => 2_690_818_669.526_218, "offset" => index }
+
+          report = base_report.dup
+          report["process"] = base_report["process"].merge("id" => id)
+
+          produce(reports_topic, report.to_json, key: id)
+        end
+
+        produce(states_topic, states.to_json)
+      end
+
+      it "keeps only the process matching the filter" do
+        get "consumers?filter[field]=id&filter[value]=web-a"
+
         assert_ok
-        refute_body("shinra:1:1")
+        assert_body("web-a:1:1")
+        refute_body("web-b:2:2")
       end
     end
   end
