@@ -75,9 +75,25 @@ module Karafka
               @current_sort ||= @request_params["sort"].to_s.downcase
             end
 
-            # @return [String] filtering keyword or empty string when no filtering is requested
+            # @return [String] filtering keyword or empty string when no filtering is requested.
+            #   Supports both the plain `filter=keyword` form (keyword filtering) and the
+            #   field-selectable `filter[field]=...&filter[value]=...` form (its value part).
             def current_filter
-              @current_filter ||= @request_params["filter"].to_s.strip
+              @current_filter ||= begin
+                filter = @request_params["filter"]
+
+                filter.is_a?(Hash) ? filter["value"].to_s.strip : filter.to_s.strip
+              end
+            end
+
+            # @return [String] the attribute selected for field-scoped filtering, or empty string
+            #   when filtering across all allowed attributes (keyword filtering)
+            def current_filter_field
+              @current_filter_field ||= begin
+                filter = @request_params["filter"]
+
+                filter.is_a?(Hash) ? filter["field"].to_s.strip : ""
+              end
             end
 
             # @return [Integer] current page for paginated views

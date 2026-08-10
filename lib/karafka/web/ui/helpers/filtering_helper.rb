@@ -12,15 +12,17 @@ module Karafka
             !params.current_filter.empty?
           end
 
-          # Renders a keyword filtering form for the current listing.
+          # Renders a filtering form for the current listing.
           #
           # The form submits via GET to the current path, preserving every other query parameter
           # (most importantly the current sort) as hidden fields while resetting pagination, so
           # filtering always starts from the first page.
           #
-          # It renders as a compact, right-aligned search field: a small input with an inline
-          # magnifying-glass icon and (when a keyword is active) a small clear (x) control. There is
-          # no submit button, the form is submitted by pressing Enter.
+          # It renders as a full-width search field with a "Search" submit button and a "Reset"
+          # button (always present, but disabled when there is nothing to reset, so the layout does
+          # not shift). When the controller exposes a `{ field => label }` map of filterable fields
+          # (via `filter`), a field selector is fused into the left of the field so the user can
+          # pick which attribute to filter on, and the placeholder follows the selected field.
           #
           # @param placeholder [String] input placeholder text
           # @return [String] html of the filtering form
@@ -29,34 +31,51 @@ module Karafka
               "<input type=\"hidden\" name=\"#{h(key)}\" value=\"#{h(value)}\">"
             end.join
 
-            clear = ""
+            # The reset button is always rendered so the layout (and the search button position)
+            # stays put whether or not a filter is active. It is only disabled when there is
+            # nothing to reset.
+            reset =
+              if filtering?
+                %(<a class="btn btn-outline font-normal" href="#{h(filter_clear_path)}">Reset</a>)
+              else
+                %(<a class="btn btn-outline font-normal btn-disabled" aria-disabled="true">Reset</a>)
+              end
 
-            if filtering?
-              clear = <<~HTML
-                <a
-                  href="#{current_path(filter: nil, page: nil)}"
-                  class="opacity-50 hover:opacity-100 cursor-pointer"
-                  title="Clear filter"
-                  aria-label="Clear filter"
-                >#{icon(:x_mark, size: 4)}</a>
-              HTML
+            fields = @filterable_fields
+            fielded = fields.is_a?(Hash) && !fields.empty?
+            value_name = fielded ? "filter[value]" : "filter"
+
+            if fielded
+              selected = selected_filter_field(fields)
+              # A field selector is present, so the placeholder should reflect the chosen field
+              # rather than a fixed one. It follows the selected field on submit.
+              placeholder = "Filter by #{fields[selected].to_s.downcase}..."
             end
 
+            input = <<~HTML
+              <input
+                type="text"
+                name="#{value_name}"
+                value="#{h(params.current_filter)}"
+                placeholder="#{h(placeholder)}"
+                class="input w-full#{fielded ? " join-item" : " grow"}"
+                autocomplete="off"
+              >
+            HTML
+
+            control =
+              if fielded
+                %(<div class="join grow">#{filter_field_selector(fields, selected)}#{input}</div>)
+              else
+                input
+              end
+
             <<~HTML
-              <form method="get" action="#{h(request.path)}" class="filter-form flex justify-end mb-3">
+              <form method="get" action="#{h(request.path)}" class="filter-form flex gap-2 mb-3">
                 #{hidden}
-                <label class="input input-sm flex items-center gap-2 w-full max-w-xs">
-                  <span class="opacity-50">#{icon(:magnifying_glass, size: 4)}</span>
-                  <input
-                    type="text"
-                    name="filter"
-                    value="#{h(params.current_filter)}"
-                    placeholder="#{h(placeholder)}"
-                    class="grow"
-                    autocomplete="off"
-                  >
-                  #{clear}
-                </label>
+                #{control}
+                <button type="submit" class="btn btn-primary font-normal">Search</button>
+                #{reset}
               </form>
             HTML
           end
@@ -91,12 +110,49 @@ module Karafka
 
           private
 
+          # @param fields [Hash] `{ attribute => label }` map of filterable fields
+          # @return [String] the currently selected filter field, defaulting to the first one when
+          #   nothing (valid) is selected
+          def selected_filter_field(fields)
+            selected = params.current_filter_field
+
+            fields.key?(selected) ? selected : fields.keys.first.to_s
+          end
+
+          # Renders the field selector fused into the left of the filtering field.
+          #
+          # @param fields [Hash] `{ attribute => label }` map of filterable fields
+          # @param selected [String] the currently selected field
+          # @return [String] html of the select element
+          def filter_field_selector(fields, selected)
+            options = fields.map do |field, label|
+              chosen = (field.to_s == selected) ? " selected" : ""
+              "<option value=\"#{h(field)}\"#{chosen}>#{h(label)}</option>"
+            end.join
+
+            <<~HTML
+              <select name="filter[field]" class="select join-item">
+                #{options}
+              </select>
+            HTML
+          end
+
+          # Builds the path used by the "clear" control: the current path with all filtering and
+          # pagination parameters removed.
+          #
+          # @return [String] path without any filter/page query parameters
+          def filter_clear_path
+            query = URI.encode_www_form(preserved_filter_params)
+
+            query.empty? ? request.path : "#{request.path}?#{query}"
+          end
+
           # @return [Hash] current request query parameters that we want to carry over when
-          #   submitting the filtering form (everything except the filter keyword itself and the
-          #   pagination, which we intentionally reset)
+          #   submitting the filtering form (everything except the filtering parameters themselves
+          #   and the pagination, which we intentionally reset)
           def preserved_filter_params
             flatten_params("", request.params).reject do |key, _value|
-              key == "filter" || key == "page"
+              key == "filter" || key.start_with?("filter[") || key == "page"
             end
           end
 

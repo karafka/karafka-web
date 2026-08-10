@@ -69,9 +69,11 @@ module Karafka
                 pending_jobs_count
               ].freeze
 
-              self.filterable_attributes = %w[
-                id
-              ].freeze
+              self.filterable_attributes = {
+                "id" => "Process ID",
+                "subscribed_topics" => "Assigned topic",
+                "tags" => "Tags"
+              }.freeze
 
               # Consumers list
               def index

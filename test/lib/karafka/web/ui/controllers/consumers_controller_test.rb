@@ -56,8 +56,9 @@ describe_current do
     it do
       assert_ok
       assert_body("shinra:1:1")
-      # The filtering box should be rendered with the active keyword
-      assert_body('name="filter"')
+      # The filtering box should be rendered with the active keyword and a field selector
+      assert_body('name="filter[value]"')
+      assert_body('name="filter[field]"')
       assert_body('value="shinra"')
     end
   end
@@ -70,8 +71,41 @@ describe_current do
       refute_body("shinra:1:1")
       # We still render the filtering box (with a clear option) and not the "no consumers at all"
       # empty state, since consumers do exist, they are just filtered out
-      assert_body('name="filter"')
+      assert_body('name="filter[value]"')
       refute_body(no_processes)
+    end
+  end
+
+  context "when filtering consumers on the assigned topic field" do
+    context "when the process is assigned to the matching topic" do
+      before { get "consumers?filter[field]=subscribed_topics&filter[value]=default" }
+
+      it do
+        assert_ok
+        assert_body("shinra:1:1")
+        # The selected field stays selected in the dropdown
+        assert_body('value="subscribed_topics" selected')
+      end
+    end
+
+    context "when the process is not assigned to the topic" do
+      before { get "consumers?filter[field]=subscribed_topics&filter[value]=no-such-topic" }
+
+      it do
+        assert_ok
+        refute_body("shinra:1:1")
+      end
+    end
+
+    context "when filtering on a field the process id does not match but the topic does" do
+      # 'default' is a subscribed topic, not part of the process id 'shinra:1:1'; scoping to the
+      # id field must therefore exclude it, proving the field scoping actually applies
+      before { get "consumers?filter[field]=id&filter[value]=default" }
+
+      it do
+        assert_ok
+        refute_body("shinra:1:1")
+      end
     end
   end
 

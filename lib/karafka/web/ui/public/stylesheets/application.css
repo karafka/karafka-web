@@ -86,3 +86,12 @@ table td.commands-inline-3 {
 .alert {
   box-shadow: none !important;
 }
+
+/*
+  daisyUI 5.7's `.table` sets `border-collapse: separate`, which makes the 1px borders we put on
+  our data-table cells sit next to each other and render as a 2px double border. This unlayered
+  rule wins over the layered daisyUI styles and collapses adjacent cell borders back to 1px.
+*/
+.data-table {
+  border-collapse: collapse !important;
+}

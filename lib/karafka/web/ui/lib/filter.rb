@@ -31,12 +31,19 @@ module Karafka
 
           # @param filter_query [String] keyword based on which we filter or empty string when no
           #   filtering is needed
-          # @param allowed_attributes [Array<String>] attributes on which we allow to filter. Since
-          #   we can filter on method invocations, this needs to be limited and provided on a per
-          #   controller basis (same contract as the sorter).
-          def initialize(filter_query, allowed_attributes:)
+          # @param allowed_attributes [Array<String>, Hash] attributes on which we allow to filter.
+          #   Since we can filter on method invocations, this needs to be limited and provided on a
+          #   per controller basis (same contract as the sorter). It can be an array of attribute
+          #   names or a `{ attribute => label }` hash (in which case only the keys matter here).
+          # @param field [String, nil] when provided (and allowed), filtering is scoped to this
+          #   single attribute instead of matching the query against every allowed attribute. Used
+          #   by the field-selectable filter on flat record listings.
+          def initialize(filter_query, allowed_attributes:, field: nil)
             @query = filter_query.to_s.downcase.strip
-            @allowed = allowed_attributes
+            @allowed = allowed_attributes.is_a?(Hash) ? allowed_attributes.keys : allowed_attributes
+
+            field = field.to_s
+            @field = @allowed.include?(field) ? field : nil
 
             # Things we have already seen and filtered. Prevents crashing (and infinite loops) on
             # circular dependencies when the same resources are present in different parts of the
@@ -221,22 +228,28 @@ module Karafka
           end
 
           # @param element [Object] element we want to classify
-          # @return [Boolean] true if the element responds to (or holds) at least one allowed
-          #   attribute
+          # @return [Boolean] true if the element responds to (or holds) at least one attribute we
+          #   are matching on
           def matchable_record?(element)
-            @allowed.any? { |attribute| attribute_value(element, attribute) != NO_VALUE }
+            match_attributes.any? { |attribute| attribute_value(element, attribute) != NO_VALUE }
           end
 
-          # Checks whether a record matches the query on any of its allowed attributes.
+          # Checks whether a record matches the query on any of the attributes we are matching on.
           #
           # @param element [Object] record we want to check
-          # @return [Boolean] true if any allowed attribute value includes the query
+          # @return [Boolean] true if any matched attribute value includes the query
           def record_match?(element)
-            @allowed.any? do |attribute|
+            match_attributes.any? do |attribute|
               value = attribute_value(element, attribute)
 
               value != NO_VALUE && matches?(value)
             end
+          end
+
+          # @return [Array<String>] the attributes to match on: just the selected field when
+          #   filtering is scoped to one, otherwise all the allowed attributes
+          def match_attributes
+            @field ? [@field] : @allowed
           end
 
           # Extracts an allowed attribute value from a record, supporting both method invocations
@@ -262,9 +275,15 @@ module Karafka
           end
 
           # @param value [Object] value we want to match against the query
-          # @return [Boolean] true if the stringified value includes the query (case-insensitive)
+          # @return [Boolean] true if the (stringified) value includes the query (case-insensitive).
+          #   Multi-valued attributes (arrays, e.g. a process's assigned topics or tags) match when
+          #   any of their elements includes the query.
           def matches?(value)
-            value.to_s.downcase.include?(@query)
+            if value.is_a?(Array)
+              value.any? { |element| element.to_s.downcase.include?(@query) }
+            else
+              value.to_s.downcase.include?(@query)
+            end
           end
 
           # Sentinel used to distinguish "attribute is absent" from an attribute that legitimately

@@ -50,11 +50,11 @@ module Karafka
                 updated_at
               ].freeze
 
-              self.filterable_attributes = %w[
-                topic
-                consumer
-                type
-              ].freeze
+              self.filterable_attributes = {
+                "topic" => "Topic",
+                "consumer" => "Consumer",
+                "type" => "Type"
+              }.freeze
 
               # Shows all running jobs of a consumer
               # @param process_id [String]

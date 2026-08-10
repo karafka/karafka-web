@@ -12,9 +12,11 @@ module Karafka
             lag_hybrid
           ].freeze
 
-          self.filterable_attributes = %w[
-            id
-          ].freeze
+          self.filterable_attributes = {
+            "id" => "Process ID",
+            "subscribed_topics" => "Assigned topic",
+            "tags" => "Tags"
+          }.freeze
 
           # List page with consumers
           # @note For now we load all and paginate over the squashed data.

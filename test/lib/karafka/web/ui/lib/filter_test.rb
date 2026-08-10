@@ -353,4 +353,59 @@ describe_current do
       assert_equal(1, result.size)
     end
   end
+
+  context "when allowed_attributes is a label hash" do
+    let(:resource) { [{ "name" => "orders" }, { "name" => "payments" }] }
+    let(:filter_query) { "orders" }
+    let(:allowed_attributes) { { "name" => "Name" } }
+
+    it "uses the hash keys as the allowed attributes" do
+      assert_equal([{ "name" => "orders" }], filtering)
+    end
+  end
+
+  context "when an attribute is multi-valued (array)" do
+    let(:resource) do
+      [
+        record_class.new(id: "a", topics: %w[orders shipments]),
+        record_class.new(id: "b", topics: %w[payments])
+      ]
+    end
+    let(:filter_query) { "orders" }
+    let(:allowed_attributes) { %w[topics] }
+
+    it "matches when any element of the array includes the query" do
+      result = filtering
+
+      assert_equal(%w[a], result.map(&:id))
+    end
+  end
+
+  context "when filtering is scoped to a specific field" do
+    let(:resource) do
+      [
+        record_class.new(id: "aaa", topic: "orders"),
+        record_class.new(id: "orders", topic: "payments")
+      ]
+    end
+    let(:allowed_attributes) { { "id" => "ID", "topic" => "Topic" } }
+
+    it "matches only on the selected field" do
+      result = described_class
+        .new("orders", allowed_attributes: allowed_attributes, field: "topic")
+        .call(resource)
+
+      # Only the record whose *topic* is orders is kept; the one whose id is "orders" is excluded
+      assert_equal(%w[aaa], result.map(&:id))
+    end
+
+    it "falls back to matching all attributes when the field is not allowed" do
+      result = described_class
+        .new("orders", allowed_attributes: allowed_attributes, field: "not_allowed")
+        .call(resource)
+
+      # Both are kept: one matches on topic, the other on id
+      assert_equal(%w[aaa orders], result.map(&:id).sort)
+    end
+  end
 end
