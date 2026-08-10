@@ -17,13 +17,19 @@ module Karafka
             in_sync_replica_brokers
           ].freeze
 
+          # Each action renders different columns, so we scope the filterable fields per action to
+          # what it actually displays
+          self.filterable_attributes = {
+            brokers: %i[broker_id broker_name],
+            replication: %i[topic_name]
+          }.freeze
+
           # Cluster state should always be fresh and not from cache
           before { cache.clear }
 
           # Lists available brokers in the cluster
           def brokers
-            # The brokers listing shows the node id and name, so we filter on those
-            @brokers = filter(sort(cluster_info.brokers), fields: %i[broker_id broker_name])
+            @brokers = filter(sort(cluster_info.brokers))
 
             render
           end
@@ -43,7 +49,7 @@ module Karafka
             end
 
             @partitions, last_page = Paginators::Arrays.call(
-              filter(sort(partitions_total), fields: %i[topic_name]),
+              filter(sort(partitions_total)),
               @params.current_page
             )
 

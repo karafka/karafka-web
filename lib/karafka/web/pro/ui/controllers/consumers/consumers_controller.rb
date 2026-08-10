@@ -69,11 +69,12 @@ module Karafka
                 pending_jobs_count
               ].freeze
 
-              self.filterable_attributes = %i[
-                id
-                subscribed_topics
-                tags
-              ].freeze
+              # The list filters processes by their id/topics/tags, while the per-process
+              # subscriptions view filters (at the view level) by topic/consumer/subscription group
+              self.filterable_attributes = {
+                default: %i[id subscribed_topics tags],
+                subscriptions: %i[topic consumer_group subscription_group]
+              }.freeze
 
               # Consumers list
               def index
@@ -118,10 +119,6 @@ module Karafka
 
                   sort(consumer_group)
                 end
-
-                # Subscriptions are filtered at the view level (via `visible_topics`), so we expose
-                # the filterable fields here for the filtering box to render its selector
-                @filterable_fields = %i[topic consumer_group subscription_group]
 
                 render
               end

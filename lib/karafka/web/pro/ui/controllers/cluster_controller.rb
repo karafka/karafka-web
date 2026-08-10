@@ -45,10 +45,16 @@ module Karafka
               port
             ].freeze
 
+            # The nodes listing and the broker config page render different columns, so we scope
+            # the filterable fields per action to what each actually displays
+            self.filterable_attributes = {
+              index: %i[id name],
+              show: %i[name value]
+            }.freeze
+
             # Lists available brokers in the cluster
             def index
-              # The brokers listing shows the node id and name, so we filter on those
-              @brokers = filter(sort(Models::Broker.all), fields: %i[id name])
+              @brokers = filter(sort(Models::Broker.all))
 
               render
             end
@@ -59,7 +65,7 @@ module Karafka
             def show(broker_id)
               @broker = Models::Broker.find(broker_id)
 
-              @configs = filter(sort(@broker.configs), fields: %i[name value])
+              @configs = filter(sort(@broker.configs))
 
               render
             end

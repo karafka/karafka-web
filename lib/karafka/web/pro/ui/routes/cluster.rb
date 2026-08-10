@@ -40,8 +40,11 @@ module Karafka
                 controller = build(Controllers::ClusterController)
 
                 r.get "replication" do
-                  # We use the non-pro controller here because this action is the same
-                  controller = build(Ui::Controllers::ClusterController)
+                  # Replication is identical to OSS, so we reuse the OSS controller directly. It is
+                  # fully qualified on purpose: unqualified `Ui::` would resolve to the Pro `Ui`
+                  # namespace (this file's lexical scope) and pick the Pro controller, which does
+                  # not declare the replication filtering fields.
+                  controller = build(Web::Ui::Controllers::ClusterController)
                   controller.replication
                 end
 

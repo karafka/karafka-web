@@ -41,6 +41,13 @@ module Karafka
               value
             ].freeze
 
+            # The list is filtered by topic/consumer group (at the view level), while the per-topic
+            # details page filters its flat attribute/value rows
+            self.filterable_attributes = {
+              index: %i[topic consumer_group],
+              show: %i[name value]
+            }.freeze
+
             # Routing list
             def index
               detect_patterns_routes
@@ -68,10 +75,6 @@ module Karafka
                 end
               end
 
-              # Routing is filtered at the view level (via `visible_topics`), so we expose the
-              # filterable fields here for the filtering box to render its selector
-              @filterable_fields = %i[topic consumer_group]
-
               render
             end
 
@@ -86,7 +89,7 @@ module Karafka
               @topic || not_found!(topic_id)
 
               # Present the routing settings as a flat, sortable + filterable list of name/value rows
-              @details = sort(filter(topic_detail_rows(@topic), fields: %i[name value]))
+              @details = sort(filter(topic_detail_rows(@topic)))
 
               render
             end

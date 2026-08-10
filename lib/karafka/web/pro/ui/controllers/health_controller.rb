@@ -58,11 +58,13 @@ module Karafka
               poll_state_ch
             ].freeze
 
-            # We filter on the consumer group and topic names (the structural keys of the stats
-            # tree) plus the process/partition id exposed by the leaf records. Match-propagation
-            # keeps a consumer group or topic when any of its descendants matches.
-            self.filterable_attributes = %w[
-              id
+            # The health selector scopes by consumer group and topic name (the structural keys of
+            # the stats tree). The plain keyword form additionally matches the process/partition id
+            # exposed by the leaf records (see `filter_health`), relying on match-propagation to
+            # keep a consumer group or topic when any of its descendants matches.
+            self.filterable_attributes = %i[
+              topic
+              consumer_group
             ].freeze
 
             # Displays the current system state
@@ -124,41 +126,31 @@ module Karafka
 
             private
 
-            # Fields exposed by the health filtering selector. They map to the two structural levels
-            # of the stats tree (topic and consumer group names) rather than record attributes.
-            HEALTH_FILTERABLE_FIELDS = %i[
-              topic
-              consumer_group
-            ].freeze
-
             # Narrows the health stats tree by the current filter.
             #
             # `topic` and `consumer_group` are structural keys of the tree (not record attributes),
             # so we scope them here by matching the relevant key. The plain keyword form (no field)
-            # falls back to the generic match-propagation engine, which matches across every level.
+            # falls back to the generic match-propagation engine, matching keywords against the leaf
+            # partition `id` while its key matching still surfaces topic/consumer group names.
             #
             # @param stats [Hash] the health stats tree (mutated in place)
             # @return [Hash] the filtered stats
             def filter_health(stats)
-              unless @params.current_filter.empty?
-                value = @params.current_filter.downcase
+              return stats if @params.current_filter.empty?
 
-                case @params.current_filter_field
-                when "consumer_group"
-                  stats.select! { |cg_id, _| cg_id.to_s.downcase.include?(value) }
-                when "topic"
-                  stats.each_value do |cg|
-                    health_topics(cg).select! { |name, _| name.to_s.downcase.include?(value) }
-                  end
-                  stats.reject! { |_cg_id, cg| health_topics(cg).empty? }
-                else
-                  filter(stats)
+              value = @params.current_filter.downcase
+
+              case @params.current_filter_field
+              when "consumer_group"
+                stats.select! { |cg_id, _| cg_id.to_s.downcase.include?(value) }
+              when "topic"
+                stats.each_value do |cg|
+                  health_topics(cg).select! { |name, _| name.to_s.downcase.include?(value) }
                 end
+                stats.reject! { |_cg_id, cg| health_topics(cg).empty? }
+              else
+                filter(stats, fields: %i[id])
               end
-
-              # Expose the selector fields last, so the `filter` call above (which resets
-              # @filterable_fields to the engine's allow-list) does not clobber them
-              @filterable_fields = HEALTH_FILTERABLE_FIELDS
 
               stats
             end
