@@ -77,7 +77,7 @@ module Karafka
               end
 
             <<~HTML
-              <form method="get" action="#{h(request.path)}" class="filter-form flex gap-2 mb-3">
+              <form method="get" action="#{h(request.path)}" class="filter-form flex gap-2 mb-6">
                 #{hidden}
                 #{control}
                 <button type="submit" class="btn btn-primary font-normal">Search</button>
