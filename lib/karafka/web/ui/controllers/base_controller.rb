@@ -146,23 +146,23 @@ module Karafka
           end
 
           # Filters the provided resources in place based on the current filtering keyword and the
-          # attributes allowed for filtering in a given controller.
-          #
-          # When `filterable_attributes` is a `{ attribute => label }` hash, the filtering box
-          # renders a field selector and filtering is scoped to the chosen attribute. When it is a
-          # plain array, filtering matches the keyword against every allowed attribute.
+          # attributes allowed for filtering.
           #
           # @param resources [Hash, Array, Lib::HashProxy] object for filtering
+          # @param fields [Array<Symbol>, nil] attributes to filter on, overriding the controller's
+          #   `filterable_attributes`. Use this when a controller serves several actions that render
+          #   different columns (e.g. cluster brokers vs configs), so each action can expose the
+          #   fields it actually displays.
           # @return [Hash, Array, Lib::HashProxy] filtered results
           # @note It mutates the provided resources in place, so it must not be used on shared
           #   structures like the app routing.
-          def filter(resources)
+          def filter(resources, fields: nil)
             # Filtering (search) is a Pro-only feature. In OSS we return the resources untouched so
             # inherited controllers keep working without applying any filtering.
             return resources unless ::Karafka.pro?
 
             # Expose the fields to the view so the filtering box can render the selector
-            @filterable_fields = self.class.filterable_attributes || []
+            @filterable_fields = fields || self.class.filterable_attributes || []
 
             Lib::Filter.new(
               @params.current_filter,

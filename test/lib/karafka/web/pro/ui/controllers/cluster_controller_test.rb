@@ -38,6 +38,10 @@ describe_current do
       assert_ok
       assert_body("ID")
       assert_body(breadcrumbs)
+      # The brokers filter selector exposes the columns actually displayed (node id + name)
+      assert_body('value="id"')
+      assert_body(">Node ID<")
+      assert_body('value="name"')
     end
 
     context "when requests policy prevents us from visiting this page" do

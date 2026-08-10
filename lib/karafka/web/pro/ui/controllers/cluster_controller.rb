@@ -45,15 +45,10 @@ module Karafka
               port
             ].freeze
 
-            self.filterable_attributes = %i[
-              name
-              value
-              topic_name
-            ].freeze
-
             # Lists available brokers in the cluster
             def index
-              @brokers = filter(sort(Models::Broker.all))
+              # The brokers listing shows the node id and name, so we filter on those
+              @brokers = filter(sort(Models::Broker.all), fields: %i[id name])
 
               render
             end
@@ -64,7 +59,7 @@ module Karafka
             def show(broker_id)
               @broker = Models::Broker.find(broker_id)
 
-              @configs = filter(sort(@broker.configs))
+              @configs = filter(sort(@broker.configs), fields: %i[name value])
 
               render
             end
