@@ -30,6 +30,8 @@
 
   <% if @processes.empty? && !filtering? && params.current_page <= 1 %>
     <%== partial 'consumers/no_consumers' %>
+  <% elsif @processes.empty? && filtering? %>
+    <%== partial 'shared/no_filter_results' %>
   <% elsif @processes.empty? %>
     <%== partial 'shared/no_paginated_data' %>
   <% else %>

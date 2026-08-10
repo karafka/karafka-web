@@ -9,6 +9,8 @@
 
   <% if @jobs.empty? && !filtering? && params.current_page <= 1 %>
     <%== partial 'jobs/no_jobs', locals: { type: 'running' } %>
+  <% elsif @jobs.empty? && filtering? %>
+    <%== partial 'shared/no_filter_results' %>
   <% elsif @jobs.empty? %>
     <%== partial 'shared/no_paginated_data' %>
   <% else %>
