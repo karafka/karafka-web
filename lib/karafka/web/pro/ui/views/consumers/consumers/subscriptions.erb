@@ -28,7 +28,7 @@
   <%== partial 'consumers/consumers/consumer/tabs' %>
 
   <% if @process.subscribed? %>
-    <%== filter_box(placeholder: 'Filter by topic or consumer group...') %>
+    <%== filter_box %>
 
     <%
       any_visible = @process.consumer_groups.any? do |cg|

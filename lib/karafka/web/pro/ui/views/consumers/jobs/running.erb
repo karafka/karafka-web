@@ -28,7 +28,7 @@
   <%== partial 'consumers/consumers/consumer/tabs' %>
 
   <% if filtering? || !@running_jobs.empty? %>
-    <%== filter_box(placeholder: 'Filter by topic, consumer or type...') %>
+    <%== filter_box %>
   <% end %>
 
   <% if @running_jobs.empty? %>

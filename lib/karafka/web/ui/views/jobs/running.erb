@@ -4,7 +4,7 @@
 
 <div class="col-span-12">
   <% if !@jobs.empty? || filtering? %>
-    <%== filter_box(placeholder: 'Filter by process id, topic, consumer or type...') %>
+    <%== filter_box %>
   <% end %>
 
   <% if @jobs.empty? && !filtering? && params.current_page <= 1 %>

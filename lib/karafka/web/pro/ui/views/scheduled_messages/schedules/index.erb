@@ -22,7 +22,7 @@
 
 <div class="col-span-12">
   <% if filtering? || !@topics.empty? %>
-    <%== filter_box(placeholder: 'Filter by topic name...') %>
+    <%== filter_box %>
   <% end %>
 
   <% if @topics.empty? && !filtering? %>

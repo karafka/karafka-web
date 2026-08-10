@@ -25,14 +25,18 @@ module Karafka
           # button (always present, but disabled when there is nothing to reset, so the layout does
           # not shift). When the controller exposes a `{ field => label }` map of filterable fields
           # (via `filter`), a field selector is fused into the left of the field so the user can
-          # pick which attribute to filter on, and the placeholder follows the selected field.
+          # pick which attribute to filter on.
           #
-          # @param placeholder [String] input placeholder text
+          # The placeholder is intentionally a single generic default across every listing: a field
+          # selector always accompanies the input and already tells the user which attribute is
+          # being filtered, so a per-view placeholder would be redundant (and would look stale until
+          # the form is submitted, since it is server-rendered and does not follow the select live).
+          #
           # @param labels [Hash] per-view overrides for the field selector labels, e.g.
           #   `labels: { id: "Task ID" }`. Anything not overridden falls back to the shared
           #   {FILTER_NAMES} map (and then to a humanized attribute name).
           # @return [String] html of the filtering form
-          def filter_box(placeholder: "Filter...", labels: {})
+          def filter_box(labels: {})
             # Filtering (search) is a Pro-only feature, so we render nothing in OSS.
             return "" unless ::Karafka.pro?
 
@@ -55,21 +59,14 @@ module Karafka
             # every search looks consistent (even single-field listings show a one-option select).
             fielded = fields.any?
             value_name = fielded ? "filter[value]" : "filter"
-
-            if fielded
-              selected = selected_filter_field(fields)
-              # The field selector already tells the user which attribute is being filtered, so the
-              # placeholder stays generic. A field-specific placeholder would look stale until the
-              # form is submitted (it is server-rendered and does not follow the select live).
-              placeholder = "Filter..."
-            end
+            selected = selected_filter_field(fields) if fielded
 
             input = <<~HTML
               <input
                 type="text"
                 name="#{value_name}"
                 value="#{h(params.current_filter)}"
-                placeholder="#{h(placeholder)}"
+                placeholder="Filter..."
                 class="input w-full#{fielded ? " join-item" : " grow"}"
                 autocomplete="off"
               >
