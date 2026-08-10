@@ -35,6 +35,10 @@ module Karafka
         module Controllers
           # Displays list of active jobs
           class JobsController < Web::Ui::Controllers::JobsController
+            # This Pro controller inherits the OSS jobs controller (which has no filtering), so it
+            # pulls in the Pro-only filtering concern directly
+            include Filterable
+
             self.sortable_attributes = %w[
               id
               topic
@@ -53,6 +57,20 @@ module Karafka
               consumer
               type
             ].freeze
+
+            private
+
+            # Adds Pro-only filtering on top of the OSS sort/paginate seam
+            #
+            # @param jobs_total [Array] aggregated jobs
+            def paginate_jobs(jobs_total)
+              @jobs, last_page = Paginators::Arrays.call(
+                filter(sort(jobs_total)),
+                @params.current_page
+              )
+
+              paginate(@params.current_page, !last_page)
+            end
           end
         end
       end

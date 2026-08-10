@@ -18,20 +18,9 @@ module Karafka
           class << self
             # Attributes on which we can sort in a given controller
             attr_accessor :sortable_attributes
-
-            # Attributes on which we can filter in a given controller. Since we can filter on
-            # method invocations, this needs to be limited and provided on a per controller basis
-            # (same contract as `sortable_attributes`).
-            #
-            # It is either a flat list applied to every action, or a `{ action => fields }` hash
-            # with an optional `:default` entry for controllers whose actions render different
-            # columns (e.g. cluster brokers vs configs). See {#filterable_fields} for the
-            # resolution.
-            attr_accessor :filterable_attributes
           end
 
           self.sortable_attributes = []
-          self.filterable_attributes = []
 
           # Detect that the state of the cache has changed
           before do
@@ -47,12 +36,6 @@ module Karafka
             session["cache_hash"] = cache.hash
             session["cache_timestamp"] = cache.timestamp.to_i
           end
-
-          # Expose the fields the current action can be filtered on so the filtering box (and the
-          # view-level filtering helpers) can render the field selector. Resolved from the
-          # controller's `filterable_attributes` declaration on every request, so no action has to
-          # wire this up by hand.
-          before { @filterable_fields = filterable_fields }
 
           # @param params [Karafka::Web::Ui::Controllers::Requests::Params] request parameters
           # @param session [Request::Session] request session (Rails or other framework)
@@ -154,49 +137,6 @@ module Karafka
               @params.current_sort,
               allowed_attributes: self.class.sortable_attributes
             ).call(resources)
-          end
-
-          # Filters the provided resources in place based on the current filtering keyword and the
-          # fields allowed for filtering.
-          #
-          # The allowed fields default to `@filterable_fields`, which a before hook resolves from
-          # the controller's `filterable_attributes` declaration for the current action and exposes
-          # to the view. Pass `fields` only when the engine's match set must differ from the fields
-          # shown in the selector (e.g. the health views scope the selector by topic/consumer group
-          # but keyword-match against the leaf partition id); it overrides matching only and does
-          # not change the exposed selector.
-          #
-          # @param resources [Hash, Array, Lib::HashProxy] object for filtering
-          # @param fields [Array<Symbol>, nil] explicit engine allow-list for matching, overriding
-          #   `@filterable_fields`
-          # @return [Hash, Array, Lib::HashProxy] filtered results
-          # @note It mutates the provided resources in place, so it must not be used on shared
-          #   structures like the app routing.
-          def filter(resources, fields: nil)
-            # Filtering (search) is a Pro-only feature. In OSS we return the resources untouched so
-            # inherited controllers keep working without applying any filtering.
-            return resources unless ::Karafka.pro?
-
-            Lib::Filter.new(
-              @params.current_filter,
-              allowed_attributes: fields || @filterable_fields,
-              field: @params.current_filter_field
-            ).call(resources)
-          end
-
-          # Resolves the fields the current action can be filtered on from the controller's
-          # `filterable_attributes` declaration. The declaration is either a flat list (applied to
-          # every action) or a `{ action => fields }` hash with an optional `:default` entry used
-          # for the actions not listed explicitly.
-          #
-          # @return [Array<Symbol>, Array<String>] fields for the current action (empty when the
-          #   action is not filterable)
-          def filterable_fields
-            attributes = self.class.filterable_attributes
-
-            return Array(attributes) unless attributes.is_a?(Hash)
-
-            Array(attributes[@current_action_name] || attributes[:default])
           end
 
           # Flattens a nested hash into a single-level hash with dotted keys, so nested settings can

@@ -35,6 +35,10 @@ module Karafka
         module Controllers
           # Cluster details controller
           class ClusterController < Web::Ui::Controllers::ClusterController
+            # This Pro controller inherits the OSS cluster controller (which has no filtering), so it
+            # pulls in the Pro-only filtering concern directly
+            include Filterable
+
             self.sortable_attributes = %w[
               id
               name
@@ -45,11 +49,12 @@ module Karafka
               port
             ].freeze
 
-            # The nodes listing and the broker config page render different columns, so we scope
-            # the filterable fields per action to what each actually displays
+            # Each action renders different columns, so we scope the filterable fields per action to
+            # what it actually displays (`replication` is inherited from the OSS controller)
             self.filterable_attributes = {
               index: %i[id name],
-              show: %i[name value]
+              show: %i[name value],
+              replication: %i[topic_name]
             }.freeze
 
             # Lists available brokers in the cluster
@@ -68,6 +73,20 @@ module Karafka
               @configs = filter(sort(@broker.configs))
 
               render
+            end
+
+            private
+
+            # Adds Pro-only filtering on top of the OSS sort/paginate seam
+            #
+            # @param partitions_total [Array<Hash>] partition rows
+            def paginate_partitions(partitions_total)
+              @partitions, last_page = Paginators::Arrays.call(
+                filter(sort(partitions_total)),
+                @params.current_page
+              )
+
+              paginate(@params.current_page, !last_page)
             end
           end
         end

@@ -35,6 +35,10 @@ module Karafka
         module Controllers
           # Controller for viewing and managing recurring tasks
           class RecurringTasksController < Web::Ui::Controllers::ClusterController
+            # This Pro controller inherits the OSS cluster controller (which has no filtering), so it
+            # pulls in the Pro-only filtering concern directly
+            include Filterable
+
             self.sortable_attributes = %w[
               id
               enabled

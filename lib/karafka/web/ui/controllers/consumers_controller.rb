@@ -12,19 +12,13 @@ module Karafka
             lag_hybrid
           ].freeze
 
-          self.filterable_attributes = %i[
-            id
-            subscribed_topics
-            tags
-          ].freeze
-
           # List page with consumers
           # @note For now we load all and paginate over the squashed data.
           def index
             @current_state = Models::ConsumersState.current!
             @counters = Models::Counters.new(@current_state)
             @processes, last_page = Paginators::Arrays.call(
-              filter(sort(Models::Processes.active(@current_state))),
+              sort(Models::Processes.active(@current_state)),
               @params.current_page
             )
 
