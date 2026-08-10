@@ -38,6 +38,7 @@ module Karafka
             self.sortable_attributes = %w[
               name
               active?
+              value
             ].freeze
 
             # Routing list
@@ -84,10 +85,23 @@ module Karafka
 
               @topic || not_found!(topic_id)
 
+              # Present the routing settings as a flat, sortable + filterable list of name/value rows
+              @details = sort(filter(topic_detail_rows(@topic), fields: %i[name value]))
+
               render
             end
 
             private
+
+            # @param topic [Karafka::Routing::Topic] topic we present the routing details for
+            # @return [Array<Hash>] `{ name:, value: }` rows for every routing setting (including
+            #   the Pro multiplexing settings)
+            def topic_detail_rows(topic)
+              rows = flatten_hash(topic.subscription_group.kafka, "kafka")
+              rows.merge!(flatten_hash(topic.to_h.except(:kafka)))
+              rows.merge!(flatten_hash(topic.subscription_group.multiplexing.to_h, "multiplexing"))
+              rows.map { |name, value| { name: name.to_s, value: value } }
+            end
 
             # Detect routes defined as patterns
             def detect_patterns_routes

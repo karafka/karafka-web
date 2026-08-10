@@ -162,6 +162,49 @@ describe_current do
       assert_body("kafka.statistics.interval.ms")
     end
 
+    context "when sorting the details by attribute name" do
+      before { get "routing/#{Karafka::App.routes.first.topics.first.id}?sort=name+desc" }
+
+      it do
+        assert_ok
+        assert_body("kafka.topic.metadata.refresh.interval.ms")
+      end
+    end
+
+    context "when sorting the details by value" do
+      before { get "routing/#{Karafka::App.routes.first.topics.first.id}?sort=value+desc" }
+
+      it do
+        assert_ok
+        assert_body("kafka.topic.metadata.refresh.interval.ms")
+      end
+    end
+
+    context "when filtering the details by attribute name" do
+      before do
+        get "routing/#{Karafka::App.routes.first.topics.first.id}" \
+            "?filter[field]=name&filter[value]=statistics"
+      end
+
+      it do
+        assert_ok
+        assert_body("kafka.statistics.interval.ms")
+        refute_body("kafka.topic.metadata.refresh.interval.ms")
+      end
+    end
+
+    context "when filtering the details by a non-matching keyword" do
+      before do
+        get "routing/#{Karafka::App.routes.first.topics.first.id}" \
+            "?filter=zzz-nonexistent-attribute-zzz"
+      end
+
+      it do
+        assert_ok
+        assert_body("No results match your filter")
+      end
+    end
+
     context "when given route is not available" do
       before { get "routing/na" }
 

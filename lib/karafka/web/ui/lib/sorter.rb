@@ -61,7 +61,9 @@ module Karafka
               # in the hash proxy object, so we can do it that way
               sort_hash!(resource.to_h, current_depth)
             when Enumerable
-              sort_array!(resource, current_depth)
+              # Some enumerables (like Range) are leaf values that cannot be sorted in place
+              # (they do not respond to `map!`), so we skip them rather than crash
+              sort_array!(resource, current_depth) if resource.respond_to?(:map!)
             end
 
             resource

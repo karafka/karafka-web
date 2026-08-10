@@ -104,6 +104,16 @@ describe_current do
     end
   end
 
+  context "when a nested value is a non-mutable enumerable (like a Range)" do
+    let(:resource) { [{ a: 2, r: 1..5 }, { a: 1, r: 0..3 }] }
+    let(:sort_query) { "a asc" }
+    let(:allowed_attributes) { %w[a] }
+
+    it "sorts by the attribute without crashing on the Range" do
+      assert_equal([{ a: 1, r: 0..3 }, { a: 2, r: 1..5 }], sorting)
+    end
+  end
+
   context "when sorting objects that do not respond to an attribute" do
     let(:resource) { [sortable_object.new(x: 5), sortable_object.new(x: 4), sortable_object.new(x: 3)] }
     let(:sort_query) { "a asc" }

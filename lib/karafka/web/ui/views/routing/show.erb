@@ -5,26 +5,20 @@
 
 <div class="data-table-wrapper">
   <table class="data-table">
+    <thead>
+      <tr>
+        <th><%== sort_link('Attribute', :name) %></th>
+        <th><%== sort_link(:value) %></th>
+      </tr>
+    </thead>
     <tbody>
-      <% flat_hash(@topic.subscription_group.kafka).each do |k, v| %>
+      <% @details.each do |detail| %>
         <%==
           partial(
             'routing/detail',
             locals: {
-              k: "kafka.#{k}",
-              v: v
-            }
-          )
-        %>
-      <% end %>
-
-      <% flat_hash(@topic.to_h.except(:kafka)).each do |k, v| %>
-        <%==
-          partial(
-            'routing/detail',
-            locals: {
-              k: k,
-              v: v
+              k: detail[:name],
+              v: detail[:value]
             }
           )
         %>
