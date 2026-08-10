@@ -43,10 +43,10 @@ module Karafka
               next_time
             ].freeze
 
-            self.filterable_attributes = {
-              "id" => "Task ID",
-              "cron" => "Cron"
-            }.freeze
+            self.filterable_attributes = %i[
+              id
+              cron
+            ].freeze
 
             # Displays the current schedule
             def schedule

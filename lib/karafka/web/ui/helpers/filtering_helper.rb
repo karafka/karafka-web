@@ -41,15 +41,17 @@ module Karafka
                 %(<a class="btn btn-outline font-normal btn-disabled" aria-disabled="true">Reset</a>)
               end
 
-            fields = @filterable_fields
-            fielded = fields.is_a?(Hash) && !fields.empty?
+            fields = Array(@filterable_fields)
+            # A field selector only makes sense when there is more than one attribute to pick from;
+            # single-attribute listings keep the plain keyword box.
+            fielded = fields.size >= 2
             value_name = fielded ? "filter[value]" : "filter"
 
             if fielded
               selected = selected_filter_field(fields)
               # A field selector is present, so the placeholder should reflect the chosen field
               # rather than a fixed one. It follows the selected field on submit.
-              placeholder = "Filter by #{fields[selected].to_s.downcase}..."
+              placeholder = "Filter by #{filter_field_label(selected).downcase}..."
             end
 
             input = <<~HTML
@@ -108,26 +110,54 @@ module Karafka
             topics.select { |topic| topic.name.to_s.downcase.include?(keyword) }
           end
 
+          # Human friendly labels for the attributes we allow filtering on. Attributes not listed
+          # here fall back to a humanized version of their name (see {#filter_field_label}), so
+          # controllers only need to declare bare attribute names in `filterable_attributes`.
+          FILTER_NAMES = {
+            id: "Process ID",
+            subscribed_topics: "Assigned topic",
+            tags: "Tags",
+            topic: "Topic",
+            topic_name: "Topic",
+            consumer: "Consumer",
+            type: "Type",
+            name: "Name",
+            value: "Value",
+            cron: "Cron",
+            broker_name: "Broker"
+          }.freeze
+
+          private_constant :FILTER_NAMES
+
           private
 
-          # @param fields [Hash] `{ attribute => label }` map of filterable fields
+          # @param attribute [String, Symbol] filterable attribute name
+          # @return [String] human friendly label for the attribute
+          def filter_field_label(attribute)
+            FILTER_NAMES.fetch(attribute.to_sym) do
+              attribute.to_s.tr("_", " ").split.map(&:capitalize).join(" ")
+            end
+          end
+
+          # @param fields [Array<String, Symbol>] filterable attributes
           # @return [String] the currently selected filter field, defaulting to the first one when
           #   nothing (valid) is selected
           def selected_filter_field(fields)
             selected = params.current_filter_field
 
-            fields.key?(selected) ? selected : fields.keys.first.to_s
+            fields.map(&:to_s).include?(selected) ? selected : fields.first.to_s
           end
 
           # Renders the field selector fused into the left of the filtering field.
           #
-          # @param fields [Hash] `{ attribute => label }` map of filterable fields
+          # @param fields [Array<String, Symbol>] filterable attributes
           # @param selected [String] the currently selected field
           # @return [String] html of the select element
           def filter_field_selector(fields, selected)
-            options = fields.map do |field, label|
-              chosen = (field.to_s == selected) ? " selected" : ""
-              "<option value=\"#{h(field)}\"#{chosen}>#{h(label)}</option>"
+            options = fields.map do |field|
+              key = field.to_s
+              chosen = (key == selected) ? " selected" : ""
+              "<option value=\"#{h(key)}\"#{chosen}>#{h(filter_field_label(field))}</option>"
             end.join
 
             <<~HTML

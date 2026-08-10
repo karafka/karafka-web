@@ -17,9 +17,9 @@ module Karafka
             in_sync_replica_brokers
           ].freeze
 
-          self.filterable_attributes = %w[
-            broker_name
+          self.filterable_attributes = %i[
             topic_name
+            broker_name
           ].freeze
 
           # Cluster state should always be fresh and not from cache

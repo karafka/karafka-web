@@ -40,7 +40,11 @@ module Karafka
           #   by the field-selectable filter on flat record listings.
           def initialize(filter_query, allowed_attributes:, field: nil)
             @query = filter_query.to_s.downcase.strip
-            @allowed = allowed_attributes.is_a?(Hash) ? allowed_attributes.keys : allowed_attributes
+
+            allowed = allowed_attributes.is_a?(Hash) ? allowed_attributes.keys : allowed_attributes
+            # Normalize to strings so symbol keys from controllers and the string field coming from
+            # the request params compare cleanly
+            @allowed = allowed.map(&:to_s)
 
             field = field.to_s
             @field = @allowed.include?(field) ? field : nil

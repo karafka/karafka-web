@@ -122,7 +122,8 @@ describe_current do
         assert_ok
         assert_body("orders_topic")
         refute_body("payments_topic")
-        assert_body('name="filter"')
+        # Cluster exposes more than one filterable attribute, so a field selector is rendered
+        assert_body('name="filter[value]"')
       end
 
       it "shows the no-results state when nothing matches" do

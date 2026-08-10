@@ -44,11 +44,11 @@ module Karafka
                 lag_hybrid
               ].freeze
 
-              self.filterable_attributes = {
-                "id" => "Process ID",
-                "subscribed_topics" => "Assigned topic",
-                "tags" => "Tags"
-              }.freeze
+              self.filterable_attributes = %i[
+                id
+                subscribed_topics
+                tags
+              ].freeze
 
               # Displays list of consumer processes + options to manage them
               def index

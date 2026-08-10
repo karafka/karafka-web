@@ -44,10 +44,10 @@ module Karafka
                 read_only?
               ].freeze
 
-              self.filterable_attributes = {
-                "name" => "Name",
-                "value" => "Value"
-              }.freeze
+              self.filterable_attributes = %i[
+                name
+                value
+              ].freeze
 
               # Displays requested topic config details
               #

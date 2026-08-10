@@ -45,7 +45,7 @@ module Karafka
               port
             ].freeze
 
-            self.filterable_attributes = %w[
+            self.filterable_attributes = %i[
               name
               value
               topic_name

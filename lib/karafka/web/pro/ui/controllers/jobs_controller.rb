@@ -47,12 +47,12 @@ module Karafka
               updated_at
             ].freeze
 
-            self.filterable_attributes = {
-              "id" => "Process ID",
-              "topic" => "Topic",
-              "consumer" => "Consumer",
-              "type" => "Type"
-            }.freeze
+            self.filterable_attributes = %i[
+              id
+              topic
+              consumer
+              type
+            ].freeze
           end
         end
       end
