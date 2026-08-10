@@ -2929,19 +2929,22 @@
         }
       }
     }
-    & :where(.table-pin-rows thead tr) {
+    & :where(.table-pin-rows thead) {
       @layer daisyui.l1.l2.l3 {
         position: sticky;
         top: 0px;
         z-index: 1;
-        background-color: var(--color-base-100);
       }
     }
-    & :where(.table-pin-rows tfoot tr) {
+    & :where(.table-pin-rows tfoot) {
       @layer daisyui.l1.l2.l3 {
         position: sticky;
         bottom: 0px;
         z-index: 1;
+      }
+    }
+    & :where(.table-pin-rows :is(thead, tfoot) tr) {
+      @layer daisyui.l1.l2.l3 {
         background-color: var(--color-base-100);
       }
     }
@@ -3084,16 +3087,17 @@
         border-top: var(--border) solid color-mix(in oklch, var(--color-base-content) 5%, #0000);
       }
     }
-    .table :where(.table-pin-rows thead tr) {
+    .table :where(.table-pin-rows thead) {
       position: sticky;
       top: 0px;
       z-index: 1;
-      background-color: var(--color-base-100);
     }
-    .table :where(.table-pin-rows tfoot tr) {
+    .table :where(.table-pin-rows tfoot) {
       position: sticky;
       bottom: 0px;
       z-index: 1;
+    }
+    .table :where(.table-pin-rows :is(thead, tfoot) tr) {
       background-color: var(--color-base-100);
     }
     .table :where(.table-pin-cols tr th) {
@@ -3110,16 +3114,17 @@
         border-bottom: var(--border) solid color-mix(in oklch, var(--color-base-content) 5%, #0000);
       }
     }
-    .table :where(.table-pin-rows thead tr) {
+    .table :where(.table-pin-rows thead) {
       position: sticky;
       top: 0px;
       z-index: 1;
-      background-color: var(--color-base-100);
     }
-    .table :where(.table-pin-rows tfoot tr) {
+    .table :where(.table-pin-rows tfoot) {
       position: sticky;
       bottom: 0px;
       z-index: 1;
+    }
+    .table :where(.table-pin-rows :is(thead, tfoot) tr) {
       background-color: var(--color-base-100);
     }
     .steps .step {
@@ -3480,7 +3485,6 @@
       outline: 2px solid var(--input-color);
       outline-offset: 2px;
       isolation: isolate;
-      background-image: linear-gradient(135deg, #0000 50%, currentColor 50%), linear-gradient(45deg, currentColor 50%, #0000 50%);
     }
     .select:focus-within {
       --input-color: var(--color-base-content);
@@ -3495,7 +3499,6 @@
       outline: 2px solid var(--input-color);
       outline-offset: 2px;
       isolation: isolate;
-      background-image: linear-gradient(135deg, #0000 50%, currentColor 50%), linear-gradient(45deg, currentColor 50%, #0000 50%);
     }
     .select:open {
       --input-color: var(--color-base-content);
@@ -4619,44 +4622,6 @@
   .right-4 {
     right: calc(var(--spacing) * 4);
   }
-  .join {
-    display: inline-flex;
-    align-items: stretch;
-    --join-ss: 0;
-    --join-se: 0;
-    --join-es: 0;
-    --join-ee: 0;
-    --join-v: 0;
-    --join-h: 1;
-    @scope (&) {
-       > :where(:focus, :has(:focus)) {
-        z-index: 1;
-      }
-      @media (hover: hover) {
-         > :where(.btn:hover, :has(.btn:hover)) {
-          isolation: isolate;
-        }
-      }
-      :where(:scope > :first-child) {
-        --join-ss: var(--radius-field);
-        --join-se: calc(var(--radius-field) * var(--join-v));
-        --join-es: calc(var(--radius-field) * var(--join-h));
-        --join-ee: 0;
-      }
-      :where(:scope > :last-child) {
-        --join-ss: 0;
-        --join-se: calc(var(--radius-field) * var(--join-h));
-        --join-es: calc(var(--radius-field) * var(--join-v));
-        --join-ee: var(--radius-field);
-      }
-      :where(:scope > :only-child) {
-        --join-ss: var(--radius-field);
-        --join-se: var(--radius-field);
-        --join-es: var(--radius-field);
-        --join-ee: var(--radius-field);
-      }
-    }
-  }
   @layer daisyui.l1.l2.l3 {
     .textarea {
       min-height: calc(0.25rem * 20);
@@ -4995,6 +4960,44 @@
     }
     .modal-backdrop button {
       cursor: pointer;
+    }
+  }
+  .join {
+    display: inline-flex;
+    align-items: stretch;
+    --join-ss: 0;
+    --join-se: 0;
+    --join-es: 0;
+    --join-ee: 0;
+    --join-v: 0;
+    --join-h: 1;
+    @scope (&) {
+       > :where(:focus, :has(:focus)) {
+        z-index: 2;
+      }
+      @media (hover: hover) {
+         > :where(.btn:hover, :has(.btn:hover)) {
+          z-index: 1;
+        }
+      }
+      :where(:scope > :first-child) {
+        --join-ss: var(--radius-field);
+        --join-se: calc(var(--radius-field) * var(--join-v));
+        --join-es: calc(var(--radius-field) * var(--join-h));
+        --join-ee: 0;
+      }
+      :where(:scope > :last-child) {
+        --join-ss: 0;
+        --join-se: calc(var(--radius-field) * var(--join-h));
+        --join-es: calc(var(--radius-field) * var(--join-v));
+        --join-ee: var(--radius-field);
+      }
+      :where(:scope > :only-child) {
+        --join-ss: var(--radius-field);
+        --join-se: var(--radius-field);
+        --join-es: var(--radius-field);
+        --join-ee: var(--radius-field);
+      }
     }
   }
   .z-10 {
