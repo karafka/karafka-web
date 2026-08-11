@@ -40,10 +40,10 @@ module Karafka
               # Base class for all the search matchers
               # Each matcher needs to have a class `#name` method and needs to respond to `#call`
               class Base
-                # @param phrase [String] string phrase for search
                 # @param message [Karafka::Messages::Message] message in which we search
+                # @param phrase [String] string phrase for search
                 # @return [Boolean] true if found, otherwise false
-                def call(phrase, message)
+                def call(message, phrase)
                   raise NotImplementedError, "Implement in a subclass"
                 end
 
