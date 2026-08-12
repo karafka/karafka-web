@@ -2673,7 +2673,6 @@
     .input:focus {
       outline: 2px solid var(--input-color);
       outline-offset: 2px;
-      isolation: isolate;
     }
     @media (pointer: coarse) {
       @supports (-webkit-touch-callout: none) {
@@ -2694,7 +2693,6 @@
     .input:focus-within {
       outline: 2px solid var(--input-color);
       outline-offset: 2px;
-      isolation: isolate;
     }
     @media (pointer: coarse) {
       @supports (-webkit-touch-callout: none) {
@@ -3484,7 +3482,6 @@
     .select:focus {
       outline: 2px solid var(--input-color);
       outline-offset: 2px;
-      isolation: isolate;
     }
     .select:focus-within {
       --input-color: var(--color-base-content);
@@ -3498,7 +3495,6 @@
     .select:focus-within {
       outline: 2px solid var(--input-color);
       outline-offset: 2px;
-      isolation: isolate;
     }
     .select:open {
       --input-color: var(--color-base-content);
@@ -3512,7 +3508,6 @@
     .select:open {
       outline: 2px solid var(--input-color);
       outline-offset: 2px;
-      isolation: isolate;
       background-image: linear-gradient(135deg, #0000 50%, currentColor 50%), linear-gradient(45deg, currentColor 50%, #0000 50%);
     }
     .select:has( > select[disabled]) {
@@ -3679,7 +3674,7 @@
     .menu-horizontal {
       display: inline-flex;
       flex-direction: row;
-      align-items: center;
+      align-items: flex-start;
     }
     .menu-horizontal > li:not(.menu-title) > details > :is(ul, menu) {
       position: absolute;
