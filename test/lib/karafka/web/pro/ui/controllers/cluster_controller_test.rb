@@ -80,6 +80,18 @@ describe_current do
         assert_body("9223372036854775807")
       end
     end
+
+    context "when filtering the broker config by a non-matching keyword" do
+      before { get "cluster/1?filter=zzz-no-such-config" }
+
+      it do
+        assert_ok
+        # The filter emptied the table, so we show the filter-specific empty state instead of a
+        # bare header-only table
+        assert_body("No results match your filter")
+        refute_body("advertised.listeners")
+      end
+    end
   end
 
   describe "#replication" do

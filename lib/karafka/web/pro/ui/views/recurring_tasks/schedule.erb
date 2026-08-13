@@ -37,7 +37,9 @@
     <%== filter_box(labels: { id: 'Task ID' }) %>
   <% end %>
 
-  <% if @schedule && !@tasks.empty? %>
+  <% if @schedule && @tasks.empty? && filtering? %>
+    <%== partial 'shared/no_filter_results' %>
+  <% elsif @schedule && !@tasks.empty? %>
     <div class="data-table-wrapper">
       <table class="data-table">
         <thead>

@@ -98,8 +98,9 @@ describe_current do
 
         it do
           assert_ok
-          # Everything is pruned, so we fall back to the empty state, but still offer the filter box
-          assert_body("No health data is available")
+          # The filter pruned everything, so we show the filter-specific empty state (not the
+          # misleading "no data / no processes" one), while still offering the filter box
+          assert_body("No results match your filter")
           assert_body('name="filter[value]"')
           refute_body("327355")
         end
@@ -122,7 +123,7 @@ describe_current do
 
           it do
             assert_ok
-            assert_body("No health data is available")
+            assert_body("No results match your filter")
             refute_body("327355")
           end
         end
@@ -146,7 +147,7 @@ describe_current do
 
           it do
             assert_ok
-            assert_body("No health data is available")
+            assert_body("No results match your filter")
             refute_body("327355")
           end
         end
@@ -408,6 +409,18 @@ describe_current do
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("-1")
+      end
+    end
+
+    context "when filtering by a non-matching topic" do
+      before { get "health/cluster_lags?filter[field]=topic&filter[value]=zzz-no-such-topic" }
+
+      it do
+        assert_ok
+        # The filter emptied the tree, so we show the filter-specific empty state, not the
+        # misleading "no data / no processes running" message
+        assert_body("No results match your filter")
+        refute_body("No health data is available")
       end
     end
   end

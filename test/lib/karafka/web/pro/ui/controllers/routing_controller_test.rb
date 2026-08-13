@@ -89,8 +89,9 @@ describe_current do
       it do
         assert_ok
         # No topic or group matches, so all consumer groups are hidden (no table rendered), but the
-        # filter box remains
+        # filter box remains alongside the filter-specific empty state
         assert_body('name="filter[value]"')
+        assert_body("No results match your filter")
         refute_body("Subscription group")
       end
 

@@ -31,7 +31,9 @@
     <%== filter_box %>
   <% end %>
 
-  <% if @running_jobs.empty? %>
+  <% if @running_jobs.empty? && filtering? %>
+    <%== partial 'shared/no_filter_results' %>
+  <% elsif @running_jobs.empty? %>
     <%== partial 'consumers/jobs/no_jobs', locals: { type: 'running' } %>
   <% else %>
     <div class="data-table-wrapper">

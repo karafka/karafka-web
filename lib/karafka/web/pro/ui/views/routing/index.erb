@@ -26,9 +26,15 @@
   </div>
 <% end %>
 
-<%==
-  each_partial(
-    @routes,
-    'routing/consumer_group'
-  )
-%>
+<% if filtering? && @routes.none? { |cg| visible_topics(cg.topics, consumer_group: cg.id).any? } %>
+  <div class="col-span-12">
+    <%== partial 'shared/no_filter_results' %>
+  </div>
+<% else %>
+  <%==
+    each_partial(
+      @routes,
+      'routing/consumer_group'
+    )
+  %>
+<% end %>

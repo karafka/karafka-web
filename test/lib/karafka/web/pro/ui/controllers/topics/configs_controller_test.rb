@@ -57,6 +57,18 @@ describe_current do
         assert_body("min.insync.replicas")
       end
     end
+
+    context "when filtering configs by a non-matching keyword" do
+      before { get "topics/#{topic}/config?filter=zzz-no-such-config" }
+
+      it do
+        assert_ok
+        # The filter emptied the table, so we show the filter-specific empty state instead of a
+        # bare header-only table
+        assert_body("No results match your filter")
+        refute_body("max.message.bytes")
+      end
+    end
   end
 
   describe "#edit" do

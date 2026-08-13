@@ -31,7 +31,9 @@
     <%== filter_box %>
   <% end %>
 
-  <% if @pending_jobs.empty? %>
+  <% if @pending_jobs.empty? && filtering? %>
+    <%== partial 'shared/no_filter_results' %>
+  <% elsif @pending_jobs.empty? %>
     <%== partial 'consumers/jobs/no_jobs', locals: { type: 'pending' } %>
   <% else %>
     <div class="data-table-wrapper">
