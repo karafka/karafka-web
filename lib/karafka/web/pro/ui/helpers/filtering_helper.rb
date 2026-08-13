@@ -41,55 +41,27 @@ module Karafka
               # Filtering (search) is a Pro-only feature, so we render nothing in OSS.
               return "" unless ::Karafka.pro?
 
-              hidden = preserved_filter_params.map do |key, value|
-                "<input type=\"hidden\" name=\"#{h(key)}\" value=\"#{h(value)}\">"
-              end.join
-
-              # The reset button is always rendered so the layout (and the search button position)
-              # stays put whether or not a filter is active. It is only disabled when there is
-              # nothing to reset.
-              reset =
-                if filtering?
-                  %(<a class="btn btn-outline font-normal" href="#{h(filter_clear_path)}">Reset</a>)
-                else
-                  %(<a class="btn btn-outline font-normal btn-disabled" aria-disabled="true">Reset</a>)
-                end
-
               # A field is either a plain attribute name or a key-alias descriptor; the selector only
-              # cares about its name
+              # cares about its name. We render the field selector whenever the controller exposes
+              # any filterable field, so every search looks consistent (even single-field listings
+              # show a one-option select).
               fields = Array(@filterable_fields).map { |field| filter_field_name(field) }
-              # We render the field selector whenever the controller exposes any filterable field, so
-              # every search looks consistent (even single-field listings show a one-option select).
               fielded = fields.any?
-              value_name = fielded ? "filter[value]" : "filter"
-              selected = selected_filter_field(fields) if fielded
 
-              input = <<~HTML
-                <input
-                  type="text"
-                  name="#{value_name}"
-                  value="#{h(params.current_filter)}"
-                  placeholder="Filter..."
-                  class="input w-full#{fielded ? " join-item" : " grow"}"
-                  autocomplete="off"
-                >
-              HTML
-
-              control =
-                if fielded
-                  %(<div class="join grow">#{filter_field_selector(fields, selected, labels)}#{input}</div>)
-                else
-                  input
-                end
-
-              <<~HTML
-                <form method="get" action="#{h(request.path)}" class="filter-form flex gap-2 mb-6">
-                  #{hidden}
-                  #{control}
-                  <button type="submit" class="btn btn-primary font-normal">Search</button>
-                  #{reset}
-                </form>
-              HTML
+              partial(
+                "shared/filter_box",
+                locals: {
+                  fields: fields,
+                  fielded: fielded,
+                  selected: fielded ? selected_filter_field(fields) : nil,
+                  labels: labels,
+                  value_name: fielded ? "filter[value]" : "filter",
+                  keyword: params.current_filter,
+                  hidden_params: preserved_filter_params,
+                  active: filtering?,
+                  clear_path: filter_clear_path
+                }
+              )
             end
 
             # Non-destructively narrows a topics collection (routing or a consumer subscription) down
@@ -182,26 +154,6 @@ module Karafka
               fields.map(&:to_s).include?(selected) ? selected : fields.first.to_s
             end
 
-            # Renders the field selector fused into the left of the filtering field.
-            #
-            # @param fields [Array<String, Symbol>] filterable attributes
-            # @param selected [String] the currently selected field
-            # @param overrides [Hash] per-view label overrides (keyed by attribute)
-            # @return [String] html of the select element
-            def filter_field_selector(fields, selected, overrides = {})
-              options = fields.map do |field|
-                key = field.to_s
-                chosen = (key == selected) ? " selected" : ""
-                "<option value=\"#{h(key)}\"#{chosen}>#{h(filter_field_label(field, overrides))}</option>"
-              end.join
-
-              <<~HTML
-                <select name="filter[field]" class="select join-item">
-                  #{options}
-                </select>
-              HTML
-            end
-
             # Builds the path used by the "clear" control: the current path with all filtering and
             # pagination parameters removed.
             #
@@ -219,13 +171,6 @@ module Karafka
               flatten_params("", request.params).reject do |key, _value|
                 key == "filter" || key.start_with?("filter[") || key == "page"
               end
-            end
-
-            # Escapes a value for safe inclusion in an HTML attribute
-            # @param value [Object] value to escape
-            # @return [String] escaped value
-            def h(value)
-              Rack::Utils.escape_html(value.to_s)
             end
           end
         end
