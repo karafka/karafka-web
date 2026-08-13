@@ -296,9 +296,10 @@ describe_current do
             it "filters the process out" do
               assert_ok
               refute_body("shinra:1:1")
-              # The filtering box stays rendered (so the filter can be adjusted or reset) and we do
-              # not fall back to the "no consumers at all" empty state, they are just filtered out
+              # The filtering box stays rendered (so the filter can be adjusted or reset) and we
+              # show the filter-specific empty state rather than the "no consumers at all" one
               assert_body('name="filter[value]"')
+              assert_body("No results match your filter")
               refute_body(no_processes)
             end
           end

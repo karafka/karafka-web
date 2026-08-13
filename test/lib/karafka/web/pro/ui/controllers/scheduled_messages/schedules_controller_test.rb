@@ -95,6 +95,22 @@ describe_current do
         refute_body(no_groups)
         refute_body(pagination)
       end
+
+      it "keeps the matching schedule when filtering by its topic name" do
+        get "scheduled_messages/schedules?filter=#{messages_topic}"
+
+        assert_ok
+        assert_body(messages_topic)
+        refute_body("No results match your filter")
+      end
+
+      it "shows the filter-specific empty state when nothing matches" do
+        get "scheduled_messages/schedules?filter=zzz-no-such-schedule-topic"
+
+        assert_ok
+        assert_body("No results match your filter")
+        refute_body(messages_topic)
+      end
     end
 
     context "when there are many schedules and routes exist" do
