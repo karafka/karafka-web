@@ -33,12 +33,7 @@ module Karafka
     module Pro
       module Ui
         module Controllers
-          # Cluster details controller.
-          #
-          # Its node listing and per-broker config views diverged from the OSS cluster controller,
-          # so it stands on its own. Replication is the one action that stays identical to OSS; its
-          # partition data is built by the shared `Models::ClusterInfo.partitions`, so we only add
-          # the Pro-only filtering on top of it here.
+          # Cluster details controller
           class ClusterController < BaseController
             self.sortable_attributes = %w[
               id
