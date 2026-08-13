@@ -34,6 +34,6 @@
   <% elsif @jobs.empty? %>
     <%== partial 'shared/no_paginated_data' %>
   <% else %>
-    <%== partial 'jobs/jobs', locals: { updated_at_label: 'Created' } %>
+    <%== partial 'jobs/jobs_table', locals: { updated_at_label: 'Created' } %>
   <% end %>
 </div>

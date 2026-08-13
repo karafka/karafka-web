@@ -36,6 +36,6 @@
   <% elsif @pending_jobs.empty? %>
     <%== partial 'consumers/jobs/no_jobs', locals: { type: 'pending' } %>
   <% else %>
-    <%== partial 'consumers/jobs/jobs', locals: { jobs: @pending_jobs } %>
+    <%== partial 'consumers/jobs/jobs_table', locals: { jobs: @pending_jobs } %>
   <% end %>
 </div>

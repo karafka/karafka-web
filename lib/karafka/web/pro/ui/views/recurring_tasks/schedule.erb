@@ -40,7 +40,7 @@
   <% if @schedule && @tasks.empty? && filtering? %>
     <%== partial 'shared/no_filter_results' %>
   <% elsif @schedule && !@tasks.empty? %>
-    <%== partial 'recurring_tasks/tasks' %>
+    <%== partial 'recurring_tasks/tasks_table' %>
   <% else %>
     <%== partial 'recurring_tasks/not_active' %>
   <% end %>
