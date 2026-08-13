@@ -77,13 +77,44 @@ module Karafka
             # List partitions replication details (same as OSS, plus Pro filtering)
             def replication
               @partitions, last_page = Paginators::Arrays.call(
-                filter(sort(Models::ClusterInfo.partitions)),
+                filter(sort(replication_partitions)),
                 @params.current_page
               )
 
               paginate(@params.current_page, !last_page)
 
               render
+            end
+
+            private
+
+            # Flattens the displayable cluster topics into the flat partition rows the replication
+            # table renders, sorts, filters and paginates. Each row is a partition carrying its
+            # topic (and topic name, so it can be sorted/filtered by name).
+            #
+            # @return [Array<Hash>] partition rows
+            def replication_partitions
+              displayable_topics.flat_map do |topic|
+                topic[:partitions].map do |partition|
+                  partition.merge(
+                    topic: topic,
+                    topic_name: topic.fetch(:topic_name)
+                  )
+                end
+              end
+            end
+
+            # @return [Array<Hash>] cluster topics to display in an alphabetical order, with
+            #   internal topics excluded unless the visibility config allows them
+            def displayable_topics
+              all = Models::ClusterInfo
+                .fetch
+                .topics
+                .sort_by { |topic| topic[:topic_name] }
+
+              return all if ::Karafka::Web.config.ui.visibility.internal_topics
+
+              all.reject { |topic| topic[:topic_name].start_with?("__") }
             end
           end
         end
