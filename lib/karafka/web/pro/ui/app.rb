@@ -36,9 +36,10 @@ module Karafka
       module Ui
         # Main Roda Web App that servers all the metrics and stats
         class App < Web::Ui::Base
-          # Filtering (search) is a Pro-only feature, so its helper is mixed in here rather than in
+          # Filtering (search) is a Pro-only feature, so its helpers are mixed in here rather than in
           # the shared OSS base
           include Helpers::FilteringHelper
+          include Helpers::TopicsFilteringHelper
 
           opts[:root] = Karafka::Web.gem_root.join("lib/karafka/web/pro/ui")
 

@@ -64,43 +64,6 @@ module Karafka
               )
             end
 
-            # Non-destructively narrows a topics collection (routing or a consumer subscription) down
-            # to the ones matching the current filter.
-            #
-            # It is field aware: when the `topic` field is selected only the topic names are matched;
-            # when `consumer_group`/`subscription_group` is selected the whole collection is kept or
-            # dropped based on that group's name. With no explicit field (plain keyword) a topic is
-            # kept when its own name matches or when any of the provided group labels match.
-            #
-            # This is used for views that render the live `Karafka::App.routes` (which we must never
-            # mutate, unlike the per-request structures the [[Filter]] engine prunes in place) as well
-            # as the per-process subscriptions view, so it always returns a new array and leaves the
-            # source untouched.
-            #
-            # @param topics [Enumerable] topics of a subscription/consumer group
-            # @param consumer_group [String, nil] the consumer group name shown as the section header
-            # @param subscription_group [String, nil] the subscription group name (subscriptions view)
-            # @return [Array] all topics when no filtering is active, otherwise only the matching ones
-            def visible_topics(topics, consumer_group: nil, subscription_group: nil)
-              return topics.to_a unless filtering?
-
-              keyword = params.current_filter.downcase
-              by_name = -> { topics.select { |topic| topic.name.to_s.downcase.include?(keyword) } }
-              label_match = ->(label) { label.to_s.downcase.include?(keyword) }
-
-              case params.current_filter_field
-              when "consumer_group"
-                label_match.call(consumer_group) ? topics.to_a : []
-              when "subscription_group"
-                label_match.call(subscription_group) ? topics.to_a : []
-              when "topic"
-                by_name.call
-              else
-                # Plain keyword: match the topic name or any of the group labels
-                [consumer_group, subscription_group].any?(&label_match) ? topics.to_a : by_name.call
-              end
-            end
-
             # Human friendly labels for the attributes we allow filtering on. Attributes not listed
             # here fall back to a humanized version of their name (see {#filter_field_label}), so
             # controllers only need to declare bare attribute names in `filterable_attributes`.
