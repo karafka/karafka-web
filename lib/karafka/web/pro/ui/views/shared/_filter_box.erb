@@ -27,9 +27,7 @@
     <div class="join grow">
       <select name="filter[field]" class="select join-item">
         <% fields.each do |field| %>
-          <option value="<%= field %>"<%= " selected" if field.to_s == selected %>>
-            <%= filter_field_label(field, labels) %>
-          </option>
+          <option value="<%= field %>"<%= " selected" if field.to_s == selected %>><%= filter_field_label(field, labels) %></option>
         <% end %>
       </select>
 
