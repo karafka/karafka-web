@@ -100,9 +100,10 @@ module Karafka
             # @return [Array<Hash>] `{ name:, value: }` rows for every routing setting (including
             #   the Pro multiplexing settings)
             def topic_detail_rows(topic)
-              rows = flatten_hash(topic.subscription_group.kafka, "kafka")
-              rows.merge!(flatten_hash(topic.to_h.except(:kafka)))
-              rows.merge!(flatten_hash(topic.subscription_group.multiplexing.to_h, "multiplexing"))
+              flattener = Web::Ui::Lib::HashFlattener
+              rows = flattener.call(topic.subscription_group.kafka, "kafka")
+              rows.merge!(flattener.call(topic.to_h.except(:kafka)))
+              rows.merge!(flattener.call(topic.subscription_group.multiplexing.to_h, "multiplexing"))
               rows.map { |name, value| { name: name.to_s, value: value } }
             end
 

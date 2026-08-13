@@ -42,8 +42,8 @@ module Karafka
           # @param topic [Karafka::Routing::Topic] topic we present the routing details for
           # @return [Array<Hash>] `{ name:, value: }` rows for every routing setting
           def topic_detail_rows(topic)
-            rows = flatten_hash(topic.subscription_group.kafka, "kafka")
-            rows.merge!(flatten_hash(topic.to_h.except(:kafka)))
+            rows = Lib::HashFlattener.call(topic.subscription_group.kafka, "kafka")
+            rows.merge!(Lib::HashFlattener.call(topic.to_h.except(:kafka)))
             rows.map { |name, value| { name: name.to_s, value: value } }
           end
         end

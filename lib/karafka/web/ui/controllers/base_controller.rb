@@ -139,30 +139,6 @@ module Karafka
             ).call(resources)
           end
 
-          # Flattens a nested hash into a single-level hash with dotted keys, so nested settings can
-          # be presented (and sorted/filtered) as a flat list of name/value rows.
-          #
-          # @param hash [Hash] hash we want to flatten
-          # @param prefix [String, nil] key prefix used during recursion
-          # @param result [Hash] accumulator used during recursion
-          # @return [Hash] flattened `{ "a.b.c" => value }` hash
-          def flatten_hash(hash, prefix = nil, result = {})
-            hash.each do |key, value|
-              flat_key = prefix ? "#{prefix}.#{key}" : key.to_s
-
-              case value
-              when Hash
-                flatten_hash(value, flat_key, result)
-              when Array
-                value.each_with_index { |item, index| flatten_hash({ index => item }, flat_key, result) }
-              else
-                result[flat_key] = value
-              end
-            end
-
-            result
-          end
-
           # Initializes the expected pagination engine and assigns expected arguments
           # @param args Any arguments accepted by the selected pagination engine
           def paginate(*args)
