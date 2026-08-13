@@ -18,30 +18,43 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<% view_title 'Consumers Groups Lags Details' %>
-
-<%== partial 'health/tabs' %>
-
-<div class="col-span-12">
-  <% if @stats.empty? %>
-    <%== partial 'health/no_data' %>
-  <% end %>
-
-  <% @stats.each do |cg_name, cg_details| %>
-    <h2 class="h2"><%= cg_name %></h2>
-
-    <% cg_details[:topics].each do |topic_name, topic_details| %>
+<div class="data-table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th colspan="12">
+          <%= topic_name %>
+        </th>
+      </tr>
+      <tr>
+        <th rowspan="2"><%== sort_link('Partition', :id) %></th>
+        <th colspan="2">Lags</th>
+        <th colspan="2">Trends</th>
+        <th colspan="12" rowspan="2">
+          <%== sort_link(:poll_state) %>
+        </th>
+      </tr>
+      <tr>
+        <th><%== sort_link(:lag) %></th>
+        <th><%== sort_link(:lag_stored) %></th>
+        <th><%== sort_link('Lag', :lag_d) %></th>
+        <th><%== sort_link('Lag stored', :lag_stored_d) %></th>
+      </tr>
+    </thead>
+    <tbody>
       <%==
         partial(
-          'health/lags_table',
+          'health/partitions_with_fallback',
           locals: {
-            cg_name: cg_name,
-            cg_details: cg_details,
+            consumer_group_id: cg_name,
+            topic_details: topic_details,
             topic_name: topic_name,
-            topic_details: topic_details
+            partition_partial: 'health/partition_lags',
+            colspan: 5
           }
         )
       %>
-    <% end %>
-  <% end %>
+    </tbody>
+  </table>
+  <%== partial 'health/table_metadata', locals: { details: cg_details } %>
 </div>

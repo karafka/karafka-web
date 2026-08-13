@@ -27,51 +27,21 @@
     <%== partial 'health/no_data' %>
   <% end %>
 
-  <% @stats.each_with_index do |(cg_name, details), index| %>
+  <% @stats.each do |cg_name, cg_details| %>
     <h2 class="h2"><%= cg_name %></h2>
 
-    <% topics = details[:topics] %>
-    <% topics.each_with_index do |(topic_name, topic_details), index| %>
-      <div class="data-table-wrapper">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th colspan="12">
-                <%= topic_name %>
-              </th>
-            </tr>
-            <tr>
-              <th rowspan="2"><%== sort_link('Partition', :id) %></th>
-              <th colspan="4">Offsets changes</th>
-              <th rowspan="2">
-                <%== sort_link('Pause state change', :poll_state_ch) %>
-              </th>
-            </tr>
-            <tr>
-              <th><%== sort_link('Committed', :committed_offset_fd) %></th>
-              <th><%== sort_link('Stored', :stored_offset_fd) %></th>
-              <th><%== sort_link('High', :hi_offset_fd) %></th>
-              <th><%== sort_link('Last stable', :lso_risk_state) %></th>
-            </tr>
-          </thead>
-          <tbody>
-              <%==
-                partial(
-                  'health/partitions_with_fallback',
-                  locals: {
-                    consumer_group_id: cg_name,
-                    topic_details: topic_details,
-                    topic_name: topic_name,
-                    partition_partial: 'health/partition_times',
-                    colspan: 5
-                  }
-                )
-              %>
-          </tbody>
-        </table>
-
-        <%== partial 'health/table_metadata', locals: { details: details } %>
-      </div>
+    <% cg_details[:topics].each do |topic_name, topic_details| %>
+      <%==
+        partial(
+          'health/changes_table',
+          locals: {
+            cg_name: cg_name,
+            cg_details: cg_details,
+            topic_name: topic_name,
+            topic_details: topic_details
+          }
+        )
+      %>
     <% end %>
   <% end %>
 </div>

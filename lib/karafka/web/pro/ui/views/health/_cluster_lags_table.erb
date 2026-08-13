@@ -18,30 +18,26 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<% view_title 'Consumers Groups Lags Details' %>
-
-<%== partial 'health/tabs' %>
-
-<div class="col-span-12">
-  <% if @stats.empty? %>
-    <%== partial 'health/no_data' %>
-  <% end %>
-
-  <% @stats.each do |cg_name, cg_details| %>
-    <h2 class="h2"><%= cg_name %></h2>
-
-    <% cg_details[:topics].each do |topic_name, topic_details| %>
-      <%==
-        partial(
-          'health/lags_table',
-          locals: {
-            cg_name: cg_name,
-            cg_details: cg_details,
-            topic_name: topic_name,
-            topic_details: topic_details
-          }
-        )
-      %>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th colspan="12">
+        <%= topic_name %>
+      </th>
+    </tr>
+    <tr>
+      <th><%== sort_link('Partition', :id) %></th>
+      <th><%== sort_link(:lag) %></th>
+      <th><%== sort_link(:stored_offset) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% partitions.each do |partition| %>
+      <tr>
+        <td><%= partition[:id] %></td>
+        <td><%== partition[:lag] %></td>
+        <td><%== partition[:stored_offset] %></td>
+      </tr>
     <% end %>
-  <% end %>
-</div>
+  </tbody>
+</table>

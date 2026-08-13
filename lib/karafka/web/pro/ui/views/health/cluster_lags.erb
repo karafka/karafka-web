@@ -26,35 +26,21 @@
   <%== partial 'health/no_data' %>
 <% end %>
 
-<% @stats.each_with_index do |(cg_name, details), index| %>
+<% @stats.each do |cg_name, cg_details| %>
   <div class="col-span-12 mb-3">
     <h2 class="h2"><%= cg_name %></h2>
 
     <div class="data-table-wrapper">
-      <% details.each_with_index do |(topic_name, partitions), index| %>
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th colspan="12">
-                <%= topic_name %>
-              </th>
-            </tr>
-            <tr>
-              <th><%== sort_link('Partition', :id) %></th>
-              <th><%== sort_link(:lag) %></th>
-              <th><%== sort_link(:stored_offset) %></th>
-            </tr>
-          </thead>
-          <tbody>
-            <% partitions.each do |details| %>
-              <tr>
-                <td><%= details[:id] %></td>
-                <td><%== details[:lag] %></td>
-                <td><%== details[:stored_offset] %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
+      <% cg_details.each do |topic_name, partitions| %>
+        <%==
+          partial(
+            'health/cluster_lags_table',
+            locals: {
+              topic_name: topic_name,
+              partitions: partitions
+            }
+          )
+        %>
       <% end %>
     </div>
   </div>
