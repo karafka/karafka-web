@@ -1,18 +1,8 @@
-<% view_title 'Cluster' %>
-
 <%== partial 'cluster/tabs' %>
 
-<% if Karafka.pro? && (filtering? || !@partitions.empty?) %>
-  <div class="col-span-12 mb-3">
-    <%== filter_box %>
-  </div>
-<% end %>
-
 <div class="col-span-12 mb-3">
-  <% if @partitions.empty? && !filtering? && params.current_page <= 1 %>
+  <% if @partitions.empty? && params.current_page <= 1 %>
     <%== partial 'cluster/no_partitions' %>
-  <% elsif @partitions.empty? && filtering? %>
-    <%== partial 'shared/no_filter_results' %>
   <% elsif @partitions.empty? %>
     <%== partial 'shared/no_paginated_data' %>
   <% else %>

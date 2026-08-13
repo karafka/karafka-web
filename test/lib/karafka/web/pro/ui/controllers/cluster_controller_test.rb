@@ -144,8 +144,9 @@ describe_current do
       end
       let(:fake_topics) do
         [
-          { topic_name: "orders_topic", partitions: [partition] },
-          { topic_name: "payments_topic", partitions: [partition] }
+          # partition_count is needed so the crawled /topics page can render these stubbed topics
+          { topic_name: "orders_topic", partition_count: 1, partitions: [partition] },
+          { topic_name: "payments_topic", partition_count: 1, partitions: [partition] }
         ]
       end
       let(:fake_brokers) do

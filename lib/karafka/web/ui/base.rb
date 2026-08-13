@@ -11,7 +11,6 @@ module Karafka
         include Helpers::FormattingHelper
         include Helpers::PartitionsHelper
         include Helpers::SortingHelper
-        include Helpers::FilteringHelper
         include Helpers::TimeHelper
         include Helpers::TopicsHelper
         include Helpers::TailwindHelper
