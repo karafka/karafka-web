@@ -1,0 +1,28 @@
+<div class="data-table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Origin</th>
+        <th>Process ID</th>
+        <th>Error</th>
+        <th>Occurred</th>
+        <th class="options">Options</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%==
+        each_partial(
+          @error_messages,
+          'errors/error',
+          local: :error_msg
+        )
+      %>
+    </tbody>
+  </table>
+
+  <p class="table_metadata">
+    Watermark offsets:
+    <%== badge_secondary "high: #{@watermark_offsets.high}" %>
+    <%== badge_secondary "low: #{@watermark_offsets.low}" %>
+  </p>
+</div>
