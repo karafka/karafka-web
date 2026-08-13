@@ -36,33 +36,6 @@
   <% elsif @pending_jobs.empty? %>
     <%== partial 'consumers/jobs/no_jobs', locals: { type: 'pending' } %>
   <% else %>
-    <div class="data-table-wrapper">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th rowspan="2"><%== sort_link(:topic) %></th>
-            <th rowspan="2"><%== sort_link(:consumer) %></th>
-            <th rowspan="2"><%== sort_link(:type) %></th>
-            <th rowspan="2"><%== sort_link(:messages) %></th>
-            <th colspan="3" class="text-center">Offsets</th>
-            <th rowspan="2"><%== sort_link('Started', :updated_at, rev: true) %></th>
-          </tr>
-          <tr>
-            <th><%== sort_link(:first_offset) %></th>
-            <th><%== sort_link(:last_offset) %></th>
-            <th><%== sort_link(:committed_offset) %></th>
-          </tr>
-        </thead>
-        <tbody>
-          <%==
-            render_each(
-              @pending_jobs,
-              'consumers/jobs/_job',
-              local: :job
-            )
-          %>
-        </tbody>
-      </table>
-    </div>
+    <%== partial 'consumers/jobs/jobs', locals: { jobs: @pending_jobs } %>
   <% end %>
 </div>

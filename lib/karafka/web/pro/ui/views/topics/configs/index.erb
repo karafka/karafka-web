@@ -33,28 +33,7 @@
     <%== partial 'shared/no_filter_results' %>
   </div>
 <% else %>
-  <div class="data-table-wrapper">
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th><%== sort_link(:name) %></th>
-          <th><%== sort_link(:value) %></th>
-          <th><%== sort_link(:default?) %></th>
-          <th><%== sort_link(:sensitive?) %></th>
-          <th><%== sort_link(:read_only?) %></th>
-          <th class="options">Options</th>
-        </tr>
-      </thead>
-      <tbody>
-        <%==
-          each_partial(
-            @configs,
-            'topics/configs/config'
-          )
-        %>
-      </tbody>
-    </table>
-  </div>
+  <%== partial 'topics/configs/configs' %>
 <% end %>
 
 <%== partial 'topics/configs/delete_button' %>

@@ -80,30 +80,6 @@
   <% elsif @processes.empty? %>
     <%== partial 'shared/no_paginated_data' %>
   <% else %>
-    <div class="data-table-wrapper">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th><%== sort_link('Process ID', :id) %></th>
-            <th><%== sort_link(:status) %></th>
-            <th>Subscriptions</th>
-            <th><%== sort_link(:started_at, rev: true) %></th>
-            <th><%== sort_link(:memory_usage) %></th>
-            <th>Performance</th>
-            <th><%== sort_link(:lag_hybrid) %></th>
-            <th class="options">Options</th>
-          </tr>
-        </thead>
-        <tbody>
-          <%==
-            render_each(
-              @processes,
-              'consumers/controls/_controls',
-              local: :process
-            )
-          %>
-        </tbody>
-      </table>
-    </div>
+    <%== partial 'consumers/controls/processes' %>
   <% end %>
 </div>

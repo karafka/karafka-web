@@ -1,0 +1,22 @@
+<div class="data-table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th><%== sort_link('Process ID', :id) %></th>
+        <th><%== sort_link(:topic) %></th>
+        <th><%== sort_link(:consumer) %></th>
+        <th><%== sort_link(:type) %></th>
+        <th><%== sort_link(:first_offset) %></th>
+        <th><%== sort_link(updated_at_label, :updated_at, rev: true) %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%==
+        each_partial(
+          @jobs,
+          'jobs/job'
+        )
+      %>
+    </tbody>
+  </table>
+</div>

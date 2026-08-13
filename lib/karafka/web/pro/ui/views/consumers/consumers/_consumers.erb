@@ -18,30 +18,26 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<% if @schedule %>
-  <% view_title "Schedule #{@schedule.schedule_version}" %>
-<% else %>
-  <% view_title 'Schedule' %>
-<% end %>
-
-<% if @schedule %>
-  <%== partial 'recurring_tasks/tabs' %>
-
-  <% unless @tasks.empty? %>
-    <%== partial 'recurring_tasks/batch_actions' %>
-  <% end %>
-<% end %>
-
-<div class="col-span-12">
-  <% if @schedule && (filtering? || !@tasks.empty?) %>
-    <%== filter_box(labels: { id: 'Task ID' }) %>
-  <% end %>
-
-  <% if @schedule && @tasks.empty? && filtering? %>
-    <%== partial 'shared/no_filter_results' %>
-  <% elsif @schedule && !@tasks.empty? %>
-    <%== partial 'recurring_tasks/tasks' %>
-  <% else %>
-    <%== partial 'recurring_tasks/not_active' %>
-  <% end %>
+<div class="data-table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th><%== sort_link('Process ID', :id) %></th>
+        <th><%== sort_link(:started_at, rev: true) %></th>
+        <th>Memory</th>
+        <th>Performance</th>
+        <th>Load</th>
+        <th><%== sort_link(:lag_hybrid) %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%==
+        render_each(
+          @processes,
+          'consumers/consumers/_consumer',
+          local: :process
+        )
+      %>
+    </tbody>
+  </table>
 </div>

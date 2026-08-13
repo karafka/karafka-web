@@ -34,34 +34,6 @@
   <% elsif @jobs.empty? %>
     <%== partial 'shared/no_paginated_data' %>
   <% else %>
-    <div class="data-table-wrapper">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th rowspan="2"><%== sort_link('Process ID', :id) %></th>
-            <th rowspan="2"><%== sort_link(:topic) %></th>
-            <th rowspan="2"><%== sort_link(:consumer) %></th>
-            <th rowspan="2"><%== sort_link(:type) %></th>
-            <th rowspan="2"><%== sort_link(:messages) %></th>
-            <th colspan="3" class="text-center">Offsets</th>
-            <th rowspan="2"><%== sort_link('Created', :updated_at, rev: true) %></th>
-          </tr>
-
-          <tr>
-            <th><%== sort_link(:first_offset) %></th>
-            <th><%== sort_link(:last_offset) %></th>
-            <th><%== sort_link(:committed_offset) %></th>
-          </tr>
-        </thead>
-        <tbody>
-          <%==
-            each_partial(
-              @jobs,
-              'jobs/job'
-            )
-          %>
-        </tbody>
-      </table>
-    </div>
+    <%== partial 'jobs/jobs', locals: { updated_at_label: 'Created' } %>
   <% end %>
 </div>

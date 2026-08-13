@@ -1,0 +1,31 @@
+<div class="mb-3 flex justify-end">
+  <small class="text-muted">
+    Broker roles:
+    <span class="badge badge-primary">leader</span>
+    <span class="badge badge-info">replica</span>
+    <span class="badge badge-success">in-sync</span>
+    <span class="badge badge-warning">out-of-sync</span>
+  </small>
+</div>
+
+<div class="data-table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th><%== sort_link(:topic_name) %></th>
+        <th><%== sort_link(:partition_id) %></th>
+        <th><%== sort_link(:leader) %></th>
+        <th><%== sort_link('Replicas', :replica_count) %></th>
+        <th><%== sort_link('In-Sync (ISR)', :in_sync_replica_brokers) %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%==
+        each_partial(
+          @partitions,
+          'cluster/partition'
+        )
+      %>
+    </tbody>
+  </table>
+</div>
