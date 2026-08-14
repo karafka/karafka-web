@@ -166,14 +166,19 @@ describe_current do
     context "when sorting the details by attribute name" do
       before { get "routing/#{Karafka::App.routes.first.topics.first.id}?sort=name+desc" }
 
-      it do
+      it "actually reorders the rows (descending by name)" do
         assert_ok
-        assert_body("kafka.topic.metadata.refresh.interval.ms")
+        # 'kafka.topic...' sorts after 'kafka.statistics...' ascending, so descending puts it first
+        assert_operator(
+          response.body.index("kafka.topic.metadata.refresh.interval.ms"),
+          :<,
+          response.body.index("kafka.statistics.interval.ms")
+        )
       end
     end
 
     context "when sorting the details by value" do
-      before { get "routing/#{Karafka::App.routes.first.topics.first.id}?sort=value+desc" }
+      before { get "routing/#{Karafka::App.routes.first.topics.first.id}?sort=value+asc" }
 
       it do
         assert_ok
