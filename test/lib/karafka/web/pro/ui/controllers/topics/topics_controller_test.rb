@@ -66,7 +66,7 @@ describe_current do
     end
 
     context "when filtering by a matching topic name" do
-      before { get "topics?filter=#{topics_config.errors.name}" }
+      before { get_filtered("topics", topics_config.errors.name) }
 
       it do
         assert_ok
@@ -77,7 +77,7 @@ describe_current do
     end
 
     context "when filtering by a non-matching keyword" do
-      before { get "topics?filter=this-topic-does-not-exist" }
+      before { get_filtered("topics", "this-topic-does-not-exist") }
 
       it do
         assert_ok

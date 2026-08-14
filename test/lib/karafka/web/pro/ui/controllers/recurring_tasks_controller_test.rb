@@ -183,7 +183,7 @@ describe_current do
           key: "state:schedule"
         )
 
-        get "recurring_tasks/schedule?filter[field]=cron&filter[value]=2"
+        get_filtered("recurring_tasks/schedule", cron: "2")
       end
 
       it do
@@ -202,7 +202,7 @@ describe_current do
           key: "state:schedule"
         )
 
-        get "recurring_tasks/schedule?filter=zzz-no-such-task"
+        get_filtered("recurring_tasks/schedule", "zzz-no-such-task")
       end
 
       it do

@@ -756,7 +756,7 @@ describe_current do
     end
 
     context "when filtering by a matching topic name" do
-      before { get "consumers/shinra:1:1/subscriptions?filter=default" }
+      before { get_filtered("consumers/shinra:1:1/subscriptions", "default") }
 
       it do
         assert_ok
@@ -770,7 +770,7 @@ describe_current do
     end
 
     context "when filtering by a matching consumer group name" do
-      before { get "consumers/shinra:1:1/subscriptions?filter=example_app6_app" }
+      before { get_filtered("consumers/shinra:1:1/subscriptions", "example_app6_app") }
 
       it do
         assert_ok
@@ -780,7 +780,7 @@ describe_current do
     end
 
     context "when filtering by a non-matching keyword" do
-      before { get "consumers/shinra:1:1/subscriptions?filter=zzz-nope-zzz" }
+      before { get_filtered("consumers/shinra:1:1/subscriptions", "zzz-nope-zzz") }
 
       it do
         assert_ok
@@ -973,7 +973,7 @@ describe_current do
     }.each do |field, values|
       context "when filtering by the #{field} field" do
         context "when the value matches" do
-          before { get "consumers/overview?filter[field]=#{field}&filter[value]=#{values.fetch(:matching)}" }
+          before { get_filtered("consumers/overview", field, values.fetch(:matching)) }
 
           it "keeps the matching process" do
             assert_ok
@@ -985,7 +985,7 @@ describe_current do
 
         context "when the value does not match" do
           before do
-            get "consumers/overview?filter[field]=#{field}&filter[value]=#{values.fetch(:non_matching)}"
+            get_filtered("consumers/overview", field, values.fetch(:non_matching))
           end
 
           it "filters the process out" do
@@ -1003,7 +1003,7 @@ describe_current do
     context "when scoping to a field the value does not belong to" do
       # 'visits' is a subscribed topic, not part of the process id 'shinra:1:1', so scoping to the
       # id field must exclude it (proving the field scoping actually applies)
-      before { get "consumers/overview?filter[field]=id&filter[value]=visits" }
+      before { get_filtered("consumers/overview", id: "visits") }
 
       it do
         assert_ok
@@ -1013,7 +1013,7 @@ describe_current do
 
     context "when filtering with a plain keyword (no field selected)" do
       context "when it matches on any attribute" do
-        before { get "consumers/overview?filter=8cbff36" }
+        before { get_filtered("consumers/overview", "8cbff36") }
 
         it do
           assert_ok
@@ -1022,7 +1022,7 @@ describe_current do
       end
 
       context "when it does not match anything" do
-        before { get "consumers/overview?filter=nothing-matches-this-keyword" }
+        before { get_filtered("consumers/overview", "nothing-matches-this-keyword") }
 
         it "filters everything out" do
           assert_ok
@@ -1054,7 +1054,7 @@ describe_current do
       end
 
       it "keeps only the process matching the filter" do
-        get "consumers/overview?filter[field]=id&filter[value]=web-a"
+        get_filtered("consumers/overview", id: "web-a")
 
         assert_ok
         assert_body("web-a:1:1")
@@ -1087,7 +1087,7 @@ describe_current do
       end
 
       context "when on the first filtered page" do
-        before { get "consumers/overview?filter[field]=id&filter[value]=match-me" }
+        before { get_filtered("consumers/overview", id: "match-me") }
 
         it "paginates the filtered set and keeps the filter active" do
           assert_ok
@@ -1098,7 +1098,7 @@ describe_current do
       end
 
       context "when on the second filtered page" do
-        before { get "consumers/overview?filter[field]=id&filter[value]=match-me&page=2" }
+        before { get_filtered("consumers/overview", id: "match-me", page: 2) }
 
         it "shows the next filtered page with the filter still applied" do
           assert_ok
@@ -1113,7 +1113,7 @@ describe_current do
       context "when filtering, sorting and paginating all at once" do
         context "when on the first page" do
           before do
-            get "consumers/overview?filter[field]=id&filter[value]=match-me&sort=id+desc&page=1"
+            get_filtered("consumers/overview", id: "match-me", sort: "id desc", page: 1)
           end
 
           it "applies the filter, the sort and the page together" do
@@ -1129,7 +1129,7 @@ describe_current do
 
         context "when on the second page" do
           before do
-            get "consumers/overview?filter[field]=id&filter[value]=match-me&sort=id+desc&page=2"
+            get_filtered("consumers/overview", id: "match-me", sort: "id desc", page: 2)
           end
 
           it "carries the filter and sort onto the next page" do

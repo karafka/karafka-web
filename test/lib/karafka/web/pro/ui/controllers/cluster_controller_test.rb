@@ -54,7 +54,7 @@ describe_current do
     end
 
     context "when filtering the nodes by a matching keyword" do
-      before { get "cluster?filter=127.0.0.1" }
+      before { get_filtered("cluster", "127.0.0.1") }
 
       it do
         assert_ok
@@ -64,7 +64,7 @@ describe_current do
     end
 
     context "when filtering the nodes by a non-matching keyword" do
-      before { get "cluster?filter=zzz-no-such-node" }
+      before { get_filtered("cluster", "zzz-no-such-node") }
 
       it do
         assert_ok
@@ -120,7 +120,7 @@ describe_current do
     end
 
     context "when filtering the broker config by a matching keyword" do
-      before { get "cluster/1?filter=advertised" }
+      before { get_filtered("cluster/1", "advertised") }
 
       it do
         assert_ok
@@ -130,7 +130,7 @@ describe_current do
     end
 
     context "when filtering the broker config by a non-matching keyword" do
-      before { get "cluster/1?filter=zzz-no-such-config" }
+      before { get_filtered("cluster/1", "zzz-no-such-config") }
 
       it do
         assert_ok
@@ -255,7 +255,7 @@ describe_current do
       end
 
       it "keeps only the matching topic" do
-        get "cluster/replication?filter=orders"
+        get_filtered("cluster/replication", "orders")
 
         assert_ok
         assert_body("orders_topic")
@@ -265,7 +265,7 @@ describe_current do
       end
 
       it "shows the no-results state when nothing matches" do
-        get "cluster/replication?filter=zzz-no-such-topic"
+        get_filtered("cluster/replication", "zzz-no-such-topic")
 
         assert_ok
         assert_body("No results match your filter")

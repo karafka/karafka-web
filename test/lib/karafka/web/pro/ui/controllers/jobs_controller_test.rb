@@ -82,7 +82,7 @@ describe_current do
     end
 
     context "when filtering running jobs by a matching keyword" do
-      before { get "jobs/running?filter=ActiveJob" }
+      before { get_filtered("jobs/running", "ActiveJob") }
 
       it "keeps the matching jobs" do
         assert_ok
@@ -92,7 +92,7 @@ describe_current do
     end
 
     context "when filtering running jobs by a non-matching keyword" do
-      before { get "jobs/running?filter=zzz-no-such-job" }
+      before { get_filtered("jobs/running", "zzz-no-such-job") }
 
       it "shows the filter-specific empty state" do
         assert_ok

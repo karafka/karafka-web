@@ -50,7 +50,7 @@ describe_current do
       # A rendered consumer group table always contains the "Subscription group" header, so we use
       # it (rather than the topic name, which is echoed back in the filter input regardless) as the
       # reliable signal that at least one group actually rendered
-      before { get "routing?filter=#{Karafka::App.routes.first.topics.first.name}" }
+      before { get_filtered("routing", Karafka::App.routes.first.topics.first.name) }
 
       it do
         assert_ok
@@ -59,7 +59,7 @@ describe_current do
     end
 
     context "when filtering by a matching consumer group name" do
-      before { get "routing?filter=#{Karafka::App.routes.first.id}" }
+      before { get_filtered("routing", Karafka::App.routes.first.id) }
 
       it do
         assert_ok
@@ -71,7 +71,7 @@ describe_current do
 
     context "when scoping the filter to the consumer group field" do
       before do
-        get "routing?filter[field]=consumer_group&filter[value]=#{Karafka::App.routes.first.id}"
+        get_filtered("routing", consumer_group: Karafka::App.routes.first.id)
       end
 
       it do
@@ -84,7 +84,7 @@ describe_current do
     end
 
     context "when filtering by a non-matching keyword" do
-      before { get "routing?filter=zzz-nonexistent-topic-zzz" }
+      before { get_filtered("routing", "zzz-nonexistent-topic-zzz") }
 
       it do
         assert_ok
@@ -99,7 +99,7 @@ describe_current do
         topic_names = -> { Karafka::App.routes.flat_map { |cg| cg.topics.map(&:name) }.sort }
 
         before_topics = topic_names.call
-        get "routing?filter=zzz-nonexistent-topic-zzz"
+        get_filtered("routing", "zzz-nonexistent-topic-zzz")
         after_topics = topic_names.call
 
         assert_equal(before_topics, after_topics)
@@ -188,8 +188,7 @@ describe_current do
 
     context "when filtering the details by attribute name" do
       before do
-        get "routing/#{Karafka::App.routes.first.topics.first.id}" \
-            "?filter[field]=name&filter[value]=statistics"
+        get_filtered("routing/#{Karafka::App.routes.first.topics.first.id}", name: "statistics")
       end
 
       it do
@@ -201,8 +200,7 @@ describe_current do
 
     context "when filtering the details by a non-matching keyword" do
       before do
-        get "routing/#{Karafka::App.routes.first.topics.first.id}" \
-            "?filter=zzz-nonexistent-attribute-zzz"
+        get_filtered("routing/#{Karafka::App.routes.first.topics.first.id}", "zzz-nonexistent-attribute-zzz")
       end
 
       it do

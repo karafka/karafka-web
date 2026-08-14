@@ -95,7 +95,7 @@ describe_current do
     end
 
     context "when filtering running jobs by a matching keyword" do
-      before { get "consumers/shinra:1:1/jobs/running?filter=ActiveJob" }
+      before { get_filtered("consumers/shinra:1:1/jobs/running", "ActiveJob") }
 
       it do
         assert_ok
@@ -105,7 +105,7 @@ describe_current do
     end
 
     context "when filtering running jobs by a non-matching keyword" do
-      before { get "consumers/shinra:1:1/jobs/running?filter=zzz-no-such-job" }
+      before { get_filtered("consumers/shinra:1:1/jobs/running", "zzz-no-such-job") }
 
       it do
         assert_ok

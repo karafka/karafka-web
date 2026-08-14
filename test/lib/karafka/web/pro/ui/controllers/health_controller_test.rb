@@ -79,7 +79,7 @@ describe_current do
       end
 
       context "when filtering by a matching topic name" do
-        before { get "health/overview?filter=default" }
+        before { get_filtered("health/overview", "default") }
 
         it do
           assert_ok
@@ -94,7 +94,7 @@ describe_current do
       end
 
       context "when filtering by a non-matching keyword" do
-        before { get "health/overview?filter=this-topic-does-not-exist" }
+        before { get_filtered("health/overview", "this-topic-does-not-exist") }
 
         it do
           assert_ok
@@ -108,7 +108,7 @@ describe_current do
 
       context "when scoping the filter to the topic field" do
         context "when the topic matches" do
-          before { get "health/overview?filter[field]=topic&filter[value]=default" }
+          before { get_filtered("health/overview", topic: "default") }
 
           it do
             assert_ok
@@ -119,7 +119,7 @@ describe_current do
         end
 
         context "when the topic does not match" do
-          before { get "health/overview?filter[field]=topic&filter[value]=no-such-topic" }
+          before { get_filtered("health/overview", topic: "no-such-topic") }
 
           it do
             assert_ok
@@ -131,7 +131,7 @@ describe_current do
 
       context "when scoping the filter to the consumer group field" do
         context "when the consumer group matches" do
-          before { get "health/overview?filter[field]=consumer_group&filter[value]=example_app6_app" }
+          before { get_filtered("health/overview", consumer_group: "example_app6_app") }
 
           it do
             assert_ok
@@ -143,7 +143,7 @@ describe_current do
         end
 
         context "when the consumer group does not match" do
-          before { get "health/overview?filter[field]=consumer_group&filter[value]=no-such-group" }
+          before { get_filtered("health/overview", consumer_group: "no-such-group") }
 
           it do
             assert_ok
@@ -413,7 +413,7 @@ describe_current do
     end
 
     context "when filtering by a non-matching topic" do
-      before { get "health/cluster_lags?filter[field]=topic&filter[value]=zzz-no-such-topic" }
+      before { get_filtered("health/cluster_lags", topic: "zzz-no-such-topic") }
 
       it do
         assert_ok

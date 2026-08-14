@@ -66,7 +66,7 @@ describe_current do
       end
 
       it "keeps the matching topic when filtering by its name" do
-        get "dlq?filter=#{dlq_topic}"
+        get_filtered("dlq", dlq_topic)
 
         assert_ok
         assert_body(dlq_topic)
@@ -74,7 +74,7 @@ describe_current do
       end
 
       it "shows the filter-specific empty state when nothing matches" do
-        get "dlq?filter=zzz-no-such-dlq-topic"
+        get_filtered("dlq", "zzz-no-such-dlq-topic")
 
         assert_ok
         assert_body("No results match your filter")

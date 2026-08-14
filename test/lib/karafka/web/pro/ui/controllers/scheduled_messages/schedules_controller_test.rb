@@ -97,7 +97,7 @@ describe_current do
       end
 
       it "keeps the matching schedule when filtering by its topic name" do
-        get "scheduled_messages/schedules?filter=#{messages_topic}"
+        get_filtered("scheduled_messages/schedules", messages_topic)
 
         assert_ok
         assert_body(messages_topic)
@@ -105,7 +105,7 @@ describe_current do
       end
 
       it "shows the filter-specific empty state when nothing matches" do
-        get "scheduled_messages/schedules?filter=zzz-no-such-schedule-topic"
+        get_filtered("scheduled_messages/schedules", "zzz-no-such-schedule-topic")
 
         assert_ok
         assert_body("No results match your filter")

@@ -68,7 +68,7 @@ describe_current do
     end
 
     context "when filtering configs by a matching keyword" do
-      before { get "topics/#{topic}/config?filter=max.message" }
+      before { get_filtered("topics/#{topic}/config", "max.message") }
 
       it do
         assert_ok
@@ -78,7 +78,7 @@ describe_current do
     end
 
     context "when filtering configs by a non-matching keyword" do
-      before { get "topics/#{topic}/config?filter=zzz-no-such-config" }
+      before { get_filtered("topics/#{topic}/config", "zzz-no-such-config") }
 
       it do
         assert_ok

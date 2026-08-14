@@ -277,7 +277,7 @@ describe_current do
         context "when filtering by the #{field} field" do
           context "when the value matches" do
             before do
-              get "consumers/controls?filter[field]=#{field}&filter[value]=#{values.fetch(:matching)}"
+              get_filtered("consumers/controls", field, values.fetch(:matching))
             end
 
             it "keeps the matching process" do
@@ -290,7 +290,7 @@ describe_current do
 
           context "when the value does not match" do
             before do
-              get "consumers/controls?filter[field]=#{field}&filter[value]=#{values.fetch(:non_matching)}"
+              get_filtered("consumers/controls", field, values.fetch(:non_matching))
             end
 
             it "filters the process out" do
@@ -309,7 +309,7 @@ describe_current do
       context "when scoping to a field the value does not belong to" do
         # 'visits' is a subscribed topic, not part of the process id 'shinra:1:1', so scoping to
         # the id field must exclude it (proving the field scoping actually applies)
-        before { get "consumers/controls?filter[field]=id&filter[value]=visits" }
+        before { get_filtered("consumers/controls", id: "visits") }
 
         it do
           assert_ok
@@ -319,7 +319,7 @@ describe_current do
 
       context "when filtering with a plain keyword (no field selected)" do
         context "when it matches on any attribute" do
-          before { get "consumers/controls?filter=8cbff36" }
+          before { get_filtered("consumers/controls", "8cbff36") }
 
           it do
             assert_ok
@@ -328,7 +328,7 @@ describe_current do
         end
 
         context "when it does not match anything" do
-          before { get "consumers/controls?filter=nothing-matches-this-keyword" }
+          before { get_filtered("consumers/controls", "nothing-matches-this-keyword") }
 
           it "filters everything out" do
             assert_ok
@@ -360,7 +360,7 @@ describe_current do
         end
 
         it "keeps only the process matching the filter" do
-          get "consumers/controls?filter[field]=id&filter[value]=web-a"
+          get_filtered("consumers/controls", id: "web-a")
 
           assert_ok
           assert_body("web-a:1:1")

@@ -80,6 +80,48 @@ module ControllerHelper
     assert(response.ok?, message)
   end
 
+  # Issues a GET to `path` with the filtering (and optionally sorting/pagination) query params
+  # built for you, so specs don't have to hand-assemble `?filter[field]=...&filter[value]=...`
+  # strings over and over.
+  #
+  # @param path [String] base path without a query string
+  # @param keyword [String, Symbol, nil] a plain search keyword (`?filter=keyword`); or, when
+  #   `value` is also given, the name of the field to scope the filter to
+  # @param value [String, nil] when present, scopes the filter to the `keyword` field
+  #   (`?filter[field]=keyword&filter[value]=value`)
+  # @param sort [String, nil] sort clause, e.g. `"id desc"` (rendered as `sort=id+desc`)
+  # @param page [Integer, nil] page number
+  # @param field [Hash] shorthand for a single field-scoped filter, e.g. `id: "web-a"` →
+  #   `?filter[field]=id&filter[value]=web-a`
+  #
+  # @example plain keyword
+  #   get_filtered("consumers/overview", "web-a")
+  # @example field-scoped (shorthand)
+  #   get_filtered("consumers/overview", id: "web-a")
+  # @example field-scoped (dynamic field name)
+  #   get_filtered("consumers/controls", field, matching_value)
+  # @example combined with sort + pagination
+  #   get_filtered("consumers/overview", id: "match-me", sort: "id desc", page: 2)
+  def get_filtered(path, keyword = nil, value = nil, sort: nil, page: nil, **field)
+    params = {}
+
+    if field.any?
+      name, val = field.first
+      params["filter"] = { "field" => name.to_s, "value" => val }
+    elsif !value.nil?
+      params["filter"] = { "field" => keyword.to_s, "value" => value }
+    elsif !keyword.nil?
+      params["filter"] = keyword
+    end
+
+    params["sort"] = sort if sort
+    params["page"] = page if page
+
+    query = Rack::Utils.build_nested_query(params)
+
+    get(query.empty? ? path : "#{path}?#{query}")
+  end
+
   # @return [String] breadcrumbs string part to match for presence
   def breadcrumbs
     '<div class="breadcrumbs">'
