@@ -44,6 +44,35 @@ describe_current do
       assert_body('value="name"')
     end
 
+    context "when sorting the nodes" do
+      before { get "cluster?sort=name+desc" }
+
+      it do
+        assert_ok
+        assert_body("127.0.0.1")
+      end
+    end
+
+    context "when filtering the nodes by a matching keyword" do
+      before { get "cluster?filter=127.0.0.1" }
+
+      it do
+        assert_ok
+        assert_body("127.0.0.1")
+        refute_body("No results match your filter")
+      end
+    end
+
+    context "when filtering the nodes by a non-matching keyword" do
+      before { get "cluster?filter=zzz-no-such-node" }
+
+      it do
+        assert_ok
+        assert_body("No results match your filter")
+        refute_body("127.0.0.1")
+      end
+    end
+
     context "when requests policy prevents us from visiting this page" do
       before do
         Karafka::Web.config.ui.policies.requests.stubs(:allow?).returns(false)
@@ -78,6 +107,25 @@ describe_current do
         assert_body("controller.quota.window.num")
         assert_body("log.flush.interval.ms")
         assert_body("9223372036854775807")
+      end
+    end
+
+    context "when sorting the broker config" do
+      before { get "cluster/1?sort=name+desc" }
+
+      it do
+        assert_ok
+        assert_body("advertised.listeners")
+      end
+    end
+
+    context "when filtering the broker config by a matching keyword" do
+      before { get "cluster/1?filter=advertised" }
+
+      it do
+        assert_ok
+        assert_body("advertised.listeners")
+        refute_body("No results match your filter")
       end
     end
 

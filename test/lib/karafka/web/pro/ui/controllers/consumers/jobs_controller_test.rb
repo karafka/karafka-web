@@ -85,6 +85,25 @@ describe_current do
       end
     end
 
+    context "when sorting running jobs" do
+      before { get "consumers/shinra:1:1/jobs/running?sort=consumer+desc" }
+
+      it do
+        assert_ok
+        assert_body("Karafka::Pro::ActiveJob::Consumer")
+      end
+    end
+
+    context "when filtering running jobs by a matching keyword" do
+      before { get "consumers/shinra:1:1/jobs/running?filter=ActiveJob" }
+
+      it do
+        assert_ok
+        assert_body("Karafka::Pro::ActiveJob::Consumer")
+        refute_body("No results match your filter")
+      end
+    end
+
     context "when filtering running jobs by a non-matching keyword" do
       before { get "consumers/shinra:1:1/jobs/running?filter=zzz-no-such-job" }
 

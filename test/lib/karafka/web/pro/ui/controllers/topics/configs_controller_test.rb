@@ -58,6 +58,25 @@ describe_current do
       end
     end
 
+    context "when sorting the configs" do
+      before { get "topics/#{topic}/config?sort=name+desc" }
+
+      it do
+        assert_ok
+        assert_body("max.message.bytes")
+      end
+    end
+
+    context "when filtering configs by a matching keyword" do
+      before { get "topics/#{topic}/config?filter=max.message" }
+
+      it do
+        assert_ok
+        assert_body("max.message.bytes")
+        refute_body("No results match your filter")
+      end
+    end
+
     context "when filtering configs by a non-matching keyword" do
       before { get "topics/#{topic}/config?filter=zzz-no-such-config" }
 

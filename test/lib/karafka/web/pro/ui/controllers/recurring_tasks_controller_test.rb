@@ -175,6 +175,25 @@ describe_current do
       end
     end
 
+    context "when filtering the tasks by a matching cron" do
+      before do
+        produce(
+          schedules_topic,
+          Fixtures.recurring_tasks_schedules_msg("only_disabled_never_running"),
+          key: "state:schedule"
+        )
+
+        get "recurring_tasks/schedule?filter[field]=cron&filter[value]=2"
+      end
+
+      it do
+        assert_ok
+        # `2` matches the `*/2 * * *` task's cron and keeps it, dropping the `* * * * *` one
+        assert_body("*/2 * * *")
+        refute_body("No results match your filter")
+      end
+    end
+
     context "when filtering the tasks by a non-matching keyword" do
       before do
         produce(
