@@ -1109,6 +1109,39 @@ describe_current do
           assert_body('value="id" selected')
         end
       end
+
+      context "when filtering, sorting and paginating all at once" do
+        context "when on the first page" do
+          before do
+            get "consumers/overview?filter[field]=id&filter[value]=match-me&sort=id+desc&page=1"
+          end
+
+          it "applies the filter, the sort and the page together" do
+            assert_ok
+            assert_body(pagination)
+            # filtered to the match-me set...
+            assert_equal(50, body.scan("match-me:").size)
+            assert_body('value="match-me"')
+            # ...and actually sorted descending by id, so the lexicographically-largest id leads
+            assert_operator(body.index("match-me:9:9"), :<, body.index("match-me:8:8"))
+          end
+        end
+
+        context "when on the second page" do
+          before do
+            get "consumers/overview?filter[field]=id&filter[value]=match-me&sort=id+desc&page=2"
+          end
+
+          it "carries the filter and sort onto the next page" do
+            assert_ok
+            assert_body(pagination)
+            assert_equal(50, body.scan("match-me:").size)
+            assert_body('value="match-me"')
+            # the first page's leading (sorted) row is not repeated on page 2
+            refute_body("match-me:9:9")
+          end
+        end
+      end
     end
   end
 end
