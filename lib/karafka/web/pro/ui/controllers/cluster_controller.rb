@@ -35,14 +35,22 @@ module Karafka
         module Controllers
           # Cluster details controller
           class ClusterController < BaseController
+            # A single controller serves the nodes (index), broker config (show) and replication
+            # listings, so the sortable set is the union of every column those tables expose
             self.sortable_attributes = %w[
               id
               name
+              port
+              value
               default?
               read_only?
               synonym?
               sensitive?
-              port
+              topic_name
+              partition_id
+              leader
+              replica_count
+              in_sync_replica_brokers
             ].freeze
 
             # Each action renders different columns, so we scope the filterable fields per action to

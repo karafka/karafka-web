@@ -186,6 +186,53 @@ describe_current do
       end
     end
 
+    context "when sorting the partitions" do
+      # `displayable_topics` pre-sorts topics alphabetically (alpha, beta), so a descending sort by
+      # topic name must reverse that (beta before alpha) — which only happens if the sort is really
+      # applied. All leaders point at the existing broker 1 so the crawled badge links resolve.
+      let(:fake_topics) do
+        [
+          {
+            topic_name: "beta_topic",
+            partition_count: 1,
+            partitions: [
+              { partition_id: 0, leader: 1, replica_count: 1, in_sync_replica_brokers: 1, replicas: [1], isrs: [1] }
+            ]
+          },
+          {
+            topic_name: "alpha_topic",
+            partition_count: 1,
+            partitions: [
+              { partition_id: 0, leader: 1, replica_count: 1, in_sync_replica_brokers: 1, replicas: [1], isrs: [1] }
+            ]
+          }
+        ]
+      end
+      let(:fake_brokers) do
+        [{ broker_id: 1, broker_name: "10.0.0.1", broker_port: 9092 }]
+      end
+
+      before do
+        Karafka::Web::Ui::Models::ClusterInfo
+          .stubs(:fetch)
+          .returns(stub(topics: fake_topics, brokers: fake_brokers))
+      end
+
+      it "reorders the rows ascending by topic name" do
+        get "cluster/replication?sort=topic_name+asc"
+
+        assert_ok
+        assert_operator(response.body.index("alpha_topic"), :<, response.body.index("beta_topic"))
+      end
+
+      it "reorders the rows descending by topic name" do
+        get "cluster/replication?sort=topic_name+desc"
+
+        assert_ok
+        assert_operator(response.body.index("beta_topic"), :<, response.body.index("alpha_topic"))
+      end
+    end
+
     context "when filtering by topic name" do
       let(:partition) do
         { partition_id: 0, leader: 1, replica_count: 1, in_sync_replica_brokers: 1, replicas: [1], isrs: [1] }

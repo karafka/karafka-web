@@ -47,6 +47,7 @@ module Karafka
               committed_offset_fd
               stored_offset
               stored_offset_fd
+              lo_offset
               hi_offset
               hi_offset_fd
               ls_offset
