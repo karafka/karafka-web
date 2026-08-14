@@ -66,7 +66,7 @@ module Karafka
                   }
                 end
 
-                @offsets = refine(offsets)
+                @offsets = sort(offsets)
 
                 next_page = @active_partitions.last < @topic.partition_count - 1
                 paginate(@params.current_page, next_page)

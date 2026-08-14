@@ -11,8 +11,9 @@ module Karafka
           include Enumerable
           extend Forwardable
 
-          # Last three methods are needed to provide sorting
-          def_delegators :@jobs_array, :empty?, :size, :map!, :sort_by!, :reverse!
+          # `map!`, `sort_by!` and `reverse!` are needed to provide sorting, `select!` to provide
+          # filtering (both mutate the underlying jobs in place)
+          def_delegators :@jobs_array, :empty?, :size, :map!, :sort_by!, :reverse!, :select!
 
           # @param jobs_array [Array<Job>] all jobs we want to enclose
           def initialize(jobs_array)

@@ -18,6 +18,13 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
+<%
+  # Non-destructively narrow the topics to the current filtering keyword. A subscription group is
+  # kept when the keyword matches its consumer/subscription group name or any of its topics.
+  topics = visible_topics(subscription_group.topics, consumer_group: consumer_group.id, subscription_group: subscription_group.id)
+%>
+
+<% unless filtering? && topics.empty? %>
 <h2 class="h2 mb-3" id="<%= subscription_group.id %>">
   <span class="tooltip" data-tip="Consumer Group">
     <%= consumer_group.id %>
@@ -115,12 +122,12 @@
 </div>
 
 
-<% if subscription_group.topics.empty? %>
+<% if topics.empty? %>
   <div class="mb-6">
     <% empty_state('This process does not consume any messages from any topics of this subscription group.', icon: 'folder') %>
   </div>
 <% else %>
-  <% subscription_group.topics.each do |topic| %>
+  <% topics.each do |topic| %>
     <div class="data-table-wrapper">
       <table class="data-table">
         <thead>
@@ -164,4 +171,5 @@
       </table>
     </div>
   <% end %>
+<% end %>
 <% end %>

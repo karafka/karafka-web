@@ -35,6 +35,10 @@ module Karafka
         module Controllers
           # DLQ topics overview
           class DlqController < BaseController
+            self.filterable_attributes = %w[
+              topic_name
+            ].freeze
+
             # Lists DLQ topics
             def index
               topics = Karafka::App.consumer_groups.flat_map(&:topics).flat_map(&:to_a)
@@ -51,6 +55,8 @@ module Karafka
                 .topics
                 .select { |topic| dlq?(dlq_topic_patterns, topic[:topic_name]) }
                 .sort_by { |topic| topic[:topic_name] }
+
+              @dlq_topics = filter(@dlq_topics)
 
               render
             end

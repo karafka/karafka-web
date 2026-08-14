@@ -69,13 +69,20 @@ module Karafka
                 pending_jobs_count
               ].freeze
 
+              # The list filters processes by their id/topics/tags, while the per-process
+              # subscriptions view filters (at the view level) by topic/consumer/subscription group
+              self.filterable_attributes = {
+                default: %i[id subscribed_topics tags],
+                subscriptions: %i[topic consumer_group subscription_group]
+              }.freeze
+
               # Consumers list
               def index
                 @current_state = Models::ConsumersState.current!
                 @counters = Models::Counters.new(@current_state)
 
                 @processes, last_page = Paginators::Arrays.call(
-                  refine(Models::Processes.active(@current_state)),
+                  filter(sort(Models::Processes.active(@current_state))),
                   @params.current_page
                 )
 
@@ -110,7 +117,7 @@ module Karafka
                   # the underlying hashes for sorting
                   consumer_group.subscription_groups.flat_map(&:topics).flat_map(&:partitions)
 
-                  refine(consumer_group)
+                  sort(consumer_group)
                 end
 
                 render

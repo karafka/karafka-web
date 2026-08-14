@@ -56,3 +56,9 @@
     </a>
   </div>
 </div>
+
+<% if filtering? || !@stats.empty? %>
+  <div class="col-span-12">
+    <%== filter_box %>
+  </div>
+<% end %>

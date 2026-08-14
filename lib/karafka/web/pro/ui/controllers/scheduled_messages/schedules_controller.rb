@@ -36,6 +36,10 @@ module Karafka
           module ScheduledMessages
             # Controller to display list of schedules (groups) and details about each
             class SchedulesController < BaseController
+              self.filterable_attributes = %w[
+                topic_name
+              ].freeze
+
               # Displays list of groups
               def index
                 topics = Models::Topic.all
@@ -53,6 +57,8 @@ module Karafka
                   .sort
 
                 @topics = topics.select { |topic| candidates.include?(topic.topic_name) }
+
+                @topics = filter(@topics)
 
                 render
               end

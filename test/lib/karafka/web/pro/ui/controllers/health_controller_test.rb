@@ -78,6 +78,81 @@ describe_current do
         it { assert_ok }
       end
 
+      context "when filtering by a matching topic name" do
+        before { get_filtered("health/overview", "default") }
+
+        it do
+          assert_ok
+          # The matching topic and its data are preserved (match-propagation keeps the branch)
+          assert_body("default")
+          assert_body("327355")
+          # The filtering box is rendered with a field selector and the active keyword
+          assert_body('name="filter[value]"')
+          assert_body('name="filter[field]"')
+          assert_body('value="default"')
+        end
+      end
+
+      context "when filtering by a non-matching keyword" do
+        before { get_filtered("health/overview", "this-topic-does-not-exist") }
+
+        it do
+          assert_ok
+          # The filter pruned everything, so we show the filter-specific empty state (not the
+          # misleading "no data / no processes" one), while still offering the filter box
+          assert_body("No results match your filter")
+          assert_body('name="filter[value]"')
+          refute_body("327355")
+        end
+      end
+
+      context "when scoping the filter to the topic field" do
+        context "when the topic matches" do
+          before { get_filtered("health/overview", topic: "default") }
+
+          it do
+            assert_ok
+            assert_body("default")
+            assert_body("327355")
+            assert_body('value="topic" selected')
+          end
+        end
+
+        context "when the topic does not match" do
+          before { get_filtered("health/overview", topic: "no-such-topic") }
+
+          it do
+            assert_ok
+            assert_body("No results match your filter")
+            refute_body("327355")
+          end
+        end
+      end
+
+      context "when scoping the filter to the consumer group field" do
+        context "when the consumer group matches" do
+          before { get_filtered("health/overview", consumer_group: "example_app6_app") }
+
+          it do
+            assert_ok
+            # The whole group (its topics) is kept
+            assert_body("example_app6_app")
+            assert_body("default")
+            assert_body("327355")
+          end
+        end
+
+        context "when the consumer group does not match" do
+          before { get_filtered("health/overview", consumer_group: "no-such-group") }
+
+          it do
+            assert_ok
+            assert_body("No results match your filter")
+            refute_body("327355")
+          end
+        end
+      end
+
       context "when commanding is enabled" do
         before do
           Karafka::Web.config.commanding.active = true
@@ -334,6 +409,18 @@ describe_current do
         assert_body(breadcrumbs)
         refute_body(pagination)
         assert_body("-1")
+      end
+    end
+
+    context "when filtering by a non-matching topic" do
+      before { get_filtered("health/cluster_lags", topic: "zzz-no-such-topic") }
+
+      it do
+        assert_ok
+        # The filter emptied the tree, so we show the filter-specific empty state, not the
+        # misleading "no data / no processes running" message
+        assert_body("No results match your filter")
+        refute_body("No health data is available")
       end
     end
   end

@@ -38,7 +38,15 @@ module Karafka
             self.sortable_attributes = %w[
               name
               active?
+              value
             ].freeze
+
+            # The list is filtered by topic/consumer group (at the view level), while the per-topic
+            # details page filters its flat attribute/value rows
+            self.filterable_attributes = {
+              index: %i[topic consumer_group],
+              show: %i[name value]
+            }.freeze
 
             # Routing list
             def index
@@ -46,7 +54,7 @@ module Karafka
 
               @routes = Karafka::App.routes
               @routes.each do |consumer_group|
-                refine(consumer_group.topics)
+                sort(consumer_group.topics)
               end
 
               current_state = Models::ConsumersState.current
@@ -80,10 +88,24 @@ module Karafka
 
               @topic || not_found!(topic_id)
 
+              # Present the routing settings as a flat, sortable + filterable list of name/value rows
+              @details = sort(filter(topic_detail_rows(@topic)))
+
               render
             end
 
             private
+
+            # @param topic [Karafka::Routing::Topic] topic we present the routing details for
+            # @return [Array<Hash>] `{ name:, value: }` rows for every routing setting (including
+            #   the Pro multiplexing settings)
+            def topic_detail_rows(topic)
+              flattener = Web::Ui::Lib::HashFlattener
+              rows = flattener.call(topic.subscription_group.kafka, "kafka")
+              rows.merge!(flattener.call(topic.to_h.except(:kafka)))
+              rows.merge!(flattener.call(topic.subscription_group.multiplexing.to_h, "multiplexing"))
+              rows.map { |name, value| { name: name.to_s, value: value } }
+            end
 
             # Detect routes defined as patterns
             def detect_patterns_routes

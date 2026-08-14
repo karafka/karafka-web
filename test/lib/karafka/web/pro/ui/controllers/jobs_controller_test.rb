@@ -81,6 +81,26 @@ describe_current do
       end
     end
 
+    context "when filtering running jobs by a matching keyword" do
+      before { get_filtered("jobs/running", "ActiveJob") }
+
+      it "keeps the matching jobs" do
+        assert_ok
+        assert_body("ActiveJob::Consumer")
+        refute_body("No results match your filter")
+      end
+    end
+
+    context "when filtering running jobs by a non-matching keyword" do
+      before { get_filtered("jobs/running", "zzz-no-such-job") }
+
+      it "shows the filter-specific empty state" do
+        assert_ok
+        assert_body("No results match your filter")
+        refute_body("ActiveJob::Consumer")
+      end
+    end
+
     context "when we have only jobs different than running" do
       before do
         topics_config.consumers.states.name = states_topic

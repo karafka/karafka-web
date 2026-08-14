@@ -23,46 +23,17 @@
 <%== partial 'consumers/consumers/tabs' %>
 
 <div class="col-span-12">
-  <% if @processes.empty? && params.current_page <= 1 %>
+  <% if !@processes.empty? || filtering? %>
+    <%== filter_box %>
+  <% end %>
+
+  <% if @processes.empty? && !filtering? && params.current_page <= 1 %>
     <%== partial 'consumers/no_consumers' %>
+  <% elsif @processes.empty? && filtering? %>
+    <%== partial 'shared/no_filter_results' %>
   <% elsif @processes.empty? %>
     <%== partial 'shared/no_paginated_data' %>
   <% else %>
-    <div class="data-table-wrapper">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th colspan="1" rowspan="2"><%== sort_link('Process ID', :id) %></th>
-            <th colspan="1" rowspan="2"><%== sort_link(:memory_usage) %></th>
-            <th colspan="1" rowspan="2"><%== sort_link(:utilization) %></th>
-            <th colspan="1" rowspan="2"><%== sort_link(:threads) %></th>
-            <th colspan="3" rowspan="1" class="text-center">Load</th>
-            <th colspan="2" class="text-center">Workers</th>
-            <th colspan="2" class="text-center">Listeners</th>
-            <th colspan="2" class="text-center">Jobs</th>
-          </tr>
-          <tr>
-            <th>1m</th>
-            <th>5m</th>
-            <th>15m</th>
-            <th><%== sort_link('Total', :workers) %></th>
-            <th><%== sort_link(:busy) %></th>
-            <th><%== sort_link(:active) %></th>
-            <th><%== sort_link(:standby) %></th>
-            <th><%== sort_link('Running', :running_jobs_count) %></th>
-            <th><%== sort_link('Pending', :pending_jobs_count) %></th>
-          </tr>
-        </thead>
-        <tbody>
-          <%==
-            render_each(
-              @processes,
-              'consumers/consumers/_consumer_performance',
-              local: :process
-            )
-          %>
-        </tbody>
-      </table>
-    </div>
+    <%== partial 'consumers/consumers/consumer_performances_table' %>
   <% end %>
 </div>

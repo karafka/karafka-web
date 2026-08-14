@@ -27,6 +27,29 @@ describe_current do
       assert_body("kafka.statistics.interval.ms")
     end
 
+    context "when sorting the details by attribute name" do
+      before { get "routing/#{Karafka::App.routes.first.topics.first.id}?sort=name+desc" }
+
+      it "actually reorders the rows (descending by name)" do
+        assert_ok
+        # 'kafka.topic...' sorts after 'kafka.statistics...' ascending, so descending puts it first
+        assert_operator(
+          response.body.index("kafka.topic.metadata.refresh.interval.ms"),
+          :<,
+          response.body.index("kafka.statistics.interval.ms")
+        )
+      end
+    end
+
+    context "when sorting the details by value" do
+      before { get "routing/#{Karafka::App.routes.first.topics.first.id}?sort=value+desc" }
+
+      it do
+        assert_ok
+        assert_body("kafka.topic.metadata.refresh.interval.ms")
+      end
+    end
+
     context "when given route is not available" do
       before { get "routing/na" }
 

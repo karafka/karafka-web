@@ -59,6 +59,18 @@ module Karafka
               .sum
           end
 
+          # @return [Array<String>] names of all the topics this process is subscribed to across
+          #   its consumer and subscription groups. Used (among others) to filter processes by the
+          #   topic they are assigned to.
+          def subscribed_topics
+            consumer_groups
+              .flat_map(&:subscription_groups)
+              .flat_map(&:topics)
+              .map(&:name)
+              .uniq
+              .sort
+          end
+
           # @return [Boolean] true if there are any active subscriptions, otherwise false.
           def subscribed?
             return false if consumer_groups.empty?

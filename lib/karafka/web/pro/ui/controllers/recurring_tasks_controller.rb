@@ -35,6 +35,10 @@ module Karafka
         module Controllers
           # Controller for viewing and managing recurring tasks
           class RecurringTasksController < Web::Ui::Controllers::ClusterController
+            # This Pro controller inherits the OSS cluster controller (which has no filtering), so it
+            # pulls in the Pro-only filtering concern directly
+            include Lib::Filtering
+
             self.sortable_attributes = %w[
               id
               enabled
@@ -43,11 +47,16 @@ module Karafka
               next_time
             ].freeze
 
+            self.filterable_attributes = %i[
+              id
+              cron
+            ].freeze
+
             # Displays the current schedule
             def schedule
               @schedule = Models::RecurringTasks::Schedule.current
 
-              @tasks = refine(@schedule.tasks) if @schedule
+              @tasks = filter(sort(@schedule.tasks)) if @schedule
 
               render
             end

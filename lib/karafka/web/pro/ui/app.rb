@@ -36,6 +36,11 @@ module Karafka
       module Ui
         # Main Roda Web App that servers all the metrics and stats
         class App < Web::Ui::Base
+          # Filtering (search) is a Pro-only feature, so its helpers are mixed in here rather than in
+          # the shared OSS base
+          include Helpers::FilteringHelper
+          include Helpers::TopicsFilteringHelper
+
           opts[:root] = Karafka::Web.gem_root.join("lib/karafka/web/pro/ui")
 
           instance_exec(&CONTEXT_DETAILS)
@@ -60,6 +65,14 @@ module Karafka
 
             # Do not allow if given request violates requests policies
             raise(Errors::Ui::ForbiddenError)
+          end
+
+          # Builds the Pro request params, which add the filtering (search) readers on top of the
+          # OSS ones. Overriding here keeps the filtering param parsing out of the shared params.
+          #
+          # @return [Controllers::Requests::Params] curated Pro params
+          def params
+            Controllers::Requests::Params.new(request.params)
           end
 
           # Sub-routes for given pieces of the Web UI

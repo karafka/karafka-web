@@ -2,24 +2,4 @@
 
 <%== partial 'cluster/tabs' %>
 
-<div class="col-span-12 mb-3">
-  <div class="data-table-wrapper">
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th><%== sort_link('Node ID', :id) %></th>
-          <th><%== sort_link(:name) %></th>
-          <th><%== sort_link(:port) %></th>
-        </tr>
-      </thead>
-      <tbody>
-        <%==
-          each_partial(
-            @brokers,
-            'cluster/broker'
-          )
-        %>
-      </tbody>
-    </table>
-  </div>
-</div>
+<%== partial 'cluster/brokers_table' %>

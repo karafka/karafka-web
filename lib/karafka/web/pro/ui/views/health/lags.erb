@@ -27,52 +27,21 @@
     <%== partial 'health/no_data' %>
   <% end %>
 
-  <% @stats.each_with_index do |(cg_name, details), index| %>
+  <% @stats.each do |cg_name, cg_details| %>
     <h2 class="h2"><%= cg_name %></h2>
 
-    <% topics = details[:topics] %>
-    <% topics.each_with_index do |(topic_name, topic_details), index| %>
-      <div class="data-table-wrapper">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th colspan="12">
-                <%= topic_name %>
-              </th>
-            </tr>
-            <tr>
-              <th rowspan="2"><%== sort_link('Partition', :id) %></th>
-              <th colspan="2">Lags</th>
-              <th colspan="2">Trends</th>
-              <th colspan="12" rowspan="2">
-                <%== sort_link(:poll_state) %>
-              </th>
-            </tr>
-            <tr>
-              <th><%== sort_link(:lag) %></th>
-              <th><%== sort_link(:lag_stored) %></th>
-              <th><%== sort_link('Lag', :lag_d) %></th>
-              <th><%== sort_link('Lag stored', :lag_stored_d) %></th>
-            </tr>
-          </thead>
-          <tbody>
-              <%==
-                partial(
-                  'health/partitions_with_fallback',
-                  locals: {
-                    consumer_group_id: cg_name,
-                    topic_details: topic_details,
-                    topic_name: topic_name,
-                    partition_partial: 'health/partition_lags',
-                    colspan: 5
-                  }
-                )
-              %>
-          </tbody>
-        </table>
-
-        <%== partial 'health/table_metadata', locals: { details: details } %>
-      </div>
+    <% cg_details[:topics].each do |topic_name, topic_details| %>
+      <%==
+        partial(
+          'health/lags_table',
+          locals: {
+            cg_name: cg_name,
+            cg_details: cg_details,
+            topic_name: topic_name,
+            topic_details: topic_details
+          }
+        )
+      %>
     <% end %>
   <% end %>
 </div>

@@ -47,6 +47,7 @@ module Karafka
               committed_offset_fd
               stored_offset
               stored_offset_fd
+              lo_offset
               hi_offset
               hi_offset_fd
               ls_offset
@@ -58,15 +59,28 @@ module Karafka
               poll_state_ch
             ].freeze
 
+            # The health stats are a tree keyed by consumer group and then topic name, so we filter
+            # on those keys rather than on record attributes. Topic keys live under `:topics` in the
+            # overview but directly under the consumer group in the cluster lags view; the key alias
+            # descends leniently, so one declaration covers both shapes without reshaping the data.
+            self.filterable_attributes = [
+              Lib::Filtering.key(:topic, under: :topics),
+              Lib::Filtering.key(:consumer_group)
+            ].freeze
+
             # Displays the current system state
             def overview
               current_state = Models::ConsumersState.current!
               @stats = Models::Health.current(current_state)
 
-              # Refine only on a per topic basis not to resort higher levels
+              # Sort only on a per topic basis not to resort higher levels
               @stats.each_value do |cg_details|
-                cg_details.each_value { |topic_details| refine(topic_details) }
+                cg_details.each_value { |topic_details| sort(topic_details) }
               end
+
+              # Narrow the whole tree down to the consumer groups/topics matching the current filter
+              # (if any). It is safe to prune in place here as the stats are built fresh per request.
+              filter(@stats)
 
               render
             end
@@ -86,8 +100,10 @@ module Karafka
               @stats = Models::Health.cluster_lags_with_offsets
 
               @stats.each_value do |cg_details|
-                cg_details.each_value { |topic_details| refine(topic_details) }
+                cg_details.each_value { |topic_details| sort(topic_details) }
               end
+
+              filter(@stats)
 
               render
             end

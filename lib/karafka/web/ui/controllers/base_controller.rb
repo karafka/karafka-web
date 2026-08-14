@@ -132,7 +132,7 @@ module Karafka
 
           # @param resources [Hash, Array, Lib::HashProxy] object for sorting
           # @return [Hash, Array, Lib::HashProxy] sorted results
-          def refine(resources)
+          def sort(resources)
             Lib::Sorter.new(
               @params.current_sort,
               allowed_attributes: self.class.sortable_attributes

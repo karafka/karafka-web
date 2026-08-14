@@ -1,3 +1,11 @@
+<%
+  pairs = consumer_group.subscription_groups.flat_map do |subscription_group|
+    subscription_group.topics.map do |topic|
+      [subscription_group, topic]
+    end
+  end
+%>
+
 <div class="col-span-12 mb-3">
   <h2 class="h2">
     <%= consumer_group.id %>
@@ -14,18 +22,16 @@
         </tr>
       </thead>
       <tbody>
-        <% consumer_group.subscription_groups.each do |subscription_group| %>
-          <% subscription_group.topics.each do |topic| %>
-            <%==
-              partial(
-                'routing/topic',
-                locals: {
-                  subscription_group: subscription_group,
-                  topic: topic
-                }
-              )
-            %>
-          <% end %>
+        <% pairs.each do |subscription_group, topic| %>
+          <%==
+            partial(
+              'routing/topic',
+              locals: {
+                subscription_group: subscription_group,
+                topic: topic
+              }
+            )
+          %>
         <% end %>
       </tbody>
     </table>

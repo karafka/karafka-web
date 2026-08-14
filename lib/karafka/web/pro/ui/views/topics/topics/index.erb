@@ -22,8 +22,16 @@
 
 <%== partial 'topics/topics/create_button' %>
 
-<% if @topics.empty? %>
+<% if filtering? || !@topics.empty? %>
+  <div class="col-span-12 mb-3">
+    <%== filter_box %>
+  </div>
+<% end %>
+
+<% if @topics.empty? && !filtering? %>
   <%== partial 'explorer/explorer/no_topics' %>
+<% elsif @topics.empty? %>
+  <%== partial 'shared/no_filter_results' %>
 <% else %>
   <div class="topic-tiles">
     <%==

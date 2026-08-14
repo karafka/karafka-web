@@ -36,6 +36,10 @@ module Karafka
         module Controllers
           # Base Pro controller
           class BaseController < Web::Ui::Controllers::BaseController
+            # Filtering (search) is a Pro-only feature, so it is mixed in here rather than in the
+            # shared OSS base controller
+            include Lib::Filtering
+
             private
 
             # @return [Karafka::Web::Pro::Ui::Lib::Features] features fetcher

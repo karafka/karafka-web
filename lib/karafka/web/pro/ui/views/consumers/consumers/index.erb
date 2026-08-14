@@ -24,33 +24,17 @@
 <%== partial 'consumers/consumers/tabs' %>
 
 <div class="col-span-12">
-  <% if @processes.empty? && params.current_page <= 1 %>
+  <% if !@processes.empty? || filtering? %>
+    <%== filter_box %>
+  <% end %>
+
+  <% if @processes.empty? && !filtering? && params.current_page <= 1 %>
     <%== partial 'consumers/no_consumers' %>
+  <% elsif @processes.empty? && filtering? %>
+    <%== partial 'shared/no_filter_results' %>
   <% elsif @processes.empty? %>
     <%== partial 'shared/no_paginated_data' %>
   <% else %>
-    <div class="data-table-wrapper">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th><%== sort_link('Process ID', :id) %></th>
-            <th><%== sort_link(:started_at, rev: true) %></th>
-            <th>Memory</th>
-            <th>Performance</th>
-            <th>Load</th>
-            <th><%== sort_link(:lag_hybrid) %></th>
-          </tr>
-        </thead>
-        <tbody>
-          <%==
-            render_each(
-              @processes,
-              'consumers/consumers/_consumer',
-              local: :process
-            )
-          %>
-        </tbody>
-      </table>
-    </div>
+    <%== partial 'consumers/consumers/consumers_table' %>
   <% end %>
 </div>

@@ -175,6 +175,45 @@ describe_current do
       end
     end
 
+    context "when filtering the tasks by a matching cron" do
+      before do
+        produce(
+          schedules_topic,
+          Fixtures.recurring_tasks_schedules_msg("only_disabled_never_running"),
+          key: "state:schedule"
+        )
+
+        get_filtered("recurring_tasks/schedule", cron: "2")
+      end
+
+      it do
+        assert_ok
+        # `2` matches the `*/2 * * *` task's cron and keeps it, dropping the `* * * * *` one
+        assert_body("*/2 * * *")
+        refute_body("No results match your filter")
+      end
+    end
+
+    context "when filtering the tasks by a non-matching keyword" do
+      before do
+        produce(
+          schedules_topic,
+          Fixtures.recurring_tasks_schedules_msg("only_disabled_never_running"),
+          key: "state:schedule"
+        )
+
+        get_filtered("recurring_tasks/schedule", "zzz-no-such-task")
+      end
+
+      it do
+        assert_ok
+        # The filter emptied the task list, so we show the filter-specific empty state, not the
+        # misleading "Recurring Tasks Data Unavailable" message
+        assert_body("No results match your filter")
+        refute_body(not_operable)
+      end
+    end
+
     context "when state has only disabled tasks that were running" do
       before do
         produce(

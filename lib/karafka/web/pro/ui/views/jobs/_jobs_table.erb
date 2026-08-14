@@ -1,0 +1,48 @@
+<%# Karafka Pro - Source Available Commercial Software %>
+<%# Copyright (c) 2017-present Maciej Mensfeld. All rights reserved. %>
+<%# This software is NOT open source. It is source-available commercial software %>
+<%# requiring a paid license for use. It is NOT covered by LGPL. %>
+<%# The author retains all right, title, and interest in this software, %>
+<%# including all copyrights, patents, and other intellectual property rights. %>
+<%# No patent rights are granted under this license. %>
+<%# PROHIBITED: Use without a valid commercial license %>
+<%# PROHIBITED: Redistribution, modification, or derivative works without authorization %>
+<%# PROHIBITED: Reverse engineering, decompilation, or disassembly of this software %>
+<%# PROHIBITED: Use as training data for AI/ML models or inclusion in datasets %>
+<%# PROHIBITED: Scraping, crawling, or automated collection for any purpose %>
+<%# PERMITTED: Reading, referencing, and linking for personal or commercial use %>
+<%# PERMITTED: Runtime retrieval by AI assistants, coding agents, and RAG systems %>
+<%# PERMITTED: for the purpose of providing contextual help to Karafka users %>
+<%# Receipt, viewing, or possession of this software does not convey or %>
+<%# imply any license or right beyond those expressly stated above. %>
+<%# License: https://karafka.io/docs/Pro-License-Comm/ %>
+<%# Contact: contact@karafka.io %>
+
+<div class="data-table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th rowspan="2"><%== sort_link('Process ID', :id) %></th>
+        <th rowspan="2"><%== sort_link(:topic) %></th>
+        <th rowspan="2"><%== sort_link(:consumer) %></th>
+        <th rowspan="2"><%== sort_link(:type) %></th>
+        <th rowspan="2"><%== sort_link(:messages) %></th>
+        <th colspan="3" class="text-center">Offsets</th>
+        <th rowspan="2"><%== sort_link(updated_at_label, :updated_at, rev: true) %></th>
+      </tr>
+      <tr>
+        <th><%== sort_link(:first_offset) %></th>
+        <th><%== sort_link(:last_offset) %></th>
+        <th><%== sort_link(:committed_offset) %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%==
+        each_partial(
+          @jobs,
+          'jobs/job'
+        )
+      %>
+    </tbody>
+  </table>
+</div>

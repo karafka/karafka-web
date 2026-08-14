@@ -78,6 +78,11 @@ module Karafka
             #
             # @param action_name [Symbol] the method name being invoked
             def run_before_hooks(action_name)
+              # Track the dispatched action so controllers can resolve per-action configuration
+              # (e.g. `filterable_attributes`) from within the hooks and their action body, before
+              # `render` is ever reached
+              @current_action_name = action_name
+
               self.class.before_hooks.each do |actions, block|
                 instance_exec(&block) if actions.empty? || actions.include?(action_name)
               end

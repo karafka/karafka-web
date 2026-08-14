@@ -64,6 +64,22 @@ describe_current do
         refute_body("No Dead Letter Queue topics exist in Kafka")
         refute_body(pagination)
       end
+
+      it "keeps the matching topic when filtering by its name" do
+        get_filtered("dlq", dlq_topic)
+
+        assert_ok
+        assert_body(dlq_topic)
+        refute_body("No results match your filter")
+      end
+
+      it "shows the filter-specific empty state when nothing matches" do
+        get_filtered("dlq", "zzz-no-such-dlq-topic")
+
+        assert_ok
+        assert_body("No results match your filter")
+        refute_body(dlq_topic)
+      end
     end
 
     context "when defined DLQ name matches the topic name with a postfix" do

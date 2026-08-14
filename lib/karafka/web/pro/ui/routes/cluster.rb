@@ -40,8 +40,6 @@ module Karafka
                 controller = build(Controllers::ClusterController)
 
                 r.get "replication" do
-                  # We use the non-pro controller here because this action is the same
-                  controller = build(Ui::Controllers::ClusterController)
                   controller.replication
                 end
 

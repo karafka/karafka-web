@@ -3,32 +3,4 @@
   view_title title
 %>
 
-<div class="data-table-wrapper">
-  <table class="data-table">
-    <tbody>
-      <% flat_hash(@topic.subscription_group.kafka).each do |k, v| %>
-        <%==
-          partial(
-            'routing/detail',
-            locals: {
-              k: "kafka.#{k}",
-              v: v
-            }
-          )
-        %>
-      <% end %>
-
-      <% flat_hash(@topic.to_h.except(:kafka)).each do |k, v| %>
-        <%==
-          partial(
-            'routing/detail',
-            locals: {
-              k: k,
-              v: v
-            }
-          )
-        %>
-      <% end %>
-    </tbody>
-  </table>
-</div>
+<%== partial 'routing/details_table' %>

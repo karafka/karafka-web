@@ -62,7 +62,7 @@ module Karafka
 
                 @aggregated, distribution = @topic.distribution(@active_partitions)
 
-                @distribution = refine(distribution)
+                @distribution = sort(distribution)
 
                 next_page = @active_partitions.last < @topic.partition_count - 1
                 paginate(@params.current_page, next_page)

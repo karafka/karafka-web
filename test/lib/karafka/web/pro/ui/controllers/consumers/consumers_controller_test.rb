@@ -755,6 +755,41 @@ describe_current do
       end
     end
 
+    context "when filtering by a matching topic name" do
+      before { get_filtered("consumers/shinra:1:1/subscriptions", "default") }
+
+      it do
+        assert_ok
+        assert_body("default")
+        # The matching subscription group renders; subscription groups without a matching topic
+        # (including the empty one) are hidden
+        assert_body("Rebalance count")
+        refute_body("This process does not consume any")
+        assert_body('name="filter[value]"')
+      end
+    end
+
+    context "when filtering by a matching consumer group name" do
+      before { get_filtered("consumers/shinra:1:1/subscriptions", "example_app6_app") }
+
+      it do
+        assert_ok
+        # Matching the consumer group name keeps all of its subscription groups/topics
+        assert_body("Rebalance count")
+      end
+    end
+
+    context "when filtering by a non-matching keyword" do
+      before { get_filtered("consumers/shinra:1:1/subscriptions", "zzz-nope-zzz") }
+
+      it do
+        assert_ok
+        assert_body("No results match your filter")
+        refute_body("Rebalance count")
+        assert_body('name="filter[value]"')
+      end
+    end
+
     context "when subscription has an unknown rebalance reason" do
       before do
         topics_config.consumers.reports.name = reports_topic
@@ -925,6 +960,187 @@ describe_current do
         assert_ok
         assert_body("btn-info btn-sm btn-disabled")
         assert_body("btn-warning btn-sm btn-disabled")
+      end
+    end
+  end
+
+  # both when it matches and when it does not.
+  describe "filtering" do
+    {
+      "id" => { matching: "shinra", non_matching: "no-such-process" },
+      "subscribed_topics" => { matching: "visits", non_matching: "no-such-topic" },
+      "tags" => { matching: "8cbff36", non_matching: "no-such-tag" }
+    }.each do |field, values|
+      context "when filtering by the #{field} field" do
+        context "when the value matches" do
+          before { get_filtered("consumers/overview", field, values.fetch(:matching)) }
+
+          it "keeps the matching process" do
+            assert_ok
+            assert_body("shinra:1:1")
+            # The selected field stays selected in the field dropdown
+            assert_body(%(value="#{field}" selected))
+          end
+        end
+
+        context "when the value does not match" do
+          before do
+            get_filtered("consumers/overview", field, values.fetch(:non_matching))
+          end
+
+          it "filters the process out" do
+            assert_ok
+            refute_body("shinra:1:1")
+            # The filtering box stays rendered (so the filter can be adjusted or reset) and we do
+            # not fall back to the "no consumers at all" empty state, they are just filtered out
+            assert_body('name="filter[value]"')
+            refute_body(no_processes)
+          end
+        end
+      end
+    end
+
+    context "when scoping to a field the value does not belong to" do
+      # 'visits' is a subscribed topic, not part of the process id 'shinra:1:1', so scoping to the
+      # id field must exclude it (proving the field scoping actually applies)
+      before { get_filtered("consumers/overview", id: "visits") }
+
+      it do
+        assert_ok
+        refute_body("shinra:1:1")
+      end
+    end
+
+    context "when filtering with a plain keyword (no field selected)" do
+      context "when it matches on any attribute" do
+        before { get_filtered("consumers/overview", "8cbff36") }
+
+        it do
+          assert_ok
+          assert_body("shinra:1:1")
+        end
+      end
+
+      context "when it does not match anything" do
+        before { get_filtered("consumers/overview", "nothing-matches-this-keyword") }
+
+        it "filters everything out" do
+          assert_ok
+          refute_body("shinra:1:1")
+          refute_body(no_processes)
+        end
+      end
+    end
+
+    context "when there are multiple processes" do
+      before do
+        topics_config.consumers.states.name = states_topic
+        topics_config.consumers.reports.name = reports_topic
+
+        states = Fixtures.consumers_states_json(symbolize_names: false)
+        states["processes"] = {}
+        base_report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        %w[web-a:1:1 web-b:2:2].each_with_index do |id, index|
+          states["processes"][id] = { "dispatched_at" => 2_690_818_669.526_218, "offset" => index }
+
+          report = base_report.dup
+          report["process"] = base_report["process"].merge("id" => id)
+
+          produce(reports_topic, report.to_json, key: id)
+        end
+
+        produce(states_topic, states.to_json)
+      end
+
+      it "keeps only the process matching the filter" do
+        get_filtered("consumers/overview", id: "web-a")
+
+        assert_ok
+        assert_body("web-a:1:1")
+        refute_body("web-b:2:2")
+      end
+    end
+
+    context "when the filtered results span multiple pages" do
+      before do
+        topics_config.consumers.states.name = states_topic
+        topics_config.consumers.reports.name = reports_topic
+
+        states = Fixtures.consumers_states_json(symbolize_names: false)
+        states["processes"] = {}
+        base_report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        # 60 processes that all match the "match-me" filter, so the filtered result set spans
+        # more than one page (25 per page)
+        60.times do |i|
+          id = "match-me:#{i}:#{i}"
+          states["processes"][id] = { "dispatched_at" => 2_690_818_669.526_218, "offset" => i }
+
+          report = base_report.dup
+          report["process"] = base_report["process"].merge("id" => id)
+
+          produce(reports_topic, report.to_json, key: id)
+        end
+
+        produce(states_topic, states.to_json)
+      end
+
+      context "when on the first filtered page" do
+        before { get_filtered("consumers/overview", id: "match-me") }
+
+        it "paginates the filtered set and keeps the filter active" do
+          assert_ok
+          assert_body(pagination)
+          assert_equal(50, body.scan("match-me:").size)
+          assert_body('value="match-me"')
+        end
+      end
+
+      context "when on the second filtered page" do
+        before { get_filtered("consumers/overview", id: "match-me", page: 2) }
+
+        it "shows the next filtered page with the filter still applied" do
+          assert_ok
+          assert_body(pagination)
+          assert_equal(50, body.scan("match-me:").size)
+          # The filter is preserved across pagination
+          assert_body('value="match-me"')
+          assert_body('value="id" selected')
+        end
+      end
+
+      context "when filtering, sorting and paginating all at once" do
+        context "when on the first page" do
+          before do
+            get_filtered("consumers/overview", id: "match-me", sort: "id desc", page: 1)
+          end
+
+          it "applies the filter, the sort and the page together" do
+            assert_ok
+            assert_body(pagination)
+            # filtered to the match-me set...
+            assert_equal(50, body.scan("match-me:").size)
+            assert_body('value="match-me"')
+            # ...and actually sorted descending by id, so the lexicographically-largest id leads
+            assert_operator(body.index("match-me:9:9"), :<, body.index("match-me:8:8"))
+          end
+        end
+
+        context "when on the second page" do
+          before do
+            get_filtered("consumers/overview", id: "match-me", sort: "id desc", page: 2)
+          end
+
+          it "carries the filter and sort onto the next page" do
+            assert_ok
+            assert_body(pagination)
+            assert_equal(50, body.scan("match-me:").size)
+            assert_body('value="match-me"')
+            # the first page's leading (sorted) row is not repeated on page 2
+            refute_body("match-me:9:9")
+          end
+        end
       end
     end
   end

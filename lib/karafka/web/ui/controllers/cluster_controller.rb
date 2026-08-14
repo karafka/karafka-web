@@ -22,27 +22,15 @@ module Karafka
 
           # Lists available brokers in the cluster
           def brokers
-            @brokers = refine(cluster_info.brokers)
+            @brokers = sort(Models::ClusterInfo.fetch.brokers)
 
             render
           end
 
           # List partitions replication details
           def replication
-            partitions_total = []
-
-            displayable_topics(cluster_info).each do |topic|
-              topic[:partitions].each do |partition|
-                partitions_total << partition.merge(
-                  topic: topic,
-                  # Will allow sorting by name
-                  topic_name: topic.fetch(:topic_name)
-                )
-              end
-            end
-
             @partitions, last_page = Paginators::Arrays.call(
-              refine(partitions_total),
+              sort(replication_partitions),
               @params.current_page
             )
 
@@ -53,16 +41,27 @@ module Karafka
 
           private
 
-          # @return [Array] whole cluster info
-          def cluster_info
-            @cluster_info ||= Models::ClusterInfo.fetch
+          # Expands the displayable cluster topics into one flat row per partition, which the
+          # replication table renders, sorts and paginates. Each row is a partition carrying its
+          # topic (and topic name, so it can be sorted/filtered by name).
+          #
+          # @return [Array<Hash>] partition rows
+          def replication_partitions
+            displayable_topics.flat_map do |topic|
+              topic[:partitions].map do |partition|
+                partition.merge(
+                  topic: topic,
+                  topic_name: topic.fetch(:topic_name)
+                )
+              end
+            end
           end
 
-          # @param cluster_info [Rdkafka::Metadata] cluster metadata
-          # @return [Array<Hash>] array with topics to be displayed sorted in an alphabetical
-          #   order
-          def displayable_topics(cluster_info)
-            all = cluster_info
+          # @return [Array<Hash>] cluster topics to display in an alphabetical order, with internal
+          #   topics excluded unless the visibility config allows them
+          def displayable_topics
+            all = Models::ClusterInfo
+              .fetch
               .topics
               .sort_by { |topic| topic[:topic_name] }
 

@@ -85,6 +85,37 @@ describe_current do
       end
     end
 
+    context "when sorting running jobs" do
+      before { get "consumers/shinra:1:1/jobs/running?sort=consumer+desc" }
+
+      it do
+        assert_ok
+        assert_body("Karafka::Pro::ActiveJob::Consumer")
+      end
+    end
+
+    context "when filtering running jobs by a matching keyword" do
+      before { get_filtered("consumers/shinra:1:1/jobs/running", "ActiveJob") }
+
+      it do
+        assert_ok
+        assert_body("Karafka::Pro::ActiveJob::Consumer")
+        refute_body("No results match your filter")
+      end
+    end
+
+    context "when filtering running jobs by a non-matching keyword" do
+      before { get_filtered("consumers/shinra:1:1/jobs/running", "zzz-no-such-job") }
+
+      it do
+        assert_ok
+        # The filter emptied the list, so we show the filter-specific empty state, not the
+        # misleading "This process has no running jobs" message
+        assert_body("No results match your filter")
+        refute_body("This process has no running jobs at the moment")
+      end
+    end
+
     context "when given process has no jobs running" do
       before do
         topics_config.consumers.reports.name = reports_topic

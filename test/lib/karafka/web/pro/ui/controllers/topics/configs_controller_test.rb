@@ -57,6 +57,37 @@ describe_current do
         assert_body("min.insync.replicas")
       end
     end
+
+    context "when sorting the configs" do
+      before { get "topics/#{topic}/config?sort=name+desc" }
+
+      it do
+        assert_ok
+        assert_body("max.message.bytes")
+      end
+    end
+
+    context "when filtering configs by a matching keyword" do
+      before { get_filtered("topics/#{topic}/config", "max.message") }
+
+      it do
+        assert_ok
+        assert_body("max.message.bytes")
+        refute_body("No results match your filter")
+      end
+    end
+
+    context "when filtering configs by a non-matching keyword" do
+      before { get_filtered("topics/#{topic}/config", "zzz-no-such-config") }
+
+      it do
+        assert_ok
+        # The filter emptied the table, so we show the filter-specific empty state instead of a
+        # bare header-only table
+        assert_body("No results match your filter")
+        refute_body("max.message.bytes")
+      end
+    end
   end
 
   describe "#edit" do

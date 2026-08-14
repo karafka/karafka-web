@@ -1,0 +1,60 @@
+<%# Karafka Pro - Source Available Commercial Software %>
+<%# Copyright (c) 2017-present Maciej Mensfeld. All rights reserved. %>
+<%# This software is NOT open source. It is source-available commercial software %>
+<%# requiring a paid license for use. It is NOT covered by LGPL. %>
+<%# The author retains all right, title, and interest in this software, %>
+<%# including all copyrights, patents, and other intellectual property rights. %>
+<%# No patent rights are granted under this license. %>
+<%# PROHIBITED: Use without a valid commercial license %>
+<%# PROHIBITED: Redistribution, modification, or derivative works without authorization %>
+<%# PROHIBITED: Reverse engineering, decompilation, or disassembly of this software %>
+<%# PROHIBITED: Use as training data for AI/ML models or inclusion in datasets %>
+<%# PROHIBITED: Scraping, crawling, or automated collection for any purpose %>
+<%# PERMITTED: Reading, referencing, and linking for personal or commercial use %>
+<%# PERMITTED: Runtime retrieval by AI assistants, coding agents, and RAG systems %>
+<%# PERMITTED: for the purpose of providing contextual help to Karafka users %>
+<%# Receipt, viewing, or possession of this software does not convey or %>
+<%# imply any license or right beyond those expressly stated above. %>
+<%# License: https://karafka.io/docs/Pro-License-Comm/ %>
+<%# Contact: contact@karafka.io %>
+
+<div class="data-table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th colspan="12">
+          <%= topic_name %>
+        </th>
+      </tr>
+      <tr>
+        <th rowspan="2"><%== sort_link('Partition', :id) %></th>
+        <th colspan="2">Lags</th>
+        <th colspan="2">Trends</th>
+        <th colspan="12" rowspan="2">
+          <%== sort_link(:poll_state) %>
+        </th>
+      </tr>
+      <tr>
+        <th><%== sort_link(:lag) %></th>
+        <th><%== sort_link(:lag_stored) %></th>
+        <th><%== sort_link('Lag', :lag_d) %></th>
+        <th><%== sort_link('Lag stored', :lag_stored_d) %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%==
+        partial(
+          'health/partitions_with_fallback',
+          locals: {
+            consumer_group_id: cg_name,
+            topic_details: topic_details,
+            topic_name: topic_name,
+            partition_partial: 'health/partition_lags',
+            colspan: 5
+          }
+        )
+      %>
+    </tbody>
+  </table>
+  <%== partial 'health/table_metadata', locals: { details: cg_details } %>
+</div>

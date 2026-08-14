@@ -46,6 +46,66 @@ describe_current do
       end
     end
 
+    context "when filtering by a matching topic name" do
+      # A rendered consumer group table always contains the "Subscription group" header, so we use
+      # it (rather than the topic name, which is echoed back in the filter input regardless) as the
+      # reliable signal that at least one group actually rendered
+      before { get_filtered("routing", Karafka::App.routes.first.topics.first.name) }
+
+      it do
+        assert_ok
+        assert_body("Subscription group")
+      end
+    end
+
+    context "when filtering by a matching consumer group name" do
+      before { get_filtered("routing", Karafka::App.routes.first.id) }
+
+      it do
+        assert_ok
+        # Matching the group name keeps the whole group (its topics) visible
+        assert_body("Subscription group")
+        assert_body(Karafka::App.routes.first.topics.first.name)
+      end
+    end
+
+    context "when scoping the filter to the consumer group field" do
+      before do
+        get_filtered("routing", consumer_group: Karafka::App.routes.first.id)
+      end
+
+      it do
+        assert_ok
+        # The group matches, so its table renders, and the selected field is reflected in the select
+        assert_body("Subscription group")
+        assert_body('name="filter[field]"')
+        assert_body('value="consumer_group" selected')
+      end
+    end
+
+    context "when filtering by a non-matching keyword" do
+      before { get_filtered("routing", "zzz-nonexistent-topic-zzz") }
+
+      it do
+        assert_ok
+        # No topic or group matches, so all consumer groups are hidden (no table rendered), but the
+        # filter box remains alongside the filter-specific empty state
+        assert_body('name="filter[value]"')
+        assert_body("No results match your filter")
+        refute_body("Subscription group")
+      end
+
+      it "does not mutate the live app routing" do
+        topic_names = -> { Karafka::App.routes.flat_map { |cg| cg.topics.map(&:name) }.sort }
+
+        before_topics = topic_names.call
+        get_filtered("routing", "zzz-nonexistent-topic-zzz")
+        after_topics = topic_names.call
+
+        assert_equal(before_topics, after_topics)
+      end
+    end
+
     context "when there is no consumers state" do
       before do
         Karafka::Web::Ui::Models::ConsumersState.stubs(:current).returns(false)
@@ -101,6 +161,52 @@ describe_current do
       assert_body("kafka.topic.metadata.refresh.interval.ms")
       assert_body(breadcrumbs)
       assert_body("kafka.statistics.interval.ms")
+    end
+
+    context "when sorting the details by attribute name" do
+      before { get "routing/#{Karafka::App.routes.first.topics.first.id}?sort=name+desc" }
+
+      it "actually reorders the rows (descending by name)" do
+        assert_ok
+        # 'kafka.topic...' sorts after 'kafka.statistics...' ascending, so descending puts it first
+        assert_operator(
+          response.body.index("kafka.topic.metadata.refresh.interval.ms"),
+          :<,
+          response.body.index("kafka.statistics.interval.ms")
+        )
+      end
+    end
+
+    context "when sorting the details by value" do
+      before { get "routing/#{Karafka::App.routes.first.topics.first.id}?sort=value+asc" }
+
+      it do
+        assert_ok
+        assert_body("kafka.topic.metadata.refresh.interval.ms")
+      end
+    end
+
+    context "when filtering the details by attribute name" do
+      before do
+        get_filtered("routing/#{Karafka::App.routes.first.topics.first.id}", name: "statistics")
+      end
+
+      it do
+        assert_ok
+        assert_body("kafka.statistics.interval.ms")
+        refute_body("kafka.topic.metadata.refresh.interval.ms")
+      end
+    end
+
+    context "when filtering the details by a non-matching keyword" do
+      before do
+        get_filtered("routing/#{Karafka::App.routes.first.topics.first.id}", "zzz-nonexistent-attribute-zzz")
+      end
+
+      it do
+        assert_ok
+        assert_body("No results match your filter")
+      end
     end
 
     context "when given route is not available" do
