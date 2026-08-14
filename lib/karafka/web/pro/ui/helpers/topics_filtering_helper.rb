@@ -39,10 +39,10 @@ module Karafka
           # `Karafka::App.routes` / process subscriptions non-destructively, since those must never
           # be mutated.
           module TopicsFilteringHelper
-            # Non-destructively narrows a topics collection (routing or a consumer subscription) down
-            # to the ones matching the current filter.
+            # Non-destructively narrows a topics collection (routing or a consumer subscription)
+            # down to the ones matching the current filter.
             #
-            # It is field aware: when the `topic` field is selected only the topic names are matched;
+            # It is field aware: when the `topic` field is selected only topic names are matched;
             # when `consumer_group`/`subscription_group` is selected the whole collection is kept or
             # dropped based on that group's name. With no explicit field (plain keyword) a topic is
             # kept when its own name matches or when any of the provided group labels match.
@@ -50,9 +50,9 @@ module Karafka
             # It always returns a new array and leaves the source untouched.
             #
             # @param topics [Enumerable] topics of a subscription/consumer group
-            # @param consumer_group [String, nil] the consumer group name shown as the section header
-            # @param subscription_group [String, nil] the subscription group name (subscriptions view)
-            # @return [Array] all topics when no filtering is active, otherwise only the matching ones
+            # @param consumer_group [String, nil] the consumer group name shown as the section title
+            # @param subscription_group [String, nil] the subscription group name (subscriptions)
+            # @return [Array] all topics when no filtering is active, otherwise only matching ones
             def visible_topics(topics, consumer_group: nil, subscription_group: nil)
               return topics.to_a unless filtering?
 

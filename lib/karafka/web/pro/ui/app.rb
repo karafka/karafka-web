@@ -68,7 +68,7 @@ module Karafka
           end
 
           # Builds the Pro request params, which add the filtering (search) readers on top of the
-          # OSS ones. Overriding here keeps the filtering param parsing out of the shared OSS params.
+          # OSS ones. Overriding here keeps the filtering param parsing out of the shared params.
           #
           # @return [Controllers::Requests::Params] curated Pro params
           def params

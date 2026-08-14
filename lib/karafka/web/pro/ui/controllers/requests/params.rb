@@ -33,6 +33,7 @@ module Karafka
     module Pro
       module Ui
         module Controllers
+          # Namespace for the Pro request wrappers (params, etc.).
           module Requests
             # Extends the OSS request params with the Pro-only filtering (search) readers, so the
             # filtering query parsing never lives in the shared OSS params.

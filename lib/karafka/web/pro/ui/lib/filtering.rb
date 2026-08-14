@@ -36,9 +36,9 @@ module Karafka
           # Filtering (search) is a Pro-only feature, so all of its wiring lives in this concern and
           # is mixed only into Pro controllers. OSS controllers never gain filtering.
           #
-          # It is included by the Pro base controller (covering every standalone Pro controller) and,
-          # because a few Pro controllers inherit OSS controllers directly (and thus bypass the Pro
-          # base controller), by those explicitly.
+          # It is included by the Pro base controller (covering every standalone Pro controller)
+          # and, because a few Pro controllers inherit OSS controllers directly (and thus bypass
+          # the Pro base controller), by those explicitly.
           module Filtering
             # Descriptor for a filterable field that matches nested hash KEYS at a position in the
             # structure, rather than an attribute on the records. Used for tree-shaped data whose
@@ -85,12 +85,12 @@ module Karafka
             # Filters the provided resources in place based on the current filtering keyword and the
             # fields allowed for filtering.
             #
-            # The allowed fields default to `@filterable_fields`, which the before hook resolves from
-            # the controller's `filterable_attributes` declaration for the current action and exposes
-            # to the view. Pass `fields` only when the engine's match set must differ from the fields
-            # shown in the selector (e.g. the health views scope the selector by topic/consumer group
-            # but keyword-match against the leaf partition id); it overrides matching only and does
-            # not change the exposed selector.
+            # The allowed fields default to `@filterable_fields`, which the before hook resolves
+            # from the controller's `filterable_attributes` declaration for the current action and
+            # exposes to the view. Pass `fields` only when the engine's match set must differ from
+            # the fields shown in the selector (e.g. the health views scope the selector by
+            # topic/consumer group but keyword-match against the leaf partition id); it overrides
+            # matching only and does not change the exposed selector.
             #
             # @param resources [Hash, Array, Web::Ui::Lib::HashProxy] object for filtering
             # @param fields [Array<Symbol>, nil] explicit engine allow-list for matching, overriding

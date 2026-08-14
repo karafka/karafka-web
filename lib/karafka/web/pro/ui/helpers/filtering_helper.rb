@@ -1,15 +1,44 @@
 # frozen_string_literal: true
 
+# Karafka Pro - Source Available Commercial Software
+# Copyright (c) 2017-present Maciej Mensfeld. All rights reserved.
+#
+# This software is NOT open source. It is source-available commercial software
+# requiring a paid license for use. It is NOT covered by LGPL.
+#
+# The author retains all right, title, and interest in this software,
+# including all copyrights, patents, and other intellectual property rights.
+# No patent rights are granted under this license.
+#
+# PROHIBITED:
+# - Use without a valid commercial license
+# - Redistribution, modification, or derivative works without authorization
+# - Reverse engineering, decompilation, or disassembly of this software
+# - Use as training data for AI/ML models or inclusion in datasets
+# - Scraping, crawling, or automated collection for any purpose
+#
+# PERMITTED:
+# - Reading, referencing, and linking for personal or commercial use
+# - Runtime retrieval by AI assistants, coding agents, and RAG systems
+#   for the purpose of providing contextual help to Karafka users
+#
+# Receipt, viewing, or possession of this software does not convey or
+# imply any license or right beyond those expressly stated above.
+#
+# License: https://karafka.io/docs/Pro-License-Comm/
+# Contact: contact@karafka.io
+
 module Karafka
   module Web
     module Pro
       module Ui
+        # Namespace for the Pro-only Web UI view helpers.
         module Helpers
-          # Helpers for rendering the keyword filtering (search) box on data tables. Companion to the
-          # [[SortingHelper]]: sorting reorders a listing, filtering narrows it down.
+          # Helpers for rendering the keyword filtering (search) box on data tables. Companion
+          # to the [[SortingHelper]]: sorting reorders a listing, filtering narrows it down.
           module FilteringHelper
-            # @return [Boolean] true if a filtering keyword is currently active. Filtering (search) is
-            #   a Pro-only feature, so this is always false in OSS.
+            # @return [Boolean] true if a filtering keyword is currently active. Filtering
+            #   (search) is a Pro-only feature, so this is always false in OSS.
             def filtering?
               return false unless ::Karafka.pro?
 
@@ -23,15 +52,16 @@ module Karafka
             # filtering always starts from the first page.
             #
             # It renders as a full-width search field with a "Search" submit button and a "Reset"
-            # button (always present, but disabled when there is nothing to reset, so the layout does
-            # not shift). When the controller exposes a `{ field => label }` map of filterable fields
-            # (via `filter`), a field selector is fused into the left of the field so the user can
-            # pick which attribute to filter on.
+            # button (always present, but disabled when there is nothing to reset, so the layout
+            # does not shift). When the controller exposes a `{ field => label }` map of filterable
+            # fields (via `filter`), a field selector is fused into the left of the field so the
+            # user can pick which attribute to filter on.
             #
-            # The placeholder is intentionally a single generic default across every listing: a field
-            # selector always accompanies the input and already tells the user which attribute is
-            # being filtered, so a per-view placeholder would be redundant (and would look stale until
-            # the form is submitted, since it is server-rendered and does not follow the select live).
+            # The placeholder is intentionally a single generic default across every listing: a
+            # field selector always accompanies the input and already tells the user which
+            # attribute is being filtered, so a per-view placeholder would be redundant (and would
+            # look stale until the form is submitted, since it is server-rendered and does not
+            # follow the select live).
             #
             # @param labels [Hash] per-view overrides for the field selector labels, e.g.
             #   `labels: { id: "Task ID" }`. Anything not overridden falls back to the shared
