@@ -69,7 +69,7 @@ module Karafka
             # controllers only need to declare bare attribute names in `filterable_attributes`.
             FILTER_NAMES = {
               id: "Process ID",
-              subscribed_topics: "Assigned topics",
+              subscribed_topics: "Subscriptions",
               tags: "Tags",
               topic: "Topic",
               topic_name: "Topic",
