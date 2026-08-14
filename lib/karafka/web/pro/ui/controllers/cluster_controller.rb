@@ -88,9 +88,9 @@ module Karafka
 
             private
 
-            # Flattens the displayable cluster topics into the flat partition rows the replication
-            # table renders, sorts, filters and paginates. Each row is a partition carrying its
-            # topic (and topic name, so it can be sorted/filtered by name).
+            # Expands the displayable cluster topics into one flat row per partition, which the
+            # replication table renders, sorts, filters and paginates. Each row is a partition
+            # carrying its topic (and topic name, so it can be sorted/filtered by name).
             #
             # @return [Array<Hash>] partition rows
             def replication_partitions
