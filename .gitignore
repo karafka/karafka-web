@@ -62,6 +62,10 @@ tailwind.min.css
 # RubyMine project files
 .idea
 
+.env*
+.codex
+.claude
+
 # Textmate project files
 /*.tmproj
 
