@@ -60,6 +60,15 @@ SimpleCov.start do
   command_name cmd_name
   merge_timeout 3600
   enable_coverage :branch
+
+  # When running in parallel, every worker shares the same coverage/ directory. The default
+  # HTML formatter writes coverage/coverage.json on exit, so concurrent workers clobber each
+  # other's file. Since simplecov 1.1.1 this raises a "concurrent overwrite" warning which our
+  # warning-to-error handler escalates into a failure. Each worker only needs to persist its
+  # raw .resultset.json (always written regardless of formatter); the human-readable report is
+  # produced once by the single collation step in bin/check_coverage. So we drop the file
+  # writing formatter for parallel workers and keep it only for non-parallel local runs.
+  formatter SimpleCov::Formatter::SimpleFormatter unless PARALLEL_GROUP_ID.empty?
 end
 
 # Only check minimum coverage when not running in parallel mode
