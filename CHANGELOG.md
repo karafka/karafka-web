@@ -1,5 +1,9 @@
 # Karafka Web Changelog
 
+## Unreleased
+- [Enhancement] Tighten compaction on the `karafka_consumers_states` and `karafka_consumers_metrics` topics (`segment.ms` 1 day -> 6h, add `max.compaction.lag.ms` of 7 days) so superseded versions are collapsed sooner. Values accepted on Apache Kafka, Confluent Cloud, Redpanda and MSK.
+- [Fix] Raise the `retention.ms` floor on the compacted `karafka_consumers_states` and `karafka_consumers_metrics` topics to 1 month (was 1 hour / 1 day) so the most recent record is not deleted on brokers that apply retention to compacted topics (e.g. Redpanda).
+
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a generic keyword filtering (search) box to the data-heavy Web UI listings (consumers, controls, jobs, routing, per-process subscriptions, cluster, configs, recurring tasks, the health views and the topic lists), so a specific consumer, topic or job can be found without scrolling. Flat listings also include a field selector to scope the search to a chosen attribute (Pro) (#1073).
 - [Enhancement] Track producer errors from every WaterDrop producer, not only `Karafka.producer` and `Karafka::Web.producer`. Web UI now subscribes its producer error listeners via WaterDrop's class-level (global) monitor, attaching them to each producer as it is configured, so errors from any additional producer a user creates (secondary, transactional, etc.) reach the Web UI. Attaching is idempotent per monitor and skips any listener a user already subscribed themselves, so errors are never counted twice. This also fixes a pre-existing double-counting bug where the default producer's errors were recorded twice, because the old `Karafka.producer == Karafka::Web.producer` guard never matched (the Web producer is a delegator/variant that shares the default producer's monitor), so the same monitor was subscribed twice (#952).
