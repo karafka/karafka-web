@@ -77,15 +77,25 @@ module Karafka
           setting :states do
             setting :name, default: "karafka_consumers_states"
 
-            # We care only about the most recent state, previous are irrelevant. So we can
-            # easily compact after one minute. We do not use this beyond the most recent
-            # collective state, hence it all can easily go away. We also limit the segment
-            # size to at most 100MB not to use more space ever.
+            # Single-key compacted topic; only the most recent state matters.
+            #
+            # `retention.ms` is a safety floor. It is inert on Apache Kafka (compact-only topics
+            # are never time-deleted), but brokers that apply retention regardless of cleanup
+            # policy (e.g. Redpanda) would delete the segment holding the last record and empty
+            # the topic. A 1 month floor keeps the last record alive there. We
+            # keep it finite rather than `-1` for portability: some managed brokers reject or
+            # clamp unlimited retention, and on some clouds it is a billing-relevant flag.
             setting :config, default: {
               "cleanup.policy": "compact",
-              "retention.ms": 60 * 60 * 1_000,
-              "segment.ms": 24 * 60 * 60 * 1_000, # 1 day
-              "segment.bytes": 104_857_600 # 100MB
+              "retention.ms": 31 * 24 * 60 * 60 * 1_000, # 1 month, last-record floor
+              # Small so the never-compacted active segment window stays short; clears Confluent
+              # Cloud's 4h minimum.
+              "segment.ms": 6 * 60 * 60 * 1_000, # 6 hours
+              "segment.bytes": 104_857_600, # 100MB
+              # Force-collapse superseded versions on a schedule, not just on dirty-ratio.
+              # Confluent Cloud's Basic/Standard/Enterprise minimum, under the retention floor.
+              # Never removes the latest value for a key.
+              "max.compaction.lag.ms": 7 * 24 * 60 * 60 * 1_000 # 7 days
             }
           end
 
@@ -93,11 +103,13 @@ module Karafka
           setting :metrics do
             setting :name, default: "karafka_consumers_metrics"
 
+            # Single-key compacted topic; same safety-floor reasoning as the states topic above.
             setting :config, default: {
               "cleanup.policy": "compact",
-              "retention.ms": 24 * 60 * 60 * 1_000, # 1 day
-              "segment.ms": 24 * 60 * 60 * 1_000, # 1 day
-              "segment.bytes": 104_857_600 # 100MB
+              "retention.ms": 31 * 24 * 60 * 60 * 1_000, # 1 month, last-record floor
+              "segment.ms": 6 * 60 * 60 * 1_000, # 6 hours
+              "segment.bytes": 104_857_600, # 100MB
+              "max.compaction.lag.ms": 7 * 24 * 60 * 60 * 1_000 # 7 days
             }
           end
 
