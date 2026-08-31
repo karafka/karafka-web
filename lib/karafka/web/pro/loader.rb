@@ -57,6 +57,10 @@ module Karafka
           # @param config [Karafka::Core::Configurable::Node] web config that we can alter with pro
           #   components
           def pre_setup_all(config)
+            # Layer Pro-specific Web UI kafka defaults on top of the OSS ones. Mirrors how
+            # Karafka::Pro::Loader prepends its defaults injector onto the OSS one.
+            Web::Config::DefaultsInjector.singleton_class.prepend(Config::DefaultsInjector)
+
             # Expand the config with commanding configuration
             config.instance_eval do
               setting(:commanding, default: Commanding::Config.config)

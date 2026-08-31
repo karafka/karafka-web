@@ -81,7 +81,9 @@ module Karafka
                 features.commanding!
 
                 # We read 25 just in case there would be a lot of transactional noise
-                messages = ::Karafka::Admin.read_topic(commands_topic, 0, 25)
+                # Uses the Web UI admin wrapper so the commands topic (written transactionally)
+                # is read with the Web UI kafka settings for responsiveness
+                messages = Web::Ui::Lib::Admin.read_topic(commands_topic, 0, 25)
 
                 # We find the most recent (last since they are shipped in reverse order)
                 recent = messages.reverse.find { |message| !message.is_a?(Array) }
