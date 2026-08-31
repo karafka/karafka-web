@@ -1,6 +1,7 @@
 # Karafka Web Changelog
 
 ## Unreleased
+- [Enhancement] Inject Web UI kafka settings via `Karafka::Web::Config::DefaultsInjector` (built on `Karafka::Core::Configurable::Injector`) so the injection follows the same pattern as Karafka and can be extended by Pro (#653). Requires karafka-core `>= 2.6.3`.
 - [Enhancement] Tighten compaction on the `karafka_consumers_states` and `karafka_consumers_metrics` topics (`segment.ms` 1 day -> 6h, add `max.compaction.lag.ms` of 7 days) so superseded versions are collapsed sooner. Values accepted on Apache Kafka, Confluent Cloud, Redpanda and MSK.
 - [Fix] Raise the `retention.ms` floor on the compacted `karafka_consumers_states` and `karafka_consumers_metrics` topics to 1 month (was 1 hour / 1 day) so the most recent record is not deleted on brokers that apply retention to compacted topics (e.g. Redpanda).
 
