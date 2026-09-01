@@ -56,6 +56,33 @@ describe_current do
     end
   end
 
+  describe "#no_data_count" do
+    context "when some assigned partitions have no data" do
+      let(:partitions) { { 0 => partition(0) } }
+      let(:partitions_count) { 3 }
+
+      it "expect to count the missing partitions below the reported count" do
+        # partitions 1 and 2 have no data
+        assert_equal(2, aggregated.no_data_count)
+      end
+    end
+
+    context "when every partition has data" do
+      let(:partitions) { { 0 => partition(0), 1 => partition(1) } }
+
+      it { assert_equal(0, aggregated.no_data_count) }
+    end
+
+    context "when more partitions report than the count (data merged across processes)" do
+      let(:partitions) { { 0 => partition(0), 1 => partition(1), 2 => partition(2) } }
+      let(:partitions_count) { 1 }
+
+      it "expect no partitions to be counted as missing" do
+        assert_equal(0, aggregated.no_data_count)
+      end
+    end
+  end
+
   describe "#lag_hybrid" do
     context "when partitions have lag available" do
       let(:partitions) do
