@@ -68,6 +68,41 @@ module Karafka
               Lib::Filtering.key(:consumer_group)
             ].freeze
 
+            # Displays a per-topic aggregated overview, so instead of a row per partition we get a
+            # single summary row per topic. This is the default health landing page: it lets one
+            # answer "is anything off?" at a glance and drill down into a topic only when needed.
+            def topics
+              current_state = Models::ConsumersState.current!
+              @stats = Models::Health.aggregated(current_state)
+
+              # Same key-based tree as overview, so the topic/consumer group filter works as-is
+              filter(@stats)
+
+              render
+            end
+
+            # Displays the per-partition details of a single topic within a consumer group. This is
+            # the drill-down target of the aggregated topics view and reuses the overview table.
+            #
+            # @param consumer_group_id [String] id of the consumer group
+            # @param topic_name [String] name of the topic
+            def topic(consumer_group_id, topic_name)
+              current_state = Models::ConsumersState.current!
+              stats = Models::Health.current(current_state)
+
+              @consumer_group_id = consumer_group_id
+              @topic_name = topic_name
+              @cg_details = stats[consumer_group_id]
+              @topic_details = @cg_details && @cg_details[:topics][topic_name]
+
+              not_found!(topic_name) unless @topic_details
+
+              # Reuse the per-partition sortable attributes exposed for the overview table
+              sort(@topic_details)
+
+              render
+            end
+
             # Displays the current system state
             def overview
               current_state = Models::ConsumersState.current!

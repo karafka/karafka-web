@@ -18,6 +18,26 @@ module Karafka
               sort_structure(stats)
             end
 
+            # Builds the same tree as {.current} but with each topic collapsed into a single
+            # {AggregatedTopic} summary instead of its per-partition data. Used by the per-topic
+            # health view where each topic is a single row. The consumer group level (including
+            # `:rebalanced_at`) and the `cg => :topics => topic_name` shape are preserved, so the
+            # existing sorting and filtering flows keep working unchanged.
+            #
+            # @param state [State] current system state
+            # @return [Hash] hash with per-topic aggregated statistics
+            def aggregated(state)
+              stats = current(state)
+
+              stats.each_value do |cg_details|
+                cg_details[:topics].transform_values! do |topic_details|
+                  AggregatedTopic.new(topic_details)
+                end
+              end
+
+              stats
+            end
+
             # @return [Hash] hash with cluster lag data
             def cluster_lags_with_offsets
               # We need to remap raw results so they comply with our sorting flows

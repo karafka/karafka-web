@@ -1,6 +1,7 @@
 # Karafka Web Changelog
 
 ## Unreleased
+- **[Feature]** Add a per-topic aggregated Health view (new default "Topics" tab). Instead of a row per partition, each topic is a single summary row showing partition coverage, total lag and its trend, the biggest single-partition lag (so a lag concentrated on one hot/stuck partition is visible even when the total looks fine), the worst LSO risk state and the paused partition count. Anything off is highlighted and links to a per-topic detail page with the full per-partition breakdown (#112).
 - [Enhancement] Tighten compaction on the `karafka_consumers_states` and `karafka_consumers_metrics` topics (`segment.ms` 1 day -> 6h, add `max.compaction.lag.ms` of 7 days) so superseded versions are collapsed sooner. Values accepted on Apache Kafka, Confluent Cloud, Redpanda and MSK.
 - [Fix] Raise the `retention.ms` floor on the compacted `karafka_consumers_states` and `karafka_consumers_metrics` topics to 1 month (was 1 hour / 1 day) so the most recent record is not deleted on brokers that apply retention to compacted topics (e.g. Redpanda).
 

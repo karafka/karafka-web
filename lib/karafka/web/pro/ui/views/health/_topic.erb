@@ -1,0 +1,69 @@
+<%# Karafka Pro - Source Available Commercial Software %>
+<%# Copyright (c) 2017-present Maciej Mensfeld. All rights reserved. %>
+<%# This software is NOT open source. It is source-available commercial software %>
+<%# requiring a paid license for use. It is NOT covered by LGPL. %>
+<%# The author retains all right, title, and interest in this software, %>
+<%# including all copyrights, patents, and other intellectual property rights. %>
+<%# No patent rights are granted under this license. %>
+<%# PROHIBITED: Use without a valid commercial license %>
+<%# PROHIBITED: Redistribution, modification, or derivative works without authorization %>
+<%# PROHIBITED: Reverse engineering, decompilation, or disassembly of this software %>
+<%# PROHIBITED: Use as training data for AI/ML models or inclusion in datasets %>
+<%# PROHIBITED: Scraping, crawling, or automated collection for any purpose %>
+<%# PERMITTED: Reading, referencing, and linking for personal or commercial use %>
+<%# PERMITTED: Runtime retrieval by AI assistants, coding agents, and RAG systems %>
+<%# PERMITTED: for the purpose of providing contextual help to Karafka users %>
+<%# Receipt, viewing, or possession of this software does not convey or %>
+<%# imply any license or right beyond those expressly stated above. %>
+<%# License: https://karafka.io/docs/Pro-License-Comm/ %>
+<%# Contact: contact@karafka.io %>
+
+<tr class="<%= lso_risk_state_bg(topic_stats) %>">
+  <td>
+    <a href="<%= root_path('health', 'topics', cg_name, topic_name) %>">
+      <%= topic_name %>
+    </a>
+  </td>
+  <td>
+    <% if topic_stats.present_count < topic_stats.partitions_count %>
+      <span
+        class="badge badge-warning"
+        title="Only <%= topic_stats.present_count %> of <%= topic_stats.partitions_count %> partitions are reporting data"
+      >
+        <%= topic_stats.present_count %>/<%= topic_stats.partitions_count %>
+      </span>
+    <% else %>
+      <%= topic_stats.present_count %>/<%= topic_stats.partitions_count %>
+    <% end %>
+  </td>
+  <td>
+    <%== lag_with_label topic_stats.lag_hybrid %>
+  </td>
+  <td>
+    <span class="badge <%= lag_trend_badge(topic_stats.lag_hybrid_d) %>">
+      <%= topic_stats.lag_hybrid_d %>
+    </span>
+  </td>
+  <td>
+    <%== lag_with_label topic_stats.max_lag %>
+    <% if topic_stats.max_lag_partition_id >= 0 %>
+      <small class="text-muted">(partition <%= topic_stats.max_lag_partition_id %>)</small>
+    <% end %>
+  </td>
+  <td>
+    <span class="badge badge-success <%= lso_risk_state_badge(topic_stats) %>">
+      <%= topic_stats.lso_risk_state %>
+    </span>
+  </td>
+  <td>
+    <% if topic_stats.paused_count.positive? %>
+      <span class="badge badge-warning">
+        <%= topic_stats.paused_count %> paused
+      </span>
+    <% else %>
+      <span class="badge badge-success">
+        all active
+      </span>
+    <% end %>
+  </td>
+</tr>

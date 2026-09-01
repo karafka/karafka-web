@@ -685,4 +685,277 @@ describe_current do
       end
     end
   end
+
+  describe "health/ path redirect" do
+    context "when visiting the health/ path without a sub-page" do
+      before { get "health" }
+
+      it "expect to redirect to the aggregated topics page" do
+        assert_equal(302, response.status)
+        assert_includes(response.headers["location"], "health/topics")
+      end
+    end
+  end
+
+  describe "#topics" do
+    context "when no report data" do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+        get "health/topics"
+      end
+
+      it do
+        assert_ok
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        assert_body("No health data is available")
+        # The Topics tab is present and highlighted
+        assert_body("health/topics")
+      end
+    end
+
+    context "when data is present" do
+      before { get "health/topics" }
+
+      it "expect to render one aggregated row per topic" do
+        assert_ok
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        assert_body("example_app6_app")
+        assert_body("default")
+        assert_body("test2")
+        assert_body("visits")
+        # Aggregated total lag of the single default partition
+        assert_body("213731273")
+        # Healthy topic: active LSO risk state and no paused partitions
+        assert_body("all active")
+        refute_body("badge-error")
+      end
+
+      it "expect each topic name to link to its per-topic detail page" do
+        assert_ok
+        assert_body("health/topics/example_app6_app/default")
+      end
+
+      context "when sorted" do
+        before { get "health/topics?sort=id+desc" }
+
+        it { assert_ok }
+      end
+    end
+
+    context "when filtering by a matching topic keyword" do
+      before { get_filtered("health/topics", "default") }
+
+      it do
+        assert_ok
+        assert_body("default")
+        assert_body("213731273")
+        # The non-matching topics are pruned
+        refute_body("visits")
+        assert_body('name="filter[value]"')
+        assert_body('value="default"')
+      end
+    end
+
+    context "when filtering by a non-matching keyword" do
+      before { get_filtered("health/topics", "this-topic-does-not-exist") }
+
+      it do
+        assert_ok
+        assert_body("No results match your filter")
+        assert_body('name="filter[value]"')
+        refute_body("213731273")
+      end
+    end
+
+    context "when scoping the filter to the topic field" do
+      context "when the topic matches" do
+        before { get_filtered("health/topics", topic: "default") }
+
+        it do
+          assert_ok
+          assert_body("default")
+          assert_body("213731273")
+          refute_body("visits")
+          assert_body('value="topic" selected')
+        end
+      end
+
+      context "when the topic does not match" do
+        before { get_filtered("health/topics", topic: "no-such-topic") }
+
+        it do
+          assert_ok
+          assert_body("No results match your filter")
+          refute_body("213731273")
+        end
+      end
+    end
+
+    context "when scoping the filter to the consumer group field" do
+      context "when the consumer group matches" do
+        before { get_filtered("health/topics", consumer_group: "example_app6_app") }
+
+        it do
+          assert_ok
+          assert_body("example_app6_app")
+          assert_body("default")
+          assert_body("213731273")
+        end
+      end
+
+      context "when the consumer group does not match" do
+        before { get_filtered("health/topics", consumer_group: "no-such-group") }
+
+        it do
+          assert_ok
+          assert_body("No results match your filter")
+          refute_body("213731273")
+        end
+      end
+    end
+
+    context "when some partitions have no data" do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+        topic_data = report.dig(*partition_scope[0..5])
+        topic_data["partitions_cnt"] = 3
+
+        produce(reports_topic, report.to_json)
+
+        get "health/topics"
+      end
+
+      it "expect to flag the incomplete partition coverage" do
+        assert_ok
+        assert_body("1/3")
+        assert_body("badge-warning")
+      end
+    end
+
+    context "when one of the partitions is at risk due to LSO" do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        partition_data = report.dig(*partition_scope)
+        partition_data["committed_offset"] = 1_000
+        partition_data["ls_offset"] = 3_000
+        partition_data["ls_offset_fd"] = 1_000_000_000
+
+        produce(reports_topic, report.to_json)
+
+        get "health/topics"
+      end
+
+      it "expect the aggregated row to escalate to at_risk" do
+        assert_ok
+        assert_body("at_risk")
+        assert_body("badge-warning")
+        refute_body("stopped")
+        refute_body("badge-error")
+      end
+    end
+
+    context "when one of the partitions is stopped due to LSO" do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        partition_data = report.dig(*partition_scope)
+        partition_data["committed_offset"] = 3_000
+        partition_data["ls_offset"] = 3_000
+        partition_data["ls_offset_fd"] = 1_000_000_000
+
+        produce(reports_topic, report.to_json)
+
+        get "health/topics"
+      end
+
+      it "expect the aggregated row to escalate to stopped" do
+        assert_ok
+        assert_body("stopped")
+        assert_body("badge-error")
+        refute_body("at_risk")
+      end
+    end
+
+    context "when one of the partitions is paused" do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        partition_data = report.dig(*partition_scope)
+        partition_data["poll_state"] = "paused"
+        partition_data["poll_state_ch"] = 1_000_000_000_000
+
+        produce(reports_topic, report.to_json)
+
+        get "health/topics"
+      end
+
+      it "expect the aggregated row to report the paused partition" do
+        assert_ok
+        assert_body("1 paused")
+        refute_body("all active")
+      end
+    end
+
+    context "when data is present but reported in a transactional fashion" do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+        produce(reports_topic, Fixtures.consumers_reports_file, type: :transactional)
+
+        get "health/topics"
+      end
+
+      it do
+        assert_ok
+        assert_body(breadcrumbs)
+        assert_body("default")
+        assert_body("213731273")
+      end
+    end
+  end
+
+  describe "#topic" do
+    context "when the consumer group and topic exist" do
+      before { get "health/topics/example_app6_app/default" }
+
+      it "expect to render the per-partition detail for that topic" do
+        assert_ok
+        assert_body(breadcrumbs)
+        refute_body(pagination)
+        # The per-partition overview table is reused for the drill-down
+        assert_body("327355")
+        assert_body("Not available until first offset")
+        # Breadcrumb and title carry the topic name
+        assert_body("default")
+      end
+
+      context "when sorted" do
+        before { get "health/topics/example_app6_app/default?sort=id+desc" }
+
+        it { assert_ok }
+      end
+    end
+
+    context "when the topic does not exist" do
+      before { get "health/topics/example_app6_app/no-such-topic" }
+
+      it { assert_equal(404, status) }
+    end
+
+    context "when the consumer group does not exist" do
+      before { get "health/topics/no-such-group/default" }
+
+      it { assert_equal(404, status) }
+    end
+  end
 end

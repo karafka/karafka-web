@@ -59,8 +59,16 @@ module Karafka
                   controller.changes
                 end
 
+                r.get "topics", String, String do |consumer_group_id, topic_name|
+                  controller.topic(consumer_group_id, topic_name)
+                end
+
+                r.get "topics" do
+                  controller.topics
+                end
+
                 r.get do
-                  r.redirect root_path("health/overview")
+                  r.redirect root_path("health/topics")
                 end
               end
             end

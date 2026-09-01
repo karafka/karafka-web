@@ -24,6 +24,22 @@
   </a>
 </li>
 
+<% if current_path.include?('/topics') %>
+  <li>
+    <a href="<%= root_path('health', 'topics') %>">
+      Topics
+    </a>
+  </li>
+<% end %>
+
+<% if defined?(@topic_name) && @topic_name %>
+  <li>
+    <a href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name) %>">
+      <%= @topic_name %>
+    </a>
+  </li>
+<% end %>
+
 <% if current_path.include?('/lags') %>
   <li>
     <a href="<%= root_path('health', 'lags') %>">

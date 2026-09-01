@@ -18,54 +18,22 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<div class="tab-container-wrapper">
-  <div class="tab-container">
-    <a
-      href="<%= root_path('health', 'topics') %>"
-      class="custom-tab <%= nav_class(include: '/topics') %>"
-    >
-      Topics
-    </a>
+<% view_title "Topic #{@topic_name} Health" %>
 
-    <a
-      href="<%= root_path('health', 'overview') %>"
-      class="custom-tab <%= nav_class(include: 'overview') %>"
-    >
-      Overview
-    </a>
+<%== partial 'health/tabs' %>
 
-    <a
-      href="<%= root_path('health', 'lags') %>"
-      class="custom-tab <%= nav_class(include: '/lags') %>"
-    >
-      Lags
-    </a>
+<div class="col-span-12">
+  <h2 class="h2"><%= @consumer_group_id %></h2>
 
-    <a
-      href="<%= root_path('health', 'offsets') %>"
-      class="custom-tab <%= nav_class(include: 'offsets') %>"
-    >
-      Offsets
-    </a>
-
-    <a
-      href="<%= root_path('health', 'changes') %>"
-      class="custom-tab <%= nav_class(include: 'changes') %>"
-    >
-      Changes
-    </a>
-
-    <a
-      href="<%= root_path('health', 'cluster_lags') %>"
-      class="custom-tab <%= nav_class(include: 'cluster_lags') %>"
-    >
-      Cluster Lags
-    </a>
-  </div>
+  <%==
+    partial(
+      'health/overview_table',
+      locals: {
+        cg_name: @consumer_group_id,
+        cg_details: @cg_details,
+        topic_name: @topic_name,
+        topic_details: @topic_details
+      }
+    )
+  %>
 </div>
-
-<% if filtering? || !(@stats || {}).empty? %>
-  <div class="col-span-12">
-    <%== filter_box %>
-  </div>
-<% end %>

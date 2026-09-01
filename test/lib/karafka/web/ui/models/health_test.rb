@@ -108,4 +108,41 @@ describe_current do
       assert_equal(keys, sg[:topics][:default][:partitions][:"0"].keys.sort)
     end
   end
+
+  describe ".aggregated" do
+    let(:aggregated) { described_class.aggregated(state) }
+
+    context "when none of the processes are active" do
+      it { assert_equal({}, aggregated) }
+    end
+
+    context "when there are active processes" do
+      let(:cg) { "example_app6_app" }
+      let(:topic) { "default" }
+
+      before do
+        produce(reports_topic, report.to_json)
+        produce(reports_topic, report.to_json)
+      end
+
+      it "expect to preserve the consumer group => topics tree shape" do
+        assert_equal(%w[example_app6_app], aggregated.keys)
+        assert_equal(%w[default test2 visits], aggregated[cg][:topics].keys)
+        assert_in_delta(2_690_818_656.575_513, aggregated[cg][:rebalanced_at])
+      end
+
+      it "expect each topic to be collapsed into an AggregatedTopic summary" do
+        topic_stats = aggregated[cg][:topics][topic]
+
+        assert_instance_of(described_class::AggregatedTopic, topic_stats)
+        assert_equal(1, topic_stats.partitions_count)
+        assert_equal(1, topic_stats.present_count)
+        assert_equal(213_731_273, topic_stats.lag_hybrid)
+        assert_equal(213_731_273, topic_stats.max_lag)
+        assert_equal(0, topic_stats.max_lag_partition_id)
+        assert_equal(:active, topic_stats.lso_risk_state)
+        assert_equal(0, topic_stats.paused_count)
+      end
+    end
+  end
 end
