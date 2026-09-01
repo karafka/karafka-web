@@ -80,5 +80,6 @@
   "test/lib/karafka/web/pro/ui/controllers/support_controller_test.rb": 0.003,
   "test/lib/karafka/web/pro/commanding/handlers/partitions/commands/pause_test.rb": 0.0,
   "test/lib/karafka/web/pro/ui/controllers/health/topics_controller_test.rb": 13.0,
-  "test/lib/karafka/web/pro/ui/controllers/health/partitions_controller_test.rb": 8.0
+  "test/lib/karafka/web/pro/ui/controllers/health/partitions_controller_test.rb": 8.0,
+  "test/lib/karafka/web/pro/ui/routes/legacy_test.rb": 2.0
 }

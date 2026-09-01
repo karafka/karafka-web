@@ -57,21 +57,6 @@ describe_current do
     end
   end
 
-  describe "legacy top-level per-partition paths" do
-    # The old all-topics per-partition views are gone; their paths redirect to the aggregated
-    # topics view so existing links/bookmarks keep working.
-    %w[overview lags offsets changes].each do |lens|
-      context "when visiting the legacy health/#{lens} path" do
-        before { get "health/#{lens}" }
-
-        it "expect to redirect to the aggregated topics page" do
-          assert_equal(302, response.status)
-          assert_includes(response.headers["location"], "health/topics")
-        end
-      end
-    end
-  end
-
   describe "#index" do
     context "when no report data" do
       before do
