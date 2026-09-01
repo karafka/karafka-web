@@ -96,10 +96,9 @@ module Karafka
                 render
               end
 
-              # Cluster lags for a single topic, straight from Kafka. Unlike the report lenses this
-              # does not 404 when the topic is absent: a topic with no running consumers has no
-              # cluster lag rows, so we render an empty table rather than a not found, keeping the
-              # lens navigable for every topic.
+              # Cluster lags for a single topic, straight from Kafka. Works even when no consumer is
+              # running (lags come from the routing groups, not the reports). A reported topic with
+              # no cluster lag rows renders an empty table; a topic absent everywhere is not found.
               #
               # @param consumer_group_id [String]
               # @param topic_name [String] name of the topic
@@ -112,12 +111,26 @@ module Karafka
                   topic_name
                 )
 
-                @cluster_partitions = sort(partitions || [])
+                if partitions.nil?
+                  not_found!(topic_name) unless reported_topic?(consumer_group_id, topic_name)
+                  partitions = []
+                end
+
+                @cluster_partitions = sort(partitions)
 
                 render
               end
 
               private
+
+              # @param consumer_group_id [String]
+              # @param topic_name [String] name of the topic
+              # @return [Boolean] true when the topic is reported by a consumer in the given group
+              def reported_topic?(consumer_group_id, topic_name)
+                cg_details = Models::Health.current(Models::ConsumersState.current!)[consumer_group_id]
+
+                cg_details ? cg_details[:topics].key?(topic_name) : false
+              end
 
               # Loads the per-partition consumer report data for the drilled-into topic (used by the
               # overview/lags/offsets/changes lenses). Missing report data is a 404.

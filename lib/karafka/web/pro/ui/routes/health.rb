@@ -82,14 +82,8 @@ module Karafka
                   topics_controller.index
                 end
 
-                # The old top-level per-partition views are gone; keep their paths working by
-                # redirecting to the aggregated topics view so existing links/bookmarks do not break.
-                %w[overview lags offsets changes].each do |legacy_lens|
-                  r.get legacy_lens do
-                    r.redirect root_path("health/topics")
-                  end
-                end
-
+                # A bare /health lands on the aggregated topics view. Legacy top-level per-partition
+                # paths (health/overview, health/lags, ...) are redirected in Routes::Legacy.
                 r.get do
                   r.redirect root_path("health/topics")
                 end

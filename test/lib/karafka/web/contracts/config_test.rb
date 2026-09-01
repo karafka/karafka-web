@@ -71,6 +71,12 @@ describe_current do
           js: false,
           css: false,
           nav_erb: false
+        },
+        health: {
+          lags: {
+            skew_threshold: 3,
+            skew_minimum: 100
+          }
         }
       }
     }
@@ -329,6 +335,32 @@ describe_current do
           end
         end
       end
+    end
+  end
+
+  context "when validating the health lag skew settings" do
+    context "when skew_threshold is not numeric" do
+      before { params[:ui][:health][:lags][:skew_threshold] = "3" }
+
+      it { refute(contract.call(params).success?) }
+    end
+
+    context "when skew_threshold is not positive" do
+      before { params[:ui][:health][:lags][:skew_threshold] = 0 }
+
+      it { refute(contract.call(params).success?) }
+    end
+
+    context "when skew_minimum is not an integer" do
+      before { params[:ui][:health][:lags][:skew_minimum] = 1.5 }
+
+      it { refute(contract.call(params).success?) }
+    end
+
+    context "when skew_minimum is negative" do
+      before { params[:ui][:health][:lags][:skew_minimum] = -1 }
+
+      it { refute(contract.call(params).success?) }
     end
   end
 end

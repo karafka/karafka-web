@@ -99,6 +99,12 @@ describe_current do
       assert_body(breadcrumbs)
       assert_body("213731273")
     end
+
+    context "when sorted" do
+      before { get "health/topics/example_app6_app/default/lags?sort=lag+desc" }
+
+      it { assert_ok }
+    end
   end
 
   describe "#offsets" do
@@ -108,6 +114,12 @@ describe_current do
       assert_ok
       assert_body(breadcrumbs)
       assert_body("327355")
+    end
+
+    context "when sorted" do
+      before { get "health/topics/example_app6_app/default/offsets?sort=committed_offset+desc" }
+
+      it { assert_ok }
     end
 
     context "when the partition is at risk due to LSO" do
@@ -143,6 +155,12 @@ describe_current do
       assert_body(breadcrumbs)
       assert_body("Pause state change")
     end
+
+    context "when sorted" do
+      before { get "health/topics/example_app6_app/default/changes?sort=poll_state_ch+desc" }
+
+      it { assert_ok }
+    end
   end
 
   describe "#cluster_lags" do
@@ -164,25 +182,43 @@ describe_current do
         assert_body(breadcrumbs)
         assert_body("4200")
       end
+
+      context "when sorted" do
+        before do
+          Karafka::Admin.stubs(:read_lags_with_offsets).returns(
+            "example_app6_app" => {
+              "default" => {
+                0 => { lag: 4_200, offset: 10 }
+              }
+            }
+          )
+
+          get "health/topics/example_app6_app/default/cluster_lags?sort=lag+desc"
+        end
+
+        it { assert_ok }
+      end
     end
 
-    context "when the topic has no cluster lag data" do
+    context "when the topic is reported but has no cluster lag data" do
       before do
         Karafka::Admin.stubs(:read_lags_with_offsets).returns({})
         get "health/topics/example_app6_app/default/cluster_lags"
       end
 
-      it "expect to render an empty table rather than a 404" do
+      it "expect to render an empty table (not a 404) for a real reported topic" do
         assert_ok
         assert_body(breadcrumbs)
       end
     end
 
-    # Exercises the real Karafka::Admin.read_lags_with_offsets path end to end (no mocking)
-    context "against the real cluster (no mocking)" do
-      before { get "health/topics/example_app6_app/default/cluster_lags" }
+    context "when the topic exists nowhere (no cluster lags and not reported)" do
+      before do
+        Karafka::Admin.stubs(:read_lags_with_offsets).returns({})
+        get "health/topics/example_app6_app/no-such-topic/cluster_lags"
+      end
 
-      it { assert_ok }
+      it { assert_equal(404, status) }
     end
   end
 end

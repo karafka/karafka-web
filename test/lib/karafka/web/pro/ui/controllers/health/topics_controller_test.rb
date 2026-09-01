@@ -375,6 +375,29 @@ describe_current do
       end
     end
 
+    context "when sorted by topic name" do
+      before do
+        Karafka::Admin.stubs(:read_lags_with_offsets).returns(cluster_lags)
+        get "health/cluster_lags?sort=name+desc"
+      end
+
+      it { assert_ok }
+    end
+
+    context "when filtering by a matching topic" do
+      before do
+        Karafka::Admin.stubs(:read_lags_with_offsets).returns(cluster_lags)
+        get_filtered("health/cluster_lags", topic: "orders")
+      end
+
+      it do
+        assert_ok
+        assert_body("orders")
+        assert_body("9100")
+        refute_body("visits")
+      end
+    end
+
     context "when filtering by a non-matching topic" do
       before do
         Karafka::Admin.stubs(:read_lags_with_offsets).returns(cluster_lags)
@@ -385,6 +408,19 @@ describe_current do
         assert_ok
         assert_body("No results match your filter")
         refute_body("9100")
+      end
+    end
+
+    context "when filtering by the consumer group" do
+      before do
+        Karafka::Admin.stubs(:read_lags_with_offsets).returns(cluster_lags)
+        get_filtered("health/cluster_lags", consumer_group: "example_app6_app")
+      end
+
+      it do
+        assert_ok
+        assert_body("orders")
+        assert_body("9100")
       end
     end
   end
