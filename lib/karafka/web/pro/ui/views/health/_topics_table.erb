@@ -22,14 +22,14 @@
   <table class="data-table">
     <thead>
       <tr>
-        <th>Topic</th>
-        <th>Partitions</th>
-        <th>Total lag</th>
-        <th>Trend</th>
-        <th>Max lag</th>
-        <th>Avg lag</th>
-        <th>LSO risk</th>
-        <th>Poll</th>
+        <th><%== sort_link('Topic', :name) %></th>
+        <th><%== sort_link('Partitions', :present_count) %></th>
+        <th><%== sort_link('Total lag', :lag_hybrid) %></th>
+        <th><%== sort_link('Trend', :lag_hybrid_d) %></th>
+        <th><%== sort_link('Max lag', :max_lag) %></th>
+        <th><%== sort_link('Avg lag', :avg_lag) %></th>
+        <th><%== sort_link('LSO risk', :lso_risk_state) %></th>
+        <th><%== sort_link('Poll', :paused_count) %></th>
       </tr>
     </thead>
     <tbody>

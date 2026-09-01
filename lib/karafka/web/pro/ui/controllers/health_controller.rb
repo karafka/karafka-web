@@ -65,6 +65,12 @@ module Karafka
               lso_risk_state
               name
               poll_state_ch
+              max_lag
+              avg_lag
+              present_count
+              no_data_count
+              paused_count
+              partitions_count
             ].freeze
 
             # The health stats are a tree keyed by consumer group and then topic name, so we filter
@@ -82,6 +88,9 @@ module Karafka
             def topics
               current_state = Models::ConsumersState.current!
               @stats = Models::Health.aggregated(current_state)
+
+              # Sort the aggregated topic rows within each consumer group (by name/lag/etc.)
+              @stats.each_value { |cg_details| sort(cg_details[:topics]) }
 
               # Same key-based tree as overview, so the topic/consumer group filter works as-is
               filter(@stats)
@@ -119,6 +128,9 @@ module Karafka
             # of the per-topic view).
             def cluster_lags
               @stats = Models::Health.aggregated_cluster_lags
+
+              # Sort the aggregated topic rows within each consumer group (by name/lag/etc.)
+              @stats.each_value { |cg_topics| sort(cg_topics) }
 
               filter(@stats)
 

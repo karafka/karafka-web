@@ -122,8 +122,14 @@ describe_current do
         refute_body("health/changes")
       end
 
-      context "when sorted" do
-        before { get "health/topics?sort=id+desc" }
+      context "when sorted by an aggregate column" do
+        before { get "health/topics?sort=max_lag+desc" }
+
+        it { assert_ok }
+      end
+
+      context "when sorted by topic name" do
+        before { get "health/topics?sort=name+desc" }
 
         it { assert_ok }
       end
@@ -490,6 +496,15 @@ describe_current do
         assert_ok
         assert_body("health/topics/example_app6_app/orders/cluster_lags")
       end
+
+      context "when sorted by an aggregate column" do
+        before do
+          Karafka::Admin.stubs(:read_lags_with_offsets).returns(cluster_lags)
+          get "health/cluster_lags?sort=max_lag+desc"
+        end
+
+        it { assert_ok }
+      end
     end
 
     context "when filtering by a non-matching topic" do
@@ -503,6 +518,25 @@ describe_current do
         assert_body("No results match your filter")
         refute_body("9100")
       end
+    end
+  end
+
+  # These exercise the real `Karafka::Admin.read_lags_with_offsets` path end to end against the
+  # test cluster (no mocking), so a regression in the actual cluster lag fetch/aggregation is caught.
+  describe "#cluster_lags against the real cluster (no mocking)" do
+    context "when listing the aggregated cluster lags" do
+      before { get "health/cluster_lags" }
+
+      it do
+        assert_ok
+        assert_body(breadcrumbs)
+      end
+    end
+
+    context "when drilling into the cluster lags lens of a topic" do
+      before { get "health/topics/example_app6_app/default/cluster_lags" }
+
+      it { assert_ok }
     end
   end
 end

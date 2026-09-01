@@ -1,10 +1,18 @@
 # frozen_string_literal: true
 
 describe_current do
-  let(:aggregated) { described_class.new(partitions) }
+  let(:aggregated) { described_class.new("orders", partitions) }
 
   def partition(id, lag:, stored_offset: 0)
     { id: id, lag: lag, stored_offset: stored_offset }
+  end
+
+  describe "#name" do
+    let(:partitions) { [partition(0, lag: 1)] }
+
+    it "expect to expose the topic name (for sorting)" do
+      assert_equal("orders", aggregated.name)
+    end
   end
 
   describe "#partitions_count" do

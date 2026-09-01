@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 describe_current do
-  let(:aggregated) { described_class.new(topic_details) }
+  let(:aggregated) { described_class.new(topic_name, topic_details) }
+
+  let(:topic_name) { "orders" }
 
   let(:topic_details) do
     {
@@ -31,6 +33,14 @@ describe_current do
     }
 
     Karafka::Web::Ui::Models::Partition.new(defaults.merge(overrides))
+  end
+
+  describe "#name" do
+    let(:partitions) { { 0 => partition(0) } }
+
+    it "expect to expose the topic name (for sorting)" do
+      assert_equal("orders", aggregated.name)
+    end
   end
 
   describe "#partitions_count and #present_count" do
@@ -235,6 +245,20 @@ describe_current do
       end
     end
 
+    context "when the imbalance is significant but the biggest lag is trivially small" do
+      let(:partitions) do
+        {
+          0 => partition(0, lag: 90, lag_stored: 90),
+          1 => partition(1, lag: 1, lag_stored: 1),
+          2 => partition(2, lag: 1, lag_stored: 1),
+          3 => partition(3, lag: 1, lag_stored: 1)
+        }
+      end
+
+      # max 90 is > 3x the average, but below the default 100 minimum, so it is just noise
+      it { refute(aggregated.skewed?) }
+    end
+
     context "when the imbalance is below the threshold" do
       let(:partitions) do
         {
@@ -257,9 +281,9 @@ describe_current do
         }
       end
 
-      before { Karafka::Web.config.ui.health_lag_skew_threshold = 2 }
+      before { Karafka::Web.config.ui.health.lags.skew_threshold = 2 }
 
-      after { Karafka::Web.config.ui.health_lag_skew_threshold = 3 }
+      after { Karafka::Web.config.ui.health.lags.skew_threshold = 3 }
 
       it "expect the same distribution to now count as skewed" do
         assert(aggregated.skewed?)

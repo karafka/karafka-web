@@ -268,11 +268,22 @@ module Karafka
         # transaction that will cause given consumer group to halt processing and wait
         setting :lso_threshold, default: 5 * 60 * 1_000
 
-        # How many times bigger than the average a single partition's lag has to be for a topic to
-        # be flagged as "skewed" in the aggregated health view. A skewed topic has its lag
-        # concentrated on one (or few) hot/stuck partition(s) rather than spread evenly, which needs
-        # a different response than an evenly lagging topic even when the totals match.
-        setting :health_lag_skew_threshold, default: 3
+        # Health view related settings
+        setting :health do
+          # Lag related health settings
+          setting :lags do
+            # How many times bigger than the average a single partition's lag has to be for a topic
+            # to be flagged as "skewed" in the aggregated health view. A skewed topic has its lag
+            # concentrated on one (or few) hot/stuck partition(s) rather than spread evenly, which
+            # needs a different response than an evenly lagging topic even when the totals match.
+            setting :skew_threshold, default: 3
+
+            # Minimum biggest-partition lag below which a topic is never flagged as "skewed". Without
+            # it a topic where one partition sits at 7 while the rest sit at 1 would be reported as
+            # skewed, which is just noise. Only imbalances above this absolute lag are worth flagging.
+            setting :skew_minimum, default: 100
+          end
+        end
 
         # Consider any topic matching those names as a DLQ topic for the DLQ view
         # Web UI uses auto DLQ discovery based on routing but this may not be fully operable when

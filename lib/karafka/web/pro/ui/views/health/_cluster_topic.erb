@@ -39,14 +39,12 @@
       <%== lag_with_label topic_stats.max_lag %>
     <% end %>
     <% if topic_stats.skewed? %>
-      <div class="mt-1">
-        <span
-          class="badge badge-warning badge-sm"
-          title="Lag is concentrated on one or few partitions (max is far above the average), not spread evenly"
-        >
-          skewed
-        </span>
-      </div>
+      <span
+        class="badge badge-warning badge-sm ml-1"
+        title="Lag is concentrated on one or few partitions (max is far above the average), not spread evenly"
+      >
+        skewed
+      </span>
     <% end %>
   </td>
   <td>

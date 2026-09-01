@@ -30,9 +30,10 @@ module Karafka
 
             private_constant :LSO_RISK_STATES_SEVERITY
 
+            # @param name [String] topic name (stored so the aggregated rows can be sorted by it)
             # @param topic_details [Hash] a single topic node from {Health.current}, that is a hash
             #   with `:partitions` (id => {Partition}) and `:partitions_count` keys
-            def initialize(topic_details)
+            def initialize(name, topic_details)
               partitions_map = topic_details[:partitions]
               partitions = partitions_map.values
               partitions_count = topic_details[:partitions_count]
@@ -42,6 +43,7 @@ module Karafka
               worst_lag_partition = measurable.max_by(&:lag_hybrid)
 
               super(
+                name: name,
                 partitions_count: partitions_count,
                 present_count: partitions.size,
                 # Partitions that were assigned/expected (ids below the reported count) but have no

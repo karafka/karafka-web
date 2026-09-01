@@ -18,15 +18,17 @@ module Karafka
           class AggregatedClusterTopic < Lib::HashProxy
             include LagStats
 
+            # @param name [String] topic name (stored so the aggregated rows can be sorted by it)
             # @param partitions [Array<Hash>] cluster lag entries for the topic, each a hash with
             #   `:id`, `:lag` and `:stored_offset`
-            def initialize(partitions)
+            def initialize(name, partitions)
               # Negative lag means the topic was never consumed by the group, so it is excluded
               measurable = partitions.select { |partition| partition[:lag] >= 0 }
               lags = measurable.map { |partition| partition[:lag] }
               worst_lag_partition = measurable.max_by { |partition| partition[:lag] }
 
               super(
+                name: name,
                 partitions_count: partitions.size,
                 measurable_count: lags.size,
                 lag: lags.empty? ? -1 : lags.sum,

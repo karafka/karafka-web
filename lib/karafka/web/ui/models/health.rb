@@ -30,8 +30,8 @@ module Karafka
               stats = current(state)
 
               stats.each_value do |cg_details|
-                cg_details[:topics].transform_values! do |topic_details|
-                  AggregatedTopic.new(topic_details)
+                cg_details[:topics].each do |topic_name, topic_details|
+                  cg_details[:topics][topic_name] = AggregatedTopic.new(topic_name, topic_details)
                 end
               end
 
@@ -75,7 +75,7 @@ module Karafka
 
               stats.each_value do |topics|
                 topics.each do |topic_name, partitions|
-                  topics[topic_name] = AggregatedClusterTopic.new(partitions)
+                  topics[topic_name] = AggregatedClusterTopic.new(topic_name, partitions)
                 end
               end
 
