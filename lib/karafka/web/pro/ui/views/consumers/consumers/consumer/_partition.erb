@@ -49,7 +49,7 @@
     <%== poll_state_with_change_time_label(partition.poll_state, partition.poll_state_ch) %>
   </td>
   <td>
-    <span class="badge badge-success <%= lso_risk_state_badge(partition) %>">
+    <span class="badge <%= lso_risk_state_badge(partition) %>">
       <%= partition.lso_risk_state %>
     </span>
   </td>
