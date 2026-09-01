@@ -73,13 +73,20 @@ module Karafka
             def aggregated_cluster_lags
               stats = cluster_lags_with_offsets
 
-              stats.each_value do |topics|
-                topics.each do |topic_name, partitions|
-                  topics[topic_name] = AggregatedClusterTopic.new(topic_name, partitions)
-                end
+              aggregated = {}
+
+              # Present consumer groups and their topics in alphabetical order, consistent with the
+              # topics view (which inherits this ordering from `.current`'s `sort_structure`). The
+              # raw cluster lags come back in whatever order the cluster reports them.
+              stats.sort_by { |consumer_group, _| consumer_group }.each do |consumer_group, topics|
+                aggregated[consumer_group] = topics
+                  .sort_by { |topic_name, _| topic_name }
+                  .each_with_object({}) do |(topic_name, partitions), sorted_topics|
+                    sorted_topics[topic_name] = AggregatedClusterTopic.new(topic_name, partitions)
+                  end
               end
 
-              stats
+              aggregated
             end
 
             private

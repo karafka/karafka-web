@@ -7,7 +7,6 @@
   "test/lib/karafka/web/pro/ui/controllers/consumers/topics/pauses_controller_test.rb": 44.131,
   "test/lib/karafka/web/pro/ui/controllers/jobs_controller_test.rb": 29.445,
   "test/lib/karafka/web/pro/ui/controllers/scheduled_messages/explorer_controller_test.rb": 25.637,
-  "test/lib/karafka/web/pro/ui/controllers/health_controller_test.rb": 18.858,
   "test/lib/karafka/web/pro/ui/controllers/consumers/partitions/offsets_controller_test.rb": 17.438,
   "test/lib/karafka/web/pro/ui/controllers/explorer/search_controller_test.rb": 16.416,
   "test/lib/karafka/web/pro/ui/controllers/consumers/commands_controller_test.rb": 16.313,
@@ -79,5 +78,7 @@
   "test/lib/karafka/web/pro/commanding/commands/partitions/seek_test.rb": 0.005,
   "test/lib/karafka/web/pro/ui/lib/policies/requests_test.rb": 0.004,
   "test/lib/karafka/web/pro/ui/controllers/support_controller_test.rb": 0.003,
-  "test/lib/karafka/web/pro/commanding/handlers/partitions/commands/pause_test.rb": 0.0
+  "test/lib/karafka/web/pro/commanding/handlers/partitions/commands/pause_test.rb": 0.0,
+  "test/lib/karafka/web/pro/ui/controllers/health/topics_controller_test.rb": 13.0,
+  "test/lib/karafka/web/pro/ui/controllers/health/partitions_controller_test.rb": 8.0
 }

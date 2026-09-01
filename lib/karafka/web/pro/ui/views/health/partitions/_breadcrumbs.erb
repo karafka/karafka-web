@@ -1,0 +1,45 @@
+<%# Karafka Pro - Source Available Commercial Software %>
+<%# Copyright (c) 2017-present Maciej Mensfeld. All rights reserved. %>
+<%# This software is NOT open source. It is source-available commercial software %>
+<%# requiring a paid license for use. It is NOT covered by LGPL. %>
+<%# The author retains all right, title, and interest in this software, %>
+<%# including all copyrights, patents, and other intellectual property rights. %>
+<%# No patent rights are granted under this license. %>
+<%# PROHIBITED: Use without a valid commercial license %>
+<%# PROHIBITED: Redistribution, modification, or derivative works without authorization %>
+<%# PROHIBITED: Reverse engineering, decompilation, or disassembly of this software %>
+<%# PROHIBITED: Use as training data for AI/ML models or inclusion in datasets %>
+<%# PROHIBITED: Scraping, crawling, or automated collection for any purpose %>
+<%# PERMITTED: Reading, referencing, and linking for personal or commercial use %>
+<%# PERMITTED: Runtime retrieval by AI assistants, coding agents, and RAG systems %>
+<%# PERMITTED: for the purpose of providing contextual help to Karafka users %>
+<%# Receipt, viewing, or possession of this software does not convey or %>
+<%# imply any license or right beyond those expressly stated above. %>
+<%# License: https://karafka.io/docs/Pro-License-Comm/ %>
+<%# Contact: contact@karafka.io %>
+
+<li>
+  <a href="<%= root_path('health') %>">
+    Health
+  </a>
+</li>
+
+<li>
+  <a href="<%= root_path('health', 'topics') %>">
+    Topics
+  </a>
+</li>
+
+<%# Topics are always shown within a consumer group, so surface the group on the drill-down and %>
+<%# link it back to the topics list scoped to that group. %>
+<li>
+  <a href="<%= root_path('health', 'topics') %>?filter[field]=consumer_group&filter[value]=<%= @consumer_group_id %>">
+    <%= @consumer_group_id %>
+  </a>
+</li>
+
+<li>
+  <a href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'overview') %>">
+    <%= @topic_name %>
+  </a>
+</li>

@@ -18,42 +18,22 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<li>
-  <a href="<%= root_path('health') %>">
-    Health
-  </a>
-</li>
+<% view_title "Topic #{@topic_name} in #{@consumer_group_id}" %>
 
-<%# The per-topic drill-down (including its cluster lags lens) lives under /topics, so check it %>
-<%# first; the bare /cluster_lags path is only the aggregated cluster lags list. %>
-<% if current_path.include?('/topics') %>
-  <li>
-    <a href="<%= root_path('health', 'topics') %>">
-      Topics
-    </a>
-  </li>
+<%== partial 'health/topic_tabs' %>
 
-  <%# Topics are always shown within a consumer group, so surface the group on the drill-down and %>
-  <%# link it back to the topics list scoped to that group. %>
-  <% if defined?(@consumer_group_id) && @consumer_group_id %>
-    <li>
-      <a href="<%= root_path('health', 'topics') %>?filter[field]=consumer_group&filter[value]=<%= @consumer_group_id %>">
-        <%= @consumer_group_id %>
-      </a>
-    </li>
-  <% end %>
+<div class="col-span-12">
+  <h2 class="h2"><%= @consumer_group_id %></h2>
 
-  <% if defined?(@topic_name) && @topic_name %>
-    <li>
-      <a href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'overview') %>">
-        <%= @topic_name %>
-      </a>
-    </li>
-  <% end %>
-<% elsif current_path.include?('/cluster_lags') %>
-  <li>
-    <a href="<%= root_path('health', 'cluster_lags') %>">
-      Cluster Lags
-    </a>
-  </li>
-<% end %>
+  <%==
+    partial(
+      'health/offsets_table',
+      locals: {
+        cg_name: @consumer_group_id,
+        cg_details: @cg_details,
+        topic_name: @topic_name,
+        topic_details: @topic_details
+      }
+    )
+  %>
+</div>

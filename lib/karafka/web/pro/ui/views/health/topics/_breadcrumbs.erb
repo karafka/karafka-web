@@ -18,36 +18,22 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<% view_title "Topic #{@topic_name} in #{@consumer_group_id}" %>
+<li>
+  <a href="<%= root_path('health') %>">
+    Health
+  </a>
+</li>
 
-<%== partial 'health/topic_tabs' %>
-
-<div class="col-span-12">
-  <h2 class="h2"><%= @consumer_group_id %></h2>
-
-  <% if @lens == :cluster_lags %>
-    <div class="data-table-wrapper">
-      <%==
-        partial(
-          'health/cluster_lags_table',
-          locals: {
-            topic_name: @topic_name,
-            partitions: @cluster_partitions
-          }
-        )
-      %>
-    </div>
-  <% else %>
-    <%==
-      partial(
-        "health/#{@lens}_table",
-        locals: {
-          cg_name: @consumer_group_id,
-          cg_details: @cg_details,
-          topic_name: @topic_name,
-          topic_details: @topic_details
-        }
-      )
-    %>
-  <% end %>
-</div>
+<% if current_path.include?('/cluster_lags') %>
+  <li>
+    <a href="<%= root_path('health', 'cluster_lags') %>">
+      Cluster Lags
+    </a>
+  </li>
+<% else %>
+  <li>
+    <a href="<%= root_path('health', 'topics') %>">
+      Topics
+    </a>
+  </li>
+<% end %>

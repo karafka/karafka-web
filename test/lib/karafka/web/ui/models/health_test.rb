@@ -171,5 +171,24 @@ describe_current do
       assert_equal(1, topic_stats.max_lag_partition_id)
       assert_equal(500, topic_stats.avg_lag)
     end
+
+    context "when the cluster reports groups and topics out of order" do
+      before do
+        Karafka::Admin.stubs(:read_lags_with_offsets).returns(
+          "zeta" => {
+            "orders" => { 0 => { lag: 1, offset: 1 } }
+          },
+          "alpha" => {
+            "visits" => { 0 => { lag: 1, offset: 1 } },
+            "default" => { 0 => { lag: 1, offset: 1 } }
+          }
+        )
+      end
+
+      it "expect consumer groups and topics to be alphabetically ordered (like the topics view)" do
+        assert_equal(%w[alpha zeta], aggregated.keys)
+        assert_equal(%w[default visits], aggregated["alpha"].keys)
+      end
+    end
   end
 end

@@ -72,7 +72,7 @@ describe_current do
     end
   end
 
-  describe "#topics" do
+  describe "#index" do
     context "when no report data" do
       before do
         topics_config.consumers.reports.name = reports_topic
@@ -314,138 +314,6 @@ describe_current do
     end
   end
 
-  describe "#topic" do
-    context "when visiting a topic without a lens" do
-      before { get "health/topics/example_app6_app/default" }
-
-      it "expect to redirect to the overview lens" do
-        assert_equal(302, response.status)
-        assert_includes(response.headers["location"], "health/topics/example_app6_app/default/overview")
-      end
-    end
-
-    context "when the overview lens is requested" do
-      before { get "health/topics/example_app6_app/default/overview" }
-
-      it "expect to render the per-partition overview for that topic" do
-        assert_ok
-        assert_body(breadcrumbs)
-        refute_body(pagination)
-        assert_body("327355")
-        assert_body("Not available until first offset")
-        # The per-topic lens sub-tabs are present, including the per-topic cluster lags lens
-        assert_body("health/topics/example_app6_app/default/lags")
-        assert_body("health/topics/example_app6_app/default/offsets")
-        assert_body("health/topics/example_app6_app/default/changes")
-        assert_body("health/topics/example_app6_app/default/cluster_lags")
-      end
-
-      context "when sorted" do
-        before { get "health/topics/example_app6_app/default/overview?sort=id+desc" }
-
-        it { assert_ok }
-      end
-    end
-
-    context "when the lags lens is requested" do
-      before { get "health/topics/example_app6_app/default/lags" }
-
-      it do
-        assert_ok
-        assert_body(breadcrumbs)
-        assert_body("213731273")
-      end
-    end
-
-    context "when the offsets lens is requested" do
-      before { get "health/topics/example_app6_app/default/offsets" }
-
-      it do
-        assert_ok
-        assert_body(breadcrumbs)
-        assert_body("327355")
-      end
-
-      context "when the partition is at risk due to LSO" do
-        before do
-          topics_config.consumers.reports.name = reports_topic
-
-          report = Fixtures.consumers_reports_json(symbolize_names: false)
-
-          partition_data = report.dig(*partition_scope)
-          partition_data["committed_offset"] = 1_000
-          partition_data["ls_offset"] = 3_000
-          partition_data["ls_offset_fd"] = 1_000_000_000
-
-          produce(reports_topic, report.to_json)
-
-          get "health/topics/example_app6_app/default/offsets"
-        end
-
-        it do
-          assert_ok
-          assert_body("at_risk")
-          assert_body("badge-warning")
-          refute_body("stopped")
-        end
-      end
-    end
-
-    context "when the changes lens is requested" do
-      before { get "health/topics/example_app6_app/default/changes" }
-
-      it do
-        assert_ok
-        assert_body(breadcrumbs)
-        assert_body("Pause state change")
-      end
-    end
-
-    context "when the cluster lags lens is requested" do
-      before do
-        Karafka::Admin.stubs(:read_lags_with_offsets).returns(
-          "example_app6_app" => {
-            "default" => {
-              0 => { lag: 4_200, offset: 10 }
-            }
-          }
-        )
-
-        get "health/topics/example_app6_app/default/cluster_lags"
-      end
-
-      it "expect to render the per-partition cluster lags for that topic" do
-        assert_ok
-        assert_body(breadcrumbs)
-        assert_body("4200")
-      end
-    end
-
-    context "when the cluster lags lens is requested for a topic with no cluster data" do
-      before do
-        Karafka::Admin.stubs(:read_lags_with_offsets).returns({})
-        get "health/topics/example_app6_app/default/cluster_lags"
-      end
-
-      it "expect to render an empty table rather than a 404" do
-        assert_ok
-        assert_body(breadcrumbs)
-      end
-    end
-
-    context "when the topic does not exist" do
-      before { get "health/topics/example_app6_app/no-such-topic/overview" }
-
-      it { assert_equal(404, status) }
-    end
-
-    context "when the consumer group does not exist" do
-      before { get "health/topics/no-such-group/default/overview" }
-
-      it { assert_equal(404, status) }
-    end
-  end
-
   describe "#cluster_lags" do
     let(:cluster_lags) do
       {
@@ -531,12 +399,6 @@ describe_current do
         assert_ok
         assert_body(breadcrumbs)
       end
-    end
-
-    context "when drilling into the cluster lags lens of a topic" do
-      before { get "health/topics/example_app6_app/default/cluster_lags" }
-
-      it { assert_ok }
     end
   end
 end
