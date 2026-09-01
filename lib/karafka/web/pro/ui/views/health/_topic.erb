@@ -39,9 +39,13 @@
     <%== lag_with_label topic_stats.lag_hybrid %>
   </td>
   <td>
-    <span class="badge <%= lag_trend_badge(topic_stats.lag_hybrid_d) %>">
-      <%= topic_stats.lag_hybrid_d %>
-    </span>
+    <% if topic_stats.measurable_count.zero? %>
+      <span class="badge badge-secondary">N/A</span>
+    <% else %>
+      <span class="badge <%= lag_trend_badge(topic_stats.lag_hybrid_d) %>">
+        <%= topic_stats.lag_hybrid_d %>
+      </span>
+    <% end %>
   </td>
   <td>
     <% if topic_stats.max_lag_partition_id >= 0 %>

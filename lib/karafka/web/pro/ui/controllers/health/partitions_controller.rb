@@ -125,11 +125,21 @@ module Karafka
 
               # @param consumer_group_id [String]
               # @param topic_name [String] name of the topic
-              # @return [Boolean] true when the topic is reported by a consumer in the given group
+              # @return [Boolean] true when the topic is reported by a consumer in the given group.
+              #   Scans the active processes directly and short-circuits, so we do not build (and
+              #   throw away) the whole aggregated health tree just to answer a presence check.
               def reported_topic?(consumer_group_id, topic_name)
-                cg_details = Models::Health.current(Models::ConsumersState.current!)[consumer_group_id]
+                state = Models::ConsumersState.current!
 
-                cg_details ? cg_details[:topics].key?(topic_name) : false
+                Models::Processes.active(state).any? do |process|
+                  process.consumer_groups.any? do |consumer_group|
+                    next false unless consumer_group.id == consumer_group_id
+
+                    consumer_group.subscription_groups.any? do |subscription_group|
+                      subscription_group.topics.any? { |topic| topic.name == topic_name }
+                    end
+                  end
+                end
               end
 
               # Loads the per-partition consumer report data for the drilled-into topic (used by the
