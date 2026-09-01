@@ -171,5 +171,7 @@
   "test/lib/karafka/web/cli/help_test.rb": 0.0,
   "test/lib/karafka/web/ui/models/health/aggregated_topic_test.rb": 3.0,
   "test/lib/karafka/web/ui/models/health/aggregated_cluster_topic_test.rb": 3.0,
-  "test/lib/karafka/web/config/defaults_injector_test.rb": 0.01
+  "test/lib/karafka/web/config/defaults_injector_test.rb": 0.01,
+  "test/lib/karafka/web/ui/models/health/topics_aggregation_test.rb": 3.0,
+  "test/lib/karafka/web/ui/models/health/cluster_lags_aggregation_test.rb": 1.0
 }

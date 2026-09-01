@@ -65,7 +65,7 @@ module Karafka
               # answer "is anything off?" at a glance and drill down into a topic only when needed.
               def index
                 current_state = Models::ConsumersState.current!
-                @stats = Models::Health.aggregated(current_state)
+                @stats = Models::Health::TopicsAggregation.call(current_state)
 
                 # Sort the aggregated topic rows within each consumer group (by name/lag/etc.)
                 @stats.each_value { |cg_details| sort(cg_details[:topics]) }
@@ -81,7 +81,7 @@ module Karafka
               # aggregated per topic, with a per-partition drill-down (the cluster lags lens of
               # {PartitionsController}).
               def cluster_lags
-                @stats = Models::Health.aggregated_cluster_lags
+                @stats = Models::Health::ClusterLagsAggregation.call
 
                 # Sort the aggregated topic rows within each consumer group (by name/lag/etc.)
                 @stats.each_value { |cg_topics| sort(cg_topics) }

@@ -18,26 +18,6 @@ module Karafka
               sort_structure(stats)
             end
 
-            # Builds the same tree as {.current} but with each topic collapsed into a single
-            # {AggregatedTopic} summary instead of its per-partition data. Used by the per-topic
-            # health view where each topic is a single row. The consumer group level (including
-            # `:rebalanced_at`) and the `cg => :topics => topic_name` shape are preserved, so the
-            # existing sorting and filtering flows keep working unchanged.
-            #
-            # @param state [State] current system state
-            # @return [Hash] hash with per-topic aggregated statistics
-            def aggregated(state)
-              stats = current(state)
-
-              stats.each_value do |cg_details|
-                cg_details[:topics].each do |topic_name, topic_details|
-                  cg_details[:topics][topic_name] = AggregatedTopic.new(topic_name, topic_details)
-                end
-              end
-
-              stats
-            end
-
             # @return [Hash] hash with cluster lag data
             def cluster_lags_with_offsets
               # We need to remap raw results so they comply with our sorting flows
@@ -62,31 +42,6 @@ module Karafka
               end
 
               mapped_lags
-            end
-
-            # Same data as {.cluster_lags_with_offsets} but with each topic collapsed into a single
-            # {AggregatedClusterTopic} summary instead of its per-partition array. Used by the
-            # per-topic cluster lags view. The `cg => topic_name` tree shape is preserved so the
-            # existing filtering flow keeps working.
-            #
-            # @return [Hash] hash with per-topic aggregated cluster lag data
-            def aggregated_cluster_lags
-              stats = cluster_lags_with_offsets
-
-              aggregated = {}
-
-              # Present consumer groups and their topics in alphabetical order, consistent with the
-              # topics view (which inherits this ordering from `.current`'s `sort_structure`). The
-              # raw cluster lags come back in whatever order the cluster reports them.
-              stats.sort_by { |consumer_group, _| consumer_group }.each do |consumer_group, topics|
-                aggregated[consumer_group] = topics
-                  .sort_by { |topic_name, _| topic_name }
-                  .each_with_object({}) do |(topic_name, partitions), sorted_topics|
-                    sorted_topics[topic_name] = AggregatedClusterTopic.new(topic_name, partitions)
-                  end
-              end
-
-              aggregated
             end
 
             private
