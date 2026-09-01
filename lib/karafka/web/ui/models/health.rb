@@ -64,6 +64,24 @@ module Karafka
               mapped_lags
             end
 
+            # Same data as {.cluster_lags_with_offsets} but with each topic collapsed into a single
+            # {AggregatedClusterTopic} summary instead of its per-partition array. Used by the
+            # per-topic cluster lags view. The `cg => topic_name` tree shape is preserved so the
+            # existing filtering flow keeps working.
+            #
+            # @return [Hash] hash with per-topic aggregated cluster lag data
+            def aggregated_cluster_lags
+              stats = cluster_lags_with_offsets
+
+              stats.each_value do |topics|
+                topics.each do |topic_name, partitions|
+                  topics[topic_name] = AggregatedClusterTopic.new(partitions)
+                end
+              end
+
+              stats
+            end
+
             private
 
             # Aggregates data on a per topic basis (in the context of a consumer group)

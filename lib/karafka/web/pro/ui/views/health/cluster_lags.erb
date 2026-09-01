@@ -22,26 +22,22 @@
 
 <%== partial 'health/tabs' %>
 
-<% if @stats.empty? %>
-  <%== partial 'health/no_data' %>
-<% end %>
+<div class="col-span-12">
+  <% if @stats.empty? %>
+    <%== partial 'health/no_data' %>
+  <% end %>
 
-<% @stats.each do |cg_name, cg_details| %>
-  <div class="col-span-12 mb-3">
+  <% @stats.each do |cg_name, cg_details| %>
     <h2 class="h2"><%= cg_name %></h2>
 
-    <div class="data-table-wrapper">
-      <% cg_details.each do |topic_name, partitions| %>
-        <%==
-          partial(
-            'health/cluster_lags_table',
-            locals: {
-              topic_name: topic_name,
-              partitions: partitions
-            }
-          )
-        %>
-      <% end %>
-    </div>
-  </div>
-<% end %>
+    <%==
+      partial(
+        'health/cluster_topics_table',
+        locals: {
+          cg_name: cg_name,
+          cg_details: cg_details
+        }
+      )
+    %>
+  <% end %>
+</div>

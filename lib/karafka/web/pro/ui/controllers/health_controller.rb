@@ -35,6 +35,14 @@ module Karafka
         module Controllers
           # Health state controller
           class HealthController < BaseController
+            # Per-partition lenses available when drilling into a single topic. The report-based
+            # lenses map 1:1 to the `_<lens>_table` view partials; `cluster_lags` is special-cased in
+            # {#topic} as it comes from the cluster (Kafka) rather than the consumer reports.
+            LENSES = %i[overview lags offsets changes cluster_lags].freeze
+
+            # The lenses backed by consumer report data (everything but the cluster lags lens)
+            REPORT_LENSES = (LENSES - %i[cluster_lags]).freeze
+
             self.sortable_attributes = %w[
               id
               lag
@@ -81,82 +89,69 @@ module Karafka
               render
             end
 
-            # Displays the per-partition details of a single topic within a consumer group. This is
-            # the drill-down target of the aggregated topics view and reuses the overview table.
+            # Displays the per-partition details of a single topic within a consumer group, in one of
+            # the {LENSES}. The report-based lenses (overview/lags/offsets/changes) reuse the existing
+            # per-partition `_<lens>_table` partials; the `cluster_lags` lens shows what Kafka sees
+            # (from the cluster) and works even when no consumer is running/reporting the topic.
+            # This is the drill-down target of both the aggregated topics and cluster lags views.
             #
             # @param consumer_group_id [String] id of the consumer group
             # @param topic_name [String] name of the topic
-            def topic(consumer_group_id, topic_name)
-              current_state = Models::ConsumersState.current!
-              stats = Models::Health.current(current_state)
-
+            # @param lens [Symbol] which lens to render (one of {LENSES})
+            def topic(consumer_group_id, topic_name, lens)
               @consumer_group_id = consumer_group_id
               @topic_name = topic_name
-              @cg_details = stats[consumer_group_id]
-              @topic_details = @cg_details && @cg_details[:topics][topic_name]
+              @lens = lens
 
-              not_found!(topic_name) unless @topic_details
-
-              # Reuse the per-partition sortable attributes exposed for the overview table
-              sort(@topic_details)
-
-              render
-            end
-
-            # Displays the current system state
-            def overview
-              current_state = Models::ConsumersState.current!
-              @stats = Models::Health.current(current_state)
-
-              # Sort only on a per topic basis not to resort higher levels
-              @stats.each_value do |cg_details|
-                cg_details.each_value { |topic_details| sort(topic_details) }
+              if lens == :cluster_lags
+                topic_cluster_lags
+              else
+                topic_report_lens
               end
 
-              # Narrow the whole tree down to the consumer groups/topics matching the current filter
-              # (if any). It is safe to prune in place here as the stats are built fresh per request.
-              filter(@stats)
-
               render
             end
 
-            # Displays details about lags and their progression/statuses
-            def lags
-              # Same data as overview but presented differently
-              overview
-
-              render
-            end
-
-            # Displays lags for routing defined consumer groups taken from the cluster and not
-            # the metrics reported. This is useful when we don't have any consumers running but
-            # still want to check lags because it shows what Kafka sees
+            # Displays per-topic aggregated lags for routing defined consumer groups taken from the
+            # cluster and not the metrics reported. This is useful when we don't have any consumers
+            # running but still want to check lags because it shows what Kafka sees. Like the topics
+            # view, it is aggregated per topic with a per-partition drill-down (the cluster lags lens
+            # of the per-topic view).
             def cluster_lags
-              @stats = Models::Health.cluster_lags_with_offsets
-
-              @stats.each_value do |cg_details|
-                cg_details.each_value { |topic_details| sort(topic_details) }
-              end
+              @stats = Models::Health.aggregated_cluster_lags
 
               filter(@stats)
 
               render
             end
 
-            # Displays details about offsets and their progression/statuses
-            def offsets
-              # Same data as overview but presented differently
-              overview
+            private
 
-              render
+            # Loads the per-partition consumer report data for the drilled-into topic (used by the
+            # overview/lags/offsets/changes lenses). Missing report data is a 404.
+            def topic_report_lens
+              stats = Models::Health.current(Models::ConsumersState.current!)
+
+              @cg_details = stats[@consumer_group_id]
+              @topic_details = @cg_details && @cg_details[:topics][@topic_name]
+
+              not_found!(@topic_name) unless @topic_details
+
+              # Reuse the per-partition sortable attributes exposed for the lens tables
+              sort(@topic_details)
             end
 
-            # Displays information related to time of changes of particular attributes
-            def changes
-              # Same data as overview but presented differently
-              overview
+            # Loads the per-partition cluster lags for the drilled-into topic (the cluster lags lens).
+            # Unlike the report lenses this does not 404 when the topic is absent: a topic with no
+            # running consumers legitimately has no cluster lag rows, so we render an empty table
+            # rather than a not found, keeping the lens navigable for every topic.
+            def topic_cluster_lags
+              partitions = Models::Health.cluster_lags_with_offsets.dig(
+                @consumer_group_id,
+                @topic_name
+              )
 
-              render
+              @cluster_partitions = sort(partitions || [])
             end
           end
         end

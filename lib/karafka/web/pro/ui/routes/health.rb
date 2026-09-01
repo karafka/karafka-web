@@ -39,32 +39,39 @@ module Karafka
               r.on "health" do
                 controller = build(Controllers::HealthController)
 
-                r.get "lags" do
-                  controller.lags
-                end
-
+                # Cluster lags is the second top-level view: a cluster-wide, routing-based lag
+                # report, aggregated per topic. Its per-partition drill-down is the `cluster_lags`
+                # lens of the per-topic view below.
                 r.get "cluster_lags" do
                   controller.cluster_lags
                 end
 
-                r.get "offsets" do
-                  controller.offsets
-                end
+                # Per-topic drill-down. The per-partition lenses (overview/lags/offsets/changes and
+                # cluster_lags) live here, scoped to a single topic, instead of the old top-level
+                # all-topics views which became unusable with many topics/partitions.
+                r.on "topics", String, String do |consumer_group_id, topic_name|
+                  Controllers::HealthController::LENSES.each do |lens|
+                    r.get lens.to_s do
+                      controller.topic(consumer_group_id, topic_name, lens)
+                    end
+                  end
 
-                r.get "overview" do
-                  controller.overview
-                end
-
-                r.get "changes" do
-                  controller.changes
-                end
-
-                r.get "topics", String, String do |consumer_group_id, topic_name|
-                  controller.topic(consumer_group_id, topic_name)
+                  # A bare topic path defaults to the overview lens
+                  r.get do
+                    r.redirect root_path("health", "topics", consumer_group_id, topic_name, "overview")
+                  end
                 end
 
                 r.get "topics" do
                   controller.topics
+                end
+
+                # The old top-level per-partition views are gone; keep their paths working by
+                # redirecting to the aggregated topics view so existing links/bookmarks do not break.
+                Controllers::HealthController::REPORT_LENSES.each do |lens|
+                  r.get lens.to_s do
+                    r.redirect root_path("health/topics")
+                  end
                 end
 
                 r.get do

@@ -20,20 +20,19 @@
 
 <tr class="<%= lso_risk_state_bg(topic_stats) %>">
   <td>
-    <a href="<%= root_path('health', 'topics', cg_name, topic_name) %>">
+    <a href="<%= root_path('health', 'topics', cg_name, topic_name, 'overview') %>">
       <%= topic_name %>
     </a>
   </td>
   <td>
-    <% if topic_stats.present_count < topic_stats.partitions_count %>
+    <%= topic_stats.present_count %>
+    <% if topic_stats.no_data_count.positive? %>
       <span
         class="badge badge-warning"
-        title="Only <%= topic_stats.present_count %> of <%= topic_stats.partitions_count %> partitions are reporting data"
+        title="<%= topic_stats.no_data_count %> assigned partition(s) have no data"
       >
-        <%= topic_stats.present_count %>/<%= topic_stats.partitions_count %>
+        <%= topic_stats.no_data_count %> no data
       </span>
-    <% else %>
-      <%= topic_stats.present_count %>/<%= topic_stats.partitions_count %>
     <% end %>
   </td>
   <td>
@@ -45,10 +44,24 @@
     </span>
   </td>
   <td>
-    <%== lag_with_label topic_stats.max_lag %>
     <% if topic_stats.max_lag_partition_id >= 0 %>
-      <small class="text-muted">(partition <%= topic_stats.max_lag_partition_id %>)</small>
+      <span title="Highest lag is on partition <%= topic_stats.max_lag_partition_id %>">
+        <%== lag_with_label topic_stats.max_lag %>
+      </span>
+    <% else %>
+      <%== lag_with_label topic_stats.max_lag %>
     <% end %>
+    <% if topic_stats.skewed? %>
+      <span
+        class="badge badge-warning"
+        title="Lag is concentrated on one or few partitions (max is far above the average), not spread evenly"
+      >
+        skewed
+      </span>
+    <% end %>
+  </td>
+  <td>
+    <%== lag_with_label topic_stats.avg_lag %>
   </td>
   <td>
     <span class="badge badge-success <%= lso_risk_state_badge(topic_stats) %>">

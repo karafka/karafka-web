@@ -18,6 +18,8 @@ module Karafka
           # the health stats tree: the keyword filter treats the topics map as a structural
           # container and matches on the topic name keys, exactly like the per-partition overview.
           class AggregatedTopic < Lib::HashProxy
+            include LagStats
+
             # Ordering used to pick the "worst" LSO risk state across partitions. A single stopped
             # partition should dominate the whole topic summary.
             LSO_RISK_STATES_SEVERITY = {
@@ -31,18 +33,29 @@ module Karafka
             # @param topic_details [Hash] a single topic node from {Health.current}, that is a hash
             #   with `:partitions` (id => {Partition}) and `:partitions_count` keys
             def initialize(topic_details)
-              partitions = topic_details[:partitions].values
+              partitions_map = topic_details[:partitions]
+              partitions = partitions_map.values
+              partitions_count = topic_details[:partitions_count]
               # Negative lag means "not available yet", so it is excluded from every roll-up
               measurable = partitions.select { |partition| partition.lag_hybrid >= 0 }
               lags = measurable.map(&:lag_hybrid)
               worst_lag_partition = measurable.max_by(&:lag_hybrid)
 
               super(
-                partitions_count: topic_details[:partitions_count],
+                partitions_count: partitions_count,
                 present_count: partitions.size,
+                # Partitions that were assigned/expected (ids below the reported count) but have no
+                # data. Computed exactly like the `_partitions_with_fallback` "No data available"
+                # rows, so the aggregated count matches what the drill-down shows. Note that the
+                # reported count is a per-process assignment count, so `present_count` can legitimately
+                # exceed it (data merged across processes) - hence a dedicated missing count rather
+                # than a present/total ratio.
+                no_data_count: (0...partitions_count).count { |id| !partitions_map.key?(id) },
+                measurable_count: lags.size,
                 lag_hybrid: lags.empty? ? -1 : lags.sum,
                 lag_hybrid_d: measurable.sum(&:lag_hybrid_d),
                 max_lag: lags.max || -1,
+                avg_lag: lags.empty? ? -1 : (lags.sum.to_f / lags.size).round,
                 # -1 (not a valid partition id) when no partition has a lag yet. `HashProxy` treats a
                 # nil value as "not found", so a sentinel is used rather than nil.
                 max_lag_partition_id: worst_lag_partition ? worst_lag_partition.id : -1,
@@ -52,11 +65,11 @@ module Karafka
             end
 
             # @return [Boolean] true when there is anything worth a closer look: a non-active LSO
-            #   risk state, any paused partition or missing partition data
+            #   risk state, any paused partition or partitions with no data
             def unhealthy?
               lso_risk_state != :active ||
                 paused_count.positive? ||
-                present_count < partitions_count
+                no_data_count.positive?
             end
 
             private

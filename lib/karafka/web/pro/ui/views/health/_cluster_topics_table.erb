@@ -18,30 +18,30 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<% view_title 'Consumers Groups Changes Details' %>
-
-<%== partial 'health/tabs' %>
-
-<div class="col-span-12">
-  <% if @stats.empty? %>
-    <%== partial 'health/no_data' %>
-  <% end %>
-
-  <% @stats.each do |cg_name, cg_details| %>
-    <h2 class="h2"><%= cg_name %></h2>
-
-    <% cg_details[:topics].each do |topic_name, topic_details| %>
-      <%==
-        partial(
-          'health/changes_table',
-          locals: {
-            cg_name: cg_name,
-            cg_details: cg_details,
-            topic_name: topic_name,
-            topic_details: topic_details
-          }
-        )
-      %>
-    <% end %>
-  <% end %>
+<div class="data-table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Topic</th>
+        <th>Partitions</th>
+        <th>Total lag</th>
+        <th>Max lag</th>
+        <th>Avg lag</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% cg_details.each do |topic_name, topic_stats| %>
+        <%==
+          partial(
+            'health/cluster_topic',
+            locals: {
+              cg_name: cg_name,
+              topic_name: topic_name,
+              topic_stats: topic_stats
+            }
+          )
+        %>
+      <% end %>
+    </tbody>
+  </table>
 </div>

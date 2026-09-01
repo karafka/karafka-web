@@ -18,30 +18,41 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<% view_title 'Consumers Groups Overview' %>
+<div class="tab-container-wrapper">
+  <div class="tab-container">
+    <a
+      href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'overview') %>"
+      class="custom-tab <%= nav_class(match: %r{/overview\z}) %>"
+    >
+      Overview
+    </a>
 
-<%== partial 'health/tabs' %>
+    <a
+      href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'lags') %>"
+      class="custom-tab <%= nav_class(match: %r{/lags\z}) %>"
+    >
+      Lags
+    </a>
 
-<div class="col-span-12">
-  <% if @stats.empty? %>
-    <%== partial 'health/no_data' %>
-  <% end %>
+    <a
+      href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'offsets') %>"
+      class="custom-tab <%= nav_class(match: %r{/offsets\z}) %>"
+    >
+      Offsets
+    </a>
 
-  <% @stats.each do |cg_name, cg_details| %>
-    <h2 class="h2"><%= cg_name %></h2>
+    <a
+      href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'changes') %>"
+      class="custom-tab <%= nav_class(match: %r{/changes\z}) %>"
+    >
+      Changes
+    </a>
 
-    <% cg_details[:topics].each do |topic_name, topic_details| %>
-      <%==
-        partial(
-          'health/overview_table',
-          locals: {
-            cg_name: cg_name,
-            cg_details: cg_details,
-            topic_name: topic_name,
-            topic_details: topic_details
-          }
-        )
-      %>
-    <% end %>
-  <% end %>
+    <a
+      href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'cluster_lags') %>"
+      class="custom-tab <%= nav_class(match: %r{/cluster_lags\z}) %>"
+    >
+      Cluster Lags
+    </a>
+  </div>
 </div>

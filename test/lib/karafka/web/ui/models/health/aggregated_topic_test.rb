@@ -163,6 +163,110 @@ describe_current do
     end
   end
 
+  describe "#avg_lag" do
+    context "when partitions have lag available" do
+      let(:partitions) do
+        {
+          0 => partition(0, lag: 100, lag_stored: 100),
+          1 => partition(1, lag: 900, lag_stored: 900)
+        }
+      end
+
+      it "expect to average only the available lags" do
+        assert_equal(500, aggregated.avg_lag)
+      end
+    end
+
+    context "when only some partitions have lag available" do
+      let(:partitions) do
+        {
+          0 => partition(0, lag: 300, lag_stored: 300),
+          1 => partition(1, lag: -1, lag_stored: -1)
+        }
+      end
+
+      it "expect to average over the measurable partitions only" do
+        assert_equal(300, aggregated.avg_lag)
+      end
+    end
+
+    context "when no partition has lag available" do
+      let(:partitions) { { 0 => partition(0, lag: -1, lag_stored: -1) } }
+
+      it "expect to return -1 (N/A)" do
+        assert_equal(-1, aggregated.avg_lag)
+      end
+    end
+  end
+
+  describe "#skewed?" do
+    context "when the lag is evenly spread across partitions" do
+      let(:partitions) do
+        {
+          0 => partition(0, lag: 1_000, lag_stored: 1_000),
+          1 => partition(1, lag: 1_000, lag_stored: 1_000),
+          2 => partition(2, lag: 1_000, lag_stored: 1_000)
+        }
+      end
+
+      it { refute(aggregated.skewed?) }
+    end
+
+    context "when the lag is concentrated on a single partition" do
+      let(:partitions) do
+        {
+          0 => partition(0, lag: 9_100, lag_stored: 9_100),
+          1 => partition(1, lag: 300, lag_stored: 300),
+          2 => partition(2, lag: 300, lag_stored: 300),
+          3 => partition(3, lag: 300, lag_stored: 300)
+        }
+      end
+
+      it "expect to be flagged as skewed" do
+        assert(aggregated.skewed?)
+      end
+    end
+
+    context "when there is only one lagging partition" do
+      let(:partitions) { { 0 => partition(0, lag: 10_000, lag_stored: 10_000) } }
+
+      it "expect not to be skewed (nothing to compare against)" do
+        refute(aggregated.skewed?)
+      end
+    end
+
+    context "when the imbalance is below the threshold" do
+      let(:partitions) do
+        {
+          0 => partition(0, lag: 4_000, lag_stored: 4_000),
+          1 => partition(1, lag: 1_000, lag_stored: 1_000),
+          2 => partition(2, lag: 1_000, lag_stored: 1_000)
+        }
+      end
+
+      # avg 2_000, max 4_000 -> only 2x, below the default 3x threshold
+      it { refute(aggregated.skewed?) }
+    end
+
+    context "when the skew threshold is lowered via config" do
+      let(:partitions) do
+        {
+          0 => partition(0, lag: 4_000, lag_stored: 4_000),
+          1 => partition(1, lag: 1_000, lag_stored: 1_000),
+          2 => partition(2, lag: 1_000, lag_stored: 1_000)
+        }
+      end
+
+      before { Karafka::Web.config.ui.health_lag_skew_threshold = 2 }
+
+      after { Karafka::Web.config.ui.health_lag_skew_threshold = 3 }
+
+      it "expect the same distribution to now count as skewed" do
+        assert(aggregated.skewed?)
+      end
+    end
+  end
+
   describe "#lso_risk_state" do
     # active: last stable offset caught up to the high watermark
     def active_partition(id)
