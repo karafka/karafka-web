@@ -75,11 +75,11 @@ module Karafka
                 render
               end
 
-              # Displays per-topic aggregated lags for routing defined consumer groups taken from the
-              # cluster and not the metrics reported. This is useful when we don't have any consumers
-              # running but still want to check lags because it shows what Kafka sees. Like the topics
-              # view it is aggregated per topic, with a per-partition drill-down (the cluster lags
-              # lens of {PartitionsController}).
+              # Displays per-topic aggregated lags taken from the cluster (what Kafka sees) for the
+              # routing defined consumer groups, not from the reported metrics. Useful when no
+              # consumers are running but we still want to check lags. Like the topics view it is
+              # aggregated per topic, with a per-partition drill-down (the cluster lags lens of
+              # {PartitionsController}).
               def cluster_lags
                 @stats = Models::Health.aggregated_cluster_lags
 

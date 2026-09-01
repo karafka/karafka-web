@@ -33,11 +33,12 @@ module Karafka
     module Pro
       module Ui
         module Controllers
+          # Namespace for the health section controllers (aggregated topics and their drill-down).
           module Health
-            # Per-partition details of a single topic within a consumer group. This is the drill-down
-            # from the aggregated {TopicsController} views. Each action is one lens: the report-based
-            # lenses (overview/lags/offsets/changes) come from the consumer reports, while
-            # {#cluster_lags} shows what Kafka sees and works even without a running consumer.
+            # Per-partition details of a single topic within a consumer group. This is the
+            # drill-down from the aggregated {TopicsController} views. Each action is one lens: the
+            # report-based lenses (overview/lags/offsets/changes) come from the consumer reports,
+            # while {#cluster_lags} shows what Kafka sees and works even without a running consumer.
             class PartitionsController < BaseController
               self.sortable_attributes = %w[
                 id
@@ -63,7 +64,7 @@ module Karafka
                 poll_state_ch
               ].freeze
 
-              # @param consumer_group_id [String] id of the consumer group
+              # @param consumer_group_id [String]
               # @param topic_name [String] name of the topic
               def overview(consumer_group_id, topic_name)
                 load_report_topic(consumer_group_id, topic_name)
@@ -71,7 +72,7 @@ module Karafka
                 render
               end
 
-              # @param consumer_group_id [String] id of the consumer group
+              # @param consumer_group_id [String]
               # @param topic_name [String] name of the topic
               def lags(consumer_group_id, topic_name)
                 load_report_topic(consumer_group_id, topic_name)
@@ -79,7 +80,7 @@ module Karafka
                 render
               end
 
-              # @param consumer_group_id [String] id of the consumer group
+              # @param consumer_group_id [String]
               # @param topic_name [String] name of the topic
               def offsets(consumer_group_id, topic_name)
                 load_report_topic(consumer_group_id, topic_name)
@@ -87,7 +88,7 @@ module Karafka
                 render
               end
 
-              # @param consumer_group_id [String] id of the consumer group
+              # @param consumer_group_id [String]
               # @param topic_name [String] name of the topic
               def changes(consumer_group_id, topic_name)
                 load_report_topic(consumer_group_id, topic_name)
@@ -96,11 +97,11 @@ module Karafka
               end
 
               # Cluster lags for a single topic, straight from Kafka. Unlike the report lenses this
-              # does not 404 when the topic is absent: a topic with no running consumers legitimately
-              # has no cluster lag rows, so we render an empty table rather than a not found, keeping
-              # the lens navigable for every topic.
+              # does not 404 when the topic is absent: a topic with no running consumers has no
+              # cluster lag rows, so we render an empty table rather than a not found, keeping the
+              # lens navigable for every topic.
               #
-              # @param consumer_group_id [String] id of the consumer group
+              # @param consumer_group_id [String]
               # @param topic_name [String] name of the topic
               def cluster_lags(consumer_group_id, topic_name)
                 @consumer_group_id = consumer_group_id
@@ -121,7 +122,7 @@ module Karafka
               # Loads the per-partition consumer report data for the drilled-into topic (used by the
               # overview/lags/offsets/changes lenses). Missing report data is a 404.
               #
-              # @param consumer_group_id [String] id of the consumer group
+              # @param consumer_group_id [String]
               # @param topic_name [String] name of the topic
               def load_report_topic(consumer_group_id, topic_name)
                 stats = Models::Health.current(Models::ConsumersState.current!)

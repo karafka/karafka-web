@@ -77,9 +77,9 @@ module Karafka
             private
 
             # @param partitions [Array<Partition>] all partitions of the topic
-            # @return [Symbol] the worst LSO risk state across the partitions (defaults to `:active`
-            #   when there are no partitions). Named `lso_risk_state` on the instance (via the stored
-            #   hash) so the `lso_risk_state_bg`/`lso_risk_state_badge` helpers work unchanged.
+            # @return [Symbol] the worst LSO risk state across the partitions, or `:active` when
+            #   there are no partitions. Named `lso_risk_state` (via the stored hash) so the
+            #   `lso_risk_state_bg`/`lso_risk_state_badge` helpers work on it unchanged.
             def worst_lso_risk_state(partitions)
               partitions
                 .map(&:lso_risk_state)
