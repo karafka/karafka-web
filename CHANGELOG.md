@@ -3,6 +3,7 @@
 ## Unreleased
 - [Enhancement] Tighten compaction on the `karafka_consumers_states` and `karafka_consumers_metrics` topics (`segment.ms` 1 day -> 6h, add `max.compaction.lag.ms` of 7 days) so superseded versions are collapsed sooner. Values accepted on Apache Kafka, Confluent Cloud, Redpanda and MSK.
 - [Fix] Raise the `retention.ms` floor on the compacted `karafka_consumers_states` and `karafka_consumers_metrics` topics to 1 month (was 1 hour / 1 day) so the most recent record is not deleted on brokers that apply retention to compacted topics (e.g. Redpanda).
+- [Fix] Stop the live poll from clobbering the search/filter box. The filtering box added in 1.0.1 is a visible editable form on almost every listing, which permanently paused live polling (it looked like a form was being edited). Live polling now ignores the filter box unless it actually has unsubmitted input, so pages auto-refresh again while a pending (typed but not yet submitted) filter is still preserved.
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a generic keyword filtering (search) box to the data-heavy Web UI listings (consumers, controls, jobs, routing, per-process subscriptions, cluster, configs, recurring tasks, the health views and the topic lists), so a specific consumer, topic or job can be found without scrolling. Flat listings also include a field selector to scope the search to a chosen attribute (Pro) (#1073).
