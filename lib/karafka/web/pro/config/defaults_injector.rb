@@ -31,6 +31,7 @@
 module Karafka
   module Web
     module Pro
+      # Namespace for Pro configuration components
       module Config
         # Pro overlay for the Web UI kafka settings injector.
         #
