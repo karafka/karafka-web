@@ -42,7 +42,9 @@ module Karafka
               # @param message_offset [Integer]
               def cancel(topic_id, partition_id, message_offset)
                 # Fetches the message we want to cancel to get its key
-                scheduled_message = Karafka::Admin.read_topic(
+                # Uses the Web UI admin wrapper so this scheduled-messages topic (written
+                # transactionally) is read with the Web UI kafka settings for responsiveness
+                scheduled_message = Web::Ui::Lib::Admin.read_topic(
                   topic_id,
                   partition_id,
                   1,

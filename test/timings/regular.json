@@ -170,5 +170,6 @@
   "test/lib/karafka/web/tracking/helpers/ttls/windows_test.rb": 0.0,
   "test/lib/karafka/web/cli/help_test.rb": 0.0,
   "test/lib/karafka/web/ui/models/health/aggregated_topic_test.rb": 3.0,
-  "test/lib/karafka/web/ui/models/health/aggregated_cluster_topic_test.rb": 3.0
+  "test/lib/karafka/web/ui/models/health/aggregated_cluster_topic_test.rb": 3.0,
+  "test/lib/karafka/web/config/defaults_injector_test.rb": 0.01
 }
