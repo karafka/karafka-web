@@ -168,5 +168,6 @@
   "test/lib/karafka/web/tracking/producers/listeners/booting_test.rb": 0.001,
   "test/lib/karafka/web/cli/uninstall_test.rb": 0.001,
   "test/lib/karafka/web/tracking/helpers/ttls/windows_test.rb": 0.0,
-  "test/lib/karafka/web/cli/help_test.rb": 0.0
+  "test/lib/karafka/web/cli/help_test.rb": 0.0,
+  "test/lib/karafka/web/config/defaults_injector_test.rb": 0.01
 }

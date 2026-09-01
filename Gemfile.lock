@@ -4,7 +4,7 @@ PATH
     karafka-web (1.0.1)
       erubi (~> 1.4)
       karafka (>= 2.6.0, < 2.7.0)
-      karafka-core (>= 2.6.2, < 2.7.0)
+      karafka-core (>= 2.6.3, < 2.7.0)
       roda (>= 3.100, < 4.0)
       tilt (~> 2.0)
 
@@ -39,7 +39,7 @@ GEM
       karafka-rdkafka (>= 0.28.0)
       waterdrop (>= 2.10.2, < 3.0.0)
       zeitwerk (~> 2.3)
-    karafka-core (2.6.2)
+    karafka-core (2.6.3)
       karafka-rdkafka (>= 0.20.0)
       logger (>= 1.6.0)
     karafka-rdkafka (0.28.0)

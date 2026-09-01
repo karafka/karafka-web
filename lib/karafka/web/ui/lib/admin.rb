@@ -37,17 +37,10 @@ module Karafka
                 partition,
                 count,
                 start_offset,
-                # Merge our Web UI specific settings
-                config.merge(settings)
+                # Inject our Web UI specific settings as defaults, letting anything the caller
+                # passes explicitly win over them
+                Config::DefaultsInjector.call(settings.dup)
               )
-            end
-
-            private
-
-            # @return [Hash] kafka config for Web UI interface.
-            # @note It does **not** affect tracking or processing
-            def config
-              ::Karafka::Web.config.ui.kafka
             end
           end
         end
