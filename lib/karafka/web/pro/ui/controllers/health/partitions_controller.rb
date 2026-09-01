@@ -97,8 +97,8 @@ module Karafka
               end
 
               # Cluster lags for a single topic, straight from Kafka. Works even when no consumer is
-              # running (lags come from the routing groups, not the reports). A reported topic with
-              # no cluster lag rows renders an empty table; a topic absent everywhere is not found.
+              # running. A topic missing from the cluster lags falls back to reports: a reported
+              # topic renders an empty table, while one that exists nowhere is not found.
               #
               # @param consumer_group_id [String]
               # @param topic_name [String] name of the topic

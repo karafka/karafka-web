@@ -82,8 +82,6 @@ module Karafka
                   topics_controller.index
                 end
 
-                # A bare /health lands on the aggregated topics view. Legacy top-level per-partition
-                # paths (health/overview, health/lags, ...) are redirected in Routes::Legacy.
                 r.get do
                   r.redirect root_path("health/topics")
                 end
