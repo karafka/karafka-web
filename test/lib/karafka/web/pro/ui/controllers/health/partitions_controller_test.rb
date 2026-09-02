@@ -147,6 +147,18 @@ describe_current do
 
       it { assert_ok }
     end
+
+    context "when the topic does not exist" do
+      before { get "health/topics/example_app6_app/no-such-topic/lags" }
+
+      it { assert_equal(404, status) }
+    end
+
+    context "when the consumer group does not exist" do
+      before { get "health/topics/no-such-group/default/lags" }
+
+      it { assert_equal(404, status) }
+    end
   end
 
   describe "#offsets" do
@@ -187,6 +199,18 @@ describe_current do
         refute_body("stopped")
       end
     end
+
+    context "when the topic does not exist" do
+      before { get "health/topics/example_app6_app/no-such-topic/offsets" }
+
+      it { assert_equal(404, status) }
+    end
+
+    context "when the consumer group does not exist" do
+      before { get "health/topics/no-such-group/default/offsets" }
+
+      it { assert_equal(404, status) }
+    end
   end
 
   describe "#changes" do
@@ -204,6 +228,18 @@ describe_current do
       before { get "health/topics/example_app6_app/default/changes?sort=poll_state_ch+desc" }
 
       it { assert_ok }
+    end
+
+    context "when the topic does not exist" do
+      before { get "health/topics/example_app6_app/no-such-topic/changes" }
+
+      it { assert_equal(404, status) }
+    end
+
+    context "when the consumer group does not exist" do
+      before { get "health/topics/no-such-group/default/changes" }
+
+      it { assert_equal(404, status) }
     end
   end
 

@@ -378,6 +378,9 @@ describe_current do
         assert_ok
         assert_body("skewed")
         assert_body("status-row-warning")
+        # The aggregation rolls the four partitions up: total 10_000 and biggest single lag 9_100
+        assert_body("10000")
+        assert_body("9100")
       end
     end
 
@@ -492,6 +495,32 @@ describe_current do
         end
 
         it { assert_ok }
+      end
+    end
+
+    context "when a cluster topic's lag is skewed across its partitions" do
+      before do
+        Karafka::Admin.stubs(:read_lags_with_offsets).returns(
+          "example_app6_app" => {
+            "orders" => {
+              0 => { lag: 9_100, offset: 1 },
+              1 => { lag: 300, offset: 1 },
+              2 => { lag: 300, offset: 1 },
+              3 => { lag: 300, offset: 1 }
+            }
+          }
+        )
+
+        get "health/cluster_lags"
+      end
+
+      it "expect the skewed cluster topic row to show the skew badge and warning border" do
+        assert_ok
+        assert_body("skewed")
+        assert_body("status-row-warning")
+        # total 10_000 across the four partitions, biggest single lag 9_100
+        assert_body("10000")
+        assert_body("9100")
       end
     end
 
