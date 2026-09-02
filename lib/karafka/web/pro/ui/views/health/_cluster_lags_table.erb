@@ -33,7 +33,7 @@
   </thead>
   <tbody>
     <% partitions.each do |partition| %>
-      <tr>
+      <tr class="<%= lag_status_row(partition[:lag]) %>">
         <td><%= partition[:id] %></td>
         <td><%== partition[:lag] %></td>
         <td><%== partition[:stored_offset] %></td>

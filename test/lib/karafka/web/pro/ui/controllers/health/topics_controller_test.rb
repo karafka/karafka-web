@@ -98,6 +98,12 @@ describe_current do
         assert_body("health/topics/example_app6_app/default/overview")
       end
 
+      it "expect a high-lag topic to get the error row border" do
+        # the default topic's average lag (213_731_273) is well above the high-lag threshold
+        assert_ok
+        assert_body("status-row-error")
+      end
+
       it "expect the old top-level per-partition views to no longer be linked" do
         assert_ok
         # The old all-topics per-partition tabs/links are gone (they are per-topic now)

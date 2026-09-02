@@ -75,7 +75,8 @@ describe_current do
         health: {
           lags: {
             skew_threshold: 3,
-            skew_minimum: 100
+            skew_minimum: 100,
+            high_threshold: 10_000
           }
         }
       }
@@ -359,6 +360,18 @@ describe_current do
 
     context "when skew_minimum is negative" do
       before { params[:ui][:health][:lags][:skew_minimum] = -1 }
+
+      it { refute(contract.call(params).success?) }
+    end
+
+    context "when high_threshold is not an integer" do
+      before { params[:ui][:health][:lags][:high_threshold] = 10_000.5 }
+
+      it { refute(contract.call(params).success?) }
+    end
+
+    context "when high_threshold is not positive" do
+      before { params[:ui][:health][:lags][:high_threshold] = 0 }
 
       it { refute(contract.call(params).success?) }
     end

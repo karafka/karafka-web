@@ -18,7 +18,7 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<tr>
+<tr class="<%= topic_lag_status_row(topic_stats) %>">
   <td>
     <a href="<%= root_path('health', 'topics', cg_name, topic_name, 'cluster_lags') %>">
       <%= topic_name %>

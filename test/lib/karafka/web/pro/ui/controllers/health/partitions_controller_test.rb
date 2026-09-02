@@ -78,6 +78,13 @@ describe_current do
       it { assert_ok }
     end
 
+    it "expect a high-lag partition row to use the error border (lag wins over process status)" do
+      # the default partition's lag (213_731_273) is well above the high-lag threshold
+      assert_ok
+      assert_body("status-row-error")
+      refute_body("status-row-running")
+    end
+
     context "when the topic does not exist" do
       before { get "health/topics/example_app6_app/no-such-topic/overview" }
 
