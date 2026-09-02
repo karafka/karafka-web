@@ -40,7 +40,6 @@ module Karafka
           # the shared OSS base
           include Helpers::FilteringHelper
           include Helpers::TopicsFilteringHelper
-          # Health view (and thus its lag/status-row helpers) is Pro-only
           include Helpers::HealthHelper
 
           opts[:root] = Karafka::Web.gem_root.join("lib/karafka/web/pro/ui")
