@@ -31,6 +31,22 @@
 describe_current do
   include described_class
 
+  describe "#health_lens_label" do
+    it { assert_equal("Overview", health_lens_label(:overview)) }
+    it { assert_equal("Lags", health_lens_label(:lags)) }
+    it { assert_equal("Offsets", health_lens_label(:offsets)) }
+    it { assert_equal("Changes", health_lens_label(:changes)) }
+    it { assert_equal("Cluster Lags", health_lens_label(:cluster_lags)) }
+
+    it "accepts a string too" do
+      assert_equal("Changes", health_lens_label("changes"))
+    end
+
+    it "falls back to a titleized name for an unknown lens" do
+      assert_equal("Some Lens", health_lens_label(:some_lens))
+    end
+  end
+
   # Default config.ui.health.lags: high_threshold 10_000, warning_ratio 0.5 (warning at 5_000)
   describe "#lag_severity" do
     it { assert_nil(lag_severity(-1)) }

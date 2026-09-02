@@ -24,14 +24,9 @@
   </a>
 </li>
 
-<li>
-  <a href="<%= root_path('health', 'topics') %>">
-    Topics
-  </a>
-</li>
-
-<%# Topics are always shown within a consumer group, so surface the group on the drill-down and %>
-<%# link it back to the topics list scoped to that group. %>
+<%# Topics are always viewed within a consumer group, so the trail goes group-first: %>
+<%# Health > <group> > Topics > <topic> > <lens>. The group links to the topics list scoped to %>
+<%# it, Topics returns to the full (all-groups) list, and the last crumb is the current lens/tab. %>
 <li>
   <a href="<%= root_path('health', 'topics') %>?filter[field]=consumer_group&filter[value]=<%= @consumer_group_id %>">
     <%= @consumer_group_id %>
@@ -39,7 +34,19 @@
 </li>
 
 <li>
+  <a href="<%= root_path('health', 'topics') %>">
+    Topics
+  </a>
+</li>
+
+<li>
   <a href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'overview') %>">
     <%= @topic_name %>
+  </a>
+</li>
+
+<li>
+  <a href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, @current_action_name) %>">
+    <%= health_lens_label(@current_action_name) %>
   </a>
 </li>

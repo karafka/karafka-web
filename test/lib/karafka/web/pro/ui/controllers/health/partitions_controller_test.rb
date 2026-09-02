@@ -85,6 +85,16 @@ describe_current do
       refute_body("status-row-running")
     end
 
+    it "expect the breadcrumb to place the topic within its consumer group" do
+      # Topics are always viewed within a consumer group, so the trail is
+      # Health > <group> > Topics > <topic> > <lens>. The group crumb links to the topics list
+      # scoped to that consumer group (a link unique to the breadcrumb on this page).
+      assert_ok
+      assert_body("filter[field]=consumer_group&filter[value]=example_app6_app")
+      # the last crumb is the current lens (overview here)
+      assert_body("Overview")
+    end
+
     context "when the partition is paused and not otherwise lagging" do
       before do
         topics_config.consumers.reports.name = reports_topic
@@ -186,6 +196,8 @@ describe_current do
       assert_ok
       assert_body(breadcrumbs)
       assert_body("Pause state change")
+      # The lens ends the breadcrumb trail with its own label
+      assert_body("Changes")
     end
 
     context "when sorted" do

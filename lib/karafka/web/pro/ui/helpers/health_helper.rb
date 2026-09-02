@@ -38,6 +38,25 @@ module Karafka
           # at a glance. Lives in Pro (not the shared OSS helpers) because the Health view is
           # Pro-only, as is its `config.ui.health.lags` configuration.
           module HealthHelper
+            # Human-readable labels for the per-topic health lenses (tabs), used in breadcrumbs so
+            # each lens ends the trail with its own name (e.g. ... > default > Changes).
+            LENS_LABELS = {
+              overview: "Overview",
+              lags: "Lags",
+              offsets: "Offsets",
+              changes: "Changes",
+              cluster_lags: "Cluster Lags"
+            }.freeze
+
+            # @param lens [Symbol, String] the lens/action name (e.g. `:changes`)
+            # @return [String] the label for that lens, falling back to a titleized name for any
+            #   lens not in {LENS_LABELS}
+            def health_lens_label(lens)
+              LENS_LABELS.fetch(lens.to_sym) do
+                lens.to_s.split("_").map(&:capitalize).join(" ")
+              end
+            end
+
             # Classifies a lag value against the configured high-lag threshold, for at-a-glance row
             # highlighting. The threshold marks an error; `warning_ratio` of it marks a warning.
             #
