@@ -118,6 +118,50 @@ describe_current do
       assert_body("Overview")
     end
 
+    context "when a partition has no committed offsets yet" do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        partition_data = report.dig(*partition_scope)
+        # Negative values mean "not available yet" and must render as N/A, not as -1
+        partition_data["lag"] = -1
+        partition_data["lag_stored"] = -1
+        partition_data["stored_offset"] = -1
+        partition_data["committed_offset"] = -1
+
+        produce(reports_topic, report.to_json)
+
+        get "health/topics/example_app6_app/default/overview"
+      end
+
+      it "expect the unavailable lag and offset cells to render N/A" do
+        assert_ok
+        assert_body("N/A")
+      end
+    end
+
+    context "when some assigned partitions have no data" do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+        topic_data = report.dig(*partition_scope[0..5])
+        # Only partition 0 is reported, but the topic has 3 partitions -> 1 and 2 fall back
+        topic_data["partitions_cnt"] = 3
+
+        produce(reports_topic, report.to_json)
+
+        get "health/topics/example_app6_app/default/overview"
+      end
+
+      it "expect a no-data fallback row for each missing partition" do
+        assert_ok
+        assert_body("No data available")
+      end
+    end
+
     context "when the partition is paused and not otherwise lagging" do
       before do
         topics_config.consumers.reports.name = reports_topic
@@ -253,6 +297,31 @@ describe_current do
         assert_body("at_risk")
         assert_body("badge-warning")
         refute_body("stopped")
+      end
+    end
+
+    context "when the partition is stopped due to LSO" do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        partition_data = report.dig(*partition_scope)
+        # Committed caught up to a frozen last stable offset -> stopped (not just at risk)
+        partition_data["committed_offset"] = 3_000
+        partition_data["ls_offset"] = 3_000
+        partition_data["ls_offset_fd"] = 1_000_000_000
+
+        produce(reports_topic, report.to_json)
+
+        get "health/topics/example_app6_app/default/offsets"
+      end
+
+      it do
+        assert_ok
+        assert_body("stopped")
+        assert_body("badge-error")
+        refute_body("at_risk")
       end
     end
 

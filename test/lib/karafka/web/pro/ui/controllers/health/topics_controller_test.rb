@@ -115,6 +115,28 @@ describe_current do
         assert_body("status-row-error")
       end
 
+      context "when a topic has no measurable lag yet" do
+        before do
+          topics_config.consumers.reports.name = reports_topic
+
+          report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+          partition_data = report.dig(*partition_scope)
+          # Nothing measurable -> the aggregated lag and the trend must render as N/A, not -1
+          partition_data["lag"] = -1
+          partition_data["lag_stored"] = -1
+
+          produce(reports_topic, report.to_json)
+
+          get "health/topics"
+        end
+
+        it "expect the aggregated row to render N/A for the unavailable lag and trend" do
+          assert_ok
+          assert_body("N/A")
+        end
+      end
+
       context "when a topic's average lag is at the warning level (not yet an error)" do
         before do
           topics_config.consumers.reports.name = reports_topic
