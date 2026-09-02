@@ -79,9 +79,11 @@ module Karafka
                 end
 
                 # A consumer-group path without a topic has no page of its own, so send it to the
-                # topics list scoped to that group rather than 404-ing.
+                # topics list scoped to that group rather than 404-ing. The group id comes from the
+                # URL path, so its value is URL-encoded to avoid injecting extra query params.
                 r.get "topics", String do |consumer_group_id|
-                  filter = "filter[field]=consumer_group&filter[value]=#{consumer_group_id}"
+                  value = Rack::Utils.escape(consumer_group_id)
+                  filter = "filter[field]=consumer_group&filter[value]=#{value}"
                   r.redirect "#{root_path("health", "topics")}?#{filter}"
                 end
 

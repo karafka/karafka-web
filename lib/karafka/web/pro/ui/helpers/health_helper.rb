@@ -120,9 +120,11 @@ module Karafka
             end
 
             # `status-row-*` class for a per-partition report row. Combines several trouble signals,
-            # worst first: a high lag or a stopped process is an error (red); a warning-level lag, a
-            # paused partition or a winding-down process is a warning (yellow). A healthy running
-            # partition keeps the plain process status class (no border).
+            # worst first: a high lag or a stopped process is an error (`status-row-error`); a
+            # warning-level lag or a paused partition is a warning (`status-row-warning`). Otherwise
+            # the row keeps its process-status class (`status-row-<status>`), which the CSS styles
+            # yellow for a winding-down process (quiet/quieting/stopping) and leaves borderless for
+            # a healthy running partition.
             #
             # @param details [::Karafka::Web::Ui::Models::Partition] partition information
             # @return [String] the `status-row-*` class for the row
