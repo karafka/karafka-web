@@ -18,8 +18,6 @@ module Karafka
           # the health stats tree: the keyword filter treats the topics map as a structural
           # container and matches on the topic name keys, exactly like the per-partition overview.
           class AggregatedTopic < Lib::HashProxy
-            include LagStats
-
             # Ordering used to pick the "worst" LSO risk state across partitions. A single stopped
             # partition should dominate the whole topic summary.
             LSO_RISK_STATES_SEVERITY = {

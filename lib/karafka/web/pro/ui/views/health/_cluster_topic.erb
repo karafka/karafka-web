@@ -38,7 +38,7 @@
     <% else %>
       <%== lag_with_label topic_stats.max_lag %>
     <% end %>
-    <% if topic_stats.skewed? %>
+    <% if skewed?(topic_stats) %>
       <span
         class="badge badge-warning badge-sm ml-1"
         title="Lag is concentrated on one or few partitions (max is far above the average), not spread evenly"

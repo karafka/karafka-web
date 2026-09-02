@@ -59,39 +59,110 @@ describe_current do
     it { assert_equal("", lag_status_row(-1)) }
   end
 
-  describe "#topic_lag_status_row" do
-    def topic_stub(avg_lag:, skewed:)
+  # Default config.ui.health.lags: skew_threshold 3, skew_minimum 100
+  describe "#skewed?" do
+    def stats(measurable_count:, avg_lag:, max_lag:)
       obj = Object.new
+      obj.define_singleton_method(:measurable_count) { measurable_count }
       obj.define_singleton_method(:avg_lag) { avg_lag }
-      obj.define_singleton_method(:skewed?) { skewed }
+      obj.define_singleton_method(:max_lag) { max_lag }
       obj
     end
 
+    it "is not skewed when the lag is evenly spread" do
+      refute(skewed?(stats(measurable_count: 3, avg_lag: 1_000, max_lag: 1_000)))
+    end
+
+    it "is skewed when the lag is concentrated on one partition" do
+      # avg 2_500, max 9_100 -> well over the default 3x threshold
+      assert(skewed?(stats(measurable_count: 4, avg_lag: 2_500, max_lag: 9_100)))
+    end
+
+    it "is not skewed with fewer than two measurable partitions" do
+      refute(skewed?(stats(measurable_count: 1, avg_lag: 10_000, max_lag: 10_000)))
+    end
+
+    it "is not skewed when the average lag is not positive" do
+      refute(skewed?(stats(measurable_count: 3, avg_lag: 0, max_lag: 0)))
+    end
+
+    it "is not skewed when the biggest lag is below the minimum" do
+      # max 90 is > 3x the average but below the default 100 minimum, so it is just noise
+      refute(skewed?(stats(measurable_count: 4, avg_lag: 23, max_lag: 90)))
+    end
+
+    it "is not skewed when the imbalance is below the threshold" do
+      # max 4_000 is only 2x the 2_000 average, below the default 3x threshold
+      refute(skewed?(stats(measurable_count: 3, avg_lag: 2_000, max_lag: 4_000)))
+    end
+
+    context "when the skew threshold is lowered via config" do
+      before { ::Karafka::Web.config.ui.health.lags.skew_threshold = 2 }
+
+      after { ::Karafka::Web.config.ui.health.lags.skew_threshold = 3 }
+
+      it "flags the same 2x distribution as skewed" do
+        assert(skewed?(stats(measurable_count: 3, avg_lag: 2_000, max_lag: 4_000)))
+      end
+    end
+
+    context "when the skew minimum is raised via config" do
+      before { ::Karafka::Web.config.ui.health.lags.skew_minimum = 100_000 }
+
+      after { ::Karafka::Web.config.ui.health.lags.skew_minimum = 100 }
+
+      it "does not flag a distribution whose biggest lag is below the raised minimum" do
+        refute(skewed?(stats(measurable_count: 4, avg_lag: 2_500, max_lag: 9_100)))
+      end
+    end
+  end
+
+  describe "#topic_lag_status_row" do
+    # `topic_lag_status_row` calls the real `skewed?`, so the stub exposes the raw metrics it
+    # reads (measurable_count/avg_lag/max_lag). The defaults describe an unskewed topic.
+    def topic_stub(avg_lag:, max_lag: 0, measurable_count: 1)
+      obj = Object.new
+      obj.define_singleton_method(:avg_lag) { avg_lag }
+      obj.define_singleton_method(:max_lag) { max_lag }
+      obj.define_singleton_method(:measurable_count) { measurable_count }
+      obj
+    end
+
+    # An unskewed topic with a low average lag (below the warning threshold)
+    def healthy_stub
+      topic_stub(avg_lag: 10)
+    end
+
+    # A skewed topic (max 9_000 is >3x the 1_000 average) with a low average lag
+    def skewed_stub
+      topic_stub(avg_lag: 1_000, max_lag: 9_000, measurable_count: 2)
+    end
+
     it "flags high average lag as an error" do
-      assert_equal("status-row-error", topic_lag_status_row(topic_stub(avg_lag: 10_000, skewed: false)))
+      assert_equal("status-row-error", topic_lag_status_row(topic_stub(avg_lag: 10_000)))
     end
 
     it "flags medium average lag as a warning" do
-      assert_equal("status-row-warning", topic_lag_status_row(topic_stub(avg_lag: 5_000, skewed: false)))
+      assert_equal("status-row-warning", topic_lag_status_row(topic_stub(avg_lag: 5_000)))
     end
 
     it "flags a skewed topic as a warning even when the average lag is low" do
-      assert_equal("status-row-warning", topic_lag_status_row(topic_stub(avg_lag: 10, skewed: true)))
+      assert_equal("status-row-warning", topic_lag_status_row(skewed_stub))
     end
 
     it "flags a topic with paused partitions as a warning even when the average lag is low" do
-      assert_equal(
-        "status-row-warning",
-        topic_lag_status_row(topic_stub(avg_lag: 10, skewed: false), paused: true)
-      )
+      assert_equal("status-row-warning", topic_lag_status_row(healthy_stub, paused: true))
     end
 
     it "keeps error precedence over a skew warning" do
-      assert_equal("status-row-error", topic_lag_status_row(topic_stub(avg_lag: 10_000, skewed: true)))
+      assert_equal(
+        "status-row-error",
+        topic_lag_status_row(topic_stub(avg_lag: 10_000, max_lag: 9_000, measurable_count: 2))
+      )
     end
 
     it "returns no class for a healthy topic" do
-      assert_equal("", topic_lag_status_row(topic_stub(avg_lag: 10, skewed: false)))
+      assert_equal("", topic_lag_status_row(healthy_stub))
     end
   end
 

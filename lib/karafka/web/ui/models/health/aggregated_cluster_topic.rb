@@ -16,8 +16,6 @@ module Karafka
           # It is a {Lib::HashProxy} (like {AggregatedTopic}) so it stays a filterable/"prunable"
           # leaf in the cluster lags tree and the keyword filter keeps matching on topic name keys.
           class AggregatedClusterTopic < Lib::HashProxy
-            include LagStats
-
             # @param name [String] topic name (stored so the aggregated rows can be sorted by it)
             # @param partitions [Array<Hash>] cluster lag entries for the topic, each a hash with
             #   `:id`, `:lag` and `:stored_offset`

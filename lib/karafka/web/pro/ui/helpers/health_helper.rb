@@ -65,17 +65,37 @@ module Karafka
               severity ? "status-row-#{severity}" : ""
             end
 
+            # @param topic_stats [#measurable_count, #avg_lag, #max_lag] an aggregated topic row
+            #   (report or cluster)
+            # @return [Boolean] true when the lag is concentrated on one (or few) partition(s)
+            #   rather than spread evenly, that is the biggest single-partition lag is at least
+            #   `config.ui.health.lags.skew_threshold`x the average. Only meaningful with more than
+            #   one lagging partition and once the biggest lag clears
+            #   `config.ui.health.lags.skew_minimum` (so trivial imbalances are not flagged). An
+            #   evenly lagging topic and a topic with one hot/stuck partition can share the same
+            #   total lag, so this is what distinguishes them at a glance.
+            def skewed?(topic_stats)
+              lags = ::Karafka::Web.config.ui.health.lags
+
+              return false if topic_stats.measurable_count < 2
+              return false unless topic_stats.avg_lag.positive?
+              return false if topic_stats.max_lag < lags.skew_minimum
+
+              topic_stats.max_lag >= topic_stats.avg_lag * lags.skew_threshold
+            end
+
             # `status-row-*` class for an aggregated topic row. High lag wins, but a skewed topic
             # and (for report-based rows) a topic with paused partitions are also surfaced as
             # warnings even when the average lag is not high on its own.
             #
-            # @param topic_stats [#avg_lag, #skewed?] an aggregated topic row (report or cluster)
+            # @param topic_stats [#avg_lag, #measurable_count, #max_lag] an aggregated topic row
+            #   (report or cluster)
             # @param paused [Boolean] whether the topic has any paused partition (report rows only;
             #   cluster lag rows have no poll state so this stays false)
             # @return [String] `status-row-error`/`status-row-warning`, or an empty string
             def topic_lag_status_row(topic_stats, paused: false)
               severity = lag_severity(topic_stats.avg_lag)
-              severity ||= :warning if topic_stats.skewed? || paused
+              severity ||= :warning if skewed?(topic_stats) || paused
 
               severity ? "status-row-#{severity}" : ""
             end

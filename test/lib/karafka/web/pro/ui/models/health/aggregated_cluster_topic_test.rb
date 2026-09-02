@@ -104,27 +104,4 @@ describe Karafka::Web::Ui::Models::Health::AggregatedClusterTopic do
 
     it { assert_equal(500, aggregated.avg_lag) }
   end
-
-  describe "#skewed?" do
-    context "when the lag is evenly spread" do
-      let(:partitions) do
-        [partition(0, lag: 1_000), partition(1, lag: 1_000), partition(2, lag: 1_000)]
-      end
-
-      it { refute(aggregated.skewed?) }
-    end
-
-    context "when the lag is concentrated on one partition" do
-      let(:partitions) do
-        [
-          partition(0, lag: 9_100),
-          partition(1, lag: 300),
-          partition(2, lag: 300),
-          partition(3, lag: 300)
-        ]
-      end
-
-      it { assert(aggregated.skewed?) }
-    end
-  end
 end
