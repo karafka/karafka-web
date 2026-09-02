@@ -43,6 +43,10 @@ module Karafka
                   controller.replication
                 end
 
+                r.get "distribution" do
+                  controller.distribution
+                end
+
                 r.get String do |broker_id|
                   controller.show(broker_id)
                 end

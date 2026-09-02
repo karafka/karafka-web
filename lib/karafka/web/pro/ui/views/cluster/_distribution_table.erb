@@ -18,26 +18,31 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<div class="tab-container-wrapper">
-  <div class="tab-container">
-    <a
-      href="<%= root_path('cluster') %>"
-      class="custom-tab <%= nav_class(end_with: 'cluster') %>"
-    >
-      Brokers
-    </a>
+<div class="mb-3 flex justify-end">
+  <small class="text-muted">
+    Distribution of partition leadership and replicas across the cluster brokers
+  </small>
+</div>
 
-    <a
-      href="<%= root_path('cluster', 'replication') %>"
-      class="custom-tab <%= nav_class(include: 'replication') %>"
-    >
-      Replication
-    </a>
-    <a
-      href="<%= root_path('cluster', 'distribution') %>"
-      class="custom-tab <%= nav_class(include: 'distribution') %>"
-    >
-      Distribution
-    </a>
-  </div>
+<div class="data-table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th><%== sort_link('Node ID', :broker_id) %></th>
+        <th><%== sort_link('Name', :broker_name) %></th>
+        <th><%== sort_link('Leader partitions', :leader_count) %></th>
+        <th><%== sort_link('Leader share', :leader_share) %></th>
+        <th><%== sort_link('Replica partitions', :replica_count) %></th>
+        <th><%== sort_link('Replica share', :replica_share) %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%==
+        each_partial(
+          @distribution,
+          'cluster/distribution'
+        )
+      %>
+    </tbody>
+  </table>
 </div>

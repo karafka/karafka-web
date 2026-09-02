@@ -18,26 +18,15 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<div class="tab-container-wrapper">
-  <div class="tab-container">
-    <a
-      href="<%= root_path('cluster') %>"
-      class="custom-tab <%= nav_class(end_with: 'cluster') %>"
-    >
-      Brokers
+<tr>
+  <td>
+    <a href="<%= root_path('cluster', distribution.broker_id) %>">
+      <%= distribution.broker_id %>
     </a>
-
-    <a
-      href="<%= root_path('cluster', 'replication') %>"
-      class="custom-tab <%= nav_class(include: 'replication') %>"
-    >
-      Replication
-    </a>
-    <a
-      href="<%= root_path('cluster', 'distribution') %>"
-      class="custom-tab <%= nav_class(include: 'distribution') %>"
-    >
-      Distribution
-    </a>
-  </div>
-</div>
+  </td>
+  <td><%= distribution.broker_name %></td>
+  <td><%= distribution.leader_count %></td>
+  <td><%= distribution.leader_share %>%</td>
+  <td><%= distribution.replica_count %></td>
+  <td><%= distribution.replica_share %>%</td>
+</tr>

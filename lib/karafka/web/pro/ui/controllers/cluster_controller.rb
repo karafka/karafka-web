@@ -51,6 +51,11 @@ module Karafka
               leader
               replica_count
               in_sync_replica_brokers
+              broker_id
+              broker_name
+              leader_count
+              leader_share
+              replica_share
             ].freeze
 
             # Each action renders different columns, so we scope the filterable fields per action to
@@ -58,7 +63,8 @@ module Karafka
             self.filterable_attributes = {
               index: %i[id name],
               show: %i[name value],
-              replication: %i[topic_name]
+              replication: %i[topic_name],
+              distribution: %i[broker_id broker_name]
             }.freeze
 
             # Cluster state should always be fresh and not from cache
@@ -90,6 +96,20 @@ module Karafka
               )
 
               paginate(@params.current_page, !last_page)
+
+              render
+            end
+
+            # Shows how partitions are distributed across brokers (leader/replica counts and each
+            # broker's share), so an imbalanced cluster - one broker leading far more partitions
+            # than the rest - is visible at a glance.
+            def distribution
+              distribution = Models::BrokerPartitionsDistribution.all(
+                brokers: Models::Broker.all,
+                topics: displayable_topics
+              )
+
+              @distribution = filter(sort(distribution))
 
               render
             end

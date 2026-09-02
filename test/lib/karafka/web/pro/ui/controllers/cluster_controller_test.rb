@@ -273,4 +273,54 @@ describe_current do
       end
     end
   end
+
+  describe "#distribution" do
+    let(:topic) { create_topic(partitions: 2) }
+
+    before do
+      topic
+      get "cluster/distribution"
+    end
+
+    it "renders the per-broker partition distribution" do
+      assert_ok
+      assert_body(breadcrumbs)
+      assert_body("Leader partitions")
+      assert_body("Replica partitions")
+      # single-broker test cluster -> node 127.0.0.1 shows up as a row
+      assert_body("127.0.0.1")
+      # the Distribution tab links here
+      assert_body("cluster/distribution")
+    end
+
+    it "exposes the distribution filter fields (node id + name)" do
+      assert_ok
+      assert_body('value="broker_id"')
+      assert_body('value="broker_name"')
+    end
+
+    context "when sorting by a distribution column" do
+      before { get "cluster/distribution?sort=leader_count+desc" }
+
+      it { assert_ok }
+    end
+
+    context "when filtering by a matching node" do
+      before { get_filtered("cluster/distribution", "127.0.0.1") }
+
+      it do
+        assert_ok
+        assert_body("127.0.0.1")
+      end
+    end
+
+    context "when filtering by a non-matching node" do
+      before { get_filtered("cluster/distribution", "zzz-no-such-node") }
+
+      it do
+        assert_ok
+        assert_body("No results match your filter")
+      end
+    end
+  end
 end
