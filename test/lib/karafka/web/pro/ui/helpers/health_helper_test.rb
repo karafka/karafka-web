@@ -31,6 +31,27 @@
 describe_current do
   include described_class
 
+  # `health_group_topics_path` builds on PathsHelper#root_path (mixed into the app at runtime)
+  def root_path(*args)
+    "/karafka/#{args.join("/")}"
+  end
+
+  describe "#health_group_topics_path" do
+    it "builds the topics path scoped to the consumer group" do
+      assert_equal(
+        "/karafka/health/topics?filter[field]=consumer_group&filter[value]=app",
+        health_group_topics_path("app")
+      )
+    end
+
+    it "URL-encodes the consumer group value so it cannot inject extra query params" do
+      result = health_group_topics_path("evil&injected=1")
+
+      assert_includes(result, "filter[value]=evil%26injected%3D1")
+      refute_includes(result, "evil&injected=1")
+    end
+  end
+
   describe "#health_lens_label" do
     it { assert_equal("Overview", health_lens_label(:overview)) }
     it { assert_equal("Lags", health_lens_label(:lags)) }

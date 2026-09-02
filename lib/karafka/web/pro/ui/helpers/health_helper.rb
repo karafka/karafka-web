@@ -57,6 +57,19 @@ module Karafka
               end
             end
 
+            # Path to the aggregated topics list scoped to a single consumer group (used by the
+            # drill-down breadcrumb and the consumer-group-only redirect). The group value is
+            # URL-encoded because it can come straight from the URL path, so it cannot inject extra
+            # query params.
+            #
+            # @param consumer_group_id [String] consumer group id to scope the topics list to
+            # @return [String] the group-scoped topics list path
+            def health_group_topics_path(consumer_group_id)
+              value = Rack::Utils.escape(consumer_group_id)
+
+              "#{root_path("health", "topics")}?filter[field]=consumer_group&filter[value]=#{value}"
+            end
+
             # Classifies a lag value against the configured high-lag threshold, for at-a-glance row
             # highlighting. The threshold marks an error; `warning_ratio` of it marks a warning.
             #

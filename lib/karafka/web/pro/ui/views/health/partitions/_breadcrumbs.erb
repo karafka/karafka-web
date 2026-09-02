@@ -28,7 +28,7 @@
 <%# Health > <group> > Topics > <topic> > <lens>. The group links to the topics list scoped to %>
 <%# it, Topics returns to the full (all-groups) list, and the last crumb is the current lens/tab. %>
 <li>
-  <a href="<%= root_path('health', 'topics') %>?filter[field]=consumer_group&filter[value]=<%= @consumer_group_id %>">
+  <a href="<%== health_group_topics_path(@consumer_group_id) %>">
     <%= @consumer_group_id %>
   </a>
 </li>

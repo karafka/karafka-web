@@ -24,35 +24,35 @@
       href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'overview') %>"
       class="custom-tab <%= nav_class(match: %r{/overview\z}) %>"
     >
-      Overview
+      <%= health_lens_label(:overview) %>
     </a>
 
     <a
       href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'lags') %>"
       class="custom-tab <%= nav_class(match: %r{/lags\z}) %>"
     >
-      Lags
+      <%= health_lens_label(:lags) %>
     </a>
 
     <a
       href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'offsets') %>"
       class="custom-tab <%= nav_class(match: %r{/offsets\z}) %>"
     >
-      Offsets
+      <%= health_lens_label(:offsets) %>
     </a>
 
     <a
       href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'changes') %>"
       class="custom-tab <%= nav_class(match: %r{/changes\z}) %>"
     >
-      Changes
+      <%= health_lens_label(:changes) %>
     </a>
 
     <a
       href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'cluster_lags') %>"
       class="custom-tab <%= nav_class(match: %r{/cluster_lags\z}) %>"
     >
-      Cluster Lags
+      <%= health_lens_label(:cluster_lags) %>
     </a>
   </div>
 </div>
