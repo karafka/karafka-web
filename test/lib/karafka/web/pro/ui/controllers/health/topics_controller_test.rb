@@ -320,6 +320,67 @@ describe_current do
       end
     end
 
+    context "when a paused topic is not otherwise lagging" do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        partition_data = report.dig(*partition_scope)
+        # Drop the lag so it does not force an error border, then pause the partition
+        partition_data["lag"] = 0
+        partition_data["lag_stored"] = 0
+        partition_data["poll_state"] = "paused"
+        partition_data["poll_state_ch"] = 1_000_000_000_000
+
+        produce(reports_topic, report.to_json)
+
+        get "health/topics"
+      end
+
+      it "expect the paused topic row to use the warning border" do
+        assert_ok
+        assert_body("status-row-warning")
+        refute_body("status-row-error")
+      end
+    end
+
+    context "when a topic's lag is skewed across its partitions" do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        topic_data = report.dig(*partition_scope[0..5])
+        base_partition = report.dig(*partition_scope)
+
+        # One hot partition (9_100) and three small ones (300 each): avg 2_500, max 9_100 -> more
+        # than 3x the average (skewed), but the average is below the high-lag error threshold
+        base_partition["lag"] = 9_100
+        base_partition["lag_stored"] = 9_100
+
+        (1..3).each do |id|
+          partition = base_partition.dup
+          partition["id"] = id
+          partition["lag"] = 300
+          partition["lag_stored"] = 300
+          topic_data["partitions"][id.to_s] = partition
+        end
+
+        topic_data["partitions_cnt"] = 4
+
+        produce(reports_topic, report.to_json)
+
+        get "health/topics"
+      end
+
+      it "expect the skewed topic row to show the skew badge and the warning border" do
+        assert_ok
+        assert_body("skewed")
+        assert_body("status-row-warning")
+      end
+    end
+
     context "when data is present but reported in a transactional fashion" do
       before do
         topics_config.consumers.reports.name = reports_topic
@@ -480,6 +541,19 @@ describe_current do
         assert_ok
         assert_body("orders")
         assert_body("9100")
+      end
+    end
+
+    context "when filtering by a non-matching consumer group" do
+      before do
+        Karafka::Admin.stubs(:read_lags_with_offsets).returns(cluster_lags)
+        get_filtered("health/cluster_lags", consumer_group: "no-such-group")
+      end
+
+      it do
+        assert_ok
+        assert_body("No results match your filter")
+        refute_body("9100")
       end
     end
   end

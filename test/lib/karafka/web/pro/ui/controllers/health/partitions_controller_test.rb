@@ -85,6 +85,31 @@ describe_current do
       refute_body("status-row-running")
     end
 
+    context "when the partition is paused and not otherwise lagging" do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        partition_data = report.dig(*partition_scope)
+        # Drop the lag so it does not force an error border, then pause the partition
+        partition_data["lag"] = 0
+        partition_data["lag_stored"] = 0
+        partition_data["poll_state"] = "paused"
+        partition_data["poll_state_ch"] = 1_000_000_000_000
+
+        produce(reports_topic, report.to_json)
+
+        get "health/topics/example_app6_app/default/overview"
+      end
+
+      it "expect the paused partition row to use the warning border" do
+        assert_ok
+        assert_body("status-row-warning")
+        refute_body("status-row-error")
+      end
+    end
+
     context "when the topic does not exist" do
       before { get "health/topics/example_app6_app/no-such-topic/overview" }
 
