@@ -124,6 +124,38 @@ describe_current do
 
         it { assert_ok }
       end
+
+      # `lag_hybrid` is sortable only for the topics view (index action), not for cluster_lags.
+      # `default` has a huge lag while `visits` has none, so a working sort must flip their
+      # positions between asc and desc - proving the index action resolves the topics-view sort
+      # attributes (and not the cluster_lags ones).
+      context "when sorted by lag_hybrid, a topics-view-only sortable attribute" do
+        def overview_position(topic)
+          response.body.index("health/topics/example_app6_app/#{topic}/overview")
+        end
+
+        it "expect the sort to actually apply for the index action" do
+          get "health/topics?sort=lag_hybrid+desc"
+
+          assert_ok
+          # default (213_731_273) comes before visits (0) when descending
+          assert(overview_position("default") < overview_position("visits"))
+
+          get "health/topics?sort=lag_hybrid+asc"
+
+          assert_ok
+          # ...and after it when ascending
+          assert(overview_position("default") > overview_position("visits"))
+        end
+      end
+
+      # `lag` is a cluster_lags-only sortable attribute; the topics view has no such column, so
+      # asking for it must be ignored gracefully (no error) rather than honored.
+      context "when sorted by lag, a cluster_lags-only sortable attribute" do
+        before { get "health/topics?sort=lag+desc" }
+
+        it { assert_ok }
+      end
     end
 
     context "when filtering by a matching topic keyword" do
@@ -360,6 +392,42 @@ describe_current do
         before do
           Karafka::Admin.stubs(:read_lags_with_offsets).returns(cluster_lags)
           get "health/cluster_lags?sort=max_lag+desc"
+        end
+
+        it { assert_ok }
+      end
+
+      # `lag` is sortable only for the cluster_lags action, not for the topics view. orders (9100)
+      # and visits (5) must flip positions between asc and desc for the sort to be applied -
+      # proving the cluster_lags action resolves the cluster_lags sort attributes.
+      context "when sorted by lag, a cluster_lags-only sortable attribute" do
+        def cluster_position(topic)
+          response.body.index("health/topics/example_app6_app/#{topic}/cluster_lags")
+        end
+
+        it "expect the sort to actually apply for the cluster_lags action" do
+          Karafka::Admin.stubs(:read_lags_with_offsets).returns(cluster_lags)
+
+          get "health/cluster_lags?sort=lag+asc"
+
+          assert_ok
+          # visits (5) comes before orders (9100) when ascending
+          assert(cluster_position("visits") < cluster_position("orders"))
+
+          get "health/cluster_lags?sort=lag+desc"
+
+          assert_ok
+          # ...and after it when descending
+          assert(cluster_position("visits") > cluster_position("orders"))
+        end
+      end
+
+      # `paused_count` is a topics-view-only sortable attribute; the cluster_lags rows have no such
+      # column, so asking for it must be ignored gracefully rather than error out.
+      context "when sorted by paused_count, a topics-view-only sortable attribute" do
+        before do
+          Karafka::Admin.stubs(:read_lags_with_offsets).returns(cluster_lags)
+          get "health/cluster_lags?sort=paused_count+desc"
         end
 
         it { assert_ok }

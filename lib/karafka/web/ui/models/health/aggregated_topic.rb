@@ -83,6 +83,9 @@ module Karafka
             def worst_lso_risk_state(partitions)
               partitions
                 .map(&:lso_risk_state)
+                # Ignore any unexpected state so we never crash and always return one of the known
+                # states (the `lso_risk_state_bg`/`lso_risk_state_badge` helpers only accept those)
+                .select { |state| LSO_RISK_STATES_SEVERITY.key?(state) }
                 .max_by { |state| LSO_RISK_STATES_SEVERITY.fetch(state) } || :active
             end
           end

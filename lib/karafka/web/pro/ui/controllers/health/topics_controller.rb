@@ -37,18 +37,30 @@ module Karafka
             # Health views aggregated per topic (one summary row per topic). This is the top level
             # of the health section; the per-partition drill-down lives in {PartitionsController}.
             class TopicsController < BaseController
-              self.sortable_attributes = %w[
-                name
-                present_count
-                partitions_count
-                lag
-                lag_hybrid
-                lag_hybrid_d
-                max_lag
-                avg_lag
-                lso_risk_state
-                paused_count
-              ].freeze
+              # Per-action sortable attributes, since the two actions render different row models:
+              # `index` rows are {Models::Health::AggregatedTopic} (report-based, with LSO risk, poll
+              # state and trend), while `cluster_lags` rows are {Models::Health::AggregatedClusterTopic}
+              # which only exposes the lag-derived metrics Kafka reports.
+              self.sortable_attributes = {
+                index: %w[
+                  name
+                  present_count
+                  partitions_count
+                  lag_hybrid
+                  lag_hybrid_d
+                  max_lag
+                  avg_lag
+                  lso_risk_state
+                  paused_count
+                ].freeze,
+                cluster_lags: %w[
+                  name
+                  partitions_count
+                  lag
+                  max_lag
+                  avg_lag
+                ].freeze
+              }.freeze
 
               # The health stats are a tree keyed by consumer group and then topic name, so we filter
               # on those keys rather than on record attributes. Topic keys live under `:topics` in the
