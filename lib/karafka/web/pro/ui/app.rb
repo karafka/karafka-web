@@ -40,6 +40,7 @@ module Karafka
           # the shared OSS base
           include Helpers::FilteringHelper
           include Helpers::TopicsFilteringHelper
+          include Helpers::HealthHelper
 
           opts[:root] = Karafka::Web.gem_root.join("lib/karafka/web/pro/ui")
 
@@ -77,6 +78,7 @@ module Karafka
 
           # Sub-routes for given pieces of the Web UI
           SUB_ROUTES = [
+            Routes::Legacy,
             # Asset handling is exactly the same in both cases
             ::Karafka::Web::Ui::Routes::Assets,
             Routes::Dashboard,

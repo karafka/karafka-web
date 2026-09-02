@@ -18,30 +18,36 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<% view_title 'Consumers Groups Overview' %>
-
-<%== partial 'health/tabs' %>
-
-<div class="col-span-12">
-  <% if @stats.empty? %>
-    <%== partial 'health/no_data' %>
-  <% end %>
-
-  <% @stats.each do |cg_name, cg_details| %>
-    <h2 class="h2"><%= cg_name %></h2>
-
-    <% cg_details[:topics].each do |topic_name, topic_details| %>
-      <%==
-        partial(
-          'health/overview_table',
-          locals: {
-            cg_name: cg_name,
-            cg_details: cg_details,
-            topic_name: topic_name,
-            topic_details: topic_details
-          }
-        )
-      %>
+<tr class="<%= topic_lag_status_row(topic_stats) %>">
+  <td>
+    <a href="<%= root_path('health', 'topics', cg_name, topic_name, 'cluster_lags') %>">
+      <%= topic_name %>
+    </a>
+  </td>
+  <td>
+    <%= topic_stats.partitions_count %>
+  </td>
+  <td>
+    <%== lag_with_label topic_stats.lag %>
+  </td>
+  <td>
+    <% if topic_stats.max_lag_partition_id >= 0 %>
+      <span title="Highest lag is on partition <%= topic_stats.max_lag_partition_id %>">
+        <%== lag_with_label topic_stats.max_lag %>
+      </span>
+    <% else %>
+      <%== lag_with_label topic_stats.max_lag %>
     <% end %>
-  <% end %>
-</div>
+    <% if skewed?(topic_stats) %>
+      <span
+        class="badge badge-warning badge-sm ml-1"
+        title="Lag is concentrated on one or few partitions (max is far above the average), not spread evenly"
+      >
+        skewed
+      </span>
+    <% end %>
+  </td>
+  <td>
+    <%== lag_with_label topic_stats.avg_lag %>
+  </td>
+</tr>

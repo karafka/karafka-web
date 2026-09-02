@@ -21,31 +21,10 @@
 <div class="tab-container-wrapper">
   <div class="tab-container">
     <a
-      href="<%= root_path('health', 'overview') %>"
-      class="custom-tab <%= nav_class(include: 'overview') %>"
+      href="<%= root_path('health', 'topics') %>"
+      class="custom-tab <%= nav_class(include: '/topics') %>"
     >
-      Overview
-    </a>
-
-    <a
-      href="<%= root_path('health', 'lags') %>"
-      class="custom-tab <%= nav_class(include: '/lags') %>"
-    >
-      Lags
-    </a>
-
-    <a
-      href="<%= root_path('health', 'offsets') %>"
-      class="custom-tab <%= nav_class(include: 'offsets') %>"
-    >
-      Offsets
-    </a>
-
-    <a
-      href="<%= root_path('health', 'changes') %>"
-      class="custom-tab <%= nav_class(include: 'changes') %>"
-    >
-      Changes
+      Topics
     </a>
 
     <a

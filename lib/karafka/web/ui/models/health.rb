@@ -18,7 +18,9 @@ module Karafka
               sort_structure(stats)
             end
 
-            # @return [Hash] hash with cluster lag data
+            # @return [Hash] cluster lag data with consumer groups and their topics in alphabetical
+            #   order (mirroring {.current}), so both aggregated views share one stable default
+            #   ordering. Raw cluster results arrive in whatever order the cluster reports them.
             def cluster_lags_with_offsets
               # We need to remap raw results so they comply with our sorting flows
               mapped_lags = {}
@@ -41,7 +43,7 @@ module Karafka
                 end
               end
 
-              mapped_lags
+              sort_structure_cluster_lags(mapped_lags)
             end
 
             private
@@ -134,6 +136,22 @@ module Karafka
 
               # Ensure that all consumer groups are always in the same order
               stats.sort_by { |key, _| key }.to_h
+            end
+
+            # Sorts the cluster lags structure (`cg => topic_name => partitions`) so consumer groups
+            # and their topics are always in alphabetical order, same as {#sort_structure} does for
+            # the report-based tree.
+            #
+            # @param stats [Hash] cluster lags hash
+            # @return [Hash] sorted data
+            def sort_structure_cluster_lags(stats)
+              sorted = {}
+
+              stats.sort_by { |consumer_group, _| consumer_group }.each do |consumer_group, topics|
+                sorted[consumer_group] = topics.sort_by { |topic_name, _| topic_name }.to_h
+              end
+
+              sorted
             end
           end
         end

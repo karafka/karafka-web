@@ -79,11 +79,14 @@ module Karafka
 
           # @param details [::Karafka::Web::Ui::Models::Partition] partition information with
           #   lso risk state info
-          # @return [String] background classes for row marking
+          # @return [String] the full daisyUI badge color class for the state. Callers should use
+          #   this alone (e.g. `class="badge #{lso_risk_state_badge(details)}"`) rather than adding
+          #   their own `badge-success`, otherwise `at_risk`/`stopped` end up with two colliding
+          #   color classes.
           def lso_risk_state_badge(details)
             case details.lso_risk_state
             when :active
-              ""
+              "badge-success"
             when :at_risk
               "badge-warning"
             when :stopped

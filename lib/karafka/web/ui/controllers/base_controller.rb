@@ -135,8 +135,23 @@ module Karafka
           def sort(resources)
             Lib::Sorter.new(
               @params.current_sort,
-              allowed_attributes: self.class.sortable_attributes
+              allowed_attributes: sortable_fields
             ).call(resources)
+          end
+
+          # Resolves the attributes the current action can be sorted on from the controller's
+          # `sortable_attributes` declaration. The declaration is either a flat list (applied to
+          # every action) or a `{ action => attributes }` hash with an optional `:default` entry,
+          # for controllers whose actions render different columns (mirrors the same contract as
+          # `filterable_attributes`).
+          #
+          # @return [Array<String>] attributes for the current action (empty when not sortable)
+          def sortable_fields
+            attributes = self.class.sortable_attributes
+
+            return Array(attributes) unless attributes.is_a?(Hash)
+
+            Array(attributes[@current_action_name] || attributes[:default])
           end
 
           # Initializes the expected pagination engine and assigns expected arguments

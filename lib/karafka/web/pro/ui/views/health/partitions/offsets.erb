@@ -18,30 +18,22 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<% view_title 'Consumers Groups Lags Details' %>
+<% view_title "Topic #{@topic_name} in #{@consumer_group_id}" %>
 
-<%== partial 'health/tabs' %>
+<%== partial 'health/topic_tabs' %>
 
 <div class="col-span-12">
-  <% if @stats.empty? %>
-    <%== partial 'health/no_data' %>
-  <% end %>
+  <h2 class="h2"><%= @consumer_group_id %></h2>
 
-  <% @stats.each do |cg_name, cg_details| %>
-    <h2 class="h2"><%= cg_name %></h2>
-
-    <% cg_details[:topics].each do |topic_name, topic_details| %>
-      <%==
-        partial(
-          'health/lags_table',
-          locals: {
-            cg_name: cg_name,
-            cg_details: cg_details,
-            topic_name: topic_name,
-            topic_details: topic_details
-          }
-        )
-      %>
-    <% end %>
-  <% end %>
+  <%==
+    partial(
+      'health/offsets_table',
+      locals: {
+        cg_name: @consumer_group_id,
+        cg_details: @cg_details,
+        topic_name: @topic_name,
+        topic_details: @topic_details
+      }
+    )
+  %>
 </div>

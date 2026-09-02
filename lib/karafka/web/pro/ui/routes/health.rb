@@ -37,30 +37,61 @@ module Karafka
           class Health < Base
             route do |r|
               r.on "health" do
-                controller = build(Controllers::HealthController)
+                topics_controller = build(Controllers::Health::TopicsController)
 
-                r.get "lags" do
-                  controller.lags
-                end
-
+                # Cluster lags is the second top-level view: a cluster-wide, routing-based lag
+                # report, aggregated per topic. Its per-partition drill-down is the `cluster_lags`
+                # lens of the per-topic view below.
                 r.get "cluster_lags" do
-                  controller.cluster_lags
+                  topics_controller.cluster_lags
                 end
 
-                r.get "offsets" do
-                  controller.offsets
+                # Per-topic drill-down. The per-partition lenses (overview/lags/offsets/changes and
+                # cluster_lags) live here, scoped to a single topic, instead of the old top-level
+                # all-topics views which became unusable with many topics/partitions.
+                r.on "topics", String, String do |consumer_group_id, topic_name|
+                  partitions_controller = build(Controllers::Health::PartitionsController)
+
+                  r.get "overview" do
+                    partitions_controller.overview(consumer_group_id, topic_name)
+                  end
+
+                  r.get "lags" do
+                    partitions_controller.lags(consumer_group_id, topic_name)
+                  end
+
+                  r.get "offsets" do
+                    partitions_controller.offsets(consumer_group_id, topic_name)
+                  end
+
+                  r.get "changes" do
+                    partitions_controller.changes(consumer_group_id, topic_name)
+                  end
+
+                  r.get "cluster_lags" do
+                    partitions_controller.cluster_lags(consumer_group_id, topic_name)
+                  end
+
+                  # A bare topic path defaults to the overview lens
+                  r.get do
+                    r.redirect root_path("health", "topics", consumer_group_id, topic_name, "overview")
+                  end
                 end
 
-                r.get "overview" do
-                  controller.overview
+                # A consumer-group path without a topic has no page of its own, so send it to the
+                # topics list scoped to that group rather than 404-ing. `health_group_topics_path`
+                # URL-encodes the group value (it comes from the URL path) so it cannot inject extra
+                # query params.
+                r.get "topics", String do |consumer_group_id|
+                  r.redirect health_group_topics_path(consumer_group_id)
                 end
 
-                r.get "changes" do
-                  controller.changes
+                r.get "topics" do
+                  topics_controller.index
                 end
 
                 r.get do
-                  r.redirect root_path("health/overview")
+                  r.redirect root_path("health/topics")
                 end
               end
             end

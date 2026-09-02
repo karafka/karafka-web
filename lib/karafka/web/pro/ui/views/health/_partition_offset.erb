@@ -18,7 +18,7 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<tr class="<%= lso_risk_state_bg(details) %>">
+<tr class="<%= lso_risk_state_bg(details) %> <%= partition_status_row(details) %>">
   <td>
     <%= partition_id %>
   </td>
@@ -53,7 +53,7 @@
     <%== relative_time(Time.now - details.ls_offset_fd / 1_000.0) %>
   </td>
   <td>
-    <span class="badge badge-success <%= lso_risk_state_badge(details) %> badge-opacity-100">
+    <span class="badge <%= lso_risk_state_badge(details) %> badge-opacity-100">
       <%= details.lso_risk_state %>
     </span>
   </td>
