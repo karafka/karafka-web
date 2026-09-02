@@ -569,5 +569,40 @@ describe_current do
         assert_body(breadcrumbs)
       end
     end
+
+    context "when a routed consumer group has real lag on a real topic" do
+      let(:lagging_topic) { create_topic }
+      let(:lagging_group) { "it-cluster-lags-#{SecureRandom.uuid}" }
+
+      before do
+        # Real messages advance the high watermark to 100
+        produce_many(lagging_topic, Array.new(100) { SecureRandom.uuid })
+
+        # Route the topic under our group so the active-topics cluster lag read picks it up
+        group = lagging_group
+        topic_name = lagging_topic
+        draw_routes do
+          consumer_group group do
+            topic topic_name do
+              consumer Karafka::BaseConsumer
+            end
+          end
+        end
+
+        # Commit the group behind the watermark to create a real, known lag (100 - 40 = 60)
+        Karafka::Admin.seek_consumer_group(lagging_group, lagging_topic => { 0 => 40 })
+
+        get "health/cluster_lags"
+      end
+
+      it "reads and renders the real lag straight from the cluster (no stubbing)" do
+        assert_ok
+        # The real topic reaches the aggregated view with its real lag (100 - 40)
+        assert_body(lagging_topic)
+        assert_body("60")
+        # ...and drills into its per-partition cluster lags lens
+        assert_body("health/topics/#{lagging_group}/#{lagging_topic}/cluster_lags")
+      end
+    end
   end
 end
