@@ -85,6 +85,29 @@ describe_current do
       refute_body("status-row-running")
     end
 
+    context "when the partition lag is at the warning level (not yet an error)" do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        partition_data = report.dig(*partition_scope)
+        # 6_000 is above the warning threshold (5_000) but below the error one (10_000)
+        partition_data["lag"] = 6_000
+        partition_data["lag_stored"] = 6_000
+
+        produce(reports_topic, report.to_json)
+
+        get "health/topics/example_app6_app/default/overview"
+      end
+
+      it "expect the partition row to use the yellow warning border, not the red error one" do
+        assert_ok
+        assert_body("status-row-warning")
+        refute_body("status-row-error")
+      end
+    end
+
     it "expect the breadcrumb to place the topic within its consumer group" do
       # Topics are always viewed within a consumer group, so the trail is
       # Health > <group> > Topics > <topic> > <lens>. The group crumb links to the topics list

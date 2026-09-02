@@ -115,6 +115,29 @@ describe_current do
         assert_body("status-row-error")
       end
 
+      context "when a topic's average lag is at the warning level (not yet an error)" do
+        before do
+          topics_config.consumers.reports.name = reports_topic
+
+          report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+          partition_data = report.dig(*partition_scope)
+          # 6_000 is above the warning threshold (5_000) but below the error one (10_000)
+          partition_data["lag"] = 6_000
+          partition_data["lag_stored"] = 6_000
+
+          produce(reports_topic, report.to_json)
+
+          get "health/topics"
+        end
+
+        it "expect the topic row to use the yellow warning border, not the red error one" do
+          assert_ok
+          assert_body("status-row-warning")
+          refute_body("status-row-error")
+        end
+      end
+
       it "expect the old top-level per-partition views to no longer be linked" do
         assert_ok
         # The old all-topics per-partition tabs/links are gone (they are per-topic now)
