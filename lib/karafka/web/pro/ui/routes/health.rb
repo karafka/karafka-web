@@ -79,7 +79,9 @@ module Karafka
                 end
 
                 # A consumer-group path without a topic has no page of its own, so send it to the
-                # topics list scoped to that group rather than 404-ing.
+                # topics list scoped to that group rather than 404-ing. `health_group_topics_path`
+                # URL-encodes the group value (it comes from the URL path) so it cannot inject extra
+                # query params.
                 r.get "topics", String do |consumer_group_id|
                   r.redirect health_group_topics_path(consumer_group_id)
                 end
