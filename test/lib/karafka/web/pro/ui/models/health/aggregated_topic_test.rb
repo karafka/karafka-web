@@ -341,41 +341,4 @@ describe Karafka::Web::Ui::Models::Health::AggregatedTopic do
       it { assert_equal(0, aggregated.paused_count) }
     end
   end
-
-  describe "#unhealthy?" do
-    context "when everything is healthy" do
-      let(:partitions) { { 0 => partition(0), 1 => partition(1) } }
-
-      it { refute(aggregated.unhealthy?) }
-    end
-
-    context "when a partition is paused" do
-      let(:partitions) { { 0 => partition(0), 1 => partition(1, poll_state: "paused") } }
-
-      it { assert(aggregated.unhealthy?) }
-    end
-
-    context "when some partitions have no data" do
-      let(:partitions) { { 0 => partition(0) } }
-      let(:partitions_count) { 3 }
-
-      it { assert(aggregated.unhealthy?) }
-    end
-
-    context "when a partition LSO is stopped" do
-      let(:partitions) do
-        {
-          0 => partition(
-            0,
-            hi_offset: 3_000,
-            ls_offset: 2_000,
-            committed_offset: 2_000,
-            ls_offset_fd: 1_000_000_000
-          )
-        }
-      end
-
-      it { assert(aggregated.unhealthy?) }
-    end
-  end
 end

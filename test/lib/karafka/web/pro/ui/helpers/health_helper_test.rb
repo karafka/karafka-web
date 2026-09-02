@@ -155,9 +155,11 @@ describe_current do
     end
 
     it "keeps error precedence over a skew warning" do
+      # avg_lag 10_000 is a high-lag error, and max_lag 40_000 (>3x avg) is genuinely skewed too,
+      # so this asserts the error wins over the skew warning
       assert_equal(
         "status-row-error",
-        topic_lag_status_row(topic_stub(avg_lag: 10_000, max_lag: 9_000, measurable_count: 2))
+        topic_lag_status_row(topic_stub(avg_lag: 10_000, max_lag: 40_000, measurable_count: 2))
       )
     end
 

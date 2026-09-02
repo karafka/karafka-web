@@ -64,14 +64,6 @@ module Karafka
               )
             end
 
-            # @return [Boolean] true when there is anything worth a closer look: a non-active LSO
-            #   risk state, any paused partition or partitions with no data
-            def unhealthy?
-              lso_risk_state != :active ||
-                paused_count.positive? ||
-                no_data_count.positive?
-            end
-
             private
 
             # @param partitions [Array<Partition>] all partitions of the topic
