@@ -108,4 +108,29 @@ describe_current do
       assert_equal(keys, sg[:topics][:default][:partitions][:"0"].keys.sort)
     end
   end
+
+  describe ".cluster_lags_with_offsets" do
+    let(:result) { described_class.cluster_lags_with_offsets }
+
+    before do
+      Karafka::Admin.stubs(:read_lags_with_offsets).returns(
+        "zeta" => {
+          "orders" => { 1 => { lag: 5, offset: 10 } }
+        },
+        "alpha" => {
+          "visits" => { 0 => { lag: 1, offset: 2 } },
+          "default" => { 0 => { lag: 3, offset: 4 } }
+        }
+      )
+    end
+
+    it "expect to remap raw results into id/lag/stored_offset partition hashes" do
+      assert_equal([{ id: 1, lag: 5, stored_offset: 10 }], result["zeta"]["orders"])
+    end
+
+    it "expect consumer groups and their topics to be alphabetically ordered" do
+      assert_equal(%w[alpha zeta], result.keys)
+      assert_equal(%w[default visits], result["alpha"].keys)
+    end
+  end
 end

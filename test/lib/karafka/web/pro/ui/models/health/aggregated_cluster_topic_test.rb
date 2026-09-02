@@ -100,8 +100,26 @@ describe Karafka::Web::Ui::Models::Health::AggregatedClusterTopic do
   end
 
   describe "#avg_lag" do
-    let(:partitions) { [partition(0, lag: 100), partition(1, lag: 900)] }
+    context "when partitions have lag" do
+      let(:partitions) { [partition(0, lag: 100), partition(1, lag: 900)] }
 
-    it { assert_equal(500, aggregated.avg_lag) }
+      it { assert_equal(500, aggregated.avg_lag) }
+    end
+
+    context "when only some partitions were consumed" do
+      let(:partitions) { [partition(0, lag: 300), partition(1, lag: -1)] }
+
+      it "expect to average only the measurable partitions" do
+        assert_equal(300, aggregated.avg_lag)
+      end
+    end
+
+    context "when no partition was consumed" do
+      let(:partitions) { [partition(0, lag: -1)] }
+
+      it "expect to return -1 (N/A)" do
+        assert_equal(-1, aggregated.avg_lag)
+      end
+    end
   end
 end

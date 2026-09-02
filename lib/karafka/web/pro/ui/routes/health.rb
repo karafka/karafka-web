@@ -78,6 +78,13 @@ module Karafka
                   end
                 end
 
+                # A consumer-group path without a topic has no page of its own, so send it to the
+                # topics list scoped to that group rather than 404-ing.
+                r.get "topics", String do |consumer_group_id|
+                  filter = "filter[field]=consumer_group&filter[value]=#{consumer_group_id}"
+                  r.redirect "#{root_path("health", "topics")}?#{filter}"
+                end
+
                 r.get "topics" do
                   topics_controller.index
                 end

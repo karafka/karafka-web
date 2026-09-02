@@ -120,6 +120,39 @@ describe_current do
       end
     end
 
+    # The per-partition tables do not paginate, so a topic with many partitions must render every
+    # partition row on one page (from the consumer reports).
+    context "when the topic has many partitions" do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+        topic_data = report.dig(*partition_scope[0..5])
+        base_partition = report.dig(*partition_scope)
+
+        (1...30).each do |id|
+          partition = base_partition.dup
+          partition["id"] = id
+          # distinctive per-partition lag so we can assert first/last rows render
+          partition["lag_stored"] = 900_000 + id
+          topic_data["partitions"][id.to_s] = partition
+        end
+
+        topic_data["partitions_cnt"] = 30
+
+        produce(reports_topic, report.to_json)
+
+        get "health/topics/example_app6_app/default/overview"
+      end
+
+      it "expect to render every partition row with no pagination" do
+        assert_ok
+        assert_body("900001")
+        assert_body("900029")
+        refute_body(pagination)
+      end
+    end
+
     context "when the topic does not exist" do
       before { get "health/topics/example_app6_app/no-such-topic/overview" }
 
@@ -299,6 +332,27 @@ describe_current do
       end
 
       it { assert_equal(404, status) }
+    end
+
+    # The per-partition tables do not paginate, so a topic with many partitions must render every
+    # partition row on one page.
+    context "when the topic has many partitions" do
+      before do
+        partitions = (0...30).to_h { |id| [id, { lag: 900_000 + id, offset: id }] }
+        Karafka::Admin.stubs(:read_lags_with_offsets).returns(
+          "example_app6_app" => { "default" => partitions }
+        )
+
+        get "health/topics/example_app6_app/default/cluster_lags"
+      end
+
+      it "expect to render every partition row with no pagination" do
+        assert_ok
+        # the first and last partitions' (distinctive) lags both render
+        assert_body("900000")
+        assert_body("900029")
+        refute_body(pagination)
+      end
     end
   end
 end

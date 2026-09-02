@@ -55,6 +55,17 @@ describe_current do
         assert_includes(response.headers["location"], "health/topics")
       end
     end
+
+    context "when visiting a consumer group path without a topic" do
+      before { get "health/topics/example_app6_app" }
+
+      it "expect to redirect to the topics list scoped to that consumer group" do
+        assert_equal(302, response.status)
+        assert_includes(response.headers["location"], "health/topics")
+        assert_includes(response.headers["location"], "consumer_group")
+        assert_includes(response.headers["location"], "example_app6_app")
+      end
+    end
   end
 
   describe "#index" do
@@ -531,6 +542,24 @@ describe_current do
       end
 
       it { assert_ok }
+    end
+
+    # Health views do not paginate (aggregating per topic is the scaling strategy), so a large
+    # number of topics must all render on one page without any silent truncation.
+    context "when there are many topics" do
+      before do
+        many = (0...30).to_h { |i| ["many-topic-#{i}", { 0 => { lag: i, offset: i } }] }
+        Karafka::Admin.stubs(:read_lags_with_offsets).returns("example_app6_app" => many)
+        get "health/cluster_lags"
+      end
+
+      it "expect to render every topic with no pagination" do
+        assert_ok
+        # first and last topics both render -> nothing was truncated to a page
+        assert_body("many-topic-0")
+        assert_body("many-topic-29")
+        refute_body(pagination)
+      end
     end
 
     context "when filtering by a matching topic" do
