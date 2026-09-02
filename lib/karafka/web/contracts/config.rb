@@ -114,20 +114,6 @@ module Karafka
             required(:internal_topics) { |val| [true, false].include?(val) }
             required(:active_topics_cluster_lags_only) { |val| [true, false].include?(val) }
           end
-
-          nested(:health) do
-            nested(:lags) do
-              # How many times bigger than the average the biggest partition lag must be for a
-              # topic to be flagged as "skewed"
-              required(:skew_threshold) { |val| val.is_a?(Numeric) && val.positive? }
-
-              # Minimum biggest-partition lag below which a topic is never flagged as "skewed"
-              required(:skew_minimum) { |val| val.is_a?(Integer) && val >= 0 }
-
-              # Lag at/above which a row is highlighted as high-lag in the health views
-              required(:high_threshold) { |val| val.is_a?(Integer) && val.positive? }
-            end
-          end
         end
       end
     end

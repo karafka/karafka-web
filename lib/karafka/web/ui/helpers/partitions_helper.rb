@@ -96,46 +96,6 @@ module Karafka
             end
           end
 
-          # Classifies a lag value against the configured high-lag threshold, for at-a-glance row
-          # highlighting. The threshold marks an error; half of it marks a warning.
-          #
-          # @param lag [Integer] a lag value (a partition's lag, or a topic's average partition lag)
-          # @return [Symbol, nil] `:error`, `:warning` or nil (nil also for N/A / negative lags)
-          def lag_severity(lag)
-            return nil if lag.negative?
-
-            threshold = ::Karafka::Web.config.ui.health.lags.high_threshold
-
-            return :error if lag >= threshold
-            return :warning if lag >= threshold / 2
-
-            nil
-          end
-
-          # `status-row-*` class for a row based purely on a lag value (used where there is no other
-          # per-row status, e.g. cluster lag partitions).
-          #
-          # @param lag [Integer] lag value to classify
-          # @param fallback [String] class to use when the lag is not high enough to highlight
-          # @return [String] `status-row-error`/`status-row-warning`, or the fallback
-          def lag_status_row(lag, fallback = "")
-            severity = lag_severity(lag)
-
-            severity ? "status-row-#{severity}" : fallback
-          end
-
-          # `status-row-*` class for an aggregated topic row. High lag wins, but a skewed topic is
-          # also surfaced as a warning even when its average lag is not high on its own.
-          #
-          # @param topic_stats [#avg_lag, #skewed?] an aggregated topic row (report or cluster)
-          # @return [String] `status-row-error`/`status-row-warning`, or an empty string
-          def topic_lag_status_row(topic_stats)
-            severity = lag_severity(topic_stats.avg_lag)
-            severity ||= :warning if topic_stats.skewed?
-
-            severity ? "status-row-#{severity}" : ""
-          end
-
           # @param lag [Integer] lag
           # @return [String] lag if correct or `N/A` with labeled explanation
           # @see #offset_with_label

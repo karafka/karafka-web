@@ -82,5 +82,9 @@
   "test/lib/karafka/web/pro/ui/controllers/health/topics_controller_test.rb": 13.0,
   "test/lib/karafka/web/pro/ui/controllers/health/partitions_controller_test.rb": 8.0,
   "test/lib/karafka/web/pro/ui/routes/legacy_test.rb": 2.0,
-  "test/lib/karafka/web/pro/config/defaults_injector_test.rb": 0.01
+  "test/lib/karafka/web/pro/config/defaults_injector_test.rb": 0.01,
+  "test/lib/karafka/web/pro/ui/models/health/aggregated_topic_test.rb": 3.0,
+  "test/lib/karafka/web/pro/ui/models/health/aggregated_cluster_topic_test.rb": 3.0,
+  "test/lib/karafka/web/pro/ui/helpers/health_helper_test.rb": 0.1,
+  "test/lib/karafka/web/pro/ui/lib/health/contracts/config_test.rb": 0.075
 }

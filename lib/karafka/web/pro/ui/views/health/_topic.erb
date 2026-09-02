@@ -18,7 +18,7 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<tr class="<%= lso_risk_state_bg(topic_stats) %> <%= topic_lag_status_row(topic_stats) %>">
+<tr class="<%= lso_risk_state_bg(topic_stats) %> <%= topic_lag_status_row(topic_stats, paused: topic_stats.paused_count.positive?) %>">
   <td>
     <a href="<%= root_path('health', 'topics', cg_name, topic_name, 'overview') %>">
       <%= topic_name %>

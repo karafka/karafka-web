@@ -24,6 +24,11 @@ en:
       ui.branding.notice_format: must be false or non-empty string
       ui.branding.nav_extras_format: must be an ERB template code or a path to one
 
+      ui.health.lags.skew_threshold_format: needs to be a numeric bigger than 0
+      ui.health.lags.skew_minimum_format: needs to be an integer equal to or bigger than 0
+      ui.health.lags.high_threshold_format: needs to be an integer bigger than 0
+      ui.health.lags.warning_ratio_format: needs to be a numeric bigger than 0 and up to 1
+
     search_form:
       missing: needs to be present
       timestamp_key_must_be_large_enough: 'must be a Kafka message timestamp with ms precision'

@@ -71,6 +71,7 @@ module Karafka
               setting(:branding, default: Ui::Lib::Branding::Config.config)
               setting(:policies, default: Ui::Lib::Policies::Config.config)
               setting(:search, default: Ui::Lib::Search::Config.config)
+              setting(:health, default: Ui::Lib::Health::Config.config)
 
               setting :topics do
                 setting :management do
@@ -89,6 +90,7 @@ module Karafka
             Ui::Lib::Branding.post_setup(config)
             Ui::Lib::Policies.post_setup(config)
             Ui::Lib::Search.post_setup(config)
+            Ui::Lib::Health.post_setup(config)
 
             config.commanding.listeners.each do |listener|
               ::Karafka::App.monitor.subscribe(listener)
