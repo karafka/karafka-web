@@ -28,44 +28,49 @@
 # License: https://karafka.io/docs/Pro-License-Comm/
 # Contact: contact@karafka.io
 
-module Karafka
-  module Web
-    module Pro
-      module Ui
-        module Routes
-          # Manages the cluster related routes
-          class Cluster < Base
-            route do |r|
-              r.on "cluster" do
-                controller = build(Controllers::ClusterController)
+describe_current do
+  let(:contract) { described_class.new }
 
-                r.get "replication" do
-                  controller.replication
-                end
+  let(:params) do
+    {
+      ui: {
+        cluster: {
+          distribution: {
+            overloaded_ratio: 1.5,
+            underloaded_ratio: 0.5
+          }
+        }
+      }
+    }
+  end
 
-                r.on "distribution" do
-                  # Drill-down: the partitions assigned to a single broker
-                  r.get String do |broker_id|
-                    controller.broker_partitions(broker_id)
-                  end
-
-                  r.get do
-                    controller.distribution
-                  end
-                end
-
-                r.get String do |broker_id|
-                  controller.show(broker_id)
-                end
-
-                r.get do
-                  controller.index
-                end
-              end
-            end
-          end
-        end
-      end
+  context "when all values are valid" do
+    it "is valid" do
+      assert(contract.call(params).success?)
     end
+  end
+
+  context "when overloaded_ratio is not numeric" do
+    before { params[:ui][:cluster][:distribution][:overloaded_ratio] = "1.5" }
+
+    it { refute(contract.call(params).success?) }
+  end
+
+  context "when overloaded_ratio is not positive" do
+    before { params[:ui][:cluster][:distribution][:overloaded_ratio] = 0 }
+
+    it { refute(contract.call(params).success?) }
+  end
+
+  context "when underloaded_ratio is not numeric" do
+    before { params[:ui][:cluster][:distribution][:underloaded_ratio] = "0.5" }
+
+    it { refute(contract.call(params).success?) }
+  end
+
+  context "when underloaded_ratio is not positive" do
+    before { params[:ui][:cluster][:distribution][:underloaded_ratio] = 0 }
+
+    it { refute(contract.call(params).success?) }
   end
 end

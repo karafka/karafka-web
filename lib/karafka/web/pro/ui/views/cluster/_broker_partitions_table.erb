@@ -18,19 +18,33 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<% imbalance = broker_imbalance(distribution) %>
-<tr class="<%= broker_load_status_row(imbalance) %>">
-  <td>
-    <a href="<%= root_path('cluster', 'distribution', distribution.broker_id) %>">
-      <%= distribution.broker_id %>
-    </a>
-  </td>
-  <td><%= distribution.broker_name %></td>
-  <td><%== broker_load_badge(imbalance) %></td>
-  <td><%= distribution.leader_count %></td>
-  <td><%= distribution.leader_share %>%</td>
-  <td><%= distribution.follower_count %></td>
-  <td><%= distribution.replica_count %></td>
-  <td><%= distribution.replica_share %>%</td>
-  <td><%== broker_out_of_sync(distribution.out_of_sync_count) %></td>
-</tr>
+<div class="mb-3 flex justify-end">
+  <small class="text-muted">
+    Roles:
+    <span class="badge badge-primary">leader</span>
+    <span class="badge badge-info">follower</span>
+    <span class="badge badge-success">in-sync</span>
+    <span class="badge badge-warning">out-of-sync</span>
+  </small>
+</div>
+
+<div class="data-table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th><%== sort_link('Topic', :topic_name) %></th>
+        <th><%== sort_link('Partition', :partition_id) %></th>
+        <th><%== sort_link('Role', :role) %></th>
+        <th>In-sync</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%==
+        each_partial(
+          @partitions,
+          'cluster/broker_partition'
+        )
+      %>
+    </tbody>
+  </table>
+</div>

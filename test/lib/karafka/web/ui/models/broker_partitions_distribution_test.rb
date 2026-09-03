@@ -131,40 +131,21 @@ describe_current do
       assert_equal([0.0, 0.0, 0.0], distribution.map(&:replica_share))
     end
 
-    it "expect every broker to be balanced (nothing to distribute)" do
-      assert_equal(%i[balanced balanced balanced], distribution.map(&:imbalance))
+    it "expect no row to be comparable (nothing to distribute), load_ratio 1.0" do
+      assert_equal([false, false, false], distribution.map(&:comparable))
+      assert_equal([1.0, 1.0, 1.0], distribution.map(&:load_ratio))
     end
   end
 
-  describe "#imbalance" do
-    context "when leaderships are spread evenly" do
-      let(:topics) do
-        [{ topic_name: "t", partitions: [
-          { leader: 1, replicas: [1] },
-          { leader: 2, replicas: [2] },
-          { leader: 3, replicas: [3] }
-        ] }]
-      end
-
-      it { assert_equal(%i[balanced balanced balanced], distribution.map(&:imbalance)) }
-    end
-
-    context "when one broker leads far more and another far fewer than the fair share" do
-      # 3 brokers -> fair share 33.3%. broker1 leads 3/4 (75% > 50%) -> overloaded,
-      # broker2 leads 1/4 (25%) -> balanced, broker3 leads 0% (< 16.6%) -> underloaded
-      let(:topics) do
-        [{ topic_name: "hot", partitions: [
-          { leader: 1, replicas: [1] },
-          { leader: 1, replicas: [1] },
-          { leader: 1, replicas: [1] },
-          { leader: 2, replicas: [2] }
-        ] }]
-      end
-
-      it "expect to flag the overloaded and underloaded brokers" do
-        assert_equal(:overloaded, broker1.imbalance)
-        assert_equal(:balanced, broker2.imbalance)
-        assert_equal(:underloaded, broker3.imbalance)
+  describe "#load_ratio and #comparable" do
+    context "when there is more than one broker and partitions to distribute" do
+      # 3 brokers -> fair share 33.3%. broker1 leads 66.67% (ratio ~2.0), broker2 33.33% (1.0),
+      # broker3 0% (0.0)
+      it "expect the load_ratio to be each broker's multiple of its fair share" do
+        assert_equal([true, true, true], distribution.map(&:comparable))
+        assert_in_delta(2.0, broker1.load_ratio)
+        assert_in_delta(1.0, broker2.load_ratio)
+        assert_in_delta(0.0, broker3.load_ratio)
       end
     end
 
@@ -172,10 +153,33 @@ describe_current do
       let(:brokers) { [broker(1)] }
       let(:topics) { [{ topic_name: "t", partitions: [{ leader: 1, replicas: [1] }] }] }
 
-      it "expect it to be balanced even though it leads everything" do
+      it "expect it to be not comparable with a neutral load_ratio, even leading everything" do
         assert_in_delta(100.0, broker1.leader_share)
-        assert_equal(:balanced, broker1.imbalance)
+        refute(broker1.comparable)
+        assert_in_delta(1.0, broker1.load_ratio)
       end
+    end
+  end
+
+  describe ".partitions_for" do
+    let(:assignments) { described_class.partitions_for(broker_id: 3, topics: topics) }
+
+    it "expect to list only the partitions the broker replicates, with role and ISR state" do
+      # broker 3 replicates p1 (isrs [1] -> out of sync) and p2 (isrs [2,3] -> in sync); leads none
+      assert_equal(2, assignments.size)
+      assert_equal(%w[orders orders], assignments.map(&:topic_name))
+      assert_equal(%i[follower follower], assignments.map(&:role))
+      assert_equal([false, true], assignments.map(&:in_sync))
+    end
+
+    it "expect the leader role for partitions the broker leads" do
+      leader_rows = described_class.partitions_for(broker_id: 1, topics: topics)
+
+      assert_equal(%i[leader leader], leader_rows.map(&:role))
+    end
+
+    context "when the broker hosts no partitions" do
+      it { assert_empty(described_class.partitions_for(broker_id: 999, topics: topics)) }
     end
   end
 

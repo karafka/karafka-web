@@ -18,19 +18,26 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<% imbalance = broker_imbalance(distribution) %>
-<tr class="<%= broker_load_status_row(imbalance) %>">
-  <td>
-    <a href="<%= root_path('cluster', 'distribution', distribution.broker_id) %>">
-      <%= distribution.broker_id %>
-    </a>
-  </td>
-  <td><%= distribution.broker_name %></td>
-  <td><%== broker_load_badge(imbalance) %></td>
-  <td><%= distribution.leader_count %></td>
-  <td><%= distribution.leader_share %>%</td>
-  <td><%= distribution.follower_count %></td>
-  <td><%= distribution.replica_count %></td>
-  <td><%= distribution.replica_share %>%</td>
-  <td><%== broker_out_of_sync(distribution.out_of_sync_count) %></td>
-</tr>
+<% view_title 'Cluster' %>
+
+<%== partial 'cluster/tabs' %>
+
+<h2 class="h2">Node <%= @broker.id %> (<%= @broker.name %>) partitions</h2>
+
+<% if filtering? || !@partitions.empty? %>
+  <div class="col-span-12 mb-3">
+    <%== filter_box(labels: { topic_name: 'Topic' }) %>
+  </div>
+<% end %>
+
+<div class="col-span-12 mb-3">
+  <% if @partitions.empty? && !filtering? && params.current_page <= 1 %>
+    <%== partial 'cluster/no_partitions' %>
+  <% elsif @partitions.empty? && filtering? %>
+    <%== partial 'shared/no_filter_results' %>
+  <% elsif @partitions.empty? %>
+    <%== partial 'shared/no_paginated_data' %>
+  <% else %>
+    <%== partial 'cluster/broker_partitions_table' %>
+  <% end %>
+</div>

@@ -31,6 +31,23 @@
 describe_current do
   let(:app) { Karafka::Web::Pro::Ui::App }
 
+  # Stubs the cluster metadata so distribution edge cases (broker counts, imbalance) can be driven
+  # deterministically. `brokers` are hashes wrapped by Models::Broker, `topics` mirror the metadata
+  # shape (`:partitions` with `:leader`/`:replicas`/`:isrs`).
+  #
+  # Defined via `let` (a lambda) because a controller `describe_current` is `instance_eval`-ed, so a
+  # bare `def` would define a class method rather than an instance one.
+  let(:stub_cluster) do
+    lambda do |brokers:, topics:|
+      double = Struct.new(:brokers, :topics).new(brokers, topics)
+      Karafka::Web::Ui::Models::ClusterInfo.stubs(:fetch).returns(double)
+    end
+  end
+
+  let(:node) do
+    ->(id) { { broker_id: id, broker_name: "broker#{id}", broker_port: 9092 } }
+  end
+
   describe "#index" do
     before { get "cluster" }
 
@@ -292,8 +309,8 @@ describe_current do
       assert_body("Out-of-sync")
       # the imbalance highlighting column
       assert_body("Balance")
-      # the per-broker load bar chart (reuses the shared bar engine)
-      assert_body("broker-distribution-chart")
+      # single-broker test cluster -> no comparison bar chart (a one-bar chart is pointless)
+      refute_body("broker-distribution-chart")
       # single-broker test cluster -> node 127.0.0.1 shows up as a row
       assert_body("127.0.0.1")
       # the Distribution tab links here
@@ -327,6 +344,107 @@ describe_current do
       it do
         assert_ok
         assert_body("No results match your filter")
+      end
+    end
+
+    context "when there is a single broker" do
+      before do
+        stub_cluster.call(
+          brokers: [node.call(1)],
+          topics: [{ topic_name: "t", partitions: [
+            { partition_id: 0, leader: 1, replicas: [1], isrs: [1] }
+          ] }]
+        )
+        get "cluster/distribution"
+      end
+
+      it "expect no comparison chart and no imbalance flags" do
+        assert_ok
+        refute_body("broker-distribution-chart")
+        refute_body("overloaded")
+        refute_body("underloaded")
+      end
+    end
+
+    context "when two brokers are imbalanced" do
+      before do
+        # broker 1 leads 4/5 (80%, fair 50% -> 1.6x -> overloaded); broker 2 leads 1/5 (underloaded)
+        stub_cluster.call(
+          brokers: [node.call(1), node.call(2)],
+          topics: [{ topic_name: "t", partitions: [
+            { partition_id: 0, leader: 1, replicas: [1], isrs: [1] },
+            { partition_id: 1, leader: 1, replicas: [1], isrs: [1] },
+            { partition_id: 2, leader: 1, replicas: [1], isrs: [1] },
+            { partition_id: 3, leader: 1, replicas: [1], isrs: [1] },
+            { partition_id: 4, leader: 2, replicas: [2], isrs: [2] }
+          ] }]
+        )
+        get "cluster/distribution"
+      end
+
+      it "expect the comparison chart and the over/under-loaded flags" do
+        assert_ok
+        assert_body("broker-distribution-chart")
+        assert_body("overloaded")
+        assert_body("underloaded")
+      end
+    end
+
+    context "when many brokers are perfectly balanced" do
+      before do
+        stub_cluster.call(
+          brokers: [node.call(1), node.call(2), node.call(3)],
+          topics: [{ topic_name: "t", partitions: [
+            { partition_id: 0, leader: 1, replicas: [1], isrs: [1] },
+            { partition_id: 1, leader: 2, replicas: [2], isrs: [2] },
+            { partition_id: 2, leader: 3, replicas: [3], isrs: [3] }
+          ] }]
+        )
+        get "cluster/distribution"
+      end
+
+      it "expect the comparison chart but no imbalance flags" do
+        assert_ok
+        assert_body("broker-distribution-chart")
+        refute_body("overloaded")
+        refute_body("underloaded")
+      end
+    end
+  end
+
+  describe "#broker_partitions" do
+    let(:topic) { create_topic(partitions: 2) }
+
+    context "for an existing broker" do
+      before do
+        topic
+        get "cluster/distribution/1"
+      end
+
+      it "lists the broker's partition assignments with role and ISR state" do
+        assert_ok
+        assert_body(breadcrumbs)
+        # heading identifies the drilled-into broker
+        assert_body("Node 1")
+        assert_body("Role")
+        # single-broker test cluster -> broker 1 leads and is in-sync on its partitions
+        assert_body("leader")
+        assert_body("in-sync")
+      end
+    end
+
+    context "when the broker does not exist" do
+      before { get "cluster/distribution/999999" }
+
+      it { assert_equal(404, status) }
+    end
+
+    context "when filtering by topic" do
+      before { get_filtered("cluster/distribution/1", topic) }
+
+      it "keeps only the matching topic's assignments" do
+        assert_ok
+        assert_body(topic)
       end
     end
   end

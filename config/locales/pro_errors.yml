@@ -29,6 +29,9 @@ en:
       ui.health.lags.high_threshold_format: needs to be an integer bigger than 0
       ui.health.lags.warning_ratio_format: needs to be a numeric bigger than 0 and up to 1
 
+      ui.cluster.distribution.overloaded_ratio_format: needs to be a numeric bigger than 0
+      ui.cluster.distribution.underloaded_ratio_format: needs to be a numeric bigger than 0
+
     search_form:
       missing: needs to be present
       timestamp_key_must_be_large_enough: 'must be a Kafka message timestamp with ms precision'

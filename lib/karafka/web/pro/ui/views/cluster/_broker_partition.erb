@@ -18,19 +18,27 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<% imbalance = broker_imbalance(distribution) %>
-<tr class="<%= broker_load_status_row(imbalance) %>">
+<tr>
   <td>
-    <a href="<%= root_path('cluster', 'distribution', distribution.broker_id) %>">
-      <%= distribution.broker_id %>
+    <a href="<%= explorer_topics_path(broker_partition.topic_name) %>">
+      <%= broker_partition.topic_name %>
     </a>
   </td>
-  <td><%= distribution.broker_name %></td>
-  <td><%== broker_load_badge(imbalance) %></td>
-  <td><%= distribution.leader_count %></td>
-  <td><%= distribution.leader_share %>%</td>
-  <td><%= distribution.follower_count %></td>
-  <td><%= distribution.replica_count %></td>
-  <td><%= distribution.replica_share %>%</td>
-  <td><%== broker_out_of_sync(distribution.out_of_sync_count) %></td>
+  <td>
+    <a href="<%= explorer_topics_path(broker_partition.topic_name, broker_partition.partition_id) %>">
+      <%= broker_partition.partition_id %>
+    </a>
+  </td>
+  <td>
+    <span class="badge <%= (broker_partition.role == :leader) ? 'badge-primary' : 'badge-info' %>">
+      <%= broker_partition.role %>
+    </span>
+  </td>
+  <td>
+    <% if broker_partition.in_sync %>
+      <span class="badge badge-success">in-sync</span>
+    <% else %>
+      <span class="badge badge-warning">out-of-sync</span>
+    <% end %>
+  </td>
 </tr>

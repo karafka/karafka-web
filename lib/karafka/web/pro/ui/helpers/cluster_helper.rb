@@ -36,6 +36,23 @@ module Karafka
           # Presentation helpers for the Pro-only cluster views (currently the per-broker partition
           # distribution highlighting).
           module ClusterHelper
+            # Classifies a broker's leadership load against its fair share, using the configurable
+            # `config.ui.cluster.distribution` ratios. The raw `load_ratio` (config-free) comes from
+            # the model; the thresholds are applied here so they stay tunable.
+            #
+            # @param distribution [#comparable, #load_ratio] a broker distribution row
+            # @return [Symbol] `:overloaded`, `:underloaded` or `:balanced`
+            def broker_imbalance(distribution)
+              return :balanced unless distribution.comparable
+
+              ratios = ::Karafka::Web.config.ui.cluster.distribution
+
+              return :overloaded if distribution.load_ratio > ratios.overloaded_ratio
+              return :underloaded if distribution.load_ratio < ratios.underloaded_ratio
+
+              :balanced
+            end
+
             # `status-row-*` class for a broker distribution row. Only an overloaded broker gets a
             # border (yellow), since it is the actionable case; underloaded is surfaced via the
             # badge only.

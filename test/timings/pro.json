@@ -87,5 +87,6 @@
   "test/lib/karafka/web/pro/ui/models/health/aggregated_cluster_topic_test.rb": 3.0,
   "test/lib/karafka/web/pro/ui/helpers/health_helper_test.rb": 0.1,
   "test/lib/karafka/web/pro/ui/helpers/cluster_helper_test.rb": 0.1,
-  "test/lib/karafka/web/pro/ui/lib/health/contracts/config_test.rb": 0.075
+  "test/lib/karafka/web/pro/ui/lib/health/contracts/config_test.rb": 0.075,
+  "test/lib/karafka/web/pro/ui/lib/cluster/contracts/config_test.rb": 0.075
 }
