@@ -145,7 +145,11 @@ module Karafka
 
                 assign_publish_form_state
 
-                payload = serialize_payload(@payload, @payload_format)
+                # An uploaded file (if any) takes precedence over the textarea. This lets users
+                # publish arbitrary binary payloads they generated elsewhere without pasting them.
+                raw_payload = uploaded_payload || @payload
+
+                payload = serialize_payload(raw_payload, @payload_format)
 
                 # `serialize_payload` returns nil only when JSON parsing failed. We re-render the
                 # publish form (which reads the typed values back from the params, preserving what
@@ -250,6 +254,25 @@ module Karafka
                 @headers = params.fetch(:headers, "").to_s
                 @payload_format = params.fetch(:payload_format, "raw").to_s
                 @payload_format = "raw" unless %w[raw json].include?(@payload_format)
+              end
+
+              # Reads the raw bytes of the uploaded payload file, if one was provided
+              #
+              # Rack exposes an uploaded file as a hash with a `:tempfile` handle. When the file
+              # field is left empty the param is either absent or a blank string, in which case we
+              # return nil so the caller falls back to the textarea payload.
+              #
+              # @return [String, nil] uploaded file bytes or nil when no file was uploaded
+              def uploaded_payload
+                file = params.fetch(:payload_file, nil)
+
+                return nil unless file.is_a?(Hash)
+
+                tempfile = file[:tempfile]
+
+                return nil unless tempfile
+
+                tempfile.read
               end
 
               # Serializes the user-provided payload according to the requested format

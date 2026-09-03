@@ -291,6 +291,51 @@ describe_current do
       end
     end
 
+    context "when we publish an uploaded file as the payload" do
+      let(:file_content) { "binary\x00payload-#{rand}".b }
+      let(:upload) do
+        tempfile = Tempfile.new(%w[payload .bin])
+        tempfile.binmode
+        tempfile.write(file_content)
+        tempfile.rewind
+        Rack::Test::UploadedFile.new(tempfile.path, "application/octet-stream", true)
+      end
+
+      before do
+        post "explorer/messages/#{topic}/publish", payload_format: "raw", payload_file: upload
+      end
+
+      it "produces the uploaded file bytes as the payload" do
+        assert_equal(302, response.status)
+        assert_equal(file_content, published.raw_payload)
+      end
+    end
+
+    context "when both a payload text and an uploaded file are provided" do
+      let(:file_content) { "from-file-#{rand}" }
+      let(:upload) do
+        tempfile = Tempfile.new(%w[payload .bin])
+        tempfile.binmode
+        tempfile.write(file_content)
+        tempfile.rewind
+        Rack::Test::UploadedFile.new(tempfile.path, "application/octet-stream", true)
+      end
+
+      before do
+        post(
+          "explorer/messages/#{topic}/publish",
+          payload_format: "raw",
+          payload: "from-text",
+          payload_file: upload
+        )
+      end
+
+      it "prefers the uploaded file over the text" do
+        assert_equal(302, response.status)
+        assert_equal(file_content, published.raw_payload)
+      end
+    end
+
     context "when we publish with the JSON format and valid JSON" do
       before do
         post(
