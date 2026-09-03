@@ -312,6 +312,23 @@ describe_current do
       end
     end
 
+    context "when both the payload and the headers are invalid" do
+      before do
+        post(
+          "explorer/messages/#{topic}/publish",
+          payload: "{ not valid json",
+          payload_format: "json",
+          headers: "no-colon-line"
+        )
+      end
+
+      it "shows both errors together instead of only the first one" do
+        assert_ok
+        assert_body("not valid JSON")
+        assert_body("Each header must be on its own line")
+      end
+    end
+
     context "when we publish with the raw format explicitly" do
       let(:payload) { "  not json at all  " }
 

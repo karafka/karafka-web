@@ -36,9 +36,15 @@
   </ul>
 <% end %>
 
-<% if @publish_error %>
+<% if @publish_errors && !@publish_errors.empty? %>
   <div class="mt-4">
-    <% alert_box_error('Message could not be published', @publish_error) %>
+    <% alert_box_error('Message could not be published') do %>
+      <ul class="list-disc ml-6">
+        <% @publish_errors.each do |publish_error| %>
+          <li><%= publish_error %></li>
+        <% end %>
+      </ul>
+    <% end %>
   </div>
 <% end %>
 

@@ -150,25 +150,19 @@ module Karafka
                 raw_payload = uploaded_payload || @payload
 
                 payload = serialize_payload(raw_payload, @payload_format)
-
-                # `serialize_payload` returns nil only when JSON parsing failed. We re-render the
-                # publish form (which reads the typed values back from the params, preserving what
-                # the user entered) with an error instead of producing a broken message.
-                if payload.nil?
-                  @publish_error = "Provided payload is not valid JSON and could not be serialized."
-
-                  return publish(topic_id)
-                end
-
                 headers = parse_headers(@headers)
 
-                # We validate rather than silently drop malformed header lines: a typo in a header
-                # (a missing colon) could otherwise omit a header the user believes they are sending.
-                if headers.nil?
-                  @publish_error = "Each header must be on its own line in the `key: value` format."
+                # Collect every validation problem so the user sees them all at once. `nil` from
+                # `serialize_payload` means invalid JSON; `nil` from `parse_headers` means a
+                # malformed header line (we validate rather than silently drop it, since a typo
+                # could otherwise omit a header the user believes they are sending). On any error we
+                # re-render the form (it reads the typed values back from the params, preserving
+                # what the user entered) instead of producing a broken message.
+                @publish_errors = []
+                @publish_errors << invalid_payload_error if payload.nil?
+                @publish_errors << malformed_headers_error if headers.nil?
 
-                  return publish(topic_id)
-                end
+                return publish(topic_id) if @publish_errors.any?
 
                 dispatch_message = { topic: topic_id, payload: payload }
 
@@ -327,6 +321,16 @@ module Karafka
                   delivery.partition,
                   delivery.offset
                 )
+              end
+
+              # @return [String] error shown when the payload cannot be parsed as JSON
+              def invalid_payload_error
+                "Provided payload is not valid JSON and could not be serialized."
+              end
+
+              # @return [String] error shown when a header line is not in the `key: value` format
+              def malformed_headers_error
+                "Each header must be on its own line in the `key: value` format."
               end
 
               # Parses and validates the user-provided headers textarea into a hash of headers
