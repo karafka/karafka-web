@@ -160,6 +160,16 @@ module Karafka
                   return publish(topic_id)
                 end
 
+                headers = parse_headers(@headers)
+
+                # We validate rather than silently drop malformed header lines: a typo in a header
+                # (a missing colon) could otherwise omit a header the user believes they are sending.
+                if headers.nil?
+                  @publish_error = "Each header must be on its own line in the `key: value` format."
+
+                  return publish(topic_id)
+                end
+
                 dispatch_message = { topic: topic_id, payload: payload }
 
                 dispatch_message[:key] = @key unless @key.empty?
@@ -168,7 +178,6 @@ module Karafka
                 # let the producer decide based on the key (if present) or round-robin
                 dispatch_message[:partition] = @partition.to_i unless @partition.empty?
 
-                headers = parse_headers(@headers)
                 dispatch_message[:headers] = headers unless headers.empty?
 
                 delivery = ::Karafka::Web.producer.produce_sync(dispatch_message)
@@ -320,26 +329,33 @@ module Karafka
                 )
               end
 
-              # Parses the user-provided headers textarea into a hash of message headers
+              # Parses and validates the user-provided headers textarea into a hash of headers
               #
-              # Each non-empty line is expected to be in the `key: value` format. The key is the
-              # part before the first colon and everything after it is the value. Lines without a
-              # colon or with a blank key are ignored so a stray newline does not break producing.
+              # Each non-blank line must be in the `key: value` format. The key is the part before
+              # the first colon and everything after it is the value. Blank lines are ignored. A
+              # malformed line (no colon, or an empty key) is treated as an error rather than being
+              # silently dropped, so a typo can never quietly omit a header the user intended.
               #
               # @param raw [String] raw textarea content with one `key: value` per line
-              # @return [Hash{String => String}] parsed message headers
+              # @return [Hash{String => String}, nil] parsed headers, or nil when a line is malformed
               def parse_headers(raw)
-                raw.each_line.each_with_object({}) do |line, headers|
+                headers = {}
+
+                raw.each_line do |line|
+                  next if line.strip.empty?
+
                   key, value = line.split(":", 2)
 
-                  next unless value
+                  return nil if value.nil?
 
                   key = key.strip
 
-                  next if key.empty?
+                  return nil if key.empty?
 
                   headers[key] = value.strip
                 end
+
+                headers
               end
 
               # @return [Object] visibility filter. Either default or user-based

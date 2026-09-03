@@ -281,7 +281,9 @@ describe_current do
         post(
           "explorer/messages/#{topic}/publish",
           payload: payload,
-          headers: "source: web-ui\nkind: manual\n\nno-colon-line"
+          payload_format: "raw",
+          # includes a blank line which must be tolerated
+          headers: "source: web-ui\nkind: manual\n\n"
         )
       end
 
@@ -291,10 +293,22 @@ describe_current do
         assert_equal("web-ui", published.headers["source"])
         assert_equal("manual", published.headers["kind"])
       end
+    end
 
-      it "ignores lines without a colon" do
-        assert_equal(302, response.status)
-        refute_includes(published.headers.keys, "no-colon-line")
+    context "when a header line is malformed (no colon)" do
+      before do
+        post(
+          "explorer/messages/#{topic}/publish",
+          payload: "hello",
+          payload_format: "raw",
+          headers: "source: web-ui\nno-colon-line"
+        )
+      end
+
+      it "re-renders the form with an error instead of producing" do
+        assert_ok
+        assert_body("message-publish-form")
+        assert_body("Each header must be on its own line")
       end
     end
 
