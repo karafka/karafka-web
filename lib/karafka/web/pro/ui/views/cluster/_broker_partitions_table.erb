@@ -18,26 +18,33 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<div class="tab-container-wrapper">
-  <div class="tab-container">
-    <a
-      href="<%= root_path('cluster') %>"
-      class="custom-tab <%= nav_class(end_with: 'cluster') %>"
-    >
-      Brokers
-    </a>
+<div class="mb-3 flex justify-end">
+  <small class="text-muted">
+    Roles:
+    <span class="badge badge-primary">leader</span>
+    <span class="badge badge-info">follower</span>
+    <span class="badge badge-success">in-sync</span>
+    <span class="badge badge-warning">out-of-sync</span>
+  </small>
+</div>
 
-    <a
-      href="<%= root_path('cluster', 'replication') %>"
-      class="custom-tab <%= nav_class(include: 'replication') %>"
-    >
-      Replication
-    </a>
-    <a
-      href="<%= root_path('cluster', 'distribution') %>"
-      class="custom-tab <%= nav_class(include: 'distribution') %>"
-    >
-      Distribution
-    </a>
-  </div>
+<div class="data-table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th><%== sort_link('Topic', :topic_name) %></th>
+        <th><%== sort_link('Partition', :partition_id) %></th>
+        <th><%== sort_link('Role', :role) %></th>
+        <th>In-sync</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%==
+        each_partial(
+          @partitions,
+          'cluster/broker_partition'
+        )
+      %>
+    </tbody>
+  </table>
 </div>

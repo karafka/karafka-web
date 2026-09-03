@@ -51,6 +51,14 @@ module Karafka
               leader
               replica_count
               in_sync_replica_brokers
+              broker_id
+              broker_name
+              leader_count
+              leader_share
+              follower_count
+              replica_share
+              out_of_sync_count
+              role
             ].freeze
 
             # Each action renders different columns, so we scope the filterable fields per action to
@@ -58,7 +66,9 @@ module Karafka
             self.filterable_attributes = {
               index: %i[id name],
               show: %i[name value],
-              replication: %i[topic_name]
+              replication: %i[topic_name],
+              distribution: %i[broker_id broker_name],
+              broker_partitions: %i[topic_name]
             }.freeze
 
             # Cluster state should always be fresh and not from cache
@@ -86,6 +96,42 @@ module Karafka
             def replication
               @partitions, last_page = Paginators::Arrays.call(
                 filter(sort(replication_partitions)),
+                @params.current_page
+              )
+
+              paginate(@params.current_page, !last_page)
+
+              render
+            end
+
+            # Shows how partitions are distributed across brokers (leader/replica counts and each
+            # broker's share), so an imbalanced cluster - one broker leading far more partitions
+            # than the rest - is visible at a glance.
+            def distribution
+              distribution = Models::BrokerPartitionsDistribution.all(
+                brokers: Models::Broker.all,
+                topics: displayable_topics
+              )
+
+              @distribution = filter(sort(distribution))
+
+              render
+            end
+
+            # Drill-down of the distribution view: the individual partitions assigned to a single
+            # broker, each with the broker's role (leader/follower) and whether it is in-sync.
+            #
+            # @param broker_id [String]
+            def broker_partitions(broker_id)
+              @broker = Models::Broker.find(broker_id)
+
+              assignments = Models::BrokerPartitionsDistribution.partitions_for(
+                broker_id: @broker.id,
+                topics: displayable_topics
+              )
+
+              @partitions, last_page = Paginators::Arrays.call(
+                filter(sort(assignments)),
                 @params.current_page
               )
 

@@ -18,26 +18,27 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<div class="tab-container-wrapper">
-  <div class="tab-container">
-    <a
-      href="<%= root_path('cluster') %>"
-      class="custom-tab <%= nav_class(end_with: 'cluster') %>"
-    >
-      Brokers
-    </a>
+<% view_title 'Cluster' %>
 
-    <a
-      href="<%= root_path('cluster', 'replication') %>"
-      class="custom-tab <%= nav_class(include: 'replication') %>"
-    >
-      Replication
-    </a>
-    <a
-      href="<%= root_path('cluster', 'distribution') %>"
-      class="custom-tab <%= nav_class(include: 'distribution') %>"
-    >
-      Distribution
-    </a>
+<%== partial 'cluster/tabs' %>
+
+<% if filtering? || !@distribution.empty? %>
+  <div class="col-span-12 mb-3">
+    <%== filter_box(labels: { broker_id: 'Node ID', broker_name: 'Name' }) %>
   </div>
+<% end %>
+
+<div class="col-span-12 mb-3">
+  <% if @distribution.empty? && filtering? %>
+    <%== partial 'shared/no_filter_results' %>
+  <% else %>
+    <%# A one-bar chart adds nothing, so only plot when there is more than one broker to compare %>
+    <% if @distribution.size > 1 %>
+      <% data = { 'Leader partitions': @distribution.map { [_1.broker_id, _1.leader_count] } }.to_json %>
+      <div class="mb-5">
+        <%== partial 'shared/charts/bar', locals: { data: data, id: 'broker-distribution' } %>
+      </div>
+    <% end %>
+    <%== partial 'cluster/distribution_table' %>
+  <% end %>
 </div>

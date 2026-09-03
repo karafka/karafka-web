@@ -18,26 +18,26 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<div class="tab-container-wrapper">
-  <div class="tab-container">
-    <a
-      href="<%= root_path('cluster') %>"
-      class="custom-tab <%= nav_class(end_with: 'cluster') %>"
-    >
-      Brokers
-    </a>
+<% view_title 'Cluster' %>
 
-    <a
-      href="<%= root_path('cluster', 'replication') %>"
-      class="custom-tab <%= nav_class(include: 'replication') %>"
-    >
-      Replication
-    </a>
-    <a
-      href="<%= root_path('cluster', 'distribution') %>"
-      class="custom-tab <%= nav_class(include: 'distribution') %>"
-    >
-      Distribution
-    </a>
+<%== partial 'cluster/tabs' %>
+
+<h2 class="h2">Node <%= @broker.id %> (<%= @broker.name %>) partitions</h2>
+
+<% if filtering? || !@partitions.empty? %>
+  <div class="col-span-12 mb-3">
+    <%== filter_box(labels: { topic_name: 'Topic' }) %>
   </div>
+<% end %>
+
+<div class="col-span-12 mb-3">
+  <% if @partitions.empty? && !filtering? && params.current_page <= 1 %>
+    <%== partial 'cluster/no_partitions' %>
+  <% elsif @partitions.empty? && filtering? %>
+    <%== partial 'shared/no_filter_results' %>
+  <% elsif @partitions.empty? %>
+    <%== partial 'shared/no_paginated_data' %>
+  <% else %>
+    <%== partial 'cluster/broker_partitions_table' %>
+  <% end %>
 </div>

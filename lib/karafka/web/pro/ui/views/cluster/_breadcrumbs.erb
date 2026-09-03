@@ -24,26 +24,47 @@
   </a>
 </li>
 
-<% unless @partitions %>
+<%# Each cluster tab has its own trail; keyed on the action so the drill-downs (broker config and %>
+<%# per-broker distribution) stay distinct rather than colliding on shared ivars. %>
+<% case @current_action_name %>
+<% when :replication %>
+  <li>
+    <a href="<%= root_path('cluster', 'replication') %>">
+      Replication
+    </a>
+  </li>
+<% when :distribution %>
+  <li>
+    <a href="<%= root_path('cluster', 'distribution') %>">
+      Distribution
+    </a>
+  </li>
+<% when :broker_partitions %>
+  <li>
+    <a href="<%= root_path('cluster', 'distribution') %>">
+      Distribution
+    </a>
+  </li>
+  <li>
+    <a href="<%= root_path('cluster', 'distribution', @broker.id) %>">
+      <%= @broker.full_name %>
+    </a>
+  </li>
+<% when :show %>
   <li>
     <a href="<%= root_path('cluster') %>">
       Brokers
     </a>
   </li>
-<% end %>
-
-<% if @broker %>
   <li>
     <a href="<%= root_path('cluster', @broker.id) %>">
       <%= @broker.full_name %>
     </a>
   </li>
-<% end %>
-
-<% if @partitions %>
+<% else %>
   <li>
-    <a href="<%= root_path('cluster', 'replication') %>">
-      Replication
+    <a href="<%= root_path('cluster') %>">
+      Brokers
     </a>
   </li>
 <% end %>

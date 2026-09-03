@@ -18,26 +18,27 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<div class="tab-container-wrapper">
-  <div class="tab-container">
-    <a
-      href="<%= root_path('cluster') %>"
-      class="custom-tab <%= nav_class(end_with: 'cluster') %>"
-    >
-      Brokers
+<tr>
+  <td>
+    <a href="<%= explorer_topics_path(broker_partition.topic_name) %>">
+      <%= broker_partition.topic_name %>
     </a>
-
-    <a
-      href="<%= root_path('cluster', 'replication') %>"
-      class="custom-tab <%= nav_class(include: 'replication') %>"
-    >
-      Replication
+  </td>
+  <td>
+    <a href="<%= explorer_topics_path(broker_partition.topic_name, broker_partition.partition_id) %>">
+      <%= broker_partition.partition_id %>
     </a>
-    <a
-      href="<%= root_path('cluster', 'distribution') %>"
-      class="custom-tab <%= nav_class(include: 'distribution') %>"
-    >
-      Distribution
-    </a>
-  </div>
-</div>
+  </td>
+  <td>
+    <span class="badge <%= (broker_partition.role == :leader) ? 'badge-primary' : 'badge-info' %>">
+      <%= broker_partition.role %>
+    </span>
+  </td>
+  <td>
+    <% if broker_partition.in_sync %>
+      <span class="badge badge-success">in-sync</span>
+    <% else %>
+      <span class="badge badge-warning">out-of-sync</span>
+    <% end %>
+  </td>
+</tr>

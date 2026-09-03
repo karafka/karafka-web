@@ -32,35 +32,15 @@ module Karafka
   module Web
     module Pro
       module Ui
-        module Routes
-          # Manages the cluster related routes
-          class Cluster < Base
-            route do |r|
-              r.on "cluster" do
-                controller = build(Controllers::ClusterController)
-
-                r.get "replication" do
-                  controller.replication
-                end
-
-                r.on "distribution" do
-                  # Drill-down: the partitions assigned to a single broker
-                  r.get String do |broker_id|
-                    controller.broker_partitions(broker_id)
-                  end
-
-                  r.get do
-                    controller.distribution
-                  end
-                end
-
-                r.get String do |broker_id|
-                  controller.show(broker_id)
-                end
-
-                r.get do
-                  controller.index
-                end
+        module Lib
+          # Namespace for the Pro-only cluster views support code
+          module Cluster
+            class << self
+              # Validates that the Pro cluster views config is correct
+              #
+              # @param config [Karafka::Core::Configurable::Node] web config
+              def post_setup(config)
+                Cluster::Contracts::Config.new.validate!(config.to_h)
               end
             end
           end

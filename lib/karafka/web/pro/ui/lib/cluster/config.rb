@@ -32,36 +32,25 @@ module Karafka
   module Web
     module Pro
       module Ui
-        module Routes
-          # Manages the cluster related routes
-          class Cluster < Base
-            route do |r|
-              r.on "cluster" do
-                controller = build(Controllers::ClusterController)
+        module Lib
+          module Cluster
+            # Configuration for the Pro cluster views. Lives in Pro because these views are
+            # Pro-only, mirroring how search, policies, branding and health keep their own config.
+            class Config
+              extend ::Karafka::Core::Configurable
 
-                r.get "replication" do
-                  controller.replication
-                end
+              # Per-broker partition distribution settings
+              setting :distribution do
+                # A broker leading more than this many times its fair share of partition leaderships
+                # (an even split, i.e. 100% / broker count) is flagged as overloaded in the view.
+                setting :overloaded_ratio, default: 1.5
 
-                r.on "distribution" do
-                  # Drill-down: the partitions assigned to a single broker
-                  r.get String do |broker_id|
-                    controller.broker_partitions(broker_id)
-                  end
-
-                  r.get do
-                    controller.distribution
-                  end
-                end
-
-                r.get String do |broker_id|
-                  controller.show(broker_id)
-                end
-
-                r.get do
-                  controller.index
-                end
+                # A broker leading less than this fraction of its fair share is flagged as
+                # underloaded.
+                setting :underloaded_ratio, default: 0.5
               end
+
+              configure
             end
           end
         end

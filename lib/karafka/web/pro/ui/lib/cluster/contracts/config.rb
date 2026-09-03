@@ -32,34 +32,28 @@ module Karafka
   module Web
     module Pro
       module Ui
-        module Routes
-          # Manages the cluster related routes
-          class Cluster < Base
-            route do |r|
-              r.on "cluster" do
-                controller = build(Controllers::ClusterController)
-
-                r.get "replication" do
-                  controller.replication
+        module Lib
+          module Cluster
+            # Namespace with cluster related contracts
+            module Contracts
+              # Makes sure all the expected Pro cluster config is defined as it should be
+              class Config < ::Karafka::Contracts::Base
+                configure do |config|
+                  config.error_messages = YAML.safe_load_file(
+                    File.join(Karafka::Web.gem_root, "config", "locales", "pro_errors.yml")
+                  ).fetch("en").fetch("validations").fetch("config")
                 end
 
-                r.on "distribution" do
-                  # Drill-down: the partitions assigned to a single broker
-                  r.get String do |broker_id|
-                    controller.broker_partitions(broker_id)
+                nested(:ui) do
+                  nested(:cluster) do
+                    nested(:distribution) do
+                      # How many times its fair share a broker must lead to be flagged overloaded
+                      required(:overloaded_ratio) { |val| val.is_a?(Numeric) && val.positive? }
+
+                      # Fraction of its fair share below which a broker is flagged underloaded
+                      required(:underloaded_ratio) { |val| val.is_a?(Numeric) && val.positive? }
+                    end
                   end
-
-                  r.get do
-                    controller.distribution
-                  end
-                end
-
-                r.get String do |broker_id|
-                  controller.show(broker_id)
-                end
-
-                r.get do
-                  controller.index
                 end
               end
             end

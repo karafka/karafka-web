@@ -31,6 +31,23 @@
 describe_current do
   let(:app) { Karafka::Web::Pro::Ui::App }
 
+  # Stubs the cluster metadata so distribution edge cases (broker counts, imbalance) can be driven
+  # deterministically. `brokers` are hashes wrapped by Models::Broker, `topics` mirror the metadata
+  # shape (`:partitions` with `:leader`/`:replicas`/`:isrs`).
+  #
+  # Defined via `let` (a lambda) because a controller `describe_current` is `instance_eval`-ed, so a
+  # bare `def` would define a class method rather than an instance one.
+  let(:stub_cluster) do
+    lambda do |brokers:, topics:|
+      double = Struct.new(:brokers, :topics).new(brokers, topics)
+      Karafka::Web::Ui::Models::ClusterInfo.stubs(:fetch).returns(double)
+    end
+  end
+
+  let(:node) do
+    ->(id) { { broker_id: id, broker_name: "broker#{id}", broker_port: 9092 } }
+  end
+
   describe "#index" do
     before { get "cluster" }
 
@@ -270,6 +287,257 @@ describe_current do
         assert_ok
         assert_body("No results match your filter")
         refute_body("orders_topic")
+      end
+    end
+  end
+
+  describe "#distribution" do
+    let(:topic) { create_topic(partitions: 2) }
+
+    before do
+      topic
+      get "cluster/distribution"
+    end
+
+    it "renders the per-broker partition distribution" do
+      assert_ok
+      assert_body(breadcrumbs)
+      assert_body("Leader partitions")
+      assert_body("Replica partitions")
+      # leader/follower + ISR split
+      assert_body("Follower partitions")
+      assert_body("Out-of-sync")
+      # the imbalance highlighting column
+      assert_body("Balance")
+      # single-broker test cluster -> no comparison bar chart (a one-bar chart is pointless)
+      refute_body("broker-distribution-chart")
+      # single-broker test cluster -> node 127.0.0.1 shows up as a row
+      assert_body("127.0.0.1")
+      # the Distribution tab links here
+      assert_body("cluster/distribution")
+    end
+
+    it "exposes the distribution filter fields (node id + name)" do
+      assert_ok
+      assert_body('value="broker_id"')
+      assert_body('value="broker_name"')
+    end
+
+    context "when sorting by a distribution column" do
+      before { get "cluster/distribution?sort=leader_count+desc" }
+
+      it { assert_ok }
+    end
+
+    context "when filtering by a matching node" do
+      before { get_filtered("cluster/distribution", "127.0.0.1") }
+
+      it do
+        assert_ok
+        assert_body("127.0.0.1")
+      end
+    end
+
+    context "when filtering by a non-matching node" do
+      before { get_filtered("cluster/distribution", "zzz-no-such-node") }
+
+      it do
+        assert_ok
+        assert_body("No results match your filter")
+      end
+    end
+
+    # broker 1 leads 3/4, broker 2 leads 1/4 -> a working sort must flip their row order
+    context "when sorting by leader_count (multi-broker)" do
+      # `let`-lambda (not `def`) because a controller describe_current is instance_eval-ed
+      let(:seed) do
+        lambda do
+          stub_cluster.call(
+            brokers: [node.call(1), node.call(2)],
+            topics: [{ topic_name: "t", partitions: [
+              { partition_id: 0, leader: 1, replicas: [1, 2], isrs: [1, 2] },
+              { partition_id: 1, leader: 1, replicas: [1, 2], isrs: [1, 2] },
+              { partition_id: 2, leader: 1, replicas: [1, 2], isrs: [1, 2] },
+              { partition_id: 3, leader: 2, replicas: [2, 1], isrs: [2, 1] }
+            ] }]
+          )
+        end
+      end
+
+      it "orders the broker rows by their leadership" do
+        seed.call
+        get "cluster/distribution?sort=leader_count+desc"
+
+        assert_ok
+        # broker 1 (3 leaders) first
+        assert(response.body.index("cluster/distribution/1") <
+               response.body.index("cluster/distribution/2"))
+
+        seed.call
+        get "cluster/distribution?sort=leader_count+asc"
+
+        # broker 2 (1 leader) first
+        assert(response.body.index("cluster/distribution/2") <
+               response.body.index("cluster/distribution/1"))
+      end
+    end
+
+    context "when scoping the filter to a single field (multi-broker)" do
+      before do
+        stub_cluster.call(
+          brokers: [node.call(1), node.call(2)],
+          topics: [{ topic_name: "t", partitions: [
+            { partition_id: 0, leader: 1, replicas: [1], isrs: [1] },
+            { partition_id: 1, leader: 2, replicas: [2], isrs: [2] }
+          ] }]
+        )
+      end
+
+      it "keeps only the matching broker when filtering by name" do
+        get_filtered("cluster/distribution", broker_name: "broker1")
+
+        assert_ok
+        assert_body("broker1")
+        refute_body("broker2")
+      end
+
+      it "keeps only the matching broker when filtering by node id" do
+        get_filtered("cluster/distribution", broker_id: "2")
+
+        assert_ok
+        assert_body("broker2")
+        refute_body("broker1")
+      end
+    end
+
+    context "when there is a single broker" do
+      before do
+        stub_cluster.call(
+          brokers: [node.call(1)],
+          topics: [{ topic_name: "t", partitions: [
+            { partition_id: 0, leader: 1, replicas: [1], isrs: [1] }
+          ] }]
+        )
+        get "cluster/distribution"
+      end
+
+      it "expect no comparison chart and no imbalance flags" do
+        assert_ok
+        refute_body("broker-distribution-chart")
+        refute_body("overloaded")
+        refute_body("underloaded")
+      end
+    end
+
+    context "when two brokers are imbalanced" do
+      before do
+        # broker 1 leads 4/5 (80%, fair 50% -> 1.6x -> overloaded); broker 2 leads 1/5 (underloaded)
+        stub_cluster.call(
+          brokers: [node.call(1), node.call(2)],
+          topics: [{ topic_name: "t", partitions: [
+            { partition_id: 0, leader: 1, replicas: [1], isrs: [1] },
+            { partition_id: 1, leader: 1, replicas: [1], isrs: [1] },
+            { partition_id: 2, leader: 1, replicas: [1], isrs: [1] },
+            { partition_id: 3, leader: 1, replicas: [1], isrs: [1] },
+            { partition_id: 4, leader: 2, replicas: [2], isrs: [2] }
+          ] }]
+        )
+        get "cluster/distribution"
+      end
+
+      it "expect the comparison chart and the over/under-loaded flags" do
+        assert_ok
+        assert_body("broker-distribution-chart")
+        assert_body("overloaded")
+        assert_body("underloaded")
+      end
+    end
+
+    context "when many brokers are perfectly balanced" do
+      before do
+        stub_cluster.call(
+          brokers: [node.call(1), node.call(2), node.call(3)],
+          topics: [{ topic_name: "t", partitions: [
+            { partition_id: 0, leader: 1, replicas: [1], isrs: [1] },
+            { partition_id: 1, leader: 2, replicas: [2], isrs: [2] },
+            { partition_id: 2, leader: 3, replicas: [3], isrs: [3] }
+          ] }]
+        )
+        get "cluster/distribution"
+      end
+
+      it "expect the comparison chart but no imbalance flags" do
+        assert_ok
+        assert_body("broker-distribution-chart")
+        refute_body("overloaded")
+        refute_body("underloaded")
+      end
+    end
+  end
+
+  describe "#broker_partitions" do
+    let(:topic) { create_topic(partitions: 2) }
+
+    context "for an existing broker" do
+      before do
+        topic
+        get "cluster/distribution/1"
+      end
+
+      it "lists the broker's partition assignments with role and ISR state" do
+        assert_ok
+        assert_body(breadcrumbs)
+        # heading identifies the drilled-into broker
+        assert_body("Node 1")
+        assert_body("Role")
+        # single-broker test cluster -> broker 1 leads and is in-sync on its partitions
+        assert_body("leader")
+        assert_body("in-sync")
+      end
+    end
+
+    context "when the broker does not exist" do
+      before { get "cluster/distribution/999999" }
+
+      it { assert_equal(404, status) }
+    end
+
+    context "when sorted by each assignment column" do
+      before { topic }
+
+      it "renders for topic/partition/role sorts" do
+        get "cluster/distribution/1?sort=topic_name+desc"
+
+        assert_ok
+
+        get "cluster/distribution/1?sort=partition_id+desc"
+
+        assert_ok
+
+        get "cluster/distribution/1?sort=role+desc"
+
+        assert_ok
+      end
+    end
+
+    context "when filtering by a matching topic" do
+      before { get_filtered("cluster/distribution/1", topic) }
+
+      it "keeps only the matching topic's assignments" do
+        assert_ok
+        assert_body(topic)
+      end
+    end
+
+    context "when filtering by a non-matching topic" do
+      before do
+        topic
+        get_filtered("cluster/distribution/1", "zzz-no-such-topic")
+      end
+
+      it do
+        assert_ok
+        assert_body("No results match your filter")
       end
     end
   end
