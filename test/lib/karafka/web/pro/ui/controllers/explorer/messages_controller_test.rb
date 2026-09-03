@@ -225,7 +225,7 @@ describe_current do
 
       it do
         assert_equal(302, response.status)
-        assert_equal("/", response.location)
+        assert_equal("/explorer/topics/#{topic}", response.location)
         assert_equal(payload, published.raw_payload)
         assert_nil(published.raw_key)
       end

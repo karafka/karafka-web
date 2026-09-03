@@ -173,8 +173,10 @@ module Karafka
 
                 delivery = ::Karafka::Web.producer.produce_sync(dispatch_message)
 
+                # Land back on the topic we just published to so the user can see their message,
+                # regardless of where they navigated from
                 redirect(
-                  :previous,
+                  "explorer/topics/#{topic_id}",
                   success: published(delivery)
                 )
               end
@@ -293,7 +295,23 @@ module Karafka
 
               # @param delivery [Rdkafka::Producer::DeliveryReport]
               # @return [String] flash message about the published message
+              #
+              # @note The delivery report does not always carry a valid offset (for example the very
+              #   first produce to a freshly created topic returns `RD_KAFKA_OFFSET_INVALID`, even
+              #   though the message is persisted). We only show the offset when it is a real one.
               def published(delivery)
+                return published_with_offset(delivery) unless delivery.offset.negative?
+
+                format_flash(
+                  "Message has been published to ?#?",
+                  delivery.topic,
+                  delivery.partition
+                )
+              end
+
+              # @param delivery [Rdkafka::Producer::DeliveryReport]
+              # @return [String] flash message including the assigned offset
+              def published_with_offset(delivery)
                 format_flash(
                   "Message has been published to ?#? and received offset ?",
                   delivery.topic,
