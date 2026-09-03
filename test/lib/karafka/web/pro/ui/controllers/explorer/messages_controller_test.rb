@@ -192,6 +192,17 @@ describe_current do
         assert_equal(403, response.status)
       end
     end
+
+    context "when a partition is provided (e.g. from a per-partition view)" do
+      let(:topic) { create_topic(partitions: 2) }
+
+      before { get "explorer/messages/#{topic}/publish?partition=1" }
+
+      it "preselects that partition in the form" do
+        assert_ok
+        assert_match(/value="1"\s+selected/, response.body)
+      end
+    end
   end
 
   describe "#dispatch" do

@@ -176,15 +176,23 @@
             id="headers"
           ><%= @headers %></textarea>
           <div class="text-sm text-base-content/70 mt-1">
-            Optional. One header per line in the <code>key: value</code> format. Lines without a
-            colon are ignored
+            Optional. One header per line, written as <code>key: value</code>. Blank lines and lines
+            without a <code>:</code> are skipped
           </div>
         </div>
       </div>
 
+      <%
+        # Return to where the user most likely came from: the specific partition view when a
+        # partition was prefilled, otherwise the topic view
+        cancel_path = @partition.empty? ?
+          explorer_topics_path(@topic_id) :
+          explorer_topics_path(@topic_id, @partition)
+      %>
+
       <div class="fieldset text-center mt-6">
         <div class="flex gap-4 justify-end">
-          <a href="<%= explorer_topics_path(@topic_id) %>" class="btn btn-ghost">
+          <a href="<%= cancel_path %>" class="btn btn-ghost">
             Cancel
           </a>
           <button type="submit" class="btn btn-primary gap-2 btn-lockable">
