@@ -252,8 +252,8 @@ module Karafka
                 @key = params.fetch(:key, "").to_s
                 @partition = params.fetch(:partition, "").to_s
                 @headers = params.fetch(:headers, "").to_s
-                @payload_format = params.fetch(:payload_format, "raw").to_s
-                @payload_format = "raw" unless %w[raw json].include?(@payload_format)
+                @payload_format = params.fetch(:payload_format, "json").to_s
+                @payload_format = "json" unless %w[raw json].include?(@payload_format)
               end
 
               # Reads the raw bytes of the uploaded payload file, if one was provided

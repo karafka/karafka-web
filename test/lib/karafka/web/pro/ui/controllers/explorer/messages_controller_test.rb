@@ -221,7 +221,7 @@ describe_current do
     end
 
     context "when we publish with only a payload" do
-      before { post "explorer/messages/#{topic}/publish", payload: payload }
+      before { post "explorer/messages/#{topic}/publish", payload: payload, payload_format: "raw" }
 
       it do
         assert_equal(302, response.status)
@@ -234,7 +234,9 @@ describe_current do
     context "when we publish with a key" do
       let(:key) { "my-key" }
 
-      before { post "explorer/messages/#{topic}/publish", payload: payload, key: key }
+      before do
+        post "explorer/messages/#{topic}/publish", payload: payload, key: key, payload_format: "raw"
+      end
 
       it do
         assert_equal(302, response.status)
@@ -247,7 +249,14 @@ describe_current do
       let(:topic) { create_topic(partitions: 2) }
       let(:published) { wait_for_message(topic, 1, 0) }
 
-      before { post "explorer/messages/#{topic}/publish", payload: payload, partition: 1 }
+      before do
+        post(
+          "explorer/messages/#{topic}/publish",
+          payload: payload,
+          partition: 1,
+          payload_format: "raw"
+        )
+      end
 
       it do
         assert_equal(302, response.status)

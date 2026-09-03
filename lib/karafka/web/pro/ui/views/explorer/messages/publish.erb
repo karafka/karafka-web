@@ -57,9 +57,6 @@
         <label class="w-1/4 text-base-content/70">Target Topic:</label>
         <div class="w-3/4">
           <code class="bg-base-200 px-2 py-1 rounded-sm"><%= @topic_id %></code>
-          <div class="text-sm text-base-content/70 mt-1">
-            Topic to which the message will be published
-          </div>
         </div>
       </div>
 
@@ -71,26 +68,26 @@
               <input
                 type="radio"
                 name="payload_format"
-                value="raw"
-                class="radio radio-primary"
-                <%= @payload_format == 'raw' ? 'checked' : '' %>
-              >
-              Raw / binary
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="payload_format"
                 value="json"
                 class="radio radio-primary"
                 <%= @payload_format == 'json' ? 'checked' : '' %>
               >
               JSON
             </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="payload_format"
+                value="raw"
+                class="radio radio-primary"
+                <%= @payload_format == 'raw' ? 'checked' : '' %>
+              >
+              Raw / binary
+            </label>
           </div>
           <div class="text-sm text-base-content/70 mt-1">
-            Raw sends the payload bytes as-is. JSON parses the payload and re-serializes it to its
-            canonical form
+            JSON parses the payload and re-serializes it to its canonical form. Raw sends the
+            payload bytes as-is
           </div>
         </div>
       </div>
@@ -145,20 +142,22 @@
       <div class="flex items-center w-full mb-6">
         <label class="w-1/4 text-base-content/70">Partition:</label>
         <div class="w-3/4">
-          <input
-            type="number"
-            name="partition"
-            class="block input input-bordered w-full"
-            placeholder="Leave empty for automatic partition assignment"
-            min="0"
-            max="<%= @partitions_count - 1 %>"
-            id="partition"
-            value="<%= @partition %>"
-            autocomplete="off"
-          >
+          <select name="partition" class="select select-bordered w-full" id="partition">
+            <option value="" <%= @partition.empty? ? 'selected' : '' %>>
+              Automatic (based on key or round-robin)
+            </option>
+            <% @partitions_count.times do |partition_id| %>
+              <option
+                value="<%= partition_id %>"
+                <%= @partition == partition_id.to_s ? 'selected' : '' %>
+              >
+                <%= partition_id %>
+              </option>
+            <% end %>
+          </select>
           <div class="text-sm text-base-content/70 mt-1">
-            Optional. This topic has <%= @partitions_count %> partition(s). If left empty, the
-            partition will be assigned based on the key or round-robin strategy
+            Optional. This topic has <%= @partitions_count %> partition(s). Leave on Automatic to
+            assign based on the key or round-robin strategy
           </div>
         </div>
       </div>
