@@ -8,6 +8,7 @@
 - [Enhancement] Tighten compaction on the `karafka_consumers_states` and `karafka_consumers_metrics` topics (`segment.ms` 1 day -> 6h, add `max.compaction.lag.ms` of 7 days) so superseded versions are collapsed sooner. Values accepted on Apache Kafka, Confluent Cloud, Redpanda and MSK.
 - [Fix] Raise the `retention.ms` floor on the compacted `karafka_consumers_states` and `karafka_consumers_metrics` topics to 1 month (was 1 hour / 1 day) so the most recent record is not deleted on brokers that apply retention to compacted topics (e.g. Redpanda).
 - [Fix] Stop the live poll from clobbering the search/filter box. Live polling now ignores the filter box unless it has unsubmitted input, so pages auto-refresh again while a typed but unsubmitted filter is preserved.
+- [Fix] When republishing a message (Pro), omit the received offset from the flash if the broker reports the `-1001` "N/A" sentinel (librdkafka does not return the offset for the very first produce to a brand-new topic even though the message lands), and redirect to the topic that received the message instead of back to the source topic.
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a generic keyword filtering box to the data-heavy Web UI listings, so a specific consumer, topic or job can be found without scrolling. Flat listings also include a field selector to scope the search to a chosen attribute (Pro) (#1073).
