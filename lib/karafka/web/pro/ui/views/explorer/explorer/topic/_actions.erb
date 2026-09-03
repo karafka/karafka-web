@@ -21,6 +21,14 @@
 <div class="grid grid-cols-12">
   <div class="col-span-4">
     <section class="actions">
+      <a
+        href="<%= explorer_messages_path(@topic_id, 'publish') %>"
+        class="btn-action"
+        title="Publish a new message to this topic"
+      >
+        <%== icon(:plus) %>
+      </a>
+
       <% if @messages && !@messages.empty? %>
         <a
           href="<%= explorer_topics_path(@topic_id, 'recent') %>"

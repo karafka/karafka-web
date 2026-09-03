@@ -159,6 +159,170 @@ describe_current do
     end
   end
 
+  describe "#publish" do
+    context "when the topic does not exist" do
+      before { get "explorer/messages/non-existing/publish" }
+
+      it do
+        refute(response.ok?)
+        assert_equal(404, response.status)
+      end
+    end
+
+    context "when the topic exists" do
+      before { get "explorer/messages/#{topic}/publish" }
+
+      it do
+        assert_ok
+        assert_body(topic)
+        assert_body("message-publish-form")
+        refute_body(pagination)
+      end
+    end
+
+    context "when publishing is off" do
+      before do
+        Karafka::Web.config.ui.policies.messages.stubs(:publish?).returns(false)
+
+        get "explorer/messages/#{topic}/publish"
+      end
+
+      it do
+        refute(response.ok?)
+        assert_equal(403, response.status)
+      end
+    end
+  end
+
+  describe "#dispatch" do
+    let(:payload) { rand.to_s }
+    let(:published) { wait_for_message(topic, 0, 0) }
+
+    context "when the topic does not exist" do
+      before { post "explorer/messages/non-existing/publish", payload: payload }
+
+      it do
+        refute(response.ok?)
+        assert_equal(404, response.status)
+      end
+    end
+
+    context "when publishing is off" do
+      before do
+        Karafka::Web.config.ui.policies.messages.stubs(:publish?).returns(false)
+
+        post "explorer/messages/#{topic}/publish", payload: payload
+      end
+
+      it do
+        refute(response.ok?)
+        assert_equal(403, response.status)
+      end
+    end
+
+    context "when we publish with only a payload" do
+      before { post "explorer/messages/#{topic}/publish", payload: payload }
+
+      it do
+        assert_equal(302, response.status)
+        assert_equal("/", response.location)
+        assert_equal(payload, published.raw_payload)
+        assert_nil(published.raw_key)
+      end
+    end
+
+    context "when we publish with a key" do
+      let(:key) { "my-key" }
+
+      before { post "explorer/messages/#{topic}/publish", payload: payload, key: key }
+
+      it do
+        assert_equal(302, response.status)
+        assert_equal(payload, published.raw_payload)
+        assert_equal(key, published.key)
+      end
+    end
+
+    context "when we publish with an explicit partition" do
+      let(:topic) { create_topic(partitions: 2) }
+      let(:published) { wait_for_message(topic, 1, 0) }
+
+      before { post "explorer/messages/#{topic}/publish", payload: payload, partition: 1 }
+
+      it do
+        assert_equal(302, response.status)
+        assert_equal(payload, published.raw_payload)
+        assert_equal(1, published.partition)
+      end
+    end
+
+    context "when we publish with headers" do
+      before do
+        post(
+          "explorer/messages/#{topic}/publish",
+          payload: payload,
+          headers: "source: web-ui\nkind: manual\n\nno-colon-line"
+        )
+      end
+
+      it do
+        assert_equal(302, response.status)
+        assert_equal(payload, published.raw_payload)
+        assert_equal("web-ui", published.headers["source"])
+        assert_equal("manual", published.headers["kind"])
+      end
+
+      it "ignores lines without a colon" do
+        assert_equal(302, response.status)
+        refute_includes(published.headers.keys, "no-colon-line")
+      end
+    end
+
+    context "when we publish with the raw format explicitly" do
+      let(:payload) { "  not json at all  " }
+
+      before do
+        post "explorer/messages/#{topic}/publish", payload: payload, payload_format: "raw"
+      end
+
+      it "produces the payload exactly as provided" do
+        assert_equal(302, response.status)
+        assert_equal(payload, published.raw_payload)
+      end
+    end
+
+    context "when we publish with the JSON format and valid JSON" do
+      before do
+        post(
+          "explorer/messages/#{topic}/publish",
+          payload: '{ "a" : 1, "b" : [2, 3] }',
+          payload_format: "json"
+        )
+      end
+
+      it "produces the canonical serialization of the parsed JSON" do
+        assert_equal(302, response.status)
+        assert_equal('{"a":1,"b":[2,3]}', published.raw_payload)
+      end
+    end
+
+    context "when we publish with the JSON format but invalid JSON" do
+      before do
+        post(
+          "explorer/messages/#{topic}/publish",
+          payload: "{ not valid json",
+          payload_format: "json"
+        )
+      end
+
+      it "re-renders the form with an error instead of producing" do
+        assert_ok
+        assert_body("message-publish-form")
+        assert_body("not valid JSON")
+      end
+    end
+  end
+
   describe "#download" do
     context "when we want to download message from a non-existing topic" do
       before { get "explorer/messages/non-existing/0/1/download" }

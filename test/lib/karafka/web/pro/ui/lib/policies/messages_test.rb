@@ -84,4 +84,8 @@ describe_current do
   describe "#republish?" do
     it { assert(policy.republish?(nil)) }
   end
+
+  describe "#publish?" do
+    it { assert(policy.publish?("some-topic")) }
+  end
 end

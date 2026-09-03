@@ -47,6 +47,14 @@ module Karafka
                 r.on "messages" do
                   controller = build(Controllers::Explorer::MessagesController)
 
+                  r.get String, "publish" do |topic_id|
+                    controller.publish(topic_id)
+                  end
+
+                  r.post String, "publish" do |topic_id|
+                    controller.dispatch(topic_id)
+                  end
+
                   r.get(
                     String, :partition_id, Integer, "forward"
                   ) do |topic_id, partition_id, offset|

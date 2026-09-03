@@ -1,6 +1,7 @@
 # Karafka Web Changelog
 
 ## Unreleased
+- [Feature] Add a **Publish message** capability to the Explorer (Pro): publish an arbitrary message to a topic directly from its Explorer page, with an optional key, target partition and headers. The payload can be sent as raw/binary data or as JSON that is validated and re-serialized to its canonical form. Gated by a new `publish?` policy (`config.ui.policies.messages`), enabled by default (#956).
 - [Enhancement] Add a per-broker partition **Distribution** view to the Cluster section (Pro): a leader-partitions bar chart plus a table of each broker's leader/follower/replica counts, shares and out-of-sync (ISR) replicas. Over/under-loaded brokers are flagged (thresholds configurable under `config.ui.cluster.distribution`) and each broker drills down to the partitions assigned to it, so cluster load imbalance is visible without external tooling (#962).
 - **[Feature]** Aggregate the Health views per topic instead of per partition so they stay usable at scale. One summary row per topic (lag, max/avg lag, skew flag, LSO risk, paused partitions) drills down to the per-partition views, with lag, skew and paused partitions colour-flagged. Thresholds are configurable under `config.ui.health.lags` (#112).
 - [Enhancement] Inject Web UI kafka settings via `Karafka::Web::Config::DefaultsInjector` (built on `Karafka::Core::Configurable::Injector`) so the injection follows the same pattern as Karafka and can be extended by Pro (#653). Requires karafka-core `>= 2.6.3`.

@@ -30,20 +30,28 @@
   </a>
 </li>
 
-<li>
-  <a href="<%= explorer_topics_path(@topic_id, @partition_id) %>">
-    Partition <%= @partition_id %>
-  </a>
-</li>
+<% if action?(:publish, :dispatch) %>
+  <li>
+    <a href="<%= explorer_messages_path(@topic_id, 'publish') %>">
+      Publish
+    </a>
+  </li>
+<% else %>
+  <li>
+    <a href="<%= explorer_topics_path(@topic_id, @partition_id) %>">
+      Partition <%= @partition_id %>
+    </a>
+  </li>
 
-<li>
-  <a href="<%= explorer_topics_path(@topic_id, @partition_id, @offset) %>">
-    <%= @offset %>
-  </a>
-</li>
+  <li>
+    <a href="<%= explorer_topics_path(@topic_id, @partition_id, @offset) %>">
+      <%= @offset %>
+    </a>
+  </li>
 
-<li>
-  <a href="<%= explorer_messages_path(@topic_id, @partition_id, @offset, 'forward') %>">
-    Forward
-  </a>
-</li>
+  <li>
+    <a href="<%= explorer_messages_path(@topic_id, @partition_id, @offset, 'forward') %>">
+      Forward
+    </a>
+  </li>
+<% end %>

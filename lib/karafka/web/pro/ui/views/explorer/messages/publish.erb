@@ -1,0 +1,177 @@
+<%# Karafka Pro - Source Available Commercial Software %>
+<%# Copyright (c) 2017-present Maciej Mensfeld. All rights reserved. %>
+<%# This software is NOT open source. It is source-available commercial software %>
+<%# requiring a paid license for use. It is NOT covered by LGPL. %>
+<%# The author retains all right, title, and interest in this software, %>
+<%# including all copyrights, patents, and other intellectual property rights. %>
+<%# No patent rights are granted under this license. %>
+<%# PROHIBITED: Use without a valid commercial license %>
+<%# PROHIBITED: Redistribution, modification, or derivative works without authorization %>
+<%# PROHIBITED: Reverse engineering, decompilation, or disassembly of this software %>
+<%# PROHIBITED: Use as training data for AI/ML models or inclusion in datasets %>
+<%# PROHIBITED: Scraping, crawling, or automated collection for any purpose %>
+<%# PERMITTED: Reading, referencing, and linking for personal or commercial use %>
+<%# PERMITTED: Runtime retrieval by AI assistants, coding agents, and RAG systems %>
+<%# PERMITTED: for the purpose of providing contextual help to Karafka users %>
+<%# Receipt, viewing, or possession of this software does not convey or %>
+<%# imply any license or right beyond those expressly stated above. %>
+<%# License: https://karafka.io/docs/Pro-License-Comm/ %>
+<%# Contact: contact@karafka.io %>
+
+<% view_title "Publishing a message to #{@topic_id}" %>
+
+<% if @publish_error %>
+  <%== alert_box_error('Message could not be published', @publish_error) %>
+<% end %>
+
+<% alert_box_info('Message Publishing Operation') do %>
+  <p>
+    You are about to publish a new message to this topic. This operation:
+  </p>
+
+  <ul class="list-disc ml-6 mt-2">
+    <li>Creates a new message on the selected topic</li>
+    <li>
+      With the <strong>JSON</strong> format, validates and re-serializes the payload the same way
+      the default JSON deserializer reads it back
+    </li>
+    <li>With the <strong>Raw / binary</strong> format, sends the payload exactly as provided</li>
+    <li>Cannot be undone</li>
+  </ul>
+<% end %>
+
+<%
+  publish_path = explorer_messages_path(@topic_id, 'publish')
+%>
+
+<div class="card bg-base-100 mt-4">
+  <div class="card-body">
+    <form class="space-y-4 w-full mt-6" method="post" action="<%= publish_path %>" id="message-publish-form">
+      <div class="flex items-center w-full mb-6">
+        <label class="w-1/4 text-base-content/70">Target Topic:</label>
+        <div class="w-3/4">
+          <code class="bg-base-200 px-2 py-1 rounded-sm"><%= @topic_id %></code>
+          <div class="text-sm text-base-content/70 mt-1">
+            Topic to which the message will be published
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center w-full mb-6">
+        <label class="w-1/4 text-base-content/70">Payload Format:</label>
+        <div class="w-3/4">
+          <div class="flex gap-6">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="payload_format"
+                value="raw"
+                class="radio radio-primary"
+                <%= @payload_format == 'raw' ? 'checked' : '' %>
+              >
+              Raw / binary
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="payload_format"
+                value="json"
+                class="radio radio-primary"
+                <%= @payload_format == 'json' ? 'checked' : '' %>
+              >
+              JSON
+            </label>
+          </div>
+          <div class="text-sm text-base-content/70 mt-1">
+            Raw sends the payload bytes as-is. JSON parses the payload and re-serializes it to its
+            canonical form
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-start w-full mb-6">
+        <label class="w-1/4 text-base-content/70 mt-2">Payload:</label>
+        <div class="w-3/4">
+          <textarea
+            name="payload"
+            class="block textarea textarea-bordered w-full font-mono"
+            rows="8"
+            placeholder="Message payload"
+            id="payload"
+          ><%= @payload %></textarea>
+          <div class="text-sm text-base-content/70 mt-1">
+            The message payload. For the JSON format it must be valid JSON
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center w-full mb-6">
+        <label class="w-1/4 text-base-content/70">Key:</label>
+        <div class="w-3/4">
+          <input
+            type="text"
+            name="key"
+            class="block input input-bordered w-full"
+            placeholder="Leave empty for no key"
+            id="key"
+            value="<%= @key %>"
+            autocomplete="off"
+          >
+          <div class="text-sm text-base-content/70 mt-1">
+            Optional. Used for partition assignment when no explicit partition is provided
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center w-full mb-6">
+        <label class="w-1/4 text-base-content/70">Partition:</label>
+        <div class="w-3/4">
+          <input
+            type="number"
+            name="partition"
+            class="block input input-bordered w-full"
+            placeholder="Leave empty for automatic partition assignment"
+            min="0"
+            max="<%= @partitions_count - 1 %>"
+            id="partition"
+            value="<%= @partition %>"
+            autocomplete="off"
+          >
+          <div class="text-sm text-base-content/70 mt-1">
+            Optional. This topic has <%= @partitions_count %> partition(s). If left empty, the
+            partition will be assigned based on the key or round-robin strategy
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-start w-full mb-8">
+        <label class="w-1/4 text-base-content/70 mt-2">Headers:</label>
+        <div class="w-3/4">
+          <textarea
+            name="headers"
+            class="block textarea textarea-bordered w-full font-mono"
+            rows="4"
+            placeholder="key: value"
+            id="headers"
+          ><%= @headers %></textarea>
+          <div class="text-sm text-base-content/70 mt-1">
+            Optional. One header per line in the <code>key: value</code> format. Lines without a
+            colon are ignored
+          </div>
+        </div>
+      </div>
+
+      <div class="fieldset text-center mt-6">
+        <div class="flex gap-4 justify-end">
+          <a href="<%= explorer_topics_path(@topic_id) %>" class="btn btn-ghost">
+            Cancel
+          </a>
+          <button type="submit" class="btn btn-primary gap-2 btn-lockable">
+            <%== icon(:arrow_up_tray) %>
+            Publish Message
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

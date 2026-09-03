@@ -104,6 +104,77 @@ module Karafka
                 )
               end
 
+              # Renders a form allowing for publishing a brand new message to a given topic
+              #
+              # @param topic_id [String] topic to which we want to publish a message
+              def publish(topic_id)
+                @topic_id = topic_id
+
+                deny! unless visibility_filter.publish?(@topic_id)
+
+                # Ensures the topic exists (raises a not found otherwise) and gives the form the
+                # number of partitions so we can hint the valid target partition range
+                @partitions_count = Models::ClusterInfo.partitions_count(topic_id)
+
+                # Default (empty) form state so the view can render blank fields
+                assign_publish_form_state
+
+                render
+              end
+
+              # Publishes a brand new message with the user-provided content to the given topic
+              #
+              # Supports two payload formats:
+              # - `json` - the payload is parsed as JSON (validated) and re-serialized to its
+              #   canonical JSON form, mirroring the default JSON payload deserializer used when
+              #   consuming. Invalid JSON re-renders the form with an error.
+              # - `raw` - the payload is produced exactly as provided (raw string / binary data).
+              #
+              # @param topic_id [String] topic to which we want to publish a message
+              # @note This action is intentionally **not** named `produce` because that name
+              #   collides with a producing helper mixed into the controller execution wrapper in
+              #   the test suite, which would shadow the action.
+              def dispatch(topic_id)
+                @topic_id = topic_id
+
+                deny! unless visibility_filter.publish?(@topic_id)
+
+                # Validates the topic exists (raises a not found otherwise) before we attempt to
+                # produce anything to it. Also feeds the partition hint if we re-render the form.
+                @partitions_count = Models::ClusterInfo.partitions_count(topic_id)
+
+                assign_publish_form_state
+
+                payload = serialize_payload(@payload, @payload_format)
+
+                # `serialize_payload` returns nil only when JSON parsing failed. We re-render the
+                # publish form (which reads the typed values back from the params, preserving what
+                # the user entered) with an error instead of producing a broken message.
+                if payload.nil?
+                  @publish_error = "Provided payload is not valid JSON and could not be serialized."
+
+                  return publish(topic_id)
+                end
+
+                dispatch_message = { topic: topic_id, payload: payload }
+
+                dispatch_message[:key] = @key unless @key.empty?
+
+                # Assign the target partition only if it was explicitly requested, otherwise we
+                # let the producer decide based on the key (if present) or round-robin
+                dispatch_message[:partition] = @partition.to_i unless @partition.empty?
+
+                headers = parse_headers(@headers)
+                dispatch_message[:headers] = headers unless headers.empty?
+
+                delivery = ::Karafka::Web.producer.produce_sync(dispatch_message)
+
+                redirect(
+                  :previous,
+                  success: published(delivery)
+                )
+              end
+
               # Dispatches the message raw payload to the browser as a file
               #
               # @param topic_id [String]
@@ -162,6 +233,72 @@ module Karafka
                   delivery.partition,
                   delivery.offset
                 )
+              end
+
+              # Reads the publish form fields from the request params into instance variables so
+              # both the initial form render and a failed submission re-render use the same state.
+              # On the initial `#publish` GET the params are absent, so everything defaults to
+              # empty (with `raw` as the default payload format).
+              #
+              # @return [void]
+              def assign_publish_form_state
+                # We use `fetch` with defaults because these fields are optional and may be absent
+                # from the params. `params.str`/`params[]` would raise a `KeyError` on missing keys.
+                @payload = params.fetch(:payload, "").to_s
+                @key = params.fetch(:key, "").to_s
+                @partition = params.fetch(:partition, "").to_s
+                @headers = params.fetch(:headers, "").to_s
+                @payload_format = params.fetch(:payload_format, "raw").to_s
+                @payload_format = "raw" unless %w[raw json].include?(@payload_format)
+              end
+
+              # Serializes the user-provided payload according to the requested format
+              #
+              # @param raw [String] payload as typed by the user
+              # @param format [String] either `raw` or `json`
+              # @return [String, nil] the payload bytes to produce, or nil when JSON was requested
+              #   but the provided content is not valid JSON
+              def serialize_payload(raw, format)
+                return raw unless format == "json"
+
+                # Re-serialize so the produced bytes are canonical JSON, matching what the default
+                # JSON deserializer will read back
+                ::JSON.generate(::JSON.parse(raw))
+              rescue ::JSON::ParserError
+                nil
+              end
+
+              # @param delivery [Rdkafka::Producer::DeliveryReport]
+              # @return [String] flash message about the published message
+              def published(delivery)
+                format_flash(
+                  "Message has been published to ?#? and received offset ?",
+                  delivery.topic,
+                  delivery.partition,
+                  delivery.offset
+                )
+              end
+
+              # Parses the user-provided headers textarea into a hash of message headers
+              #
+              # Each non-empty line is expected to be in the `key: value` format. The key is the
+              # part before the first colon and everything after it is the value. Lines without a
+              # colon or with a blank key are ignored so a stray newline does not break producing.
+              #
+              # @param raw [String] raw textarea content with one `key: value` per line
+              # @return [Hash{String => String}] parsed message headers
+              def parse_headers(raw)
+                raw.each_line.each_with_object({}) do |line, headers|
+                  key, value = line.split(":", 2)
+
+                  next unless value
+
+                  key = key.strip
+
+                  next if key.empty?
+
+                  headers[key] = value.strip
+                end
               end
 
               # @return [Object] visibility filter. Either default or user-based
