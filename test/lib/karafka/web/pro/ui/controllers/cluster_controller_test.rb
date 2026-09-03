@@ -292,6 +292,8 @@ describe_current do
       assert_body("Out-of-sync")
       # the imbalance highlighting column
       assert_body("Balance")
+      # the per-broker load bar chart (reuses the shared bar engine)
+      assert_body("broker-distribution-chart")
       # single-broker test cluster -> node 127.0.0.1 shows up as a row
       assert_body("127.0.0.1")
       # the Distribution tab links here
