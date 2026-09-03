@@ -347,6 +347,69 @@ describe_current do
       end
     end
 
+    # broker 1 leads 3/4, broker 2 leads 1/4 -> a working sort must flip their row order
+    context "when sorting by leader_count (multi-broker)" do
+      # `let`-lambda (not `def`) because a controller describe_current is instance_eval-ed
+      let(:seed) do
+        lambda do
+          stub_cluster.call(
+            brokers: [node.call(1), node.call(2)],
+            topics: [{ topic_name: "t", partitions: [
+              { partition_id: 0, leader: 1, replicas: [1, 2], isrs: [1, 2] },
+              { partition_id: 1, leader: 1, replicas: [1, 2], isrs: [1, 2] },
+              { partition_id: 2, leader: 1, replicas: [1, 2], isrs: [1, 2] },
+              { partition_id: 3, leader: 2, replicas: [2, 1], isrs: [2, 1] }
+            ] }]
+          )
+        end
+      end
+
+      it "orders the broker rows by their leadership" do
+        seed.call
+        get "cluster/distribution?sort=leader_count+desc"
+
+        assert_ok
+        # broker 1 (3 leaders) first
+        assert(response.body.index("cluster/distribution/1") <
+               response.body.index("cluster/distribution/2"))
+
+        seed.call
+        get "cluster/distribution?sort=leader_count+asc"
+
+        # broker 2 (1 leader) first
+        assert(response.body.index("cluster/distribution/2") <
+               response.body.index("cluster/distribution/1"))
+      end
+    end
+
+    context "when scoping the filter to a single field (multi-broker)" do
+      before do
+        stub_cluster.call(
+          brokers: [node.call(1), node.call(2)],
+          topics: [{ topic_name: "t", partitions: [
+            { partition_id: 0, leader: 1, replicas: [1], isrs: [1] },
+            { partition_id: 1, leader: 2, replicas: [2], isrs: [2] }
+          ] }]
+        )
+      end
+
+      it "keeps only the matching broker when filtering by name" do
+        get_filtered("cluster/distribution", broker_name: "broker1")
+
+        assert_ok
+        assert_body("broker1")
+        refute_body("broker2")
+      end
+
+      it "keeps only the matching broker when filtering by node id" do
+        get_filtered("cluster/distribution", broker_id: "2")
+
+        assert_ok
+        assert_body("broker2")
+        refute_body("broker1")
+      end
+    end
+
     context "when there is a single broker" do
       before do
         stub_cluster.call(
@@ -439,12 +502,42 @@ describe_current do
       it { assert_equal(404, status) }
     end
 
-    context "when filtering by topic" do
+    context "when sorted by each assignment column" do
+      before { topic }
+
+      it "renders for topic/partition/role sorts" do
+        get "cluster/distribution/1?sort=topic_name+desc"
+
+        assert_ok
+
+        get "cluster/distribution/1?sort=partition_id+desc"
+
+        assert_ok
+
+        get "cluster/distribution/1?sort=role+desc"
+
+        assert_ok
+      end
+    end
+
+    context "when filtering by a matching topic" do
       before { get_filtered("cluster/distribution/1", topic) }
 
       it "keeps only the matching topic's assignments" do
         assert_ok
         assert_body(topic)
+      end
+    end
+
+    context "when filtering by a non-matching topic" do
+      before do
+        topic
+        get_filtered("cluster/distribution/1", "zzz-no-such-topic")
+      end
+
+      it do
+        assert_ok
+        assert_body("No results match your filter")
       end
     end
   end
