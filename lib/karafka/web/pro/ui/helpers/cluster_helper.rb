@@ -65,7 +65,8 @@ module Karafka
             # Badge labelling a broker's load balance so an over/under-loaded node stands out.
             #
             # @param imbalance [Symbol] `:overloaded`, `:underloaded` or `:balanced`
-            # @return [String] badge html (a muted dash for a balanced broker)
+            # @return [String] badge html: a yellow warning for over/under-loaded, a green
+            #   `balanced` badge otherwise
             def broker_load_badge(imbalance)
               case imbalance
               when :overloaded

@@ -192,5 +192,10 @@ describe_current do
       assert_equal(1, broker1.leader_count)
       assert_equal(0, broker1.replica_count)
     end
+
+    it "expect the derived counts to stay non-negative (no -1 follower/out-of-sync)" do
+      assert_equal(0, broker1.follower_count)
+      assert_equal(0, broker1.out_of_sync_count)
+    end
   end
 end
