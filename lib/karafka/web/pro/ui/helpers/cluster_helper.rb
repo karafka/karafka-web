@@ -72,7 +72,7 @@ module Karafka
               when :overloaded
                 %(<span class="badge badge-warning">overloaded</span>)
               when :underloaded
-                %(<span class="badge badge-secondary">underloaded</span>)
+                %(<span class="badge badge-warning">underloaded</span>)
               else
                 %(<span class="badge badge-success">balanced</span>)
               end

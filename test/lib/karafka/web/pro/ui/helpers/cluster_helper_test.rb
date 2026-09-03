@@ -77,9 +77,9 @@ describe_current do
       assert_includes(broker_load_badge(:overloaded), "badge-warning")
     end
 
-    it "labels an underloaded broker" do
+    it "labels an underloaded broker with a warning badge" do
       assert_includes(broker_load_badge(:underloaded), "underloaded")
-      assert_includes(broker_load_badge(:underloaded), "badge-secondary")
+      assert_includes(broker_load_badge(:underloaded), "badge-warning")
     end
 
     it "labels a balanced broker" do
