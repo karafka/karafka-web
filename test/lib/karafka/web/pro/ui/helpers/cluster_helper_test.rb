@@ -82,8 +82,9 @@ describe_current do
       assert_includes(broker_load_badge(:underloaded), "badge-secondary")
     end
 
-    it "renders a muted dash for a balanced broker" do
-      assert_includes(broker_load_badge(:balanced), "&mdash;")
+    it "labels a balanced broker" do
+      assert_includes(broker_load_badge(:balanced), "balanced")
+      assert_includes(broker_load_badge(:balanced), "badge-success")
     end
   end
 

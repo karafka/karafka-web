@@ -74,7 +74,7 @@ module Karafka
               when :underloaded
                 %(<span class="badge badge-secondary">underloaded</span>)
               else
-                %(<span class="text-muted">&mdash;</span>)
+                %(<span class="badge badge-success">balanced</span>)
               end
             end
 
