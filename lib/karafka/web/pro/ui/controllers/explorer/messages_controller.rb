@@ -337,7 +337,7 @@ module Karafka
               # silently dropped, so a typo can never quietly omit a header the user intended.
               #
               # @param raw [String] raw textarea content with one `key: value` per line
-              # @return [Hash{String => String}, nil] parsed headers, or nil when a line is malformed
+              # @return [Hash{String => String}, nil] parsed headers, nil if a line is malformed
               def parse_headers(raw)
                 headers = {}
 
