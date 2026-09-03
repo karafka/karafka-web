@@ -94,8 +94,8 @@ describe_current do
 
         it do
           assert_equal(302, response.status)
-          # Taken from referer and referer is nil in specs
-          assert_equal("/", response.location)
+          # We redirect to the topic we published to, on the partition the message landed on
+          assert_equal("/explorer/topics/#{target_topic}/0", response.location)
           assert_equal(payload, republished.raw_payload)
           assert_includes(republished.headers.keys, "source_topic")
           assert_includes(republished.headers.keys, "source_partition")
@@ -113,7 +113,7 @@ describe_current do
 
         it do
           assert_equal(302, response.status)
-          assert_equal("/", response.location)
+          assert_equal("/explorer/topics/#{target_topic}/0", response.location)
           assert_equal(payload, republished.raw_payload)
           refute_includes(republished.headers.keys, "source_topic")
           refute_includes(republished.headers.keys, "source_partition")
@@ -133,11 +133,56 @@ describe_current do
 
         it do
           assert_equal(302, response.status)
-          assert_equal("/", response.location)
+          assert_equal("/explorer/topics/#{target_topic}/1", response.location)
           assert_equal(payload, republished.raw_payload)
           assert_includes(republished.headers.keys, "source_topic")
           assert_includes(republished.headers.keys, "source_partition")
           assert_includes(republished.headers.keys, "source_offset")
+        end
+      end
+
+      context "when republishing to an established topic" do
+        # The establishing produce lands at offset 0, so the republished message lands at offset 1
+        let(:republished) { wait_for_message(target_topic, 0, 1) }
+
+        before do
+          produce(topic, payload)
+          # Establish the topic with a prior produce so the delivery report for the republish
+          # comes back with a real, valid offset
+          produce(target_topic, rand.to_s)
+          post "explorer/messages/#{topic}/0/0/republish", params
+        end
+
+        it do
+          assert_equal(302, response.status)
+          assert_equal("/explorer/topics/#{target_topic}/0", response.location)
+          assert_equal(payload, republished.raw_payload)
+          # The real received offset is surfaced in the flash for an established topic
+          assert_includes(flash[:success], "and received offset")
+        end
+      end
+
+      context "when the broker reports the invalid offset for the first produce" do
+        let(:republished) { wait_for_message(target_topic, 0, 0) }
+
+        before do
+          produce(topic, payload)
+          # librdkafka does not return the offset in the delivery report for the very first
+          # produce to a brand-new topic, reporting the -1001 "N/A" sentinel even though the
+          # message lands. We simulate that edge case deterministically here.
+          Rdkafka::Producer::DeliveryReport.any_instance.stubs(:offset).returns(-1001)
+          post "explorer/messages/#{topic}/0/0/republish", params
+        end
+
+        it do
+          assert_equal(302, response.status)
+          # We still redirect to the topic we published to
+          assert_equal("/explorer/topics/#{target_topic}/0", response.location)
+          # The message still lands even though the report came back with the -1001 sentinel
+          assert_equal(payload, republished.raw_payload)
+          # The invalid offset must not surface in the flash
+          assert_includes(flash[:success], "has been sent to")
+          refute_includes(flash[:success], "received offset")
         end
       end
     end

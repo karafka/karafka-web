@@ -99,7 +99,7 @@ module Karafka
                 delivery = ::Karafka::Web.producer.produce_sync(dispatch_message)
 
                 redirect(
-                  :previous,
+                  "explorer/topics/#{delivery.topic}/#{delivery.partition}",
                   success: republished(@message, delivery)
                 )
               end
@@ -154,14 +154,28 @@ module Karafka
               # @param message [Karafka::Messages::Message]
               # @param delivery [Rdkafka::Producer::DeliveryReport]
               # @return [String] flash message about message reproducing
+              #
+              # @note librdkafka does not return the offset in the delivery report for the very
+              #   first produce to a brand-new topic, reporting the `-1001` "N/A" sentinel even
+              #   though the message lands. In that case we omit the offset from the flash instead
+              #   of surfacing the invalid value.
               def republished(message, delivery)
-                format_flash(
-                  "Message with offset ? has been sent to ?#? and received offset ?",
-                  message.offset,
-                  delivery.topic,
-                  delivery.partition,
-                  delivery.offset
-                )
+                if delivery.offset.negative?
+                  format_flash(
+                    "Message with offset ? has been sent to ?#?",
+                    message.offset,
+                    delivery.topic,
+                    delivery.partition
+                  )
+                else
+                  format_flash(
+                    "Message with offset ? has been sent to ?#? and received offset ?",
+                    message.offset,
+                    delivery.topic,
+                    delivery.partition,
+                    delivery.offset
+                  )
+                end
               end
 
               # @return [Object] visibility filter. Either default or user-based
