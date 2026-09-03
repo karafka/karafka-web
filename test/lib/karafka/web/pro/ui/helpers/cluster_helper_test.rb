@@ -67,7 +67,7 @@ describe_current do
 
   describe "#broker_load_status_row" do
     it { assert_equal("status-row-warning", broker_load_status_row(:overloaded)) }
-    it { assert_equal("", broker_load_status_row(:underloaded)) }
+    it { assert_equal("status-row-warning", broker_load_status_row(:underloaded)) }
     it { assert_equal("", broker_load_status_row(:balanced)) }
   end
 

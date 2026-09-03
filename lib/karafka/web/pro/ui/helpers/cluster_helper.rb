@@ -53,14 +53,13 @@ module Karafka
               :balanced
             end
 
-            # `status-row-*` class for a broker distribution row. Only an overloaded broker gets a
-            # border (yellow), since it is the actionable case; underloaded is surfaced via the
-            # badge only.
+            # `status-row-*` class for a broker distribution row. Any imbalance (over- or
+            # under-loaded) gets a yellow warning border; a balanced broker gets none.
             #
             # @param imbalance [Symbol] `:overloaded`, `:underloaded` or `:balanced`
             # @return [String] the row class, or an empty string
             def broker_load_status_row(imbalance)
-              (imbalance == :overloaded) ? "status-row-warning" : ""
+              (imbalance == :balanced) ? "" : "status-row-warning"
             end
 
             # Badge labelling a broker's load balance so an over/under-loaded node stands out.
