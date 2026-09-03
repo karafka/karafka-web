@@ -287,6 +287,8 @@ describe_current do
       assert_body(breadcrumbs)
       assert_body("Leader partitions")
       assert_body("Replica partitions")
+      # the imbalance highlighting column
+      assert_body("Balance")
       # single-broker test cluster -> node 127.0.0.1 shows up as a row
       assert_body("127.0.0.1")
       # the Distribution tab links here

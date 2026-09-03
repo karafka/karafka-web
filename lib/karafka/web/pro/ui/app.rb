@@ -41,6 +41,7 @@ module Karafka
           include Helpers::FilteringHelper
           include Helpers::TopicsFilteringHelper
           include Helpers::HealthHelper
+          include Helpers::ClusterHelper
 
           opts[:root] = Karafka::Web.gem_root.join("lib/karafka/web/pro/ui")
 
