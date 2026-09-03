@@ -28,6 +28,8 @@
   <td><%== broker_load_badge(distribution.imbalance) %></td>
   <td><%= distribution.leader_count %></td>
   <td><%= distribution.leader_share %>%</td>
+  <td><%= distribution.follower_count %></td>
   <td><%= distribution.replica_count %></td>
   <td><%= distribution.replica_share %>%</td>
+  <td><%== broker_out_of_sync(distribution.out_of_sync_count) %></td>
 </tr>

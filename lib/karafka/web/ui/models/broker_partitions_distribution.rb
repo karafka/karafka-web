@@ -42,6 +42,9 @@ module Karafka
                 replicas = partitions.count do |partition|
                   Array(partition[:replicas]).include?(broker.id)
                 end
+                in_sync = partitions.count do |partition|
+                  Array(partition[:isrs]).include?(broker.id)
+                end
                 leader_share = percentage(leaderships, total_leaderships)
 
                 new(
@@ -49,8 +52,14 @@ module Karafka
                   broker_name: broker.name,
                   leader_count: leaderships,
                   leader_share: leader_share,
+                  # A leader is always part of its own replica set, so replicas it does not lead are
+                  # the ones it follows
+                  follower_count: replicas - leaderships,
                   replica_count: replicas,
                   replica_share: percentage(replicas, total_replicas),
+                  # Replicas this broker hosts that are not in-sync (a lagging/under-replicated
+                  # replica on this node)
+                  out_of_sync_count: replicas - in_sync,
                   imbalance: imbalance(
                     leader_share, even_leader_share, brokers.size, total_leaderships
                   )

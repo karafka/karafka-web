@@ -43,7 +43,7 @@ module Karafka
             # @param imbalance [Symbol] `:overloaded`, `:underloaded` or `:balanced`
             # @return [String] the row class, or an empty string
             def broker_load_status_row(imbalance)
-              imbalance == :overloaded ? "status-row-warning" : ""
+              (imbalance == :overloaded) ? "status-row-warning" : ""
             end
 
             # Badge labelling a broker's load balance so an over/under-loaded node stands out.
@@ -59,6 +59,15 @@ module Karafka
               else
                 %(<span class="text-muted">&mdash;</span>)
               end
+            end
+
+            # Renders a broker's count of out-of-sync (under-replicated) replicas, drawing attention
+            # with a warning badge when there are any.
+            #
+            # @param count [Integer] number of out-of-sync replicas on the broker
+            # @return [String] the count, badged as a warning when positive
+            def broker_out_of_sync(count)
+              count.positive? ? %(<span class="badge badge-warning">#{count}</span>) : count.to_s
             end
           end
         end

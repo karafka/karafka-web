@@ -55,7 +55,9 @@ module Karafka
               broker_name
               leader_count
               leader_share
+              follower_count
               replica_share
+              out_of_sync_count
             ].freeze
 
             # Each action renders different columns, so we scope the filterable fields per action to

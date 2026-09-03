@@ -13,9 +13,9 @@ describe_current do
       {
         topic_name: "orders",
         partitions: [
-          { leader: 1, replicas: [1, 2] },
-          { leader: 1, replicas: [1, 3] },
-          { leader: 2, replicas: [2, 3] }
+          { leader: 1, replicas: [1, 2], isrs: [1, 2] },
+          { leader: 1, replicas: [1, 3], isrs: [1] },
+          { leader: 2, replicas: [2, 3], isrs: [2, 3] }
         ]
       }
     ]
@@ -64,6 +64,35 @@ describe_current do
       assert_in_delta(33.33, broker1.replica_share)
       assert_in_delta(33.33, broker2.replica_share)
       assert_in_delta(33.33, broker3.replica_share)
+    end
+  end
+
+  describe "#follower_count" do
+    it "expect to count the replicas a broker hosts but does not lead" do
+      # broker1 replicates 2 and leads 2 -> 0 followers; broker2 2/1 -> 1; broker3 2/0 -> 2
+      assert_equal(0, broker1.follower_count)
+      assert_equal(1, broker2.follower_count)
+      assert_equal(2, broker3.follower_count)
+    end
+  end
+
+  describe "#out_of_sync_count" do
+    it "expect to count the broker's replicas that are not in the ISR" do
+      # broker3 replicates p1 (isrs [1]) and p2 (isrs [2,3]) -> out-of-sync on p1 only
+      assert_equal(0, broker1.out_of_sync_count)
+      assert_equal(0, broker2.out_of_sync_count)
+      assert_equal(1, broker3.out_of_sync_count)
+    end
+
+    context "when the ISR data is missing (older metadata)" do
+      let(:topics) do
+        [{ topic_name: "t", partitions: [{ leader: 1, replicas: [1, 2], isrs: nil }] }]
+      end
+
+      it "expect not to crash (treats replicas as out-of-sync)" do
+        assert_equal(1, broker1.out_of_sync_count)
+        assert_equal(1, broker2.out_of_sync_count)
+      end
     end
   end
 

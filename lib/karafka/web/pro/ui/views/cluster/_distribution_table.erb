@@ -33,8 +33,10 @@
         <th>Balance</th>
         <th><%== sort_link('Leader partitions', :leader_count) %></th>
         <th><%== sort_link('Leader share', :leader_share) %></th>
+        <th><%== sort_link('Follower partitions', :follower_count) %></th>
         <th><%== sort_link('Replica partitions', :replica_count) %></th>
         <th><%== sort_link('Replica share', :replica_share) %></th>
+        <th><%== sort_link('Out-of-sync', :out_of_sync_count) %></th>
       </tr>
     </thead>
     <tbody>

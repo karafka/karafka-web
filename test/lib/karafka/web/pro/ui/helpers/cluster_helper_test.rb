@@ -52,4 +52,17 @@ describe_current do
       assert_includes(broker_load_badge(:balanced), "&mdash;")
     end
   end
+
+  describe "#broker_out_of_sync" do
+    it "renders a plain zero when everything is in sync" do
+      assert_equal("0", broker_out_of_sync(0))
+    end
+
+    it "badges a positive count as a warning" do
+      result = broker_out_of_sync(3)
+
+      assert_includes(result, "badge-warning")
+      assert_includes(result, "3")
+    end
+  end
 end

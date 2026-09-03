@@ -287,6 +287,9 @@ describe_current do
       assert_body(breadcrumbs)
       assert_body("Leader partitions")
       assert_body("Replica partitions")
+      # leader/follower + ISR split
+      assert_body("Follower partitions")
+      assert_body("Out-of-sync")
       # the imbalance highlighting column
       assert_body("Balance")
       # single-broker test cluster -> node 127.0.0.1 shows up as a row
