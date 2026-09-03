@@ -374,6 +374,10 @@ describe_current do
         assert_body("message-publish-form")
         assert_body("not valid JSON")
       end
+
+      it "renders the error exactly once" do
+        assert_equal(1, response.body.scan("could not be serialized").count)
+      end
     end
   end
 

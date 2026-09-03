@@ -20,10 +20,6 @@
 
 <% view_title "Publishing a message to #{@topic_id}" %>
 
-<% if @publish_error %>
-  <%== alert_box_error('Message could not be published', @publish_error) %>
-<% end %>
-
 <% alert_box_info('Message Publishing Operation') do %>
   <p>
     You are about to publish a new message to this topic. This operation:
@@ -38,6 +34,12 @@
     <li>With the Raw / binary format, sends the payload exactly as provided</li>
     <li>Cannot be undone</li>
   </ul>
+<% end %>
+
+<% if @publish_error %>
+  <div class="mt-4">
+    <% alert_box_error('Message could not be published', @publish_error) %>
+  </div>
 <% end %>
 
 <%
