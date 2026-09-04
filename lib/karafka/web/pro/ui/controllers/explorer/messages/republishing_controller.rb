@@ -95,8 +95,6 @@ module Karafka
                     )
                   end
 
-                  # Use the `acked` (acks: 1) variant so the delivery report carries the assigned
-                  # offset for the flash, instead of the fire-and-forget reporting producer
                   delivery = ::Karafka::Web.producer.acked.produce_sync(dispatch_message)
 
                   redirect(
