@@ -39,4 +39,14 @@ describe_current do
     assert_equal(topic, delivery.topic)
     assert_equal(payload, wait_for_message(topic, 0, 0).raw_payload)
   end
+
+  it "produces with acks so the delivery report carries a real offset" do
+    # Warm the topic/leader first; the very first produce to a brand-new topic can return an
+    # invalid offset regardless of acks. With acks: 0 every report would be invalid instead.
+    described_class.new(topic: topic, payload: "warmup").call
+
+    delivery = described_class.new(topic: topic, payload: rand.to_s).call
+
+    assert_operator(delivery.offset, :>=, 0)
+  end
 end

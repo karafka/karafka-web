@@ -42,8 +42,10 @@ module Karafka
               end
 
               # @return [Rdkafka::Producer::DeliveryReport] delivery report of the produced message
+              # @note Uses the `acked` (`acks: 1`) producer variant so the report carries the
+              #   assigned offset, unlike the default fire-and-forget reporting producer.
               def call
-                ::Karafka::Web.producer.produce_sync(@message)
+                ::Karafka::Web.producer.acked.produce_sync(@message)
               end
             end
           end
