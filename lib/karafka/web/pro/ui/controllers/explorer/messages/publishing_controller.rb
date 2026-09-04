@@ -40,7 +40,7 @@ module Karafka
                 # Renders a form allowing for publishing a brand new message to a given topic
                 #
                 # @param topic_id [String] topic to which we want to publish a message
-                def publish(topic_id)
+                def new(topic_id)
                   @topic_id = topic_id
 
                   deny! unless visibility_filter.publish?(@topic_id)
@@ -63,10 +63,7 @@ module Karafka
                 # - `raw` - the payload is produced exactly as provided (raw string / binary data).
                 #
                 # @param topic_id [String] topic to which we want to publish a message
-                # @note This action is intentionally **not** named `produce` because that name
-                #   collides with a producing helper mixed into the controller execution wrapper in
-                #   the test suite, which would shadow the action.
-                def dispatch(topic_id)
+                def create(topic_id)
                   @topic_id = topic_id
 
                   deny! unless visibility_filter.publish?(@topic_id)
@@ -94,7 +91,7 @@ module Karafka
                   @publish_errors << invalid_payload_error if payload.nil?
                   @publish_errors << malformed_headers_error if headers.nil?
 
-                  return publish(topic_id) if @publish_errors.any?
+                  return new(topic_id) if @publish_errors.any?
 
                   dispatch_message = { topic: topic_id, payload: payload }
 
