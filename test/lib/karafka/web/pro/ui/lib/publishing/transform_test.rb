@@ -98,6 +98,10 @@ describe_current do
         described_class.payload(data(payload: "text", payload_file: "file", tombstone: true))
       )
     end
+
+    it "falls back to the textarea when the uploaded file is empty" do
+      assert_equal("text", described_class.payload(data(payload: "text", payload_file: "")))
+    end
   end
 
   describe ".headers" do

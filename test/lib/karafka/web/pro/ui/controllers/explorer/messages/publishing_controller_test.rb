@@ -256,5 +256,22 @@ describe_current do
         assert_equal(file_content, published.raw_payload)
       end
     end
+
+    context "when an empty file is uploaded alongside a text payload" do
+      let(:upload) do
+        tempfile = Tempfile.new(%w[payload .bin])
+        tempfile.rewind
+        Rack::Test::UploadedFile.new(tempfile.path, "application/octet-stream", true)
+      end
+
+      before do
+        post "explorer/messages/#{topic}/publish", payload: payload, payload_file: upload
+      end
+
+      it "falls back to the text payload instead of publishing empty bytes" do
+        assert_equal(302, response.status)
+        assert_equal(payload, published.raw_payload)
+      end
+    end
   end
 end

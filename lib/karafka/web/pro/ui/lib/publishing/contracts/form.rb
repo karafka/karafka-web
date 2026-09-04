@@ -61,13 +61,17 @@ module Karafka
                   [[%i[headers], :invalid_format]]
                 end
 
-                # An explicitly requested partition must be an existing partition of the topic
+                # An explicitly requested partition must be an existing partition of the topic. When
+                # the partition count is not supplied we cannot range-check, so we skip rather than
+                # reject.
                 virtual do |data|
                   partition = data[:partition]
+                  partitions_count = data[:partitions_count]
 
                   next if partition.empty?
                   next [[%i[partition], :out_of_range]] unless partition.match?(/\A\d+\z/)
-                  next if partition.to_i < data[:partitions_count].to_i
+                  next if partitions_count.nil?
+                  next if partition.to_i < partitions_count
 
                   [[%i[partition], :out_of_range]]
                 end

@@ -85,6 +85,17 @@ describe_current do
     it { refute(result.success?) }
   end
 
+  context "when a partition is given but the partition count is unknown" do
+    before do
+      params[:partition] = "999"
+      params.delete(:partitions_count)
+    end
+
+    it "skips the range check rather than rejecting" do
+      assert(result.success?)
+    end
+  end
+
   context "when both the headers and the partition are invalid" do
     before do
       params[:headers] = "no-colon"

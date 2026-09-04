@@ -73,6 +73,9 @@ module Karafka
 
                   return nil unless tempfile
 
+                  # Rewind first so repeated normalization (e.g. the error re-render path) reads the
+                  # full content again rather than an empty string from a handle left at EOF.
+                  tempfile.rewind
                   tempfile.read
                 end
               end

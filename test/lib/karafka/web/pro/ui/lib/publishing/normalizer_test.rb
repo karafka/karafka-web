@@ -89,6 +89,12 @@ describe_current do
     it "reads the file bytes into payload_file" do
       assert_equal(file_content, result[:payload_file])
     end
+
+    it "reads the full bytes even when called twice (rewinds the tempfile)" do
+      described_class.call(params)
+
+      assert_equal(file_content, described_class.call(params)[:payload_file])
+    end
   end
 
   context "when the payload_file field is blank (no file selected)" do

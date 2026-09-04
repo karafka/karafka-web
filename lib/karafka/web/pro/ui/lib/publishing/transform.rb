@@ -64,12 +64,16 @@ module Karafka
                 end
 
                 # @param data [Hash] normalized form data
-                # @return [String, nil] payload bytes to produce (uploaded file wins over the
-                #   textarea), or nil for a tombstone (e.g. to delete a key on a compacted topic)
+                # @return [String, nil] payload bytes to produce (a non-empty uploaded file wins
+                #   over the textarea), or nil for a tombstone (e.g. to delete a key on a compacted
+                #   topic)
                 def payload(data)
                   return nil if data[:tombstone]
 
-                  data[:payload_file] || data[:payload]
+                  file = data[:payload_file]
+
+                  # An empty/absent file must not shadow the textarea payload
+                  (file.nil? || file.empty?) ? data[:payload] : file
                 end
 
                 # @param raw [String] raw headers textarea content
