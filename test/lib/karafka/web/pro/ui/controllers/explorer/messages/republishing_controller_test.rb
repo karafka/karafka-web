@@ -103,6 +103,22 @@ describe_current do
         end
       end
 
+      context "when the target partition param is entirely absent" do
+        before do
+          produce(topic, payload)
+          post(
+            "explorer/messages/#{topic}/0/0/republish",
+            target_topic: target_topic,
+            include_source_headers: "off"
+          )
+        end
+
+        it "republishes without crashing, letting the producer pick the partition" do
+          assert_equal(302, response.status)
+          assert_equal(payload, republished.raw_payload)
+        end
+      end
+
       context "when we do not want source headers" do
         let(:include_source_headers) { false }
 
