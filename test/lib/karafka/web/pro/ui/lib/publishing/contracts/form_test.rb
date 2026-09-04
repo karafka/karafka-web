@@ -34,12 +34,11 @@ describe_current do
 
   let(:params) do
     {
-      payload: '{"a":1}',
+      payload: "hello",
       payload_file: nil,
       key: "",
       partition: "",
       headers: "",
-      payload_format: "json",
       partitions_count: 3
     }
   end
@@ -48,26 +47,10 @@ describe_current do
     it { assert(result.success?) }
   end
 
-  context "when the raw format carries non-JSON content" do
-    before do
-      params[:payload_format] = "raw"
-      params[:payload] = "not json at all"
-    end
+  context "when the payload is arbitrary non-JSON text" do
+    before { params[:payload] = "not json at all" }
 
     it { assert(result.success?) }
-  end
-
-  context "when the JSON format carries invalid JSON" do
-    before { params[:payload] = "{ not valid json" }
-
-    it { refute(result.success?) }
-    it { assert(result.errors.key?(:payload)) }
-  end
-
-  context "when the payload_format is neither raw nor json" do
-    before { params[:payload_format] = "xml" }
-
-    it { refute(result.success?) }
   end
 
   context "when a header line is malformed" do
@@ -102,16 +85,16 @@ describe_current do
     it { refute(result.success?) }
   end
 
-  context "when both the payload and the headers are invalid" do
+  context "when both the headers and the partition are invalid" do
     before do
-      params[:payload] = "{ nope"
       params[:headers] = "no-colon"
+      params[:partition] = "999"
     end
 
     it "reports both independently" do
       refute(result.success?)
-      assert(result.errors.key?(:payload))
       assert(result.errors.key?(:headers))
+      assert(result.errors.key?(:partition))
     end
   end
 end

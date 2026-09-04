@@ -46,8 +46,7 @@ module Karafka
                     payload_file: uploaded_bytes(params),
                     key: params.fetch(:key, "").to_s,
                     partition: params.fetch(:partition, "").to_s,
-                    headers: params.fetch(:headers, "").to_s,
-                    payload_format: params.fetch(:payload_format, "json").to_s
+                    headers: params.fetch(:headers, "").to_s
                   }
                 end
 

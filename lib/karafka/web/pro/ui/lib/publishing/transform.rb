@@ -37,10 +37,10 @@ module Karafka
           module Publishing
             # Turns normalized publish form data into the message to produce.
             #
-            # This is the single source of truth for how the raw form input becomes wire bytes:
-            # the file-vs-textarea precedence, the JSON canonicalization and the header parsing all
-            # live here. The form contract reuses the `json?`/`headers?` predicates so validation
-            # and transformation never disagree on what "valid" means.
+            # The payload is produced as raw bytes (an uploaded file wins over the textarea); we do
+            # not serialize it - Kafka producing takes raw bytes and Karafka has no producer-side /
+            # topic serializers to apply. Header parsing lives here too; the form contract reuses
+            # the `headers?` predicate so validation and transformation agree on what "valid" means.
             module Transform
               class << self
                 # Builds the message hash to hand to the producer
@@ -64,14 +64,9 @@ module Karafka
                 end
 
                 # @param data [Hash] normalized form data
-                # @return [String] payload bytes to produce (uploaded file wins over the textarea;
-                #   canonical JSON for the `json` format, otherwise the raw bytes)
+                # @return [String] payload bytes to produce (uploaded file wins over the textarea)
                 def payload(data)
-                  raw = raw_payload(data)
-
-                  return raw unless data[:payload_format] == "json"
-
-                  ::JSON.generate(::JSON.parse(raw))
+                  data[:payload_file] || data[:payload]
                 end
 
                 # @param raw [String] raw headers textarea content
@@ -93,19 +88,6 @@ module Karafka
                   end
                 end
 
-                # @param data [Hash] normalized form data
-                # @return [Boolean] true if the payload is valid for the requested format (always
-                #   true for the raw format, valid-JSON check for the json format)
-                def json?(data)
-                  return true unless data[:payload_format] == "json"
-
-                  ::JSON.parse(raw_payload(data))
-
-                  true
-                rescue ::JSON::ParserError
-                  false
-                end
-
                 # @param raw [String] raw headers textarea content
                 # @return [Boolean] true if every non-blank line is in the `key: value` format
                 def headers?(raw)
@@ -116,14 +98,6 @@ module Karafka
 
                     !value.nil? && !key.strip.empty?
                   end
-                end
-
-                private
-
-                # @param data [Hash] normalized form data
-                # @return [String] the effective raw payload, preferring an uploaded file
-                def raw_payload(data)
-                  data[:payload_file] || data[:payload]
                 end
               end
             end

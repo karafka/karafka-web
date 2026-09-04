@@ -37,9 +37,9 @@ module Karafka
             # Namespace for publishing contracts
             module Contracts
               # Validates the normalized publish form data. Field-format rules cover the simple
-              # values; the virtual rules delegate to {Transform} so validation and transformation
-              # agree on what a valid payload/headers look like. Rules are independent (not gated on
-              # prior errors) so all problems surface in a single submission.
+              # values; the header virtual rule delegates to {Transform} so validation and
+              # transformation agree on what valid headers look like. Rules are independent (not
+              # gated on prior errors) so all problems surface in a single submission.
               class Form < Web::Contracts::Base
                 configure do |config|
                   config.error_messages = YAML.safe_load_file(
@@ -51,16 +51,8 @@ module Karafka
                 required(:key) { |val| val.is_a?(String) }
                 required(:partition) { |val| val.is_a?(String) }
                 required(:headers) { |val| val.is_a?(String) }
-                required(:payload_format) { |val| %w[raw json].include?(val) }
 
                 optional(:payload_file) { |val| val.nil? || val.is_a?(String) }
-
-                # Payload must be valid JSON when the JSON format is selected
-                virtual do |data|
-                  next if Transform.json?(data)
-
-                  [[%i[payload], :invalid_json]]
-                end
 
                 # Every non-blank header line must be in the `key: value` format
                 virtual do |data|

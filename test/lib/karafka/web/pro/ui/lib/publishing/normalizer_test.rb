@@ -35,13 +35,12 @@ describe_current do
   context "when nothing is provided" do
     let(:raw) { {} }
 
-    it "defaults every field, with json as the default format and no file" do
+    it "defaults every field to empty with no file" do
       assert_equal("", result[:payload])
       assert_nil(result[:payload_file])
       assert_equal("", result[:key])
       assert_equal("", result[:partition])
       assert_equal("", result[:headers])
-      assert_equal("json", result[:payload_format])
     end
   end
 
@@ -51,8 +50,7 @@ describe_current do
         "payload" => "hello",
         "key" => "k1",
         "partition" => "2",
-        "headers" => "a: b",
-        "payload_format" => "raw"
+        "headers" => "a: b"
       }
     end
 
@@ -61,15 +59,6 @@ describe_current do
       assert_equal("k1", result[:key])
       assert_equal("2", result[:partition])
       assert_equal("a: b", result[:headers])
-      assert_equal("raw", result[:payload_format])
-    end
-  end
-
-  context "when an invalid payload_format is provided" do
-    let(:raw) { { "payload_format" => "xml" } }
-
-    it "passes it through unchanged (validation is the contract's job)" do
-      assert_equal("xml", result[:payload_format])
     end
   end
 

@@ -46,8 +46,6 @@ module Karafka
 
                 r.on "messages" do
                   publishing = build(Controllers::Explorer::Messages::PublishingController)
-                  republishing = build(Controllers::Explorer::Messages::RepublishingController)
-                  exporting = build(Controllers::Explorer::Messages::ExportingController)
 
                   r.get String, "publish" do |topic_id|
                     publishing.build(topic_id)
@@ -56,6 +54,8 @@ module Karafka
                   r.post String, "publish" do |topic_id|
                     publishing.publish(topic_id)
                   end
+
+                  republishing = build(Controllers::Explorer::Messages::RepublishingController)
 
                   r.get(
                     String, :partition_id, Integer, "forward"
@@ -68,6 +68,8 @@ module Karafka
                   ) do |topic_id, partition_id, offset|
                     republishing.republish(topic_id, partition_id, offset)
                   end
+
+                  exporting = build(Controllers::Explorer::Messages::ExportingController)
 
                   r.get(
                     String, :partition_id, Integer, "download"

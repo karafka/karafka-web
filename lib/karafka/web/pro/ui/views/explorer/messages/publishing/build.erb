@@ -27,12 +27,8 @@
 
   <ul class="list-disc ml-6 mt-2">
     <li>Creates a new message on the selected topic</li>
-    <li>
-      With the JSON format, validates the payload as JSON and sends its canonical (compact) form as
-      the message bytes
-    </li>
-    <li>With the Raw / binary format, sends the payload exactly as provided</li>
-    <li>Does not apply any topic-specific serialization, the payload is produced as bytes</li>
+    <li>Sends the payload exactly as provided, as raw bytes (no serialization is applied)</li>
+    <li>For binary formats (for example Avro), upload the payload as a file</li>
     <li>Cannot be undone</li>
   </ul>
 <% end %>
@@ -70,38 +66,6 @@
         </div>
       </div>
 
-      <div class="flex items-center w-full mb-6">
-        <label class="w-1/4 text-base-content/70">Payload Format:</label>
-        <div class="w-3/4">
-          <div class="flex gap-6">
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="payload_format"
-                value="json"
-                class="radio radio-primary"
-                <%= @publish_form[:payload_format] == 'json' ? 'checked' : '' %>
-              >
-              JSON
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="payload_format"
-                value="raw"
-                class="radio radio-primary"
-                <%= @publish_form[:payload_format] == 'raw' ? 'checked' : '' %>
-              >
-              Raw / binary
-            </label>
-          </div>
-          <div class="text-sm text-base-content/70 mt-1">
-            JSON parses the payload and re-serializes it to its canonical form. Raw sends the
-            payload bytes as-is
-          </div>
-        </div>
-      </div>
-
       <div class="flex items-start w-full mb-6">
         <label class="w-1/4 text-base-content/70 mt-2">Payload:</label>
         <div class="w-3/4">
@@ -113,7 +77,7 @@
             id="payload"
           ><%= @publish_form[:payload] %></textarea>
           <div class="text-sm text-base-content/70 mt-1">
-            The message payload. For the JSON format it must be valid JSON
+            The message payload, produced as raw bytes exactly as provided
           </div>
 
           <div class="mt-3">

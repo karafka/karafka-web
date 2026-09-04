@@ -106,7 +106,7 @@ describe_current do
     end
 
     context "when we publish with only a payload" do
-      before { post "explorer/messages/#{topic}/publish", payload: payload, payload_format: "raw" }
+      before { post "explorer/messages/#{topic}/publish", payload: payload }
 
       it do
         assert_equal(302, response.status)
@@ -116,12 +116,21 @@ describe_current do
       end
     end
 
+    context "when the payload is arbitrary non-JSON text" do
+      let(:payload) { "  not json at all  " }
+
+      before { post "explorer/messages/#{topic}/publish", payload: payload }
+
+      it "produces it verbatim as raw bytes" do
+        assert_equal(302, response.status)
+        assert_equal(payload, published.raw_payload)
+      end
+    end
+
     context "when we publish with a key" do
       let(:key) { "my-key" }
 
-      before do
-        post "explorer/messages/#{topic}/publish", payload: payload, key: key, payload_format: "raw"
-      end
+      before { post "explorer/messages/#{topic}/publish", payload: payload, key: key }
 
       it do
         assert_equal(302, response.status)
@@ -134,14 +143,7 @@ describe_current do
       let(:topic) { create_topic(partitions: 2) }
       let(:published) { wait_for_message(topic, 1, 0) }
 
-      before do
-        post(
-          "explorer/messages/#{topic}/publish",
-          payload: payload,
-          partition: 1,
-          payload_format: "raw"
-        )
-      end
+      before { post "explorer/messages/#{topic}/publish", payload: payload, partition: 1 }
 
       it do
         assert_equal(302, response.status)
@@ -155,7 +157,6 @@ describe_current do
         post(
           "explorer/messages/#{topic}/publish",
           payload: payload,
-          payload_format: "raw",
           # includes a blank line which must be tolerated
           headers: "source: web-ui\nkind: manual\n\n"
         )
@@ -174,7 +175,6 @@ describe_current do
         post(
           "explorer/messages/#{topic}/publish",
           payload: "hello",
-          payload_format: "raw",
           headers: "source: web-ui\nno-colon-line"
         )
       end
@@ -186,50 +186,15 @@ describe_current do
       end
     end
 
-    context "when both the payload and the headers are invalid" do
-      before do
-        post(
-          "explorer/messages/#{topic}/publish",
-          payload: "{ not valid json",
-          payload_format: "json",
-          headers: "no-colon-line"
-        )
-      end
-
-      it "shows both errors together instead of only the first one" do
-        assert_ok
-        assert_body("not valid JSON")
-        assert_body("Each header must be on its own line")
-      end
-    end
-
     context "when the requested partition does not exist on the topic" do
       before do
-        post(
-          "explorer/messages/#{topic}/publish",
-          payload: "hello",
-          payload_format: "raw",
-          partition: 999
-        )
+        post "explorer/messages/#{topic}/publish", payload: "hello", partition: 999
       end
 
       it "re-renders the form with an error instead of producing" do
         assert_ok
         assert_body("message-publish-form")
         assert_body("Selected partition does not exist")
-      end
-    end
-
-    context "when we publish with the raw format explicitly" do
-      let(:payload) { "  not json at all  " }
-
-      before do
-        post "explorer/messages/#{topic}/publish", payload: payload, payload_format: "raw"
-      end
-
-      it "produces the payload exactly as provided" do
-        assert_equal(302, response.status)
-        assert_equal(payload, published.raw_payload)
       end
     end
 
@@ -243,9 +208,7 @@ describe_current do
         Rack::Test::UploadedFile.new(tempfile.path, "application/octet-stream", true)
       end
 
-      before do
-        post "explorer/messages/#{topic}/publish", payload_format: "raw", payload_file: upload
-      end
+      before { post "explorer/messages/#{topic}/publish", payload_file: upload }
 
       it "produces the uploaded file bytes as the payload" do
         assert_equal(302, response.status)
@@ -266,7 +229,6 @@ describe_current do
       before do
         post(
           "explorer/messages/#{topic}/publish",
-          payload_format: "raw",
           payload: "from-text",
           payload_file: upload
         )
@@ -275,41 +237,6 @@ describe_current do
       it "prefers the uploaded file over the text" do
         assert_equal(302, response.status)
         assert_equal(file_content, published.raw_payload)
-      end
-    end
-
-    context "when we publish with the JSON format and valid JSON" do
-      before do
-        post(
-          "explorer/messages/#{topic}/publish",
-          payload: '{ "a" : 1, "b" : [2, 3] }',
-          payload_format: "json"
-        )
-      end
-
-      it "produces the canonical serialization of the parsed JSON" do
-        assert_equal(302, response.status)
-        assert_equal('{"a":1,"b":[2,3]}', published.raw_payload)
-      end
-    end
-
-    context "when we publish with the JSON format but invalid JSON" do
-      before do
-        post(
-          "explorer/messages/#{topic}/publish",
-          payload: "{ not valid json",
-          payload_format: "json"
-        )
-      end
-
-      it "re-renders the form with an error instead of producing" do
-        assert_ok
-        assert_body("message-publish-form")
-        assert_body("not valid JSON")
-      end
-
-      it "renders the error exactly once" do
-        assert_equal(1, response.body.scan("could not be serialized").count)
       end
     end
   end

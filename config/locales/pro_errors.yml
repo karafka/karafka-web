@@ -49,7 +49,5 @@ en:
       partition_format: must be a string
       headers_format: must be a string
       payload_file_format: must be a file
-      payload_format_format: must be either JSON or raw
-      payload_invalid_json: 'Provided payload is not valid JSON and could not be serialized.'
       headers_invalid_format: 'Each header must be on its own line in the `key: value` format.'
       partition_out_of_range: 'Selected partition does not exist for this topic'

@@ -29,29 +29,28 @@
 # Contact: contact@karafka.io
 
 describe_current do
-  # Baseline valid normalized data; individual tests override via merge
+  # Baseline normalized data; individual tests override via merge
   def data(**overrides)
     {
       payload: "",
       payload_file: nil,
       key: "",
       partition: "",
-      headers: "",
-      payload_format: "json"
+      headers: ""
     }.merge(overrides)
   end
 
   describe ".call" do
     it "builds a minimal message with just topic and payload" do
-      message = described_class.call("t", data(payload: '{"a":1}', payload_format: "json"))
+      message = described_class.call("t", data(payload: "hello"))
 
-      assert_equal({ topic: "t", payload: '{"a":1}' }, message)
+      assert_equal({ topic: "t", payload: "hello" }, message)
     end
 
     it "includes key, partition and headers when present" do
       message = described_class.call(
         "t",
-        data(payload: "x", payload_format: "raw", key: "k", partition: "3", headers: "h: v")
+        data(payload: "x", key: "k", partition: "3", headers: "h: v")
       )
 
       assert_equal("t", message[:topic])
@@ -62,7 +61,7 @@ describe_current do
     end
 
     it "omits key/partition/headers when blank" do
-      message = described_class.call("t", data(payload: "x", payload_format: "raw"))
+      message = described_class.call("t", data(payload: "x"))
 
       refute(message.key?(:key))
       refute(message.key?(:partition))
@@ -70,22 +69,21 @@ describe_current do
     end
 
     it "prefers the uploaded file over the textarea payload" do
-      message = described_class.call(
-        "t",
-        data(payload: "from-text", payload_file: "from-file", payload_format: "raw")
-      )
+      message = described_class.call("t", data(payload: "from-text", payload_file: "from-file"))
 
       assert_equal("from-file", message[:payload])
     end
   end
 
   describe ".payload" do
-    it "canonicalizes JSON for the json format" do
-      assert_equal('{"a":1,"b":2}', described_class.payload(data(payload: '{ "a": 1, "b": 2 }')))
+    it "returns the textarea bytes untouched" do
+      assert_equal("  raw bytes  ", described_class.payload(data(payload: "  raw bytes  ")))
     end
 
-    it "returns the raw bytes untouched for the raw format" do
-      assert_equal("  raw  ", described_class.payload(data(payload: "  raw  ", payload_format: "raw")))
+    it "prefers the uploaded file bytes" do
+      content = "binary\x00".b
+
+      assert_equal(content, described_class.payload(data(payload: "text", payload_file: content)))
     end
   end
 
@@ -95,14 +93,6 @@ describe_current do
         { "a" => "b", "c" => "d" },
         described_class.headers("a: b\n\nc: d\n")
       )
-    end
-  end
-
-  describe ".json?" do
-    it { assert(described_class.json?(data(payload: '{"a":1}', payload_format: "json"))) }
-    it { refute(described_class.json?(data(payload: "{ not json", payload_format: "json"))) }
-    it "is always true for the raw format" do
-      assert(described_class.json?(data(payload: "not json", payload_format: "raw")))
     end
   end
 
