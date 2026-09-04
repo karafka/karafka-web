@@ -50,11 +50,11 @@ module Karafka
                   exporting = build(Controllers::Explorer::Messages::ExportingController)
 
                   r.get String, "publish" do |topic_id|
-                    publishing.new(topic_id)
+                    publishing.build(topic_id)
                   end
 
                   r.post String, "publish" do |topic_id|
-                    publishing.create(topic_id)
+                    publishing.publish(topic_id)
                   end
 
                   r.get(

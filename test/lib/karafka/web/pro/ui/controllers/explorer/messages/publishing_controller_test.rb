@@ -33,7 +33,7 @@ describe_current do
 
   let(:topic) { create_topic }
 
-  describe "#new" do
+  describe "#build" do
     context "when the topic does not exist" do
       before { get "explorer/messages/non-existing/publish" }
 
@@ -79,7 +79,7 @@ describe_current do
     end
   end
 
-  describe "#create" do
+  describe "#publish" do
     let(:payload) { rand.to_s }
     let(:published) { wait_for_message(topic, 0, 0) }
 
