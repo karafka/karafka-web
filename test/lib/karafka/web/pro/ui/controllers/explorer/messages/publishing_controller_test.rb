@@ -203,6 +203,23 @@ describe_current do
       end
     end
 
+    context "when the requested partition does not exist on the topic" do
+      before do
+        post(
+          "explorer/messages/#{topic}/publish",
+          payload: "hello",
+          payload_format: "raw",
+          partition: 999
+        )
+      end
+
+      it "re-renders the form with an error instead of producing" do
+        assert_ok
+        assert_body("message-publish-form")
+        assert_body("Selected partition does not exist")
+      end
+    end
+
     context "when we publish with the raw format explicitly" do
       let(:payload) { "  not json at all  " }
 

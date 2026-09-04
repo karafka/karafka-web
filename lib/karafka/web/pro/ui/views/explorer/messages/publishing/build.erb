@@ -37,12 +37,12 @@
   </ul>
 <% end %>
 
-<% if @publish_errors && !@publish_errors.empty? %>
+<% if @errors && !@errors.empty? %>
   <div class="mt-4">
     <% alert_box_error('Message could not be published') do %>
       <ul class="list-disc ml-6">
-        <% @publish_errors.each do |publish_error| %>
-          <li><%= publish_error %></li>
+        <% @errors.each_value do |message| %>
+          <li><%= message %></li>
         <% end %>
       </ul>
     <% end %>
@@ -80,7 +80,7 @@
                 name="payload_format"
                 value="json"
                 class="radio radio-primary"
-                <%= @payload_format == 'json' ? 'checked' : '' %>
+                <%= @publish_form[:payload_format] == 'json' ? 'checked' : '' %>
               >
               JSON
             </label>
@@ -90,7 +90,7 @@
                 name="payload_format"
                 value="raw"
                 class="radio radio-primary"
-                <%= @payload_format == 'raw' ? 'checked' : '' %>
+                <%= @publish_form[:payload_format] == 'raw' ? 'checked' : '' %>
               >
               Raw / binary
             </label>
@@ -111,7 +111,7 @@
             rows="8"
             placeholder="Message payload"
             id="payload"
-          ><%= @payload %></textarea>
+          ><%= @publish_form[:payload] %></textarea>
           <div class="text-sm text-base-content/70 mt-1">
             The message payload. For the JSON format it must be valid JSON
           </div>
@@ -140,7 +140,7 @@
             class="block input input-bordered w-full"
             placeholder="Leave empty for no key"
             id="key"
-            value="<%= @key %>"
+            value="<%= @publish_form[:key] %>"
             autocomplete="off"
           >
           <div class="text-sm text-base-content/70 mt-1">
@@ -153,13 +153,13 @@
         <label class="w-1/4 text-base-content/70">Partition:</label>
         <div class="w-3/4">
           <select name="partition" class="select select-bordered w-full" id="partition">
-            <option value="" <%= @partition.empty? ? 'selected' : '' %>>
+            <option value="" <%= @publish_form[:partition].empty? ? 'selected' : '' %>>
               Automatic (based on key or round-robin)
             </option>
             <% @partitions_count.times do |partition_id| %>
               <option
                 value="<%= partition_id %>"
-                <%= @partition == partition_id.to_s ? 'selected' : '' %>
+                <%= @publish_form[:partition] == partition_id.to_s ? 'selected' : '' %>
               >
                 <%= partition_id %>
               </option>
@@ -181,7 +181,7 @@
             rows="4"
             placeholder="key: value"
             id="headers"
-          ><%= @headers %></textarea>
+          ><%= @publish_form[:headers] %></textarea>
           <div class="text-sm text-base-content/70 mt-1">
             Optional. One header per line, written as <code>key: value</code>. Lines that are not in
             that format will prevent publishing
@@ -192,9 +192,9 @@
       <%
         # Return to where the user most likely came from: the specific partition view when a
         # partition was prefilled, otherwise the topic view
-        cancel_path = @partition.empty? ?
+        cancel_path = @publish_form[:partition].empty? ?
           explorer_topics_path(@topic_id) :
-          explorer_topics_path(@topic_id, @partition)
+          explorer_topics_path(@topic_id, @publish_form[:partition])
       %>
 
       <div class="fieldset text-center mt-6">
