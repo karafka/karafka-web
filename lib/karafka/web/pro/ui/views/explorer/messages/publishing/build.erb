@@ -96,6 +96,29 @@
       </div>
 
       <div class="flex items-center w-full mb-6">
+        <label class="w-1/4 text-base-content/70">Tombstone:</label>
+        <div class="w-3/4">
+          <label class="flex items-center gap-4 cursor-pointer">
+            <input type="hidden" name="tombstone" value="off">
+            <input
+              type="checkbox"
+              name="tombstone"
+              value="on"
+              class="checkbox checkbox-primary"
+              <%= @publish_form[:tombstone] ? 'checked' : '' %>
+            >
+            <div class="space-y-1">
+              <div>Publish a tombstone (null payload)</div>
+              <div class="text-sm text-base-content/70">
+                Produces a message with a null payload, for example to delete a key on a compacted
+                topic. The payload above is ignored
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="flex items-center w-full mb-6">
         <label class="w-1/4 text-base-content/70">Key:</label>
         <div class="w-3/4">
           <input

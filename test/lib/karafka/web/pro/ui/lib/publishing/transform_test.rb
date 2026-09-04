@@ -34,6 +34,7 @@ describe_current do
     {
       payload: "",
       payload_file: nil,
+      tombstone: false,
       key: "",
       partition: "",
       headers: ""
@@ -73,6 +74,12 @@ describe_current do
 
       assert_equal("from-file", message[:payload])
     end
+
+    it "builds a null payload for a tombstone" do
+      message = described_class.call("t", data(payload: "ignored", tombstone: true))
+
+      assert_nil(message[:payload])
+    end
   end
 
   describe ".payload" do
@@ -84,6 +91,12 @@ describe_current do
       content = "binary\x00".b
 
       assert_equal(content, described_class.payload(data(payload: "text", payload_file: content)))
+    end
+
+    it "is nil for a tombstone, ignoring the payload and file" do
+      assert_nil(
+        described_class.payload(data(payload: "text", payload_file: "file", tombstone: true))
+      )
     end
   end
 

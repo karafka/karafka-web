@@ -64,8 +64,11 @@ module Karafka
                 end
 
                 # @param data [Hash] normalized form data
-                # @return [String] payload bytes to produce (uploaded file wins over the textarea)
+                # @return [String, nil] payload bytes to produce (uploaded file wins over the
+                #   textarea), or nil for a tombstone (e.g. to delete a key on a compacted topic)
                 def payload(data)
+                  return nil if data[:tombstone]
+
                   data[:payload_file] || data[:payload]
                 end
 

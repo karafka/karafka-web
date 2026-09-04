@@ -35,13 +35,26 @@ describe_current do
   context "when nothing is provided" do
     let(:raw) { {} }
 
-    it "defaults every field to empty with no file" do
+    it "defaults every field to empty with no file and no tombstone" do
       assert_equal("", result[:payload])
       assert_nil(result[:payload_file])
       assert_equal("", result[:key])
       assert_equal("", result[:partition])
       assert_equal("", result[:headers])
+      refute(result[:tombstone])
     end
+  end
+
+  context "when the tombstone checkbox is on" do
+    let(:raw) { { "tombstone" => "on" } }
+
+    it { assert(result[:tombstone]) }
+  end
+
+  context "when the tombstone checkbox is off" do
+    let(:raw) { { "tombstone" => "off" } }
+
+    it { refute(result[:tombstone]) }
   end
 
   context "when the fields are provided" do

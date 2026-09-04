@@ -44,6 +44,7 @@ module Karafka
                   {
                     payload: params.fetch(:payload, "").to_s,
                     payload_file: uploaded_bytes(params),
+                    tombstone: truthy?(params.fetch(:tombstone, "")),
                     key: params.fetch(:key, "").to_s,
                     partition: params.fetch(:partition, "").to_s,
                     headers: params.fetch(:headers, "").to_s
@@ -51,6 +52,15 @@ module Karafka
                 end
 
                 private
+
+                # `params.bool` raises on missing keys, but the field is absent on the initial form
+                # render, so we default it and check the truthy values ourselves.
+                #
+                # @param value [Object] raw param value
+                # @return [Boolean]
+                def truthy?(value)
+                  %w[on yes true].include?(value.to_s)
+                end
 
                 # @param params [Karafka::Web::Ui::Controllers::Requests::Params] request params
                 # @return [String, nil] uploaded file bytes or nil when no file was uploaded

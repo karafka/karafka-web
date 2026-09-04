@@ -127,6 +127,23 @@ describe_current do
       end
     end
 
+    context "when we publish a tombstone" do
+      before do
+        post(
+          "explorer/messages/#{topic}/publish",
+          payload: "ignored",
+          tombstone: "on",
+          key: "some-key"
+        )
+      end
+
+      it "produces a null payload, ignoring the entered payload" do
+        assert_equal(302, response.status)
+        assert_nil(published.raw_payload)
+        assert_equal("some-key", published.key)
+      end
+    end
+
     context "when we publish with a key" do
       let(:key) { "my-key" }
 

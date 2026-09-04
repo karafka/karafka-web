@@ -49,4 +49,30 @@ describe_current do
 
     assert_operator(delivery.offset, :>=, 0)
   end
+
+  describe "producer resolution" do
+    let(:built_message) { { topic: "t", payload: "p" } }
+
+    it "publishes through the acked variant when the web producer provides one" do
+      acked = stub
+      web_producer = stub
+      web_producer.stubs(:respond_to?).with(:acked).returns(true)
+      web_producer.stubs(:acked).returns(acked)
+      Karafka::Web.stubs(:producer).returns(web_producer)
+
+      acked.expects(:produce_sync).with(built_message).returns(:report)
+
+      assert_equal(:report, described_class.new(built_message).call)
+    end
+
+    it "falls back to the configured producer when it has no acked variant" do
+      web_producer = stub
+      web_producer.stubs(:respond_to?).with(:acked).returns(false)
+      Karafka::Web.stubs(:producer).returns(web_producer)
+
+      web_producer.expects(:produce_sync).with(built_message).returns(:report)
+
+      assert_equal(:report, described_class.new(built_message).call)
+    end
+  end
 end

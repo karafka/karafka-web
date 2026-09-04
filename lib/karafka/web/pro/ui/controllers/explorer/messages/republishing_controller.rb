@@ -95,7 +95,7 @@ module Karafka
                     )
                   end
 
-                  delivery = ::Karafka::Web.producer.acked.produce_sync(dispatch_message)
+                  delivery = Lib::Publishing::Dispatcher.new(dispatch_message).call
 
                   redirect(
                     :previous,
