@@ -80,9 +80,22 @@ module Karafka
                   # Re-render the form (preserving the entered values) with all errors at once
                   return build(topic_id) unless @errors.empty?
 
-                  delivery = Lib::Publishing::Dispatcher.new(
-                    Lib::Publishing::Transform.call(topic_id, @publish_form)
-                  ).call
+                  message = Lib::Publishing::Transform.call(topic_id, @publish_form)
+
+                  # Best-effort check that the payload is consumable by the topic's deserializer
+                  # (when it is routed). The user can opt out to publish an intentionally
+                  # non-conforming message, e.g. to exercise a consumer's error handling.
+                  unless @publish_form[:skip_validation]
+                    consistency_error = Lib::Publishing::Consistency.call(message)
+
+                    if consistency_error
+                      @errors = { payload: consistency_error }
+
+                      return build(topic_id)
+                    end
+                  end
+
+                  delivery = Lib::Publishing::Dispatcher.new(message).call
 
                   # Land back on the topic we just published to so the user can see their message,
                   # regardless of where they navigated from

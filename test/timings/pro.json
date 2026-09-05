@@ -46,6 +46,7 @@
   "test/lib/karafka/web/pro/commanding/handlers/partitions/listener_test.rb": 0.071,
   "test/lib/karafka/web/pro/ui/lib/policies/messages_test.rb": 0.059,
   "test/lib/karafka/web/pro/ui/lib/publishing/dispatcher_test.rb": 4.0,
+  "test/lib/karafka/web/pro/ui/lib/publishing/consistency_test.rb": 0.1,
   "test/lib/karafka/web/pro/ui/lib/publishing/transform_test.rb": 0.1,
   "test/lib/karafka/web/pro/ui/lib/publishing/normalizer_test.rb": 0.1,
   "test/lib/karafka/web/pro/ui/lib/publishing/contracts/form_test.rb": 0.1,

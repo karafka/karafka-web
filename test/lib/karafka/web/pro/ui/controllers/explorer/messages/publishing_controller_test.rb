@@ -215,6 +215,53 @@ describe_current do
       end
     end
 
+    context "when the topic is routed and the payload matches its deserializer" do
+      before do
+        topic_name = topic
+        draw_routes { topic(topic_name) { consumer Karafka::BaseConsumer } }
+
+        post "explorer/messages/#{topic}/publish", payload: '{"a":1}'
+      end
+
+      it "publishes it" do
+        assert_equal(302, response.status)
+        assert_equal('{"a":1}', published.raw_payload)
+      end
+    end
+
+    context "when the topic is routed and the payload does not match its deserializer" do
+      before do
+        topic_name = topic
+        draw_routes { topic(topic_name) { consumer Karafka::BaseConsumer } }
+
+        post "explorer/messages/#{topic}/publish", payload: "{ not valid json"
+      end
+
+      it "re-renders with a consistency error instead of producing" do
+        assert_ok
+        assert_body("message-publish-form")
+        assert_body("does not match what the topic")
+      end
+    end
+
+    context "when payload validation is skipped for a non-conforming payload" do
+      before do
+        topic_name = topic
+        draw_routes { topic(topic_name) { consumer Karafka::BaseConsumer } }
+
+        post(
+          "explorer/messages/#{topic}/publish",
+          payload: "{ not valid json",
+          skip_validation: "on"
+        )
+      end
+
+      it "publishes it anyway" do
+        assert_equal(302, response.status)
+        assert_equal("{ not valid json", published.raw_payload)
+      end
+    end
+
     context "when we publish an uploaded file as the payload" do
       let(:file_content) { "binary\x00payload-#{rand}".b }
       let(:upload) do

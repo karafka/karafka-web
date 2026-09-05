@@ -42,7 +42,14 @@ describe_current do
       assert_equal("", result[:partition])
       assert_equal("", result[:headers])
       refute(result[:tombstone])
+      refute(result[:skip_validation])
     end
+  end
+
+  context "when the skip_validation checkbox is on" do
+    let(:raw) { { "skip_validation" => "on" } }
+
+    it { assert(result[:skip_validation]) }
   end
 
   context "when the tombstone checkbox is on" do

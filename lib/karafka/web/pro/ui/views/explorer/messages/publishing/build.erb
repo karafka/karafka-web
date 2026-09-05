@@ -176,6 +176,30 @@
         </div>
       </div>
 
+      <div class="flex items-center w-full mb-6">
+        <label class="w-1/4 text-base-content/70">Validation:</label>
+        <div class="w-3/4">
+          <label class="flex items-center gap-4 cursor-pointer">
+            <input type="hidden" name="skip_validation" value="off">
+            <input
+              type="checkbox"
+              name="skip_validation"
+              value="on"
+              class="checkbox checkbox-primary"
+              <%= @publish_form[:skip_validation] ? 'checked' : '' %>
+            >
+            <div class="space-y-1">
+              <div>Skip payload validation</div>
+              <div class="text-sm text-base-content/70">
+                By default, when the topic is in the routing, the payload is checked against its
+                deserializer. Check this to publish a payload the deserializer cannot read, for
+                example to test a consumer's error handling
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
       <%
         # Return to where the user most likely came from: the specific partition view when a
         # partition was prefilled, otherwise the topic view

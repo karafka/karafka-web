@@ -45,6 +45,7 @@ module Karafka
                     payload: params.fetch(:payload, "").to_s,
                     payload_file: uploaded_bytes(params),
                     tombstone: truthy?(params.fetch(:tombstone, "")),
+                    skip_validation: truthy?(params.fetch(:skip_validation, "")),
                     key: params.fetch(:key, "").to_s,
                     partition: params.fetch(:partition, "").to_s,
                     headers: params.fetch(:headers, "").to_s
