@@ -29,63 +29,45 @@
 # Contact: contact@karafka.io
 
 describe_current do
-  let(:policy) { described_class.new }
-
-  describe "#key?" do
-    it { assert(policy.key?("irrelevant")) }
+  def built_message(overrides = {})
+    { topic: "t", payload: "hello" }.merge(overrides)
   end
 
-  describe "#headers?" do
-    it { assert(policy.headers?("irrelevant")) }
-  end
+  context "when the topic is not in the routing" do
+    before { ::Karafka::Routing::Router.stubs(:find_by).with(name: "t").returns(nil) }
 
-  describe "#payload?" do
-    context "when encryption is off" do
-      let(:msg) { Struct.new(:headers).new({}) }
-
-      it { assert(policy.payload?(msg)) }
-    end
-
-    context "when encryption is on" do
-      let(:msg) { Struct.new(:headers).new({ "encryption" => true }) }
-
-      it { refute(policy.payload?(msg)) }
+    it "skips validation" do
+      assert_nil(described_class.call(built_message(payload: "{ not json")))
     end
   end
 
-  describe "#download?" do
-    context "when encryption is off" do
-      let(:msg) { Struct.new(:headers).new({}) }
-
-      it { assert(policy.download?(msg)) }
+  context "when the topic is routed with a JSON deserializer" do
+    let(:topic) do
+      stub(deserializers?: true, deserializers: stub(payload: Karafka::Deserializers::Payload.new))
     end
 
-    context "when encryption is on" do
-      let(:msg) { Struct.new(:headers).new({ "encryption" => true }) }
+    before { ::Karafka::Routing::Router.stubs(:find_by).with(name: "t").returns(topic) }
 
-      it { refute(policy.download?(msg)) }
-    end
-  end
-
-  describe "#export?" do
-    context "when encryption is off" do
-      let(:msg) { Struct.new(:headers).new({}) }
-
-      it { assert(policy.export?(msg)) }
+    it "returns nil for a payload the deserializer can read" do
+      assert_nil(described_class.call(built_message(payload: '{"a":1}')))
     end
 
-    context "when encryption is on" do
-      let(:msg) { Struct.new(:headers).new({ "encryption" => true }) }
+    it "returns an error for a payload the deserializer cannot read" do
+      refute_nil(described_class.call(built_message(payload: "{ not json")))
+    end
 
-      it { refute(policy.export?(msg)) }
+    it "skips a tombstone (nil payload)" do
+      assert_nil(described_class.call(built_message(payload: nil)))
     end
   end
 
-  describe "#republish?" do
-    it { assert(policy.republish?(nil)) }
-  end
+  context "when the routed topic has no active deserializer" do
+    let(:topic) { stub(deserializers?: false) }
 
-  describe "#publish?" do
-    it { assert(policy.publish?("some-topic")) }
+    before { ::Karafka::Routing::Router.stubs(:find_by).with(name: "t").returns(topic) }
+
+    it "skips validation" do
+      assert_nil(described_class.call(built_message(payload: "{ not json")))
+    end
   end
 end

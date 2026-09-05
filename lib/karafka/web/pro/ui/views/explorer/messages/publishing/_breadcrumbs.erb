@@ -18,40 +18,20 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<div class="grid grid-cols-12">
-  <div class="col-span-4">
-    <section class="actions">
-      <a
-        href="<%= explorer_messages_path(@topic_id, 'publish') %>"
-        class="btn-action"
-        title="Publish a new message to this topic"
-      >
-        <%== icon(:plus) %>
-      </a>
+<li>
+  <a href="<%= explorer_path %>">
+    Explorer
+  </a>
+</li>
 
-      <% if @messages && !@messages.empty? %>
-        <a
-          href="<%= explorer_topics_path(@topic_id, 'recent') %>"
-          class="btn-action"
-          title="Display the most recent message for this topic with auto-refresh"
-        >
-          <%== icon(:play_circle) %>
-        </a>
+<li>
+  <a href="<%= explorer_topics_path(@topic_id) %>">
+    <%= @topic_id %>
+  </a>
+</li>
 
-        <a
-          href="<%= explorer_path(@topic_id, 'search') %>"
-          class="btn-action"
-          title="Search in this topic"
-        >
-          <%== icon(:magnifying_glass) %>
-        </a>
-      <% end %>
-    </section>
-  </div>
-
-  <div class="col-span-8 mb-3">
-    <section class="actions">
-      <%== partial 'explorer/explorer/selector' %>
-    </section>
-  </div>
-</div>
+<li>
+  <a href="<%= explorer_messages_path(@topic_id, 'publish') %>">
+    Publish
+  </a>
+</li>
