@@ -32,7 +32,11 @@ class LinksValidator
     "StatusController" => [/.*/],
     # Also deals with invalid state that affects dashboard
     "RoutingController" => [%r{/dashboard}, %r{/jobs}, %r{/health}],
-    "ClusterController" => [%r{/explorer}],
+    # The distribution specs stub the whole cluster metadata with fabricated brokers and topics.
+    # Those topic names do not exist in the test cluster, so their per-topic pages (reached from
+    # the topics listing) 404. The stub is still active here because link validation runs before
+    # the stub cleanup.
+    "ClusterController" => [%r{/explorer}, %r{/topics}],
     # Replication rows render broker-id badges that link to per-broker detail pages. In specs
     # the topic metadata is stubbed with hypothetical multi-broker replica sets, so brokers
     # other than node 1 do not exist in the single-node test cluster. We still validate the

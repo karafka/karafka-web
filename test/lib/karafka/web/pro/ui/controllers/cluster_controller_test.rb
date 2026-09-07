@@ -39,7 +39,14 @@ describe_current do
   # bare `def` would define a class method rather than an instance one.
   let(:stub_cluster) do
     lambda do |brokers:, topics:|
-      double = Struct.new(:brokers, :topics).new(brokers, topics)
+      # Real topic metadata always carries `partition_count` next to `partitions`, and the stub
+      # stays active while the links validator crawls other pages (it runs before the stub
+      # cleanup). Pages like `/topics` render `partition_count`, so omitting it makes them 500.
+      normalized = topics.map do |topic|
+        { partition_count: topic[:partitions].size }.merge(topic)
+      end
+
+      double = Struct.new(:brokers, :topics).new(brokers, normalized)
       Karafka::Web::Ui::Models::ClusterInfo.stubs(:fetch).returns(double)
     end
   end
