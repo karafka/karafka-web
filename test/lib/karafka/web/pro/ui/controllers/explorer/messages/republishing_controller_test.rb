@@ -112,8 +112,7 @@ describe_current do
 
         it do
           assert_equal(302, response.status)
-          # Taken from referer and referer is nil in specs
-          assert_equal("/", response.location)
+          assert_equal("/explorer/topics/#{target_topic}/0", response.location)
           assert_equal(payload, republished.raw_payload)
           assert_includes(republished.headers.keys, "source_topic")
           assert_includes(republished.headers.keys, "source_partition")
@@ -147,7 +146,7 @@ describe_current do
 
         it do
           assert_equal(302, response.status)
-          assert_equal("/", response.location)
+          assert_equal("/explorer/topics/#{target_topic}/0", response.location)
           assert_equal(payload, republished.raw_payload)
           refute_includes(republished.headers.keys, "source_topic")
           refute_includes(republished.headers.keys, "source_partition")
@@ -167,7 +166,7 @@ describe_current do
 
         it do
           assert_equal(302, response.status)
-          assert_equal("/", response.location)
+          assert_equal("/explorer/topics/#{target_topic}/1", response.location)
           assert_equal(payload, republished.raw_payload)
           assert_includes(republished.headers.keys, "source_topic")
           assert_includes(republished.headers.keys, "source_partition")
