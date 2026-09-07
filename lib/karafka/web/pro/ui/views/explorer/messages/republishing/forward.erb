@@ -34,6 +34,18 @@
   </ul>
 <% end %>
 
+<% if @errors && !@errors.empty? %>
+  <div class="mt-4">
+    <% alert_box_error('Message could not be republished') do %>
+      <ul class="list-disc ml-6">
+        <% @errors.each_value do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+<% end %>
+
 <%
   republish_path = root_path(
     'explorer',
@@ -93,7 +105,7 @@
               <option
                 value="<%= topic.topic_name %>"
                 data-partitions="<%= topic.partition_count %>"
-                <%= topic.topic_name == @target_topic ? 'selected' : '' %>
+                <%= topic.topic_name == @republish_form[:target_topic] ? 'selected' : '' %>
               >
                 <%= topic.topic_name %> (<%= topic.partition_count %>)
               </option>
@@ -116,7 +128,7 @@
             min="0"
             max="10000"
             id="target_partition"
-            value="<%= @target_partition %>"
+            value="<%= @republish_form[:target_partition] %>"
             autocomplete="on"
           >
           <div class="text-sm text-base-content/70 mt-1">
@@ -125,18 +137,46 @@
         </div>
       </div>
 
-      <div class="flex items-center w-full">
+      <div class="flex items-center w-full mb-6">
         <label class="w-1/4 text-base-content/70">Delivery Options:</label>
         <div class="w-3/4">
           <label class="flex items-center gap-4 cursor-pointer">
             <input type="hidden" name="include_source_headers" value="off">
-            <input type="checkbox" name="include_source_headers" class="checkbox checkbox-primary" checked>
+            <input
+              type="checkbox"
+              name="include_source_headers"
+              class="checkbox checkbox-primary"
+              <%= @republish_form[:include_source_headers] ? 'checked' : '' %>
+            >
             <div class="space-y-1">
               <div class="flex items-center gap-2">
                 Include source message headers
               </div>
               <div class="text-sm text-base-content/70">
                 Add origin headers with source topic, partition, and offset information for traceability
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="flex items-center w-full">
+        <label class="w-1/4 text-base-content/70">Validation:</label>
+        <div class="w-3/4">
+          <label class="flex items-center gap-4 cursor-pointer">
+            <input type="hidden" name="skip_validation" value="off">
+            <input
+              type="checkbox"
+              name="skip_validation"
+              value="on"
+              class="checkbox checkbox-primary"
+              <%= @republish_form[:skip_validation] ? 'checked' : '' %>
+            >
+            <div class="space-y-1">
+              <div>Skip payload validation</div>
+              <div class="text-sm text-base-content/70">
+                When the target topic is in the routing, the payload is checked against its
+                deserializer. Check this to republish a payload the deserializer cannot read
               </div>
             </div>
           </label>

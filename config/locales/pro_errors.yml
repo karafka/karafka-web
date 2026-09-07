@@ -51,3 +51,9 @@ en:
       payload_file_format: must be a file
       headers_invalid_format: 'Each header must be on its own line in the `key: value` format.'
       partition_out_of_range: 'Selected partition does not exist for this topic'
+    republishing_form:
+      missing: needs to be present
+      target_topic_format: must be a non-empty string
+      target_topic_unknown: 'Target topic does not exist'
+      target_partition_format: must be a string
+      target_partition_out_of_range: 'Selected partition does not exist for the target topic'

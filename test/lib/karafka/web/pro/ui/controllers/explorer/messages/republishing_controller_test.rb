@@ -175,6 +175,111 @@ describe_current do
       end
     end
 
+    context "when the target topic is blank" do
+      let(:payload) { rand.to_s }
+
+      before do
+        produce(topic, payload)
+        post(
+          "explorer/messages/#{topic}/0/0/republish",
+          target_topic: "",
+          include_source_headers: "off"
+        )
+      end
+
+      it "re-renders the form with an error instead of producing" do
+        assert_ok
+        assert_body("message-republish-form")
+        assert_body("non-empty string")
+      end
+    end
+
+    context "when the target topic does not exist" do
+      let(:payload) { rand.to_s }
+
+      before do
+        produce(topic, payload)
+        post(
+          "explorer/messages/#{topic}/0/0/republish",
+          target_topic: "non-existing-target",
+          include_source_headers: "off"
+        )
+      end
+
+      it "re-renders the form with an error instead of producing" do
+        assert_ok
+        assert_body("message-republish-form")
+        assert_body("Target topic does not exist")
+      end
+    end
+
+    context "when the target partition is out of range" do
+      let(:payload) { rand.to_s }
+
+      before do
+        produce(topic, payload)
+        post(
+          "explorer/messages/#{topic}/0/0/republish",
+          target_topic: target_topic,
+          target_partition: 999,
+          include_source_headers: "off"
+        )
+      end
+
+      it "re-renders the form with an error instead of producing" do
+        assert_ok
+        assert_body("message-republish-form")
+        assert_body("does not exist for the target topic")
+      end
+    end
+
+    context "when the target topic is routed and the payload is not consumable" do
+      let(:payload) { "{ not valid json" }
+      let(:target_topic) { create_topic }
+
+      before do
+        target_name = target_topic
+        draw_routes { topic(target_name) { consumer Karafka::BaseConsumer } }
+
+        produce(topic, payload)
+        post(
+          "explorer/messages/#{topic}/0/0/republish",
+          target_topic: target_topic,
+          include_source_headers: "off"
+        )
+      end
+
+      it "re-renders the form with a consistency error instead of producing" do
+        assert_ok
+        assert_body("message-republish-form")
+        assert_body("does not match what the topic")
+      end
+    end
+
+    context "when validation is skipped for a non-consumable payload on a routed target" do
+      let(:payload) { "{ not valid json" }
+      let(:target_topic) { create_topic }
+      let(:republished) { wait_for_message(target_topic, 0, 0) }
+
+      before do
+        target_name = target_topic
+        draw_routes { topic(target_name) { consumer Karafka::BaseConsumer } }
+
+        produce(topic, payload)
+        post(
+          "explorer/messages/#{topic}/0/0/republish",
+          target_topic: target_topic,
+          include_source_headers: "off",
+          skip_validation: "on"
+        )
+      end
+
+      it "republishes anyway" do
+        assert_equal(302, response.status)
+        assert_equal(payload, republished.raw_payload)
+      end
+    end
+
     context "when message exists but republishing is off" do
       let(:payload) { rand.to_s }
 

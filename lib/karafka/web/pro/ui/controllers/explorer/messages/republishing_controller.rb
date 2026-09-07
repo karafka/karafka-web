@@ -35,24 +35,18 @@ module Karafka
         module Controllers
           module Explorer
             module Messages
-              # Republishes existing messages to the same or a different topic
+              # Republishes existing messages to the same or a different topic.
+              #
+              # The form parsing, validation and transformation live in {Lib::Republishing}; this
+              # controller only orchestrates them and handles the HTTP concerns.
               class RepublishingController < BaseController
-                # Renders a form allowing for piping a message to a different topic
+                # Renders the form allowing for piping a message to a different topic
                 #
                 # @param topic_id [String]
                 # @param partition_id [Integer]
                 # @param offset [Integer] offset of the message we want to republish
                 def forward(topic_id, partition_id, offset)
-                  @message = Models::Message.find(topic_id, partition_id, offset)
-
-                  deny! unless visibility_filter.republish?(@message)
-
-                  @topic_id = topic_id
-                  @partition_id = partition_id
-                  @offset = offset
-
-                  @target_topic = @topic_id
-                  @target_partition = @partition_id
+                  load_source_message(topic_id, partition_id, offset)
 
                   @topics = Models::ClusterInfo
                     .topics
@@ -62,40 +56,44 @@ module Karafka
                     @topics.reject! { |topic| topic[:topic_name].start_with?("__") }
                   end
 
+                  # Default (initial) form state; on a failed submission `#republish` has already
+                  # populated `@republish_form`/`@errors`, which the `||=` preserves.
+                  @republish_form ||= {
+                    target_topic: @topic_id,
+                    target_partition: @partition_id.to_s,
+                    include_source_headers: true,
+                    skip_validation: false
+                  }
+                  @errors ||= {}
+
                   render
                 end
 
-                # Takes a requested message content and republishes it again
+                # Republishes the requested message to the target topic
                 #
                 # @param topic_id [String]
                 # @param partition_id [Integer]
                 # @param offset [Integer] offset of the message we want to republish
                 def republish(topic_id, partition_id, offset)
-                  forward(topic_id, partition_id, offset)
+                  @republish_form = Lib::Republishing::Normalizer.call(params)
 
-                  dispatch_message = {
-                    topic: params.str(:target_topic),
-                    payload: @message.raw_payload,
-                    headers: @message.headers.dup,
-                    key: @message.key
-                  }
+                  load_source_message(topic_id, partition_id, offset)
 
-                  # Add target partition only if it was requested, otherwise it will use either the
-                  # message key (if present) or will just round-robin
-                  unless params.fetch(:target_partition, "").empty?
-                    dispatch_message[:partition] = params.int(:target_partition)
-                  end
-
-                  # Include source headers for enhanced debuggability
-                  if params.bool(:include_source_headers)
-                    dispatch_message[:headers].merge!(
-                      "source_topic" => @message.topic,
-                      "source_partition" => @message.partition.to_s,
-                      "source_offset" => @message.offset.to_s
+                  # The contract answers "can this be republished safely?" - target topic exists,
+                  # partition in range, and the payload is consumable by the target's deserializer.
+                  @errors = Lib::Republishing::Contracts::Form.new.call(
+                    @republish_form.merge(
+                      target_partitions_count: target_partitions_count(@republish_form[:target_topic]),
+                      source_message: @message
                     )
-                  end
+                  ).errors
 
-                  delivery = Lib::Publishing::Dispatcher.new(dispatch_message).call
+                  # Re-render the form (preserving the entered values) with all errors at once
+                  return forward(topic_id, partition_id, offset) unless @errors.empty?
+
+                  delivery = Lib::Publishing::Dispatcher.new(
+                    Lib::Republishing::Transform.call(@message, @republish_form)
+                  ).call
 
                   # Land on the partition that received the copy so the user can see it, rather
                   # than going back to the source message
@@ -106,6 +104,32 @@ module Karafka
                 end
 
                 private
+
+                # Loads the source message and authorizes republishing it
+                #
+                # @param topic_id [String]
+                # @param partition_id [Integer]
+                # @param offset [Integer]
+                def load_source_message(topic_id, partition_id, offset)
+                  @message = Models::Message.find(topic_id, partition_id, offset)
+
+                  deny! unless visibility_filter.republish?(@message)
+
+                  @topic_id = topic_id
+                  @partition_id = partition_id
+                  @offset = offset
+                end
+
+                # @param target_topic [String] target topic name
+                # @return [Integer, nil] the target topic's partition count, or nil when it is blank
+                #   or does not exist
+                def target_partitions_count(target_topic)
+                  return nil if target_topic.empty?
+
+                  Models::ClusterInfo.partitions_count(target_topic)
+                rescue ::Karafka::Web::Errors::Ui::NotFoundError
+                  nil
+                end
 
                 # @param message [Karafka::Messages::Message]
                 # @param delivery [Rdkafka::Producer::DeliveryReport]
