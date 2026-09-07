@@ -33,17 +33,6 @@
   </ul>
 <% end %>
 
-<% unless @payload_checkable %>
-  <div class="mt-4">
-    <% alert_box_warning('Payload will not be validated') do %>
-      <p>
-        This topic is not in the Karafka routing, so its payload cannot be checked against a
-        deserializer. The message will be published exactly as provided.
-      </p>
-    <% end %>
-  </div>
-<% end %>
-
 <% if @errors && !@errors.empty? %>
   <div class="mt-4">
     <% alert_box_error('Message could not be published') do %>
@@ -197,15 +186,23 @@
               name="skip_validation"
               value="on"
               class="checkbox checkbox-primary"
-              <%= @publish_form[:skip_validation] ? 'checked' : '' %>
+              <%= (@publish_form[:skip_validation] || !@payload_checkable) ? 'checked' : '' %>
+              <%= @payload_checkable ? '' : 'disabled' %>
             >
             <div class="space-y-1">
               <div>Skip payload validation</div>
-              <div class="text-sm text-base-content/70">
-                By default, when the topic is in the routing, the payload is checked against its
-                deserializer. Check this to publish a payload the deserializer cannot read, for
-                example to test a consumer's error handling
-              </div>
+              <% if @payload_checkable %>
+                <div class="text-sm text-base-content/70">
+                  By default the payload is checked against the topic's deserializer. Check this to
+                  publish a payload the deserializer cannot read, for example to test a consumer's
+                  error handling
+                </div>
+              <% else %>
+                <div class="text-sm text-base-content/70">
+                  This topic is not in the Karafka routing, so its payload cannot be validated
+                  against a deserializer. It will be published exactly as provided
+                </div>
+              <% end %>
             </div>
           </label>
         </div>

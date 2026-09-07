@@ -81,9 +81,10 @@ describe_current do
     context "when the topic is not in the routing" do
       before { get "explorer/messages/#{topic}/publish" }
 
-      it "warns that the payload will not be validated" do
+      it "forces skip-validation on, disabled, with a not-routed explanation" do
         assert_ok
-        assert_body("Payload will not be validated")
+        assert_body("not in the Karafka routing")
+        assert_match(/value="on"[\s\S]{0,120}disabled/, response.body)
       end
     end
 
@@ -95,9 +96,10 @@ describe_current do
         get "explorer/messages/#{topic}/publish"
       end
 
-      it "does not warn about validation" do
+      it "offers an enabled skip-validation toggle without the not-routed note" do
         assert_ok
-        refute_body("Payload will not be validated")
+        refute_body("not in the Karafka routing")
+        refute_match(/value="on"[\s\S]{0,120}disabled/, response.body)
       end
     end
   end
