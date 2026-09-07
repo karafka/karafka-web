@@ -1,6 +1,7 @@
 # Karafka Web Changelog
 
 ## Unreleased
+- [Maintenance] Retry transient 5xx responses in the test link validator before failing, so an occasional Kafka-coordinator-load `/topics` 500 no longer reddens unrelated specs.
 - [Enhancement] After republishing a message, redirect to the partition that received the copy (instead of back to the source message) so the republished message is immediately visible (#1239).
 - [Feature] Add a **Publish message** capability to the Explorer (Pro): publish an arbitrary message to a topic (or a specific partition, pre-selected when opened from a per-partition view) directly from its Explorer page, with an optional key and validated headers. The payload is produced as raw bytes exactly as provided, typed in or uploaded as a file (for binary formats), or published as a tombstone (null payload). When the target topic is in the routing, the payload is validated against its configured deserializer (skippable, e.g. to test a consumer's error handling); when it is not routed, the form warns that no validation can be performed. Gated by a new `publish?` policy (`config.ui.policies.messages`), enabled by default (#956).
 - [Enhancement] Add `Karafka::Web.producer.acked` returning an `acks: 1` producer variant (idempotent/transactional producers are returned unchanged), so user-initiated produces get the assigned offset back instead of the fire-and-forget (`acks: 0`) reporting producer's `-1001`. Used by the Explorer publish flow (#956).
