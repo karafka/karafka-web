@@ -33,6 +33,17 @@
   </ul>
 <% end %>
 
+<% unless @payload_checkable %>
+  <div class="mt-4">
+    <% alert_box_warning('Payload will not be validated') do %>
+      <p>
+        This topic is not in the Karafka routing, so its payload cannot be checked against a
+        deserializer. The message will be published exactly as provided.
+      </p>
+    <% end %>
+  </div>
+<% end %>
+
 <% if @errors && !@errors.empty? %>
   <div class="mt-4">
     <% alert_box_error('Message could not be published') do %>

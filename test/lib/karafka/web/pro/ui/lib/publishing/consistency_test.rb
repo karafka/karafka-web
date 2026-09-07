@@ -70,4 +70,28 @@ describe_current do
       assert_nil(described_class.call(built_message(payload: "{ not json")))
     end
   end
+
+  describe ".checkable?" do
+    it "is false when the topic is not routed" do
+      ::Karafka::Routing::Router.stubs(:find_by).with(name: "t").returns(nil)
+
+      refute(described_class.checkable?("t"))
+    end
+
+    it "is true when the topic is routed with an active deserializer" do
+      topic = stub(
+        deserializers?: true,
+        deserializers: stub(payload: Karafka::Deserializers::Payload.new)
+      )
+      ::Karafka::Routing::Router.stubs(:find_by).with(name: "t").returns(topic)
+
+      assert(described_class.checkable?("t"))
+    end
+
+    it "is false when the routed topic has no active deserializer" do
+      ::Karafka::Routing::Router.stubs(:find_by).with(name: "t").returns(stub(deserializers?: false))
+
+      refute(described_class.checkable?("t"))
+    end
+  end
 end

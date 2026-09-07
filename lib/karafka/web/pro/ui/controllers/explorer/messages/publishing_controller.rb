@@ -52,6 +52,9 @@ module Karafka
                   # number of partitions to render the partition selector
                   @partitions_count = Models::ClusterInfo.partitions_count(topic_id)
 
+                  # Lets the form warn when the payload cannot be validated (topic not in routing)
+                  @payload_checkable = Lib::Publishing::Consistency.checkable?(topic_id)
+
                   # Reads the (possibly empty) form state back so the view can render the fields.
                   # `@errors` is only defaulted here - when we re-render after a failed submission
                   # `#publish` has already populated it.

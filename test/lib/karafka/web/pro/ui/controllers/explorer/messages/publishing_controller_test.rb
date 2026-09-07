@@ -77,6 +77,29 @@ describe_current do
         assert_match(/value="1"\s+selected/, response.body)
       end
     end
+
+    context "when the topic is not in the routing" do
+      before { get "explorer/messages/#{topic}/publish" }
+
+      it "warns that the payload will not be validated" do
+        assert_ok
+        assert_body("Payload will not be validated")
+      end
+    end
+
+    context "when the topic is in the routing" do
+      before do
+        topic_name = topic
+        draw_routes { topic(topic_name) { consumer Karafka::BaseConsumer } }
+
+        get "explorer/messages/#{topic}/publish"
+      end
+
+      it "does not warn about validation" do
+        assert_ok
+        refute_body("Payload will not be validated")
+      end
+    end
   end
 
   describe "#publish" do

@@ -47,6 +47,15 @@ module Karafka
               Message = Struct.new(:raw_payload, :headers, :key)
 
               class << self
+                # Whether a payload published to this topic can be validated, i.e. the topic is in
+                # the routing with an active deserializer.
+                #
+                # @param topic_name [String] topic we are publishing to
+                # @return [Boolean]
+                def checkable?(topic_name)
+                  !payload_deserializer(topic_name).nil?
+                end
+
                 # @param message [Hash] the built message (see {Transform.call})
                 # @return [String, nil] an error description when the payload is not consumable, or
                 #   nil when it is consistent / could not be checked
