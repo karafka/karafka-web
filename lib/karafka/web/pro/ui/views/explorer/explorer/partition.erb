@@ -23,13 +23,15 @@
 <div class="grid grid-cols-12">
   <div class="col-span-4">
     <section class="actions">
-      <a
-        href="<%= "#{explorer_messages_path(@topic_id, 'publish')}?partition=#{@partition_id}" %>"
-        class="btn-action"
-        title="Publish a new message to this partition"
-      >
-        <%== icon(:plus) %>
-      </a>
+      <% if @visibility_filter.publish?(@topic_id) %>
+        <a
+          href="<%= "#{explorer_messages_path(@topic_id, 'publish')}?partition=#{@partition_id}" %>"
+          class="btn-action"
+          title="Publish a new message to this partition"
+        >
+          <%== icon(:plus) %>
+        </a>
+      <% end %>
 
       <% if @messages && !@messages.empty? %>
         <a

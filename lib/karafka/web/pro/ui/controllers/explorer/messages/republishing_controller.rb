@@ -81,7 +81,7 @@ module Karafka
                   }
 
                   # Add target partition only if it was requested, otherwise it will use either the
-                  # message key (if present) or will jut round-robin
+                  # message key (if present) or will just round-robin
                   unless params.fetch(:target_partition, "").empty?
                     dispatch_message[:partition] = params.int(:target_partition)
                   end
