@@ -111,6 +111,14 @@ describe_current do
         described_class.headers("a: b\n\nc: d\n")
       )
     end
+
+    it "skips lines with an empty key" do
+      assert_equal({ "a" => "b" }, described_class.headers(": nokey\na: b"))
+    end
+
+    it "skips lines without a colon" do
+      assert_equal({ "a" => "b" }, described_class.headers("no-colon\na: b"))
+    end
   end
 
   describe ".headers?" do

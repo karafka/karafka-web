@@ -111,4 +111,12 @@ describe_current do
       assert_nil(result[:payload_file])
     end
   end
+
+  context "when the payload_file hash has no tempfile" do
+    let(:raw) { { "payload_file" => { filename: "x.bin" } } }
+
+    it "treats it as no file" do
+      assert_nil(result[:payload_file])
+    end
+  end
 end

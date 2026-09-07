@@ -59,6 +59,24 @@ describe_current do
         refute_body(pagination)
       end
     end
+
+    context "when message exists and internal topics are visible" do
+      let(:payload) { rand.to_s }
+
+      before do
+        Karafka::Web.config.ui.visibility.internal_topics = true
+
+        produce(topic, payload)
+        get "explorer/messages/#{topic}/0/0/forward"
+      end
+
+      after { Karafka::Web.config.ui.visibility.internal_topics = false }
+
+      it "renders the form without rejecting internal topics" do
+        assert_ok
+        assert_body("message-republish-form")
+      end
+    end
   end
 
   describe "#republish" do
