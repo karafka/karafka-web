@@ -56,26 +56,33 @@ module Karafka
                 # @param topic [String]
                 # @param partition_id [Integer]
                 def create(consumer_group_id, topic, partition_id)
-                  new(consumer_group_id, topic, partition_id)
+                  bootstrap!(consumer_group_id, topic, partition_id)
 
-                  # Broadcast to all processes with matchers to filter by consumer group,
-                  # topic, and partition
-                  Commanding::Dispatcher.request(
-                    Commanding::Commands::Partitions::Pause.name,
-                    {
-                      consumer_group_id: consumer_group_id,
-                      topic: topic,
-                      partition_id: partition_id,
-                      # User provides this in seconds, we operate on ms in the system
-                      duration: params.int(:duration) * 1_000,
-                      prevent_override: params.bool(:prevent_override)
-                    },
-                    matchers: {
-                      consumer_group_id: consumer_group_id,
-                      topic: topic,
-                      partition_id: partition_id
-                    }
-                  )
+                  command_form = Lib::Commands::Normalizer.pause(params)
+                  errors = Lib::Commands::Contracts::Pause.new.call(command_form).errors
+
+                  unless errors.empty?
+                    return redirect(
+                      :previous,
+                      error: format_flash(
+                        "Could not pause partition ?#? in consumer group ?: ?",
+                        topic,
+                        partition_id,
+                        consumer_group_id,
+                        errors.values.join(", ")
+                      )
+                    )
+                  end
+
+                  Lib::Commands::Dispatcher.new(
+                    Lib::Commands::Transform.partition_pause(
+                      command_form.merge(
+                        consumer_group_id: consumer_group_id,
+                        topic: topic,
+                        partition_id: partition_id
+                      )
+                    )
+                  ).call
 
                   redirect(
                     :previous,
@@ -105,24 +112,17 @@ module Karafka
                 # @param topic [String]
                 # @param partition_id [Integer]
                 def delete(consumer_group_id, topic, partition_id)
-                  new(consumer_group_id, topic, partition_id)
+                  bootstrap!(consumer_group_id, topic, partition_id)
 
-                  # Broadcast to all processes with matchers to filter by consumer group,
-                  # topic, and partition
-                  Commanding::Dispatcher.request(
-                    Commanding::Commands::Partitions::Resume.name,
-                    {
-                      consumer_group_id: consumer_group_id,
-                      topic: topic,
-                      partition_id: partition_id,
-                      reset_attempts: params.bool(:reset_attempts)
-                    },
-                    matchers: {
-                      consumer_group_id: consumer_group_id,
-                      topic: topic,
-                      partition_id: partition_id
-                    }
-                  )
+                  Lib::Commands::Dispatcher.new(
+                    Lib::Commands::Transform.partition_resume(
+                      Lib::Commands::Normalizer.resume(params).merge(
+                        consumer_group_id: consumer_group_id,
+                        topic: topic,
+                        partition_id: partition_id
+                      )
+                    )
+                  ).call
 
                   redirect(
                     :previous,

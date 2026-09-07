@@ -213,6 +213,17 @@ describe_current do
       end
     end
 
+    context "when the topic name is malformed" do
+      before { post "topics", default_params.merge(topic_name: "invalid name!") }
+
+      it "renders the form with a validation error and does not create" do
+        assert_ok
+        assert_body("Creating New Topic")
+        assert_body("Please Correct the Following Errors Before Continuing")
+        assert_body("only letters")
+      end
+    end
+
     context "with parameter validation" do
       [
         { topic_name: "" },

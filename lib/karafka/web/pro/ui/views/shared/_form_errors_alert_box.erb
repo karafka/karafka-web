@@ -18,18 +18,12 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<% view_title "Topic #{@topic.topic_name} - Edit #{@property.name}" %>
-
-<div class="space-y-4">
-  <%== partial('topics/configs/edit_warning') %>
-
-  <% if @errors && !@errors.empty? %>
-    <%== partial 'shared/form_errors_alert_box' %>
-  <% elsif @form_error %>
-    <%== partial 'shared/rdkafka_form_error_alert_box' %>
-  <% else %>
-    <%== partial 'topics/configs/edit_plan' %>
+<div class="mb-6">
+  <% alert_box_error('Please Correct the Following Errors Before Continuing') do %>
+    <ul class="list-disc m-5 mb-0 mt-0">
+      <% @errors.each_value do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
   <% end %>
-
-  <%== partial 'topics/configs/edit_form' %>
 </div>

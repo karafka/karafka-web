@@ -57,3 +57,25 @@ en:
       target_topic_unknown: 'Target topic does not exist'
       target_partition_format: must be a string
       target_partition_out_of_range: 'Selected partition does not exist for the target topic'
+    seek_form:
+      missing: needs to be present
+      offset_format: needs to be an integer that is 0 or greater
+      prevent_overtaking_format: must be a boolean
+      force_resume_format: must be a boolean
+    pause_form:
+      missing: needs to be present
+      duration_format: needs to be an integer that is 0 or greater (0 means an indefinite pause)
+      prevent_override_format: must be a boolean
+    configuring_form:
+      missing: needs to be present
+      property_value_format: needs to be a non-empty value
+    topic_creation_form:
+      missing: needs to be present
+      topic_name_format: >-
+        needs to be present, at most 249 characters and contain only letters, digits, dots,
+        hyphens and underscores
+      partitions_count_format: needs to be an integer that is 1 or greater
+      replication_factor_format: needs to be an integer that is 1 or greater
+    repartitioning_form:
+      missing: needs to be present
+      partition_count_format: needs to be an integer that is 1 or greater

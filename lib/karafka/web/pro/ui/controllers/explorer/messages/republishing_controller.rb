@@ -36,9 +36,6 @@ module Karafka
           module Explorer
             module Messages
               # Republishes existing messages to the same or a different topic.
-              #
-              # The form parsing, validation and transformation live in {Lib::Republishing}; this
-              # controller only orchestrates them and handles the HTTP concerns.
               class RepublishingController < BaseController
                 # Renders the form allowing for piping a message to a different topic
                 #
@@ -88,7 +85,6 @@ module Karafka
                     )
                   ).errors
 
-                  # Re-render the form (preserving the entered values) with all errors at once
                   return forward(topic_id, partition_id, offset) unless @errors.empty?
 
                   delivery = Lib::Publishing::Dispatcher.new(
