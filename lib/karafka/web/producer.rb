@@ -12,8 +12,11 @@ module Karafka
     # This wrapper:
     # - Returns the default producer unchanged if it's idempotent or transactional
     #   (since acks cannot be altered for these producer types)
-    # - Creates a variant with `acks: 1` for non-idempotent, non-transactional producers
-    #   to reduce latency while maintaining basic delivery confirmation
+    # - Creates a variant with `acks: 0` (fire-and-forget) for non-idempotent, non-transactional
+    #   producers to minimize the overhead of the non-critical reporting traffic
+    #
+    # For the occasional produce where the assigned offset matters (a user-initiated publish, not
+    # reporting), use {#acked} to get an `acks: 1` variant instead.
     #
     # @note This uses SimpleDelegator to transparently proxy all producer methods
     # @note The variant is created lazily on first access to ensure the default producer
@@ -30,32 +33,38 @@ module Karafka
       # @note accept block to avoid Ruby 3.4's `strict_unused_block` warning from SimpleDelegator.
       def __getobj__(&)
         unless @initialized
-          @delegate_sd_obj = build_producer
+          @delegate_sd_obj = acks_variant(0)
           @initialized = true
         end
 
         @delegate_sd_obj
       end
 
+      # A producer variant that waits for a broker acknowledgment (`acks: 1`) so the delivery
+      # report carries a real offset. Use it for user-initiated produces where the assigned offset
+      # matters, rather than the default fire-and-forget reporting producer.
+      #
+      # @return [WaterDrop::Producer, WaterDrop::Producer::Variant] the `acks: 1` variant, or the
+      #   default producer unchanged when it is idempotent/transactional (already `acks: all`)
+      def acked
+        @acked ||= acks_variant(1)
+      end
+
       private
 
-      # Builds the appropriate producer based on the default producer's configuration
+      # Builds an `acks`-adjusted variant of the default producer, when altering acks is allowed
       #
-      # @return [WaterDrop::Producer, WaterDrop::Producer::Variant] either the default producer
-      #   (if idempotent/transactional) or a low-ack variant
-      def build_producer
+      # @param acks [Integer] required acknowledgments for the variant
+      # @return [WaterDrop::Producer, WaterDrop::Producer::Variant] the variant, or the default
+      #   producer unchanged for idempotent/transactional producers (acks cannot be altered - they
+      #   require acks: all)
+      def acks_variant(acks)
         default = ::Karafka.producer
 
-        # Idempotent producers require acks: all - cannot create variants with different acks
         return default if default.idempotent?
-        # Transactional producers also require acks: all
         return default if default.transactional?
 
-        # For non-idempotent, non-transactional producers, create a variant with lower acks
-        # acks: 0 means fire-and-forget - no acknowledgment required
-        # This is acceptable for non-critical analytics/monitoring data where occasional
-        # message loss is not a concern
-        default.variant(topic_config: { acks: 0 })
+        default.variant(topic_config: { acks: acks })
       end
     end
   end

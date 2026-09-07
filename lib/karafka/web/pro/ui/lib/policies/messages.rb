@@ -84,6 +84,16 @@ module Karafka
               def republish?(_message)
                 true
               end
+
+              # Should it be allowed to publish a brand new message to a given topic
+              #
+              # @param _topic [String] name of the topic to which we want to publish a message
+              # @return [Boolean] true if we should allow publishing
+              # @note This governs the "Publish message" explorer capability that produces an
+              #   arbitrary message to a topic. It is independent of republishing an existing one.
+              def publish?(_topic)
+                true
+              end
             end
           end
         end

@@ -23,6 +23,7 @@
 @source inline('input{,-xs,-sm,-md,-lg,-bordered,-ghost,-primary,-secondary,-accent,-success,-warning,-error,-info}');
 @source inline('textarea{,-xs,-sm,-md,-lg,-bordered,-ghost,-primary,-secondary,-accent,-success,-warning,-error,-info}');
 @source inline('select{,-xs,-sm,-md,-lg,-bordered,-ghost,-primary,-secondary,-accent,-success,-warning,-error,-info}');
+@source inline('file-input{,-xs,-sm,-md,-lg,-bordered,-ghost,-primary,-secondary,-accent,-success,-warning,-error,-info}');
 @source inline('checkbox{,-xs,-sm,-md,-lg,-primary,-secondary,-accent,-success,-warning,-error,-info}');
 @source inline('radio{,-xs,-sm,-md,-lg,-primary,-secondary,-accent,-success,-warning,-error,-info}');
 @source inline('link{,-primary,-secondary,-accent,-success,-warning,-error,-info,-hover}');

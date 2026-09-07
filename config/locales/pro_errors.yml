@@ -42,3 +42,12 @@ en:
       offset_format: needs to be an integer bigger than 0
       partitions_format: needs to include "all" or partitions ids
       timestamp_format: must be a Kafka message timestamp with ms precision
+    publishing_form:
+      missing: needs to be present
+      payload_format: must be a string
+      key_format: must be a string
+      partition_format: must be a string
+      headers_format: must be a string
+      payload_file_format: must be a file
+      headers_invalid_format: 'Each header must be on its own line in the `key: value` format.'
+      partition_out_of_range: 'Selected partition does not exist for this topic'

@@ -285,6 +285,30 @@ describe_current do
     end
   end
 
+  describe "#topic publish action gating" do
+    context "when publishing is enabled by policy" do
+      before { get "explorer/topics/#{topic}" }
+
+      it "shows the publish action" do
+        assert_ok
+        assert_body("messages/#{topic}/publish")
+      end
+    end
+
+    context "when publishing is disabled by policy" do
+      before do
+        Karafka::Web.config.ui.policies.messages.stubs(:publish?).returns(false)
+
+        get "explorer/topics/#{topic}"
+      end
+
+      it "hides the publish action" do
+        assert_ok
+        refute_body("messages/#{topic}/publish")
+      end
+    end
+  end
+
   describe "#partition" do
     let(:no_data) { "This partition is empty and does not contain any data" }
 
@@ -318,6 +342,28 @@ describe_current do
         refute_body("Watermark offsets")
         refute_body(pagination)
         refute_body(search_button)
+      end
+    end
+
+    context "when publishing is enabled by policy" do
+      before { get "explorer/topics/#{topic}/0" }
+
+      it "shows the publish action" do
+        assert_ok
+        assert_body("messages/#{topic}/publish")
+      end
+    end
+
+    context "when publishing is disabled by policy" do
+      before do
+        Karafka::Web.config.ui.policies.messages.stubs(:publish?).returns(false)
+
+        get "explorer/topics/#{topic}/0"
+      end
+
+      it "hides the publish action" do
+        assert_ok
+        refute_body("messages/#{topic}/publish")
       end
     end
 
