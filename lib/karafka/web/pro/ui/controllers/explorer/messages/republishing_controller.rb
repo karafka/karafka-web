@@ -95,8 +95,10 @@ module Karafka
                     Lib::Republishing::Transform.call(@message, @republish_form)
                   ).call
 
+                  # Land on the partition that received the copy so the user can see it, rather
+                  # than going back to the source message
                   redirect(
-                    :previous,
+                    "explorer/topics/#{delivery.topic}/#{delivery.partition}",
                     success: republished(@message, delivery)
                   )
                 end

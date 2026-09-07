@@ -54,7 +54,16 @@ class LinksValidator
     /[a-z0-9]+:\d+:\d+/
   ].freeze
 
-  private_constant :ALLOWED_RESPONSES, :EXCLUDED_CONTROLLERS, :EXCLUDED_DESCRIPTIONS
+  # A crawled link can briefly return a 5xx for reasons unrelated to the page under test - most
+  # notably the Kafka coordinator still loading right after the cluster starts, which makes a
+  # metadata-backed page (e.g. `/topics`) 500 for a moment. We retry such links a few times before
+  # treating the failure as real, so these transient blips do not redden unrelated specs.
+  MAX_RETRIES = 3
+  RETRY_BACKOFF = 0.25
+
+  private_constant(
+    :ALLOWED_RESPONSES, :EXCLUDED_CONTROLLERS, :EXCLUDED_DESCRIPTIONS, :MAX_RETRIES, :RETRY_BACKOFF
+  )
 
   attr_writer :context, :description
 
@@ -127,17 +136,34 @@ class LinksValidator
     # Add to visited set to avoid checking again
     @visited_links.add(link_key)
 
+    # First visit. Some specs inject invalid data on purpose, corrupting the views we reach out
+    # to, so a raised error on the initial request means we skip the link entirely.
     begin
-      # Make GET request to the link using the test context
-      @context.get link
-    # We ignore errors because some specs are designed to inject invalid data, etc, so other
-    # views to which we reach out may in fact be corrupted
+      @context.get(link)
     rescue
       return
     end
 
     resp = @context.last_response
     status = resp.status
+
+    # A metadata-backed page can transiently 5xx (e.g. Kafka coordinator load right after the
+    # cluster starts). We retry a 5xx a few times. A genuine error still 5xxs after the retries and
+    # is reported - once we have seen a 5xx we never skip the link, even if a retry raises.
+    attempts = 0
+    while status >= 500 && attempts < MAX_RETRIES
+      attempts += 1
+      sleep(RETRY_BACKOFF)
+
+      begin
+        @context.get(link)
+      rescue
+        break
+      end
+
+      resp = @context.last_response
+      status = resp.status
+    end
 
     return if ALLOWED_RESPONSES.include?(status)
 
