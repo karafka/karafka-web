@@ -76,29 +76,18 @@ module Karafka
 
                   @publish_form = Lib::Publishing::Normalizer.call(params)
 
+                  # The contract answers "can this be sent to Kafka safely?" - field shape plus the
+                  # runtime payload-consistency cross-check (via Lib::Publishing::Consistency).
                   @errors = Lib::Publishing::Contracts::Form.new.call(
-                    @publish_form.merge(partitions_count: @partitions_count)
+                    @publish_form.merge(partitions_count: @partitions_count, topic: topic_id)
                   ).errors
 
                   # Re-render the form (preserving the entered values) with all errors at once
                   return build(topic_id) unless @errors.empty?
 
-                  message = Lib::Publishing::Transform.call(topic_id, @publish_form)
-
-                  # Best-effort check that the payload is consumable by the topic's deserializer
-                  # (when it is routed). The user can opt out to publish an intentionally
-                  # non-conforming message, e.g. to exercise a consumer's error handling.
-                  unless @publish_form[:skip_validation]
-                    consistency_error = Lib::Publishing::Consistency.call(message)
-
-                    if consistency_error
-                      @errors = { payload: consistency_error }
-
-                      return build(topic_id)
-                    end
-                  end
-
-                  delivery = Lib::Publishing::Dispatcher.new(message).call
+                  delivery = Lib::Publishing::Dispatcher.new(
+                    Lib::Publishing::Transform.call(topic_id, @publish_form)
+                  ).call
 
                   # Land back on the topic we just published to so the user can see their message,
                   # regardless of where they navigated from

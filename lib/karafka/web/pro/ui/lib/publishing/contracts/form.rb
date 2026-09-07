@@ -36,10 +36,14 @@ module Karafka
           module Publishing
             # Namespace for publishing contracts
             module Contracts
-              # Validates the normalized publish form data. Field-format rules cover the simple
-              # values; the header virtual rule delegates to {Transform} so validation and
-              # transformation agree on what valid headers look like. Rules are independent (not
+              # Validates that a normalized publish form can be sent to Kafka safely. Field-format
+              # rules cover the shape of the input; the header rule delegates to {Transform} (so
+              # validation and transformation agree), and the payload rule delegates to
+              # {Consistency} for the runtime deserializer cross-check. Rules are independent (not
               # gated on prior errors) so all problems surface in a single submission.
+              #
+              # @note Requires `topic`, `partitions_count` and `skip_validation` in the data
+              #   alongside the normalized form fields.
               class Form < Web::Contracts::Base
                 configure do |config|
                   config.error_messages = YAML.safe_load_file(
@@ -74,6 +78,20 @@ module Karafka
                   next if partition.to_i < partitions_count
 
                   [[%i[partition], :out_of_range]]
+                end
+
+                # The payload must be consumable by the topic's deserializer (the runtime check that
+                # lets this contract answer "can this be sent to Kafka safely?"). Delegated to
+                # {Consistency}, which is skipped for unrouted topics and tombstones. The user can
+                # opt out via `skip_validation`. The dynamic message is used verbatim.
+                virtual do |data|
+                  next if data[:skip_validation]
+
+                  error = Consistency.call(Transform.call(data[:topic], data))
+
+                  next unless error
+
+                  [[%i[payload], error]]
                 end
               end
             end

@@ -108,4 +108,40 @@ describe_current do
       assert(result.errors.key?(:partition))
     end
   end
+
+  describe "payload consistency (routed topic)" do
+    let(:topic) do
+      stub(
+        deserializers?: true,
+        deserializers: stub(payload: Karafka::Deserializers::Payload.new)
+      )
+    end
+
+    before do
+      params[:topic] = "t"
+      ::Karafka::Routing::Router.stubs(:find_by).with(name: "t").returns(topic)
+    end
+
+    context "when the payload is not consumable by the topic's deserializer" do
+      before { params[:payload] = "{ not json" }
+
+      it { refute(result.success?) }
+      it { assert(result.errors.key?(:payload)) }
+    end
+
+    context "when the payload is consumable" do
+      before { params[:payload] = '{"a":1}' }
+
+      it { assert(result.success?) }
+    end
+
+    context "when validation is skipped" do
+      before do
+        params[:payload] = "{ not json"
+        params[:skip_validation] = true
+      end
+
+      it { assert(result.success?) }
+    end
+  end
 end
