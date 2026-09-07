@@ -136,38 +136,40 @@ class LinksValidator
     # Add to visited set to avoid checking again
     @visited_links.add(link_key)
 
-    status = visit(link)
+    # First visit. Some specs inject invalid data on purpose, corrupting the views we reach out
+    # to, so a raised error on the initial request means we skip the link entirely.
+    begin
+      @context.get(link)
+    rescue
+      return
+    end
 
-    # nil means the request raised - some specs inject invalid data on purpose, so the views we
-    # reach out to may be corrupted; we ignore those
-    return if status.nil?
+    resp = @context.last_response
+    status = resp.status
 
-    # Transient 5xx (e.g. Kafka coordinator load) is retried before we treat it as a real failure
+    # A metadata-backed page can transiently 5xx (e.g. Kafka coordinator load right after the
+    # cluster starts). We retry a 5xx a few times. A genuine error still 5xxs after the retries and
+    # is reported - once we have seen a 5xx we never skip the link, even if a retry raises.
     attempts = 0
     while status >= 500 && attempts < MAX_RETRIES
       attempts += 1
       sleep(RETRY_BACKOFF)
-      status = visit(link)
-      return if status.nil?
+
+      begin
+        @context.get(link)
+      rescue
+        break
+      end
+
+      resp = @context.last_response
+      status = resp.status
     end
 
     return if ALLOWED_RESPONSES.include?(status)
 
-    resp = @context.last_response
     body_snippet = resp.body.to_s[0, 500].gsub(/\s+/, " ").strip
     assert_msg = "Link '#{link}' returned #{status} status.\nBody: #{body_snippet}"
     @context.assert_includes(ALLOWED_RESPONSES, status, assert_msg)
-  end
-
-  # Visits a link and returns its response status, or nil when the request raised
-  #
-  # @param link [String]
-  # @return [Integer, nil]
-  def visit(link)
-    @context.get(link)
-    @context.last_response.status
-  rescue
-    nil
   end
 
   # Builds a visit key so we track similar links and do not visit similar stuff twice
