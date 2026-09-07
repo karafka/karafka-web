@@ -72,6 +72,7 @@ module Karafka
                   runner = Lib::SafeRunner.new do
                     deserializer.call(Message.new(payload, message[:headers] || {}, message[:key]))
                   end
+
                   runner.call
 
                   return nil if runner.success?
