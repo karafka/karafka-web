@@ -72,13 +72,13 @@ module Karafka
               def create
                 features.topics_management!
 
-                topic_form = Lib::TopicCreation::Normalizer.call(params)
-                @errors = Lib::TopicCreation::Contracts::Form.new.call(topic_form).errors
+                topic_form = Lib::Topics::Creation::Normalizer.call(params)
+                @errors = Lib::Topics::Creation::Contracts::Form.new.call(topic_form).errors
 
                 return new unless @errors.empty?
 
                 begin
-                  Lib::TopicCreation::Dispatcher.new(topic_form).call
+                  Lib::Topics::Creation::Dispatcher.new(topic_form).call
                 rescue Rdkafka::RdkafkaError => e
                   @form_error = e
                 end

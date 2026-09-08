@@ -70,7 +70,7 @@ module Karafka
             config.ui.instance_eval do
               setting(:branding, default: Ui::Lib::Branding::Config.config)
               setting(:policies, default: Ui::Lib::Policies::Config.config)
-              setting(:search, default: Ui::Lib::Search::Config.config)
+              setting(:search, default: Ui::Lib::Explorer::Search::Config.config)
               setting(:health, default: Ui::Lib::Health::Config.config)
               setting(:cluster, default: Ui::Lib::Cluster::Config.config)
 
@@ -90,7 +90,7 @@ module Karafka
             Commanding.post_setup(config)
             Ui::Lib::Branding.post_setup(config)
             Ui::Lib::Policies.post_setup(config)
-            Ui::Lib::Search.post_setup(config)
+            Ui::Lib::Explorer::Search.post_setup(config)
             Ui::Lib::Health.post_setup(config)
             Ui::Lib::Cluster.post_setup(config)
 
