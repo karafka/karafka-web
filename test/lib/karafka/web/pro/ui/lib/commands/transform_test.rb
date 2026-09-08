@@ -39,7 +39,7 @@ describe_current do
         consumer_group_id: consumer_group_id,
         topic: topic,
         partition_id: partition_id,
-        offset: 42,
+        offset: "42",
         prevent_overtaking: true,
         force_resume: false
       }
@@ -51,7 +51,7 @@ describe_current do
       assert_equal("partitions.seek", result[:name])
     end
 
-    it "builds the payload verbatim" do
+    it "builds the payload, converting the offset to an integer" do
       payload = result[:payload]
 
       assert_equal(consumer_group_id, payload[:consumer_group_id])
@@ -76,7 +76,7 @@ describe_current do
         consumer_group_id: consumer_group_id,
         topic: topic,
         partition_id: partition_id,
-        duration: 60,
+        duration: "60",
         prevent_override: true
       }
     end
@@ -130,7 +130,7 @@ describe_current do
       {
         consumer_group_id: consumer_group_id,
         topic: topic,
-        duration: 5,
+        duration: "5",
         prevent_override: false
       }
     end

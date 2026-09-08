@@ -41,13 +41,31 @@ describe_current do
       }
     end
 
-    it "coerces the offset to an integer" do
-      assert_equal(100, result[:offset])
+    it "keeps the offset as a raw string for the contract to validate" do
+      assert_equal("100", result[:offset])
     end
 
     it "coerces the boolean flags" do
       assert(result[:prevent_overtaking])
       refute(result[:force_resume])
+    end
+
+    context "when the offset is non-numeric" do
+      let(:raw) { { "offset" => "abc" } }
+
+      it "keeps it verbatim (so the contract rejects it) instead of coercing to 0" do
+        assert_equal("abc", result[:offset])
+      end
+    end
+
+    context "when the fields are entirely absent" do
+      let(:raw) { {} }
+
+      it "defaults without raising" do
+        assert_equal("", result[:offset])
+        refute(result[:prevent_overtaking])
+        refute(result[:force_resume])
+      end
     end
   end
 
@@ -60,12 +78,21 @@ describe_current do
       }
     end
 
-    it "keeps the duration in seconds as entered" do
-      assert_equal(60, result[:duration])
+    it "keeps the duration (in seconds) as a raw string for the contract to validate" do
+      assert_equal("60", result[:duration])
     end
 
     it "coerces the prevent_override flag" do
       assert(result[:prevent_override])
+    end
+
+    context "when the fields are entirely absent" do
+      let(:raw) { {} }
+
+      it "defaults without raising" do
+        assert_equal("", result[:duration])
+        refute(result[:prevent_override])
+      end
     end
   end
 

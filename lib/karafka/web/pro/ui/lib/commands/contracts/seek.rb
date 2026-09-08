@@ -45,7 +45,7 @@ module Karafka
                   ).fetch("en").fetch("validations").fetch("seek_form")
                 end
 
-                required(:offset) { |val| val.is_a?(Integer) && val >= 0 }
+                required(:offset) { |val| val.is_a?(String) && val.match?(/\A\d+\z/) }
                 required(:prevent_overtaking) { |val| [true, false].include?(val) }
                 required(:force_resume) { |val| [true, false].include?(val) }
               end

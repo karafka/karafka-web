@@ -38,15 +38,19 @@ module Karafka
           module Commands
             # Turns raw request params of the commanding forms into typed hashes. Each form has a
             # dedicated method so the controllers stay declarative about what they submit.
+            #
+            # Numeric fields are kept as raw strings (via `fetch`, so a missing key does not raise)
+            # and their format is validated by the contracts, so a malformed or absent value fails
+            # validation instead of being silently coerced (`"abc".to_i => 0`) or 500-ing.
             module Normalizer
               class << self
                 # @param params [Karafka::Web::Ui::Controllers::Requests::Params] request params
                 # @return [Hash] typed seek (offset adjustment) form data
                 def seek(params)
                   {
-                    offset: params.int(:offset),
-                    prevent_overtaking: params.bool(:prevent_overtaking),
-                    force_resume: params.bool(:force_resume)
+                    offset: params.fetch(:offset, "").to_s,
+                    prevent_overtaking: truthy?(params.fetch(:prevent_overtaking, "")),
+                    force_resume: truthy?(params.fetch(:force_resume, ""))
                   }
                 end
 
@@ -55,8 +59,8 @@ module Karafka
                 #   the conversion to milliseconds happens in {Transform} when the payload is built.
                 def pause(params)
                   {
-                    duration: params.int(:duration),
-                    prevent_override: params.bool(:prevent_override)
+                    duration: params.fetch(:duration, "").to_s,
+                    prevent_override: truthy?(params.fetch(:prevent_override, ""))
                   }
                 end
 
@@ -64,8 +68,16 @@ module Karafka
                 # @return [Hash] typed resume form data
                 def resume(params)
                   {
-                    reset_attempts: params.bool(:reset_attempts)
+                    reset_attempts: truthy?(params.fetch(:reset_attempts, ""))
                   }
+                end
+
+                private
+
+                # @param value [Object] raw checkbox value
+                # @return [Boolean] whether the value represents a checked checkbox
+                def truthy?(value)
+                  %w[on yes true].include?(value.to_s)
                 end
               end
             end

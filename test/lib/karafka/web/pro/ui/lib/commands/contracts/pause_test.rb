@@ -33,7 +33,7 @@ describe_current do
   let(:result) { contract.call(params) }
   let(:params) do
     {
-      duration: 60,
+      duration: "60",
       prevent_override: true
     }
   end
@@ -43,20 +43,34 @@ describe_current do
   end
 
   context "when the duration is zero (indefinite pause)" do
-    before { params[:duration] = 0 }
+    before { params[:duration] = "0" }
 
     it { assert(result.success?) }
   end
 
   context "when the duration is negative" do
-    before { params[:duration] = -5 }
+    before { params[:duration] = "-5" }
 
     it { refute(result.success?) }
     it { assert(result.errors.key?(:duration)) }
   end
 
-  context "when the duration is not an integer" do
-    before { params[:duration] = "60" }
+  context "when the duration is non-numeric" do
+    before { params[:duration] = "abc" }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:duration)) }
+  end
+
+  context "when the duration is blank" do
+    before { params[:duration] = "" }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:duration)) }
+  end
+
+  context "when the duration is not a string" do
+    before { params[:duration] = 60 }
 
     it { refute(result.success?) }
     it { assert(result.errors.key?(:duration)) }

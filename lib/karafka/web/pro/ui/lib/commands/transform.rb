@@ -54,7 +54,7 @@ module Karafka
                       consumer_group_id: data[:consumer_group_id],
                       topic: data[:topic],
                       partition_id: data[:partition_id],
-                      offset: data[:offset],
+                      offset: data[:offset].to_i,
                       prevent_overtaking: data[:prevent_overtaking],
                       force_resume: data[:force_resume]
                     },
@@ -71,7 +71,7 @@ module Karafka
                       consumer_group_id: data[:consumer_group_id],
                       topic: data[:topic],
                       partition_id: data[:partition_id],
-                      duration: data[:duration] * MILLIS_IN_SECOND,
+                      duration: data[:duration].to_i * MILLIS_IN_SECOND,
                       prevent_override: data[:prevent_override]
                     },
                     matchers: partition_matchers(data)
@@ -102,7 +102,7 @@ module Karafka
                     payload: {
                       consumer_group_id: data[:consumer_group_id],
                       topic: data[:topic],
-                      duration: data[:duration] * MILLIS_IN_SECOND,
+                      duration: data[:duration].to_i * MILLIS_IN_SECOND,
                       prevent_override: data[:prevent_override]
                     },
                     matchers: topic_matchers(data)

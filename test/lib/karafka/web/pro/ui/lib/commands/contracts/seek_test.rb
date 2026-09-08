@@ -33,7 +33,7 @@ describe_current do
   let(:result) { contract.call(params) }
   let(:params) do
     {
-      offset: 100,
+      offset: "100",
       prevent_overtaking: true,
       force_resume: false
     }
@@ -44,20 +44,34 @@ describe_current do
   end
 
   context "when the offset is zero" do
-    before { params[:offset] = 0 }
+    before { params[:offset] = "0" }
 
     it { assert(result.success?) }
   end
 
   context "when the offset is negative" do
-    before { params[:offset] = -1 }
+    before { params[:offset] = "-1" }
 
     it { refute(result.success?) }
     it { assert(result.errors.key?(:offset)) }
   end
 
-  context "when the offset is not an integer" do
-    before { params[:offset] = "100" }
+  context "when the offset is non-numeric" do
+    before { params[:offset] = "abc" }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:offset)) }
+  end
+
+  context "when the offset is blank" do
+    before { params[:offset] = "" }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:offset)) }
+  end
+
+  context "when the offset is not a string" do
+    before { params[:offset] = 100 }
 
     it { refute(result.success?) }
     it { assert(result.errors.key?(:offset)) }

@@ -45,7 +45,7 @@ module Karafka
                   ).fetch("en").fetch("validations").fetch("pause_form")
                 end
 
-                required(:duration) { |val| val.is_a?(Integer) && val >= 0 }
+                required(:duration) { |val| val.is_a?(String) && val.match?(/\A\d+\z/) }
                 required(:prevent_override) { |val| [true, false].include?(val) }
               end
             end
