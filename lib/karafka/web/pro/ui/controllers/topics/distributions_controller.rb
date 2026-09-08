@@ -83,13 +83,13 @@ module Karafka
               def update(topic_name)
                 edit(topic_name)
 
-                repartition_form = Lib::Repartitioning::Normalizer.call(params)
-                @errors = Lib::Repartitioning::Contracts::Form.new.call(repartition_form).errors
+                repartition_form = Lib::Topics::Repartitioning::Normalizer.call(params)
+                @errors = Lib::Topics::Repartitioning::Contracts::Form.new.call(repartition_form).errors
 
                 return edit(topic_name) unless @errors.empty?
 
                 begin
-                  Lib::Repartitioning::Dispatcher.new(topic_name, repartition_form).call
+                  Lib::Topics::Repartitioning::Dispatcher.new(topic_name, repartition_form).call
                 rescue Rdkafka::RdkafkaError, Rdkafka::Config::ConfigError => e
                   @form_error = e
                 end

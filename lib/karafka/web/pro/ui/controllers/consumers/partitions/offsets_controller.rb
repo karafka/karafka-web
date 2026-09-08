@@ -58,8 +58,8 @@ module Karafka
                 def update(consumer_group_id, topic, partition_id)
                   bootstrap!(consumer_group_id, topic, partition_id)
 
-                  command_form = Lib::Commands::Normalizer.seek(params)
-                  errors = Lib::Commands::Contracts::Seek.new.call(command_form).errors
+                  command_form = Lib::Consumers::Commands::Normalizer.seek(params)
+                  errors = Lib::Consumers::Commands::Contracts::Seek.new.call(command_form).errors
 
                   unless errors.empty?
                     return redirect(
@@ -74,8 +74,8 @@ module Karafka
                     )
                   end
 
-                  Lib::Commands::Dispatcher.new(
-                    Lib::Commands::Transform.partition_seek(
+                  Lib::Consumers::Commands::Dispatcher.new(
+                    Lib::Consumers::Commands::Transform.partition_seek(
                       command_form.merge(
                         consumer_group_id: consumer_group_id,
                         topic: topic,
