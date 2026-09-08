@@ -132,7 +132,7 @@ module Karafka
             def produce_request(payload)
               # Requests are user-initiated state changes (pause, resume, seek, quiet, ...), so
               # produce them with acks so the broker confirms receipt rather than dropping them
-              Karafka::Web.acked_producer.produce_async(
+              Karafka::Web.producers.acked.produce_async(
                 topic: commands_topic,
                 partition: 0,
                 payload: ::Zlib::Deflate.deflate(payload.to_json),

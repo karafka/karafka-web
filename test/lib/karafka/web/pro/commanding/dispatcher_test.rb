@@ -37,7 +37,7 @@ describe_current do
     let(:command_name) { "quiet" }
     let(:acked_producer) { stub }
 
-    before { Karafka::Web.stubs(:acked_producer).returns(acked_producer) }
+    before { Karafka::Web.producers.stubs(:acked).returns(acked_producer) }
 
     context "without matchers" do
       it "dispatches a request message with acks, without key (filtering via matchers)" do

@@ -46,7 +46,7 @@ module Karafka
               #
               # @return [Rdkafka::Producer::DeliveryReport] delivery report of the produced message
               def call
-                ::Karafka::Web.acked_producer.produce_sync(@message)
+                ::Karafka::Web.producers.acked.produce_sync(@message)
               end
             end
           end
