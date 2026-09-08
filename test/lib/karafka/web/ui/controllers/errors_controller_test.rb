@@ -81,6 +81,22 @@ describe_current do
       end
     end
 
+    context "when the errors topic contains a message with a corrupt zlib body" do
+      before do
+        produce(errors_topic, error_report)
+        # A `zlib` header makes the deserializer inflate the body, which fails for non-zlib bytes
+        produce(errors_topic, "this is not zlib compressed", headers: { "zlib" => "true" })
+
+        get "errors"
+      end
+
+      it "renders a placeholder for the corrupt message instead of 500-ing" do
+        assert_ok
+        assert_body("shinra:1555833:4e8f7174ae53")
+        assert_body("not a valid Karafka error report")
+      end
+    end
+
     context "when there are enough errors for pagination to kick in" do
       before do
         produce_many(errors_topic, Array.new(30) { error_report })
