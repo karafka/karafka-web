@@ -44,6 +44,7 @@
   "test/lib/karafka/web/processing/consumers/reports_migrator_test.rb": 0.079,
   "test/lib/karafka/web/tracking/consumers/listeners/statistics_test.rb": 0.07,
   "test/lib/karafka/web/ui/helpers/paths_helper_test.rb": 0.07,
+  "test/lib/karafka/web/ui/helpers/errors_helper_test.rb": 0.05,
   "test/lib/karafka/web/ui/helpers/topics_helper_test.rb": 0.067,
   "test/lib/karafka/web/ui/base_csrf_test.rb": 0.064,
   "test/lib/karafka/web/ui/lib/paginations/watermark_offsets_based_test.rb": 0.058,

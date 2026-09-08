@@ -1,7 +1,8 @@
-<% if @error_message %>
+<% error = @error_message && displayable_error(@error_message) %>
+<% if error %>
   <%
-    type = @error_message.payload[:type]
-    error_class = @error_message.payload[:error_class]
+    type = error[:type]
+    error_class = error[:error_class]
 
     view_title "#{type}: #{error_class}"
   %>
@@ -14,7 +15,7 @@
     <div class="data-table-wrapper">
       <table class="data-table">
         <tbody>
-          <% @error_message.payload.each do |k, v| %>
+          <% error.each do |k, v| %>
             <% next if k == :backtrace %>
             <%==
               partial(
@@ -36,10 +37,14 @@
       Backtrace
     </h2>
 
-    <pre class="mb-5 p-0 border border-base-300 text-sm"><code class="wrapped json p-0 m-0"><%= @error_message.payload[:backtrace] %></code></pre>
+    <pre class="mb-5 p-0 border border-base-300 text-sm"><code class="wrapped json p-0 m-0"><%= error[:backtrace] %></code></pre>
   </div>
 <% else %>
   <% view_title "Offset #{@offset}" %>
 
-  <%== partial 'shared/compacted_message_info' %>
+  <% if @error_message %>
+    <%== partial 'errors/invalid_message_info' %>
+  <% else %>
+    <%== partial 'shared/compacted_message_info' %>
+  <% end %>
 <% end %>

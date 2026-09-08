@@ -1,8 +1,4 @@
-<% if error_msg.is_a?(Array) %>
-  <%== partial 'shared/not_a_message' %>
-<% else %>
-  <% error = error_msg.payload %>
-
+<% if (error = displayable_error(error_msg)) %>
   <tr>
     <td>
       <span class="badge badge-secondary">
@@ -32,4 +28,13 @@
       <%== link_button_primary_sm 'Details', root_path('errors', error_msg.offset) %>
     </td>
   </tr>
+<% elsif error_msg.is_a?(Array) %>
+  <%== partial 'shared/not_a_message' %>
+<% else %>
+  <%==
+    partial(
+      'errors/invalid_message',
+      locals: { details_path: root_path('errors', error_msg.offset) }
+    )
+  %>
 <% end %>

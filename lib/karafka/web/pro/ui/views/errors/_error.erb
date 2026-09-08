@@ -18,11 +18,7 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<% if error_msg.is_a?(Array) %>
-  <%== partial 'shared/not_a_message' %>
-<% else %>
-  <% error = error_msg.payload %>
-
+<% if (error = displayable_error(error_msg)) %>
   <tr>
     <td>
       <span class="badge badge-secondary">
@@ -57,4 +53,15 @@
       %>
     </td>
   </tr>
+<% elsif error_msg.is_a?(Array) %>
+  <%== partial 'shared/not_a_message' %>
+<% else %>
+  <%==
+    partial(
+      'errors/invalid_message',
+      locals: {
+        details_path: explorer_topics_path(@topic_id, error_msg.partition, error_msg.offset)
+      }
+    )
+  %>
 <% end %>
