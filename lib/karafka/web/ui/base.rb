@@ -8,6 +8,7 @@ module Karafka
         include Helpers::PathsHelper
         include Helpers::ApplicationHelper
         include Helpers::BadgesHelper
+        include Helpers::ErrorsHelper
         include Helpers::FormattingHelper
         include Helpers::PartitionsHelper
         include Helpers::SortingHelper

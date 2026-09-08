@@ -78,6 +78,23 @@ describe_current do
       end
     end
 
+    context "when a partition contains a foreign message published by a user" do
+      before do
+        produce_many(errors_topic, Array.new(2) { error_report }, partition: 0)
+        produce(errors_topic, { a: "1" }.to_json, partition: 0)
+
+        get "errors"
+      end
+
+      it "renders the valid errors and a placeholder with an explorer link instead of 500-ing" do
+        assert_ok
+        assert_body("shinra:1555833:4e8f7174ae53")
+        assert_body("not a valid Karafka error report")
+        # The placeholder keeps a Details link that opens the raw message in the Explorer
+        assert_body("explorer/topics/#{errors_topic}/0/2")
+      end
+    end
+
     context "when there are only few errors in many partitions" do
       before do
         partitions.times do |i|
@@ -250,6 +267,18 @@ describe_current do
       it do
         refute(response.ok?)
         assert_equal(404, status)
+      end
+    end
+
+    context "when visiting a foreign message published by a user" do
+      before do
+        produce(errors_topic, { a: "1" }.to_json, partition: 0)
+        get "errors/0/0"
+      end
+
+      it "renders the empty-offset placeholder instead of 500-ing" do
+        assert_ok
+        assert_body("not a valid Karafka error report")
       end
     end
 

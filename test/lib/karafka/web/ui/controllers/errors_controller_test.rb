@@ -51,6 +51,52 @@ describe_current do
       end
     end
 
+    context "when the errors topic contains a non-deserializable message" do
+      before do
+        produce(errors_topic, error_report)
+        produce(errors_topic, "this is not valid json")
+
+        get "errors"
+      end
+
+      it "renders the valid errors and a placeholder instead of 500-ing" do
+        assert_ok
+        assert_body("shinra:1555833:4e8f7174ae53")
+        assert_body("not a valid Karafka error report")
+      end
+    end
+
+    context "when the errors topic contains a foreign json message published by a user" do
+      before do
+        produce(errors_topic, error_report)
+        produce(errors_topic, { foo: "bar" }.to_json)
+
+        get "errors"
+      end
+
+      it "renders a placeholder for the foreign message instead of 500-ing" do
+        assert_ok
+        assert_body("shinra:1555833:4e8f7174ae53")
+        assert_body("not a valid Karafka error report")
+      end
+    end
+
+    context "when the errors topic contains a message with a corrupt zlib body" do
+      before do
+        produce(errors_topic, error_report)
+        # A `zlib` header makes the deserializer inflate the body, which fails for non-zlib bytes
+        produce(errors_topic, "this is not zlib compressed", headers: { "zlib" => "true" })
+
+        get "errors"
+      end
+
+      it "renders a placeholder for the corrupt message instead of 500-ing" do
+        assert_ok
+        assert_body("shinra:1555833:4e8f7174ae53")
+        assert_body("not a valid Karafka error report")
+      end
+    end
+
     context "when there are enough errors for pagination to kick in" do
       before do
         produce_many(errors_topic, Array.new(30) { error_report })
@@ -134,6 +180,30 @@ describe_current do
       it do
         refute(response.ok?)
         assert_equal(404, status)
+      end
+    end
+
+    context "when visiting a non-deserializable message" do
+      before do
+        produce(errors_topic, "this is not valid json")
+        get "errors/0"
+      end
+
+      it "renders the empty-offset placeholder instead of 500-ing" do
+        assert_ok
+        assert_body("not a valid Karafka error report")
+      end
+    end
+
+    context "when visiting a foreign json message published by a user" do
+      before do
+        produce(errors_topic, { foo: "bar" }.to_json)
+        get "errors/0"
+      end
+
+      it "renders the empty-offset placeholder instead of 500-ing" do
+        assert_ok
+        assert_body("not a valid Karafka error report")
       end
     end
 
