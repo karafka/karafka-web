@@ -58,8 +58,8 @@ module Karafka
                 def create(consumer_group_id, topic, partition_id)
                   bootstrap!(consumer_group_id, topic, partition_id)
 
-                  command_form = Lib::Commands::Normalizer.pause(params)
-                  errors = Lib::Commands::Contracts::Pause.new.call(command_form).errors
+                  command_form = Lib::Consumers::Commands::Normalizer.pause(params)
+                  errors = Lib::Consumers::Commands::Contracts::Pause.new.call(command_form).errors
 
                   unless errors.empty?
                     return redirect(
@@ -74,8 +74,8 @@ module Karafka
                     )
                   end
 
-                  Lib::Commands::Dispatcher.new(
-                    Lib::Commands::Transform.partition_pause(
+                  Lib::Consumers::Commands::Dispatcher.new(
+                    Lib::Consumers::Commands::Transform.partition_pause(
                       command_form.merge(
                         consumer_group_id: consumer_group_id,
                         topic: topic,
@@ -114,9 +114,9 @@ module Karafka
                 def delete(consumer_group_id, topic, partition_id)
                   bootstrap!(consumer_group_id, topic, partition_id)
 
-                  Lib::Commands::Dispatcher.new(
-                    Lib::Commands::Transform.partition_resume(
-                      Lib::Commands::Normalizer.resume(params).merge(
+                  Lib::Consumers::Commands::Dispatcher.new(
+                    Lib::Consumers::Commands::Transform.partition_resume(
+                      Lib::Consumers::Commands::Normalizer.resume(params).merge(
                         consumer_group_id: consumer_group_id,
                         topic: topic,
                         partition_id: partition_id

@@ -72,13 +72,13 @@ module Karafka
                 # @param partition_id [Integer]
                 # @param offset [Integer] offset of the message we want to republish
                 def republish(topic_id, partition_id, offset)
-                  @republish_form = Lib::Republishing::Normalizer.call(params)
+                  @republish_form = Lib::Explorer::Republishing::Normalizer.call(params)
 
                   load_source_message(topic_id, partition_id, offset)
 
                   # The contract answers "can this be republished safely?" - target topic exists,
                   # partition in range, and the payload is consumable by the target's deserializer.
-                  @errors = Lib::Republishing::Contracts::Form.new.call(
+                  @errors = Lib::Explorer::Republishing::Contracts::Form.new.call(
                     @republish_form.merge(
                       target_partitions_count: target_partitions_count(@republish_form[:target_topic]),
                       source_message: @message
@@ -87,8 +87,8 @@ module Karafka
 
                   return forward(topic_id, partition_id, offset) unless @errors.empty?
 
-                  delivery = Lib::Publishing::Dispatcher.new(
-                    Lib::Republishing::Transform.call(@message, @republish_form)
+                  delivery = Lib::Explorer::Publishing::Dispatcher.new(
+                    Lib::Explorer::Republishing::Transform.call(@message, @republish_form)
                   ).call
 
                   # Land on the partition that received the copy so the user can see it, rather
