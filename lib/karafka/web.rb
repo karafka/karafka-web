@@ -20,6 +20,15 @@ module Karafka
         Web.config.producer
       end
 
+      # @return [WaterDrop::Producer] a producer variant that waits for at least one broker
+      #   acknowledgement (`acks: 1`), so user-initiated produces are confirmed instead of
+      #   fire-and-forget (`acks: 0`). Falls back to the configured producer when it does not
+      #   expose an acked variant (for example a custom user-provided producer).
+      # @note Do NOT memoize for the same reason as {.producer}
+      def acked_producer
+        producer.respond_to?(:acked) ? producer.acked : producer
+      end
+
       # @return [String] root path of this gem
       def gem_root
         Pathname.new(File.expand_path("../..", __dir__))

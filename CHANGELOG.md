@@ -1,6 +1,7 @@
 # Karafka Web Changelog
 
 ## Unreleased
+- [Enhancement] Dispatch consumer commanding requests (pause, resume, seek, quiet, stop, trace) through the acked (`acks: 1`) producer so the broker confirms receipt, instead of the fire-and-forget (`acks: 0`) reporting producer that can silently drop a command. Adds `Karafka::Web.acked_producer` as the single source of truth for user-initiated produces (also used by the Explorer publish/republish flows) (#1241).
 - [Maintenance] Extract the consumer commanding forms (partition offset seek, partition pause/resume, topic pause/resume) into `Lib::Commands` (Normalizer/Transform/Dispatcher plus `Seek`/`Pause` contracts), keeping the controllers to orchestration only. The offset and pause submissions are now validated server-side (offset and duration must be non-negative), redirecting back with an error instead of forwarding a crafted value to the running consumer (#1241).
 - [Maintenance] Extract the topic configuration edit flow into `Lib::Configuring` (Normalizer/Contract/Transform/Dispatcher), guarding against an empty value before the broker `alter configs` request (#1241).
 - [Maintenance] Extract the topic creation and partition-increase flows into `Lib::TopicCreation` and `Lib::Repartitioning` (Normalizer/Contract/Dispatcher). Topic name and partition/replication counts are now validated server-side, so a malformed request re-renders the form with a friendly error instead of relying on the broker rejection (#1241).

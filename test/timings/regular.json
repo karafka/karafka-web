@@ -85,6 +85,7 @@
   "test/lib/karafka/web/deserializer_test.rb": 0.021,
   "test/lib/karafka/web/ui/lib/paginations/offset_based_test.rb": 0.021,
   "test/lib/karafka/web/producer_test.rb": 0.02,
+  "test/lib/karafka/web_test.rb": 0.02,
   "test/lib/karafka/web/ui/lib/cache_test.rb": 0.019,
   "test/lib/karafka/web/processing/consumers/aggregators/state/context_test.rb": 0.018,
   "test/lib/karafka/web/processing/consumers/aggregators/state/steps/increment_counters_test.rb": 0.018,
