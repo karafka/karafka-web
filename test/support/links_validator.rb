@@ -32,7 +32,11 @@ class LinksValidator
     "StatusController" => [/.*/],
     # Also deals with invalid state that affects dashboard
     "RoutingController" => [%r{/dashboard}, %r{/jobs}, %r{/health}],
-    "ClusterController" => [%r{/explorer}],
+    # The distribution/replication specs stub `ClusterInfo.fetch` with fabricated multi-broker
+    # metadata; crawling `/topics` renders it against that stubbed state plus real Kafka calls on
+    # a fresh cluster, which intermittently 500s. `/topics` is validated by its own controller
+    # specs, so we skip it (and `/explorer`) when crawling from the cluster views.
+    "ClusterController" => [%r{/explorer}, %r{\A/topics}],
     # Replication rows render broker-id badges that link to per-broker detail pages. In specs
     # the topic metadata is stubbed with hypothetical multi-broker replica sets, so brokers
     # other than node 1 do not exist in the single-node test cluster. We still validate the
