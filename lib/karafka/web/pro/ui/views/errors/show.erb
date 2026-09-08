@@ -20,51 +20,12 @@
 
 <% error = @error_message && displayable_error(@error_message) %>
 <% if error %>
-  <%
-    type = error[:type]
-    error_class = error[:error_class]
+  <% view_title("#{error[:type]}: #{error[:error_class]}") %>
 
-    view_title("#{type}: #{error_class}")
-  %>
-
-  <div class="col-span-12 mb-3">
-    <h2 class="h2">
-      Metadata
-    </h2>
-
-    <div class="data-table-wrapper">
-      <table class="data-table">
-        <tbody>
-          <% error.each do |k, v| %>
-            <% next if k == :backtrace %>
-            <%==
-              partial(
-                'errors/detail',
-                locals: {
-                  k: k,
-                  v: v
-                }
-              )
-            %>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="col-span-12 mb-3">
-    <h2 class="h2">
-      Backtrace
-    </h2>
-
-    <pre class="mb-5 p-0 border border-base-300 text-sm"><code class="wrapped json p-0 m-0"><%= error[:backtrace] %></code></pre>
-  </div>
+  <%== partial 'errors/metadata', locals: { error: error } %>
+  <%== partial 'errors/backtrace', locals: { error: error } %>
 <% else %>
   <% view_title "Offset #{@offset}" %>
 
-  <% if @error_message %>
-    <%== partial 'errors/invalid_message_info' %>
-  <% else %>
-    <%== partial 'shared/compacted_message_info' %>
-  <% end %>
+  <%== partial 'errors/missing_message', locals: { message: @error_message } %>
 <% end %>
