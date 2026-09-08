@@ -1,0 +1,24 @@
+<div class="col-span-12 mb-3">
+  <h2 class="h2">
+    Metadata
+  </h2>
+
+  <div class="data-table-wrapper">
+    <table class="data-table">
+      <tbody>
+        <% error.each do |k, v| %>
+          <% next if k == :backtrace %>
+          <%==
+            partial(
+              'errors/detail',
+              locals: {
+                k: k,
+                v: v
+              }
+            )
+          %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

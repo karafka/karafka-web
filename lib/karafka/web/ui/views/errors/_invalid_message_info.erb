@@ -1,0 +1,11 @@
+<div class="col-span-12 mb-6">
+  <% empty_state('Not a Karafka Error', icon: 'document') do %>
+    This offset holds a message that is not a valid Karafka error report.
+
+    <p class="mt-2">
+      It was most likely produced to this topic by something other than Karafka's error
+      tracking (for example a message published to it by mistake). The Web UI can only display
+      messages that follow the Karafka error schema.
+    </p>
+  <% end %>
+</div>
