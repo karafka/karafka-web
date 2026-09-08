@@ -23,9 +23,9 @@ module Karafka
             return false unless payload.is_a?(Hash) && payload[:schema_version]
 
             payload
-          # Deserialization of a foreign payload can fail in many ways (invalid JSON, bad zlib
-          # header, etc.); none of them should take the whole page down
-          rescue
+          # A foreign payload can fail to deserialize (invalid JSON, or a corrupt zlib body); those
+          # should not take the whole page down. Anything else is a real bug, so let it raise.
+          rescue JSON::ParserError, Zlib::Error
             false
           end
         end
