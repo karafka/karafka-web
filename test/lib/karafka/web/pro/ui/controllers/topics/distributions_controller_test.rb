@@ -278,6 +278,20 @@ describe_current do
             assert_body("new_total_cnt")
           end
         end
+
+        context "when partition count is not positive" do
+          before do
+            setup_topic
+            put "topics/#{topic_name}/distribution", partition_count: 0
+          end
+
+          it "renders the edit form with a validation error and does not repartition" do
+            assert_ok
+            assert_body("Increase Partitions")
+            assert_body("Please Correct the Following Errors")
+            assert_body("1 or greater")
+          end
+        end
       end
     end
 

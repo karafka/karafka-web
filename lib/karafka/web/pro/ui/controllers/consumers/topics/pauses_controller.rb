@@ -55,22 +55,31 @@ module Karafka
                 # @param consumer_group_id [String]
                 # @param topic [String]
                 def create(consumer_group_id, topic)
-                  new(consumer_group_id, topic)
+                  bootstrap!(consumer_group_id, topic)
 
-                  Commanding::Dispatcher.request(
-                    Commanding::Commands::Topics::Pause.name,
-                    {
-                      consumer_group_id: consumer_group_id,
-                      topic: topic,
-                      # User provides this in seconds, we operate on ms in the system
-                      duration: params.int(:duration) * 1_000,
-                      prevent_override: params.bool(:prevent_override)
-                    },
-                    matchers: {
-                      consumer_group_id: consumer_group_id,
-                      topic: topic
-                    }
-                  )
+                  command_form = Lib::Consumers::Commands::Normalizer.pause(params)
+                  errors = Lib::Consumers::Commands::Contracts::Pause.new.call(command_form).errors
+
+                  unless errors.empty?
+                    return redirect(
+                      :previous,
+                      error: format_flash(
+                        "Could not pause the ? topic in consumer group ?: ?",
+                        topic,
+                        consumer_group_id,
+                        errors.values.join(", ")
+                      )
+                    )
+                  end
+
+                  Lib::Consumers::Commands::Dispatcher.new(
+                    Lib::Consumers::Commands::Transform.topic_pause(
+                      command_form.merge(
+                        consumer_group_id: consumer_group_id,
+                        topic: topic
+                      )
+                    )
+                  ).call
 
                   redirect(
                     :previous,
@@ -97,20 +106,16 @@ module Karafka
                 # @param consumer_group_id [String]
                 # @param topic [String]
                 def delete(consumer_group_id, topic)
-                  new(consumer_group_id, topic)
+                  bootstrap!(consumer_group_id, topic)
 
-                  Commanding::Dispatcher.request(
-                    Commanding::Commands::Topics::Resume.name,
-                    {
-                      consumer_group_id: consumer_group_id,
-                      topic: topic,
-                      reset_attempts: params.bool(:reset_attempts)
-                    },
-                    matchers: {
-                      consumer_group_id: consumer_group_id,
-                      topic: topic
-                    }
-                  )
+                  Lib::Consumers::Commands::Dispatcher.new(
+                    Lib::Consumers::Commands::Transform.topic_resume(
+                      Lib::Consumers::Commands::Normalizer.resume(params).merge(
+                        consumer_group_id: consumer_group_id,
+                        topic: topic
+                      )
+                    )
+                  ).call
 
                   redirect(
                     :previous,

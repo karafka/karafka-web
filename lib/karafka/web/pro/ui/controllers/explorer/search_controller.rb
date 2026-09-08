@@ -53,7 +53,7 @@ module Karafka
                 available_matchers = Web.config.ui.search.matchers
                 @matchers = available_matchers.select { |match| match.active?(@topic_id) }
                 @search_criteria = !@params.current_search.empty?
-                @current_search = Lib::Search::Normalizer.call(@params.current_search)
+                @current_search = Lib::Explorer::Search::Normalizer.call(@params.current_search)
                 # Needed when rendering found messages rows. We should always filter the messages
                 # details with the visibility filter
                 @visibility_filter = ::Karafka::Web.config.ui.policies.messages
@@ -61,14 +61,14 @@ module Karafka
 
                 # If there is search form filled, we validate it to make sure there are no errors
                 @errors = if @search_criteria
-                  Lib::Search::Contracts::Form.new.call(@current_search).errors
+                  Lib::Explorer::Search::Contracts::Form.new.call(@current_search).errors
                 else
                   {}
                 end
 
                 # If all good we run the search
                 if @search_criteria && @errors.empty?
-                  found, @search_details = Lib::Search::Runner.new(
+                  found, @search_details = Lib::Explorer::Search::Runner.new(
                     @topic_id,
                     @partitions_count,
                     @current_search

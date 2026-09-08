@@ -201,6 +201,21 @@ describe_current do
           assert_body(property_value)
         end
       end
+
+      context "when the submitted value is empty" do
+        let(:property_value) { "" }
+
+        before do
+          setup_topic
+          put "topics/#{topic_name}/config/#{property_name}", default_params
+        end
+
+        it "renders the edit form with a validation error and does not alter" do
+          assert_ok
+          assert_body("Please Correct the Following Errors")
+          assert_body("non-empty")
+        end
+      end
     end
 
     context "when topics management feature is not enabled" do

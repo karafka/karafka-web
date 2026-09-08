@@ -183,5 +183,15 @@ describe_current do
       assert_equal(topic_name, matchers[:topic])
       assert_equal(partition_id, matchers[:partition_id])
     end
+
+    context "when the offset is invalid (negative)" do
+      let(:offset) { -1 }
+
+      it "redirects back with an error instead of dispatching" do
+        assert_equal(302, response.status)
+        assert_includes(flash[:error], "Could not adjust the offset")
+        assert_includes(flash[:error], "0 or greater")
+      end
+    end
   end
 end

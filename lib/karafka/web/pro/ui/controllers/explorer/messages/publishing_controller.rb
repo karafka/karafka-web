@@ -36,9 +36,6 @@ module Karafka
           module Explorer
             module Messages
               # Publishes brand new messages to a topic from the explorer.
-              #
-              # The form parsing, validation and transformation live in {Lib::Publishing}; this
-              # controller only orchestrates them and handles the HTTP concerns.
               class PublishingController < BaseController
                 # Renders the publish form for a given topic
                 #
@@ -53,12 +50,12 @@ module Karafka
                   @partitions_count = Models::ClusterInfo.partitions_count(topic_id)
 
                   # Lets the form warn when the payload cannot be validated (topic not in routing)
-                  @payload_checkable = Lib::Publishing::Consistency.checkable?(topic_id)
+                  @payload_checkable = Lib::Explorer::Publishing::Consistency.checkable?(topic_id)
 
                   # Reads the (possibly empty) form state back so the view can render the fields.
                   # `@errors` is only defaulted here - when we re-render after a failed submission
                   # `#publish` has already populated it.
-                  @publish_form = Lib::Publishing::Normalizer.call(params)
+                  @publish_form = Lib::Explorer::Publishing::Normalizer.call(params)
                   @errors ||= {}
 
                   render
@@ -74,19 +71,18 @@ module Karafka
 
                   @partitions_count = Models::ClusterInfo.partitions_count(topic_id)
 
-                  @publish_form = Lib::Publishing::Normalizer.call(params)
+                  @publish_form = Lib::Explorer::Publishing::Normalizer.call(params)
 
                   # The contract answers "can this be sent to Kafka safely?" - field shape plus the
-                  # runtime payload-consistency cross-check (via Lib::Publishing::Consistency).
-                  @errors = Lib::Publishing::Contracts::Form.new.call(
+                  # runtime payload-consistency cross-check (via Lib::Explorer::Publishing::Consistency).
+                  @errors = Lib::Explorer::Publishing::Contracts::Form.new.call(
                     @publish_form.merge(partitions_count: @partitions_count, topic: topic_id)
                   ).errors
 
-                  # Re-render the form (preserving the entered values) with all errors at once
                   return build(topic_id) unless @errors.empty?
 
-                  delivery = Lib::Publishing::Dispatcher.new(
-                    Lib::Publishing::Transform.call(topic_id, @publish_form)
+                  delivery = Lib::Explorer::Publishing::Dispatcher.new(
+                    Lib::Explorer::Publishing::Transform.call(topic_id, @publish_form)
                   ).call
 
                   # Land back on the topic we just published to so the user can see their message,
