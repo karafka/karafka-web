@@ -59,7 +59,7 @@ module Karafka
                   }
                 )
 
-                Karafka::Web.producer.produce_sync(cancel_message)
+                Karafka::Web.producers.acked.produce_sync(cancel_message)
 
                 redirect(
                   :back,
