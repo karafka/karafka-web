@@ -36,9 +36,6 @@ module Karafka
           module Explorer
             module Messages
               # Publishes brand new messages to a topic from the explorer.
-              #
-              # The form parsing, validation and transformation live in {Lib::Publishing}; this
-              # controller only orchestrates them and handles the HTTP concerns.
               class PublishingController < BaseController
                 # Renders the publish form for a given topic
                 #
@@ -82,7 +79,6 @@ module Karafka
                     @publish_form.merge(partitions_count: @partitions_count, topic: topic_id)
                   ).errors
 
-                  # Re-render the form (preserving the entered values) with all errors at once
                   return build(topic_id) unless @errors.empty?
 
                   delivery = Lib::Publishing::Dispatcher.new(

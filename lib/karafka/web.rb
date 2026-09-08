@@ -20,6 +20,12 @@ module Karafka
         Web.config.producer
       end
 
+      # @return [Module] facade exposing the producers the Web UI dispatches through:
+      #   `producers.default` (alias of {.producer}) and `producers.acked` (`acks: 1`)
+      def producers
+        Producers
+      end
+
       # @return [String] root path of this gem
       def gem_root
         Pathname.new(File.expand_path("../..", __dir__))

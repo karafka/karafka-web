@@ -72,12 +72,13 @@ module Karafka
               def create
                 features.topics_management!
 
+                topic_form = Lib::TopicCreation::Normalizer.call(params)
+                @errors = Lib::TopicCreation::Contracts::Form.new.call(topic_form).errors
+
+                return new unless @errors.empty?
+
                 begin
-                  Karafka::Admin.create_topic(
-                    params[:topic_name],
-                    params.int(:partitions_count),
-                    params.int(:replication_factor)
-                  )
+                  Lib::TopicCreation::Dispatcher.new(topic_form).call
                 rescue Rdkafka::RdkafkaError => e
                   @form_error = e
                 end
@@ -88,7 +89,7 @@ module Karafka
                   "topics",
                   success: format_flash(
                     "Topic ? successfully created",
-                    params[:topic_name]
+                    topic_form[:topic_name]
                   )
                 )
               end

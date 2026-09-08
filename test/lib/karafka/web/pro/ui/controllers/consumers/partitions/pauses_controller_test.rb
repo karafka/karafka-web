@@ -229,6 +229,16 @@ describe_current do
 
       it { assert_equal(404, status) }
     end
+
+    context "when the duration is invalid (negative)" do
+      let(:duration) { -5 }
+
+      it "redirects back with an error instead of dispatching" do
+        assert_equal(302, response.status)
+        assert_includes(flash[:error], "Could not pause partition")
+        assert_includes(flash[:error], "0 or greater")
+      end
+    end
   end
 
   describe "#edit" do

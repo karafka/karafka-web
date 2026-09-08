@@ -83,13 +83,13 @@ module Karafka
               def update(topic_name)
                 edit(topic_name)
 
-                partition_count = params.int(:partition_count)
+                repartition_form = Lib::Repartitioning::Normalizer.call(params)
+                @errors = Lib::Repartitioning::Contracts::Form.new.call(repartition_form).errors
+
+                return edit(topic_name) unless @errors.empty?
 
                 begin
-                  Karafka::Admin.create_partitions(
-                    topic_name,
-                    partition_count
-                  )
+                  Lib::Repartitioning::Dispatcher.new(topic_name, repartition_form).call
                 rescue Rdkafka::RdkafkaError, Rdkafka::Config::ConfigError => e
                   @form_error = e
                 end
@@ -101,7 +101,7 @@ module Karafka
                   success: format_flash(
                     "Topic ? repartitioning to ? partitions successfully started",
                     topic_name,
-                    partition_count
+                    repartition_form[:partition_count]
                   )
                 )
               end

@@ -86,12 +86,15 @@ module Karafka
               def update(topic_name, property_name)
                 edit(topic_name, property_name)
 
-                property_value = params[:property_value]
+                config_form = Lib::Configuring::Normalizer.call(params)
+                @errors = Lib::Configuring::Contracts::Form.new.call(config_form).errors
+
+                return edit(topic_name, property_name) unless @errors.empty?
 
                 begin
-                  resource = Karafka::Admin::Configs::Resource.new(type: :topic, name: topic_name)
-                  resource.set(property_name, property_value)
-                  Karafka::Admin::Configs.alter(resource)
+                  Lib::Configuring::Dispatcher.new(
+                    Lib::Configuring::Transform.call(topic_name, property_name, config_form)
+                  ).call
                 rescue Rdkafka::RdkafkaError => e
                   @form_error = e
                 end

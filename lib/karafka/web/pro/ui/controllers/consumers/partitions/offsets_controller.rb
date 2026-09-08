@@ -35,7 +35,7 @@ module Karafka
         module Controllers
           module Consumers
             module Partitions
-              # Partition offset management controller at the consumer group level
+              # Partition offset management controller at the consumer group level.
               class OffsetsController < BaseController
                 self.sortable_attributes = [].freeze
 
@@ -56,36 +56,39 @@ module Karafka
                 # @param topic [String]
                 # @param partition_id [Integer]
                 def update(consumer_group_id, topic, partition_id)
-                  edit(consumer_group_id, topic, partition_id)
+                  bootstrap!(consumer_group_id, topic, partition_id)
 
-                  offset = params.int(:offset)
-                  prevent_overtaking = params.bool(:prevent_overtaking)
-                  force_resume = params.bool(:force_resume)
+                  command_form = Lib::Commands::Normalizer.seek(params)
+                  errors = Lib::Commands::Contracts::Seek.new.call(command_form).errors
 
-                  # Broadcast to all processes with matchers to filter by consumer group,
-                  # topic, and partition
-                  Commanding::Dispatcher.request(
-                    Commanding::Commands::Partitions::Seek.name,
-                    {
-                      consumer_group_id: consumer_group_id,
-                      topic: topic,
-                      partition_id: partition_id,
-                      offset: offset,
-                      prevent_overtaking: prevent_overtaking,
-                      force_resume: force_resume
-                    },
-                    matchers: {
-                      consumer_group_id: consumer_group_id,
-                      topic: topic,
-                      partition_id: partition_id
-                    }
-                  )
+                  unless errors.empty?
+                    return redirect(
+                      :previous,
+                      error: format_flash(
+                        "Could not adjust the offset for ?#? in consumer group ?: ?",
+                        topic,
+                        partition_id,
+                        consumer_group_id,
+                        errors.values.join(", ")
+                      )
+                    )
+                  end
+
+                  Lib::Commands::Dispatcher.new(
+                    Lib::Commands::Transform.partition_seek(
+                      command_form.merge(
+                        consumer_group_id: consumer_group_id,
+                        topic: topic,
+                        partition_id: partition_id
+                      )
+                    )
+                  ).call
 
                   redirect(
                     :previous,
                     success: format_flash(
                       "Initiated offset adjustment to ? for ?#? in consumer group ?",
-                      offset,
+                      command_form.fetch(:offset),
                       topic,
                       partition_id,
                       consumer_group_id

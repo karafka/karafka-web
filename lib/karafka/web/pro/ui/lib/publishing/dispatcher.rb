@@ -34,32 +34,19 @@ module Karafka
       module Ui
         module Lib
           module Publishing
-            # Produces the built message. The only side-effecting piece of the pipeline and the
-            # single place that knows which producer user-initiated dispatches go through.
+            # Produces the built message. The only side-effecting piece of the pipeline.
             class Dispatcher
               # @param message [Hash] message hash built by {Transform}
               def initialize(message)
                 @message = message
               end
 
+              # Produces through the acked (`acks: 1`) producer so the delivery report carries the
+              # assigned offset rather than the fire-and-forget reporting producer's `-1001`.
+              #
               # @return [Rdkafka::Producer::DeliveryReport] delivery report of the produced message
               def call
-                producer.produce_sync(@message)
-              end
-
-              private
-
-              # Resolves the producer used for user-initiated dispatches. We want the `acked`
-              # (`acks: 1`) variant so the delivery report carries the assigned offset, rather than
-              # the default fire-and-forget reporting producer. `Karafka::Web.producer` is normally
-              # our wrapper (which provides `#acked`), but it is configurable and may be replaced
-              # with a plain producer - in that case we use it as-is so publishing still works.
-              #
-              # @return [WaterDrop::Producer, WaterDrop::Producer::Variant] producer to publish with
-              def producer
-                web_producer = ::Karafka::Web.producer
-
-                web_producer.respond_to?(:acked) ? web_producer.acked : web_producer
+                ::Karafka::Web.producers.acked.produce_sync(@message)
               end
             end
           end
