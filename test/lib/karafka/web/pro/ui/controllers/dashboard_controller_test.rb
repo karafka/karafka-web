@@ -77,6 +77,10 @@ describe_current do
 
       Karafka::Web::Management::Actions::CreateInitialStates.new.call
       produce(metrics_topic, Fixtures.consumers_metrics_file("v1.0.0_single.json"))
+      # Wait until the freshly produced state/metrics records are readable before migrating.
+      # `MigrateStatesData` reads them back (via `Metrics.current!`), which otherwise races the
+      # broker propagation and raises `MissingConsumersMetricsError` under parallel-worker load.
+      wait_for_state_data(require_ui: false)
       Karafka::Web::Management::Actions::MigrateStatesData.new.call
       wait_for_state_data
 
@@ -152,6 +156,9 @@ describe_current do
 
       Karafka::Web::Management::Actions::CreateInitialStates.new.call
       produce(metrics_topic, Fixtures.consumers_metrics_file("v1.3.0_pace_gaps.json"))
+      # See the note above: sync on the produced data before migrating so `Metrics.current!`
+      # inside `MigrateStatesData` does not race broker propagation.
+      wait_for_state_data(require_ui: false)
       Karafka::Web::Management::Actions::MigrateStatesData.new.call
       wait_for_state_data
 
