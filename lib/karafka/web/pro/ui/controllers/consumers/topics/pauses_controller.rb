@@ -45,6 +45,8 @@ module Karafka
                 # @param consumer_group_id [String]
                 # @param topic [String]
                 def new(consumer_group_id, topic)
+                  features.commanding!
+
                   bootstrap!(consumer_group_id, topic)
 
                   render
@@ -55,6 +57,8 @@ module Karafka
                 # @param consumer_group_id [String]
                 # @param topic [String]
                 def create(consumer_group_id, topic)
+                  features.commanding!
+
                   bootstrap!(consumer_group_id, topic)
 
                   command_form = Lib::Consumers::Commands::Normalizer.pause(params)
@@ -106,6 +110,8 @@ module Karafka
                 # @param consumer_group_id [String]
                 # @param topic [String]
                 def delete(consumer_group_id, topic)
+                  features.commanding!
+
                   bootstrap!(consumer_group_id, topic)
 
                   Lib::Consumers::Commands::Dispatcher.new(

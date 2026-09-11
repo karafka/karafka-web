@@ -45,6 +45,8 @@ module Karafka
                 # @param topic [String]
                 # @param partition_id [Integer]
                 def edit(consumer_group_id, topic, partition_id)
+                  features.commanding!
+
                   bootstrap!(consumer_group_id, topic, partition_id)
 
                   render
@@ -56,6 +58,8 @@ module Karafka
                 # @param topic [String]
                 # @param partition_id [Integer]
                 def update(consumer_group_id, topic, partition_id)
+                  features.commanding!
+
                   bootstrap!(consumer_group_id, topic, partition_id)
 
                   command_form = Lib::Consumers::Commands::Normalizer.seek(params)
