@@ -11,8 +11,15 @@ module Karafka
     #   compressing the payload.
     class Deserializer
       # @param message [::Karafka::Messages::Message]
-      # @return [Object] deserialized data
+      # @return [Object, nil] deserialized data or `nil` for a tombstone / null-value record
+      #
+      # @note A `nil` raw payload (a tombstone or any null-value record, for example a foreign
+      #   message published to one of our topics) has nothing to deserialize. We return `nil`
+      #   rather than letting `JSON.parse(nil)` / `Zlib::Inflate.inflate(nil)` raise a
+      #   `TypeError`, which would 500 the views reading such a record (e.g. the Errors views).
       def call(message)
+        return nil if message.raw_payload.nil?
+
         raw_payload = if message.headers.key?("zlib")
           Zlib::Inflate.inflate(message.raw_payload)
         else
