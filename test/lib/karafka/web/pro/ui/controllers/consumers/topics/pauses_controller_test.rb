@@ -384,4 +384,41 @@ describe_current do
       it { assert_equal(404, status) }
     end
   end
+
+  describe "when commanding is disabled" do
+    let(:base_path) do
+      [
+        "consumers",
+        "topics",
+        consumer_group_id,
+        topic_name,
+        "pause"
+      ].join("/")
+    end
+
+    before { Karafka::Web.config.commanding.active = false }
+
+    after { Karafka::Web.config.commanding.active = true }
+
+    it "forbids rendering the pause form (#new)" do
+      get("#{base_path}/new")
+
+      refute(response.ok?)
+      assert_equal(403, status)
+    end
+
+    it "forbids dispatching a pause (#create)" do
+      post(base_path, duration: 60)
+
+      refute(response.ok?)
+      assert_equal(403, status)
+    end
+
+    it "forbids dispatching a resume (#delete)" do
+      delete(base_path, reset_attempts: "yes")
+
+      refute(response.ok?)
+      assert_equal(403, status)
+    end
+  end
 end

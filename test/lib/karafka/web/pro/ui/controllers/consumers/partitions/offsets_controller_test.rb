@@ -193,5 +193,47 @@ describe_current do
         assert_includes(flash[:error], "0 or greater")
       end
     end
+
+    context "when commanding is disabled" do
+      before do
+        Karafka::Web.config.commanding.active = false
+
+        put(post_path, offset: offset)
+      end
+
+      after { Karafka::Web.config.commanding.active = true }
+
+      it "returns unauthorized status and does not dispatch" do
+        refute(response.ok?)
+        assert_equal(403, status)
+      end
+    end
+  end
+
+  describe "#edit when commanding is disabled" do
+    let(:edit_path) do
+      [
+        "consumers",
+        "partitions",
+        consumer_group_id,
+        topic_name,
+        partition_id,
+        "offset",
+        "edit"
+      ].join("/")
+    end
+
+    before do
+      Karafka::Web.config.commanding.active = false
+
+      get(edit_path)
+    end
+
+    after { Karafka::Web.config.commanding.active = true }
+
+    it "returns unauthorized status" do
+      refute(response.ok?)
+      assert_equal(403, status)
+    end
   end
 end
