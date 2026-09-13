@@ -84,6 +84,19 @@ describe_current do
     it { assert(result.errors.key?(:offset)) }
   end
 
+  context "when the offset is the maximum signed 64-bit integer" do
+    before { params[:offset] = ((2**63) - 1).to_s }
+
+    it { assert(result.success?) }
+  end
+
+  context "when the offset exceeds the maximum signed 64-bit integer" do
+    before { params[:offset] = (2**63).to_s }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:offset)) }
+  end
+
   context "when a boolean flag is not a boolean" do
     before { params[:force_resume] = "off" }
 
