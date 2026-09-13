@@ -37,6 +37,10 @@ module Karafka
             # Turns the "create topic" form into a Kafka topic creation request.
             module Creation
               # Turns the raw "create topic" form params into a typed hash
+              #
+              # Numeric fields are kept as raw strings and their format is validated by the
+              # contract, so a malformed value fails validation instead of being silently
+              # truncated (`"5abc".to_i => 5`).
               module Normalizer
                 class << self
                   # @param params [Karafka::Web::Ui::Controllers::Requests::Params] request params
@@ -44,8 +48,8 @@ module Karafka
                   def call(params)
                     {
                       topic_name: params.fetch(:topic_name, "").to_s,
-                      partitions_count: params.fetch(:partitions_count, "").to_i,
-                      replication_factor: params.fetch(:replication_factor, "").to_i
+                      partitions_count: params.fetch(:partitions_count, "").to_s,
+                      replication_factor: params.fetch(:replication_factor, "").to_s
                     }
                   end
                 end

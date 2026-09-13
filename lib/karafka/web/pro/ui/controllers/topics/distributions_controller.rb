@@ -101,7 +101,7 @@ module Karafka
                   success: format_flash(
                     "Topic ? repartitioning to ? partitions successfully started",
                     topic_name,
-                    repartition_form[:partition_count]
+                    repartition_form[:partition_count].to_i
                   )
                 )
               end

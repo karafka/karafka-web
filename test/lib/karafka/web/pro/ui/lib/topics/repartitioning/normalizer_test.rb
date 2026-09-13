@@ -35,14 +35,22 @@ describe_current do
   context "when the partition count is provided" do
     let(:raw) { { "partition_count" => "5" } }
 
-    it { assert_equal(5, result[:partition_count]) }
+    it { assert_equal("5", result[:partition_count]) }
   end
 
   context "when the partition count is missing" do
     let(:raw) { {} }
 
-    it "defaults to zero" do
-      assert_equal(0, result[:partition_count])
+    it "defaults to an empty string" do
+      assert_equal("", result[:partition_count])
+    end
+  end
+
+  context "when the partition count carries trailing garbage" do
+    let(:raw) { { "partition_count" => "5abc" } }
+
+    it "keeps it verbatim instead of truncating it" do
+      assert_equal("5abc", result[:partition_count])
     end
   end
 end

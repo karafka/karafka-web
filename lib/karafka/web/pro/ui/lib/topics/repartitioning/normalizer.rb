@@ -37,13 +37,17 @@ module Karafka
             # Turns the "increase partitions" form into a Kafka create-partitions request.
             module Repartitioning
               # Turns the raw "increase partitions" form params into a typed hash
+              #
+              # The partition count is kept as a raw string and its format is validated by the
+              # contract, so a malformed value fails validation instead of being silently
+              # truncated (`"5abc".to_i => 5`).
               module Normalizer
                 class << self
                   # @param params [Karafka::Web::Ui::Controllers::Requests::Params] request params
                   # @return [Hash] typed repartitioning form data
                   def call(params)
                     {
-                      partition_count: params.fetch(:partition_count, "").to_i
+                      partition_count: params.fetch(:partition_count, "").to_s
                     }
                   end
                 end
