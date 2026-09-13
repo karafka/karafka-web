@@ -83,6 +83,19 @@ describe_current do
     it { assert(result.errors.key?(:duration)) }
   end
 
+  context "when the duration is the maximum that stays within int64 milliseconds" do
+    before { params[:duration] = (((2**63) - 1) / 1_000).to_s }
+
+    it { assert(result.success?) }
+  end
+
+  context "when the duration would overflow int64 milliseconds" do
+    before { params[:duration] = ((((2**63) - 1) / 1_000) + 1).to_s }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:duration)) }
+  end
+
   context "when prevent_override is not a boolean" do
     before { params[:prevent_override] = "on" }
 

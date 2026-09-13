@@ -489,5 +489,35 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups d
         assert_in_delta(50.0, result["cg2"][:subscription_groups]["sg2"][:state][:poll_age])
       end
     end
+
+    # Regression: the consumer group hash carries several top-level keys (`:id` and
+    # `:subscription_groups`). A previous stray `cg_details.each` wrapper iterated once per
+    # top-level key, so every subscription group was enriched multiple times per sample.
+    context "when the consumer group hash carries several top-level keys" do
+      let(:consumer_groups) do
+        {
+          "cg1" => {
+            id: "cg1",
+            subscription_groups: {
+              "sg1" => { state: {}, topics: {} }
+            }
+          }
+        }
+      end
+
+      let(:subscription_groups) do
+        {
+          "sg1" => { polled_at: 100.0, poll_interval: 300_000, topics: {} }
+        }
+      end
+
+      before { enricher.stubs(:monotonic_now).returns(150.0) }
+
+      it "enriches each subscription group exactly once" do
+        enricher.expects(:enrich_subscription_group).with("sg1", anything).once
+
+        enricher.call
+      end
+    end
   end
 end

@@ -120,7 +120,7 @@ GEM
     roda (3.107.0)
       rack
     ruby2_keywords (0.0.5)
-    simplecov (1.1.1)
+    simplecov (1.2.0)
     tilt (2.9.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)

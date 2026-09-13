@@ -34,6 +34,22 @@ describe_current do
     end
   end
 
+  context "when the raw payload is nil (a tombstone / null-value record)" do
+    let(:raw_payload) { nil }
+
+    it "returns nil instead of raising a TypeError" do
+      assert_nil(parsing)
+    end
+
+    context "when a zlib header is present" do
+      let(:headers) { { "zlib" => "true" } }
+
+      it "still returns nil rather than inflating nil" do
+        assert_nil(parsing)
+      end
+    end
+  end
+
   context "when we detect zlib usage" do
     let(:headers) { { "zlib" => "true" } }
     let(:raw_payload) { Zlib::Deflate.deflate('{"key":"value"}') }

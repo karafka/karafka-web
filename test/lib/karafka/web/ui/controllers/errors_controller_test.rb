@@ -97,6 +97,40 @@ describe_current do
       end
     end
 
+    context "when the errors topic contains a tombstone (null payload) message" do
+      before do
+        produce(errors_topic, error_report)
+        # A tombstone / null-value record has a nil raw payload, so the deserializer has nothing
+        # to parse. It must return nil rather than raise on `JSON.parse(nil)`.
+        produce(errors_topic, nil)
+
+        get "errors"
+      end
+
+      it "renders a placeholder for the tombstone instead of 500-ing" do
+        assert_ok
+        assert_body("shinra:1555833:4e8f7174ae53")
+        assert_body("not a valid Karafka error report")
+      end
+    end
+
+    context "when the errors topic contains a tombstone with a zlib header" do
+      before do
+        produce(errors_topic, error_report)
+        # A nil payload must short-circuit before the `zlib` inflate too, otherwise
+        # `Zlib::Inflate.inflate(nil)` raises a `TypeError`.
+        produce(errors_topic, nil, headers: { "zlib" => "true" })
+
+        get "errors"
+      end
+
+      it "renders a placeholder for the tombstone instead of 500-ing" do
+        assert_ok
+        assert_body("shinra:1555833:4e8f7174ae53")
+        assert_body("not a valid Karafka error report")
+      end
+    end
+
     context "when there are enough errors for pagination to kick in" do
       before do
         produce_many(errors_topic, Array.new(30) { error_report })

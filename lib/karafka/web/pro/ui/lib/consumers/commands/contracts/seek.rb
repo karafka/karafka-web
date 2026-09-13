@@ -38,15 +38,24 @@ module Karafka
               module Contracts
                 # Validates the offset-adjustment (seek) form. The form enforces the bounds in the
                 # browser; this guards the same on the server so a crafted request cannot seek to a
-                # negative offset.
+                # negative or out-of-range offset.
                 class Seek < Web::Contracts::Base
+                  # Kafka stores offsets as a signed 64-bit integer. A larger value overflows the
+                  # librdkafka `int64` seek argument and raises a `RangeError` inside the running
+                  # consumer when the command is applied, so we reject it server-side.
+                  MAX_OFFSET = (2**63) - 1
+
+                  private_constant :MAX_OFFSET
+
                   configure do |config|
                     config.error_messages = YAML.safe_load_file(
                       File.join(Karafka::Web.gem_root, "config", "locales", "pro_errors.yml")
                     ).fetch("en").fetch("validations").fetch("seek_form")
                   end
 
-                  required(:offset) { |val| val.is_a?(String) && val.match?(/\A\d+\z/) }
+                  required(:offset) do |val|
+                    val.is_a?(String) && val.match?(/\A\d+\z/) && val.to_i <= MAX_OFFSET
+                  end
                   required(:prevent_overtaking) { |val| [true, false].include?(val) }
                   required(:force_resume) { |val| [true, false].include?(val) }
                 end

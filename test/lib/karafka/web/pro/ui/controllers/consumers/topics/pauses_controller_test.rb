@@ -220,7 +220,7 @@ describe_current do
       it "redirects back with an error instead of dispatching" do
         assert_equal(302, response.status)
         assert_includes(flash[:error], "Could not pause the")
-        assert_includes(flash[:error], "0 or greater")
+        assert_includes(flash[:error], "between 0 and")
       end
     end
   end
