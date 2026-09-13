@@ -75,6 +75,27 @@ module Karafka
                     [[%i[target_partition], :out_of_range]]
                   end
 
+                  # The source message's key and headers must be deserializable. Both are copied
+                  # onto the republished message, and both are lazily deserialized, so a strict
+                  # custom deserializer on the source topic would otherwise raise mid-republish.
+                  # Not gated on `skip_validation`: that flag is about the target's payload
+                  # consistency, while this is about being able to read the source at all.
+                  virtual do |data|
+                    message = data[:source_message]
+
+                    %i[key headers].filter_map do |attribute|
+                      runner = Lib::SafeRunner.new { message.public_send(attribute) }
+                      runner.call
+
+                      next if runner.success?
+
+                      [
+                        %i[source_message],
+                        "Source message #{attribute} cannot be deserialized: #{runner.error.message}"
+                      ]
+                    end
+                  end
+
                   # The payload must be consumable by the target deserializer, unless skipped
                   virtual do |data|
                     next if data[:skip_validation]

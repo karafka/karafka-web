@@ -48,6 +48,40 @@ describe_current do
     }.merge(overrides)
   end
 
+  # M1: Transform must stay total. Key/headers are lazily deserialized and a strict custom
+  # deserializer on the source topic raises - that used to 500 the republish. The form contract
+  # blocks the republish with a validation error, so this only has to not raise; the raw bytes are
+  # the closest stand-in for the value.
+  it "falls back to the raw key when the key deserializer raises" do
+    source.stubs(:key).raises(StandardError, "broken key deserializer")
+    source.stubs(:raw_key).returns("raw-k")
+
+    message = described_class.call(source, data)
+
+    assert_equal("raw-k", message[:key])
+  end
+
+  it "falls back to the raw headers when the headers deserializer raises" do
+    source.stubs(:headers).raises(StandardError, "broken headers deserializer")
+    source.stubs(:raw_headers).returns({ "rh" => "rv" })
+
+    message = described_class.call(source, data)
+
+    assert_equal({ "rh" => "rv" }, message[:headers])
+  end
+
+  it "still augments raw headers with source tracking when requested" do
+    source.stubs(:headers).raises(StandardError, "broken headers deserializer")
+    source.stubs(:raw_headers).returns({ "rh" => "rv" })
+
+    message = described_class.call(source, data(include_source_headers: true))
+
+    assert_equal("rv", message[:headers]["rh"])
+    assert_equal("src", message[:headers]["source_topic"])
+    assert_equal("3", message[:headers]["source_partition"])
+    assert_equal("7", message[:headers]["source_offset"])
+  end
+
   it "copies the payload, key and headers to the target topic" do
     message = described_class.call(source, data)
 
