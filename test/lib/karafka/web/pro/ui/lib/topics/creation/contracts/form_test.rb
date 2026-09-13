@@ -64,6 +64,32 @@ describe_current do
     it { assert(result.errors.key?(:topic_name)) }
   end
 
+  context "when the topic name is the reserved single dot" do
+    before { params[:topic_name] = "." }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:topic_name)) }
+  end
+
+  context "when the topic name is the reserved double dot" do
+    before { params[:topic_name] = ".." }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:topic_name)) }
+  end
+
+  context "when the topic name has more dots than the reserved ones" do
+    before { params[:topic_name] = "..." }
+
+    it { assert(result.success?) }
+  end
+
+  context "when the topic name contains a dot" do
+    before { params[:topic_name] = "a.b" }
+
+    it { assert(result.success?) }
+  end
+
   context "when the partitions count is below one" do
     before { params[:partitions_count] = 0 }
 

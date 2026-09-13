@@ -48,7 +48,14 @@ module Karafka
                   # Maximum length of a Kafka topic name
                   MAX_TOPIC_NAME_LENGTH = 249
 
-                  private_constant :TOPIC_NAME_REGEXP, :MAX_TOPIC_NAME_LENGTH
+                  # Names Kafka refuses because they would clash with the directory entries that
+                  # back topic partitions. Only these two are reserved, longer dot-only names such
+                  # as `...` are accepted by the broker
+                  RESERVED_TOPIC_NAMES = %w[. ..].freeze
+
+                  private_constant :TOPIC_NAME_REGEXP,
+                    :MAX_TOPIC_NAME_LENGTH,
+                    :RESERVED_TOPIC_NAMES
 
                   configure do |config|
                     config.error_messages = YAML.safe_load_file(
@@ -60,6 +67,7 @@ module Karafka
                     val.is_a?(String) &&
                       !val.empty? &&
                       val.length <= MAX_TOPIC_NAME_LENGTH &&
+                      !RESERVED_TOPIC_NAMES.include?(val) &&
                       val.match?(TOPIC_NAME_REGEXP)
                   end
 
