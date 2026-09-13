@@ -24,10 +24,8 @@ module Karafka
               # @return [Hash] enriched consumer groups
               def call
                 consumer_groups.each_value do |cg_details|
-                  cg_details.each do
-                    cg_details.fetch(:subscription_groups, {}).each do |sg_id, sg_details|
-                      enrich_subscription_group(sg_id, sg_details)
-                    end
+                  cg_details.fetch(:subscription_groups, {}).each do |sg_id, sg_details|
+                    enrich_subscription_group(sg_id, sg_details)
                   end
                 end
 
