@@ -79,7 +79,7 @@ module Karafka
 
                 begin
                   Lib::Topics::Creation::Dispatcher.new(topic_form).call
-                rescue Rdkafka::RdkafkaError => e
+                rescue Rdkafka::RdkafkaError, Rdkafka::Config::ConfigError => e
                   @form_error = e
                 end
 
