@@ -59,12 +59,12 @@ en:
       target_partition_out_of_range: 'Selected partition does not exist for the target topic'
     seek_form:
       missing: needs to be present
-      offset_format: needs to be an integer that is 0 or greater
+      offset_format: needs to be an integer between 0 and 9223372036854775807
       prevent_overtaking_format: must be a boolean
       force_resume_format: must be a boolean
     pause_form:
       missing: needs to be present
-      duration_format: needs to be an integer that is 0 or greater (0 means an indefinite pause)
+      duration_format: needs to be an integer between 0 and 9223372036854775 (0 means an indefinite pause)
       prevent_override_format: must be a boolean
     configuring_form:
       missing: needs to be present

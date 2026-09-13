@@ -38,15 +38,25 @@ module Karafka
               # Namespace for the consumer commanding form contracts
               module Contracts
                 # Validates the pause form (both partition and topic level). Duration is in seconds
-                # with `0` meaning an indefinite pause, so it only needs to be a non-negative int.
+                # with `0` meaning an indefinite pause, so it only needs to be a non-negative int
+                # within range.
                 class Pause < Web::Contracts::Base
+                  # Duration is given in seconds and multiplied by 1_000 to milliseconds downstream
+                  # before it reaches the running consumer's pause timeout. Cap it so the resulting
+                  # millisecond value stays within a signed 64-bit integer.
+                  MAX_DURATION = ((2**63) - 1) / 1_000
+
+                  private_constant :MAX_DURATION
+
                   configure do |config|
                     config.error_messages = YAML.safe_load_file(
                       File.join(Karafka::Web.gem_root, "config", "locales", "pro_errors.yml")
                     ).fetch("en").fetch("validations").fetch("pause_form")
                   end
 
-                  required(:duration) { |val| val.is_a?(String) && val.match?(/\A\d+\z/) }
+                  required(:duration) do |val|
+                    val.is_a?(String) && val.match?(/\A\d+\z/) && val.to_i <= MAX_DURATION
+                  end
                   required(:prevent_override) { |val| [true, false].include?(val) }
                 end
               end
