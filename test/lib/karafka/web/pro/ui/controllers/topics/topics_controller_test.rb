@@ -213,6 +213,25 @@ describe_current do
       end
     end
 
+    context "when topic creation fails because of an admin config error" do
+      let(:error_message) { "Invalid admin client configuration" }
+
+      before do
+        Karafka::Admin.stubs(:create_topic).raises(
+          Rdkafka::Config::ConfigError.new(error_message)
+        )
+
+        post "topics", default_params
+      end
+
+      it "renders form with errors instead of failing" do
+        assert_ok
+        assert_body("Creating New Topic")
+        assert_body("Please Correct the Following Errors Before Continuing")
+        assert_body(error_message)
+      end
+    end
+
     context "when the topic name is malformed" do
       before { post "topics", default_params.merge(topic_name: "invalid name!") }
 
