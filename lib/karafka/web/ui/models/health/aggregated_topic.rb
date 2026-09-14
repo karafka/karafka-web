@@ -53,6 +53,9 @@ module Karafka
                 no_data_count: (0...partitions_count).count { |id| !partitions_map.key?(id) },
                 measurable_count: lags.size,
                 lag_hybrid: lags.empty? ? -1 : lags.sum,
+                # Same number as `lag_hybrid`, under a name the cluster rows share, so lag
+                # distribution can be judged the same way for both row types.
+                total_lag: lags.empty? ? -1 : lags.sum,
                 lag_hybrid_d: measurable.sum(&:lag_hybrid_d),
                 max_lag: lags.max || -1,
                 avg_lag: lags.empty? ? -1 : (lags.sum.to_f / lags.size).round,
