@@ -27,6 +27,7 @@
 - [Fix] Stop the live poll from clobbering the search/filter box. Live polling now ignores the filter box unless it has unsubmitted input, so pages auto-refresh again while a typed but unsubmitted filter is preserved.
 - [Fix] Report malformed partition count, replication factor and repartition count values in the topic forms as errors instead of silently truncating them (`"5abc"` became `5`).
 - [Fix] Rescue `Rdkafka::Config::ConfigError` when creating a topic or altering a topic config, so an admin client configuration failure re-renders the form with the error instead of returning a 500, matching what repartitioning already did.
+- [Fix] Stop the explorer search from falling back to partition `0` when none of the requested partitions exist on the topic, so a search scoped to a non-existent partition reports no results instead of presenting partition `0` results as the requested scope.
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a generic keyword filtering box to the data-heavy Web UI listings, so a specific consumer, topic or job can be found without scrolling. Flat listings also include a field selector to scope the search to a chosen attribute (Pro) (#1073).
