@@ -50,8 +50,8 @@ module Karafka
                 def call
                   ::Karafka::Admin.create_topic(
                     @data[:topic_name],
-                    @data[:partitions_count],
-                    @data[:replication_factor]
+                    @data[:partitions_count].to_i,
+                    @data[:replication_factor].to_i
                   )
                 end
               end

@@ -41,20 +41,35 @@ describe_current do
       }
     end
 
-    it "coerces the name to a string and the counts to integers" do
+    it "keeps the name and the counts as strings" do
       assert_equal("orders", result[:topic_name])
-      assert_equal(3, result[:partitions_count])
-      assert_equal(1, result[:replication_factor])
+      assert_equal("3", result[:partitions_count])
+      assert_equal("1", result[:replication_factor])
     end
   end
 
   context "when fields are missing" do
     let(:raw) { {} }
 
-    it "defaults to an empty name and zero counts" do
+    it "defaults to empty strings" do
       assert_equal("", result[:topic_name])
-      assert_equal(0, result[:partitions_count])
-      assert_equal(0, result[:replication_factor])
+      assert_equal("", result[:partitions_count])
+      assert_equal("", result[:replication_factor])
+    end
+  end
+
+  context "when the counts carry trailing garbage" do
+    let(:raw) do
+      {
+        "topic_name" => "orders",
+        "partitions_count" => "5abc",
+        "replication_factor" => "3.9"
+      }
+    end
+
+    it "keeps them verbatim instead of truncating them" do
+      assert_equal("5abc", result[:partitions_count])
+      assert_equal("3.9", result[:replication_factor])
     end
   end
 end

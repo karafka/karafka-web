@@ -53,9 +53,14 @@ module Karafka
                   # as `...` are accepted by the broker
                   RESERVED_TOPIC_NAMES = %w[. ..].freeze
 
+                  # Digits only. Counts arrive as raw strings so a malformed value ("5abc", "3.9",
+                  # " 7") is reported as such instead of being silently truncated by a coercion
+                  COUNT_REGEXP = /\A\d+\z/
+
                   private_constant :TOPIC_NAME_REGEXP,
                     :MAX_TOPIC_NAME_LENGTH,
-                    :RESERVED_TOPIC_NAMES
+                    :RESERVED_TOPIC_NAMES,
+                    :COUNT_REGEXP
 
                   configure do |config|
                     config.error_messages = YAML.safe_load_file(
@@ -71,8 +76,13 @@ module Karafka
                       val.match?(TOPIC_NAME_REGEXP)
                   end
 
-                  required(:partitions_count) { |val| val.is_a?(Integer) && val >= 1 }
-                  required(:replication_factor) { |val| val.is_a?(Integer) && val >= 1 }
+                  required(:partitions_count) do |val|
+                    val.is_a?(String) && val.match?(COUNT_REGEXP) && val.to_i >= 1
+                  end
+
+                  required(:replication_factor) do |val|
+                    val.is_a?(String) && val.match?(COUNT_REGEXP) && val.to_i >= 1
+                  end
                 end
               end
             end

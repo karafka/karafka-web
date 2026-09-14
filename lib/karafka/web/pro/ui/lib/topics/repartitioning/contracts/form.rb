@@ -41,13 +41,21 @@ module Karafka
                 # than the current one is left to the broker (rejects a non-increase); this only
                 # guards the value being a positive integer before we reach out.
                 class Form < Web::Contracts::Base
+                  # Digits only. The count arrives as a raw string so a malformed value ("5abc",
+                  # "3.9", " 7") is reported as such instead of being silently truncated
+                  COUNT_REGEXP = /\A\d+\z/
+
+                  private_constant :COUNT_REGEXP
+
                   configure do |config|
                     config.error_messages = YAML.safe_load_file(
                       File.join(Karafka::Web.gem_root, "config", "locales", "pro_errors.yml")
                     ).fetch("en").fetch("validations").fetch("repartitioning_form")
                   end
 
-                  required(:partition_count) { |val| val.is_a?(Integer) && val >= 1 }
+                  required(:partition_count) do |val|
+                    val.is_a?(String) && val.match?(COUNT_REGEXP) && val.to_i >= 1
+                  end
                 end
               end
             end

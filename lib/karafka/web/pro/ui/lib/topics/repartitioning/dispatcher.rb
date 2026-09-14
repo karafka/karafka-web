@@ -53,7 +53,7 @@ module Karafka
                 def call
                   ::Karafka::Admin.create_partitions(
                     @topic_name,
-                    @data[:partition_count]
+                    @data[:partition_count].to_i
                   )
                 end
               end
