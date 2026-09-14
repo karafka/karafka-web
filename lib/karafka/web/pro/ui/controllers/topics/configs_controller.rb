@@ -95,7 +95,7 @@ module Karafka
                   Lib::Topics::Configuring::Dispatcher.new(
                     Lib::Topics::Configuring::Transform.call(topic_name, property_name, config_form)
                   ).call
-                rescue Rdkafka::RdkafkaError => e
+                rescue Rdkafka::RdkafkaError, Rdkafka::Config::ConfigError => e
                   @form_error = e
                 end
 
