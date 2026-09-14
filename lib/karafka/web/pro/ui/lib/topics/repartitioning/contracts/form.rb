@@ -71,7 +71,11 @@ module Karafka
                     current = data[:current_partition_count]
 
                     next if current.nil?
+                    # Mirror the shape rule above: anything it already rejects (malformed, or
+                    # below 1) is reported there, so this must stay silent rather than replace
+                    # that error with a less accurate one
                     next unless count.is_a?(String) && count.match?(COUNT_REGEXP)
+                    next unless count.to_i >= 1
                     next if count.to_i > current
 
                     [[%i[partition_count], :not_an_increase]]

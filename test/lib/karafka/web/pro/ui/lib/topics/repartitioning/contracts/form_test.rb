@@ -64,16 +64,20 @@ describe_current do
     end
 
     # The shape rule already reports malformed values; the comparison must not report them again
-    context "when the new count is malformed" do
-      before { params[:partition_count] = "5abc" }
+    # with a less accurate message. "0" is the subtle one - well-formed digits, but below 1, so a
+    # regexp-only guard lets it through
+    ["5abc", "0", "-1", ""].each do |invalid|
+      context "when the new count is #{invalid.inspect}" do
+        before { params[:partition_count] = invalid }
 
-      it { refute(result.success?) }
+        it { refute(result.success?) }
 
-      it "reports it once, as a format problem" do
-        assert_equal(
-          "needs to be an integer that is 1 or greater",
-          result.errors[:partition_count]
-        )
+        it "reports it once, as a format problem" do
+          assert_equal(
+            "needs to be an integer that is 1 or greater",
+            result.errors[:partition_count]
+          )
+        end
       end
     end
   end
