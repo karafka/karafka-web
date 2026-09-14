@@ -202,6 +202,27 @@ describe_current do
         end
       end
 
+      context "when the update fails because of an admin config error" do
+        let(:error_message) { "Invalid admin client configuration" }
+
+        before do
+          setup_topic
+          Karafka::Admin::Configs.stubs(:alter).raises(
+            Rdkafka::Config::ConfigError.new(error_message)
+          )
+
+          put "topics/#{topic_name}/config/#{property_name}", default_params
+        end
+
+        it "renders edit form with error messages instead of failing" do
+          assert_ok
+          assert_body("Please Correct the Following Errors Before Continuing")
+          assert_body(error_message)
+          assert_body(topic_name)
+          assert_body(property_name)
+        end
+      end
+
       context "when the submitted value is empty" do
         let(:property_value) { "" }
 
