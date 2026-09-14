@@ -39,7 +39,7 @@
             name="partition_count"
             class="block input input-bordered w-full"
             placeholder="Enter new partition count"
-            value="<%= params.fetch(:partition_count, @topic.partition_count) %>"
+            value="<%= params.fetch(:partition_count, @topic.partition_count + 1) %>"
             min="<%= @topic.partition_count + 1 %>"
             required
             autocomplete="on"
