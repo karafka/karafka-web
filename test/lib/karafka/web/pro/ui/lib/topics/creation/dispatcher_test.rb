@@ -32,12 +32,12 @@ describe_current do
   let(:data) do
     {
       topic_name: "orders",
-      partitions_count: 3,
-      replication_factor: 1
+      partitions_count: "3",
+      replication_factor: "1"
     }
   end
 
-  it "creates the topic via the admin api using the normalized data" do
+  it "creates the topic via the admin api with the counts coerced to integers" do
     Karafka::Admin
       .expects(:create_topic)
       .with("orders", 3, 1)
