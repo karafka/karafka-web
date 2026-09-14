@@ -72,8 +72,8 @@ en:
     topic_creation_form:
       missing: needs to be present
       topic_name_format: >-
-        needs to be present, at most 249 characters and contain only letters, digits, dots,
-        hyphens and underscores
+        needs to be present, at most 249 characters, contain only letters, digits, dots,
+        hyphens and underscores, and cannot be "." or ".."
       partitions_count_format: needs to be an integer that is 1 or greater
       replication_factor_format: needs to be an integer that is 1 or greater
     repartitioning_form:
