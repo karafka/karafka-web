@@ -174,6 +174,29 @@ describe_current do
       it { assert_equal([], runner.call.first) }
     end
 
+    context "when none of the requested partitions exist" do
+      let(:topic) { create_topic }
+      let(:partitions_count) { 1 }
+
+      before do
+        # Partition 0 holds a match, so falling back to it would return a result the operator
+        # never asked for
+        produce(topic, "12 test phrase 12", partition: 0)
+
+        search_criteria[:partitions] = %w[999]
+      end
+
+      it "returns nothing instead of searching partition 0" do
+        results, details = runner.call
+
+        assert_equal([], results)
+        assert_equal(0, details[:totals][:checked])
+        assert_equal(0, details[:totals][:matched])
+        assert_empty(details[:partitions])
+        assert_equal(:eof, details[:stop_reason])
+      end
+    end
+
     context "when we want to search in many partitions and all include some data" do
       let(:topic) { create_topic(partitions: 2) }
       let(:partitions_count) { 2 }
