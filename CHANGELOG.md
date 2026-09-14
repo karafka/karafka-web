@@ -25,6 +25,9 @@
 - [Fix] Do not 500 the Errors views when the errors topic contains a foreign or malformed message. Such an entry now renders a "not a valid Karafka error report" placeholder, keeping a Details link that opens the raw message in the Explorer (Pro) (#1243).
 - [Fix] Raise the `retention.ms` floor on the compacted `karafka_consumers_states` and `karafka_consumers_metrics` topics to 1 month (was 1 hour / 1 day) so the most recent record is not deleted on brokers that apply retention to compacted topics (e.g. Redpanda).
 - [Fix] Stop the live poll from clobbering the search/filter box. Live polling now ignores the filter box unless it has unsubmitted input, so pages auto-refresh again while a typed but unsubmitted filter is preserved.
+- [Fix] Report malformed partition count, replication factor and repartition count values in the topic forms as errors instead of silently truncating them (`"5abc"` became `5`).
+- [Fix] Rescue `Rdkafka::Config::ConfigError` when creating a topic or altering a topic config, so an admin client configuration failure re-renders the form with the error instead of returning a 500, matching what repartitioning already did.
+- [Fix] Reject the Kafka-reserved topic names `.` and `..` in the topic creation form contract (Pro), so they fail with a re-rendered form error instead of reaching the broker and coming back as a raw rejection.
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a generic keyword filtering box to the data-heavy Web UI listings, so a specific consumer, topic or job can be found without scrolling. Flat listings also include a field selector to scope the search to a chosen attribute (Pro) (#1073).

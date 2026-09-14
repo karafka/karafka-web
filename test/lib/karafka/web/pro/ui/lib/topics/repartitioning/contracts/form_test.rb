@@ -31,21 +31,63 @@
 describe_current do
   let(:contract) { described_class.new }
   let(:result) { contract.call(params) }
-  let(:params) { { partition_count: 5 } }
+  let(:params) { { partition_count: "5" } }
 
   context "when the partition count is valid" do
     it { assert(result.success?) }
   end
 
   context "when the partition count is zero" do
-    before { params[:partition_count] = 0 }
+    before { params[:partition_count] = "0" }
 
     it { refute(result.success?) }
     it { assert(result.errors.key?(:partition_count)) }
   end
 
   context "when the partition count is negative" do
-    before { params[:partition_count] = -1 }
+    before { params[:partition_count] = "-1" }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:partition_count)) }
+  end
+
+  context "when the partition count has trailing garbage" do
+    before { params[:partition_count] = "5abc" }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:partition_count)) }
+  end
+
+  context "when the partition count is fractional" do
+    before { params[:partition_count] = "3.9" }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:partition_count)) }
+  end
+
+  context "when the partition count is padded with whitespace" do
+    before { params[:partition_count] = " 7" }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:partition_count)) }
+  end
+
+  context "when the partition count is non-numeric" do
+    before { params[:partition_count] = "abc" }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:partition_count)) }
+  end
+
+  context "when the partition count is blank" do
+    before { params[:partition_count] = "" }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:partition_count)) }
+  end
+
+  context "when the partition count is not a string" do
+    before { params[:partition_count] = 5 }
 
     it { refute(result.success?) }
     it { assert(result.errors.key?(:partition_count)) }

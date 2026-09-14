@@ -30,9 +30,9 @@
 
 describe_current do
   let(:topic_name) { "orders" }
-  let(:data) { { partition_count: 5 } }
+  let(:data) { { partition_count: "5" } }
 
-  it "increases the partitions via the admin api" do
+  it "increases the partitions via the admin api with the count coerced to an integer" do
     Karafka::Admin
       .expects(:create_partitions)
       .with(topic_name, 5)

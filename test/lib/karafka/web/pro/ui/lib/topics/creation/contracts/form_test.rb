@@ -34,8 +34,8 @@ describe_current do
   let(:params) do
     {
       topic_name: "valid-topic.name_1",
-      partitions_count: 3,
-      replication_factor: 1
+      partitions_count: "3",
+      replication_factor: "1"
     }
   end
 
@@ -64,15 +64,111 @@ describe_current do
     it { assert(result.errors.key?(:topic_name)) }
   end
 
+  context "when the topic name is the reserved single dot" do
+    before { params[:topic_name] = "." }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:topic_name)) }
+  end
+
+  context "when the topic name is the reserved double dot" do
+    before { params[:topic_name] = ".." }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:topic_name)) }
+  end
+
+  context "when the topic name has more dots than the reserved ones" do
+    before { params[:topic_name] = "..." }
+
+    it { assert(result.success?) }
+  end
+
+  context "when the topic name contains a dot" do
+    before { params[:topic_name] = "a.b" }
+
+    it { assert(result.success?) }
+  end
+
   context "when the partitions count is below one" do
-    before { params[:partitions_count] = 0 }
+    before { params[:partitions_count] = "0" }
 
     it { refute(result.success?) }
     it { assert(result.errors.key?(:partitions_count)) }
   end
 
   context "when the replication factor is below one" do
-    before { params[:replication_factor] = 0 }
+    before { params[:replication_factor] = "0" }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:replication_factor)) }
+  end
+
+  context "when the partitions count has trailing garbage" do
+    before { params[:partitions_count] = "5abc" }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:partitions_count)) }
+  end
+
+  context "when the partitions count is fractional" do
+    before { params[:partitions_count] = "3.9" }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:partitions_count)) }
+  end
+
+  context "when the partitions count is padded with whitespace" do
+    before { params[:partitions_count] = " 7" }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:partitions_count)) }
+  end
+
+  context "when the partitions count is negative" do
+    before { params[:partitions_count] = "-1" }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:partitions_count)) }
+  end
+
+  context "when the partitions count is non-numeric" do
+    before { params[:partitions_count] = "abc" }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:partitions_count)) }
+  end
+
+  context "when the partitions count is blank" do
+    before { params[:partitions_count] = "" }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:partitions_count)) }
+  end
+
+  context "when the partitions count is not a string" do
+    before { params[:partitions_count] = 3 }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:partitions_count)) }
+  end
+
+  context "when the partitions count key is missing" do
+    before { params.delete(:partitions_count) }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:partitions_count)) }
+  end
+
+  context "when the replication factor has trailing garbage" do
+    before { params[:replication_factor] = "1abc" }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:replication_factor)) }
+  end
+
+  context "when the replication factor is fractional" do
+    before { params[:replication_factor] = "1.5" }
 
     it { refute(result.success?) }
     it { assert(result.errors.key?(:replication_factor)) }
