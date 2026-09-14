@@ -64,6 +64,24 @@ describe_current do
     it { refute(contract.call(params).success?) }
   end
 
+  context "when skew_threshold is one" do
+    before { params[:ui][:health][:lags][:skew_threshold] = 1 }
+
+    it { refute(contract.call(params).success?) }
+  end
+
+  context "when skew_threshold is a fraction below one" do
+    before { params[:ui][:health][:lags][:skew_threshold] = 0.5 }
+
+    it { refute(contract.call(params).success?) }
+  end
+
+  context "when skew_threshold is just above one" do
+    before { params[:ui][:health][:lags][:skew_threshold] = 1.5 }
+
+    it { assert(contract.call(params).success?) }
+  end
+
   context "when skew_minimum is not an integer" do
     before { params[:ui][:health][:lags][:skew_minimum] = 1.5 }
 
