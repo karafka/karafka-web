@@ -48,7 +48,7 @@ module Karafka
                       topic: data[:target_topic],
                       payload: message.raw_payload,
                       headers: headers(message, data),
-                      key: message.key
+                      key: key(message)
                     }
 
                     partition = data[:target_partition]
@@ -57,11 +57,28 @@ module Karafka
                     dispatch_message
                   end
 
+                  # Key and headers are lazily deserialized, so a strict custom deserializer on the
+                  # source topic raises here. This must stay total: the form contract reports an
+                  # undeserializable key/headers as a validation error, and a raise would 500 the
+                  # republish instead. The raw bytes are the closest stand-in when that happens.
+                  #
+                  # @param message [Karafka::Messages::Message] source message
+                  # @return [Object] the deserialized key, or the raw key when deserialization fails
+                  def key(message)
+                    runner = Lib::SafeRunner.new { message.key }
+                    runner.call
+
+                    runner.success? ? runner.result : message.raw_key
+                  end
+
                   # @param message [Karafka::Messages::Message] source message
                   # @param data [Hash] normalized form data
                   # @return [Hash] the source headers, plus source-tracking headers when requested
                   def headers(message, data)
-                    headers = message.headers.dup
+                    runner = Lib::SafeRunner.new { message.headers }
+                    runner.call
+
+                    headers = (runner.success? ? runner.result : message.raw_headers).dup
 
                     return headers unless data[:include_source_headers]
 

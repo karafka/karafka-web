@@ -54,6 +54,61 @@ describe_current do
     it { assert(result.success?) }
   end
 
+  # M1: key/headers are lazily deserialized, so a strict custom deserializer on the SOURCE topic
+  # raises when Transform copies them. That used to 500 the republish on both the validation and
+  # the dispatch path; it must surface as a validation error instead.
+  context "when the source message key cannot be deserialized" do
+    let(:source_message) do
+      message = stub(raw_payload: '{"a":1}', headers: {}, topic: "src", partition: 0, offset: 0)
+      message.stubs(:key).raises(StandardError, "broken key deserializer")
+      message.stubs(:raw_key).returns("raw-k")
+      message
+    end
+
+    it "does not raise" do
+      result
+    end
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:source_message)) }
+
+    it "explains which part could not be deserialized" do
+      assert_includes(result.errors[:source_message], "key")
+      assert_includes(result.errors[:source_message], "broken key deserializer")
+    end
+  end
+
+  context "when the source message headers cannot be deserialized" do
+    let(:source_message) do
+      message = stub(raw_payload: '{"a":1}', key: nil, topic: "src", partition: 0, offset: 0)
+      message.stubs(:headers).raises(StandardError, "broken headers deserializer")
+      message.stubs(:raw_headers).returns({ "h" => "v" })
+      message
+    end
+
+    it "does not raise" do
+      result
+    end
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:source_message)) }
+  end
+
+  # The rule must not be bypassable - skip_validation is about the target payload consistency
+  context "when the source key cannot be deserialized and validation is skipped" do
+    let(:source_message) do
+      message = stub(raw_payload: '{"a":1}', headers: {}, topic: "src", partition: 0, offset: 0)
+      message.stubs(:key).raises(StandardError, "broken key deserializer")
+      message.stubs(:raw_key).returns("raw-k")
+      message
+    end
+
+    before { params[:skip_validation] = true }
+
+    it { refute(result.success?) }
+    it { assert(result.errors.key?(:source_message)) }
+  end
+
   context "when the target topic is blank" do
     before { params[:target_topic] = "" }
 
