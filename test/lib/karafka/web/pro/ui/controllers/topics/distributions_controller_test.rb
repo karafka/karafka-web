@@ -47,6 +47,36 @@ describe_current do
       end
     end
 
+    context "when the topic is internal and internal topics are hidden" do
+      let(:internal_topic) { "__#{generate_topic_name}" }
+
+      before do
+        create_topic(topic_name: internal_topic)
+        get "topics/#{internal_topic}/distribution"
+      end
+
+      it do
+        refute(response.ok?)
+        assert_equal(404, status)
+      end
+    end
+
+    context "when the topic is internal and internal topics are visible" do
+      let(:internal_topic) { "__#{generate_topic_name}" }
+
+      before do
+        Karafka::Web.config.ui.visibility.stubs(:internal_topics).returns(true)
+
+        create_topic(topic_name: internal_topic)
+        get "topics/#{internal_topic}/distribution"
+      end
+
+      it do
+        assert_ok
+        assert_body(internal_topic)
+      end
+    end
+
     context "when getting distribution of an existing empty topic" do
       before { get "topics/#{topic}/distribution" }
 
@@ -161,6 +191,33 @@ describe_current do
   describe "#edit" do
     let(:topic_name) { generate_topic_name }
     let(:setup_topic) { create_topic(topic_name: topic_name) }
+
+    context "when the topic is internal and internal topics are hidden" do
+      let(:topic_name) { "__#{generate_topic_name}" }
+
+      before do
+        setup_topic
+        get "topics/#{topic_name}/distribution/edit"
+      end
+
+      it { assert_equal(404, status) }
+    end
+
+    context "when the topic is internal and internal topics are visible" do
+      let(:topic_name) { "__#{generate_topic_name}" }
+
+      before do
+        Karafka::Web.config.ui.visibility.stubs(:internal_topics).returns(true)
+
+        setup_topic
+        get "topics/#{topic_name}/distribution/edit"
+      end
+
+      it do
+        assert_ok
+        assert_body(topic_name)
+      end
+    end
 
     context "when topics management feature is enabled" do
       before do
