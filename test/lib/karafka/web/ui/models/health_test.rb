@@ -132,5 +132,34 @@ describe_current do
       assert_equal(%w[alpha zeta], result.keys)
       assert_equal(%w[default visits], result["alpha"].keys)
     end
+
+    context "when Kafka reports a topic's partitions out of order" do
+      before do
+        Karafka::Admin.stubs(:read_lags_with_offsets).returns(
+          "alpha" => {
+            "orders" => {
+              2 => { lag: 30, offset: 300 },
+              0 => { lag: 10, offset: 100 },
+              10 => { lag: 40, offset: 400 },
+              1 => { lag: 20, offset: 200 }
+            }
+          }
+        )
+      end
+
+      it "expect partitions to be ordered by id" do
+        assert_equal([0, 1, 2, 10], result["alpha"]["orders"].map { |partition| partition[:id] })
+      end
+
+      # The report-based tree keeps partitions in an id-keyed Hash, but this lens keeps them in an
+      # Array that ClusterLagsAggregation and the partitions controller both consume - so ordering
+      # must not change the shape.
+      it "expect partitions to remain an array of id/lag/stored_offset hashes" do
+        partitions = result["alpha"]["orders"]
+
+        assert_instance_of(Array, partitions)
+        assert_equal({ id: 0, lag: 10, stored_offset: 100 }, partitions.first)
+      end
+    end
   end
 end
