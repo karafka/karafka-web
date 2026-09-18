@@ -52,14 +52,17 @@ module Karafka
         # any states we manage. We can only move forward, so attempt to migrate for example from
         # 1.0.0 to 0.9.0 should be considered and error.
         def ensure_migrable!
-          if consumers_states[:schema_version] > State::SCHEMA_VERSION
+          states_version = ::Gem::Version.new(consumers_states[:schema_version])
+          metrics_version = ::Gem::Version.new(consumers_metrics[:schema_version])
+
+          if states_version > ::Gem::Version.new(State::SCHEMA_VERSION)
             raise(
               Errors::Management::IncompatibleSchemaError,
               "consumers state newer than supported"
             )
           end
 
-          if consumers_metrics[:schema_version] > Metrics::SCHEMA_VERSION
+          if metrics_version > ::Gem::Version.new(Metrics::SCHEMA_VERSION)
             raise(
               Errors::Management::IncompatibleSchemaError,
               "consumers metrics newer than supported"

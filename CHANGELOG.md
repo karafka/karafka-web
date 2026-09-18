@@ -29,6 +29,7 @@
 - [Fix] Rescue `Rdkafka::Config::ConfigError` when creating a topic or altering a topic config, so an admin client configuration failure re-renders the form with the error instead of returning a 500, matching what repartitioning already did.
 - [Fix] Reject a `config.ui.health.lags.skew_threshold` of `1` or less. The value is a multiplier of the average lag, so anything at or below `1` flagged every multi-partition topic as skewed.
 - [Fix] Correct the republish form label for the source-headers checkbox (Pro). The source message headers are always carried over; the checkbox only adds the `source_topic`, `source_partition` and `source_offset` tracking headers.
+- [Fix] Compare schema versions with `Gem::Version` instead of as raw strings when running migrations, so a version with a multi-digit component (for example `1.10.0`) orders by semver rather than lexicographically.
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a generic keyword filtering box to the data-heavy Web UI listings, so a specific consumer, topic or job can be found without scrolling. Flat listings also include a field selector to scope the search to a chosen attribute (Pro) (#1073).
