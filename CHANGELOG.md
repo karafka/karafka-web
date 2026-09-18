@@ -30,6 +30,7 @@
 - [Fix] Reject the Kafka-reserved topic names `.` and `..` in the topic creation form contract (Pro), so they fail with a re-rendered form error instead of reaching the broker and coming back as a raw rejection.
 - [Fix] Reject a `config.ui.health.lags.skew_threshold` of `1` or less. The value is a multiplier of the average lag, so anything at or below `1` flagged every multi-partition topic as skewed.
 - [Fix] Correct the republish form label for the source-headers checkbox (Pro). The source message headers are always carried over; the checkbox only adds the `source_topic`, `source_partition` and `source_offset` tracking headers.
+- [Maintenance] Update the vendored `AirDatepicker` **CSS** to `3.6.0`, matching the JS. The 3.6.0 upgrade in 0.11.0 only swapped the JS, leaving the stylesheet on `3.4.0` ever since.
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a generic keyword filtering box to the data-heavy Web UI listings, so a specific consumer, topic or job can be found without scrolling. Flat listings also include a field selector to scope the search to a chosen attribute (Pro) (#1073).
