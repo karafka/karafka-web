@@ -23,7 +23,7 @@ module Karafka
                 metrics.each do |metric_group|
                   metric_group.last.each_value do |metric|
                     metric.each_value do |sample|
-                      sample[:lag_hybrid] = sample[:lag_total]
+                      sample[:lag_hybrid] = sample[:lag_total] || 0
                       sample.delete(:lag_total)
                     end
                   end

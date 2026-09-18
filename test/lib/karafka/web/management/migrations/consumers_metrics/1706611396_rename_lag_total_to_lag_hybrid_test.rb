@@ -36,4 +36,32 @@ describe(
       end
     end
   end
+
+  # The preceding migration copies `lag_total` from `lag_stored` unguarded, so a nil can reach
+  # here. Both branches normalise it to 0, matching the consumers_states sibling. Built inline
+  # rather than mutating the shared v1.2.0 fixture, which other migration tests also read.
+  context "when a lag_total is nil" do
+    let(:state) do
+      {
+        aggregated: { days: [[1, { lag_total: nil }]] },
+        consumer_groups: { days: [[1, { "cg" => { "cg-0" => { lag_total: nil } } }]] }
+      }
+    end
+
+    before { described_class.new.migrate(state) }
+
+    it "expect an aggregated nil lag_total to become 0" do
+      sample = state[:aggregated][:days].first.last
+
+      assert_equal(0, sample[:lag_hybrid])
+      refute(sample.key?(:lag_total))
+    end
+
+    it "expect a consumer group nil lag_total to become 0" do
+      sample = state[:consumer_groups][:days].first.last["cg"]["cg-0"]
+
+      assert_equal(0, sample[:lag_hybrid])
+      refute(sample.key?(:lag_total))
+    end
+  end
 end
