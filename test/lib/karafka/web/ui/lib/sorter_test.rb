@@ -86,8 +86,6 @@ describe_current do
     it { assert_equal([{ "a" => 7 }, { "a" => 3 }, { "a" => 2, :x => 1 }], sorting) }
   end
 
-  # A Hash key whose name is also a Hash method. Both branches used to run, so the key value was
-  # discarded and every element sorted on Hash#count (2 for all of them, making the sort a no-op).
   context "when sorting array of hashes on a key that collides with a Hash method" do
     let(:resource) { [{ count: 2, x: 1 }, { count: 7, x: 1 }, { count: 5, x: 1 }] }
     let(:sort_query) { "count desc" }
@@ -101,10 +99,8 @@ describe_current do
     end
   end
 
-  # A proxy is not a Hash, so it keeps taking the respond_to?/public_send branch and resolves the
-  # field through `method_missing`, which `deep_find`s it. The values are nested on purpose:
-  # `HashProxy` delegates `[]` straight to the underlying hash, so a flat fixture would pass even
-  # if proxies were routed to the Hash branch. Nested, only `public_send` finds the value.
+  # Nested on purpose: `HashProxy` delegates `[]` flat, so a flat fixture would pass even with
+  # proxies routed to the Hash branch.
   context "when sorting hash proxies on a key that collides with a Hash method" do
     let(:resource) do
       [

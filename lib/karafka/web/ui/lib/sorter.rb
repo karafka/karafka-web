@@ -145,10 +145,9 @@ module Karafka
           #   figure out the value based on which we may sort
           # @return [Object, nil] sortable value or nil if nothing to sort
           def sortable_value(element)
-            # Exclusive on purpose: a Hash sorts on its key and anything else on the method. Both
-            # branches used to run, so a Hash with a key whose name is also a Hash method (`count`)
-            # had its value overwritten by the method result. `Lib::HashProxy` is not a Hash, so it
-            # keeps taking the second branch and resolves the field through its `method_missing`.
+            # Exclusive on purpose: a Hash that also responds to the field must not be re-read
+            # through the method. `Lib::HashProxy` is not a Hash and must keep taking the second
+            # branch - its `[]` is flat while `method_missing` finds nested values.
             result =
               if element.is_a?(Hash)
                 element[@field] || element[@field.to_sym]
