@@ -148,7 +148,7 @@ module Karafka
                   # Establish starting point
                   start = case offset_type
                   when "latest"
-                    (limit / partitions_to_search.size) * -1
+                    messages_per_partition * -1
                   when "offset"
                     offset
                   when "timestamp"
@@ -172,10 +172,7 @@ module Karafka
                   started_at = monotonic_now
                   started_at_time = Time.now
 
-                  per_partition = (limit / partitions_to_search.size)
-                  # Ensure that in case we have a limit smaller than number of partitions, we check
-                  # at least one message (if any) per partition
-                  per_partition = 1 if per_partition.zero?
+                  per_partition = messages_per_partition
 
                   iterator.each do |message|
                     @current_partition = message.partition
@@ -231,6 +228,17 @@ module Karafka
                 #   checking.
                 def current_stats
                   @partitions_stats[@current_partition]
+                end
+
+                # Integer division floors to zero once there are more partitions than the total
+                # limit, so this is clamped to at least one message per partition. Both callers
+                # degenerate on a zero: the per-partition cap would check nothing, and the
+                # "latest" look-back would become `0`, which the iterator reads as an absolute
+                # offset and so searches from the oldest message rather than from the end.
+                #
+                # @return [Integer] messages to check per partition, never less than one
+                def messages_per_partition
+                  [limit / partitions_to_search.size, 1].max
                 end
 
                 # @return [Array<Integer>] partitions in which we're supposed to search
