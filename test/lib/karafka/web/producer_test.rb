@@ -107,6 +107,64 @@ describe_current do
     end
   end
 
+  # This wrapper is a lazy singleton on `Web.config.producer`, so it outlives a fork. Without a
+  # pid check a child would keep serving variants built from the parent's `::Karafka.producer`.
+  describe "fork awareness" do
+    before do
+      default_producer.stubs(:idempotent?).returns(false)
+      default_producer.stubs(:transactional?).returns(false)
+      default_producer.stubs(:variant).returns(variant)
+    end
+
+    context "when the process did not change" do
+      it "expect to build the acks: 0 variant once" do
+        default_producer.expects(:variant).once.returns(variant)
+        3.times { producer.__getobj__ }
+      end
+
+      it "expect to build the acks: 1 variant once" do
+        default_producer.expects(:variant).once.returns(variant)
+        3.times { producer.acked }
+      end
+    end
+
+    context "when the process changed" do
+      it "expect to rebuild the acks: 0 variant" do
+        default_producer.expects(:variant).twice.returns(variant)
+
+        producer.__getobj__
+        # Read the real pid first: evaluating `Process.pid` as the stub's return value would hit
+        # the stub itself and yield nil.
+        forked_pid = Process.pid + 1
+        Process.stubs(:pid).returns(forked_pid)
+        producer.__getobj__
+      end
+
+      it "expect to rebuild the acks: 1 variant" do
+        default_producer.expects(:variant).twice.returns(variant)
+
+        producer.acked
+        # Read the real pid first: evaluating `Process.pid` as the stub's return value would hit
+        # the stub itself and yield nil.
+        forked_pid = Process.pid + 1
+        Process.stubs(:pid).returns(forked_pid)
+        producer.acked
+      end
+
+      # `__getobj__` guards on `@initialized`, which is a separate ivar from the delegate, so a
+      # partial reset would hand back a nil delegate instead of a rebuilt variant.
+      it "expect to return the rebuilt variant rather than nil" do
+        producer.__getobj__
+        # Read the real pid first: evaluating `Process.pid` as the stub's return value would hit
+        # the stub itself and yield nil.
+        forked_pid = Process.pid + 1
+        Process.stubs(:pid).returns(forked_pid)
+
+        assert_equal(variant, producer.__getobj__)
+      end
+    end
+  end
+
   describe "#acked" do
     context "when default producer is not idempotent and not transactional" do
       before do
