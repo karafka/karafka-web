@@ -53,6 +53,8 @@ module Karafka
               #
               # @param topic_name [String] topic we're interested in
               def index(topic_name)
+                ensure_visible!(topic_name)
+
                 @topic = Models::Topic.find(topic_name)
 
                 @configs = filter(sort(@topic.configs))
