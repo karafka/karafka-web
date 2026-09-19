@@ -353,4 +353,50 @@ describe_current do
       end
     end
   end
+
+  # Flash messages are rendered raw so the `<strong>` markup survives, which makes every
+  # interpolated argument a potential injection point.
+  describe "#format_flash" do
+    let(:controller) { described_class.new({}, {}) }
+
+    def format_flash(message, *args)
+      controller.send(:format_flash, message, *args)
+    end
+
+    it "expect to wrap an argument in strong tags" do
+      assert_equal("topic <strong>events</strong>", format_flash("topic ?", "events"))
+    end
+
+    it "expect to replace one placeholder per argument, in order" do
+      assert_equal(
+        "<strong>events</strong>/<strong>0</strong>",
+        format_flash("?/?", "events", 0)
+      )
+    end
+
+    it "expect to escape html in an argument" do
+      assert_equal(
+        "topic <strong>&lt;script&gt;alert(1)&lt;/script&gt;</strong>",
+        format_flash("topic ?", "<script>alert(1)</script>")
+      )
+    end
+
+    it "expect to escape quotes and ampersands in an argument" do
+      assert_equal(
+        "topic <strong>a&amp;b&quot;c&#39;d</strong>",
+        format_flash("topic ?", %(a&b"c'd))
+      )
+    end
+
+    # With a replacement string rather than a block, `\0` and `\&` would be read as
+    # backreferences - putting the matched `?` back into the output and corrupting the escaping.
+    it "expect to treat backreference sequences in an argument as literal text" do
+      assert_equal("x <strong>a\\0b</strong>", format_flash("x ?", "a\\0b"))
+      assert_equal("x <strong>a\\&amp;b</strong>", format_flash("x ?", "a\\&b"))
+    end
+
+    it "expect to stringify a non-string argument" do
+      assert_equal("offset <strong>42</strong>", format_flash("offset ?", 42))
+    end
+  end
 end
