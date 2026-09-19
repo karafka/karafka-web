@@ -2,6 +2,7 @@
 
 require "karafka"
 require "roda"
+require "cgi/escape"
 require "etc"
 require "open3"
 require "zlib"

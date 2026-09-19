@@ -103,12 +103,20 @@ module Karafka
           # Wraps the provided arguments inside a message with a `<strong>` tag to simplify flash
           # messages building.
           #
+          # Flash messages are rendered raw (`<%== %>`) so this `<strong>` markup survives, so each
+          # argument is HTML-escaped on the way in. Today every caller passes an integer or a
+          # validated topic name, but escaping here stops a future caller with free-form input from
+          # turning the flash into an injection sink.
+          #
           # @param message [String] message with `?` to be replaced.
           # @param args [Array<Object>] arguments to use to replace `?` with strong
           # @return [String] formatted string
           def format_flash(message, *args)
             args.each do |arg|
-              message = message.sub("?", "<strong>#{arg}</strong>")
+              # Block form on purpose: with a replacement string, `\0`/`\&` in an argument are
+              # treated as backreferences, which would both corrupt the escaped text and put the
+              # matched `?` back into the output.
+              message = message.sub("?") { "<strong>#{CGI.escapeHTML(arg.to_s)}</strong>" }
             end
 
             message
