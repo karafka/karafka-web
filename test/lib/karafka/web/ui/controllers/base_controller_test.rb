@@ -354,8 +354,6 @@ describe_current do
     end
   end
 
-  # Flash messages are rendered raw so the `<strong>` markup survives, which makes every
-  # interpolated argument a potential injection point.
   describe "#format_flash" do
     let(:controller) { described_class.new({}, {}) }
 
@@ -388,8 +386,6 @@ describe_current do
       )
     end
 
-    # With a replacement string rather than a block, `\0` and `\&` would be read as
-    # backreferences - putting the matched `?` back into the output and corrupting the escaping.
     it "expect to treat backreference sequences in an argument as literal text" do
       assert_equal("x <strong>a\\0b</strong>", format_flash("x ?", "a\\0b"))
       assert_equal("x <strong>a\\&amp;b</strong>", format_flash("x ?", "a\\&b"))
