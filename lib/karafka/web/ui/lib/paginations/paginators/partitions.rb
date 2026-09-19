@@ -25,6 +25,11 @@ module Karafka
                 #   be active on a given page, materialized page for them and info if we had to
                 #   limit the partitions number on a given page
                 def call(partitions_count, current_page)
+                  # A topic always has at least one partition, so this is defensive. Without it a
+                  # zero count makes `slices_count` zero, and the divisions below then raise -
+                  # `FloatDomainError` on the two float ones and `ZeroDivisionError` on the modulo.
+                  return [[], 1, false] if partitions_count.zero?
+
                   # How many "chunks" of partitions we will have
                   slices_count = (partitions_count / per_page.to_f).ceil
                   # How many partitions in a single slice should we have

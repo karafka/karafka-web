@@ -1,6 +1,7 @@
 # Karafka Web Changelog
 
 ## Unreleased
+- [Fix] Return an empty, unlimited first page from the partitions paginator when a topic reports zero partitions, instead of raising. A zero count made the slice count zero, which then raised `FloatDomainError` on the float divisions and `ZeroDivisionError` on the modulo. Defensive only - a Kafka topic always has at least one partition.
 - **[Feature]** Add a **Publish message** capability to the Explorer (Pro): produce an arbitrary message to a topic or chosen partition, with an optional key, validated headers, and a typed, uploaded or tombstone payload. Gated by the new `publish?` policy, enabled by default (#956).
 - **[Feature]** Aggregate the Health views per topic instead of per partition so they stay usable at scale. One summary row per topic (lag, max/avg lag, skew flag, LSO risk, paused partitions) drills down to the per-partition views. Thresholds are configurable under `config.ui.health.lags` (#112).
 - [Enhancement] Produce the scheduled-message cancel command through the acked (`acks: 1`) producer (`Karafka::Web.producers.acked`) so the broker confirms receipt, instead of the fire-and-forget (`acks: 0`) producer that could silently drop the cancellation.

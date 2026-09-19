@@ -3,6 +3,25 @@
 describe_current do
   let(:pagination) { described_class.call(partitions_count, page) }
 
+  # Defensive: a topic always has at least one partition. Without the guard a zero count makes
+  # slices_count zero and the divisions raise (FloatDomainError, then ZeroDivisionError).
+  context "when there are no partitions" do
+    let(:partitions_count) { 0 }
+    let(:page) { 1 }
+
+    it { assert_equal([], pagination[0]) }
+    it { assert_equal(1, pagination[1]) }
+    it { refute(pagination[2]) }
+
+    context "when asking for a page beyond the first" do
+      let(:page) { 5 }
+
+      it { assert_equal([], pagination[0]) }
+      it { assert_equal(1, pagination[1]) }
+      it { refute(pagination[2]) }
+    end
+  end
+
   context "when there is only one partition" do
     let(:partitions_count) { 1 }
     let(:page) { 1 }
