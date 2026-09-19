@@ -60,10 +60,13 @@ module Karafka
 
                 stats[cg_id] ||= { topics: {} }
 
-                stats[cg_id][:topics][t_name] ||= {
-                  partitions: {},
-                  partitions_count: topic.partitions_cnt
-                }
+                stats[cg_id][:topics][t_name] ||= { partitions: {} }
+
+                # Processes are iterated oldest-first precisely so the newest one wins, the same
+                # way the partition data below does. `partitions_cnt` is a per-process assignment
+                # count, so the freshest process's view is the one we want; `||=` here would lock
+                # in the oldest process's value and go stale after a repartition.
+                stats[cg_id][:topics][t_name][:partitions_count] = topic.partitions_cnt
 
                 stats[cg_id][:topics][t_name][:partitions][pt_id] = partition
                 stats[cg_id][:topics][t_name][:partitions][pt_id][:process] = process

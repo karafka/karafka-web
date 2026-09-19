@@ -109,6 +109,46 @@ describe_current do
     end
   end
 
+  # L12: `partitions_cnt` is a per-process assignment count and processes are iterated
+  # oldest-first so the newest wins (see `iterate_partitions`). It used to be captured with
+  # `||=`, which locked in the OLDEST process's value and went stale after a repartition.
+  context "when two processes report different partition counts for the same topic" do
+    let(:cg) { "example_app6_app" }
+    let(:topic) { "default" }
+
+    # The state fixture maps offset 0 -> shinra:1:1 and offset 1 -> shinra:2:2, so the reports
+    # are produced in that order and carry matching process ids.
+    let(:older_report) do
+      build_report("shinra:1:1", dispatched_at: 2_690_883_271.0, partitions_cnt: 1)
+    end
+
+    let(:newer_report) do
+      build_report("shinra:2:2", dispatched_at: 2_690_883_371.0, partitions_cnt: 5)
+    end
+
+    def build_report(process_id, dispatched_at:, partitions_cnt:)
+      report = Fixtures.consumers_reports_json
+      report[:process][:id] = process_id
+      report[:dispatched_at] = dispatched_at
+
+      sgs = report[:consumer_groups][:example_app6_app][:subscription_groups]
+      sgs.each_value { |sg| sg[:topics][:default][:partitions_cnt] = partitions_cnt }
+
+      report
+    end
+
+    # The reports are keyed by process id: `squash_processes_data` uniqs by Kafka message key,
+    # so unkeyed reports would collapse into a single process and the two counts never meet.
+    before do
+      produce(reports_topic, older_report.to_json, key: "shinra:1:1")
+      produce(reports_topic, newer_report.to_json, key: "shinra:2:2")
+    end
+
+    it "expect the newest process partition count to win" do
+      assert_equal(5, stats[cg][:topics][topic][:partitions_count])
+    end
+  end
+
   describe ".cluster_lags_with_offsets" do
     let(:result) { described_class.cluster_lags_with_offsets }
 
