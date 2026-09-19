@@ -1,6 +1,7 @@
 # Karafka Web Changelog
 
 ## Unreleased
+- [Fix] Compare a topic's biggest partition lag against the average of its *other* partitions when flagging a skewed topic in the Health views (Pro), instead of the self-inclusive average. The old comparison bounded `max / avg` by the partition count, so a topic with fewer partitions than `config.ui.health.lags.skew_threshold` could never be flagged - with the default threshold of 3, a two-partition topic stayed unflagged even when one partition carried all of the lag. Note this makes the flag strictly more sensitive: existing deployments will see more topics flagged as skewed at an unchanged `skew_threshold`.
 - **[Feature]** Add a **Publish message** capability to the Explorer (Pro): produce an arbitrary message to a topic or chosen partition, with an optional key, validated headers, and a typed, uploaded or tombstone payload. Gated by the new `publish?` policy, enabled by default (#956).
 - **[Feature]** Aggregate the Health views per topic instead of per partition so they stay usable at scale. One summary row per topic (lag, max/avg lag, skew flag, LSO risk, paused partitions) drills down to the per-partition views. Thresholds are configurable under `config.ui.health.lags` (#112).
 - [Enhancement] Produce the scheduled-message cancel command through the acked (`acks: 1`) producer (`Karafka::Web.producers.acked`) so the broker confirms receipt, instead of the fire-and-forget (`acks: 0`) producer that could silently drop the cancellation.
