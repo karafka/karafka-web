@@ -107,8 +107,6 @@ describe_current do
     end
   end
 
-  # This wrapper is a lazy singleton on `Web.config.producer`, so it outlives a fork. Without a
-  # pid check a child would keep serving variants built from the parent's `::Karafka.producer`.
   describe "fork awareness" do
     before do
       default_producer.stubs(:idempotent?).returns(false)
@@ -133,8 +131,6 @@ describe_current do
         default_producer.expects(:variant).twice.returns(variant)
 
         producer.__getobj__
-        # Read the real pid first: evaluating `Process.pid` as the stub's return value would hit
-        # the stub itself and yield nil.
         forked_pid = Process.pid + 1
         Process.stubs(:pid).returns(forked_pid)
         producer.__getobj__
@@ -144,19 +140,13 @@ describe_current do
         default_producer.expects(:variant).twice.returns(variant)
 
         producer.acked
-        # Read the real pid first: evaluating `Process.pid` as the stub's return value would hit
-        # the stub itself and yield nil.
         forked_pid = Process.pid + 1
         Process.stubs(:pid).returns(forked_pid)
         producer.acked
       end
 
-      # `__getobj__` guards on `@initialized`, which is a separate ivar from the delegate, so a
-      # partial reset would hand back a nil delegate instead of a rebuilt variant.
       it "expect to return the rebuilt variant rather than nil" do
         producer.__getobj__
-        # Read the real pid first: evaluating `Process.pid` as the stub's return value would hit
-        # the stub itself and yield nil.
         forked_pid = Process.pid + 1
         Process.stubs(:pid).returns(forked_pid)
 

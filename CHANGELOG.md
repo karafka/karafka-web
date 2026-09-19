@@ -1,7 +1,6 @@
 # Karafka Web Changelog
 
 ## Unreleased
-- [Fix] Rebuild the Web UI producer variants after a fork. `Web::Producer` is a lazy singleton on `Web.config.producer`, so it outlives a fork and kept serving `acks` variants built from the parent's `Karafka.producer`. The variants are now stamped with the pid that built them and rebuilt when it changes.
 - **[Feature]** Add a **Publish message** capability to the Explorer (Pro): produce an arbitrary message to a topic or chosen partition, with an optional key, validated headers, and a typed, uploaded or tombstone payload. Gated by the new `publish?` policy, enabled by default (#956).
 - **[Feature]** Aggregate the Health views per topic instead of per partition so they stay usable at scale. One summary row per topic (lag, max/avg lag, skew flag, LSO risk, paused partitions) drills down to the per-partition views. Thresholds are configurable under `config.ui.health.lags` (#112).
 - [Enhancement] Produce the scheduled-message cancel command through the acked (`acks: 1`) producer (`Karafka::Web.producers.acked`) so the broker confirms receipt, instead of the fire-and-forget (`acks: 0`) producer that could silently drop the cancellation.
@@ -31,6 +30,7 @@
 - [Fix] Reject the Kafka-reserved topic names `.` and `..` in the topic creation form contract (Pro), so they fail with a re-rendered form error instead of reaching the broker and coming back as a raw rejection.
 - [Fix] Reject a `config.ui.health.lags.skew_threshold` of `1` or less. The value is a multiplier of the average lag, so anything at or below `1` flagged every multi-partition topic as skewed.
 - [Fix] Correct the republish form label for the source-headers checkbox (Pro). The source message headers are always carried over; the checkbox only adds the `source_topic`, `source_partition` and `source_offset` tracking headers.
+- [Fix] Rebuild the Web UI producer variants after a fork. `Web::Producer` is a lazy singleton on `Web.config.producer`, so it outlives a fork and kept serving `acks` variants built from the parent's `Karafka.producer`. The variants are now stamped with the pid that built them and rebuilt when it changes.
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a generic keyword filtering box to the data-heavy Web UI listings, so a specific consumer, topic or job can be found without scrolling. Flat listings also include a field selector to scope the search to a chosen attribute (Pro) (#1073).
