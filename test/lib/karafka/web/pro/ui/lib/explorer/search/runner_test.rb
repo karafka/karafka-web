@@ -72,21 +72,18 @@ describe_current do
       iterator_instance.stubs(:stop_current_partition)
     end
 
-    # L6: the "latest" start is a look-back, i.e. a NEGATIVE offset. `limit / partitions` floors
-    # to zero once there are more partitions than the limit, and `0 * -1` is still `0`, which the
-    # iterator reads as an absolute offset - so a "search from latest" silently scanned from the
-    # oldest message.
     describe "the latest start offset" do
       let(:starts) do
         query = nil
-        # the assignment returns the (truthy) query hash, so it doubles as the matcher
-        Karafka::Pro::Iterator.stubs(:new).with { |q| query = q }.returns(iterator_instance)
+        Karafka::Pro::Iterator
+          .stubs(:new)
+          .with { |q| (query = q).is_a?(Hash) }
+          .returns(iterator_instance)
         runner.call
         query.fetch(topic).values
       end
 
       context "when there are fewer partitions than the limit" do
-        # limit 10 over partitions 0 and 1 -> 5 messages of look-back each
         it { assert_equal([-5, -5], starts) }
       end
 
@@ -100,7 +97,6 @@ describe_current do
 
         it "still looks back rather than collapsing to the oldest message" do
           assert_equal(20, starts.size)
-          # every start must be a real look-back; `0` here would mean "from the beginning"
           assert(starts.all?(&:negative?), "expected negative look-backs, got #{starts.uniq}")
         end
 
