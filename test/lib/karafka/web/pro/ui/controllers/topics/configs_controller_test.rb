@@ -58,6 +58,36 @@ describe_current do
       end
     end
 
+    context "when the topic is internal and internal topics are hidden" do
+      let(:internal_topic) { "__#{generate_topic_name}" }
+
+      before do
+        create_topic(topic_name: internal_topic)
+        get "topics/#{internal_topic}/config"
+      end
+
+      it do
+        refute(response.ok?)
+        assert_equal(404, status)
+      end
+    end
+
+    context "when the topic is internal and internal topics are visible" do
+      let(:internal_topic) { "__#{generate_topic_name}" }
+
+      before do
+        Karafka::Web.config.ui.visibility.stubs(:internal_topics).returns(true)
+
+        create_topic(topic_name: internal_topic)
+        get "topics/#{internal_topic}/config"
+      end
+
+      it do
+        assert_ok
+        assert_body(internal_topic)
+      end
+    end
+
     context "when sorting the configs" do
       before { get "topics/#{topic}/config?sort=name+desc" }
 
