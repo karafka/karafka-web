@@ -37,9 +37,6 @@ describe_current do
     it { assert(result.success?) }
   end
 
-  # L1: `create_partitions` sets the TOTAL count, so anything at or below the current count is not
-  # an increase. Before this rule it passed the contract and was only rejected by the broker, as a
-  # raw rdkafka error - and the form pre-filled exactly the equal-to-current value.
   context "when a current partition count is supplied" do
     before { params[:current_partition_count] = 5 }
 
@@ -63,9 +60,6 @@ describe_current do
       it { assert(result.errors.key?(:partition_count)) }
     end
 
-    # The shape rule already reports malformed values; the comparison must not report them again
-    # with a less accurate message. "0" is the subtle one - well-formed digits, but below 1, so a
-    # regexp-only guard lets it through
     ["5abc", "0", "-1", ""].each do |invalid|
       context "when the new count is #{invalid.inspect}" do
         before { params[:partition_count] = invalid }
@@ -82,7 +76,6 @@ describe_current do
     end
   end
 
-  # Without a current count there is nothing to compare against, so the rule stays out of the way
   context "when no current partition count is supplied" do
     before { params[:partition_count] = "1" }
 
