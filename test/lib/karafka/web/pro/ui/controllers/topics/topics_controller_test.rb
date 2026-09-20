@@ -352,11 +352,70 @@ describe_current do
         assert_equal(404, status)
       end
     end
+
+    context "when the topic is internal and internal topics are hidden" do
+      let(:topic_name) { "__#{generate_topic_name}" }
+
+      before do
+        setup_topic
+        get "topics/#{topic_name}/delete"
+      end
+
+      it "returns not found status" do
+        assert_equal(404, status)
+      end
+    end
+
+    context "when the topic is internal and internal topics are visible" do
+      let(:topic_name) { "__#{generate_topic_name}" }
+
+      before do
+        Karafka::Web.config.ui.visibility.stubs(:internal_topics).returns(true)
+
+        setup_topic
+        get "topics/#{topic_name}/delete"
+      end
+
+      it "renders the removal confirmation page" do
+        assert_ok
+        assert_body("Topic #{topic_name} Removal Confirmation")
+      end
+    end
   end
 
   describe "#delete" do
     let(:topic_name) { generate_topic_name }
     let(:setup_topic) { create_topic(topic_name: topic_name) }
+
+    context "when the topic is internal and internal topics are hidden" do
+      let(:topic_name) { "__#{generate_topic_name}" }
+
+      before do
+        setup_topic
+        delete "topics/#{topic_name}"
+      end
+
+      it "returns not found status and keeps the topic" do
+        assert_equal(404, status)
+        assert_includes(cluster_topics, topic_name)
+      end
+    end
+
+    context "when the topic is internal and internal topics are visible" do
+      let(:topic_name) { "__#{generate_topic_name}" }
+
+      before do
+        Karafka::Web.config.ui.visibility.stubs(:internal_topics).returns(true)
+
+        setup_topic
+        delete "topics/#{topic_name}"
+      end
+
+      it "deletes the topic" do
+        assert_equal(302, response.status)
+        refute_includes(cluster_topics, topic_name)
+      end
+    end
 
     context "when topics management feature is enabled" do
       before do

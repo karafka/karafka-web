@@ -1536,7 +1536,7 @@
     .dropdown {
       position: relative;
       display: inline-block;
-      position-area: var(--anchor-v, bottom) var(--anchor-h, span-right);
+      position-area: var(--anchor-v, block-end) var(--anchor-h, span-inline-end);
     }
     .dropdown > :not(:has( ~ [class*="dropdown-content"])):focus {
       --tw-outline-style: none;
@@ -1854,6 +1854,7 @@
       pointer-events: none;
       display: inline-block;
       aspect-ratio: 1 / 1;
+      flex-shrink: 0;
       background-color: currentcolor;
       vertical-align: middle;
       width: calc(var(--size-selector, 0.25rem) * 6);
@@ -2254,22 +2255,22 @@
     }
   }
   @layer daisyui.l1.l2 {
-    .list .list-row:has(.list-col-grow:nth-child(1)) {
+    .list .list-row:has( > .list-col-grow:nth-child(1)) {
       --list-grid-cols: 1fr;
     }
-    .list .list-row:has(.list-col-grow:nth-child(2)) {
+    .list .list-row:has( > .list-col-grow:nth-child(2)) {
       --list-grid-cols: minmax(0, auto) 1fr;
     }
-    .list .list-row:has(.list-col-grow:nth-child(3)) {
+    .list .list-row:has( > .list-col-grow:nth-child(3)) {
       --list-grid-cols: minmax(0, auto) minmax(0, auto) 1fr;
     }
-    .list .list-row:has(.list-col-grow:nth-child(4)) {
+    .list .list-row:has( > .list-col-grow:nth-child(4)) {
       --list-grid-cols: minmax(0, auto) minmax(0, auto) minmax(0, auto) 1fr;
     }
-    .list .list-row:has(.list-col-grow:nth-child(5)) {
+    .list .list-row:has( > .list-col-grow:nth-child(5)) {
       --list-grid-cols: minmax(0, auto) minmax(0, auto) minmax(0, auto) minmax(0, auto) 1fr;
     }
-    .list .list-row:has(.list-col-grow:nth-child(6)) {
+    .list .list-row:has( > .list-col-grow:nth-child(6)) {
       --list-grid-cols: minmax(0, auto) minmax(0, auto) minmax(0, auto) minmax(0, auto)
           minmax(0, auto) 1fr;
     }
@@ -4126,6 +4127,7 @@
     }
     .checkbox:checked:before {
       clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 0%, 70% 0%, 70% 100%);
+      translate: 3.5% -7%;
       opacity: 100%;
     }
     @media (forced-colors: active) {
@@ -4150,6 +4152,7 @@
     }
     .checkbox[aria-checked="true"]:before {
       clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 0%, 70% 0%, 70% 100%);
+      translate: 3.5% -7%;
       opacity: 100%;
     }
     @media (forced-colors: active) {
@@ -4179,7 +4182,7 @@
     .checkbox:indeterminate:before {
       rotate: 0deg;
       opacity: 100%;
-      translate: 0 -35%;
+      translate: 0 -40%;
       clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 80%, 80% 80%, 80% 100%);
     }
     .checkbox[aria-checked="mixed"] {
@@ -4193,7 +4196,7 @@
     .checkbox[aria-checked="mixed"]:before {
       rotate: 0deg;
       opacity: 100%;
-      translate: 0 -35%;
+      translate: 0 -40%;
       clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 80%, 80% 80%, 80% 100%);
     }
   }
@@ -4866,7 +4869,7 @@
       transform-origin: 100%;
     }
     .dropdown-end {
-      --anchor-h: span-left;
+      --anchor-h: span-inline-start;
     }
     .dropdown-end :where(.dropdown-content) {
       inset-inline-end: calc(0.25rem * 0);
@@ -4892,7 +4895,7 @@
       bottom: 0px;
     }
     .dropdown-bottom {
-      --anchor-v: bottom;
+      --anchor-v: block-end;
     }
     .dropdown-bottom .dropdown-content {
       top: 100%;
@@ -4900,7 +4903,7 @@
       transform-origin: top;
     }
     .dropdown-top {
-      --anchor-v: top;
+      --anchor-v: block-start;
     }
     .dropdown-top .dropdown-content {
       top: auto;
@@ -6410,6 +6413,7 @@
     }
     .badge {
       display: inline-flex;
+      flex-shrink: 0;
       align-items: center;
       justify-content: center;
       gap: calc(0.25rem * 2);
@@ -9639,6 +9643,20 @@ table td.options {
   }
   :root {
     --fx-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.34' numOctaves='4' stitchTiles='stitch'%3E%3C/feTurbulence%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23a)' opacity='0.2'%3E%3C/rect%3E%3C/svg%3E");
+    scrollbar-color: currentColor #0000;
+    @supports (color: color-mix(in lab, red, red)) {
+      scrollbar-color: color-mix(in oklch, currentColor 35%, #0000) #0000;
+    }
+  }
+  @property --radialprogress {
+    syntax: "<percentage>";
+    inherits: true;
+    initial-value: 0%;
+  }
+  @property --aura-angle {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: 0deg;
   }
   :root, [data-theme] {
     background-color: var(--root-bg);
@@ -9657,31 +9675,43 @@ table td.options {
   :root:not(span) {
     overflow: var(--page-overflow);
   }
-  :root {
-    scrollbar-color: currentColor #0000;
-    @supports (color: color-mix(in lab, red, red)) {
-      scrollbar-color: color-mix(in oklch, currentColor 35%, #0000) #0000;
-    }
-  }
-  @property --radialprogress {
-    syntax: "<percentage>";
-    inherits: true;
-    initial-value: 0%;
-  }
-  @property --aura-angle {
-    syntax: "<angle>";
-    inherits: false;
-    initial-value: 0deg;
-  }
 }
-@keyframes toast {
+@keyframes skeleton {
   0% {
-    scale: 0.9;
-    opacity: 0;
+    background-position: 150%;
   }
   100% {
-    scale: 1;
-    opacity: 1;
+    background-position: -50%;
+  }
+}
+@keyframes radio {
+  0% {
+    padding: 5px;
+  }
+  50% {
+    padding: 3px;
+  }
+}
+@keyframes rotator {
+  89.9999%, 100% {
+    --first-item-position: 0 0%;
+  }
+  90%, 99.9999% {
+    --first-item-position: 0 calc(var(--items) * 100%);
+  }
+  100% {
+    translate: 0 -100%;
+  }
+}
+@keyframes rating {
+  0%, 40% {
+    scale: 1.1;
+    filter: brightness(1.05) contrast(1.05);
+  }
+}
+@keyframes dropdown {
+  0% {
+    opacity: 0;
   }
 }
 @keyframes aura {
@@ -9710,17 +9740,14 @@ table td.options {
     filter: blur(1.5rem);
   }
 }
-@keyframes radio {
+@keyframes toast {
   0% {
-    padding: 5px;
+    scale: 0.9;
+    opacity: 0;
   }
-  50% {
-    padding: 3px;
-  }
-}
-@keyframes progress {
-  50% {
-    background-position-x: -115%;
+  100% {
+    scale: 1;
+    opacity: 1;
   }
 }
 @keyframes menu {
@@ -9728,34 +9755,9 @@ table td.options {
     opacity: 0;
   }
 }
-@keyframes skeleton {
-  0% {
-    background-position: 150%;
-  }
-  100% {
-    background-position: -50%;
-  }
-}
-@keyframes rating {
-  0%, 40% {
-    scale: 1.1;
-    filter: brightness(1.05) contrast(1.05);
-  }
-}
-@keyframes rotator {
-  89.9999%, 100% {
-    --first-item-position: 0 0%;
-  }
-  90%, 99.9999% {
-    --first-item-position: 0 calc(var(--items) * 100%);
-  }
-  100% {
-    translate: 0 -100%;
-  }
-}
-@keyframes dropdown {
-  0% {
-    opacity: 0;
+@keyframes progress {
+  50% {
+    background-position-x: -115%;
   }
 }
 @property --tw-border-style {

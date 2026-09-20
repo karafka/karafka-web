@@ -30,6 +30,7 @@
 - [Fix] Reject the Kafka-reserved topic names `.` and `..` in the topic creation form contract (Pro), so they fail with a re-rendered form error instead of reaching the broker and coming back as a raw rejection.
 - [Fix] Reject a `config.ui.health.lags.skew_threshold` of `1` or less. The value is a multiplier of the average lag, so anything at or below `1` flagged every multi-partition topic as skewed.
 - [Fix] Correct the republish form label for the source-headers checkbox (Pro). The source message headers are always carried over; the checkbox only adds the `source_topic`, `source_partition` and `source_offset` tracking headers.
+- [Fix] Apply the `internal_topics` visibility setting to the per-topic config, distribution and removal pages (Pro), so an internal topic hidden from the topics listing is no longer reachable there by a direct URL.
 - [Fix] Rebuild the Web UI producer variants after a fork. `Web::Producer` is a lazy singleton on `Web.config.producer`, so it outlives a fork and kept serving `acks` variants built from the parent's `Karafka.producer`. The variants are now stamped with the pid that built them and rebuilt when it changes.
 
 ## 1.0.1 (2026-08-24)
