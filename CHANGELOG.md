@@ -30,6 +30,7 @@
 - [Fix] Reject the Kafka-reserved topic names `.` and `..` in the topic creation form contract (Pro), so they fail with a re-rendered form error instead of reaching the broker and coming back as a raw rejection.
 - [Fix] Reject a `config.ui.health.lags.skew_threshold` of `1` or less. The value is a multiplier of the average lag, so anything at or below `1` flagged every multi-partition topic as skewed.
 - [Fix] Correct the republish form label for the source-headers checkbox (Pro). The source message headers are always carried over; the checkbox only adds the `source_topic`, `source_partition` and `source_offset` tracking headers.
+- [Fix] Apply the `internal_topics` visibility setting to the per-topic config, distribution and removal pages (Pro), so an internal topic hidden from the topics listing is no longer reachable there by a direct URL.
 - [Fix] Take the Health topic `partitions_count` from the newest reporting process instead of the oldest. Processes are aggregated oldest-first so the freshest data wins, but this one field used `||=` and so locked in the first (oldest) process's value, leaving the "no data" partition count stale after a repartition.
 
 ## 1.0.1 (2026-08-24)
