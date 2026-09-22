@@ -60,10 +60,8 @@ module Karafka
 
                 stats[cg_id] ||= { topics: {} }
 
-                stats[cg_id][:topics][t_name] ||= {
-                  partitions: {},
-                  partitions_count: topic.partitions_cnt
-                }
+                stats[cg_id][:topics][t_name] ||= { partitions: {} }
+                stats[cg_id][:topics][t_name][:partitions_count] = topic.partitions_cnt
 
                 stats[cg_id][:topics][t_name][:partitions][pt_id] = partition
                 stats[cg_id][:topics][t_name][:partitions][pt_id][:process] = process
