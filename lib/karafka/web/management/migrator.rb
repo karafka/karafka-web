@@ -53,7 +53,6 @@ module Karafka
         # 1.0.0 to 0.9.0 should be considered and error.
         def ensure_migrable!
           states_version = ::Gem::Version.new(consumers_states[:schema_version])
-          metrics_version = ::Gem::Version.new(consumers_metrics[:schema_version])
 
           if states_version > ::Gem::Version.new(State::SCHEMA_VERSION)
             raise(
@@ -61,6 +60,8 @@ module Karafka
               "consumers state newer than supported"
             )
           end
+
+          metrics_version = ::Gem::Version.new(consumers_metrics[:schema_version])
 
           if metrics_version > ::Gem::Version.new(Metrics::SCHEMA_VERSION)
             raise(
