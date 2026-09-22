@@ -11,6 +11,7 @@
 - [Enhancement] Inject Web UI kafka settings via `Karafka::Web::Config::DefaultsInjector` (built on `Karafka::Core::Configurable::Injector`) so the injection follows the same pattern as Karafka and can be extended by Pro (#653). Requires karafka-core `>= 2.6.3`.
 - [Enhancement] Read the Pro commands and scheduled-messages topics through the Web UI admin wrapper so those (transactionally written) reads use the same Web UI kafka settings as the rest of the UI.
 - [Enhancement] Tighten compaction on the `karafka_consumers_states` and `karafka_consumers_metrics` topics (`segment.ms` 1 day -> 6h, add `max.compaction.lag.ms` of 7 days) so superseded versions are collapsed sooner. Values accepted on Apache Kafka, Confluent Cloud, Redpanda and MSK.
+- [Fix] Make the two `Sorter#sortable_value` lookups mutually exclusive. A Hash element was always re-read through `public_send`, so a Hash sorted on a key whose name is also a `Hash` method (e.g. `count`) sorted on the method result instead of the key value. No allow-list currently feeds plain Hashes into that collision, so this is defensive.
 - [Maintenance] Stop the recurring `/topics` link-validator flake by skipping `/topics` when crawling from the cluster views, matching the existing `/explorer` exclusion. It is covered by its own specs.
 - [Maintenance] Reorganize the Pro UI `Lib` feature pipelines into domain namespaces mirroring the controllers and routes: `Lib::Consumers::Commands`, `Lib::Explorer::{Publishing,Republishing,Search}` and `Lib::Topics::{Configuring,Creation,Repartitioning}`. Internal only; no behavior change.
 - [Maintenance] Extract the consumer commanding forms (offset seek, partition and topic pause/resume) into `Lib::Commands`, keeping controllers to orchestration. Offset and pause values are now validated server-side, so a crafted value is rejected instead of reaching the running consumer (#1241).
@@ -31,6 +32,7 @@
 - [Fix] Reject a `config.ui.health.lags.skew_threshold` of `1` or less. The value is a multiplier of the average lag, so anything at or below `1` flagged every multi-partition topic as skewed.
 - [Fix] Correct the republish form label for the source-headers checkbox (Pro). The source message headers are always carried over; the checkbox only adds the `source_topic`, `source_partition` and `source_offset` tracking headers.
 - [Fix] Apply the `internal_topics` visibility setting to the per-topic config, distribution and removal pages (Pro), so an internal topic hidden from the topics listing is no longer reachable there by a direct URL.
+- [Fix] Take the Health topic `partitions_count` from the newest reporting process instead of the oldest. Processes are aggregated oldest-first so the freshest data wins, but this one field used `||=` and so locked in the first (oldest) process's value, leaving the "no data" partition count stale after a repartition.
 - [Fix] Stop the explorer search from falling back to partition `0` when none of the requested partitions exist on the topic, so a search scoped to a non-existent partition reports no results instead of presenting partition `0` results as the requested scope.
 
 ## 1.0.1 (2026-08-24)

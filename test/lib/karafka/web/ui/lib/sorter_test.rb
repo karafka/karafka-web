@@ -86,6 +86,36 @@ describe_current do
     it { assert_equal([{ "a" => 7 }, { "a" => 3 }, { "a" => 2, :x => 1 }], sorting) }
   end
 
+  context "when sorting array of hashes on a key that collides with a Hash method" do
+    let(:resource) { [{ count: 2, x: 1 }, { count: 7, x: 1 }, { count: 5, x: 1 }] }
+    let(:sort_query) { "count desc" }
+    let(:allowed_attributes) { %w[count] }
+
+    it do
+      assert_equal(
+        [{ count: 7, x: 1 }, { count: 5, x: 1 }, { count: 2, x: 1 }],
+        sorting
+      )
+    end
+  end
+
+  # Nested on purpose: `HashProxy` delegates `[]` flat, so a flat fixture would pass even with
+  # proxies routed to the Hash branch.
+  context "when sorting hash proxies on a key that collides with a Hash method" do
+    let(:resource) do
+      [
+        Karafka::Web::Ui::Lib::HashProxy.new({ stats: { count: 2 }, x: 1 }),
+        Karafka::Web::Ui::Lib::HashProxy.new({ stats: { count: 7 }, x: 1 }),
+        Karafka::Web::Ui::Lib::HashProxy.new({ stats: { count: 5 }, x: 1 })
+      ]
+    end
+
+    let(:sort_query) { "count desc" }
+    let(:allowed_attributes) { %w[count] }
+
+    it { assert_equal([7, 5, 2], sorting.map(&:count)) }
+  end
+
   context "when sorting booleans" do
     let(:resource) { [true, false, true, false] }
     let(:sort_query) { "itself desc" }
