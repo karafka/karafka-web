@@ -1,7 +1,7 @@
 # Karafka Web
 
-[![Build Status](https://github.com/karafka/karafka-web/workflows/ci/badge.svg)](https://github.com/karafka/karafka-web/actions?query=workflow%3Aci)
-[![Gem Version](https://badge.fury.io/rb/karafka-web.svg)](http://badge.fury.io/rb/karafka-web)
+[![Build Status](https://github.com/karafka/karafka-web/actions/workflows/ci.yml/badge.svg)](https://github.com/karafka/karafka-web/actions/workflows/ci.yml)
+[![Gem Version](https://badge.fury.io/rb/karafka-web.svg)](https://badge.fury.io/rb/karafka-web)
 [![Join the chat at https://slack.karafka.io](https://raw.githubusercontent.com/karafka/misc/master/slack.svg)](https://slack.karafka.io)
 
 Karafka Web UI is a web-based interface for the [Karafka framework](https://github.com/karafka/karafka). The Web UI provides a convenient way for developers to monitor and manage their Kafka-based applications, eliminating the need to use command-line tools or third-party software.
