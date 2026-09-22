@@ -33,6 +33,7 @@
 - [Fix] Correct the republish form label for the source-headers checkbox (Pro). The source message headers are always carried over; the checkbox only adds the `source_topic`, `source_partition` and `source_offset` tracking headers.
 - [Fix] Apply the `internal_topics` visibility setting to the per-topic config, distribution and removal pages (Pro), so an internal topic hidden from the topics listing is no longer reachable there by a direct URL.
 - [Fix] Take the Health topic `partitions_count` from the newest reporting process instead of the oldest. Processes are aggregated oldest-first so the freshest data wins, but this one field used `||=` and so locked in the first (oldest) process's value, leaving the "no data" partition count stale after a repartition.
+- [Fix] Compare schema versions with `Gem::Version` instead of as raw strings when running migrations, so a version with a multi-digit component (for example `1.10.0`) orders by semver rather than lexicographically.
 - [Fix] Do not collapse the Explorer search "latest" start offset to the beginning of the topic (Pro). The per-partition look-back is `limit / partitions`, which floors to zero once a topic has more partitions than the search limit; `0` is an absolute offset, so the search silently scanned from the oldest message instead of from the end. It is now clamped to at least one message per partition, sharing that computation with the per-partition cap that already guarded it.
 
 ## 1.0.1 (2026-08-24)
