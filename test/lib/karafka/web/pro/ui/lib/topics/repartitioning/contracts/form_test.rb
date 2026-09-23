@@ -37,6 +37,51 @@ describe_current do
     it { assert(result.success?) }
   end
 
+  context "when a current partition count is supplied" do
+    before { params[:current_partition_count] = 5 }
+
+    context "when the new count is greater" do
+      before { params[:partition_count] = "6" }
+
+      it { assert(result.success?) }
+    end
+
+    context "when the new count equals the current one" do
+      before { params[:partition_count] = "5" }
+
+      it { refute(result.success?) }
+      it { assert(result.errors.key?(:partition_count)) }
+    end
+
+    context "when the new count is lower" do
+      before { params[:partition_count] = "4" }
+
+      it { refute(result.success?) }
+      it { assert(result.errors.key?(:partition_count)) }
+    end
+
+    ["5abc", "0", "-1", ""].each do |invalid|
+      context "when the new count is #{invalid.inspect}" do
+        before { params[:partition_count] = invalid }
+
+        it { refute(result.success?) }
+
+        it "reports it once, as a format problem" do
+          assert_equal(
+            "needs to be an integer that is 1 or greater",
+            result.errors[:partition_count]
+          )
+        end
+      end
+    end
+  end
+
+  context "when no current partition count is supplied" do
+    before { params[:partition_count] = "1" }
+
+    it { assert(result.success?) }
+  end
+
   context "when the partition count is zero" do
     before { params[:partition_count] = "0" }
 
