@@ -79,3 +79,4 @@ en:
     repartitioning_form:
       missing: needs to be present
       partition_count_format: needs to be an integer that is 1 or greater
+      partition_count_not_an_increase: 'Must be greater than the current partition count'

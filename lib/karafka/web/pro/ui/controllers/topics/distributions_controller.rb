@@ -87,7 +87,11 @@ module Karafka
                 edit(topic_name)
 
                 repartition_form = Lib::Topics::Repartitioning::Normalizer.call(params)
-                @errors = Lib::Topics::Repartitioning::Contracts::Form.new.call(repartition_form).errors
+                # The contract compares the requested count against the current one, which only
+                # the controller knows (`edit` above loads `@topic`)
+                @errors = Lib::Topics::Repartitioning::Contracts::Form.new.call(
+                  repartition_form.merge(current_partition_count: @topic.partition_count)
+                ).errors
 
                 return edit(topic_name) unless @errors.empty?
 
