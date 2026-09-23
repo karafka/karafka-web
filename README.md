@@ -17,6 +17,20 @@ To get started with the Karafka Web UI, see the [Web UI](https://karafka.io/docs
 
 ![karafka web ui dashboard](https://raw.githubusercontent.com/karafka/misc/master/printscreens/web-ui.png)
 
+## Running the tests
+
+Tests need a running Kafka broker. Use `bin/tests_parallel`, which is what CI runs:
+
+```bash
+docker compose up -d
+bundle exec bin/wait_for_kafka
+bin/tests_parallel
+```
+
+It splits the regular and Pro suites across timing-balanced workers (`REGULAR_WORKERS` / `PRO_WORKERS`, 4 each by default). The Pro suite also needs `KARAFKA_PRO_LICENSE_TOKEN` and `KARAFKA_PRO_LICENSE_VERSION` set.
+
+`bin/rspecs`, `rake test` and plain `rake` load a whole suite into one process. In the Pro suite, `method redefined` warnings from different test files then collide, and `test/test_helper.rb` turns them into errors. Failures in `Topics::ReplicationsController` and `ScheduledMessages::ExplorerController` from those runs are an artifact of the runner, not real breakages.
+
 ## Karafka Pro Enhanced Web UI
 
 The Enhanced Web UI, in addition to all the features from the OSS version, also offers additional features and capabilities not available in the free version, making it a more robust option for those seeking enhanced monitoring and management capabilities for their Karafka applications. Some of the key benefits of the Enhanced Web UI version include the following:
