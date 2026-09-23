@@ -19,6 +19,7 @@
 - [Maintenance] Extract the topic creation and partition-increase flows into `Lib::TopicCreation` and `Lib::Repartitioning`. Topic name and partition/replication counts are now validated server-side, so a malformed request re-renders the form with an error (#1241).
 - [Maintenance] Extract the Explorer republish flow into `Lib::Republishing`, mirroring the publish extraction. The form now validates the target topic, partition range and payload against the target deserializer (skippable), re-rendering with errors instead of failing on produce (#1244).
 - [Maintenance] Retry transient 5xx responses in the test link validator before failing, so an occasional Kafka-coordinator-load `/topics` 500 no longer reddens unrelated specs.
+- [Maintenance] Update the vendored `AirDatepicker` **CSS** to `3.6.0`, matching the JS. The 3.6.0 upgrade in 0.11.0 only swapped the JS, leaving the stylesheet on `3.4.0` ever since.
 - [Fix] Remove a stray outer loop in the consumer-groups sampler enricher that re-ran subscription-group enrichment once per top-level consumer-group key (twice per report), so each subscription group is now enriched exactly once per sample.
 - [Fix] Bound the commanding seek `offset` (at the signed 64-bit max) and pause `duration` server-side, so a value that overflows librdkafka's `int64` no longer passes validation and raises a `RangeError` inside the running consumer when the command is applied; the form now re-renders with an error instead.
 - [Fix] Gate the partition/topic pause, resume and offset-seek controllers behind `features.commanding!`, so a crafted request no longer dispatches a command to running consumers while commanding is disabled (it now returns 403, matching the other commanding paths).
@@ -34,6 +35,7 @@
 - [Fix] Apply the `internal_topics` visibility setting to the per-topic config, distribution and removal pages (Pro), so an internal topic hidden from the topics listing is no longer reachable there by a direct URL.
 - [Fix] Take the Health topic `partitions_count` from the newest reporting process instead of the oldest. Processes are aggregated oldest-first so the freshest data wins, but this one field used `||=` and so locked in the first (oldest) process's value, leaving the "no data" partition count stale after a repartition.
 - [Fix] Compare schema versions with `Gem::Version` instead of as raw strings when running migrations, so a version with a multi-digit component (for example `1.10.0`) orders by semver rather than lexicographically.
+- [Fix] Rebuild the Web UI producer variants after a fork. `Web::Producer` is a lazy singleton on `Web.config.producer`, so it outlives a fork and kept serving `acks` variants built from the parent's `Karafka.producer`. The variants are now stamped with the pid that built them and rebuilt when it changes.
 - [Fix] Stop the explorer search from falling back to partition `0` when none of the requested partitions exist on the topic, so a search scoped to a non-existent partition reports no results instead of presenting partition `0` results as the requested scope.
 
 ## 1.0.1 (2026-08-24)
