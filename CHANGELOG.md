@@ -38,6 +38,7 @@
 - [Fix] Compare schema versions with `Gem::Version` instead of as raw strings when running migrations, so a version with a multi-digit component (for example `1.10.0`) orders by semver rather than lexicographically.
 - [Fix] Rebuild the Web UI producer variants after a fork. `Web::Producer` is a lazy singleton on `Web.config.producer`, so it outlives a fork and kept serving `acks` variants built from the parent's `Karafka.producer`. The variants are now stamped with the pid that built them and rebuilt when it changes.
 - [Fix] Stop the producers tracking reporter from swallowing dispatch errors with a debug `p` to stdout. They are now logged through the Karafka logger, and still don't propagate, since that would abort the whole process.
+- [Fix] Return 404 when triggering, enabling or disabling a recurring task that is not in the current schedule (Pro), instead of dispatching the command and reporting success for a task that does not exist. This matches the not-found handling of the sibling controllers; the `*_all` variants are unchanged.
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a generic keyword filtering box to the data-heavy Web UI listings, so a specific consumer, topic or job can be found without scrolling. Flat listings also include a field selector to scope the search to a chosen attribute (Pro) (#1073).

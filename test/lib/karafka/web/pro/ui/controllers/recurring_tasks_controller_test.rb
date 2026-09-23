@@ -452,66 +452,64 @@ describe_current do
     end
   end
 
-  describe "#enable" do
-    before { post "recurring_tasks/task1/enable" }
+  %w[enable disable trigger].each do |action|
+    describe "##{action}" do
+      let(:last_message) do
+        # Dispatch of commands is async, so we have to wait
+        sleep(1)
+        Karafka::Admin.read_topic(schedules_topic, 0, 1, -1).first
+      end
 
-    it do
-      assert_equal(302, response.status)
-      # Taken from referer and referer is nil in specs
-      assert_equal("/", response.location)
-    end
+      def produce_schedule
+        produce(
+          schedules_topic,
+          Fixtures.recurring_tasks_schedules_msg("only_enabled"),
+          key: "state:schedule"
+        )
+      end
 
-    it "expect to create new command" do
-      # Dispatch of commands is async, so we have to wait
-      sleep(1)
-      message = Karafka::Admin.read_topic(schedules_topic, 0, 1, -1).first
+      context "when the task is in the current schedule" do
+        before do
+          produce_schedule
+          post "recurring_tasks/test1/#{action}"
+        end
 
-      assert_equal("command:enable:task1", message.key)
-      assert_equal("command", message.payload[:type])
-      assert_equal("enable", message.payload[:command][:name])
-      assert_equal("task1", message.payload[:task][:id])
-    end
-  end
+        it do
+          assert_equal(302, response.status)
+          # Taken from referer and referer is nil in specs
+          assert_equal("/", response.location)
+        end
 
-  describe "#disable" do
-    before { post "recurring_tasks/task1/disable" }
+        it "expect to create new command" do
+          assert_equal("command:#{action}:test1", last_message.key)
+          assert_equal("command", last_message.payload[:type])
+          assert_equal(action, last_message.payload[:command][:name])
+          assert_equal("test1", last_message.payload[:task][:id])
+        end
+      end
 
-    it do
-      assert_equal(302, response.status)
-      # Taken from referer and referer is nil in specs
-      assert_equal("/", response.location)
-    end
+      context "when the task is not in the current schedule" do
+        before do
+          produce_schedule
+          post "recurring_tasks/unknown/#{action}"
+        end
 
-    it "expect to create new command" do
-      # Dispatch of commands is async, so we have to wait
-      sleep(1)
-      message = Karafka::Admin.read_topic(schedules_topic, 0, 1, -1).first
+        it { assert_equal(404, status) }
 
-      assert_equal("command:disable:task1", message.key)
-      assert_equal("command", message.payload[:type])
-      assert_equal("disable", message.payload[:command][:name])
-      assert_equal("task1", message.payload[:task][:id])
-    end
-  end
+        it "expect not to create a command" do
+          assert_equal("state:schedule", last_message.key)
+        end
+      end
 
-  describe "#trigger" do
-    before { post "recurring_tasks/task1/trigger" }
+      context "when there is no schedule" do
+        before { post "recurring_tasks/test1/#{action}" }
 
-    it do
-      assert_equal(302, response.status)
-      # Taken from referer and referer is nil in specs
-      assert_equal("/", response.location)
-    end
+        it { assert_equal(404, status) }
 
-    it "expect to create new command" do
-      # Dispatch of commands is async, so we have to wait
-      sleep(1)
-      message = Karafka::Admin.read_topic(schedules_topic, 0, 1, -1).first
-
-      assert_equal("command:trigger:task1", message.key)
-      assert_equal("command", message.payload[:type])
-      assert_equal("trigger", message.payload[:command][:name])
-      assert_equal("task1", message.payload[:task][:id])
+        it "expect not to create a command" do
+          assert_nil(last_message)
+        end
+      end
     end
   end
 end
