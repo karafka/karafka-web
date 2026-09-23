@@ -29,7 +29,7 @@ bin/tests_parallel
 
 It splits the regular and Pro suites across timing-balanced workers (`REGULAR_WORKERS` / `PRO_WORKERS`, 4 each by default). The Pro suite also needs `KARAFKA_PRO_LICENSE_TOKEN` and `KARAFKA_PRO_LICENSE_VERSION` set.
 
-`bin/rspecs`, `rake test` and plain `rake` load a whole suite into one process. In the Pro suite, `method redefined` warnings from different test files then collide, and `test/test_helper.rb` turns them into errors. Failures in `Topics::ReplicationsController` and `ScheduledMessages::ExplorerController` from those runs are an artifact of the runner, not real breakages.
+`bin/rspecs`, `rake test` and plain `rake` load a whole suite into one process. In the Pro suite that triggers warnings that don't appear in the split runs (e.g. `method redefined` when test files stub the same method), and `test/test_helper.rb` turns warnings into errors. Failures in `Topics::ReplicationsController` and `ScheduledMessages::ExplorerController` from those runs are an artifact of the runner, not real breakages.
 
 ## Karafka Pro Enhanced Web UI
 
