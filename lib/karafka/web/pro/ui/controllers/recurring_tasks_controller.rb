@@ -137,9 +137,8 @@ module Karafka
             # @param task_id [String] id of the task we want to operate on
             def ensure_task_exists!(task_id)
               schedule = Models::RecurringTasks::Schedule.current
-              schedule || raise(Errors::Ui::NotFoundError)
-
-              schedule.tasks.find { |task| task.id == task_id } || raise(Errors::Ui::NotFoundError)
+              raise(Errors::Ui::NotFoundError) unless schedule
+              raise(Errors::Ui::NotFoundError) unless schedule.tasks.map(&:id).include?(task_id)
             end
 
             # Generates a nice flash message about the dispatch

@@ -460,17 +460,14 @@ describe_current do
         Karafka::Admin.read_topic(schedules_topic, 0, 1, -1).first
       end
 
-      def produce_schedule
-        produce(
-          schedules_topic,
-          Fixtures.recurring_tasks_schedules_msg("only_enabled"),
-          key: "state:schedule"
-        )
-      end
-
       context "when the task is in the current schedule" do
         before do
-          produce_schedule
+          produce(
+            schedules_topic,
+            Fixtures.recurring_tasks_schedules_msg("only_enabled"),
+            key: "state:schedule"
+          )
+
           post "recurring_tasks/test1/#{action}"
         end
 
@@ -490,7 +487,12 @@ describe_current do
 
       context "when the task is not in the current schedule" do
         before do
-          produce_schedule
+          produce(
+            schedules_topic,
+            Fixtures.recurring_tasks_schedules_msg("only_enabled"),
+            key: "state:schedule"
+          )
+
           post "recurring_tasks/unknown/#{action}"
         end
 
