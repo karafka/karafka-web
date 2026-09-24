@@ -1,33 +1,44 @@
 # Karafka Web Changelog
 
 ## Unreleased
-- [Fix] Compare a topic's biggest partition lag against the average of its *other* partitions when flagging a skewed topic in the Health views (Pro), instead of the self-inclusive average. The old comparison bounded `max / avg` by the partition count, so a topic with fewer partitions than `config.ui.health.lags.skew_threshold` could never be flagged - with the default threshold of 3, a two-partition topic stayed unflagged even when one partition carried all of the lag. Note this makes the flag strictly more sensitive: existing deployments will see more topics flagged as skewed at an unchanged `skew_threshold`.
-- **[Feature]** Add a **Publish message** capability to the Explorer (Pro): produce an arbitrary message to a topic or chosen partition, with an optional key, validated headers, and a typed, uploaded or tombstone payload. Gated by the new `publish?` policy, enabled by default (#956).
-- **[Feature]** Aggregate the Health views per topic instead of per partition so they stay usable at scale. One summary row per topic (lag, max/avg lag, skew flag, LSO risk, paused partitions) drills down to the per-partition views. Thresholds are configurable under `config.ui.health.lags` (#112).
-- [Enhancement] Produce the scheduled-message cancel command through the acked (`acks: 1`) producer (`Karafka::Web.producers.acked`) so the broker confirms receipt, instead of the fire-and-forget (`acks: 0`) producer that could silently drop the cancellation.
-- [Enhancement] Dispatch consumer commanding requests (pause, resume, seek, quiet, stop, trace) through the acked (`acks: 1`) producer, so the broker confirms receipt instead of the fire-and-forget producer silently dropping a command. Adds a `Karafka::Web.producers` facade (#1241).
-- [Enhancement] After republishing a message, redirect to the partition that received the copy (instead of back to the source message) so the republished message is immediately visible (#1239).
-- [Enhancement] Add `Karafka::Web.producer.acked`, an `acks: 1` producer variant (idempotent and transactional producers are returned unchanged), so user-initiated produces get the assigned offset back instead of the reporting producer's `-1001` (#956).
-- [Enhancement] Add a per-broker partition **Distribution** view to the Cluster section (Pro): a leader-partitions chart plus each broker's leader, follower and replica counts, shares and out-of-sync replicas. Over and under-loaded brokers are flagged (#962).
-- [Enhancement] Inject Web UI kafka settings via `Karafka::Web::Config::DefaultsInjector` (built on `Karafka::Core::Configurable::Injector`) so the injection follows the same pattern as Karafka and can be extended by Pro (#653). Requires karafka-core `>= 2.6.3`.
-- [Enhancement] Read the Pro commands and scheduled-messages topics through the Web UI admin wrapper so those (transactionally written) reads use the same Web UI kafka settings as the rest of the UI.
-- [Enhancement] Tighten compaction on the `karafka_consumers_states` and `karafka_consumers_metrics` topics (`segment.ms` 1 day -> 6h, add `max.compaction.lag.ms` of 7 days) so superseded versions are collapsed sooner. Values accepted on Apache Kafka, Confluent Cloud, Redpanda and MSK.
-- [Maintenance] Stop the recurring `/topics` link-validator flake by skipping `/topics` when crawling from the cluster views, matching the existing `/explorer` exclusion. It is covered by its own specs.
-- [Maintenance] Reorganize the Pro UI `Lib` feature pipelines into domain namespaces mirroring the controllers and routes: `Lib::Consumers::Commands`, `Lib::Explorer::{Publishing,Republishing,Search}` and `Lib::Topics::{Configuring,Creation,Repartitioning}`. Internal only; no behavior change.
-- [Maintenance] Extract the consumer commanding forms (offset seek, partition and topic pause/resume) into `Lib::Commands`, keeping controllers to orchestration. Offset and pause values are now validated server-side, so a crafted value is rejected instead of reaching the running consumer (#1241).
-- [Maintenance] Extract the topic configuration edit flow into `Lib::Configuring` (Normalizer/Contract/Transform/Dispatcher), guarding against an empty value before the broker `alter configs` request (#1241).
-- [Maintenance] Extract the topic creation and partition-increase flows into `Lib::TopicCreation` and `Lib::Repartitioning`. Topic name and partition/replication counts are now validated server-side, so a malformed request re-renders the form with an error (#1241).
-- [Maintenance] Extract the Explorer republish flow into `Lib::Republishing`, mirroring the publish extraction. The form now validates the target topic, partition range and payload against the target deserializer (skippable), re-rendering with errors instead of failing on produce (#1244).
-- [Maintenance] Retry transient 5xx responses in the test link validator before failing, so an occasional Kafka-coordinator-load `/topics` 500 no longer reddens unrelated specs.
-- [Fix] Remove a stray outer loop in the consumer-groups sampler enricher that re-ran subscription-group enrichment once per top-level consumer-group key (twice per report), so each subscription group is now enriched exactly once per sample.
-- [Fix] Bound the commanding seek `offset` (at the signed 64-bit max) and pause `duration` server-side, so a value that overflows librdkafka's `int64` no longer passes validation and raises a `RangeError` inside the running consumer when the command is applied; the form now re-renders with an error instead.
-- [Fix] Gate the partition/topic pause, resume and offset-seek controllers behind `features.commanding!`, so a crafted request no longer dispatches a command to running consumers while commanding is disabled (it now returns 403, matching the other commanding paths).
-- [Fix] Return `nil` from the reporting deserializer for a tombstone / null-value record instead of raising a `TypeError` on `JSON.parse(nil)` (or `Zlib::Inflate.inflate(nil)`), so a null message on one of our topics (e.g. the errors topic) renders the placeholder rather than 500-ing the view.
-- [Fix] Do not 500 the Errors views when the errors topic contains a foreign or malformed message. Such an entry now renders a "not a valid Karafka error report" placeholder, keeping a Details link that opens the raw message in the Explorer (Pro) (#1243).
-- [Fix] Raise the `retention.ms` floor on the compacted `karafka_consumers_states` and `karafka_consumers_metrics` topics to 1 month (was 1 hour / 1 day) so the most recent record is not deleted on brokers that apply retention to compacted topics (e.g. Redpanda).
-- [Fix] Stop the live poll from clobbering the search/filter box. Live polling now ignores the filter box unless it has unsubmitted input, so pages auto-refresh again while a typed but unsubmitted filter is preserved.
-- [Fix] Report malformed partition count, replication factor and repartition count values in the topic forms as errors instead of silently truncating them (`"5abc"` became `5`).
-- [Fix] Rescue `Rdkafka::Config::ConfigError` when creating a topic or altering a topic config, so an admin client configuration failure re-renders the form with the error instead of returning a 500, matching what repartitioning already did.
+- **[Feature]** Add a **Publish message** capability to the Explorer (Pro) to produce new messages with an optional key, headers and a typed, uploaded or tombstone payload. Gated by the new `#publish?` policy, enabled by default (#956).
+- **[Feature]** Aggregate the Health views per topic with drill-down to partitions, so they stay usable at scale. Thresholds are configurable under `config.ui.health.lags` (#112).
+- [Enhancement] Produce scheduled-message cancellations with `acks: 1` so the broker confirms receipt.
+- [Enhancement] Produce consumer commanding requests with `acks: 1` so the broker confirms receipt, and add a `Karafka::Web.producers` facade (#1241).
+- [Enhancement] After republishing, redirect to the partition that received the copy (#1239).
+- [Enhancement] Add `Karafka::Web.producer.acked`, an `acks: 1` producer variant, so user-initiated produces report the assigned offset (#956).
+- [Enhancement] Add a per-broker partition **Distribution** view to the Cluster section (Pro) that flags over and under-loaded brokers (#962).
+- [Enhancement] Inject Web UI kafka settings through `Karafka::Web::Config::DefaultsInjector`, following the Karafka pattern (#653). Requires karafka-core `>= 2.6.3`.
+- [Enhancement] Read the Pro commands and scheduled-messages topics with the same Web UI kafka settings as the rest of the UI.
+- [Enhancement] Tighten compaction on the `karafka_consumers_states` and `karafka_consumers_metrics` topics so superseded versions are removed sooner.
+- [Maintenance] Fix a recurring `/topics` link-validator flake in specs.
+- [Maintenance] Reorganize the Pro UI `Lib` pipelines into domain namespaces. No behavior change.
+- [Maintenance] Extract the consumer commanding forms into `Lib::Commands` and validate offset and pause values server-side (#1241).
+- [Maintenance] Extract the topic configuration edit flow into `Lib::Configuring` and reject empty values (#1241).
+- [Maintenance] Extract topic creation and repartitioning into `Lib::TopicCreation` and `Lib::Repartitioning` with server-side validation (#1241).
+- [Maintenance] Extract the Explorer republish flow into `Lib::Republishing` and validate the form before producing (#1244).
+- [Maintenance] Retry transient 5xx responses in the test link validator.
+- [Maintenance] Update the vendored `AirDatepicker` CSS to `3.6.0` to match the JS.
+- [Fix] Sort Hash elements by key value even when the key name matches a `Hash` method.
+- [Fix] Reject a new partition count that is not greater than the current one with a form error instead of a broker error (Pro).
+- [Fix] Enrich each subscription group only once per consumer report.
+- [Fix] Reject seek offsets and pause durations that overflow librdkafka limits instead of crashing the running consumer.
+- [Fix] Return 403 for partition and topic commanding requests when commanding is disabled.
+- [Fix] Render tombstone messages on Web UI topics as a placeholder instead of failing the view.
+- [Fix] Render foreign or malformed messages in the Errors views as a placeholder instead of failing the view (#1243).
+- [Fix] Raise the `retention.ms` floor on the compacted consumer states and metrics topics to 1 month, so brokers that apply retention to compacted topics (e.g. Redpanda) keep the latest record.
+- [Fix] Stop live polling from overwriting an unsubmitted search or filter input.
+- [Fix] Report malformed partition count, replication factor and repartition values as form errors instead of truncating them.
+- [Fix] Show admin client configuration errors in the topic creation and configuration forms instead of returning a 500.
+- [Fix] Reject the reserved topic names `.` and `..` in the topic creation form (Pro).
+- [Fix] Reject a `config.ui.health.lags.skew_threshold` of `1` or less.
+- [Fix] Correct the republish form label for the source-headers checkbox (Pro).
+- [Fix] Hide internal topics from the per-topic config, distribution and removal pages when `internal_topics` visibility is off (Pro).
+- [Fix] Refresh the Health topic partition count after a repartition.
+- [Fix] Compare schema versions as semantic versions when running migrations.
+- [Fix] Rebuild the Web UI producer variants after a fork.
+- [Fix] Log producer tracking errors through the Karafka logger instead of printing them to stdout.
+- [Fix] Flag Health lag skew against the average of a topic's other partitions, so small topics can be flagged too. This is more sensitive at the same `skew_threshold` (Pro).
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a generic keyword filtering box to the data-heavy Web UI listings, so a specific consumer, topic or job can be found without scrolling. Flat listings also include a field selector to scope the search to a chosen attribute (Pro) (#1073).

@@ -37,9 +37,16 @@ module Karafka
             module Repartitioning
               # Namespace for the repartitioning form contracts
               module Contracts
-                # Validates the "increase partitions" form. Whether the new count is actually higher
-                # than the current one is left to the broker (rejects a non-increase); this only
-                # guards the value being a positive integer before we reach out.
+                # Validates the "increase partitions" form: the value is a positive integer and it
+                # is an actual increase over the topic's current partition count.
+                #
+                # `create_partitions` sets the TOTAL count, so anything at or below the current
+                # count is not an increase. The broker rejects it anyway, but only as a raw
+                # rdkafka error - catching it here re-renders the form with a field error, which
+                # is what the form's own `min` and helper text already promise.
+                #
+                # @note The comparison needs `current_partition_count` alongside the normalized
+                #   form fields; it is skipped when that is not supplied.
                 class Form < Web::Contracts::Base
                   # Digits only. The count arrives as a raw string so a malformed value ("5abc",
                   # "3.9", " 7") is reported as such instead of being silently truncated
@@ -55,6 +62,23 @@ module Karafka
 
                   required(:partition_count) do |val|
                     val.is_a?(String) && val.match?(COUNT_REGEXP) && val.to_i >= 1
+                  end
+
+                  # Must be a real increase. Shape problems are already reported by the rule above,
+                  # so a malformed value is skipped here rather than reported twice
+                  virtual do |data|
+                    count = data[:partition_count]
+                    current = data[:current_partition_count]
+
+                    next if current.nil?
+                    # Mirror the shape rule above: anything it already rejects (malformed, or
+                    # below 1) is reported there, so this must stay silent rather than replace
+                    # that error with a less accurate one
+                    next unless count.is_a?(String) && count.match?(COUNT_REGEXP)
+                    next unless count.to_i >= 1
+                    next if count.to_i > current
+
+                    [[%i[partition_count], :not_an_increase]]
                   end
                 end
               end
