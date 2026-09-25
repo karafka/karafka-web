@@ -38,6 +38,7 @@
 - [Fix] Compare schema versions as semantic versions when running migrations.
 - [Fix] Rebuild the Web UI producer variants after a fork.
 - [Fix] Log producer tracking errors through the Karafka logger instead of printing them to stdout.
+- [Fix] Flag Health lag skew against the average of a topic's other partitions, so small topics can be flagged too. This is more sensitive at the same `skew_threshold` (Pro).
 - [Fix] Return 404 for unknown recurring tasks on trigger, enable and disable (Pro).
 - [Fix] Stop the Explorer search "latest" start offset from collapsing to the beginning of the topic (Pro).
 
