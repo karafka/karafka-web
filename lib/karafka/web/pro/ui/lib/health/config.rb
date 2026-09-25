@@ -53,7 +53,7 @@ module Karafka
                 # Without it a topic where one partition sits at 7 while the rest sit at 1 would be
                 # reported as skewed, which is just noise. Only imbalances above this absolute lag
                 # are worth flagging.
-                setting :skew_minimum, default: 100
+                setting :skew_minimum, default: 1_000
 
                 # Lag at (or above) which a row is highlighted as a high-lag row in the health views
                 # (a red `status-row-error` left border). Applied per partition to a partition's own

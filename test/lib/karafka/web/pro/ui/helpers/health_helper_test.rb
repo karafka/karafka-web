@@ -96,41 +96,49 @@ describe_current do
     it { assert_equal("", lag_status_row(-1)) }
   end
 
-  # Default config.ui.health.lags: skew_threshold 3, skew_minimum 100
+  # Default config.ui.health.lags: skew_threshold 3, skew_minimum 1_000
   describe "#skewed?" do
-    def stats(measurable_count:, avg_lag:, max_lag:)
+    def stats(measurable_count:, total_lag:, max_lag:)
       obj = Object.new
       obj.define_singleton_method(:measurable_count) { measurable_count }
-      obj.define_singleton_method(:avg_lag) { avg_lag }
+      obj.define_singleton_method(:total_lag) { total_lag }
       obj.define_singleton_method(:max_lag) { max_lag }
       obj
     end
 
     it "is not skewed when the lag is evenly spread" do
-      refute(skewed?(stats(measurable_count: 3, avg_lag: 1_000, max_lag: 1_000)))
+      # [1_000, 1_000, 1_000] -> others average 1_000, max is 1x that
+      refute(skewed?(stats(measurable_count: 3, total_lag: 3_000, max_lag: 1_000)))
     end
 
     it "is skewed when the lag is concentrated on one partition" do
-      # avg 2_500, max 9_100 -> well over the default 3x threshold
-      assert(skewed?(stats(measurable_count: 4, avg_lag: 2_500, max_lag: 9_100)))
+      # [9_100, 300, 300, 300] -> others average 300, well over the default 3x threshold
+      assert(skewed?(stats(measurable_count: 4, total_lag: 10_000, max_lag: 9_100)))
+    end
+
+    it "is skewed when one partition carries all of the lag of a two-partition topic" do
+      # The case the self-inclusive average could never flag: [100_000, 0] has an overall average
+      # of 50_000, so max/avg is 2 and the default 3x threshold was unreachable no matter how
+      # lopsided the split. Against the other partition (0) it is unambiguously skewed.
+      assert(skewed?(stats(measurable_count: 2, total_lag: 100_000, max_lag: 100_000)))
     end
 
     it "is not skewed with fewer than two measurable partitions" do
-      refute(skewed?(stats(measurable_count: 1, avg_lag: 10_000, max_lag: 10_000)))
+      refute(skewed?(stats(measurable_count: 1, total_lag: 10_000, max_lag: 10_000)))
     end
 
-    it "is not skewed when the average lag is not positive" do
-      refute(skewed?(stats(measurable_count: 3, avg_lag: 0, max_lag: 0)))
+    it "is not skewed when there is no lag at all" do
+      refute(skewed?(stats(measurable_count: 3, total_lag: 0, max_lag: 0)))
     end
 
     it "is not skewed when the biggest lag is below the minimum" do
-      # max 90 is > 3x the average but below the default 100 minimum, so it is just noise
-      refute(skewed?(stats(measurable_count: 4, avg_lag: 23, max_lag: 90)))
+      # [900, 1, 1, 1] is lopsided, but 900 is below the default 1_000 minimum, so it is just noise
+      refute(skewed?(stats(measurable_count: 4, total_lag: 903, max_lag: 900)))
     end
 
     it "is not skewed when the imbalance is below the threshold" do
-      # max 4_000 is only 2x the 2_000 average, below the default 3x threshold
-      refute(skewed?(stats(measurable_count: 3, avg_lag: 2_000, max_lag: 4_000)))
+      # [2_400, 1_800, 1_800] -> others average 1_800, max is 1.33x that, below the default 3x
+      refute(skewed?(stats(measurable_count: 3, total_lag: 6_000, max_lag: 2_400)))
     end
 
     context "when the skew threshold is lowered via config" do
@@ -138,30 +146,36 @@ describe_current do
 
       after { ::Karafka::Web.config.ui.health.lags.skew_threshold = 3 }
 
-      it "flags the same 2x distribution as skewed" do
-        assert(skewed?(stats(measurable_count: 3, avg_lag: 2_000, max_lag: 4_000)))
+      it "flags a distribution that the default threshold leaves alone" do
+        # [4_000, 1_000, 1_000] -> others average 1_000, max is 4x that
+        assert(skewed?(stats(measurable_count: 3, total_lag: 6_000, max_lag: 4_000)))
       end
     end
 
     context "when the skew minimum is raised via config" do
       before { ::Karafka::Web.config.ui.health.lags.skew_minimum = 100_000 }
 
-      after { ::Karafka::Web.config.ui.health.lags.skew_minimum = 100 }
+      after { ::Karafka::Web.config.ui.health.lags.skew_minimum = 1_000 }
 
       it "does not flag a distribution whose biggest lag is below the raised minimum" do
-        refute(skewed?(stats(measurable_count: 4, avg_lag: 2_500, max_lag: 9_100)))
+        refute(skewed?(stats(measurable_count: 4, total_lag: 10_000, max_lag: 9_100)))
       end
     end
   end
 
   describe "#topic_lag_status_row" do
-    # `topic_lag_status_row` calls the real `skewed?`, so the stub exposes the raw metrics it
-    # reads (measurable_count/avg_lag/max_lag). The defaults describe an unskewed topic.
-    def topic_stub(avg_lag:, max_lag: 0, measurable_count: 1)
+    # `topic_lag_status_row` classifies on `avg_lag` and calls the real `skewed?`, which reads
+    # `measurable_count`/`total_lag`/`max_lag` - so the stub exposes both. `total_lag` defaults to
+    # `avg_lag * measurable_count` so the numbers stay a self-consistent distribution. The defaults
+    # describe an unskewed topic.
+    def topic_stub(avg_lag:, max_lag: 0, measurable_count: 1, total_lag: nil)
+      total_lag ||= avg_lag * measurable_count
+
       obj = Object.new
       obj.define_singleton_method(:avg_lag) { avg_lag }
       obj.define_singleton_method(:max_lag) { max_lag }
       obj.define_singleton_method(:measurable_count) { measurable_count }
+      obj.define_singleton_method(:total_lag) { total_lag }
       obj
     end
 
@@ -170,9 +184,10 @@ describe_current do
       topic_stub(avg_lag: 10)
     end
 
-    # A skewed topic (max 9_000 is >3x the 1_000 average) with a low average lag
+    # [9_000, 100, 100, 100]: skewed (max is 90x the 100 others-average) while the 2_325 average
+    # stays below the warning threshold, so only the skew can produce a status here
     def skewed_stub
-      topic_stub(avg_lag: 1_000, max_lag: 9_000, measurable_count: 2)
+      topic_stub(avg_lag: 2_325, max_lag: 9_000, measurable_count: 4, total_lag: 9_300)
     end
 
     it "flags high average lag as an error" do
@@ -192,11 +207,13 @@ describe_current do
     end
 
     it "keeps error precedence over a skew warning" do
-      # avg_lag 10_000 is a high-lag error, and max_lag 40_000 (>3x avg) is genuinely skewed too,
-      # so this asserts the error wins over the skew warning
+      # [40_000, 0]: avg_lag 20_000 is a high-lag error, and it is genuinely skewed too, so this
+      # asserts the error wins over the skew warning
       assert_equal(
         "status-row-error",
-        topic_lag_status_row(topic_stub(avg_lag: 10_000, max_lag: 40_000, measurable_count: 2))
+        topic_lag_status_row(
+          topic_stub(avg_lag: 20_000, max_lag: 40_000, measurable_count: 2, total_lag: 40_000)
+        )
       )
     end
 

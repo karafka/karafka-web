@@ -97,23 +97,30 @@ module Karafka
               severity ? "status-row-#{severity}" : ""
             end
 
-            # @param topic_stats [#measurable_count, #avg_lag, #max_lag] an aggregated topic row
+            # @param topic_stats [#measurable_count, #total_lag, #max_lag] an aggregated topic row
             #   (report or cluster)
             # @return [Boolean] true when the lag is concentrated on one (or few) partition(s)
             #   rather than spread evenly, that is the biggest single-partition lag is at least
-            #   `config.ui.health.lags.skew_threshold`x the average. Only meaningful with more than
-            #   one lagging partition and once the biggest lag clears
-            #   `config.ui.health.lags.skew_minimum` (so trivial imbalances are not flagged). An
-            #   evenly lagging topic and a topic with one hot/stuck partition can share the same
-            #   total lag, so this is what distinguishes them at a glance.
+            #   `config.ui.health.lags.skew_threshold`x the average of the *remaining* partitions.
+            #   Only meaningful with more than one lagging partition and once the biggest lag
+            #   clears `config.ui.health.lags.skew_minimum` (so trivial imbalances are not
+            #   flagged). An evenly lagging topic and a topic with one hot/stuck partition can
+            #   share the same total lag, so this is what distinguishes them at a glance.
             def skewed?(topic_stats)
               lags = ::Karafka::Web.config.ui.health.lags
 
               return false if topic_stats.measurable_count < 2
-              return false unless topic_stats.avg_lag.positive?
               return false if topic_stats.max_lag < lags.skew_minimum
 
-              topic_stats.max_lag >= topic_stats.avg_lag * lags.skew_threshold
+              # Compared against the average of the other partitions rather than the average of
+              # all of them. A self-inclusive average caps `max / avg` at the partition count, so
+              # a topic with fewer partitions than the threshold could never be flagged however
+              # lopsided it was - with the default threshold of 3 a two-partition topic stayed
+              # unflagged even when one partition carried all of the lag.
+              others_lag = topic_stats.total_lag - topic_stats.max_lag
+              others_avg = others_lag.to_f / (topic_stats.measurable_count - 1)
+
+              topic_stats.max_lag >= others_avg * lags.skew_threshold
             end
 
             # `status-row-*` class for an aggregated topic row. High lag wins, but a skewed topic
