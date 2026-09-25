@@ -96,7 +96,7 @@ describe_current do
     it { assert_equal("", lag_status_row(-1)) }
   end
 
-  # Default config.ui.health.lags: skew_threshold 3, skew_minimum 100
+  # Default config.ui.health.lags: skew_threshold 3, skew_minimum 1_000
   describe "#skewed?" do
     def stats(measurable_count:, total_lag:, max_lag:)
       obj = Object.new
@@ -132,8 +132,8 @@ describe_current do
     end
 
     it "is not skewed when the biggest lag is below the minimum" do
-      # [90, 1, 1, 1] is lopsided, but 90 is below the default 100 minimum, so it is just noise
-      refute(skewed?(stats(measurable_count: 4, total_lag: 93, max_lag: 90)))
+      # [900, 1, 1, 1] is lopsided, but 900 is below the default 1_000 minimum, so it is just noise
+      refute(skewed?(stats(measurable_count: 4, total_lag: 903, max_lag: 900)))
     end
 
     it "is not skewed when the imbalance is below the threshold" do
@@ -155,7 +155,7 @@ describe_current do
     context "when the skew minimum is raised via config" do
       before { ::Karafka::Web.config.ui.health.lags.skew_minimum = 100_000 }
 
-      after { ::Karafka::Web.config.ui.health.lags.skew_minimum = 100 }
+      after { ::Karafka::Web.config.ui.health.lags.skew_minimum = 1_000 }
 
       it "does not flag a distribution whose biggest lag is below the raised minimum" do
         refute(skewed?(stats(measurable_count: 4, total_lag: 10_000, max_lag: 9_100)))
