@@ -14,14 +14,21 @@ module Karafka
 
           class << self
             # First version that should **NOT** be affected by this migration
-            attr_accessor :versions_until
+            attr_reader :versions_until
             # What resource does it relate it. One migration should modify only one resource type
             attr_accessor :type
 
             # @param version [String] sem-ver version
+            def versions_until=(version)
+              @versions_until = version
+              # Converted once here because `#applicable?` is also used per consumer report
+              @comparable_versions_until = ::Gem::Version.new(version)
+            end
+
+            # @param version [String] sem-ver version
             # @return [Boolean] is the given migration applicable
             def applicable?(version)
-              version < versions_until
+              ::Gem::Version.new(version) < @comparable_versions_until
             end
 
             # @param state [Hash] deserialized state to be modified

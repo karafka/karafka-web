@@ -46,6 +46,10 @@ module Karafka
 
               # Clear the sampler so it tracks new state changes without previous once impacting
               # the data
+              #
+              # The clear happens before the dispatch below on purpose. If the dispatch keeps
+              # failing, retaining the records would let errors accumulate without bound, so we
+              # accept losing one window of tracking data over growing the error queue forever.
               sampler.clear
             end
 
@@ -87,9 +91,11 @@ module Karafka
           # and we can just safely ignore this
           rescue WaterDrop::Errors::ProducerClosedError
             nil
+          # Raising here would abort the whole process, since the scheduler thread aborts on
+          # exception, and instrumenting would feed the error back into the errors topic that may
+          # be the thing failing, so we only log it
           rescue => e
-            p "------------------------------------------------"
-            p e
+            ::Karafka.logger.error("Failed to report producers errors: #{e.class} - #{e.message}")
           end
         end
       end

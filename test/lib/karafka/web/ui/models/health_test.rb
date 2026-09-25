@@ -109,6 +109,39 @@ describe_current do
     end
   end
 
+  context "when two processes report different partition counts for the same topic" do
+    let(:cg) { "example_app6_app" }
+    let(:topic) { "default" }
+
+    let(:older_report) do
+      build_report("shinra:1:1", dispatched_at: 2_690_883_271.0, partitions_cnt: 1)
+    end
+
+    let(:newer_report) do
+      build_report("shinra:2:2", dispatched_at: 2_690_883_371.0, partitions_cnt: 5)
+    end
+
+    def build_report(process_id, dispatched_at:, partitions_cnt:)
+      report = Fixtures.consumers_reports_json
+      report[:process][:id] = process_id
+      report[:dispatched_at] = dispatched_at
+
+      sgs = report[:consumer_groups][:example_app6_app][:subscription_groups]
+      sgs.each_value { |sg| sg[:topics][:default][:partitions_cnt] = partitions_cnt }
+
+      report
+    end
+
+    before do
+      produce(reports_topic, older_report.to_json, key: "shinra:1:1")
+      produce(reports_topic, newer_report.to_json, key: "shinra:2:2")
+    end
+
+    it "expect the newest process partition count to win" do
+      assert_equal(5, stats[cg][:topics][topic][:partitions_count])
+    end
+  end
+
   describe ".cluster_lags_with_offsets" do
     let(:result) { described_class.cluster_lags_with_offsets }
 
