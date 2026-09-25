@@ -41,6 +41,7 @@
 - [Fix] Flag Health lag skew against the average of a topic's other partitions, so small topics can be flagged too. This is more sensitive at the same `skew_threshold` (Pro).
 - [Fix] Return 404 for unknown recurring tasks on trigger, enable and disable (Pro).
 - [Fix] Stop the Explorer search "latest" start offset from collapsing to the beginning of the topic (Pro).
+- [Fix] List partitions in numeric id order in the Health cluster-lag drill-down.
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a keyword filtering box to the data-heavy Web UI listings, with a field selector on flat listings (Pro) (#1073).
