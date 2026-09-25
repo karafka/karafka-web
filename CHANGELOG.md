@@ -38,6 +38,7 @@
 - [Fix] Compare schema versions as semantic versions when running migrations.
 - [Fix] Rebuild the Web UI producer variants after a fork.
 - [Fix] Log producer tracking errors through the Karafka logger instead of printing them to stdout.
+- [Fix] Return 404 for unknown recurring tasks on trigger, enable and disable (Pro).
 - [Fix] Stop the Explorer search "latest" start offset from collapsing to the beginning of the topic (Pro).
 
 ## 1.0.1 (2026-08-24)

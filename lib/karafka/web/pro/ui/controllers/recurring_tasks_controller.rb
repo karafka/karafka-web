@@ -96,6 +96,7 @@ module Karafka
               end
 
               define_method action do |task_id|
+                ensure_task_exists!(task_id)
                 command(action, task_id)
 
                 redirect(
@@ -129,6 +130,15 @@ module Karafka
             # @param task_id [String] task id or '*' to target expected task
             def command(command, task_id)
               Karafka::Pro::RecurringTasks.public_send(command, task_id)
+            end
+
+            # Raises not found unless the task is present in the current schedule
+            #
+            # @param task_id [String] id of the task we want to operate on
+            def ensure_task_exists!(task_id)
+              schedule = Models::RecurringTasks::Schedule.current
+              raise(Errors::Ui::NotFoundError) unless schedule
+              raise(Errors::Ui::NotFoundError) unless schedule.tasks.map(&:id).include?(task_id)
             end
 
             # Generates a nice flash message about the dispatch
