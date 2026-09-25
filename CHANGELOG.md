@@ -38,6 +38,7 @@
 - [Fix] Compare schema versions as semantic versions when running migrations.
 - [Fix] Rebuild the Web UI producer variants after a fork.
 - [Fix] Log producer tracking errors through the Karafka logger instead of printing them to stdout.
+- [Fix] Return no results for an Explorer search scoped only to partitions that don't exist, instead of searching partition `0` (Pro).
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a generic keyword filtering box to the data-heavy Web UI listings, so a specific consumer, topic or job can be found without scrolling. Flat listings also include a field selector to scope the search to a chosen attribute (Pro) (#1073).
