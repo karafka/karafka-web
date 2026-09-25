@@ -39,6 +39,7 @@
 - [Fix] Rebuild the Web UI producer variants after a fork.
 - [Fix] Log producer tracking errors through the Karafka logger instead of printing them to stdout.
 - [Fix] Return 404 for unknown recurring tasks on trigger, enable and disable (Pro).
+- [Fix] Stop the Explorer search "latest" start offset from collapsing to the beginning of the topic (Pro).
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a keyword filtering box to the data-heavy Web UI listings, with a field selector on flat listings (Pro) (#1073).
