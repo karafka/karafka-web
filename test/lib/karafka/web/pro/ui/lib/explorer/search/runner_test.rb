@@ -72,6 +72,40 @@ describe_current do
       iterator_instance.stubs(:stop_current_partition)
     end
 
+    describe "the latest start offset" do
+      let(:starts) do
+        query = nil
+        Karafka::Pro::Iterator
+          .stubs(:new)
+          .with { |q| (query = q).is_a?(Hash) }
+          .returns(iterator_instance)
+        runner.call
+        query.fetch(topic).values
+      end
+
+      context "when there are fewer partitions than the limit" do
+        it { assert_equal([-5, -5], starts) }
+      end
+
+      context "when there are more partitions than the limit" do
+        let(:partitions_count) { 20 }
+
+        before do
+          search_criteria[:limit] = 5
+          search_criteria[:partitions] = %w[all]
+        end
+
+        it "still looks back rather than collapsing to the oldest message" do
+          assert_equal(20, starts.size)
+          assert(starts.all?(&:negative?), "expected negative look-backs, got #{starts.uniq}")
+        end
+
+        it "clamps to one message per partition" do
+          assert_equal([-1], starts.uniq)
+        end
+      end
+    end
+
     describe "#call" do
       it "returns the matched results and metrics" do
         results, metrics = runner.call

@@ -148,7 +148,7 @@ module Karafka
                   # Establish starting point
                   start = case offset_type
                   when "latest"
-                    (limit / partitions_to_search.size) * -1
+                    messages_per_partition * -1
                   when "offset"
                     offset
                   when "timestamp"
@@ -174,7 +174,8 @@ module Karafka
 
                   # None of the requested partitions exist in this topic, so there is nothing to
                   # search. Returning empty is what keeps the reported scope honest and it also
-                  # guards the `limit / partitions_to_search.size` divisions below.
+                  # guards the `limit / partitions_to_search.size` division in
+                  # `messages_per_partition` below.
                   if partitions_to_search.empty?
                     @stop_reason = :eof
                     @totals_stats[:time_taken] = monotonic_now - started_at
@@ -182,10 +183,7 @@ module Karafka
                     return
                   end
 
-                  per_partition = (limit / partitions_to_search.size)
-                  # Ensure that in case we have a limit smaller than number of partitions, we check
-                  # at least one message (if any) per partition
-                  per_partition = 1 if per_partition.zero?
+                  per_partition = messages_per_partition
 
                   iterator.each do |message|
                     @current_partition = message.partition
@@ -241,6 +239,17 @@ module Karafka
                 #   checking.
                 def current_stats
                   @partitions_stats[@current_partition]
+                end
+
+                # Integer division floors to zero once there are more partitions than the total
+                # limit, so this is clamped to at least one message per partition. Both callers
+                # degenerate on a zero: the per-partition cap would check nothing, and the
+                # "latest" look-back would become `0`, which the iterator reads as an absolute
+                # offset and so searches from the oldest message rather than from the end.
+                #
+                # @return [Integer] messages to check per partition, never less than one
+                def messages_per_partition
+                  [limit / partitions_to_search.size, 1].max
                 end
 
                 # @return [Array<Integer>] partitions in which we're supposed to search
