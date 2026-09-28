@@ -11,6 +11,7 @@
 - [Enhancement] Inject Web UI kafka settings through `Karafka::Web::Config::DefaultsInjector`, following the Karafka pattern (#653). Requires karafka-core `>= 2.6.3`.
 - [Enhancement] Read the Pro commands and scheduled-messages topics with the same Web UI kafka settings as the rest of the UI.
 - [Enhancement] Tighten compaction on the `karafka_consumers_states` and `karafka_consumers_metrics` topics so superseded versions are removed sooner.
+- [Fix] Report the Health per-topic lag trend as N/A instead of `0` when a topic has no measurable partitions, so sorting by Trend no longer intermixes no-data topics with real zero trends (Pro).
 - [Maintenance] Fix a recurring `/topics` link-validator flake in specs.
 - [Maintenance] Reorganize the Pro UI `Lib` pipelines into domain namespaces. No behavior change.
 - [Maintenance] Extract the consumer commanding forms into `Lib::Commands` and validate offset and pause values server-side (#1241).
@@ -41,6 +42,7 @@
 - [Fix] Flag Health lag skew against the average of a topic's other partitions, so small topics can be flagged too. This is more sensitive at the same `skew_threshold` (Pro).
 - [Fix] Return 404 for unknown recurring tasks on trigger, enable and disable (Pro).
 - [Fix] Stop the Explorer search "latest" start offset from collapsing to the beginning of the topic (Pro).
+- [Fix] Return no results for an Explorer search scoped only to partitions that don't exist, instead of searching partition `0` (Pro).
 - [Fix] List partitions in numeric id order in the Health cluster-lag drill-down.
 
 ## 1.0.1 (2026-08-24)

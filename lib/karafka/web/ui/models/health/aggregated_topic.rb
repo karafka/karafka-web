@@ -56,7 +56,7 @@ module Karafka
                 # Same number as `lag_hybrid`, under a name the cluster rows share, so lag
                 # distribution can be judged the same way for both row types.
                 total_lag: lags.empty? ? -1 : lags.sum,
-                lag_hybrid_d: measurable.sum(&:lag_hybrid_d),
+                lag_hybrid_d: measurable.empty? ? -1 : measurable.sum(&:lag_hybrid_d),
                 max_lag: lags.max || -1,
                 avg_lag: lags.empty? ? -1 : (lags.sum.to_f / lags.size).round,
                 # -1 (not a valid partition id) when no partition has a lag yet. `HashProxy` treats a
