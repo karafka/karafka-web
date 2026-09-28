@@ -172,6 +172,17 @@ module Karafka
                   started_at = monotonic_now
                   started_at_time = Time.now
 
+                  # None of the requested partitions exist in this topic, so there is nothing to
+                  # search. Returning empty is what keeps the reported scope honest and it also
+                  # guards the `limit / partitions_to_search.size` division in
+                  # `messages_per_partition` below.
+                  if partitions_to_search.empty?
+                    @stop_reason = :eof
+                    @totals_stats[:time_taken] = monotonic_now - started_at
+
+                    return
+                  end
+
                   per_partition = messages_per_partition
 
                   iterator.each do |message|
@@ -252,9 +263,6 @@ module Karafka
                   # in the topic that were part of the requested search scope
                   unless partitions.include?("all")
                     @partitions_to_search &= partitions.map(&:to_i)
-                    # and just in case someone would provide really weird data, we fallback to
-                    # partition 0
-                    @partitions_to_search = [0] if @partitions_to_search.empty?
                   end
 
                   @partitions_to_search

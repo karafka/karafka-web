@@ -338,6 +338,35 @@ describe_current do
     end
   end
 
+  context "when searching a topic where none of the requested partitions exist" do
+    let(:partitions) { 1 }
+    let(:valid_search) do
+      <<~SEARCH.tr("\n", "&")
+        search[matcher]=Raw+payload+includes
+        search[phrase]=find-me
+        search[partitions][]=999
+        search[offset_type]=latest
+        search[timestamp]=0
+        search[limit]=1000
+      SEARCH
+    end
+
+    before do
+      produce_many(topic, %w[find-me-alpha find-me-beta], partition: 0)
+
+      sleep(1)
+
+      get "explorer/#{topic}/search?#{valid_search}"
+    end
+
+    it "renders no results rather than results from partition 0" do
+      assert_ok
+      assert_body(nothing_found)
+      refute_body("find-me-alpha")
+      refute_body("find-me-beta")
+    end
+  end
+
   context "when searching a topic that has matches in a zlib compressed payload" do
     let(:partitions) { 2 }
 
