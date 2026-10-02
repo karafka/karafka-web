@@ -43,6 +43,7 @@
 - [Fix] Stop the Explorer search "latest" start offset from collapsing to the beginning of the topic (Pro).
 - [Fix] Return no results for an Explorer search scoped only to partitions that don't exist, instead of searching partition `0` (Pro).
 - [Fix] Report the Health per-topic lag trend as N/A instead of `0` when a topic has no measurable partitions, so sorting by Trend no longer intermixes no-data topics with real zero trends (Pro).
+- [Fix] List partitions in numeric id order in the Health cluster-lag drill-down.
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a keyword filtering box to the data-heavy Web UI listings, with a field selector on flat listings (Pro) (#1073).
