@@ -40,4 +40,37 @@ describe_current do
       it { assert(reporter.active?) }
     end
   end
+
+  describe "#produce" do
+    let(:producer) { Karafka::Web.producer }
+    let(:messages) { Array.new(sync_threshold) { { topic: "topic", payload: "payload" } } }
+    let(:sync_threshold) { Karafka::Web.config.tracking.consumers.sync_threshold }
+
+    context "when the sync dispatch fails" do
+      it "expect to log the failure instead of raising" do
+        producer.stubs(:produce_many_sync).raises(WaterDrop::Errors::ProduceManyError.new([], "msg_timed_out"))
+        Karafka.logger.expects(:error).with(regexp_matches(/Failed to report consumers state: .*ProduceManyError - msg_timed_out/))
+
+        assert_output("") { reporter.send(:produce, messages) }
+      end
+    end
+
+    context "when the async dispatch fails" do
+      it "expect to log the failure instead of raising" do
+        producer.stubs(:produce_many_async).raises(WaterDrop::Errors::ProduceManyError.new([], "boom"))
+        Karafka.logger.expects(:error).with(regexp_matches(/Failed to report consumers state: .*ProduceManyError - boom/))
+
+        assert_output("") { reporter.send(:produce, messages.first(1)) }
+      end
+    end
+
+    context "when the producer is already closed" do
+      it "expect to ignore it silently" do
+        producer.stubs(:produce_many_sync).raises(WaterDrop::Errors::ProducerClosedError.new("closed"))
+        Karafka.logger.expects(:error).never
+
+        assert_output("") { reporter.send(:produce, messages) }
+      end
+    end
+  end
 end
