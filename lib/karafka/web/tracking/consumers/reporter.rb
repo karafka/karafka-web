@@ -148,7 +148,7 @@ module Karafka
           # Raising here would abort the whole process, since the scheduler thread aborts on
           # exception, and instrumenting would feed the error back into the errors topic that may
           # be the thing failing, so we only log it
-          rescue => e
+          rescue WaterDrop::Errors::ProduceError => e
             ::Karafka.logger.error("Failed to report consumers state: #{e.class} - #{e.message}")
           end
 

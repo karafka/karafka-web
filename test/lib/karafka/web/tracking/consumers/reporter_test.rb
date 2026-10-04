@@ -64,6 +64,15 @@ describe_current do
       end
     end
 
+    context "when the dispatch fails with an error not originating from the produce" do
+      it "expect not to silence it" do
+        producer.stubs(:produce_many_sync).raises(StandardError.new("other"))
+        Karafka.logger.expects(:error).never
+
+        assert_raises(StandardError) { reporter.send(:produce, messages) }
+      end
+    end
+
     context "when the producer is already closed" do
       it "expect to ignore it silently" do
         producer.stubs(:produce_many_sync).raises(WaterDrop::Errors::ProducerClosedError.new("closed"))
