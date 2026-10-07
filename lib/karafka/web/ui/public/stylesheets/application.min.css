@@ -1975,27 +1975,27 @@
     }
   }
   @layer daisyui {
-    .btn:is(:disabled, [disabled], [aria-disabled="true"]) {
+    .btn:is(.btn-disabled, :disabled, [disabled], [aria-disabled="true"]) {
       pointer-events: none;
       color: var(--color-base-content);
     }
     @supports (color: color-mix(in lab, red, red)) {
-      .btn:is(:disabled, [disabled], [aria-disabled="true"]) {
+      .btn:is(.btn-disabled, :disabled, [disabled], [aria-disabled="true"]) {
         color: color-mix(in oklch, var(--color-base-content) 20%, #0000);
       }
     }
-    .btn:is(:disabled, [disabled], [aria-disabled="true"]) {
+    .btn:is(.btn-disabled, :disabled, [disabled], [aria-disabled="true"]) {
       --btn-bg: #0000;
       --btn-border: #0000;
       background-image: none;
       --btn-inset: 0 0 0 0 oklch(0% 0 0/0);
       --btn-shadow: 0 0 0 0 oklch(0% 0 0/0);
     }
-    :is(.btn-disabled, .btn:is(:disabled, [disabled], [aria-disabled="true"])):not(.btn-link, .btn-ghost) {
+    .btn:is(.btn-disabled, :disabled, [disabled], [aria-disabled="true"]):not(.btn-link, .btn-ghost) {
       background-color: var(--color-base-content);
     }
     @supports (color: color-mix(in lab, red, red)) {
-      :is(.btn-disabled, .btn:is(:disabled, [disabled], [aria-disabled="true"])):not(.btn-link, .btn-ghost) {
+      .btn:is(.btn-disabled, :disabled, [disabled], [aria-disabled="true"]):not(.btn-link, .btn-ghost) {
         background-color: color-mix(in oklab, var(--color-base-content) 10%, transparent);
       }
     }
@@ -2028,27 +2028,27 @@
     }
   }
   @layer daisyui {
-    .btn-disabled {
+    .btn:is(:is(.btn-disabled), :disabled, [disabled], [aria-disabled="true"]) {
       pointer-events: none;
       color: var(--color-base-content);
     }
     @supports (color: color-mix(in lab, red, red)) {
-      .btn-disabled {
+      .btn:is(:is(.btn-disabled), :disabled, [disabled], [aria-disabled="true"]) {
         color: color-mix(in oklch, var(--color-base-content) 20%, #0000);
       }
     }
-    .btn-disabled {
+    .btn:is(:is(.btn-disabled), :disabled, [disabled], [aria-disabled="true"]) {
       --btn-bg: #0000;
       --btn-border: #0000;
       background-image: none;
       --btn-inset: 0 0 0 0 oklch(0% 0 0/0);
       --btn-shadow: 0 0 0 0 oklch(0% 0 0/0);
     }
-    :is(:is(.btn-disabled), .btn:is(:disabled, [disabled], [aria-disabled="true"])):not(.btn-link, .btn-ghost) {
+    .btn:is(:is(.btn-disabled), :disabled, [disabled], [aria-disabled="true"]):not(.btn-link, .btn-ghost) {
       background-color: var(--color-base-content);
     }
     @supports (color: color-mix(in lab, red, red)) {
-      :is(:is(.btn-disabled), .btn:is(:disabled, [disabled], [aria-disabled="true"])):not(.btn-link, .btn-ghost) {
+      .btn:is(:is(.btn-disabled), :disabled, [disabled], [aria-disabled="true"]):not(.btn-link, .btn-ghost) {
         background-color: color-mix(in oklab, var(--color-base-content) 10%, transparent);
       }
     }
@@ -9521,7 +9521,7 @@ table td.options {
       isolation: isolate;
     }
   }
-  &:is(:disabled, [disabled], [aria-disabled="true"]) {
+  &:is(.btn-disabled, :disabled, [disabled], [aria-disabled="true"]) {
     @layer daisyui {
       pointer-events: none;
       color: var(--color-base-content);
@@ -9535,7 +9535,7 @@ table td.options {
       --btn-shadow: 0 0 0 0 oklch(0% 0 0/0);
     }
   }
-  :is(.btn-disabled, &:is(:disabled, [disabled], [aria-disabled="true"])):not(.btn-link, .btn-ghost) {
+  &:is(.btn-disabled, :disabled, [disabled], [aria-disabled="true"]):not(.btn-link, .btn-ghost) {
     @layer daisyui {
       background-color: var(--color-base-content);
       @supports (color: color-mix(in lab, red, red)) {
