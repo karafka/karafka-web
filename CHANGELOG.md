@@ -124,18 +124,18 @@
 - [Enhancement] Utilize newly released Roda session management `:env_key` to isolate Karafka Web session from the main application session.
 
 ## 0.11.4 (2025-11-01)
-- [Enhancement] Show placeholder rows for partitions with no data during rebalances in health view. The UI now displays all topic partitions (0 to N-1) with "No data available" indicators for partitions currently being rebalanced, preventing confusion from disappearing partitions. Consumer reports now include `partitions_cnt` field extracted from librdkafka statistics. Consumer schema version bumped to 1.5.0 (breaking change).
+- [Enhancement] Show placeholder rows for partitions with no data during rebalances in the health view. Consumer reports now include `partitions_cnt`; the consumer schema version is bumped to 1.5.0 (breaking change).
 - [Enhancement] Track and report UI errors originating from Roda/Puma web processes directly to Kafka errors topic for visibility and debugging. UI errors are dispatched asynchronously from web processes using a dedicated listener.
 - [Enhancement] Require Karafka 2.5.2 at minimum and migrate from string-based execution mode comparisons to the new ExecutionMode object API.
 - [Enhancement] Increase Web UI processing consumer backoff time to 30 seconds when encountering incompatible schema errors to prevent error spam during rolling upgrades.
 - [Enhancement] Add unique `id` field to error reports to track duplicate error occurrences. Error schema version bumped to 1.2.0 while maintaining backward compatibility with older error formats (1.0.0, 1.1.0) in the Web UI.
 - [Enhancement] Add container-aware metrics collection for Docker/Kubernetes environments. The Web UI now reports accurate container memory limits from cgroups (v1 and v2) instead of misleading host metrics, while maintaining full backward compatibility with non-containerized deployments.
-- [Enhancement] Add per-message report migration system to handle schema evolution for consumer reports. This allows transparent migration of old report formats (e.g., schema 1.2.x using `process[:name]`) to current expectations (schema 1.3.0+ using `process[:id]`), ensuring backward compatibility with reports from older karafka-web versions (≤ v0.8.2) that may still exist in Kafka topics.
-- [Change] Reduce `max_messages` for consumer reports processing from 1000 to 200 to prevent excessive memory usage in large-scale deployments. Processing 1000 messages at once can impact memory consumption significantly in big systems, while 200 messages provides better memory efficiency with negligible impact on throughput.
-- [Refactor] Extract metrics collection logic from monolithic Sampler into focused, single-responsibility classes (Metrics::Base, Metrics::Os, Metrics::Container, Metrics::Network, Metrics::Server, Metrics::Jobs) and consumer groups enrichment into dedicated enricher (Enrichers::Base, Enrichers::ConsumerGroups) for improved maintainability and testability.
+- [Enhancement] Add per-message migration of consumer reports, so reports from karafka-web ≤ v0.8.2 (schema 1.2.x, `process[:name]`) still in Kafka work with schema 1.3.0+ (`process[:id]`).
+- [Change] Reduce `max_messages` for consumer reports processing from 1000 to 200 to lower memory usage in large deployments.
+- [Refactor] Split the Sampler metrics collection into `Metrics::*` classes and the consumer groups enrichment into `Enrichers::*` classes.
 - [Testing] Add Docker-based integration tests for container metrics collection. Tests verify cgroup v1/v2 detection, memory limit reading, and fallback behavior across multiple containerized scenarios with different resource constraints.
 - [Fix] Fix "OS memory used" metric on Linux reporting same value as RSS instead of system-wide memory usage. The metric now correctly sums memory usage across all processes (or all container processes when running in Docker/Kubernetes) to match macOS behavior and original design intent.
-- [Fix] Fix crash when processing old consumer reports from schema versions < 1.3.0 (karafka-web ≤ v0.8.2) that used `process[:name]` field instead of `process[:id]`. The error `undefined method 'to_sym' for nil` would occur when these old reports were encountered during upgrades. Reports are now automatically migrated in-place to the current schema format.
+- [Fix] Fix the `undefined method 'to_sym' for nil` crash on consumer reports from schema < 1.3.0 (karafka-web ≤ v0.8.2) that use `process[:name]`. They are now migrated to the current schema.
 
 ## 0.11.3 (2025-09-29)
 - [Enhancement] Upgrade DaisyUI to 5.1.
