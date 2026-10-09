@@ -130,12 +130,12 @@
 - [Enhancement] Require Karafka 2.5.2 at minimum and migrate from string-based execution mode comparisons to the new ExecutionMode object API.
 - [Enhancement] Increase Web UI processing consumer backoff time to 30 seconds when encountering incompatible schema errors to prevent error spam during rolling upgrades.
 - [Enhancement] Add unique `id` field to error reports to track duplicate error occurrences. Error schema version bumped to 1.2.0 while maintaining backward compatibility with older error formats (1.0.0, 1.1.0) in the Web UI.
-- [Enhancement] Add container-aware metrics collection for Docker/Kubernetes environments. The Web UI now reports accurate container memory limits from cgroups (v1 and v2) instead of misleading host metrics, while maintaining full backward compatibility with non-containerized deployments.
+- [Enhancement] Add container-aware metrics for Docker/Kubernetes: the Web UI reports container memory limits from cgroups (v1 and v2) instead of host metrics.
 - [Enhancement] Add per-message migration of consumer reports, so reports from karafka-web ≤ v0.8.2 (schema 1.2.x, `process[:name]`) still in Kafka work with schema 1.3.0+ (`process[:id]`).
 - [Change] Reduce `max_messages` for consumer reports processing from 1000 to 200 to lower memory usage in large deployments.
 - [Refactor] Split the Sampler metrics collection into `Metrics::*` classes and the consumer groups enrichment into `Enrichers::*` classes.
 - [Testing] Add Docker-based integration tests for container metrics collection. Tests verify cgroup v1/v2 detection, memory limit reading, and fallback behavior across multiple containerized scenarios with different resource constraints.
-- [Fix] Fix "OS memory used" metric on Linux reporting same value as RSS instead of system-wide memory usage. The metric now correctly sums memory usage across all processes (or all container processes when running in Docker/Kubernetes) to match macOS behavior and original design intent.
+- [Fix] Fix the "OS memory used" metric on Linux, which reported RSS instead of the memory used by all processes (or all container processes), matching macOS.
 - [Fix] Fix the `undefined method 'to_sym' for nil` crash on consumer reports from schema < 1.3.0 (karafka-web ≤ v0.8.2) that use `process[:name]`. They are now migrated to the current schema.
 
 ## 0.11.3 (2025-09-29)
@@ -423,7 +423,7 @@
 - [Refactor] Rename `ui.show_internal_topics` to `ui.visibility.internal_topics_display`
 
 ## 0.7.4 (2023-09-19)
-- [Improvement] Skip aggregations on older schemas during upgrades. This only skips process-reports (that are going to be rolled) on the 5s window in case of an upgrade that should not be a rolling one anyhow. This simplifies the operations and minimizes the risk on breaking upgrades.
+- [Improvement] Skip aggregations on process reports with older schemas during upgrades to lower the risk of breaking upgrades.
 - [Fix] Fix not working `ps` for macOS.
 
 ## 0.7.3 (2023-09-18)
