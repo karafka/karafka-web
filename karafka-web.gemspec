@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "rackup", "~> 0.2"
 
-  spec.required_ruby_version = ">= 3.2.0"
+  spec.required_ruby_version = ">= 3.3.0"
 
   spec.executables = %w[karafka-web]
   spec.require_paths = %w[lib]
