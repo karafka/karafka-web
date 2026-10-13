@@ -137,16 +137,28 @@ module Karafka
             end
 
             # Sorts the cluster lags structure (`cg => topic_name => partitions`) so consumer groups
-            # and their topics are always in alphabetical order, same as {#sort_structure} does for
-            # the report-based tree.
+            # and their topics are in alphabetical order and each topic's partitions are in
+            # partition id order, giving this lens the same stable default order {#sort_structure}
+            # gives the report-based tree.
             #
             # @param stats [Hash] cluster lags hash
             # @return [Hash] sorted data
+            #
+            # @note Partitions are an Array of `{ id:, lag:, stored_offset: }` hashes here, not the
+            #   id-keyed Hash the report-based tree uses, so they are sorted on `:id` and stay an
+            #   Array - {Health::ClusterLagsAggregation} and the partitions controller both expect
+            #   one.
             def sort_structure_cluster_lags(stats)
               sorted = {}
 
               stats.sort_by { |consumer_group, _| consumer_group }.each do |consumer_group, topics|
-                sorted[consumer_group] = topics.sort_by { |topic_name, _| topic_name }.to_h
+                sorted_topics = topics.sort_by { |topic_name, _| topic_name }.to_h
+
+                sorted_topics.each do |topic_name, partitions|
+                  sorted_topics[topic_name] = partitions.sort_by { |partition| partition[:id] }
+                end
+
+                sorted[consumer_group] = sorted_topics
               end
 
               sorted
