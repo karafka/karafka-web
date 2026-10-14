@@ -6,7 +6,7 @@ module Karafka
       module Migrations
         # Consumer reports migrations
         module ConsumersReports
-          # Migrates consumer reports from schema < 1.3.0 that used process[:name] to process[:id]
+          # Migrates consumer reports from schema < 1.3.0 that used `process[:name]` to `process[:id]`
           #
           # In schema versions 1.2.x and earlier (karafka-web <= v0.8.2), the process identifier
           # was stored in the :name field. Starting with schema 1.3.0 (karafka-web v0.9.0+),
