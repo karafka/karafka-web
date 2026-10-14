@@ -311,7 +311,7 @@ describe_current do
 
       it "expect to render the delivery outcome details" do
         assert_ok
-        assert_body('<span class="badge  badge-warning">possibly persisted</span>')
+        assert_body('<span class="badge badge-warning">possibly persisted</span>')
         assert_body("details.latency_ms")
         assert_body("12.35")
         assert_body("details.broker_id")
@@ -331,9 +331,9 @@ describe_current do
         get "errors/0"
       end
 
-      it "expect to render it escaped and without a badge" do
+      it "expect to render it escaped in a neutral badge" do
         assert_ok
-        assert_body("&lt;b&gt;x&lt;/b&gt;")
+        assert_body('<span class="badge badge-secondary">&lt;b&gt;x&lt;/b&gt;</span>')
         refute_body("<b>x</b>")
       end
     end

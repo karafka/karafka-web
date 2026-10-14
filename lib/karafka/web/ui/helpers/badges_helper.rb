@@ -4,7 +4,8 @@ module Karafka
   module Web
     module Ui
       module Helpers
-        # Helpers mapping domain states (process status, kafka state, lag trend) to badge styles
+        # Helpers mapping domain states (process status, kafka state, lag trend, delivery status) to
+        # badge styles
         # and rendering simple badge collections
         module BadgesHelper
           # Takes a status and recommends background style color
@@ -57,6 +58,19 @@ module Karafka
             when "steady" then "badge-success"
             else
               "badge-warning"
+            end
+          end
+
+          # Takes a producer delivery status and recommends background style color
+          # @param status [String] delivery status
+          # @return [String] background style
+          def delivery_status_badge(status)
+            case status
+            when "persisted" then "badge-success"
+            when "possibly persisted" then "badge-warning"
+            when "not persisted" then "badge-error"
+            else
+              "badge-secondary"
             end
           end
         end
