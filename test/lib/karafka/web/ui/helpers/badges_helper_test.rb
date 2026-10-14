@@ -121,25 +121,25 @@ describe_current do
     let(:result) { delivery_status_badge(status) }
 
     context "when the message was persisted" do
-      let(:status) { "persisted" }
+      let(:status) { Rdkafka::Bindings::RD_KAFKA_MSG_STATUS_PERSISTED }
 
       it { assert_equal("badge-success", result) }
     end
 
     context "when the message was possibly persisted" do
-      let(:status) { "possibly persisted" }
+      let(:status) { Rdkafka::Bindings::RD_KAFKA_MSG_STATUS_POSSIBLY_PERSISTED }
 
       it { assert_equal("badge-warning", result) }
     end
 
     context "when the message was not persisted" do
-      let(:status) { "not persisted" }
+      let(:status) { Rdkafka::Bindings::RD_KAFKA_MSG_STATUS_NOT_PERSISTED }
 
       it { assert_equal("badge-error", result) }
     end
 
     context "when the status is unknown" do
-      let(:status) { "other" }
+      let(:status) { 99 }
 
       it { assert_equal("badge-secondary", result) }
     end

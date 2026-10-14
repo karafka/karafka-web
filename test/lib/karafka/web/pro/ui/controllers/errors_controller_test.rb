@@ -338,7 +338,7 @@ describe_current do
             topic: "default",
             partition: 2,
             offset: -1,
-            delivery_status: "possibly persisted",
+            delivery_status: Rdkafka::Bindings::RD_KAFKA_MSG_STATUS_POSSIBLY_PERSISTED,
             latency_ms: 12.35,
             broker_id: 1
           }

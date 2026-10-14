@@ -10,7 +10,7 @@
         <% elsif k2.to_s == 'tags' %>
           <%== tags(v2) %>
         <% elsif k2.to_s == 'delivery_status' && !v2.nil? %>
-          <span class="badge <%= delivery_status_badge(v2) %>"><%= v2 %></span>
+          <span class="badge <%= delivery_status_badge(v2) %>"><%= delivery_status_name(v2) %></span>
         <% else %>
           <%= v2 %>
         <% end %>

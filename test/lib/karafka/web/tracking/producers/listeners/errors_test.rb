@@ -103,7 +103,7 @@ describe_current do
         topic: "test_topic",
         partition: 2,
         offset: 100,
-        delivery_status: "possibly persisted",
+        delivery_status: Rdkafka::Bindings::RD_KAFKA_MSG_STATUS_POSSIBLY_PERSISTED,
         latency_ms: 12.35,
         broker_id: 1
       }
@@ -120,13 +120,15 @@ describe_current do
     context "when the message was not persisted" do
       let(:status) { Rdkafka::Bindings::RD_KAFKA_MSG_STATUS_NOT_PERSISTED }
 
-      it { assert_equal("not persisted", details[:delivery_status]) }
+      it do
+        assert_equal(Rdkafka::Bindings::RD_KAFKA_MSG_STATUS_NOT_PERSISTED, details[:delivery_status])
+      end
     end
 
     context "when the message was persisted" do
       let(:status) { Rdkafka::Bindings::RD_KAFKA_MSG_STATUS_PERSISTED }
 
-      it { assert_equal("persisted", details[:delivery_status]) }
+      it { assert_equal(Rdkafka::Bindings::RD_KAFKA_MSG_STATUS_PERSISTED, details[:delivery_status]) }
     end
 
     context "when status, latency and broker are not known" do
