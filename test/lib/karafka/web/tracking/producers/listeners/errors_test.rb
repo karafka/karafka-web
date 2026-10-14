@@ -142,13 +142,5 @@ describe_current do
         assert_nil(details[:broker_id])
       end
     end
-
-    context "when the delivery report does not carry the delivery outcome" do
-      let(:delivery_report) { Struct.new(:partition, :offset).new(2, 100) }
-
-      it "expect to report only the topic, partition and offset" do
-        assert_equal({ topic: "test_topic", partition: 2, offset: 100 }, details)
-      end
-    end
   end
 end

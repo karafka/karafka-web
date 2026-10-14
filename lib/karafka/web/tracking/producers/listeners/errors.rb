@@ -64,11 +64,8 @@ module Karafka
 
             # @param delivery_report [Rdkafka::Producer::DeliveryReport] report of the failed
             #   delivery
-            # @return [Hash] delivery outcome details or an empty hash when the report does not
-            #   carry them (karafka-rdkafka older than 0.31.0)
+            # @return [Hash] delivery outcome details
             def delivery_details(delivery_report)
-              return {} unless delivery_report.respond_to?(:status)
-
               latency = delivery_report.latency
 
               {
