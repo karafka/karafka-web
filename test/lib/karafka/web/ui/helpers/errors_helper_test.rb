@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
 describe_current do
-  let(:helper) { Class.new { include Karafka::Web::Ui::Helpers::ErrorsHelper }.new }
+  let(:helper) do
+    Class.new do
+      include Karafka::Web::Ui::Helpers::TailwindHelper
+      include Karafka::Web::Ui::Helpers::ErrorsHelper
+    end.new
+  end
 
   let(:valid_payload) { { schema_version: "1.2.0", error_class: "StandardError" } }
 
@@ -48,6 +53,34 @@ describe_current do
 
     it "returns false for a foreign hash without a schema_version" do
       refute(helper.displayable_error(msg_double({ a: "1" })))
+    end
+  end
+
+  describe "#delivery_status_badge" do
+    it "renders a success badge for a persisted message" do
+      assert_equal(
+        '<span class="badge  badge-success">persisted</span>',
+        helper.delivery_status_badge("persisted")
+      )
+    end
+
+    it "renders a warning badge for a possibly persisted message" do
+      assert_equal(
+        '<span class="badge  badge-warning">possibly persisted</span>',
+        helper.delivery_status_badge("possibly persisted")
+      )
+    end
+
+    it "renders an error badge for a message that was not persisted" do
+      assert_equal(
+        '<span class="badge  badge-error">not persisted</span>',
+        helper.delivery_status_badge("not persisted")
+      )
+    end
+
+    it "returns nil for an unknown status" do
+      assert_nil(helper.delivery_status_badge("<b>x</b>"))
+      assert_nil(helper.delivery_status_badge(nil))
     end
   end
 end

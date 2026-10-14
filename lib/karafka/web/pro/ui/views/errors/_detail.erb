@@ -29,6 +29,8 @@
           ***
         <% elsif k2.to_s == 'tags' %>
           <%== tags(v2) %>
+        <% elsif k2.to_s == 'delivery_status' && delivery_status_badge(v2) %>
+          <%== delivery_status_badge(v2) %>
         <% elsif k2.to_s == 'topic' && !v2.nil? %>
           <a href="<%= explorer_topics_path(v2) %>">
             <%= v2 %>
