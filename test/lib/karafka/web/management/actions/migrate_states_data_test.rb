@@ -19,7 +19,7 @@ describe_current do
     migrate
   end
 
-  context "when the metrics record becomes visible after a few attempts" do
+  context "when the states become visible after a few attempts" do
     before do
       migrator
         .expects(:call)
