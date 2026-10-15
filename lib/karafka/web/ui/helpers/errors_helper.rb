@@ -28,6 +28,21 @@ module Karafka
           rescue JSON::ParserError, Zlib::Error
             false
           end
+
+          # @param status [Integer] librdkafka message persistence status
+          # @return [String] human readable status
+          def delivery_status_name(status)
+            case status
+            when ::Rdkafka::Bindings::RD_KAFKA_MSG_STATUS_PERSISTED
+              "persisted"
+            when ::Rdkafka::Bindings::RD_KAFKA_MSG_STATUS_POSSIBLY_PERSISTED
+              "possibly persisted"
+            when ::Rdkafka::Bindings::RD_KAFKA_MSG_STATUS_NOT_PERSISTED
+              "not persisted"
+            else
+              status.to_s
+            end
+          end
         end
       end
     end

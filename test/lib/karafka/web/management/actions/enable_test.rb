@@ -224,7 +224,8 @@ describe_current do
         error: error,
         topic: "test_topic",
         partition: 0,
-        offset: 1
+        offset: 1,
+        delivery_report: Rdkafka::Producer::DeliveryReport.new(0, 1, "test_topic", 1)
       )
     end
 
