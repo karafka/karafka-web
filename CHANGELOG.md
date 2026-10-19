@@ -21,6 +21,7 @@
 - [Maintenance] Extract the Explorer republish flow into `Lib::Republishing` and validate the form before producing (#1244).
 - [Maintenance] Retry transient 5xx responses in the test link validator.
 - [Maintenance] Update the vendored `AirDatepicker` CSS to `3.6.0` to match the JS.
+- [Maintenance] Drop `nokogiri` from the test dependencies.
 - [Fix] Log consumers reporter dispatch failures instead of crashing the process when `produce_many_sync` times out (#1336).
 - [Fix] Sort Hash elements by key value even when the key name matches a `Hash` method.
 - [Fix] Reject a new partition count that is not greater than the current one with a form error instead of a broker error (Pro).
