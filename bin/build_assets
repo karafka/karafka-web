@@ -11,10 +11,48 @@ npx postcss \
   lib/karafka/web/ui/public/stylesheets/libs/tailwind.css \
   -o lib/karafka/web/ui/public/stylesheets/libs/tailwind.min.css
 
-npx gulp
+js_dir=lib/karafka/web/ui/public/javascripts
+css_dir=lib/karafka/web/ui/public/stylesheets
 
-# We remove the intermediate tailwind file because its already bundled with gulp
-rm lib/karafka/web/ui/public/stylesheets/libs/tailwind.min.css
+js_files=$(
+  find "$js_dir/libs" -name '*.js' | sort
+  find "$js_dir/charts" -name '*.js' | sort
+  find "$js_dir/components" -name '*.js' | sort
+  echo "$js_dir/application.js"
+)
+
+# Each file gets a header with its location, so we copy them with it into a tmp dir
+tmp_dir=$(mktemp -d)
+trap 'rm -rf "$tmp_dir"' EXIT
+
+tmp_files=()
+for file in $js_files; do
+  mkdir -p "$tmp_dir/$(dirname "$file")"
+  { printf '/*! Source: %s */\n\n' "$file"; cat "$file"; } > "$tmp_dir/$file"
+  tmp_files+=("$tmp_dir/$file")
+done
+
+uglify_options=(--compress --mangle --comments '/@preserve|@license|@cc_on|^!/')
+
+if [ "$KARAFKA_RELEASE" != "true" ]; then
+  uglify_options+=(--source-map "base='$tmp_dir',url='application.min.js.map',includeSources")
+fi
+
+npx uglifyjs "${tmp_files[@]}" "${uglify_options[@]}" -o "$js_dir/application.min.js"
+
+css_files=(
+  "$css_dir/libs/datepicker.min.css"
+  "$css_dir/libs/tailwind.min.css"
+  "$css_dir/application.css"
+)
+
+for i in "${!css_files[@]}"; do
+  [ "$i" -gt 0 ] && echo
+  cat "${css_files[$i]}"
+done > "$css_dir/application.min.css"
+
+# We remove the intermediate tailwind file because its already bundled
+rm "$css_dir/libs/tailwind.min.css"
 
 compress_file() {
   local input_file="$1"
