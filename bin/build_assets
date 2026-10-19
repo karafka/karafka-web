@@ -21,7 +21,7 @@ js_files=$(
   echo "$js_dir/application.js"
 )
 
-# Each file gets a header with its location, so we copy them with it into a tmp dir
+# Files stay separate uglifyjs inputs, so the dev sourcemap points to each original file
 tmp_dir=$(mktemp -d)
 trap 'rm -rf "$tmp_dir"' EXIT
 
