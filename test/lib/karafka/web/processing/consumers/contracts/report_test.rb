@@ -119,6 +119,39 @@ describe_current do
     end
   end
 
+  context "when the report is built by the Ruby tracking" do
+    let(:report) do
+      consumer_groups = Fixtures.consumers_reports_json[:consumer_groups]
+
+      subscription_groups = consumer_groups.values.flat_map do |cg|
+        cg[:subscription_groups].keys
+      end
+
+      now = Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)
+
+      tracking = subscription_groups.to_h do |sg_id|
+        [
+          sg_id,
+          { polled_at: now - 12.345, poll_interval: 300_000, instance_id: false, topics: {} }
+        ]
+      end
+
+      sampled = Karafka::Web::Tracking::Consumers::Sampler.new.to_report
+      sampled[:consumer_groups] = Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups
+        .new(consumer_groups, tracking)
+        .call
+
+      JSON.parse(sampled.to_json, symbolize_names: true)
+    end
+
+    let(:sg_state) do
+      report[:consumer_groups].values.first[:subscription_groups].values.first[:state]
+    end
+
+    it { assert_kind_of(Float, sg_state[:poll_age]) }
+    it { assert(contract.call(report).success?) }
+  end
+
   context "when a version is missing" do
     before { report[:versions].delete(:karafka) }
 

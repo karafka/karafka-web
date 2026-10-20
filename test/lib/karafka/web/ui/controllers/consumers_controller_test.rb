@@ -116,6 +116,30 @@ describe_current do
     end
   end
 
+  context "when the report has a Float poll age as the Ruby tracking sends it" do
+    let(:report) do
+      report = Fixtures.consumers_reports_json
+      sg = report[:consumer_groups].values.first[:subscription_groups].values.first
+      sg[:state][:poll_age] = 12.38
+      report
+    end
+
+    before do
+      topics_config.consumers.states.name = states_topic
+      topics_config.consumers.reports.name = reports_topic
+
+      produce(states_topic, Fixtures.consumers_states_file)
+      produce(reports_topic, report.to_json, key: "shinra:1:1")
+    end
+
+    it "renders the consumer" do
+      get "consumers"
+
+      assert_ok
+      assert_body("shinra:1:1")
+    end
+  end
+
   context "when there is an active consumer but without any partitions assigned yet" do
     before do
       topics_config.consumers.states.name = states_topic

@@ -19,7 +19,8 @@ module Karafka
             # Subscription group state keys the UI reads, by their expected type
             SG_STATE_KEYS = {
               String => %i[join_state rebalance_reason],
-              Integer => %i[stateage rebalance_age rebalance_cnt poll_age]
+              Integer => %i[stateage rebalance_age rebalance_cnt],
+              Numeric => %i[poll_age]
             }.freeze
 
             # Partition keys the UI reads, by their expected type
