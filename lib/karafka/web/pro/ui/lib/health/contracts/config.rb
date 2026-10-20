@@ -49,7 +49,7 @@ module Karafka
                     nested(:lags) do
                       # How many times bigger than the average a partition's lag has to be for the
                       # topic to be flagged as "skewed"
-                      required(:skew_threshold) { |val| val.is_a?(Numeric) && val.positive? }
+                      required(:skew_threshold) { |val| val.is_a?(Numeric) && val > 1 }
 
                       # Minimum biggest-partition lag below which a topic is never flagged as "skewed"
                       required(:skew_minimum) { |val| val.is_a?(Integer) && val >= 0 }

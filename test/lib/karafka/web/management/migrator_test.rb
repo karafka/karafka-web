@@ -29,6 +29,24 @@ describe_current do
     it { assert_raises(compatibility_error) { migrate } }
   end
 
+  context "when consumers state schema is newer only in a multi-digit component" do
+    before do
+      topics_config.consumers.states.name = states_topic
+      produce(states_topic, { schema_version: "1.10.0" }.to_json)
+    end
+
+    it { assert_raises(compatibility_error) { migrate } }
+  end
+
+  context "when consumers metrics schema is newer only in a multi-digit component" do
+    before do
+      topics_config.consumers.metrics.name = metrics_topic
+      produce(metrics_topic, { schema_version: "1.10.0" }.to_json)
+    end
+
+    it { assert_raises(compatibility_error) { migrate } }
+  end
+
   context "when we start from empty states" do
     before do
       topics_config.consumers.states.name = states_topic

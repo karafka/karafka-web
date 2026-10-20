@@ -99,6 +99,7 @@ module Karafka
               # @param topic_name [String]
               def edit(topic_name)
                 features.topics_management!
+                ensure_visible!(topic_name)
 
                 @topic = Models::Topic.find(topic_name)
                 @topic_name = topic_name
@@ -111,6 +112,7 @@ module Karafka
               # @param topic_name [String] name of the topic we want to remove
               def delete(topic_name)
                 features.topics_management!
+                ensure_visible!(topic_name)
 
                 edit(topic_name)
 

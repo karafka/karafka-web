@@ -30,6 +30,9 @@ module Karafka
                 partitions_count: partitions.size,
                 measurable_count: lags.size,
                 lag: lags.empty? ? -1 : lags.sum,
+                # Same number as `lag`, under a name the report rows share, so lag
+                # distribution can be judged the same way for both row types.
+                total_lag: lags.empty? ? -1 : lags.sum,
                 max_lag: lags.max || -1,
                 avg_lag: lags.empty? ? -1 : (lags.sum.to_f / lags.size).round,
                 # -1 (not a valid partition id) when no partition has a lag. `HashProxy` treats a nil

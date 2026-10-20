@@ -145,9 +145,15 @@ module Karafka
           #   figure out the value based on which we may sort
           # @return [Object, nil] sortable value or nil if nothing to sort
           def sortable_value(element)
-            result = nil
-            result = element[@field] || element[@field.to_sym] if element.is_a?(Hash)
-            result = element.public_send(@field) if element.respond_to?(@field)
+            # Exclusive on purpose: a Hash that also responds to the field must not be re-read
+            # through the method. `Lib::HashProxy` is not a Hash and must keep taking the second
+            # branch - its `[]` is flat while `method_missing` finds nested values.
+            result =
+              if element.is_a?(Hash)
+                element[@field] || element[@field.to_sym]
+              elsif element.respond_to?(@field)
+                element.public_send(@field)
+              end
 
             # We cannot sort on some of the types and some require mapping, thus we convert
             # types here when needed

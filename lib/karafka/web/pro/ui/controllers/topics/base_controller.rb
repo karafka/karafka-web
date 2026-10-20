@@ -37,6 +37,19 @@ module Karafka
           module Topics
             # Base controller for all topics related controllers
             class BaseController < Controllers::BaseController
+              private
+
+              # Internal topics are hidden from the listings when the visibility toggle is off,
+              # so their per-topic pages should not be reachable by a direct URL either. Reported
+              # as not found rather than denied, because this is visibility, not authorization
+              #
+              # @param topic_name [String]
+              def ensure_visible!(topic_name)
+                return if ::Karafka::Web.config.ui.visibility.internal_topics
+                return unless topic_name.start_with?("__")
+
+                not_found!(topic_name)
+              end
             end
           end
         end

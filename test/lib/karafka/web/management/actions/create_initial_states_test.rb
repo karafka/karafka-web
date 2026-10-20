@@ -58,4 +58,17 @@ describe_current do
       assert_equal(initial_state, consumers_metrics)
     end
   end
+
+  context "when both states are missing" do
+    let(:acked_producer) { stub }
+
+    before { Karafka::Web.producers.stubs(:acked).returns(acked_producer) }
+
+    it "expect to write them with the acked producer" do
+      acked_producer.expects(:produce_sync).with(has_entries(topic: consumers_states_topic))
+      acked_producer.expects(:produce_sync).with(has_entries(topic: consumers_metrics_topic))
+
+      described_class.new.call
+    end
+  end
 end

@@ -330,6 +330,55 @@ describe_current do
       end
     end
 
+    context "when visiting a producer dispatch error with a delivery outcome" do
+      let(:error_report) do
+        Fixtures.errors_json.merge(
+          type: "librdkafka.dispatch_error",
+          details: {
+            topic: "default",
+            partition: 2,
+            offset: -1,
+            delivery_status: Rdkafka::Bindings::RD_KAFKA_MSG_STATUS_POSSIBLY_PERSISTED,
+            latency_ms: 12.35,
+            broker_id: 1
+          }
+        ).to_json
+      end
+
+      before do
+        produce(errors_topic, error_report, partition: 0)
+        get "errors/0/0"
+      end
+
+      it "expect to render the delivery outcome details" do
+        assert_ok
+        assert_body('<span class="badge badge-warning">possibly persisted</span>')
+        assert_body("details.latency_ms")
+        assert_body("12.35")
+        assert_body("details.broker_id")
+      end
+    end
+
+    context "when visiting a producer dispatch error with an unknown delivery status" do
+      let(:error_report) do
+        Fixtures.errors_json.merge(
+          type: "librdkafka.dispatch_error",
+          details: { topic: "default", partition: 2, offset: -1, delivery_status: "<b>x</b>" }
+        ).to_json
+      end
+
+      before do
+        produce(errors_topic, error_report, partition: 0)
+        get "errors/0/0"
+      end
+
+      it "expect to render it escaped in a neutral badge" do
+        assert_ok
+        assert_body('<span class="badge badge-secondary">&lt;b&gt;x&lt;/b&gt;</span>')
+        refute_body("<b>x</b>")
+      end
+    end
+
     context "when visiting error offset with a transactional record in range" do
       before do
         produce(errors_topic, error_report, partition: 0, type: :transactional)

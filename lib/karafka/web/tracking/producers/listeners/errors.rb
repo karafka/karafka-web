@@ -54,10 +54,25 @@ module Karafka
             def build_details(type, payload)
               case type
               when "librdkafka.dispatch_error"
-                payload.slice(:topic, :partition, :offset)
+                payload
+                  .slice(:topic, :partition, :offset)
+                  .merge(delivery_details(payload[:delivery_report]))
               else
                 {}
               end
+            end
+
+            # @param delivery_report [Rdkafka::Producer::DeliveryReport] report of the failed
+            #   delivery
+            # @return [Hash] delivery outcome details
+            def delivery_details(delivery_report)
+              latency = delivery_report.latency
+
+              {
+                delivery_status: delivery_report.status,
+                latency_ms: latency && (latency / 1_000.0).round(2),
+                broker_id: delivery_report.broker_id
+              }
             end
           end
         end

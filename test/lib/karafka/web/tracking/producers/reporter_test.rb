@@ -92,6 +92,28 @@ describe_current do
         assert_empty(sampler.errors)
       end
     end
+
+    context "when the dispatch fails" do
+      before { sampler.errors << valid_error }
+
+      it "expect to log the failure instead of printing it or raising" do
+        producer.stubs(:produce_many_async).raises(WaterDrop::Errors::ProduceManyError.new([], "boom"))
+        Karafka.logger.expects(:error).with(regexp_matches(/Failed to report producers errors: .*ProduceManyError - boom/))
+
+        assert_output("") { reporter.report }
+      end
+    end
+
+    context "when the producer is already closed" do
+      before { sampler.errors << valid_error }
+
+      it "expect to ignore it silently" do
+        producer.stubs(:produce_many_async).raises(WaterDrop::Errors::ProducerClosedError.new("closed"))
+        Karafka.logger.expects(:error).never
+
+        assert_output("") { reporter.report }
+      end
+    end
   end
 
   describe "#active?" do

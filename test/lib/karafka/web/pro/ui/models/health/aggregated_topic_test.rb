@@ -185,6 +185,28 @@ describe Karafka::Web::Ui::Models::Health::AggregatedTopic do
         assert_equal(5, aggregated.lag_hybrid_d)
       end
     end
+
+    context "when no partition has lag available" do
+      let(:partitions) do
+        {
+          0 => partition(0, lag: -1, lag_stored: -1, lag_d: 5, lag_stored_d: 5),
+          1 => partition(1, lag: -1, lag_stored: -1, lag_d: -2, lag_stored_d: -2)
+        }
+      end
+
+      it "expect to return -1 (N/A), matching lag_hybrid, not a real 0 trend" do
+        assert_equal(-1, aggregated.lag_hybrid_d)
+      end
+    end
+
+    context "when there are no partitions at all" do
+      let(:partitions) { {} }
+      let(:partitions_count) { 0 }
+
+      it "expect to return -1 (N/A)" do
+        assert_equal(-1, aggregated.lag_hybrid_d)
+      end
+    end
   end
 
   describe "#max_lag and #max_lag_partition_id" do

@@ -54,6 +54,8 @@ module Karafka
               #   because of that results may not be exact, this allows us to support topics with
               #   many partitions.
               def show(topic_name)
+                ensure_visible!(topic_name)
+
                 @topic = Models::Topic.find(topic_name)
 
                 @active_partitions, _materialized_page, @limited = Paginators::Partitions.call(
@@ -73,6 +75,7 @@ module Karafka
               # @param topic_name [String]
               def edit(topic_name)
                 features.topics_management!
+                ensure_visible!(topic_name)
 
                 @topic = Models::Topic.find(topic_name)
 
@@ -84,7 +87,11 @@ module Karafka
                 edit(topic_name)
 
                 repartition_form = Lib::Topics::Repartitioning::Normalizer.call(params)
-                @errors = Lib::Topics::Repartitioning::Contracts::Form.new.call(repartition_form).errors
+                # The contract compares the requested count against the current one, which only
+                # the controller knows (`edit` above loads `@topic`)
+                @errors = Lib::Topics::Repartitioning::Contracts::Form.new.call(
+                  repartition_form.merge(current_partition_count: @topic.partition_count)
+                ).errors
 
                 return edit(topic_name) unless @errors.empty?
 

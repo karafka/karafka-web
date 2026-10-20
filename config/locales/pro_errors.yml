@@ -24,7 +24,7 @@ en:
       ui.branding.notice_format: must be false or non-empty string
       ui.branding.nav_extras_format: must be an ERB template code or a path to one
 
-      ui.health.lags.skew_threshold_format: needs to be a numeric bigger than 0
+      ui.health.lags.skew_threshold_format: needs to be a numeric bigger than 1
       ui.health.lags.skew_minimum_format: needs to be an integer equal to or bigger than 0
       ui.health.lags.high_threshold_format: needs to be an integer bigger than 0
       ui.health.lags.warning_ratio_format: needs to be a numeric bigger than 0 and up to 1
@@ -72,10 +72,11 @@ en:
     topic_creation_form:
       missing: needs to be present
       topic_name_format: >-
-        needs to be present, at most 249 characters and contain only letters, digits, dots,
-        hyphens and underscores
+        needs to be present, at most 249 characters, contain only letters, digits, dots,
+        hyphens and underscores, and cannot be "." or ".."
       partitions_count_format: needs to be an integer that is 1 or greater
       replication_factor_format: needs to be an integer that is 1 or greater
     repartitioning_form:
       missing: needs to be present
       partition_count_format: needs to be an integer that is 1 or greater
+      partition_count_not_an_increase: 'Must be greater than the current partition count'

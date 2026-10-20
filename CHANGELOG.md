@@ -1,106 +1,128 @@
 # Karafka Web Changelog
 
-## Unreleased
-- **[Feature]** Add a **Publish message** capability to the Explorer (Pro): produce an arbitrary message to a topic or chosen partition, with an optional key, validated headers, and a typed, uploaded or tombstone payload. Gated by the new `publish?` policy, enabled by default (#956).
-- **[Feature]** Aggregate the Health views per topic instead of per partition so they stay usable at scale. One summary row per topic (lag, max/avg lag, skew flag, LSO risk, paused partitions) drills down to the per-partition views. Thresholds are configurable under `config.ui.health.lags` (#112).
-- [Enhancement] Produce the scheduled-message cancel command through the acked (`acks: 1`) producer (`Karafka::Web.producers.acked`) so the broker confirms receipt, instead of the fire-and-forget (`acks: 0`) producer that could silently drop the cancellation.
-- [Enhancement] Dispatch consumer commanding requests (pause, resume, seek, quiet, stop, trace) through the acked (`acks: 1`) producer, so the broker confirms receipt instead of the fire-and-forget producer silently dropping a command. Adds a `Karafka::Web.producers` facade (#1241).
-- [Enhancement] After republishing a message, redirect to the partition that received the copy (instead of back to the source message) so the republished message is immediately visible (#1239).
-- [Enhancement] Add `Karafka::Web.producer.acked`, an `acks: 1` producer variant (idempotent and transactional producers are returned unchanged), so user-initiated produces get the assigned offset back instead of the reporting producer's `-1001` (#956).
-- [Enhancement] Add a per-broker partition **Distribution** view to the Cluster section (Pro): a leader-partitions chart plus each broker's leader, follower and replica counts, shares and out-of-sync replicas. Over and under-loaded brokers are flagged (#962).
-- [Enhancement] Inject Web UI kafka settings via `Karafka::Web::Config::DefaultsInjector` (built on `Karafka::Core::Configurable::Injector`) so the injection follows the same pattern as Karafka and can be extended by Pro (#653). Requires karafka-core `>= 2.6.3`.
-- [Enhancement] Read the Pro commands and scheduled-messages topics through the Web UI admin wrapper so those (transactionally written) reads use the same Web UI kafka settings as the rest of the UI.
-- [Enhancement] Tighten compaction on the `karafka_consumers_states` and `karafka_consumers_metrics` topics (`segment.ms` 1 day -> 6h, add `max.compaction.lag.ms` of 7 days) so superseded versions are collapsed sooner. Values accepted on Apache Kafka, Confluent Cloud, Redpanda and MSK.
-- [Maintenance] Stop the recurring `/topics` link-validator flake by skipping `/topics` when crawling from the cluster views, matching the existing `/explorer` exclusion. It is covered by its own specs.
-- [Maintenance] Reorganize the Pro UI `Lib` feature pipelines into domain namespaces mirroring the controllers and routes: `Lib::Consumers::Commands`, `Lib::Explorer::{Publishing,Republishing,Search}` and `Lib::Topics::{Configuring,Creation,Repartitioning}`. Internal only; no behavior change.
-- [Maintenance] Extract the consumer commanding forms (offset seek, partition and topic pause/resume) into `Lib::Commands`, keeping controllers to orchestration. Offset and pause values are now validated server-side, so a crafted value is rejected instead of reaching the running consumer (#1241).
-- [Maintenance] Extract the topic configuration edit flow into `Lib::Configuring` (Normalizer/Contract/Transform/Dispatcher), guarding against an empty value before the broker `alter configs` request (#1241).
-- [Maintenance] Extract the topic creation and partition-increase flows into `Lib::TopicCreation` and `Lib::Repartitioning`. Topic name and partition/replication counts are now validated server-side, so a malformed request re-renders the form with an error (#1241).
-- [Maintenance] Extract the Explorer republish flow into `Lib::Republishing`, mirroring the publish extraction. The form now validates the target topic, partition range and payload against the target deserializer (skippable), re-rendering with errors instead of failing on produce (#1244).
-- [Maintenance] Retry transient 5xx responses in the test link validator before failing, so an occasional Kafka-coordinator-load `/topics` 500 no longer reddens unrelated specs.
-- [Fix] Do not 500 the Explorer republish (Pro) when the source message's key or headers cannot be deserialized. Both are lazily deserialized and were copied onto the republished message outside any rescue, so a strict custom deserializer on the source topic raised on both the validation and the dispatch path. The form contract now reports it as a validation error and re-renders, matching how an unconsumable payload is already handled.
-- [Fix] Remove a stray outer loop in the consumer-groups sampler enricher that re-ran subscription-group enrichment once per top-level consumer-group key (twice per report), so each subscription group is now enriched exactly once per sample.
-- [Fix] Bound the commanding seek `offset` (at the signed 64-bit max) and pause `duration` server-side, so a value that overflows librdkafka's `int64` no longer passes validation and raises a `RangeError` inside the running consumer when the command is applied; the form now re-renders with an error instead.
-- [Fix] Gate the partition/topic pause, resume and offset-seek controllers behind `features.commanding!`, so a crafted request no longer dispatches a command to running consumers while commanding is disabled (it now returns 403, matching the other commanding paths).
-- [Fix] Return `nil` from the reporting deserializer for a tombstone / null-value record instead of raising a `TypeError` on `JSON.parse(nil)` (or `Zlib::Inflate.inflate(nil)`), so a null message on one of our topics (e.g. the errors topic) renders the placeholder rather than 500-ing the view.
-- [Fix] Do not 500 the Errors views when the errors topic contains a foreign or malformed message. Such an entry now renders a "not a valid Karafka error report" placeholder, keeping a Details link that opens the raw message in the Explorer (Pro) (#1243).
-- [Fix] Raise the `retention.ms` floor on the compacted `karafka_consumers_states` and `karafka_consumers_metrics` topics to 1 month (was 1 hour / 1 day) so the most recent record is not deleted on brokers that apply retention to compacted topics (e.g. Redpanda).
-- [Fix] Stop the live poll from clobbering the search/filter box. Live polling now ignores the filter box unless it has unsubmitted input, so pages auto-refresh again while a typed but unsubmitted filter is preserved.
-- [Fix] Report malformed partition count, replication factor and repartition count values in the topic forms as errors instead of silently truncating them (`"5abc"` became `5`).
-- [Fix] Rescue `Rdkafka::Config::ConfigError` when creating a topic or altering a topic config, so an admin client configuration failure re-renders the form with the error instead of returning a 500, matching what repartitioning already did.
+## 1.1.0 (Unreleased)
+- **[EOL]** Drop Ruby 3.2 support; require Ruby 3.3+.
+- **[Feature]** Add a **Publish message** capability to the Explorer (Pro) to produce new messages with an optional key, headers and a typed, uploaded or tombstone payload. Gated by the new `#publish?` policy, enabled by default (#956).
+- **[Feature]** Aggregate the Health views per topic with drill-down to partitions, so they stay usable at scale. Thresholds are configurable under `config.ui.health.lags` (#112).
+- [Enhancement] Show the delivery outcome (persisted, possibly persisted or not persisted), latency and broker of failed producer deliveries in the error details, so it is clear whether a retry may duplicate the message. Requires karafka-rdkafka `0.31.0` or newer.
+- [Enhancement] Produce scheduled-message cancellations with `acks: 1` so the broker confirms receipt.
+- [Enhancement] Produce consumer commanding requests with `acks: 1` so the broker confirms receipt, and add a `Karafka::Web.producers` facade (#1241).
+- [Enhancement] After republishing, redirect to the partition that received the copy (#1239).
+- [Enhancement] Add `Karafka::Web.producer.acked`, an `acks: 1` producer variant, so user-initiated produces report the assigned offset (#956).
+- [Enhancement] Add a per-broker partition **Distribution** view to the Cluster section (Pro) that flags over and under-loaded brokers (#962).
+- [Enhancement] Inject Web UI kafka settings through `Karafka::Web::Config::DefaultsInjector`, following the Karafka pattern (#653). Requires karafka-core `>= 2.6.3`.
+- [Enhancement] Read the Pro commands and scheduled-messages topics with the same Web UI kafka settings as the rest of the UI.
+- [Enhancement] Tighten compaction on the `karafka_consumers_states` and `karafka_consumers_metrics` topics so superseded versions are removed sooner.
+- [Maintenance] Fix a recurring `/topics` link-validator flake in specs.
+- [Maintenance] Reorganize the Pro UI `Lib` pipelines into domain namespaces. No behavior change.
+- [Maintenance] Extract the consumer commanding forms into `Lib::Commands` and validate offset and pause values server-side (#1241).
+- [Maintenance] Extract the topic configuration edit flow into `Lib::Configuring` and reject empty values (#1241).
+- [Maintenance] Extract topic creation and repartitioning into `Lib::TopicCreation` and `Lib::Repartitioning` with server-side validation (#1241).
+- [Maintenance] Extract the Explorer republish flow into `Lib::Republishing` and validate the form before producing (#1244).
+- [Maintenance] Retry transient 5xx responses in the test link validator.
+- [Maintenance] Update the vendored `AirDatepicker` CSS to `3.6.0` to match the JS.
+- [Maintenance] Drop `nokogiri` from the test dependencies.
+- [Maintenance] Build the assets with the `uglify-js` CLI instead of gulp, removing 188 npm development packages.
+- [Maintenance] Drop the unused `byebug` gem from the test bundle.
+- [Fix] Log consumers reporter dispatch failures instead of crashing the process when `produce_many_sync` times out (#1336).
+- [Fix] Sort Hash elements by key value even when the key name matches a `Hash` method.
+- [Fix] Reject a new partition count that is not greater than the current one with a form error instead of a broker error (Pro).
+- [Fix] Enrich each subscription group only once per consumer report.
+- [Fix] Reject seek offsets and pause durations that overflow librdkafka limits instead of crashing the running consumer.
+- [Fix] Return 403 for partition and topic commanding requests when commanding is disabled.
+- [Fix] Render tombstone messages on Web UI topics as a placeholder instead of failing the view.
+- [Fix] Render foreign or malformed messages in the Errors views as a placeholder instead of failing the view (#1243).
+- [Fix] Raise the `retention.ms` floor on the compacted consumer states and metrics topics to 1 month, so brokers that apply retention to compacted topics (e.g. Redpanda) keep the latest record.
+- [Fix] Stop live polling from overwriting an unsubmitted search or filter input.
+- [Fix] Report malformed partition count, replication factor and repartition values as form errors instead of truncating them.
+- [Fix] Show admin client configuration errors in the topic creation and configuration forms instead of returning a 500.
+- [Fix] Reject the reserved topic names `.` and `..` in the topic creation form (Pro).
+- [Fix] Reject a `config.ui.health.lags.skew_threshold` of `1` or less.
+- [Fix] Correct the republish form label for the source-headers checkbox (Pro).
+- [Fix] Hide internal topics from the per-topic config, distribution and removal pages when `internal_topics` visibility is off (Pro).
+- [Fix] Refresh the Health topic partition count after a repartition.
+- [Fix] Compare schema versions as semantic versions when running migrations.
+- [Fix] Rebuild the Web UI producer variants after a fork.
+- [Fix] Log producer tracking errors through the Karafka logger instead of printing them to stdout.
+- [Fix] Flag Health lag skew against the average of a topic's other partitions, so small topics can be flagged too. This is more sensitive at the same `skew_threshold` (Pro).
+- [Fix] Return 404 for unknown recurring tasks on trigger, enable and disable (Pro).
+- [Fix] Stop the Explorer search "latest" start offset from collapsing to the beginning of the topic (Pro).
+- [Fix] Return no results for an Explorer search scoped only to partitions that don't exist, instead of searching partition `0` (Pro).
+- [Fix] Report the Health per-topic lag trend as N/A instead of `0` when a topic has no measurable partitions, so sorting by Trend no longer intermixes no-data topics with real zero trends (Pro).
+- [Fix] Write the initial consumers states with `acks: 1` and retry the install/migrate data migration a few times when the just-written states are not yet readable, instead of aborting with `MissingConsumersMetricsError`.
 
 ## 1.0.1 (2026-08-24)
-- **[Feature]** Add a generic keyword filtering box to the data-heavy Web UI listings, so a specific consumer, topic or job can be found without scrolling. Flat listings also include a field selector to scope the search to a chosen attribute (Pro) (#1073).
-- [Enhancement] Track producer errors from every WaterDrop producer, not only `Karafka.producer` and `Karafka::Web.producer`, by subscribing via WaterDrop's global monitor. Attaching is idempotent, so errors are never double-counted - which also fixes a pre-existing double-count of the default producer's errors (#952).
-- [Enhancement] Report the details Karafka publishes on a forceful shutdown (which listeners were still active and which jobs were still in processing, with their blocking status) in the Web UI error details, so a `ForcefulShutdownError` shows what was still blocking (#979).
-- [Enhancement] Show the actual replica and in-sync (ISR) broker ids, not just their counts, in the cluster and topic replication views. The leader is emphasized and out-of-sync replicas highlighted; in Pro each broker badge links to its details page (#1084).
-- [Maintenance] Bump `simplecov` to `1.1.1` and stop parallel test workers from clobbering each other's `coverage/coverage.json`. Parallel workers now persist only their raw `.resultset.json`; the readable report is still produced once by `bin/check_coverage` (#1214).
-- [Maintenance] Split the oversized `ApplicationHelper` into focused helper modules (`SortingHelper`, `FormattingHelper`, `BadgesHelper`, `PartitionsHelper`), leaving `ApplicationHelper` with only app/layout/hash utilities.
+- **[Feature]** Add a keyword filtering box to the data-heavy Web UI listings, with a field selector on flat listings (Pro) (#1073).
+- [Enhancement] Track producer errors from every WaterDrop producer, not only the Karafka and Web UI ones, without double-counting (#952).
+- [Enhancement] Show which listeners and jobs were still active in the error details of a `ForcefulShutdownError` (#979).
+- [Enhancement] Show replica and in-sync (ISR) broker ids instead of counts in the cluster and topic replication views, highlighting out-of-sync replicas (#1084).
+- [Maintenance] Bump `simplecov` to `1.1.1` and stop parallel test workers from overwriting each other's coverage results (#1214).
+- [Maintenance] Split `ApplicationHelper` into focused helper modules.
 - [Fix] Force `border-collapse` on the data tables so their 1px cell borders no longer render as a doubled 2px border under daisyUI 5.7 (which switched `.table` to `border-collapse: separate`).
-- [Fix] Make columns that render a sort link actually sortable. Some tables exposed sortable headers for columns missing from the controller's allow-list, so clicking them silently did nothing (cluster replication, the Pro broker config `value` column, and the health low-offset column).
+- [Fix] Make columns with a sort link actually sortable in the cluster replication, Pro broker config and health views.
 
 ## 1.0.0 (2026-08-05)
-- **[Breaking]** Namespace the commanding pause configuration under `config.commanding.pause`. The flat `config.commanding.pause_timeout` setting has been removed in favor of the nested `config.commanding.pause.timeout` namespace, mirroring the pause configuration namespacing introduced in Karafka.
+- **[Breaking]** Namespace the commanding pause configuration under `config.commanding.pause`: `config.commanding.pause_timeout` is removed in favor of `config.commanding.pause.timeout`.
 - [Enhancement] Link the topic, partition and offset in the Explorer's single-message metadata table to the Explorer, matching the Errors detail view (#1179).
-- [Enhancement] Link the topic, partition and offsets on the Errors detail view to the Explorer, so you can jump straight from an error to the matching message. The producer dispatch-error `offset` is now linked too, as are the partition and scanned offset range in the Search results metadata (#1179).
+- [Enhancement] Link topics, partitions and offsets in the Errors detail view and Search results metadata to the Explorer (#1179).
 - [Enhancement] Make `assert_ok` surface the actual captured exception (class, message, backtrace) on a 500 instead of the generic error page body, making rare CI-only controller flakes diagnosable.
-- [Enhancement] Remove the OSS "support Karafka Pro" banner that was rendered on every Web UI page for non-Pro users. It's no longer needed at this stage since users are already aware of the Pro offering.
-- [Enhancement] Migrate the Web UI topic declarations to Karafka's standalone `Karafka::App.declaratives.draw` API (Karafka `2.6.0.beta1`), replacing the deprecated routing-based `config(active: false)` bridge.
+- [Enhancement] Remove the "support Karafka Pro" banner from OSS Web UI pages.
+- [Enhancement] Declare the Web UI topics with Karafka's standalone `Karafka::App.declaratives.draw` API.
 - [Enhancement] Add `Warning.process` block to the test helper to turn Ruby warnings originating from the project code into test failures.
-- [Enhancement] Enable all opt-in Ruby warning categories in the test helper via `Warning.categories` (available since Ruby 3.4), so any new categories added in future Ruby versions are automatically enabled without code changes.
-- [Enhancement] Replace the sequential per-partition `query_watermark_offsets` calls in `Counters#estimate_errors_count` with one `topic_info` call plus a batch `read_watermark_offsets`, cutting Kafka roundtrips from N+1 to 3 regardless of partition count.
+- [Enhancement] Enable all opt-in Ruby warning categories in the test helper.
+- [Enhancement] Estimate the errors count with a constant number of Kafka roundtrips instead of one per partition.
 - [Enhancement] Allow for zero value in number of workers to support dynamic scaling of Karafka workers.
-- [Enhancement] Align concurrency tracking with dynamic thread pool scaling. Workers count is now read from `Karafka::Server.workers.size` instead of the static `Karafka::App.config.concurrency`, so the Web UI accurately reflects runtime thread pool changes.
-- [Enhancement] Track `poll_interval` (max.poll.interval.ms) per subscription group alongside `poll_age` to help users monitor how close they are to the polling timeout limit. Consumer schema version bumped to 1.7.0.
-- [Enhancement] Replace token-based CSRF protection (`route_csrf`) with header-based protection using `Sec-Fetch-Site` (`sec_fetch_site_csrf`), which browsers enforce and cross-origin requests cannot forge.
-- [Enhancement] Include a short spec file hash in generated test topic names for traceability. Topic names now follow the `it-{hash}-{uuid}` format, making it easy to identify which test file created a given topic in Kafka logs.
+- [Enhancement] Show the live worker count from `Karafka::Server.workers.size`, reflecting dynamic thread pool scaling.
+- [Enhancement] Track `poll_interval` (`max.poll.interval.ms`) per subscription group alongside `poll_age`. Consumer schema version bumped to 1.7.0.
+- [Enhancement] Replace token-based CSRF protection with header-based `Sec-Fetch-Site` protection.
+- [Enhancement] Include a spec file hash in generated test topic names (`it-{hash}-{uuid}`) for traceability.
 - [Enhancement] Add a standardized `empty_state` helper (icon, message, optional description and call-to-action) and use it in place of the ad hoc "There are no X" alerts across every empty-list view.
-- [Enhancement] Expand the internal `/ux` style-guide page to cover every UI component used across the app, so dependency upgrades can be spot-checked in one place. Adds a reusable `ModalOpener` JS component, since the CSP disallows the inline `onclick` style used by the existing search modal trigger.
-- [Enhancement] Replace the bare `assert(response.ok?)` pattern with a new `assert_ok` test helper across the controller suite (381 call sites); it now prints the actual status and a body excerpt on failure.
+- [Enhancement] Expand the internal `/ux` style-guide page to cover every UI component and add a reusable `ModalOpener` JS component.
+- [Enhancement] Add an `assert_ok` test helper that prints the actual status and a body excerpt on failure.
 - [Change] Require Karafka `>= 2.6.0.rc2` (was `>= 2.6.0.beta1`), which ships the nested `pause` routing DSL and the removal of the flat per-topic pause setters.
 - [Change] Require Roda `>= 3.100` (previously `~> 3.69`).
-- [Change] Switch to Karafka 2.6's group-type-agnostic `#group`/`group_id` accessors instead of `#consumer_group`/`consumer_group_id` when reading Karafka's own routing and instrumentation APIs, preparing for share group support (KIP-932). karafka-web's own internal naming is unchanged. Closes #1022.
-- [Fix] The Explorer's time-based `#closest` lookup for a time beyond the last message now lands on the partition's default view (the latest page), adapting to Karafka `2.6`'s `Admin#read_topic` change.
-- [Fix] Declare the Web UI consumer topic pause strategy via the nested `pause(...)` routing DSL, which Karafka `2.6` requires; the flat setters it removed previously raised during routing. The custom backoff now applies only on Pro, with OSS falling back to the global pause defaults.
-- [Fix] Link the global Jobs view's committed offset to the Explorer. `jobs/_job.erb` linked the first and last offsets but the committed offset was accidentally rendered as plain text, unlike the consumer-scoped Jobs view which links all three (#1179).
-- [Fix] Fix two precision bugs in process eviction and utilization: `evict_expired_processes` truncated a non-multiple-of-1000ms ttl via integer division, evicting up to ~999ms early, and average utilization used an epsilon guard that systematically under-reported it. Both now use exact float division.
-- [Fix] Fix the real cause of the intermittent CI-only Pro Explorer flakes: Ruby's object-shape warning (a controller crossing 8 instance-variable shapes) escalated to a hard failure by the suite's `Warning.process` hook. The existing `Ui::App` shape-variation exception now covers controller classes too.
+- [Change] Use Karafka 2.6's group-type-agnostic `#group`/`group_id` accessors to prepare for share groups (KIP-932). Closes #1022.
+- [Fix] Land the Explorer time-based lookup on the latest page for a time beyond the last message.
+- [Fix] Declare the Web UI consumer topic pause strategy with the nested `pause(...)` routing DSL required by Karafka `2.6`. The custom backoff now applies only on Pro.
+- [Fix] Link the committed offset in the global Jobs view to the Explorer (#1179).
+- [Fix] Fix precision errors in process eviction timing and average utilization.
+- [Fix] Fix intermittent CI-only Pro Explorer spec failures caused by a Ruby object-shape warning.
 - [Fix] Harden the `wait_for_offset_visible` test helper to also poll the Web UI's own read path, not just the admin watermark offset, which alone did not guarantee the Web UI could read that offset.
 - [Fix] Fix two more flaky Pro Explorer `#recent` specs by replacing a fixed `sleep(0.1)` before the second produce with a `wait_for_message` poll on its offset, matching the sibling spec.
-- [Fix] Stop a long, unbreakable page title and the breadcrumbs bar above it from overflowing the page and forcing a horizontal scrollbar. Both wrappers now set `min-width: 0`, the title wraps via `overflow-wrap: anywhere`, and breadcrumbs wrap onto multiple lines.
+- [Fix] Wrap long page titles and breadcrumbs instead of forcing horizontal scrolling.
 - [Fix] Stop long, unbreakable flash messages from overflowing their alert box; the message now sets `overflow-wrap: anywhere` and `min-width: 0` so it wraps inside the alert.
-- [Fix] Stop long, dotted or underscored topic-tile names in the Pro Explorer, DLQ and Topics views from overflowing their tile; names now wrap and the tile link carries a `title` attribute with the full name.
-- [Fix] Make the `create_topic` test helper wait until a new topic's partitions are actually readable, not just until the name appears in cluster metadata, removing a flaky 404 in multi-partition specs.
+- [Fix] Wrap long topic-tile names in the Pro Explorer, DLQ and Topics views and show the full name on hover.
+- [Fix] Make the `create_topic` test helper wait until partitions are readable, removing a flaky spec 404.
 - [Fix] Stop the array paginator from offering a "Next" link to an empty page when the last page is exactly full; it now reports the last page based on whether a further slice actually exists.
 - [Fix] Compute the dashboard average batch size with float division so it is no longer floored (e.g. 1000 messages over 47 batches now charts as `21.28`, not `21`).
-- [Fix] Include jobs in the `waiting` state when aggregating the dashboard "Pending" counter, which previously undercounted jobs sitting in the advanced, recurring and scheduled-message schedulers. `:waiting` is now also validated by the `AggregatedStats` contract.
-- [Fix] Add `initialize` to `Status::Context` that defines all instance variables upfront in a consistent order, giving every instance the same Ruby object shape and eliminating the `:performance` shape-variation warning.
-- [Fix] Accept (and ignore) a block in `Karafka::Web::Producer#__getobj__` to silence Ruby 3.4's `strict_unused_block` warning emitted via `SimpleDelegator#method_missing` on every delegated producer call.
+- [Fix] Include `waiting` jobs in the dashboard "Pending" counter.
+- [Fix] Remove the `:performance` object-shape warning from `Status::Context`.
+- [Fix] Silence the Ruby 3.4 `strict_unused_block` warning on delegated producer calls.
 - [Fix] Remove `cgi` as no longer needed.
 - [Fix] Exclude `test/` directory from gem releases to reduce package size.
 - [Fix] Update LinksValidator regexes to match the new `it-{hash}-{uuid}` test topic naming format, fixing test-order dependent failures in explorer controller specs.
 - [Fix] Fix alerts formatting for the distribution view.
-- [Fix] Fix a 500 in the Pro Explorer when a payload parses as valid JSON but contains strings with invalid UTF-8 bytes. Pretty-printing now runs in its own SafeRunner; on failure the raw bytes are shown with a deserialization warning.
-- [Fix] Fix a 500 in the Pro Explorer message JSON export when a payload deserializes but cannot be serialized back to JSON. The endpoint now responds with 404 and the export button is no longer rendered for such messages.
-- [Fix] Normalize a batch of styling inconsistencies found while auditing #906: an unstyled Cluster replication table, raw `true`/`false` instead of badges in `Cluster::_config`, an unapplied disabled state on the Recurring Tasks "Trigger" button, dead pre-Tailwind Bootstrap classes, several grammar and casing slips in breadcrumbs and titles, and a number of hand-rolled alerts, badges and icons replaced with the shared primitives they should have used.
-- [Fix] Continue normalizing styling inconsistencies from the #906 audit: the Health and Recurring Tasks tab bars now use the shared `tab-container-wrapper` class, and the Scheduled Messages per-partition heading uses `h2` to match the equivalent Health heading.
-- [Fix] Retire the `.row-table` primitive, which had drifted to a single caller against 45+ uses of `.data-table` and used a different button alignment. The one table was switched to `.data-table` and the unused CSS removed.
-- [Fix] Fix unreadable `.btn-outline.btn-active` buttons (e.g. the dashboard time-range selector) in both themes, where the daisyUI 5.6 upgrade left the active background and the outline text nearly the same colour.
+- [Fix] Show the raw payload with a warning instead of a 500 in the Pro Explorer when a JSON payload contains invalid UTF-8.
+- [Fix] Return 404 instead of a 500 from the Pro Explorer JSON export when a payload cannot be serialized, and hide the export button for such messages.
+- [Fix] Fix a batch of styling inconsistencies found in the #906 audit.
+- [Fix] Align the Health, Recurring Tasks and Scheduled Messages tabs and headings with the shared styles (#906).
+- [Fix] Replace the last `.row-table` with the standard `.data-table` and remove the unused CSS.
+- [Fix] Fix unreadable active outline buttons, such as the dashboard time-range selector, in both themes.
 - [Fix] Fix a flaky Pro Explorer spec by replacing the `produce` helper's fixed `sleep(0.1)` wait for a transactional commit control record with a `wait_for_offset_visible` poll.
-- [Fix] Stop a misclick on a Pro-gated OSS element from navigating away to the standalone "Pro Feature" upsell page, across the sidebar, Consumers tabs, dashboard chart tabs and several previously unguarded links. Gated items are now inert `disabled` buttons with an "Available in Karafka Pro" tooltip. Also hardens `TabsManager` against a missing or disabled active tab. Closes #1106.
-- [Fix] Add `rel="noopener noreferrer"` to every `target="_blank"` link across the Web UI, closing a reverse tabnabbing vector where the opened page could redirect the original tab via `window.opener`.
-- [Fix] Fix a flaky Pro Explorer `#recent` spec that requested the endpoint with no readiness wait after producing; a `wait_for_message` poll was added, matching the pattern used elsewhere in the suite.
+- [Fix] Render Pro-gated elements in OSS as disabled buttons with an "Available in Karafka Pro" tooltip instead of navigating to the upsell page. Closes #1106.
+- [Fix] Add `rel="noopener noreferrer"` to every `target="_blank"` link, closing a reverse tabnabbing vector.
+- [Fix] Fix a flaky Pro Explorer `#recent` spec.
 
 ## 0.11.6 (2026-02-01)
-- **[Feature]** Provide ability to pause/resume all partitions of a topic at once across all consumer processes via the Health Overview page (Pro). Topic-level commands are broadcast to all processes, and each process applies the command to partitions it owns within the specified consumer group. This simplifies bulk operations compared to pausing/resuming individual partitions one by one.
-- [Enhancement] Optimize partition command tracker to use index-based lookup instead of iterating over 10,000 partitions during rebalance events. The tracker now maintains a partition index for O(n) lookups where n is the number of partitions with pending commands.
-- [Enhancement] Report `group.instance.id` (static membership ID) per subscription group in consumer reports. This enables identifying consumers using Kafka's static group membership feature. The ID is displayed in the per-consumer subscription view header and in Health Overview below each process ID, making it easy to find a process by its static membership ID. Consumer schema version bumped to 1.6.0.
-- [Enhancement] Display `min.insync.replicas` alongside replication factor on the topic replication page with fault tolerance indicators (Pro). Shows specific warnings for different resilience issues: no redundancy (RF=1), zero fault tolerance (RF ≤ minISR), and low durability (minISR=1). Each warning includes impact details, environment-aware severity messaging, and recommended actions. Helps users identify misconfigured topics that would cause outages or data loss.
+- **[Feature]** Pause or resume all partitions of a topic at once across all consumer processes from the Health Overview page (Pro).
+- [Enhancement] Speed up the partition command tracker during rebalances on topics with many partitions.
+- [Enhancement] Report and display the `group.instance.id` (static membership ID) per subscription group. Consumer schema version bumped to 1.6.0.
+- [Enhancement] Show `min.insync.replicas` and fault tolerance warnings on the topic replication page (Pro).
 - [Enhancement] Add `.options` CSS class for table columns containing action buttons, providing consistent `width: 1%; white-space: nowrap` styling to prevent column width fluctuation.
 - [Enhancement] Add commands topic presence status check for Pro users. Warns when the `karafka_consumers_commands` topic is missing, which is required for commanding features (pause, resume, trace).
 - [Enhancement] Disable "Quiet All" and "Stop All" buttons when only swarm or embedded consumers are running (Pro). These commands only work on standalone consumer processes.
-- [Enhancement] Use low-ack producer variant (`acks: 0`) for Web UI reporting. Since Web UI reporting serves analytical purposes, fire-and-forget semantics minimize latency and overhead while occasional message loss is acceptable. Falls back to the original producer for idempotent/transactional producers.
-- [Refactor] Refactor Status model into a DSL-based architecture with individual check classes. Each status check is now a separate class in `Karafka::Web::Ui::Models::Status::Checks` that declares its dependencies using `depends_on :check_name` DSL. Shared state is managed through a `Context` class, and the `Step` struct has been extracted to its own file. This improves maintainability, testability, and makes it easier to add new status checks in the future.
+- [Enhancement] Use a fire-and-forget (`acks: 0`) producer variant for Web UI reporting, falling back to the original producer when it is idempotent or transactional.
+- [Refactor] Split the Status model into individual check classes with declared dependencies.
 - [Fix] Fix session keys to use strings instead of symbols for compatibility with Roda's session management.
 - [Fix] Fix actions and selector alignment in explorer and errors views by wrapping col-span elements in proper grid container.
 
@@ -108,18 +130,18 @@
 - [Enhancement] Utilize newly released Roda session management `:env_key` to isolate Karafka Web session from the main application session.
 
 ## 0.11.4 (2025-11-01)
-- [Enhancement] Show placeholder rows for partitions with no data during rebalances in health view. The UI now displays all topic partitions (0 to N-1) with "No data available" indicators for partitions currently being rebalanced, preventing confusion from disappearing partitions. Consumer reports now include `partitions_cnt` field extracted from librdkafka statistics. Consumer schema version bumped to 1.5.0 (breaking change).
+- [Enhancement] Show placeholder rows for partitions with no data during rebalances in the health view. Consumer reports now include `partitions_cnt`; the consumer schema version is bumped to 1.5.0 (breaking change).
 - [Enhancement] Track and report UI errors originating from Roda/Puma web processes directly to Kafka errors topic for visibility and debugging. UI errors are dispatched asynchronously from web processes using a dedicated listener.
 - [Enhancement] Require Karafka 2.5.2 at minimum and migrate from string-based execution mode comparisons to the new ExecutionMode object API.
 - [Enhancement] Increase Web UI processing consumer backoff time to 30 seconds when encountering incompatible schema errors to prevent error spam during rolling upgrades.
 - [Enhancement] Add unique `id` field to error reports to track duplicate error occurrences. Error schema version bumped to 1.2.0 while maintaining backward compatibility with older error formats (1.0.0, 1.1.0) in the Web UI.
-- [Enhancement] Add container-aware metrics collection for Docker/Kubernetes environments. The Web UI now reports accurate container memory limits from cgroups (v1 and v2) instead of misleading host metrics, while maintaining full backward compatibility with non-containerized deployments.
-- [Enhancement] Add per-message report migration system to handle schema evolution for consumer reports. This allows transparent migration of old report formats (e.g., schema 1.2.x using `process[:name]`) to current expectations (schema 1.3.0+ using `process[:id]`), ensuring backward compatibility with reports from older karafka-web versions (≤ v0.8.2) that may still exist in Kafka topics.
-- [Change] Reduce `max_messages` for consumer reports processing from 1000 to 200 to prevent excessive memory usage in large-scale deployments. Processing 1000 messages at once can impact memory consumption significantly in big systems, while 200 messages provides better memory efficiency with negligible impact on throughput.
-- [Refactor] Extract metrics collection logic from monolithic Sampler into focused, single-responsibility classes (Metrics::Base, Metrics::Os, Metrics::Container, Metrics::Network, Metrics::Server, Metrics::Jobs) and consumer groups enrichment into dedicated enricher (Enrichers::Base, Enrichers::ConsumerGroups) for improved maintainability and testability.
+- [Enhancement] Add container-aware metrics for Docker/Kubernetes: the Web UI reports container memory limits from cgroups (v1 and v2) instead of host metrics.
+- [Enhancement] Add per-message migration of consumer reports, so reports from karafka-web ≤ v0.8.2 (schema 1.2.x, `process[:name]`) still in Kafka work with schema 1.3.0+ (`process[:id]`).
+- [Change] Reduce `max_messages` for consumer reports processing from 1000 to 200 to lower memory usage in large deployments.
+- [Refactor] Split the Sampler metrics collection into `Metrics::*` classes and the consumer groups enrichment into `Enrichers::*` classes.
 - [Testing] Add Docker-based integration tests for container metrics collection. Tests verify cgroup v1/v2 detection, memory limit reading, and fallback behavior across multiple containerized scenarios with different resource constraints.
-- [Fix] Fix "OS memory used" metric on Linux reporting same value as RSS instead of system-wide memory usage. The metric now correctly sums memory usage across all processes (or all container processes when running in Docker/Kubernetes) to match macOS behavior and original design intent.
-- [Fix] Fix crash when processing old consumer reports from schema versions < 1.3.0 (karafka-web ≤ v0.8.2) that used `process[:name]` field instead of `process[:id]`. The error `undefined method 'to_sym' for nil` would occur when these old reports were encountered during upgrades. Reports are now automatically migrated in-place to the current schema format.
+- [Fix] Fix the "OS memory used" metric on Linux, which reported RSS instead of the memory used by all processes (or all container processes), matching macOS.
+- [Fix] Fix the `undefined method 'to_sym' for nil` crash on consumer reports from schema < 1.3.0 (karafka-web ≤ v0.8.2) that use `process[:name]`. They are now migrated to the current schema.
 
 ## 0.11.3 (2025-09-29)
 - [Enhancement] Upgrade DaisyUI to 5.1.
@@ -406,7 +428,7 @@
 - [Refactor] Rename `ui.show_internal_topics` to `ui.visibility.internal_topics_display`
 
 ## 0.7.4 (2023-09-19)
-- [Improvement] Skip aggregations on older schemas during upgrades. This only skips process-reports (that are going to be rolled) on the 5s window in case of an upgrade that should not be a rolling one anyhow. This simplifies the operations and minimizes the risk on breaking upgrades.
+- [Improvement] Skip aggregations on process reports with older schemas during upgrades to lower the risk of breaking upgrades.
 - [Fix] Fix not working `ps` for macOS.
 
 ## 0.7.3 (2023-09-18)
