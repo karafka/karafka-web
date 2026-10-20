@@ -29,14 +29,21 @@
 # Contact: contact@karafka.io
 
 describe_current do
+  let(:key_deserializer) { ->(metadata) { "deserialized-#{metadata.raw_key}" } }
+  let(:headers_deserializer) { ->(metadata) { metadata.raw_headers.transform_values(&:upcase) } }
+  let(:raw_headers) { { "h" => "v" } }
+
   let(:source) do
-    stub(
-      raw_payload: "payload",
-      headers: { "h" => "v" },
-      key: "k",
-      topic: "src",
-      partition: 3,
-      offset: 7
+    Karafka::Messages::Message.new(
+      "payload",
+      Karafka::Messages::Metadata.new(
+        deserializers: stub(key: key_deserializer, headers: headers_deserializer),
+        raw_key: "k",
+        raw_headers: raw_headers,
+        topic: "src",
+        partition: 3,
+        offset: 7
+      )
     )
   end
 
@@ -48,41 +55,7 @@ describe_current do
     }.merge(overrides)
   end
 
-  # M1: Transform must stay total. Key/headers are lazily deserialized and a strict custom
-  # deserializer on the source topic raises - that used to 500 the republish. The form contract
-  # blocks the republish with a validation error, so this only has to not raise; the raw bytes are
-  # the closest stand-in for the value.
-  it "falls back to the raw key when the key deserializer raises" do
-    source.stubs(:key).raises(StandardError, "broken key deserializer")
-    source.stubs(:raw_key).returns("raw-k")
-
-    message = described_class.call(source, data)
-
-    assert_equal("raw-k", message[:key])
-  end
-
-  it "falls back to the raw headers when the headers deserializer raises" do
-    source.stubs(:headers).raises(StandardError, "broken headers deserializer")
-    source.stubs(:raw_headers).returns({ "rh" => "rv" })
-
-    message = described_class.call(source, data)
-
-    assert_equal({ "rh" => "rv" }, message[:headers])
-  end
-
-  it "still augments raw headers with source tracking when requested" do
-    source.stubs(:headers).raises(StandardError, "broken headers deserializer")
-    source.stubs(:raw_headers).returns({ "rh" => "rv" })
-
-    message = described_class.call(source, data(include_source_headers: true))
-
-    assert_equal("rv", message[:headers]["rh"])
-    assert_equal("src", message[:headers]["source_topic"])
-    assert_equal("3", message[:headers]["source_partition"])
-    assert_equal("7", message[:headers]["source_offset"])
-  end
-
-  it "copies the payload, key and headers to the target topic" do
+  it "copies the raw payload, key and headers to the target topic" do
     message = described_class.call(source, data)
 
     assert_equal("dst", message[:topic])
@@ -92,13 +65,33 @@ describe_current do
     refute(message.key?(:partition))
   end
 
+  it "does not copy the deserialized key and headers" do
+    message = described_class.call(source, data)
+
+    refute_equal(source.key, message[:key])
+    refute_equal(source.headers, message[:headers])
+  end
+
+  context "when the key and headers deserializers raise" do
+    let(:key_deserializer) { ->(_metadata) { raise StandardError, "broken key deserializer" } }
+    let(:headers_deserializer) { ->(_metadata) { raise StandardError, "broken headers deserializer" } }
+
+    it "copies the raw key and headers" do
+      message = described_class.call(source, data(include_source_headers: true))
+
+      assert_equal("k", message[:key])
+      assert_equal("v", message[:headers]["h"])
+      assert_equal("src", message[:headers]["source_topic"])
+    end
+  end
+
   it "sets the target partition when provided" do
     message = described_class.call(source, data(target_partition: "1"))
 
     assert_equal(1, message[:partition])
   end
 
-  it "adds source-tracking headers when requested" do
+  it "adds source-tracking headers to the raw headers when requested" do
     message = described_class.call(source, data(include_source_headers: true))
 
     assert_equal("v", message[:headers]["h"])
@@ -108,13 +101,8 @@ describe_current do
   end
 
   it "does not mutate the source message headers" do
-    original = { "h" => "v" }
-    message = stub(
-      raw_payload: "p", headers: original, key: nil, topic: "s", partition: 0, offset: 0
-    )
+    described_class.call(source, data(include_source_headers: true))
 
-    described_class.call(message, data(include_source_headers: true))
-
-    refute(original.key?("source_topic"))
+    refute(raw_headers.key?("source_topic"))
   end
 end

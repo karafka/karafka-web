@@ -36,8 +36,9 @@ module Karafka
           module Explorer
             module Republishing
               # Builds the message to produce from the source message and the normalized form data.
-              # The payload/key are copied verbatim from the source; the headers are duplicated and,
-              # when requested, augmented with source-tracking headers.
+              # The payload, key and headers are copied raw, so the copy carries the source bytes
+              # even when the source topic uses custom deserializers. When requested, the headers
+              # are augmented with source-tracking headers.
               module Transform
                 class << self
                   # @param message [Karafka::Messages::Message] source message being republished
@@ -48,7 +49,7 @@ module Karafka
                       topic: data[:target_topic],
                       payload: message.raw_payload,
                       headers: headers(message, data),
-                      key: key(message)
+                      key: message.raw_key
                     }
 
                     partition = data[:target_partition]
@@ -57,28 +58,12 @@ module Karafka
                     dispatch_message
                   end
 
-                  # Key and headers are lazily deserialized, so a strict custom deserializer on the
-                  # source topic raises here. This must stay total: the form contract reports an
-                  # undeserializable key/headers as a validation error, and a raise would 500 the
-                  # republish instead. The raw bytes are the closest stand-in when that happens.
-                  #
-                  # @param message [Karafka::Messages::Message] source message
-                  # @return [Object] the deserialized key, or the raw key when deserialization fails
-                  def key(message)
-                    runner = Lib::SafeRunner.new { message.key }
-                    runner.call
-
-                    runner.success? ? runner.result : message.raw_key
-                  end
-
                   # @param message [Karafka::Messages::Message] source message
                   # @param data [Hash] normalized form data
-                  # @return [Hash] the source headers, plus source-tracking headers when requested
+                  # @return [Hash] the raw source headers, plus source-tracking headers when
+                  #   requested
                   def headers(message, data)
-                    runner = Lib::SafeRunner.new { message.headers }
-                    runner.call
-
-                    headers = (runner.success? ? runner.result : message.raw_headers).dup
+                    headers = message.raw_headers.dup
 
                     return headers unless data[:include_source_headers]
 
