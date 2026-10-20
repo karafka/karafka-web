@@ -10,10 +10,15 @@ module Karafka
           # Reports may come from processes that do not run the Ruby tracking (for example apps
           # on librdkafka bindings in other languages), so unlike the sender side
           # `Tracking::Consumers::Contracts::Report`, it does not check Ruby-only values (Ruby
-          # classes, Karafka status names). It requires the process, versions and stats fields
-          # that the processing and the Web UI read. Consumer groups and jobs are checked only
-          # for their top-level shape.
+          # classes, Karafka status names). It requires the process, versions and stats fields and
+          # the consumer groups tree keys that the processing and the Web UI read. Jobs are
+          # checked only for their top-level shape.
           class Report < Web::Contracts::Base
+            # Is the value a Hash with Hash values
+            HASH_OF_HASHES = ->(val) { val.is_a?(Hash) && val.values.all?(Hash) }
+
+            private_constant :HASH_OF_HASHES
+
             configure
 
             required(:schema_version) { |val| val.is_a?(String) && !val.empty? }
@@ -69,8 +74,36 @@ module Karafka
               end
             end
 
-            required(:consumer_groups) { |val| val.is_a?(Hash) && val.values.all?(Hash) }
+            required(:consumer_groups) { |val| HASH_OF_HASHES.call(val) }
             required(:jobs) { |val| val.is_a?(Array) && val.all?(Hash) }
+
+            # Checks the consumer groups tree down to the partitions. Without these keys the UI
+            # fails or `HashProxy` renders a same-named nested value instead.
+            virtual do |data, errors|
+              next unless errors.empty?
+
+              valid = data.fetch(:consumer_groups).each_value.all? do |cg|
+                cg[:id].is_a?(String) &&
+                  HASH_OF_HASHES.call(cg[:subscription_groups]) &&
+                  cg[:subscription_groups].each_value.all? do |sg|
+                    sg[:id].is_a?(String) &&
+                      sg[:state].is_a?(Hash) &&
+                      HASH_OF_HASHES.call(sg[:topics]) &&
+                      sg[:topics].each_value.all? do |topic|
+                        topic[:name].is_a?(String) &&
+                          topic[:partitions_cnt].is_a?(Integer) &&
+                          HASH_OF_HASHES.call(topic[:partitions]) &&
+                          topic[:partitions].each_value.all? do |partition|
+                            partition[:id].is_a?(Integer) &&
+                              partition[:lag_stored].is_a?(Integer) &&
+                              partition[:lag_stored_d].is_a?(Integer)
+                          end
+                      end
+                  end
+              end
+
+              valid ? nil : [[%i[consumer_groups], :format]]
+            end
           end
         end
       end

@@ -61,6 +61,40 @@ describe_current do
     end
   end
 
+  context "when validating the consumer groups tree" do
+    let(:cg) { report[:consumer_groups].values.first }
+    let(:sg) { cg[:subscription_groups].values.first }
+    let(:topic) { sg[:topics].values.first }
+    let(:partition) { topic[:partitions].values.first }
+
+    {
+      cg: %i[id subscription_groups],
+      sg: %i[id state topics],
+      topic: %i[name partitions partitions_cnt],
+      partition: %i[id lag_stored lag_stored_d]
+    }.each do |level, keys|
+      keys.each do |key|
+        context "when #{level} #{key} is missing" do
+          before { public_send(level).delete(key) }
+
+          it { refute(contract.call(report).success?) }
+        end
+      end
+    end
+
+    context "when a consumer group is empty" do
+      before { report[:consumer_groups] = { cg: {} } }
+
+      it { refute(contract.call(report).success?) }
+    end
+
+    context "when a subscription group is empty" do
+      before { cg[:subscription_groups] = { sg: {} } }
+
+      it { refute(contract.call(report).success?) }
+    end
+  end
+
   context "when a version is missing" do
     before { report[:versions].delete(:karafka) }
 

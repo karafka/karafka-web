@@ -84,6 +84,38 @@ describe_current do
     end
   end
 
+  context "when the reports topic also holds a report with an empty consumer group" do
+    let(:rejected_report) do
+      report = Fixtures.consumers_reports_json
+      report[:process][:id] = "go-app:1:1"
+      report[:consumer_groups] = { cg: {} }
+      report
+    end
+
+    before do
+      topics_config.consumers.states.name = states_topic
+      topics_config.consumers.reports.name = reports_topic
+
+      produce(states_topic, Fixtures.consumers_states_file)
+      produce(reports_topic, Fixtures.consumers_reports_file, key: "shinra:1:1")
+      produce(reports_topic, rejected_report.to_json, key: "go-app:1:1")
+    end
+
+    it "renders the consumers without that report" do
+      get "consumers"
+
+      assert_ok
+      assert_body("shinra:1:1")
+      refute_body("go-app:1:1")
+    end
+
+    it "renders the status page" do
+      get "status"
+
+      assert_ok
+    end
+  end
+
   context "when there is an active consumer but without any partitions assigned yet" do
     before do
       topics_config.consumers.states.name = states_topic
