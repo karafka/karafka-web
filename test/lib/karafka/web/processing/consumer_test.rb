@@ -33,6 +33,8 @@ describe_current do
 
   let(:report_contract) { stub(call: stub(success?: true)) }
 
+  let(:legacy_report_contract) { stub(call: stub(success?: true)) }
+
   before do
     consumer.stubs(:messages).returns(messages)
 
@@ -45,6 +47,9 @@ describe_current do
     Karafka::Web::Processing::Consumers::Contracts::State.stubs(:new).returns(state_contract)
     Karafka::Web::Processing::Consumers::Contracts::Metrics.stubs(:new).returns(metrics_contract)
     Karafka::Web::Processing::Consumers::Contracts::Report.stubs(:new).returns(report_contract)
+    Karafka::Web::Processing::Consumers::Contracts::LegacyReport
+      .stubs(:new)
+      .returns(legacy_report_contract)
 
     state_aggregator.stubs(:to_h).returns({})
     metrics_aggregator.stubs(:to_h).returns({})
@@ -154,12 +159,42 @@ describe_current do
           schema_manager.stubs(:call).returns(:older)
           migrator_instance = stub(call: nil)
           Karafka::Web::Processing::Consumers::ReportsMigrator.stubs(:new).returns(migrator_instance)
-          report_contract.stubs(:call).returns(failed)
+          legacy_report_contract.stubs(:call).returns(failed)
           state_aggregator.stubs(:add_rejection)
         end
 
         it "rejects it instead of registering the process" do
           state_aggregator.expects(:add_rejection).twice
+          state_aggregator.expects(:add_state).never
+
+          consumer.consume
+        end
+      end
+
+      context "when an older report cannot be migrated" do
+        let(:message1) do
+          stub(payload: { schema_version: "1.0.0", type: "consumer", dispatched_at: 1.0 }, offset: 100)
+        end
+
+        let(:message2) do
+          stub(
+            payload: { schema_version: "1.5.0", type: "consumer", consumer_groups: [] },
+            offset: 101
+          )
+        end
+
+        before do
+          schema_manager.stubs(:call).returns(:older)
+          state_aggregator.stubs(:add_rejection)
+        end
+
+        it "rejects it with the real migrator instead of raising" do
+          state_aggregator
+            .expects(:add_rejection)
+            .with(message1.payload, 100, { schema_version: "report cannot be migrated" })
+          state_aggregator
+            .expects(:add_rejection)
+            .with(message2.payload, 101, { schema_version: "report cannot be migrated" })
           state_aggregator.expects(:add_state).never
 
           consumer.consume

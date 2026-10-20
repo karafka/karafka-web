@@ -69,6 +69,7 @@
   "test/lib/karafka/web/ui/lib/sorter_test.rb": 0.029,
   "test/lib/karafka/web/ui/lib/filter_test.rb": 0.04,
   "test/lib/karafka/web/ui/lib/hash_flattener_test.rb": 0.012,
+  "test/lib/karafka/web/processing/consumers/contracts/legacy_report_test.rb": 0.01,
   "test/lib/karafka/web/processing/consumers/contracts/process_test.rb": 0.026,
   "test/lib/karafka/web/processing/consumers/contracts/report_test.rb": 0.03,
   "test/lib/karafka/web/ui/lib/paginations/page_based_test.rb": 0.026,

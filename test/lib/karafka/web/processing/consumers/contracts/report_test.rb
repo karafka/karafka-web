@@ -45,13 +45,33 @@ describe_current do
     it { refute(contract.call(report).success?) }
   end
 
-  context "when Ruby-only process details are missing" do
-    before do
-      %i[cpus memory_usage memory_total_usage tags execution_mode].each do |key|
-        report[:process].delete(key)
-      end
+  %i[started_at cpus memory_usage workers tags execution_mode listeners cpu_usage].each do |key|
+    context "when process #{key} is missing" do
+      before { report[:process].delete(key) }
 
-      report[:versions] = {}
+      it { refute(contract.call(report).success?) }
+    end
+  end
+
+  %i[busy enqueued waiting utilization total].each do |key|
+    context "when stats #{key} is missing" do
+      before { report[:stats].delete(key) }
+
+      it { refute(contract.call(report).success?) }
+    end
+  end
+
+  context "when a version is missing" do
+    before { report[:versions].delete(:karafka) }
+
+    it { refute(contract.call(report).success?) }
+  end
+
+  context "when values are not the ones the Ruby tracking sends" do
+    before do
+      report[:process][:status] = "healthy"
+      report[:process][:tags] = %w[go]
+      report[:versions].transform_values! { "go-1.22" }
     end
 
     it { assert(contract.call(report).success?) }
