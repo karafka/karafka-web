@@ -452,11 +452,11 @@ describe_current do
     end
 
     it "does not publish current stats with fewer processes than are running" do
-      consumer.stubs(:monotonic_now).returns(1_000.0, 1_001.0)
+      consumer.stubs(:monotonic_now).returns(1_000.0, 1_000.0 + tracking_interval - 1)
       consumer.stubs(:messages).returns([stub(payload: report("process-1", now), offset: 2)])
       consumer.consume
 
-      assert_empty(published_processes.select { |processes| processes < 2 })
+      assert_empty(published_processes)
 
       consumer.stubs(:monotonic_now).returns(1_000.0 + tracking_interval + 1)
       consumer.stubs(:messages).returns([stub(payload: report("process-2", now + 1), offset: 3)])
