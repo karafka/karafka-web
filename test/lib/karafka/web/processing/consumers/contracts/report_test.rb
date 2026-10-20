@@ -95,6 +95,24 @@ describe_current do
     end
   end
 
+  context "when validating the jobs" do
+    it { assert(contract.call(report).success?) }
+
+    %i[consumer consumer_group topic partition first_offset updated_at status].each do |key|
+      context "when job #{key} is missing" do
+        before { report[:jobs].first.delete(key) }
+
+        it { refute(contract.call(report).success?) }
+      end
+    end
+
+    context "when a job is empty" do
+      before { report[:jobs] = [{}] }
+
+      it { refute(contract.call(report).success?) }
+    end
+  end
+
   context "when a version is missing" do
     before { report[:versions].delete(:karafka) }
 

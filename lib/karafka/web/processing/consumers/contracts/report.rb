@@ -11,8 +11,7 @@ module Karafka
           # on librdkafka bindings in other languages), so unlike the sender side
           # `Tracking::Consumers::Contracts::Report`, it does not check Ruby-only values (Ruby
           # classes, Karafka status names). It requires the process, versions and stats fields and
-          # the consumer groups tree keys that the processing and the Web UI read. Jobs are
-          # checked only for their top-level shape.
+          # the consumer groups tree and jobs keys that the processing and the Web UI read.
           class Report < Web::Contracts::Base
             # Is the value a Hash with Hash values
             HASH_OF_HASHES = ->(val) { val.is_a?(Hash) && val.values.all?(Hash) }
@@ -103,6 +102,23 @@ module Karafka
               end
 
               valid ? nil : [[%i[consumer_groups], :format]]
+            end
+
+            # Checks the jobs keys the jobs views read
+            virtual do |data, errors|
+              next unless errors.empty?
+
+              valid = data.fetch(:jobs).all? do |job|
+                job[:consumer].is_a?(String) &&
+                  job[:consumer_group].is_a?(String) &&
+                  job[:topic].is_a?(String) &&
+                  job[:partition].is_a?(Integer) &&
+                  job[:first_offset].is_a?(Integer) &&
+                  job[:updated_at].is_a?(Numeric) &&
+                  job[:status].is_a?(String)
+              end
+
+              valid ? nil : [[%i[jobs], :format]]
             end
           end
         end
