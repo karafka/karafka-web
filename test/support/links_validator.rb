@@ -65,8 +65,13 @@ class LinksValidator
   MAX_RETRIES = 3
   RETRY_BACKOFF = 0.25
 
+  # `href` value of every anchor tag, in double or single quotes. Matches the links of the Web UI's
+  # own ERB output, so no HTML parser is needed
+  HREF_REGEXP = /<a\s[^>]*?(?<=\s)href\s*=\s*(?:"([^"]*)"|'([^']*)')/im
+
   private_constant(
-    :ALLOWED_RESPONSES, :EXCLUDED_CONTROLLERS, :EXCLUDED_DESCRIPTIONS, :MAX_RETRIES, :RETRY_BACKOFF
+    :ALLOWED_RESPONSES, :EXCLUDED_CONTROLLERS, :EXCLUDED_DESCRIPTIONS, :MAX_RETRIES, :RETRY_BACKOFF,
+    :HREF_REGEXP
   )
 
   attr_writer :context, :description
@@ -81,8 +86,7 @@ class LinksValidator
   def validate_all!(response)
     return unless response.content_type.include?("text/html")
 
-    html = Nokogiri::HTML(response.body)
-    links = extract_links(html)
+    links = extract_links(response.body)
 
     links.each do |link|
       validate!(link)
@@ -93,11 +97,10 @@ class LinksValidator
 
   # Extract all internal links from HTML
   #
-  # @param html [Nokogiri::HTML4::Document] nokogiri document
+  # @param body [String] rendered HTML
   # @return [Array<String>] list of links potentially to visit
-  def extract_links(html)
-    # Get all anchor tags with href attributes
-    links = html.css("a[href]").map { |a| a["href"] }
+  def extract_links(body)
+    links = body.scan(HREF_REGEXP).map { |double, single| CGI.unescapeHTML(double || single) }
 
     # Filter to only include internal links (not external or anchors)
     links.delete_if do |link|

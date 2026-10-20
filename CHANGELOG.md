@@ -21,6 +21,7 @@
 - [Maintenance] Extract the Explorer republish flow into `Lib::Republishing` and validate the form before producing (#1244).
 - [Maintenance] Retry transient 5xx responses in the test link validator.
 - [Maintenance] Update the vendored `AirDatepicker` CSS to `3.6.0` to match the JS.
+- [Maintenance] Drop `nokogiri` from the test dependencies.
 - [Maintenance] Build the assets with the `uglify-js` CLI instead of gulp, removing 188 npm development packages.
 - [Maintenance] Drop the unused `byebug` gem from the test bundle.
 - [Fix] Log consumers reporter dispatch failures instead of crashing the process when `produce_many_sync` times out (#1336).

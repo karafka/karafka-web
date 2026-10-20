@@ -83,6 +83,7 @@
   "test/lib/karafka/web/errors_test.rb": 0.022,
   "test/lib/karafka/web/management/migrations/consumers_metrics/1706607960_introduce_lag_total_test.rb": 0.022,
   "test/lib/karafka/web/inflector_test.rb": 0.021,
+  "test/lib/karafka/web/links_validator_test.rb": 0.06,
   "test/lib/karafka/web/deserializer_test.rb": 0.021,
   "test/lib/karafka/web/ui/lib/paginations/offset_based_test.rb": 0.021,
   "test/lib/karafka/web/producer_test.rb": 0.02,

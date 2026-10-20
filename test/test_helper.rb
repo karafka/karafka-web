@@ -3,7 +3,7 @@
 require "simplecov"
 require "rack/test"
 require "ostruct"
-require "nokogiri"
+require "cgi/escape"
 require "singleton"
 require "digest"
 require "warning"
