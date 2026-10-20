@@ -19,6 +19,47 @@ describe_current do
     wait_for_state_data
   end
 
+  describe "#add_rejection" do
+    let(:report) { { process: { id: "process-1234" }, dispatched_at: Time.now.to_f } }
+    let(:errors) { { "process.status": "needs to be present" } }
+
+    it "records the rejection in the state" do
+      state_aggregator.add_rejection(report, 100, errors)
+      rejection = state_aggregator.to_h[:rejected_reports].last
+
+      assert_equal("process-1234", rejection[:process_id])
+      assert_equal(100, rejection[:offset])
+      assert_equal({ "process.status" => "needs to be present" }, rejection[:errors])
+    end
+
+    it "records a rejection without a readable process id" do
+      state_aggregator.add_rejection({ process: "broken" }, 100, errors)
+
+      assert_nil(state_aggregator.to_h[:rejected_reports].last[:process_id])
+    end
+
+    it "keeps only the most recent rejections" do
+      12.times { |offset| state_aggregator.add_rejection(report, offset, errors) }
+      rejections = state_aggregator.to_h[:rejected_reports]
+
+      assert_equal(10, rejections.size)
+      assert_equal(2, rejections.first[:offset])
+    end
+
+    it "drops rejections older than the ttl" do
+      state_aggregator.add_rejection(report, 100, errors)
+      state_aggregator.to_h[:rejected_reports].last[:rejected_at] -= 60
+
+      assert_empty(state_aggregator.to_h[:rejected_reports])
+    end
+
+    it "produces a state that passes the state contract" do
+      state_aggregator.add_rejection(report, 100, errors)
+
+      Karafka::Web::Processing::Consumers::Contracts::State.new.validate!(state_aggregator.to_h)
+    end
+  end
+
   describe "#add_state" do
     context "when process id is a string" do
       let(:report) do

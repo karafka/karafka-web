@@ -324,6 +324,49 @@ describe_current do
       end
     end
 
+    context "when consumers reports were rejected at ingest" do
+      let(:states_topic) { create_topic }
+      let(:metrics_topic) { create_topic }
+      let(:reports_topic) { create_topic }
+
+      before do
+        topics_config.consumers.states.name = states_topic
+        topics_config.consumers.metrics.name = metrics_topic
+        topics_config.consumers.reports.name = reports_topic
+
+        parsed_state = JSON.parse(Fixtures.consumers_states_file)
+        parsed_state["rejected_reports"] = [
+          {
+            "process_id" => "rejected-process:1:1",
+            "offset" => 17,
+            "errors" => { "process.status" => "needs to be present" },
+            "rejected_at" => Time.now.to_f
+          }
+        ]
+
+        produce(states_topic, parsed_state.to_json)
+        produce(metrics_topic, Fixtures.consumers_metrics_file)
+
+        parsed = JSON.parse(Fixtures.consumers_reports_file)
+        cg = parsed["consumer_groups"]["example_app6_app"]["subscription_groups"]["c4ca4238a0b9_0"]
+        cg["topics"][reports_topic] = cg["topics"]["default"]
+        cg["topics"][reports_topic]["name"] = reports_topic
+
+        produce(reports_topic, parsed.to_json)
+
+        get "status"
+      end
+
+      it do
+        assert_ok
+        assert_body("Consumers reports validity")
+        assert_body("Some consumers reports were rejected")
+        assert_body("rejected-process:1:1")
+        assert_body("process.status")
+        assert_body("needs to be present")
+      end
+    end
+
     context "when consumers reports schema state is incompatible" do
       let(:states_topic) { create_topic }
       let(:metrics_topic) { create_topic }
