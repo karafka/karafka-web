@@ -31,6 +31,8 @@ describe_current do
     stub
   end
 
+  let(:report_contract) { stub(call: stub(success?: true)) }
+
   before do
     consumer.stubs(:messages).returns(messages)
 
@@ -42,6 +44,7 @@ describe_current do
     Karafka::Web::Processing::Consumers::Aggregators::Metrics.stubs(:new).returns(metrics_aggregator)
     Karafka::Web::Processing::Consumers::Contracts::State.stubs(:new).returns(state_contract)
     Karafka::Web::Processing::Consumers::Contracts::Metrics.stubs(:new).returns(metrics_contract)
+    Karafka::Web::Processing::Consumers::Contracts::Report.stubs(:new).returns(report_contract)
 
     state_aggregator.stubs(:to_h).returns({})
     metrics_aggregator.stubs(:to_h).returns({})
@@ -107,6 +110,82 @@ describe_current do
           consumer.stubs(:mark_as_consumed)
 
           consumer.expects(:mark_as_consumed).with(message2)
+          consumer.consume
+        end
+      end
+
+      context "when a report does not pass the ingest contract" do
+        let(:errors) { { "process.id": "needs to be present" } }
+        let(:failed) { stub(success?: false, errors: errors) }
+
+        before do
+          schema_manager.stubs(:call).returns(:current)
+          report_contract.stubs(:call).with(message1.payload).returns(failed)
+          state_aggregator.stubs(:add)
+          state_aggregator.stubs(:stats).returns({})
+          state_aggregator.stubs(:add_rejection)
+          metrics_aggregator.stubs(:add_report)
+          metrics_aggregator.stubs(:add_stats)
+        end
+
+        it "rejects it and keeps processing the other reports" do
+          state_aggregator.expects(:add_rejection).with(message1.payload, message1.offset, errors)
+          state_aggregator.expects(:add).with(message1.payload, anything).never
+          metrics_aggregator.expects(:add_report).with(message1.payload).never
+          state_aggregator.expects(:add).with(message2.payload, message2.offset)
+
+          consumer.consume
+        end
+
+        it "flushes the rejection" do
+          consumer.stubs(:periodic_flush?).returns(true)
+          consumer.stubs(:mark_as_consumed)
+
+          Karafka::Web::Processing::Publisher.expects(:publish)
+
+          consumer.consume
+        end
+      end
+
+      context "when an older report does not pass the ingest contract after migration" do
+        let(:failed) { stub(success?: false, errors: { stats: "needs to be present" }) }
+
+        before do
+          schema_manager.stubs(:call).returns(:older)
+          migrator_instance = stub(call: nil)
+          Karafka::Web::Processing::Consumers::ReportsMigrator.stubs(:new).returns(migrator_instance)
+          report_contract.stubs(:call).returns(failed)
+          state_aggregator.stubs(:add_rejection)
+        end
+
+        it "rejects it instead of registering the process" do
+          state_aggregator.expects(:add_rejection).twice
+          state_aggregator.expects(:add_state).never
+
+          consumer.consume
+        end
+      end
+
+      context "when a report schema version cannot be read" do
+        let(:message1) do
+          stub(payload: { schema_version: "not a version", type: "consumer" }, offset: 100)
+        end
+
+        let(:message2) do
+          stub(payload: { schema_version: 2, type: "consumer" }, offset: 101)
+        end
+
+        before { state_aggregator.stubs(:add_rejection) }
+
+        it "rejects it without comparing schemas" do
+          schema_manager.expects(:call).never
+          state_aggregator
+            .expects(:add_rejection)
+            .with(message1.payload, 100, { schema_version: "is invalid" })
+          state_aggregator
+            .expects(:add_rejection)
+            .with(message2.payload, 101, { schema_version: "is invalid" })
+
           consumer.consume
         end
       end

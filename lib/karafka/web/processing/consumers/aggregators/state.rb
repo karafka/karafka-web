@@ -35,6 +35,11 @@ module Karafka
               Steps::RefreshCurrentStats
             ].freeze
 
+            # How many recent rejected reports we keep in the state
+            MAX_REJECTIONS = 10
+
+            private_constant :MAX_REJECTIONS
+
             # @param schema_manager [Karafka::Web::Processing::Consumers::SchemaManager] schema
             #   manager that tracks the compatibility of schemas.
             def initialize(schema_manager)
@@ -59,6 +64,25 @@ module Karafka
               Steps::RegisterProcess.new(context(report, offset)).call
             end
 
+            # Records a report that did not pass the ingest validation, so the Web UI can flag it
+            #
+            # @param report [Hash] rejected report
+            # @param offset [Integer] offset of the message with the rejected report
+            # @param errors [Hash] contract errors
+            def add_rejection(report, offset, errors)
+              process = report[:process]
+              process_id = process[:id] if process.is_a?(Hash) && process[:id].is_a?(String)
+
+              rejections << {
+                process_id: process_id,
+                offset: offset,
+                errors: errors.to_h { |key, message| [key.to_s, message.to_s] },
+                rejected_at: float_now
+              }
+
+              rejections.shift while rejections.size > MAX_REJECTIONS
+            end
+
             # @return [Array<Hash, Float>] aggregated current stats value and time from which this
             #   aggregation comes from
             #
@@ -78,10 +102,19 @@ module Karafka
               state[:dispatched_at] = float_now
               state[:schema_state] = @schema_manager.to_s
 
+              max_age = float_now - (::Karafka::Web.config.ttl / 1_000.0)
+              rejections.select! { |rejection| rejection[:rejected_at] >= max_age }
+
               state
             end
 
             private
+
+            # @return [Array<Hash>] recent rejected reports
+            # @note States written before ingest validation do not have this key
+            def rejections
+              state[:rejected_reports] ||= []
+            end
 
             # @return [Hash] hash with current state from Kafka
             def state

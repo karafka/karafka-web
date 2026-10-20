@@ -21,9 +21,15 @@ module Karafka
           consumers_messages.each do |message|
             report = message.payload
 
+            unless schema_version_readable?(report)
+              reject(report, message.offset, { schema_version: "is invalid" })
+
+              next
+            end
+
             case @reports_schema_manager.call(message)
             when :current
-              true
+              next unless accepted?(report, message.offset)
             when :newer
               @reports_schema_manager.invalidate!
 
@@ -39,6 +45,9 @@ module Karafka
             when :older
               # Migrate old report format to current schema expectations (in-place)
               @reports_migrator.call(report)
+
+              next unless accepted?(report, message.offset)
+
               @state_aggregator.add_state(report, message.offset)
 
               next
@@ -93,6 +102,7 @@ module Karafka
           @reports_migrator = Consumers::ReportsMigrator.new
           @state_aggregator = Consumers::Aggregators::State.new(@reports_schema_manager)
           @state_contract = Consumers::Contracts::State.new
+          @report_contract = Consumers::Contracts::Report.new
 
           @metrics_aggregator = Consumers::Aggregators::Metrics.new
           @metrics_contract = Consumers::Contracts::Metrics.new
@@ -102,6 +112,45 @@ module Karafka
           @established = false
 
           @bootstrapped = true
+        end
+
+        # Checks the report against the ingest contract. Reports may come from processes that do
+        # not validate them before sending, and a malformed one must not reach the UI.
+        #
+        # @param report [Hash] consumer report
+        # @param offset [Integer] offset of the report message
+        # @return [Boolean] true if the report can be materialized
+        def accepted?(report, offset)
+          result = @report_contract.call(report)
+
+          return true if result.success?
+
+          reject(report, offset, result.errors)
+
+          false
+        end
+
+        # @param report [Hash] consumer report
+        # @return [Boolean] can the schema manager compare the report schema version. A missing
+        #   version is readable, as it marks a legacy report.
+        def schema_version_readable?(report)
+          schema_version = report[:schema_version]
+
+          return true if schema_version.nil?
+          return false unless schema_version.is_a?(String)
+
+          ::Gem::Version.correct?(schema_version)
+        end
+
+        # Records a rejected report, so the status page can flag it
+        #
+        # @param report [Hash] consumer report
+        # @param offset [Integer] offset of the report message
+        # @param errors [Hash] contract errors
+        def reject(report, offset, errors)
+          @state_aggregator.add_rejection(report, offset, errors)
+          # The rejection is a state change we want to flush
+          @established = true
         end
 
         # Flushes the state of the Web-UI to the DB

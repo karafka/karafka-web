@@ -53,6 +53,7 @@ module Karafka
             materializing_lag: Checks::MaterializingLag,
             state_calculation: Checks::StateCalculation,
             consumers_reports_schema_state: Checks::ConsumersReportsSchemaState,
+            consumers_reports_validity: Checks::ConsumersReportsValidity,
             routing_topics_presence: Checks::RoutingTopicsPresence,
             commands_topic_presence: Checks::CommandsTopicPresence,
             pro_subscription: Checks::ProSubscription
