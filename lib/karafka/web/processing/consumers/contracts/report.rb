@@ -16,7 +16,27 @@ module Karafka
             # Is the value a Hash with Hash values
             HASH_OF_HASHES = ->(val) { val.is_a?(Hash) && val.values.all?(Hash) }
 
-            private_constant :HASH_OF_HASHES
+            # Subscription group state keys the UI reads, by their expected type
+            SG_STATE_KEYS = {
+              String => %i[join_state rebalance_reason],
+              Integer => %i[stateage rebalance_age rebalance_cnt poll_age]
+            }.freeze
+
+            # Partition keys the UI reads, by their expected type
+            PARTITION_KEYS = {
+              String => %i[fetch_state poll_state],
+              Integer => %i[
+                id lag lag_d lag_stored lag_stored_d committed_offset stored_offset hi_offset
+                ls_offset ls_offset_fd poll_state_ch
+              ]
+            }.freeze
+
+            # Are all the given keys of the hash of the expected types
+            TYPED = lambda do |hash, keys|
+              keys.all? { |type, names| names.all? { |name| hash[name].is_a?(type) } }
+            end
+
+            private_constant :HASH_OF_HASHES, :SG_STATE_KEYS, :PARTITION_KEYS, :TYPED
 
             configure
 
@@ -86,16 +106,16 @@ module Karafka
                   HASH_OF_HASHES.call(cg[:subscription_groups]) &&
                   cg[:subscription_groups].each_value.all? do |sg|
                     sg[:id].is_a?(String) &&
+                      (sg[:instance_id] == false || sg[:instance_id].is_a?(String)) &&
                       sg[:state].is_a?(Hash) &&
+                      TYPED.call(sg[:state], SG_STATE_KEYS) &&
                       HASH_OF_HASHES.call(sg[:topics]) &&
                       sg[:topics].each_value.all? do |topic|
                         topic[:name].is_a?(String) &&
                           topic[:partitions_cnt].is_a?(Integer) &&
                           HASH_OF_HASHES.call(topic[:partitions]) &&
                           topic[:partitions].each_value.all? do |partition|
-                            partition[:id].is_a?(Integer) &&
-                              partition[:lag_stored].is_a?(Integer) &&
-                              partition[:lag_stored_d].is_a?(Integer)
+                            TYPED.call(partition, PARTITION_KEYS)
                           end
                       end
                   end

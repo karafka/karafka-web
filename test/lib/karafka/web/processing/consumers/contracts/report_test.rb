@@ -67,11 +67,17 @@ describe_current do
     let(:topic) { sg[:topics].values.first }
     let(:partition) { topic[:partitions].values.first }
 
+    let(:sg_state) { sg[:state] }
+
     {
       cg: %i[id subscription_groups],
-      sg: %i[id state topics],
+      sg: %i[id instance_id state topics],
+      sg_state: %i[join_state rebalance_reason stateage rebalance_age rebalance_cnt poll_age],
       topic: %i[name partitions partitions_cnt],
-      partition: %i[id lag_stored lag_stored_d]
+      partition: %i[
+        id lag lag_d lag_stored lag_stored_d committed_offset stored_offset hi_offset ls_offset
+        ls_offset_fd poll_state_ch fetch_state poll_state
+      ]
     }.each do |level, keys|
       keys.each do |key|
         context "when #{level} #{key} is missing" do
