@@ -398,7 +398,7 @@ describe_current do
   end
 end
 
-describe(Karafka::Web::Processing::Consumer) do
+describe_current do
   describe "first flush of a new instance" do
     let(:consumer) do
       consumer = described_class.new
