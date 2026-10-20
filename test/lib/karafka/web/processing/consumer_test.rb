@@ -396,4 +396,73 @@ describe_current do
       end
     end
   end
+
+  describe "first flush of a new instance" do
+    let(:reports_topic) { Karafka::Web.config.topics.consumers.reports.name = create_topic }
+    let(:metrics_topic) { Karafka::Web.config.topics.consumers.metrics.name = create_topic }
+    let(:states_topic) { Karafka::Web.config.topics.consumers.states.name = create_topic }
+    let(:published_processes) { [] }
+    let(:now) { Time.now.to_f }
+    let(:tracking_interval) { Karafka::Web.config.tracking.interval }
+
+    def report(process_id, dispatched_at)
+      data = Fixtures.consumers_reports_json("current")
+      data[:process][:id] = process_id
+      data[:dispatched_at] = dispatched_at
+      data
+    end
+
+    before do
+      [
+        Karafka::Web::Management::Migrator,
+        Karafka::Web::Processing::Consumers::SchemaManager,
+        Karafka::Web::Processing::Consumers::Aggregators::State,
+        Karafka::Web::Processing::Consumers::Aggregators::Metrics,
+        Karafka::Web::Processing::Consumers::Contracts::State,
+        Karafka::Web::Processing::Consumers::Contracts::Metrics
+      ].each { |klass| klass.unstub(:new) }
+
+      Karafka::Web::Processing::Publisher.unstub(:publish)
+
+      reports_topic
+      metrics_topic
+      states_topic
+
+      Karafka::Web::Management::Actions::CreateInitialStates.new.call
+      wait_for_state_data(require_ui: false)
+      Karafka::Web::Management::Actions::MigrateStatesData.new.call
+      wait_for_state_data
+
+      # State flushed by the previous instance while both processes were running
+      schema_manager = Karafka::Web::Processing::Consumers::SchemaManager.new
+      previous_state = Karafka::Web::Processing::Consumers::Aggregators::State.new(schema_manager)
+      previous_metrics = Karafka::Web::Processing::Consumers::Aggregators::Metrics.new
+
+      [report("process-1", now - 2), report("process-2", now - 1)].each_with_index do |data, i|
+        previous_state.add(data, i)
+        previous_metrics.add_report(data)
+        previous_metrics.add_stats(previous_state.stats)
+      end
+
+      Karafka::Web::Processing::Publisher.publish!(previous_state.to_h, previous_metrics.to_h)
+
+      Karafka::Web::Processing::Publisher.stubs(:publish).with do |state, _metrics|
+        published_processes << state[:stats][:processes]
+      end
+    end
+
+    it "does not publish current stats with fewer processes than are running" do
+      consumer.stubs(:monotonic_now).returns(1_000.0, 1_001.0)
+      consumer.stubs(:messages).returns([stub(payload: report("process-1", now), offset: 2)])
+      consumer.consume
+
+      assert_empty(published_processes.select { |processes| processes < 2 })
+
+      consumer.stubs(:monotonic_now).returns(1_000.0 + tracking_interval + 1)
+      consumer.stubs(:messages).returns([stub(payload: report("process-2", now + 1), offset: 3)])
+      consumer.consume
+
+      assert_equal([2], published_processes)
+    end
+  end
 end

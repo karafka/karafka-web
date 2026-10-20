@@ -97,8 +97,10 @@ module Karafka
           @metrics_aggregator = Consumers::Aggregators::Metrics.new
           @metrics_contract = Consumers::Contracts::Metrics.new
 
-          # We set this that way so we report with first batch and so we report as fast as possible
-          @flushed_at = monotonic_now - @flush_interval
+          # A new instance (e.g. after a rebalance) knows only the reports it has consumed so far,
+          # so the current stats it computes would miss processes. We delay the first flush by
+          # one tracking interval, so every running process has reported at least once
+          @flushed_at = monotonic_now - @flush_interval + ::Karafka::Web.config.tracking.interval
           @established = false
 
           @bootstrapped = true
