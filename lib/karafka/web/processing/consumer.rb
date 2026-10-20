@@ -98,8 +98,8 @@ module Karafka
           @metrics_contract = Consumers::Contracts::Metrics.new
 
           # A new instance (e.g. after a rebalance) knows only the reports it has consumed so far,
-          # so the current stats it computes would miss processes. We delay the first flush by
-          # one tracking interval, so running processes have had time to report
+          # so the current stats it computes would miss processes. One tracking interval gives
+          # running processes time to report
           @flushed_at = monotonic_now - @flush_interval + ::Karafka::Web.config.tracking.interval
           @established = false
 

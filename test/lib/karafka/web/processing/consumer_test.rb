@@ -396,8 +396,17 @@ describe_current do
       end
     end
   end
+end
 
+describe(Karafka::Web::Processing::Consumer) do
   describe "first flush of a new instance" do
+    let(:consumer) do
+      consumer = described_class.new
+      consumer.coordinator = build(:processing_coordinator)
+      consumer.define_singleton_method(:mark_as_consumed) { |_message| nil }
+      consumer
+    end
+
     let(:reports_topic) { Karafka::Web.config.topics.consumers.reports.name = create_topic }
     let(:metrics_topic) { Karafka::Web.config.topics.consumers.metrics.name = create_topic }
     let(:states_topic) { Karafka::Web.config.topics.consumers.states.name = create_topic }
@@ -413,17 +422,6 @@ describe_current do
     end
 
     before do
-      [
-        Karafka::Web::Management::Migrator,
-        Karafka::Web::Processing::Consumers::SchemaManager,
-        Karafka::Web::Processing::Consumers::Aggregators::State,
-        Karafka::Web::Processing::Consumers::Aggregators::Metrics,
-        Karafka::Web::Processing::Consumers::Contracts::State,
-        Karafka::Web::Processing::Consumers::Contracts::Metrics
-      ].each { |klass| klass.unstub(:new) }
-
-      Karafka::Web::Processing::Publisher.unstub(:publish)
-
       reports_topic
       metrics_topic
       states_topic
