@@ -340,6 +340,7 @@ describe_current do
             "process_id" => "rejected-process:1:1",
             "offset" => 17,
             "errors" => { "process.status" => "needs to be present" },
+            "errors_count" => 25,
             "rejected_at" => Time.now.to_f
           }
         ]
@@ -364,6 +365,7 @@ describe_current do
         assert_body("rejected-process:1:1")
         assert_body("process.status")
         assert_body("needs to be present")
+        assert_body("and 24 more")
       end
     end
 

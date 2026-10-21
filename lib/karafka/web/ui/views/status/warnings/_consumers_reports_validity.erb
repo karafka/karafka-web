@@ -24,6 +24,10 @@
             <% rejection[:errors].each do |key, message| %>
               <code><%= key %></code> <%= message %><br>
             <% end %>
+            <% hidden = rejection[:errors_count].to_i - rejection[:errors].size %>
+            <% if hidden.positive? %>
+              and <%= hidden %> more
+            <% end %>
           </td>
         </tr>
       <% end %>

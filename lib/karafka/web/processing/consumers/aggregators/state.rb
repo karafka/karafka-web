@@ -38,7 +38,11 @@ module Karafka
             # How many recent rejected reports we keep in the state
             MAX_REJECTIONS = 10
 
-            private_constant :MAX_REJECTIONS
+            # How many errors of one rejected report we keep. A report from a non-Ruby sender can
+            # miss keys on every partition, so its errors grow with the number of partitions.
+            MAX_REJECTION_ERRORS = 10
+
+            private_constant :MAX_REJECTIONS, :MAX_REJECTION_ERRORS
 
             # @param schema_manager [Karafka::Web::Processing::Consumers::SchemaManager] schema
             #   manager that tracks the compatibility of schemas.
@@ -76,7 +80,10 @@ module Karafka
               rejections << {
                 process_id: process_id,
                 offset: offset,
-                errors: errors.to_h { |key, message| [key.to_s, message.to_s] },
+                errors: errors.first(MAX_REJECTION_ERRORS).to_h do |key, message|
+                  [key.to_s, message.to_s]
+                end,
+                errors_count: errors.size,
                 rejected_at: float_now
               }
 

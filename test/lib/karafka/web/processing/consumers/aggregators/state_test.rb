@@ -32,6 +32,22 @@ describe_current do
       assert_equal({ "process.status" => "needs to be present" }, rejection[:errors])
     end
 
+    it "keeps only the first errors of a report with many invalid partitions" do
+      invalid = Fixtures.consumers_reports_json
+      topic = invalid[:consumer_groups].values.first[:subscription_groups].values.first[:topics]
+        .values.first
+      partition = topic[:partitions].values.first.except(:lag, :poll_state)
+      topic[:partitions] = 100.times.to_h { |i| [i.to_s.to_sym, partition.merge(id: i)] }
+
+      errors = Karafka::Web::Processing::Consumers::Contracts::Report.new.call(invalid).errors
+      state_aggregator.add_rejection(invalid, 100, errors)
+      rejection = state_aggregator.to_h[:rejected_reports].last
+
+      assert_equal(200, rejection[:errors_count])
+      assert_equal(10, rejection[:errors].size)
+      assert(rejection[:errors].keys.first.end_with?("partitions.0.lag"))
+    end
+
     it "records a rejection without a readable process id" do
       state_aggregator.add_rejection({ process: "broken" }, 100, errors)
 
