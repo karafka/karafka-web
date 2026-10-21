@@ -25,14 +25,6 @@ describe_current do
     end
   end
 
-  %i[id status].each do |key|
-    context "when process #{key} is missing" do
-      before { report[:process].delete(key) }
-
-      it { refute(contract.call(report).success?) }
-    end
-  end
-
   context "when the type is not consumer" do
     before { report[:type] = "producer" }
 
@@ -45,7 +37,9 @@ describe_current do
     it { refute(contract.call(report).success?) }
   end
 
-  %i[started_at cpus memory_usage workers tags execution_mode listeners cpu_usage].each do |key|
+  %i[
+    id status started_at cpus memory_usage workers tags execution_mode listeners cpu_usage
+  ].each do |key|
     context "when process #{key} is missing" do
       before { report[:process].delete(key) }
 
@@ -59,6 +53,12 @@ describe_current do
 
       it { refute(contract.call(report).success?) }
     end
+  end
+
+  context "when a version is missing" do
+    before { report[:versions].delete(:karafka) }
+
+    it { refute(contract.call(report).success?) }
   end
 
   context "when validating the consumer groups tree" do
@@ -88,6 +88,22 @@ describe_current do
       end
     end
 
+    context "when a partition key is missing" do
+      before { partition.delete(:lag) }
+
+      it "names the missing key" do
+        path = [
+          :consumer_groups, report[:consumer_groups].keys.first,
+          :subscription_groups, cg[:subscription_groups].keys.first,
+          :topics, sg[:topics].keys.first,
+          :partitions, topic[:partitions].keys.first,
+          :lag
+        ].join(".").to_sym
+
+        assert_equal({ path => "needs to be present" }, contract.call(report).errors)
+      end
+    end
+
     context "when a consumer group is empty" do
       before { report[:consumer_groups] = { cg: {} } }
 
@@ -102,14 +118,18 @@ describe_current do
   end
 
   context "when validating the jobs" do
-    it { assert(contract.call(report).success?) }
-
     %i[consumer consumer_group topic partition first_offset updated_at status].each do |key|
       context "when job #{key} is missing" do
         before { report[:jobs].first.delete(key) }
 
         it { refute(contract.call(report).success?) }
       end
+    end
+
+    context "when a job key is missing" do
+      before { report[:jobs].first.delete(:topic) }
+
+      it { assert_equal({ "jobs.0.topic": "needs to be present" }, contract.call(report).errors) }
     end
 
     context "when a job is empty" do
@@ -150,12 +170,6 @@ describe_current do
 
     it { assert_kind_of(Float, sg_state[:poll_age]) }
     it { assert(contract.call(report).success?) }
-  end
-
-  context "when a version is missing" do
-    before { report[:versions].delete(:karafka) }
-
-    it { refute(contract.call(report).success?) }
   end
 
   context "when values are not the ones the Ruby tracking sends" do

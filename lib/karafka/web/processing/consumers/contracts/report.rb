@@ -13,32 +13,6 @@ module Karafka
           # classes, Karafka status names). It requires the process, versions and stats fields and
           # the consumer groups tree and jobs keys that the processing and the Web UI read.
           class Report < Web::Contracts::Base
-            # Is the value a Hash with Hash values
-            HASH_OF_HASHES = ->(val) { val.is_a?(Hash) && val.values.all?(Hash) }
-
-            # Subscription group state keys the UI reads, by their expected type
-            SG_STATE_KEYS = {
-              String => %i[join_state rebalance_reason],
-              Integer => %i[stateage rebalance_age rebalance_cnt],
-              Numeric => %i[poll_age]
-            }.freeze
-
-            # Partition keys the UI reads, by their expected type
-            PARTITION_KEYS = {
-              String => %i[fetch_state poll_state],
-              Integer => %i[
-                id lag lag_d lag_stored lag_stored_d committed_offset stored_offset hi_offset
-                ls_offset ls_offset_fd poll_state_ch
-              ]
-            }.freeze
-
-            # Are all the given keys of the hash of the expected types
-            TYPED = lambda do |hash, keys|
-              keys.all? { |type, names| names.all? { |name| hash[name].is_a?(type) } }
-            end
-
-            private_constant :HASH_OF_HASHES, :SG_STATE_KEYS, :PARTITION_KEYS, :TYPED
-
             configure
 
             required(:schema_version) { |val| val.is_a?(String) && !val.empty? }
@@ -94,52 +68,34 @@ module Karafka
               end
             end
 
-            required(:consumer_groups) { |val| HASH_OF_HASHES.call(val) }
+            required(:consumer_groups) { |val| val.is_a?(Hash) && val.values.all?(Hash) }
             required(:jobs) { |val| val.is_a?(Array) && val.all?(Hash) }
 
-            # Checks the consumer groups tree down to the partitions. Without these keys the UI
+            # Validates the consumer groups tree down to the partitions. Without these keys the UI
             # fails or `HashProxy` renders a same-named nested value instead.
             virtual do |data, errors|
               next unless errors.empty?
 
-              valid = data.fetch(:consumer_groups).each_value.all? do |cg|
-                cg[:id].is_a?(String) &&
-                  HASH_OF_HASHES.call(cg[:subscription_groups]) &&
-                  cg[:subscription_groups].each_value.all? do |sg|
-                    sg[:id].is_a?(String) &&
-                      (sg[:instance_id] == false || sg[:instance_id].is_a?(String)) &&
-                      sg[:state].is_a?(Hash) &&
-                      TYPED.call(sg[:state], SG_STATE_KEYS) &&
-                      HASH_OF_HASHES.call(sg[:topics]) &&
-                      sg[:topics].each_value.all? do |topic|
-                        topic[:name].is_a?(String) &&
-                          topic[:partitions_cnt].is_a?(Integer) &&
-                          HASH_OF_HASHES.call(topic[:partitions]) &&
-                          topic[:partitions].each_value.all? do |partition|
-                            TYPED.call(partition, PARTITION_KEYS)
-                          end
-                      end
-                  end
-              end
+              consumer_group_contract = ConsumerGroup.new
 
-              valid ? nil : [[%i[consumer_groups], :format]]
+              data.fetch(:consumer_groups).flat_map do |cg_id, details|
+                consumer_group_contract.call(details).errors.map do |path, message|
+                  [[:consumer_groups, cg_id, path], message]
+                end
+              end
             end
 
-            # Checks the jobs keys the jobs views read
+            # Validates the jobs keys the jobs views read
             virtual do |data, errors|
               next unless errors.empty?
 
-              valid = data.fetch(:jobs).all? do |job|
-                job[:consumer].is_a?(String) &&
-                  job[:consumer_group].is_a?(String) &&
-                  job[:topic].is_a?(String) &&
-                  job[:partition].is_a?(Integer) &&
-                  job[:first_offset].is_a?(Integer) &&
-                  job[:updated_at].is_a?(Numeric) &&
-                  job[:status].is_a?(String)
-              end
+              job_contract = Job.new
 
-              valid ? nil : [[%i[jobs], :format]]
+              data.fetch(:jobs).each_with_index.flat_map do |details, index|
+                job_contract.call(details).errors.map do |path, message|
+                  [[:jobs, index, path], message]
+                end
+              end
             end
           end
         end
