@@ -2014,6 +2014,11 @@
       mask-position: center;
       mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' stroke='black' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform-origin='center'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='none' stroke-width='3' stroke-linecap='round'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 12 12' to='360 12 12' dur='8s' repeatCount='indefinite'/%3E%3Canimate attributeName='stroke-dasharray' values='0,150;42,150;42,150' keyTimes='0;0.475;1' dur='6s' repeatCount='indefinite'/%3E%3Canimate attributeName='stroke-dashoffset' values='0;-16;-59' keyTimes='0;0.475;1' dur='6s' repeatCount='indefinite'/%3E%3C/circle%3E%3C/g%3E%3C/svg%3E");
     }
+    @media (forced-colors: active) {
+      .loading {
+        background-color: CanvasText;
+      }
+    }
     @media (prefers-reduced-motion: no-preference) {
       .loading {
         mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' stroke='black' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform-origin='center'%3E%3Ccircle cx='12' cy='12' r='9.5' fill='none' stroke-width='3' stroke-linecap='round'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 12 12' to='360 12 12' dur='2s' repeatCount='indefinite'/%3E%3Canimate attributeName='stroke-dasharray' values='0,150;42,150;42,150' keyTimes='0;0.475;1' dur='1.5s' repeatCount='indefinite'/%3E%3Canimate attributeName='stroke-dashoffset' values='0;-16;-59' keyTimes='0;0.475;1' dur='1.5s' repeatCount='indefinite'/%3E%3C/circle%3E%3C/g%3E%3C/svg%3E");
@@ -2343,6 +2348,16 @@
       --thickness: calc(var(--size) / 10);
       --radialprogress: calc(var(--value) * 1%);
       transition: --radialprogress 0.3s linear;
+    }
+    @media (forced-colors: active) {
+      .radial-progress:before {
+        color: CanvasText;
+        forced-color-adjust: none;
+      }
+      .radial-progress:after {
+        color: CanvasText;
+        forced-color-adjust: none;
+      }
     }
     .radial-progress:before {
       position: absolute;
@@ -4746,6 +4761,11 @@
     .progress {
       color: var(--color-base-content);
     }
+    @media (forced-colors: active) {
+      .progress {
+        border: 1px solid;
+      }
+    }
     .progress:indeterminate {
       background-image: repeating-linear-gradient( 90deg, currentColor -1%, currentColor 10%, #0000 10%, #0000 90% );
       background-size: 200%;
@@ -4770,6 +4790,11 @@
         border-radius: var(--radius-box);
         background-color: currentcolor;
       }
+      @media (forced-colors: active) {
+        .progress::-moz-progress-bar {
+          background-color: CanvasText;
+        }
+      }
       @media (prefers-reduced-motion: no-preference) {
         .progress::-moz-progress-bar {
           transition: inline-size 0.3s ease;
@@ -4784,6 +4809,11 @@
       .progress::-webkit-progress-value {
         border-radius: var(--radius-box);
         background-color: currentColor;
+      }
+      @media (forced-colors: active) {
+        .progress::-webkit-progress-value {
+          background-color: CanvasText;
+        }
       }
       @media (prefers-reduced-motion: no-preference) {
         .progress::-webkit-progress-value {
@@ -5744,7 +5774,7 @@
       flex-grow: 1;
       background-color: var(--divider-color);
     }
-    @media print {
+    @media print, (forced-colors: active) {
       .divider:before {
         border: 0.5px solid;
       }
@@ -5756,7 +5786,7 @@
       flex-grow: 1;
       background-color: var(--divider-color);
     }
-    @media print {
+    @media print, (forced-colors: active) {
       .divider:after {
         border: 0.5px solid;
       }
