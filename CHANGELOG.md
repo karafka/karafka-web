@@ -133,15 +133,15 @@
 
 ## 0.11.4 (2025-11-01)
 - [Enhancement] Show placeholder rows for partitions with no data during rebalances in the health view. Consumer reports now include `partitions_cnt`; the consumer schema version is bumped to 1.5.0 (breaking change).
-- [Enhancement] Track and report UI errors originating from Roda/Puma web processes directly to Kafka errors topic for visibility and debugging. UI errors are dispatched asynchronously from web processes using a dedicated listener.
+- [Enhancement] Report UI errors from Roda/Puma web processes to the Kafka errors topic, asynchronously, through a dedicated listener.
 - [Enhancement] Require Karafka 2.5.2 at minimum and migrate from string-based execution mode comparisons to the new ExecutionMode object API.
 - [Enhancement] Increase Web UI processing consumer backoff time to 30 seconds when encountering incompatible schema errors to prevent error spam during rolling upgrades.
-- [Enhancement] Add unique `id` field to error reports to track duplicate error occurrences. Error schema version bumped to 1.2.0 while maintaining backward compatibility with older error formats (1.0.0, 1.1.0) in the Web UI.
+- [Enhancement] Add a unique `id` field to error reports to track duplicate errors. Error schema version bumped to 1.2.0; the Web UI still reads the older 1.0.0 and 1.1.0 formats.
 - [Enhancement] Add container-aware metrics for Docker/Kubernetes: the Web UI reports container memory limits from cgroups (v1 and v2) instead of host metrics.
 - [Enhancement] Add per-message migration of consumer reports, so reports from karafka-web ≤ v0.8.2 (schema 1.2.x, `process[:name]`) still in Kafka work with schema 1.3.0+ (`process[:id]`).
 - [Change] Reduce `max_messages` for consumer reports processing from 1000 to 200 to lower memory usage in large deployments.
 - [Refactor] Split the Sampler metrics collection into `Metrics::*` classes and the consumer groups enrichment into `Enrichers::*` classes.
-- [Testing] Add Docker-based integration tests for container metrics collection. Tests verify cgroup v1/v2 detection, memory limit reading, and fallback behavior across multiple containerized scenarios with different resource constraints.
+- [Testing] Add Docker-based integration tests for container metrics collection (cgroup v1/v2 detection, memory limits and fallbacks).
 - [Fix] Fix the "OS memory used" metric on Linux, which reported RSS instead of the memory used by all processes (or all container processes), matching macOS.
 - [Fix] Fix the `undefined method 'to_sym' for nil` crash on consumer reports from schema < 1.3.0 (karafka-web ≤ v0.8.2) that use `process[:name]`. They are now migrated to the current schema.
 
