@@ -195,6 +195,21 @@
 
   <%==
     partial(
+      "status/#{@status.consumers_reports_validity.to_s}",
+      locals: {
+        title: 'Consumers reports validity',
+        description: partial(
+          'status/warnings/consumers_reports_validity',
+          locals: {
+            details: @status.consumers_reports_validity.details
+          }
+        )
+      }
+    )
+  %>
+
+  <%==
+    partial(
       "status/#{@status.routing_topics_presence.to_s}",
       locals: {
         title: 'Routing topics presence',

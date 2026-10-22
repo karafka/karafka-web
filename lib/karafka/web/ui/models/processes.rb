@@ -17,6 +17,7 @@ module Karafka
             # @return [Array<Process>]
             def all(state)
               messages = fetch_reports(state)
+              messages = messages.select { |message| renderable?(message.payload) }
               messages = squash_processes_data(messages)
               processes = messages.map(&:payload)
               evict_expired_processes(processes)
@@ -36,6 +37,23 @@ module Karafka
             end
 
             private
+
+            # The reports topic also holds reports the processing rejected, so we render only
+            # those that pass the same ingest contracts
+            #
+            # @param report [Object] deserialized report
+            # @return [Boolean] can we render this report
+            def renderable?(report)
+              return false unless report.is_a?(Hash)
+
+              contract = if report[:schema_version] == Tracking::Consumers::Sampler::SCHEMA_VERSION
+                @report_contract ||= Processing::Consumers::Contracts::Report.new
+              else
+                @legacy_report_contract ||= Processing::Consumers::Contracts::LegacyReport.new
+              end
+
+              contract.call(report).success?
+            end
 
             # Fetches the relevant processes reports from the reports topic
             # @param state [State]

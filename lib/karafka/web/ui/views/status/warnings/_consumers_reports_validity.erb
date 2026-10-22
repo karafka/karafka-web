@@ -1,0 +1,36 @@
+<p class="mb-2">
+  Some consumers reports were rejected because they do not have the structure the Web UI needs.
+</p>
+
+<p class="mb-4">
+  Rejected reports are not materialized, so the data of the processes that sent them is missing or outdated in the Web UI. This can happen when a process reports with a custom or incomplete tracking implementation.
+</p>
+
+<div class="data-table-wrapper mb-0">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Process</th>
+        <th>Offset</th>
+        <th>Errors</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% details[:rejected].each do |rejection| %>
+        <tr>
+          <td><%= rejection[:process_id] || 'unknown' %></td>
+          <td><%= rejection[:offset] %></td>
+          <td>
+            <% rejection[:errors].each do |key, message| %>
+              <code><%= key %></code> <%= message %><br>
+            <% end %>
+            <% hidden = rejection[:errors_count].to_i - rejection[:errors].size %>
+            <% if hidden.positive? %>
+              and <%= hidden %> more
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
