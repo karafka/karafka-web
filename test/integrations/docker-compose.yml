@@ -43,7 +43,8 @@ services:
       bash -c "
         echo 'Running integration tests without memory limit...' &&
         bundle exec ruby test/integrations/container_metrics_unlimited_spec.rb &&
-        bundle exec ruby test/integrations/os_metrics_spec.rb
+        bundle exec ruby test/integrations/os_metrics_spec.rb &&
+        LANG=C LC_ALL=C bundle exec ruby test/integrations/c_locale_templates_spec.rb
       "
 
   # Test container with strict memory limit (for testing low memory scenarios)
