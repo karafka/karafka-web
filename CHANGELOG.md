@@ -1,8 +1,10 @@
 # Karafka Web Changelog
 
-## Unreleased
+## 1.1.0 (Unreleased)
+- **[EOL]** Drop Ruby 3.2 support; require Ruby 3.3+.
 - **[Feature]** Add a **Publish message** capability to the Explorer (Pro) to produce new messages with an optional key, headers and a typed, uploaded or tombstone payload. Gated by the new `#publish?` policy, enabled by default (#956).
 - **[Feature]** Aggregate the Health views per topic with drill-down to partitions, so they stay usable at scale. Thresholds are configurable under `config.ui.health.lags` (#112).
+- [Enhancement] Show the delivery outcome (persisted, possibly persisted or not persisted), latency and broker of failed producer deliveries in the error details, so it is clear whether a retry may duplicate the message. Requires karafka-rdkafka `0.31.0` or newer.
 - [Enhancement] Produce scheduled-message cancellations with `acks: 1` so the broker confirms receipt.
 - [Enhancement] Produce consumer commanding requests with `acks: 1` so the broker confirms receipt, and add a `Karafka::Web.producers` facade (#1241).
 - [Enhancement] After republishing, redirect to the partition that received the copy (#1239).
@@ -19,6 +21,10 @@
 - [Maintenance] Extract the Explorer republish flow into `Lib::Republishing` and validate the form before producing (#1244).
 - [Maintenance] Retry transient 5xx responses in the test link validator.
 - [Maintenance] Update the vendored `AirDatepicker` CSS to `3.6.0` to match the JS.
+- [Maintenance] Drop `nokogiri` from the test dependencies.
+- [Maintenance] Build the assets with the `uglify-js` CLI instead of gulp, removing 188 npm development packages.
+- [Maintenance] Drop the unused `byebug` gem from the test bundle.
+- [Fix] Log consumers reporter dispatch failures instead of crashing the process when `produce_many_sync` times out (#1336).
 - [Fix] Sort Hash elements by key value even when the key name matches a `Hash` method.
 - [Fix] Reject a new partition count that is not greater than the current one with a form error instead of a broker error (Pro).
 - [Fix] Enrich each subscription group only once per consumer report.
@@ -44,6 +50,9 @@
 - [Fix] Return no results for an Explorer search scoped only to partitions that don't exist, instead of searching partition `0` (Pro).
 - [Fix] Report the Health per-topic lag trend as N/A instead of `0` when a topic has no measurable partitions, so sorting by Trend no longer intermixes no-data topics with real zero trends (Pro).
 - [Fix] List partitions in numeric id order in the Health cluster-lag drill-down.
+- [Fix] Write the initial consumers states with `acks: 1` and retry the install/migrate data migration a few times when the just-written states are not yet readable, instead of aborting with `MissingConsumersMetricsError`.
+- [Fix] Read the Web UI templates as UTF-8, so a C/POSIX locale (`LANG=C`) cannot make pages with non-ASCII characters return 500.
+- [Fix] Stop the Dashboard current stats (processes, workers and others) from dropping for one flush after the Web UI's own consumer group rebalances.
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a keyword filtering box to the data-heavy Web UI listings, with a field selector on flat listings (Pro) (#1073).
@@ -124,18 +133,18 @@
 - [Enhancement] Utilize newly released Roda session management `:env_key` to isolate Karafka Web session from the main application session.
 
 ## 0.11.4 (2025-11-01)
-- [Enhancement] Show placeholder rows for partitions with no data during rebalances in health view. The UI now displays all topic partitions (0 to N-1) with "No data available" indicators for partitions currently being rebalanced, preventing confusion from disappearing partitions. Consumer reports now include `partitions_cnt` field extracted from librdkafka statistics. Consumer schema version bumped to 1.5.0 (breaking change).
-- [Enhancement] Track and report UI errors originating from Roda/Puma web processes directly to Kafka errors topic for visibility and debugging. UI errors are dispatched asynchronously from web processes using a dedicated listener.
+- [Enhancement] Show placeholder rows for partitions with no data during rebalances in the health view. Consumer reports now include `partitions_cnt`; the consumer schema version is bumped to 1.5.0 (breaking change).
+- [Enhancement] Report UI errors from Roda/Puma web processes to the Kafka errors topic, asynchronously, through a dedicated listener.
 - [Enhancement] Require Karafka 2.5.2 at minimum and migrate from string-based execution mode comparisons to the new ExecutionMode object API.
 - [Enhancement] Increase Web UI processing consumer backoff time to 30 seconds when encountering incompatible schema errors to prevent error spam during rolling upgrades.
-- [Enhancement] Add unique `id` field to error reports to track duplicate error occurrences. Error schema version bumped to 1.2.0 while maintaining backward compatibility with older error formats (1.0.0, 1.1.0) in the Web UI.
-- [Enhancement] Add container-aware metrics collection for Docker/Kubernetes environments. The Web UI now reports accurate container memory limits from cgroups (v1 and v2) instead of misleading host metrics, while maintaining full backward compatibility with non-containerized deployments.
-- [Enhancement] Add per-message report migration system to handle schema evolution for consumer reports. This allows transparent migration of old report formats (e.g., schema 1.2.x using `process[:name]`) to current expectations (schema 1.3.0+ using `process[:id]`), ensuring backward compatibility with reports from older karafka-web versions (≤ v0.8.2) that may still exist in Kafka topics.
-- [Change] Reduce `max_messages` for consumer reports processing from 1000 to 200 to prevent excessive memory usage in large-scale deployments. Processing 1000 messages at once can impact memory consumption significantly in big systems, while 200 messages provides better memory efficiency with negligible impact on throughput.
-- [Refactor] Extract metrics collection logic from monolithic Sampler into focused, single-responsibility classes (Metrics::Base, Metrics::Os, Metrics::Container, Metrics::Network, Metrics::Server, Metrics::Jobs) and consumer groups enrichment into dedicated enricher (Enrichers::Base, Enrichers::ConsumerGroups) for improved maintainability and testability.
-- [Testing] Add Docker-based integration tests for container metrics collection. Tests verify cgroup v1/v2 detection, memory limit reading, and fallback behavior across multiple containerized scenarios with different resource constraints.
-- [Fix] Fix "OS memory used" metric on Linux reporting same value as RSS instead of system-wide memory usage. The metric now correctly sums memory usage across all processes (or all container processes when running in Docker/Kubernetes) to match macOS behavior and original design intent.
-- [Fix] Fix crash when processing old consumer reports from schema versions < 1.3.0 (karafka-web ≤ v0.8.2) that used `process[:name]` field instead of `process[:id]`. The error `undefined method 'to_sym' for nil` would occur when these old reports were encountered during upgrades. Reports are now automatically migrated in-place to the current schema format.
+- [Enhancement] Add a unique `id` field to error reports to track duplicate errors. Error schema version bumped to 1.2.0; the Web UI still reads the older 1.0.0 and 1.1.0 formats.
+- [Enhancement] Add container-aware metrics for Docker/Kubernetes: the Web UI reports container memory limits from cgroups (v1 and v2) instead of host metrics.
+- [Enhancement] Add per-message migration of consumer reports, so reports from karafka-web ≤ v0.8.2 (schema 1.2.x, `process[:name]`) still in Kafka work with schema 1.3.0+ (`process[:id]`).
+- [Change] Reduce `max_messages` for consumer reports processing from 1000 to 200 to lower memory usage in large deployments.
+- [Refactor] Split the Sampler metrics collection into `Metrics::*` classes and the consumer groups enrichment into `Enrichers::*` classes.
+- [Testing] Add Docker-based integration tests for container metrics collection (cgroup v1/v2 detection, memory limits and fallbacks).
+- [Fix] Fix the "OS memory used" metric on Linux, which reported RSS instead of the memory used by all processes (or all container processes), matching macOS.
+- [Fix] Fix the `undefined method 'to_sym' for nil` crash on consumer reports from schema < 1.3.0 (karafka-web ≤ v0.8.2) that use `process[:name]`. They are now migrated to the current schema.
 
 ## 0.11.3 (2025-09-29)
 - [Enhancement] Upgrade DaisyUI to 5.1.
@@ -422,7 +431,7 @@
 - [Refactor] Rename `ui.show_internal_topics` to `ui.visibility.internal_topics_display`
 
 ## 0.7.4 (2023-09-19)
-- [Improvement] Skip aggregations on older schemas during upgrades. This only skips process-reports (that are going to be rolled) on the 5s window in case of an upgrade that should not be a rolling one anyhow. This simplifies the operations and minimizes the risk on breaking upgrades.
+- [Improvement] Skip aggregations on process reports with older schemas during upgrades to lower the risk of breaking upgrades.
 - [Fix] Fix not working `ps` for macOS.
 
 ## 0.7.3 (2023-09-18)

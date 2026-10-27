@@ -50,4 +50,31 @@ describe_current do
       refute(helper.displayable_error(msg_double({ a: "1" })))
     end
   end
+
+  describe "#delivery_status_name" do
+    it "names a persisted message" do
+      assert_equal(
+        "persisted",
+        helper.delivery_status_name(Rdkafka::Bindings::RD_KAFKA_MSG_STATUS_PERSISTED)
+      )
+    end
+
+    it "names a possibly persisted message" do
+      assert_equal(
+        "possibly persisted",
+        helper.delivery_status_name(Rdkafka::Bindings::RD_KAFKA_MSG_STATUS_POSSIBLY_PERSISTED)
+      )
+    end
+
+    it "names a message that was not persisted" do
+      assert_equal(
+        "not persisted",
+        helper.delivery_status_name(Rdkafka::Bindings::RD_KAFKA_MSG_STATUS_NOT_PERSISTED)
+      )
+    end
+
+    it "returns an unknown status as is" do
+      assert_equal("99", helper.delivery_status_name(99))
+    end
+  end
 end

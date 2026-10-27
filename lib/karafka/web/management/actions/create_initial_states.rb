@@ -23,7 +23,7 @@ module Karafka
               exists("consumers state")
             else
               creating("consumers state")
-              ::Karafka::Web.producer.produce_sync(
+              ::Karafka::Web.producers.acked.produce_sync(
                 topic: Karafka::Web.config.topics.consumers.states.name,
                 key: Karafka::Web.config.topics.consumers.states.name,
                 payload: DEFAULT_STATE.to_json
@@ -35,7 +35,7 @@ module Karafka
               exists("consumers metrics")
             else
               creating("consumers metrics")
-              ::Karafka::Web.producer.produce_sync(
+              ::Karafka::Web.producers.acked.produce_sync(
                 topic: Karafka::Web.config.topics.consumers.metrics.name,
                 key: Karafka::Web.config.topics.consumers.metrics.name,
                 payload: DEFAULT_METRICS.to_json
