@@ -116,6 +116,32 @@ describe_current do
     end
   end
 
+  context "when the newest report of a process is rejected and an older one is valid" do
+    let(:rejected_report) do
+      report = Fixtures.consumers_reports_json
+      report[:consumer_groups] = { cg: {} }
+      report
+    end
+
+    before do
+      topics_config.consumers.states.name = states_topic
+      topics_config.consumers.reports.name = reports_topic
+
+      produce(states_topic, Fixtures.consumers_states_file)
+      produce(reports_topic, Fixtures.consumers_reports_file, key: "shinra:1:1")
+      produce(reports_topic, rejected_report.to_json, key: "shinra:1:1")
+
+      get "consumers"
+    end
+
+    it "renders the process from its older valid report" do
+      assert_ok
+      refute_body(no_processes)
+      assert_body("shinra:1:1")
+      assert_body("246 MB")
+    end
+  end
+
   context "when the report has a Float poll age as the Ruby tracking sends it" do
     let(:report) do
       report = Fixtures.consumers_reports_json
