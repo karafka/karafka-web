@@ -142,6 +142,32 @@ describe_current do
     end
   end
 
+  context "when a process has an older and a newer valid report" do
+    let(:newer_report) do
+      report = Fixtures.consumers_reports_json
+      report[:process][:started_at] = 2_690_818_999.5
+      report
+    end
+
+    before do
+      topics_config.consumers.states.name = states_topic
+      topics_config.consumers.reports.name = reports_topic
+
+      produce(states_topic, Fixtures.consumers_states_file)
+      produce(reports_topic, Fixtures.consumers_reports_file, key: "shinra:1:1")
+      produce(reports_topic, newer_report.to_json, key: "shinra:1:1")
+
+      get "consumers"
+    end
+
+    it "renders the process once from its newer report" do
+      assert_ok
+      assert_body("2690818999.5")
+      refute_body("2690818651.82293")
+      assert_equal(1, response.body.scan("2690818999.5").size)
+    end
+  end
+
   context "when the report has a Float poll age as the Ruby tracking sends it" do
     let(:report) do
       report = Fixtures.consumers_reports_json
