@@ -466,6 +466,32 @@ describe_current do
 
       consumer.consume
     end
+
+    context "when a new instance gets its first reports" do
+      let(:tracking_interval) { Karafka::Web.config.tracking.interval }
+
+      before do
+        schema_manager.stubs(:call).returns(:current)
+        state_aggregator.stubs(:add)
+        state_aggregator.stubs(:stats).returns({})
+        metrics_aggregator.stubs(:add_report)
+        metrics_aggregator.stubs(:add_stats)
+      end
+
+      it "does not flush before every process had one tracking interval to report" do
+        consumer.stubs(:monotonic_now).returns(1_000.0, 1_000.0 + tracking_interval - 1)
+        Karafka::Web::Processing::Publisher.expects(:publish).never
+
+        consumer.consume
+      end
+
+      it "flushes once one tracking interval has passed" do
+        consumer.stubs(:monotonic_now).returns(1_000.0, 1_000.0 + tracking_interval + 1)
+        Karafka::Web::Processing::Publisher.expects(:publish).once
+
+        consumer.consume
+      end
+    end
   end
 
   describe "validation" do
