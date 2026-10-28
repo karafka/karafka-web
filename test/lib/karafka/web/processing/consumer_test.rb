@@ -265,6 +265,8 @@ describe_current do
   end
 
   describe "#shutdown" do
+    let(:tracking_interval) { Karafka::Web.config.tracking.interval }
+
     context "when data has been established" do
       let(:msg) do
         stub(payload: {
@@ -284,13 +286,22 @@ describe_current do
         metrics_aggregator.stubs(:add_report)
         metrics_aggregator.stubs(:add_stats)
         consumer.stubs(:periodic_flush?).returns(false)
+        consumer.stubs(:monotonic_now).returns(1_000.0)
 
         # Process a message to establish data
         consumer.consume
       end
 
-      it "dispatches final state" do
+      it "dispatches final state once every process had one tracking interval to report" do
+        consumer.stubs(:monotonic_now).returns(1_000.0 + tracking_interval)
         Karafka::Web::Processing::Publisher.expects(:publish)
+
+        consumer.shutdown
+      end
+
+      it "does not dispatch partial state before every process had time to report" do
+        consumer.stubs(:monotonic_now).returns(1_000.0 + tracking_interval - 1)
+        Karafka::Web::Processing::Publisher.expects(:publish).never
 
         consumer.shutdown
       end
