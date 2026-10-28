@@ -128,6 +128,7 @@ DEPENDENCIES
   ostruct
   rack-test
   rackup (~> 0.2)
+  rake
   simplecov
   warning
 
