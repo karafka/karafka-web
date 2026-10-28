@@ -69,7 +69,9 @@ module Karafka
 
         # Flush final state on shutdown
         # @note A new instance that stops before it got reports from all the processes does not
-        #   flush. Its reports are not marked as consumed, so the next instance replays them
+        #   flush. Its reports are not marked as consumed, so the next instance replays them from
+        #   the committed offset. Without one (first run, expired offsets) it starts from the latest
+        #   reports, so the skipped ones are not aggregated and processes reappear on next report
         def shutdown
           return unless @established
           return unless warmed_up?
