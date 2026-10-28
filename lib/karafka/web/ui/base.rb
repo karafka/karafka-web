@@ -41,7 +41,9 @@ module Karafka
           )
         end
 
-        plugin :render, escape: true, engine: "erb"
+        # Templates are UTF-8. Without this they are read in the default external encoding, which
+        # is US-ASCII under a C/POSIX locale, and a non-ASCII byte in a view makes it fail
+        plugin :render, escape: true, engine: "erb", template_opts: { default_encoding: Encoding::UTF_8 }
         plugin :run_append_slash
         plugin :error_handler
         plugin :not_found
