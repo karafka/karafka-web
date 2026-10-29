@@ -265,6 +265,8 @@ describe_current do
   end
 
   describe "#shutdown" do
+    let(:tracking_interval) { Karafka::Web.config.tracking.interval }
+
     context "when data has been established" do
       let(:msg) do
         stub(payload: {
@@ -284,13 +286,22 @@ describe_current do
         metrics_aggregator.stubs(:add_report)
         metrics_aggregator.stubs(:add_stats)
         consumer.stubs(:periodic_flush?).returns(false)
+        consumer.stubs(:monotonic_now).returns(1_000.0)
 
         # Process a message to establish data
         consumer.consume
       end
 
-      it "dispatches final state" do
+      it "dispatches final state once every process had one tracking interval to report" do
+        consumer.stubs(:monotonic_now).returns(1_000.0 + tracking_interval)
         Karafka::Web::Processing::Publisher.expects(:publish)
+
+        consumer.shutdown
+      end
+
+      it "does not dispatch partial state before every process had time to report" do
+        consumer.stubs(:monotonic_now).returns(1_000.0 + tracking_interval - 1)
+        Karafka::Web::Processing::Publisher.expects(:publish).never
 
         consumer.shutdown
       end
@@ -301,6 +312,54 @@ describe_current do
         Karafka::Web::Processing::Publisher.expects(:publish).never
 
         consumer.shutdown
+      end
+    end
+
+    context "when a new instance stops with real aggregators and Kafka" do
+      let(:states_topic) { Karafka::Web.config.topics.consumers.states.name = create_topic }
+      let(:metrics_topic) { Karafka::Web.config.topics.consumers.metrics.name = create_topic }
+      let(:report) { Fixtures.consumers_reports_json }
+      let(:messages) { [stub(payload: report, offset: 0, clean!: nil)] }
+      let(:processes) { Karafka::Web::Processing::Consumers::State.current![:processes] }
+
+      before do
+        [
+          Karafka::Web::Management::Migrator,
+          Karafka::Web::Processing::Consumers::SchemaManager,
+          Karafka::Web::Processing::Consumers::Aggregators::State,
+          Karafka::Web::Processing::Consumers::Aggregators::Metrics,
+          Karafka::Web::Processing::Consumers::Contracts::State,
+          Karafka::Web::Processing::Consumers::Contracts::Metrics
+        ].each { |klass| klass.unstub(:new) }
+        Karafka::Web::Processing::Publisher.unstub(:publish)
+
+        Karafka::Web.config.topics.consumers.reports.name = create_topic
+        states_topic
+        metrics_topic
+
+        Karafka::Web::Management::Actions::CreateInitialStates.new.call
+        wait_for_state_data(require_ui: false)
+        Karafka::Web::Management::Actions::MigrateStatesData.new.call
+        wait_for_state_data
+
+        consumer.stubs(:monotonic_now).returns(1_000.0)
+        consumer.consume
+      end
+
+      it "keeps the stored state when it stops within the first tracking interval" do
+        consumer.stubs(:monotonic_now).returns(1_000.0 + tracking_interval - 1)
+        consumer.shutdown
+        Karafka::Web.producer.client.flush
+
+        assert_empty(processes)
+      end
+
+      it "stores its state when it stops after the first tracking interval" do
+        consumer.stubs(:monotonic_now).returns(1_000.0 + tracking_interval)
+        consumer.shutdown
+        Karafka::Web.producer.client.flush
+
+        assert_equal([report[:process][:id].to_sym], processes.keys)
       end
     end
   end
