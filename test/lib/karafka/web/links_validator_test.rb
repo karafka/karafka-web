@@ -68,13 +68,26 @@ describe LinksValidator do
       ].map { |path| %(<a href="#{format(path, topic)}">x</a>) }.join
     end
 
+    let(:page_context) { mock }
+
     before do
-      context = mock
-      context.stubs(:described_class).returns(Karafka::Web::Ui::Controllers::BaseController)
-      context.expects(:get).never
-      validator.context = context
+      page_context.stubs(:described_class).returns(Karafka::Web::Ui::Controllers::BaseController)
+      validator.context = page_context
     end
 
-    it { validator.validate_all!(response) }
+    it "does not visit them" do
+      page_context.expects(:get).never
+      validator.validate_all!(response)
+    end
+
+    context "when a link points to another page of a test topic" do
+      let(:body) { %(<a href="/topics/#{topic}/replication">x</a>) }
+
+      it "visits it" do
+        page_context.expects(:get).with("/topics/#{topic}/replication").once
+        page_context.stubs(:last_response).returns(stub(status: 200))
+        validator.validate_all!(response)
+      end
+    end
   end
 end
