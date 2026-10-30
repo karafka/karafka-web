@@ -80,11 +80,12 @@ describe LinksValidator do
       validator.validate_all!(response)
     end
 
-    context "when a link points to another page of a test topic" do
-      let(:body) { %(<a href="/topics/#{topic}/replication">x</a>) }
+    context "when links point to other pages of a test topic" do
+      let(:paths) { ["/topics/#{topic}/replication", "/topics/#{topic}/config/retention.ms/edit"] }
+      let(:body) { paths.map { |path| %(<a href="#{path}">x</a>) }.join }
 
-      it "visits it" do
-        page_context.expects(:get).with("/topics/#{topic}/replication").once
+      it "visits them" do
+        paths.each { |path| page_context.expects(:get).with(path).once }
         page_context.stubs(:last_response).returns(stub(status: 200))
         validator.validate_all!(response)
       end
