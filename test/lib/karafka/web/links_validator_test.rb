@@ -55,4 +55,26 @@ describe LinksValidator do
       assert_operator(links.size, :>, 5)
     end
   end
+
+  context "when links point to pages of test topics" do
+    let(:topic) { "it-a1b2c3-#{SecureRandom.uuid}" }
+    let(:response) { stub(content_type: "text/html", body: body) }
+    let(:body) do
+      %w[
+        /topics/%s/config
+        /topics/__%s/config
+        /explorer/topics/%s
+        /explorer/topics/__%s
+      ].map { |path| %(<a href="#{format(path, topic)}">x</a>) }.join
+    end
+
+    before do
+      context = mock
+      context.stubs(:described_class).returns(Karafka::Web::Ui::Controllers::BaseController)
+      context.expects(:get).never
+      validator.context = context
+    end
+
+    it { validator.validate_all!(response) }
+  end
 end

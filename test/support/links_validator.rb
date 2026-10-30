@@ -14,7 +14,7 @@ class LinksValidator
   # in other ways
   EXCEPTIONS = [
     %r{explorer/topics/\w+/\d+},
-    %r{explorer/topics/(__)?it-[a-f0-9-]+},
+    %r{/topics/(__)?it-[a-f0-9-]+},
     %r{consumers/[a-z0-9-]+:[a-z0-9]+(:[a-z0-9]+)?/subscriptions},
     "/explorer/topics/test3",
     # Fixture-based topic name (errors/consumers reports) that does not exist in the test
