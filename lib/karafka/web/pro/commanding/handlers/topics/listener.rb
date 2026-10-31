@@ -49,6 +49,8 @@ module Karafka
               #
               # @param event [Karafka::Core::Monitoring::Event]
               def on_connection_listener_fetch_loop(event)
+                return if @tracker.empty?
+
                 listener = event[:caller]
                 client = event[:client]
                 subscription_group = listener.subscription_group
