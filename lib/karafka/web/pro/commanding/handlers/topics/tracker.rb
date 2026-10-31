@@ -80,6 +80,17 @@ module Karafka
 
                 (requests || EMPTY_ARRAY).each(&)
               end
+
+              # @return [Boolean] true if there are no pending commands
+              def empty?
+                @mutex.synchronize { @requests.empty? }
+              end
+
+              # Clears all stored requests
+              # @note Primarily for testing purposes
+              def clear!
+                @mutex.synchronize { @requests.clear }
+              end
             end
           end
         end

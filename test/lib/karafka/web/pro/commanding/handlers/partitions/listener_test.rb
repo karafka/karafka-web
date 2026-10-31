@@ -84,6 +84,7 @@ describe_current do
     end
 
     before do
+      tracker.stubs(:empty?).returns(false)
       tracker.stubs(:each_for).yields(command)
       executor.stubs(:call)
     end
@@ -92,6 +93,17 @@ describe_current do
       tracker.expects(:each_for).with(consumer_group_id, topic_name, partition_id).yields(command)
       executor.expects(:call).with(connection_listener, client, command)
       listener.on_connection_listener_fetch_loop(event)
+    end
+
+    context "when the tracker is empty" do
+      before { tracker.stubs(:empty?).returns(true) }
+
+      it "does not read the assignment nor query the tracker" do
+        client.expects(:assignment).never
+        tracker.expects(:each_for).never
+        executor.expects(:call).never
+        listener.on_connection_listener_fetch_loop(event)
+      end
     end
 
     context "when no commands exist" do
