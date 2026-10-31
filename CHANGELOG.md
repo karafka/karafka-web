@@ -127,9 +127,9 @@
 - [Enhancement] Add a commands topic presence status check that warns Pro users when the `karafka_consumers_commands` topic, required for commanding, is missing.
 - [Enhancement] Disable "Quiet All" and "Stop All" buttons when only swarm or embedded consumers are running (Pro). These commands only work on standalone consumer processes.
 - [Enhancement] Use a fire-and-forget (`acks: 0`) producer variant for Web UI reporting, falling back to the original producer when it is idempotent or transactional.
-- [Refactor] Split the Status model into individual check classes with declared dependencies.
 - [Fix] Fix session keys to use strings instead of symbols for compatibility with Roda's session management.
 - [Fix] Fix actions and selector alignment in explorer and errors views by wrapping col-span elements in proper grid container.
+- [Refactor] Split the Status model into individual check classes with declared dependencies.
 
 ## 0.11.5 (2025-11-14)
 - [Enhancement] Utilize newly released Roda session management `:env_key` to isolate Karafka Web session from the main application session.
@@ -143,10 +143,10 @@
 - [Enhancement] Add container-aware metrics for Docker/Kubernetes: the Web UI reports container memory limits from cgroups (v1 and v2) instead of host metrics.
 - [Enhancement] Add per-message migration of consumer reports, so reports from karafka-web ≤ v0.8.2 (schema 1.2.x, `process[:name]`) still in Kafka work with schema 1.3.0+ (`process[:id]`).
 - [Change] Reduce `max_messages` for consumer reports processing from 1000 to 200 to lower memory usage in large deployments.
-- [Refactor] Split the Sampler metrics collection into `Metrics::*` classes and the consumer groups enrichment into `Enrichers::*` classes.
-- [Testing] Add Docker-based integration tests for container metrics collection (cgroup v1/v2 detection, memory limits and fallbacks).
 - [Fix] Fix the "OS memory used" metric on Linux, which reported RSS instead of the memory used by all processes (or all container processes), matching macOS.
 - [Fix] Fix the `undefined method 'to_sym' for nil` crash on consumer reports from schema < 1.3.0 (karafka-web ≤ v0.8.2) that use `process[:name]`. They are now migrated to the current schema.
+- [Refactor] Split the Sampler metrics collection into `Metrics::*` classes and the consumer groups enrichment into `Enrichers::*` classes.
+- [Testing] Add Docker-based integration tests for container metrics collection (cgroup v1/v2 detection, memory limits and fallbacks).
 
 ## 0.11.3 (2025-09-29)
 - [Enhancement] Upgrade DaisyUI to 5.1.
