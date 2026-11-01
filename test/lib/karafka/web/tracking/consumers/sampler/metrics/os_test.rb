@@ -13,7 +13,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
   describe "#memory_usage" do
     context "when running on Linux" do
       before do
-        stub_const("RUBY_PLATFORM", "x86_64-linux")
+        stub_const("RbConfig::CONFIG", RbConfig::CONFIG.merge("host_os" => "linux-gnu"))
         IO.stubs(:readlines).with("/proc/#{Process.pid}/status").returns([
           "Name:\truby\n",
           "VmRSS:\t123456 kB\n",
@@ -28,7 +28,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
 
     context "when running on macOS" do
       before do
-        stub_const("RUBY_PLATFORM", "x86_64-darwin")
+        stub_const("RbConfig::CONFIG", RbConfig::CONFIG.merge("host_os" => "darwin23"))
         shell.stubs(:call).with("ps -o pid,rss -p #{Process.pid}").returns("  PID  RSS\n#{Process.pid} 98765\n")
       end
 
@@ -63,7 +63,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
   describe "#memory_size" do
     context "when running on Linux" do
       before do
-        stub_const("RUBY_PLATFORM", "x86_64-linux")
+        stub_const("RbConfig::CONFIG", RbConfig::CONFIG.merge("host_os" => "linux-gnu"))
         File.stubs(:read).with("/proc/meminfo").returns("MemTotal:       16384000 kB\nMemFree:        8192000 kB\n")
       end
 
@@ -74,7 +74,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
 
     context "when running on macOS" do
       before do
-        stub_const("RUBY_PLATFORM", "x86_64-darwin")
+        stub_const("RbConfig::CONFIG", RbConfig::CONFIG.merge("host_os" => "darwin23"))
         shell.stubs(:call).with("sysctl -a").returns("hw.memsize: 17179869184\nhw.ncpu: 8\n")
       end
 
@@ -87,7 +87,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
   describe "#cpu_usage" do
     context "when running on Linux" do
       before do
-        stub_const("RUBY_PLATFORM", "x86_64-linux")
+        stub_const("RbConfig::CONFIG", RbConfig::CONFIG.merge("host_os" => "linux-gnu"))
         File.stubs(:read).with("/proc/loadavg").returns("1.23 4.56 7.89 2/345 12345\n")
       end
 
@@ -98,7 +98,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
 
     context "when running on macOS" do
       before do
-        stub_const("RUBY_PLATFORM", "x86_64-darwin")
+        stub_const("RbConfig::CONFIG", RbConfig::CONFIG.merge("host_os" => "darwin23"))
         shell.stubs(:call).with("w | head -1").returns("12:34  up 5 days, 6:78, 9 users, load averages: 2.34 5.67 8.90\n")
       end
 
@@ -109,7 +109,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
 
     context "when running on unknown platform" do
       before do
-        stub_const("RUBY_PLATFORM", "unknown")
+        stub_const("RbConfig::CONFIG", RbConfig::CONFIG.merge("host_os" => "unknown"))
       end
 
       it "returns default values" do
@@ -150,7 +150,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
   describe "#memory_threads_ps" do
     context "when running on Linux" do
       before do
-        stub_const("RUBY_PLATFORM", "x86_64-linux")
+        stub_const("RbConfig::CONFIG", RbConfig::CONFIG.merge("host_os" => "linux-gnu"))
 
         Karafka::Web::Tracking::Helpers::Sysconf.stubs(:page_size).returns(4096)
 
@@ -198,7 +198,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
 
     context "when running on macOS" do
       before do
-        stub_const("RUBY_PLATFORM", "x86_64-darwin")
+        stub_const("RbConfig::CONFIG", RbConfig::CONFIG.merge("host_os" => "darwin23"))
         shell.stubs(:call).with("ps -A -o rss=,pid=").returns("  1024  #{Process.pid}\n  2048  9999\n")
       end
 
@@ -216,7 +216,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os do
 
     context "when running on unknown platform" do
       before do
-        stub_const("RUBY_PLATFORM", "unknown")
+        stub_const("RbConfig::CONFIG", RbConfig::CONFIG.merge("host_os" => "unknown"))
       end
 
       it "returns false" do
