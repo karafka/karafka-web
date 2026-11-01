@@ -25,6 +25,7 @@
 - [Maintenance] Build the assets with the `uglify-js` CLI instead of gulp, removing 188 npm development packages.
 - [Maintenance] Drop the unused `byebug` gem from the test bundle.
 - [Maintenance] Declare `rake` in the `Gemfile`. It came only through `karafka-rdkafka`, which will stop depending on it for precompiled platform gems.
+- [Maintenance] Fix a recurring Explorer link-validator flake in specs: skip links to the internal `__it-*` test topics, which parallel tests create and delete.
 - [Fix] Log consumers reporter dispatch failures instead of crashing the process when `produce_many_sync` times out (#1336).
 - [Fix] Sort Hash elements by key value even when the key name matches a `Hash` method.
 - [Fix] Reject a new partition count that is not greater than the current one with a form error instead of a broker error (Pro).
