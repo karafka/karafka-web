@@ -264,12 +264,17 @@ describe_current do
       end
 
       context "when the deletion fails because of rdkafka error" do
+        let(:error) do
+          Rdkafka::RdkafkaError.new(
+            Rdkafka::Bindings::RD_KAFKA_RESP_ERR__STATE,
+            broker_message: "Not authorized"
+          )
+        end
+
         before do
           produce_many(topic, %w[1 2 3])
 
-          Karafka::Admin
-            .stubs(:delete_records)
-            .raises(Rdkafka::RdkafkaError.new(29, broker_message: "Not authorized"))
+          Karafka::Admin.stubs(:delete_records).raises(error)
 
           Karafka.logger.expects(:info).with(&audit_line).never
 
