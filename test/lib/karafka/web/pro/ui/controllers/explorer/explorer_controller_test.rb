@@ -523,6 +523,33 @@ describe_current do
       end
     end
 
+    context "when deleting messages is not allowed by the default policy" do
+      before do
+        produce(topic, { test: "me" }.to_json)
+        get "explorer/topics/#{topic}/0/0"
+      end
+
+      it "hides the delete action" do
+        assert_ok
+        refute_body("messages/#{topic}/0/0/delete")
+      end
+    end
+
+    context "when deleting messages is allowed by policy" do
+      before do
+        Karafka::Web.config.ui.policies.messages.stubs(:delete_records?).returns(true)
+
+        produce(topic, { test: "me" }.to_json)
+        get "explorer/topics/#{topic}/0/0"
+      end
+
+      it "shows the delete action" do
+        assert_ok
+        assert_body("messages/#{topic}/0/0/delete")
+        assert_body("Delete messages up to this offset")
+      end
+    end
+
     context "when requested message exists and can be deserialized" do
       before do
         produce(topic, { test: "me" }.to_json)

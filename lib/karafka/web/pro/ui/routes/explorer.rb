@@ -69,6 +69,20 @@ module Karafka
                     republishing.republish(topic_id, partition_id, offset)
                   end
 
+                  deleting = build(Controllers::Explorer::Messages::DeletingController)
+
+                  r.get(
+                    String, :partition_id, Integer, "delete"
+                  ) do |topic_id, partition_id, offset|
+                    deleting.confirm(topic_id, partition_id, offset)
+                  end
+
+                  r.delete(
+                    String, :partition_id, Integer, "delete"
+                  ) do |topic_id, partition_id, offset|
+                    deleting.delete(topic_id, partition_id, offset)
+                  end
+
                   exporting = build(Controllers::Explorer::Messages::ExportingController)
 
                   r.get(
