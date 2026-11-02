@@ -34,6 +34,7 @@ describe_current do
   let(:topic) { create_topic }
   let(:policy) { Karafka::Web.config.ui.policies.messages }
   let(:low_watermark) { Karafka::Admin.read_watermark_offsets(topic, 0).first }
+  let(:audit_line) { ->(line) { line.to_s.start_with?("Web UI deleted") } }
 
   describe "#confirm" do
     context "when deleting is not allowed by the default policy" do
@@ -87,9 +88,12 @@ describe_current do
           get "explorer/messages/#{topic}/0/2/delete"
         end
 
-        it "shows how many messages would go and the confirmation form" do
+        it "shows the offsets range that would go and the confirmation form" do
           assert_ok
           assert_body("Messages Deletion Warning")
+          assert_body("all messages in offsets")
+          assert_body('<span class="font-bold ml-1">0</span>')
+          assert_body('<span class="font-bold ml-1">1</span>')
           assert_body('<span class="font-bold ml-1">2</span>')
           assert_body("explorer/messages/#{topic}/0/2/delete")
           assert_body("Delete Messages")
@@ -108,13 +112,50 @@ describe_current do
           refute_body("Delete Messages")
         end
       end
+
+      context "when the low watermark was already moved" do
+        before do
+          produce_many(topic, %w[1 2 3 4])
+          Karafka::Admin.delete_records(topic => [{ partition: 0, offset: 1 }])
+        end
+
+        context "when there are messages between the low watermark and the offset" do
+          before { get "explorer/messages/#{topic}/0/3/delete" }
+
+          it "counts only the offsets above the low watermark" do
+            assert_ok
+            assert_match(
+              %r{
+                offsets\s+<span[^>]*>1</span>\s+
+                to\s+<span[^>]*>2</span>\s+
+                \(up\ to\s+<span[^>]*>2</span>\s+messages\)
+              }x,
+              response.body
+            )
+            assert_body("Delete Messages")
+          end
+        end
+
+        context "when the offset is below the low watermark" do
+          before { get "explorer/messages/#{topic}/0/0/delete" }
+
+          it "does not offer the deletion" do
+            assert_ok
+            assert_body("There are no messages below offset")
+            refute_body("Delete Messages")
+          end
+        end
+      end
     end
   end
 
   describe "#delete" do
+    before { Karafka.logger.stubs(:info) }
+
     context "when deleting is not allowed by the default policy" do
       before do
         produce_many(topic, %w[1 2 3])
+        Karafka.logger.expects(:info).with(&audit_line).never
         delete "explorer/messages/#{topic}/0/2/delete"
       end
 
@@ -139,14 +180,60 @@ describe_current do
       context "when there are messages below the offset" do
         before do
           produce_many(topic, %w[1 2 3])
+
+          Karafka.logger
+            .expects(:info)
+            .with("Web UI deleted offsets 0 to 1 (up to 2 messages) from #{topic}#0")
+            .once
+
           delete "explorer/messages/#{topic}/0/2/delete"
         end
 
-        it "deletes them and redirects to the partition" do
+        it "deletes them, writes the audit line and redirects to the partition" do
           assert_equal(302, response.status)
           assert_equal("/explorer/topics/#{topic}/0", response.location)
-          assert_includes(flash[:success], "2 messages below offset 2 have been deleted")
+          assert_includes(
+            flash[:success],
+            "Messages in offsets 0 to 1 (up to 2 messages) have been deleted from #{topic}#0"
+          )
           assert_equal(2, low_watermark)
+        end
+      end
+
+      context "when the low watermark was already moved" do
+        before do
+          produce_many(topic, %w[1 2 3 4])
+          Karafka::Admin.delete_records(topic => [{ partition: 0, offset: 1 }])
+        end
+
+        context "when there are messages between the low watermark and the offset" do
+          before do
+            Karafka.logger
+              .expects(:info)
+              .with("Web UI deleted offsets 1 to 2 (up to 2 messages) from #{topic}#0")
+              .once
+
+            delete "explorer/messages/#{topic}/0/3/delete"
+          end
+
+          it "deletes only the offsets above the low watermark" do
+            assert_equal(302, response.status)
+            assert_includes(flash[:success], "Messages in offsets 1 to 2 (up to 2 messages)")
+            assert_equal(3, low_watermark)
+          end
+        end
+
+        context "when the offset is below the low watermark" do
+          before do
+            Karafka.logger.expects(:info).with(&audit_line).never
+            delete "explorer/messages/#{topic}/0/0/delete"
+          end
+
+          it "does not delete anything" do
+            assert_equal(302, response.status)
+            assert_includes(flash[:error], "There are no messages below offset")
+            assert_equal(1, low_watermark)
+          end
         end
       end
 
@@ -165,6 +252,7 @@ describe_current do
       context "when there are no messages below the offset" do
         before do
           produce_many(topic, %w[1 2 3])
+          Karafka.logger.expects(:info).with(&audit_line).never
           delete "explorer/messages/#{topic}/0/0/delete"
         end
 
@@ -182,6 +270,8 @@ describe_current do
           Karafka::Admin
             .stubs(:delete_records)
             .raises(Rdkafka::RdkafkaError.new(29, broker_message: "Not authorized"))
+
+          Karafka.logger.expects(:info).with(&audit_line).never
 
           delete "explorer/messages/#{topic}/0/2/delete"
         end

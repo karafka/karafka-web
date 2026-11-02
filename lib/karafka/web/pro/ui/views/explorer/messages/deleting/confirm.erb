@@ -41,13 +41,13 @@
           <div class="flex items-center gap-4">
             <%== icon(:trash) %>
             <span>
-              You are about to delete
-              <span class="font-bold ml-1"><%= @count %></span>
-              messages (offsets
+              You are about to delete all messages in offsets
               <span class="font-bold ml-1"><%= @low %></span>
               to
-              <span class="font-bold ml-1"><%= @offset - 1 %></span>)
-              from topic
+              <span class="font-bold ml-1"><%= @offset - 1 %></span>
+              (up to
+              <span class="font-bold ml-1"><%= @count %></span>
+              messages) from topic
               <span class="font-bold ml-1"><%= @topic_id %></span>
               partition
               <span class="font-bold ml-1"><%= @partition_id %></span>

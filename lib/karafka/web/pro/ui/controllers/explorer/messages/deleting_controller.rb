@@ -81,16 +81,17 @@ module Karafka
                   return confirm(topic_id, partition_id, offset) if @form_error
 
                   ::Karafka.logger.info(
-                    "Web UI deleted #{@count} messages below offset #{offset} " \
+                    "Web UI deleted offsets #{@low} to #{offset - 1} (up to #{@count} messages) " \
                     "from #{topic_id}##{partition_id}"
                   )
 
                   redirect(
                     "explorer/topics/#{topic_id}/#{partition_id}",
                     success: format_flash(
-                      "? messages below offset ? have been deleted from ?#?",
+                      "Messages in offsets ? to ? (up to ? messages) have been deleted from ?#?",
+                      @low,
+                      offset - 1,
                       @count,
-                      offset,
                       topic_id,
                       partition_id
                     )
@@ -99,7 +100,10 @@ module Karafka
 
                 private
 
-                # Authorizes the deletion and computes how many messages it would remove
+                # Authorizes the deletion and computes how many offsets it would remove
+                #
+                # @note `@count` is the number of offsets, so an upper bound of messages: transaction
+                #   control records and compacted gaps take offsets too
                 #
                 # @param topic_id [String]
                 # @param partition_id [Integer]
