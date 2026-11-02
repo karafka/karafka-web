@@ -69,6 +69,49 @@ describe_current do
     end
   end
 
+  context "when evicting outdated samples" do
+    def push_at(time, value)
+      ttl_array.stubs(:monotonic_now).returns(time)
+      ttl_array << value
+    end
+
+    def values_at(time)
+      ttl_array.stubs(:monotonic_now).returns(time)
+      ttl_array.samples.map { |sample| sample[:value] }
+    end
+
+    it "returns nothing when the array is empty" do
+      assert_equal([], values_at(1_000))
+    end
+
+    it "drops exactly the outdated prefix and keeps the order" do
+      push_at(1_000, 1)
+      push_at(1_050, 2)
+      push_at(1_100, 3)
+      push_at(1_150, 4)
+
+      assert_equal([2, 3, 4], values_at(1_150))
+    end
+
+    it "drops all samples when all of them are outdated" do
+      push_at(1_000, 1)
+      push_at(1_010, 2)
+      push_at(1_020, 3)
+
+      assert_equal([], values_at(2_000))
+      assert_empty(ttl_array)
+    end
+
+    it "keeps an out of order sample until the samples before it are outdated" do
+      push_at(1_000, 1)
+      push_at(900, 2)
+      push_at(1_050, 3)
+
+      assert_equal([1, 2, 3], values_at(1_050))
+      assert_equal([3], values_at(1_120))
+    end
+  end
+
   describe "#inspect" do
     let(:ttl) { 1000 }
     let(:array) { described_class.new(ttl) }
