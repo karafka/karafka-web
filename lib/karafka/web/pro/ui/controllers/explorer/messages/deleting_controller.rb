@@ -102,8 +102,8 @@ module Karafka
 
                 # Authorizes the deletion and computes how many offsets it would remove
                 #
-                # @note `@count` is the number of offsets, so an upper bound of messages: transaction
-                #   control records and compacted gaps take offsets too
+                # @note `@count` is the number of offsets, so an upper bound of messages:
+                #   transaction control records and compacted gaps take offsets too
                 #
                 # @param topic_id [String]
                 # @param partition_id [Integer]
