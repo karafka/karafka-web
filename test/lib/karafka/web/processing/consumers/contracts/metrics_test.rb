@@ -42,6 +42,15 @@ describe_current do
     it { refute(contract.call(metrics).success?) }
   end
 
+  context "when metrics ranges are empty" do
+    before do
+      metrics[:aggregated] = { days: [], hours: [] }
+      metrics[:consumer_groups] = { days: [], hours: [] }
+    end
+
+    it { assert(contract.call(metrics).success?) }
+  end
+
   context "when aggregated metrics exist but are not valid" do
     before { metrics[:aggregated] = { days: [[1, { batches: -2 }]] } }
 

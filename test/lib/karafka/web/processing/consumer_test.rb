@@ -476,6 +476,55 @@ describe_current do
         assert_equal([report[:process][:id].to_sym], processes.keys)
       end
     end
+
+    context "when a fresh install gets only rejected reports" do
+      let(:states_topic) { Karafka::Web.config.topics.consumers.states.name = create_topic }
+      let(:metrics_topic) { Karafka::Web.config.topics.consumers.metrics.name = create_topic }
+      let(:report) { Fixtures.consumers_reports_json.merge(process: { id: "go-app:1:1" }) }
+      let(:messages) { [stub(payload: report, offset: 0, clean!: nil)] }
+      let(:state) { Karafka::Web::Processing::Consumers::State.current! }
+
+      before do
+        [
+          Karafka::Web::Management::Migrator,
+          Karafka::Web::Processing::Consumers::SchemaManager,
+          Karafka::Web::Processing::Consumers::Aggregators::State,
+          Karafka::Web::Processing::Consumers::Aggregators::Metrics,
+          Karafka::Web::Processing::Consumers::Contracts::State,
+          Karafka::Web::Processing::Consumers::Contracts::Metrics,
+          Karafka::Web::Processing::Consumers::Contracts::Report
+        ].each { |klass| klass.unstub(:new) }
+        Karafka::Web::Processing::Publisher.unstub(:publish)
+
+        Karafka::Web.config.topics.consumers.reports.name = create_topic
+        states_topic
+        metrics_topic
+
+        Karafka::Web::Management::Actions::CreateInitialStates.new.call
+        wait_for_state_data(require_ui: false)
+        Karafka::Web::Management::Actions::MigrateStatesData.new.call
+        wait_for_state_data
+      end
+
+      it "stores the rejection on a periodic flush" do
+        consumer.stubs(:monotonic_now).returns(1_000.0, 1_001.0 + tracking_interval)
+        consumer.consume
+        Karafka::Web.producer.client.flush
+
+        assert_empty(state[:processes])
+        assert_equal(["go-app:1:1"], state[:rejected_reports].map { |r| r[:process_id] })
+      end
+
+      it "stores the rejection on shutdown" do
+        consumer.stubs(:monotonic_now).returns(1_000.0)
+        consumer.consume
+        consumer.stubs(:monotonic_now).returns(1_000.0 + tracking_interval)
+        consumer.shutdown
+        Karafka::Web.producer.client.flush
+
+        assert_equal(["go-app:1:1"], state[:rejected_reports].map { |r| r[:process_id] })
+      end
+    end
   end
 
   describe "bootstrap process" do
