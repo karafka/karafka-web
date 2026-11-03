@@ -101,6 +101,11 @@ module Karafka
                 end
               end
 
+              # @return [Boolean] true if there are no pending commands
+              def empty?
+                @mutex.synchronize { @requests.empty? }
+              end
+
               # Clears all stored requests and partition index
               # @note Primarily for testing purposes
               def clear!

@@ -55,6 +55,7 @@ describe_current do
       listener.stubs(:subscription_group).returns(subscription_group)
       subscription_group.stubs(:group).returns(consumer_group)
       subscription_group.stubs(:topics).returns([topic])
+      tracker.stubs(:empty?).returns(false)
       tracker.stubs(:each_for).with(consumer_group_id, topic_name).yields(command)
       executor.stubs(:call)
     end
@@ -63,6 +64,17 @@ describe_current do
       tracker.expects(:each_for).with(consumer_group_id, topic_name).yields(command)
       executor.expects(:call).with(listener, client, command)
       topic_listener.on_connection_listener_fetch_loop(event)
+    end
+
+    context "when the tracker is empty" do
+      before { tracker.stubs(:empty?).returns(true) }
+
+      it "does not query the tracker nor execute anything" do
+        listener.expects(:subscription_group).never
+        tracker.expects(:each_for).never
+        executor.expects(:call).never
+        topic_listener.on_connection_listener_fetch_loop(event)
+      end
     end
 
     context "when multiple topics exist in subscription group" do

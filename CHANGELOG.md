@@ -13,6 +13,8 @@
 - [Enhancement] Inject Web UI kafka settings through `Karafka::Web::Config::DefaultsInjector`, following the Karafka pattern (#653). Requires karafka-core `>= 2.6.3`.
 - [Enhancement] Read the Pro commands and scheduled-messages topics with the same Web UI kafka settings as the rest of the UI.
 - [Enhancement] Tighten compaction on the `karafka_consumers_states` and `karafka_consumers_metrics` topics so superseded versions are removed sooner.
+- [Enhancement] Skip the consumer commanding partition and topic checks in each fetch loop when no command is pending, avoiding a full assignment scan per loop (Pro).
+- [Enhancement] Evict outdated per-job tracking samples without scanning the whole 60 s window, so each processed job holds the tracking lock for a constant time.
 - [Maintenance] Fix a recurring `/topics` link-validator flake in specs.
 - [Maintenance] Reorganize the Pro UI `Lib` pipelines into domain namespaces. No behavior change.
 - [Maintenance] Extract the consumer commanding forms into `Lib::Commands` and validate offset and pause values server-side (#1241).
@@ -25,6 +27,7 @@
 - [Maintenance] Build the assets with the `uglify-js` CLI instead of gulp, removing 188 npm development packages.
 - [Maintenance] Drop the unused `byebug` gem from the test bundle.
 - [Maintenance] Declare `rake` in the `Gemfile`. It came only through `karafka-rdkafka`, which will stop depending on it for precompiled platform gems.
+- [Maintenance] Fix a recurring Explorer link-validator flake in specs: skip links to the internal `__it-*` test topics, which parallel tests create and delete.
 - [Fix] Log consumers reporter dispatch failures instead of crashing the process when `produce_many_sync` times out (#1336).
 - [Fix] Sort Hash elements by key value even when the key name matches a `Hash` method.
 - [Fix] Reject a new partition count that is not greater than the current one with a form error instead of a broker error (Pro).
@@ -56,6 +59,7 @@
 - [Fix] Stop the Dashboard current stats (processes, workers and others) from dropping for one flush after the Web UI's own consumer group rebalances.
 - [Fix] Do not flush partial current stats when a Web UI processing consumer shuts down within one tracking interval of taking over the reports.
 - [Fix] Detect the OS from `RbConfig::CONFIG["host_os"]` instead of `RUBY_PLATFORM`, so Karafka Web loads on JRuby and reports its OS metrics (#847).
+- [Fix] Require karafka-core `>= 2.6.6`, whose thread-safe tags stop a JRuby crash when the reporter serializes tags.
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a keyword filtering box to the data-heavy Web UI listings, with a field selector on flat listings (Pro) (#1073).
@@ -128,9 +132,9 @@
 - [Enhancement] Add a commands topic presence status check that warns Pro users when the `karafka_consumers_commands` topic, required for commanding, is missing.
 - [Enhancement] Disable "Quiet All" and "Stop All" buttons when only swarm or embedded consumers are running (Pro). These commands only work on standalone consumer processes.
 - [Enhancement] Use a fire-and-forget (`acks: 0`) producer variant for Web UI reporting, falling back to the original producer when it is idempotent or transactional.
-- [Refactor] Split the Status model into individual check classes with declared dependencies.
 - [Fix] Fix session keys to use strings instead of symbols for compatibility with Roda's session management.
 - [Fix] Fix actions and selector alignment in explorer and errors views by wrapping col-span elements in proper grid container.
+- [Refactor] Split the Status model into individual check classes with declared dependencies.
 
 ## 0.11.5 (2025-11-14)
 - [Enhancement] Utilize newly released Roda session management `:env_key` to isolate Karafka Web session from the main application session.
@@ -144,10 +148,10 @@
 - [Enhancement] Add container-aware metrics for Docker/Kubernetes: the Web UI reports container memory limits from cgroups (v1 and v2) instead of host metrics.
 - [Enhancement] Add per-message migration of consumer reports, so reports from karafka-web ≤ v0.8.2 (schema 1.2.x, `process[:name]`) still in Kafka work with schema 1.3.0+ (`process[:id]`).
 - [Change] Reduce `max_messages` for consumer reports processing from 1000 to 200 to lower memory usage in large deployments.
-- [Refactor] Split the Sampler metrics collection into `Metrics::*` classes and the consumer groups enrichment into `Enrichers::*` classes.
-- [Testing] Add Docker-based integration tests for container metrics collection (cgroup v1/v2 detection, memory limits and fallbacks).
 - [Fix] Fix the "OS memory used" metric on Linux, which reported RSS instead of the memory used by all processes (or all container processes), matching macOS.
 - [Fix] Fix the `undefined method 'to_sym' for nil` crash on consumer reports from schema < 1.3.0 (karafka-web ≤ v0.8.2) that use `process[:name]`. They are now migrated to the current schema.
+- [Refactor] Split the Sampler metrics collection into `Metrics::*` classes and the consumer groups enrichment into `Enrichers::*` classes.
+- [Testing] Add Docker-based integration tests for container metrics collection (cgroup v1/v2 detection, memory limits and fallbacks).
 
 ## 0.11.3 (2025-09-29)
 - [Enhancement] Upgrade DaisyUI to 5.1.
