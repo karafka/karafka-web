@@ -1,7 +1,8 @@
 # Dockerfile for integration testing container metrics
 # This container runs integration tests inside Docker to verify cgroup detection
 
-FROM ruby:4.0-slim
+ARG BASE_IMAGE=ruby:4.0-slim
+FROM ${BASE_IMAGE}
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
