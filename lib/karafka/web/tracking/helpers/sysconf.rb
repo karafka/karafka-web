@@ -9,7 +9,7 @@ module Karafka
         module Sysconf
           extend FFI::Library
 
-          case RUBY_PLATFORM
+          case RbConfig::CONFIG["host_os"]
           when /linux/
             ffi_lib "libc.so.6" # Standard C library on Linux
             SC_PAGESIZE = 30 # _SC_PAGESIZE constant

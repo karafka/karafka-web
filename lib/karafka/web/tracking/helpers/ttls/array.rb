@@ -70,10 +70,12 @@ module Karafka
             private
 
             # Evicts outdated samples
+            #
+            # @note Samples are appended in time order, so the outdated ones are always a prefix
             def clear
-              @accu.delete_if do |sample|
-                monotonic_now - sample[:added_at] > @ttl
-              end
+              now = monotonic_now
+
+              @accu.shift while !@accu.empty? && now - @accu.first[:added_at] > @ttl
             end
           end
         end
