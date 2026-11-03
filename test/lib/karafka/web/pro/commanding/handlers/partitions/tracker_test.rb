@@ -283,6 +283,26 @@ describe_current do
     end
   end
 
+  describe "#empty?" do
+    it "is empty when no commands exist" do
+      assert_predicate(tracker, :empty?)
+    end
+
+    context "when a command is pending" do
+      before { tracker << command }
+
+      it "is not empty" do
+        refute_predicate(tracker, :empty?)
+      end
+
+      it "is empty again once the command is taken" do
+        tracker.each_for(consumer_group_id, topic, partition_id) { nil }
+
+        assert_predicate(tracker, :empty?)
+      end
+    end
+  end
+
   describe ".instance" do
     it "is a singleton" do
       assert_raises(NoMethodError) { described_class.new }

@@ -3,7 +3,7 @@
 describe_current do
   let(:sampler) { described_class.new }
 
-  it { assert(sampler.ruby_version.start_with?("ruby ")) }
+  it { assert(sampler.ruby_version.start_with?("#{RUBY_ENGINE} ")) }
   it { assert_includes(sampler.karafka_version, "2.6.") }
   it { assert_includes(sampler.karafka_web_version, "1.0.") }
   it { assert_includes(sampler.karafka_core_version, "2.6.") }

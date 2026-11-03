@@ -68,7 +68,14 @@ module Karafka
         end
 
         # Flush final state on shutdown
+        # @note A new instance that stops before it got reports from all the processes does not
+        #   flush. Its reports are not marked as consumed, so the next instance replays them from
+        #   the committed offset. Without one (first run, expired offsets) it starts from the latest
+        #   reports, so the skipped ones are not aggregated and processes reappear on next report
         def shutdown
+          return unless @established
+          return unless warmed_up?
+
           dispatch
         end
 
@@ -100,7 +107,8 @@ module Karafka
           # A new instance (e.g. after a rebalance) knows only the reports it has consumed so far,
           # so the current stats it computes would miss processes. One tracking interval gives
           # running processes time to report
-          @flushed_at = monotonic_now - @flush_interval + ::Karafka::Web.config.tracking.interval
+          @warmed_up_at = monotonic_now + ::Karafka::Web.config.tracking.interval
+          @flushed_at = @warmed_up_at - @flush_interval
           @established = false
 
           @bootstrapped = true
@@ -113,6 +121,11 @@ module Karafka
           materialize
           validate!
           flush
+        end
+
+        # @return [Boolean] did running processes have one tracking interval to report
+        def warmed_up?
+          monotonic_now >= @warmed_up_at
         end
 
         # @return [Boolean] is it time to persist the new current state

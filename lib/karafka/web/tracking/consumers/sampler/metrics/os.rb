@@ -23,7 +23,7 @@ module Karafka
               def memory_usage
                 pid = ::Process.pid
 
-                case RUBY_PLATFORM
+                case RbConfig::CONFIG["host_os"]
                 # Reading this that way is cheaper than running a shell command
                 when /linux/
                   File.readlines("/proc/#{pid}/status").each do |line|
@@ -69,7 +69,7 @@ module Karafka
               def memory_size
                 return @memory_size if instance_variable_defined?(:@memory_size)
 
-                @memory_size = case RUBY_PLATFORM
+                @memory_size = case RbConfig::CONFIG["host_os"]
                 when /linux/
                   mem_info = File.read("/proc/meminfo")
                   mem_total_line = mem_info.match(/MemTotal:\s*(?<total>\d+)/)
@@ -90,7 +90,7 @@ module Karafka
 
               # @return [Array<Float>] load averages for last 1, 5 and 15 minutes
               def cpu_usage
-                case RUBY_PLATFORM
+                case RbConfig::CONFIG["host_os"]
                 when /linux/
                   File
                     .read("/proc/loadavg")
@@ -150,7 +150,7 @@ module Karafka
               # @note On Linux, thread count is only extracted for the current process to
               #   optimize performance
               def memory_threads_ps
-                case RUBY_PLATFORM
+                case RbConfig::CONFIG["host_os"]
                 when /linux/
                   page_size = Helpers::Sysconf.page_size
                   current_pid = ::Process.pid
