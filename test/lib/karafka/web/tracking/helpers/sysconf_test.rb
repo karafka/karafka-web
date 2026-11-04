@@ -24,7 +24,7 @@ describe_current do
       assert_equal(page_size2, page_size1)
     end
 
-    if RUBY_PLATFORM.include?("linux")
+    if RbConfig::CONFIG["host_os"].include?("linux")
       context "when on Linux systems" do
         it "uses the correct libc library and constant" do
           assert_equal(30, described_class::SC_PAGESIZE)
@@ -39,7 +39,7 @@ describe_current do
       end
     end
 
-    if RUBY_PLATFORM.include?("darwin")
+    if RbConfig::CONFIG["host_os"].include?("darwin")
       context "when on macOS systems" do
         it "uses the correct system library and constant" do
           assert_equal(29, described_class::SC_PAGESIZE)
@@ -82,7 +82,7 @@ describe_current do
 
     context "when testing platform-specific behavior" do
       it "defines appropriate constants for the current platform" do
-        case RUBY_PLATFORM
+        case RbConfig::CONFIG["host_os"]
         when /linux/
           assert(defined?(described_class::SC_PAGESIZE))
 
@@ -94,7 +94,7 @@ describe_current do
         else
           # For other platforms, the constant might not be defined
           # but the test should still pass
-          skip "Platform #{RUBY_PLATFORM} not specifically supported"
+          skip "Platform #{RbConfig::CONFIG["host_os"]} not specifically supported"
         end
       end
     end

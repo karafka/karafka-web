@@ -15,6 +15,7 @@
 - [Enhancement] Read the Pro commands and scheduled-messages topics with the same Web UI kafka settings as the rest of the UI.
 - [Enhancement] Tighten compaction on the `karafka_consumers_states` and `karafka_consumers_metrics` topics so superseded versions are removed sooner.
 - [Enhancement] Skip the consumer commanding partition and topic checks in each fetch loop when no command is pending, avoiding a full assignment scan per loop (Pro).
+- [Enhancement] Evict outdated per-job tracking samples without scanning the whole 60 s window, so each processed job holds the tracking lock for a constant time.
 - [Maintenance] Fix a recurring `/topics` link-validator flake in specs.
 - [Maintenance] Reorganize the Pro UI `Lib` pipelines into domain namespaces. No behavior change.
 - [Maintenance] Extract the consumer commanding forms into `Lib::Commands` and validate offset and pause values server-side (#1241).
@@ -58,6 +59,8 @@
 - [Fix] Read the Web UI templates as UTF-8, so a C/POSIX locale (`LANG=C`) cannot make pages with non-ASCII characters return 500.
 - [Fix] Stop the Dashboard current stats (processes, workers and others) from dropping for one flush after the Web UI's own consumer group rebalances.
 - [Fix] Do not flush partial current stats when a Web UI processing consumer shuts down within one tracking interval of taking over the reports.
+- [Fix] Detect the OS from `RbConfig::CONFIG["host_os"]` instead of `RUBY_PLATFORM`, so Karafka Web loads on JRuby and reports its OS metrics (#847).
+- [Fix] Require karafka-core `>= 2.6.6`, whose thread-safe tags stop a JRuby crash when the reporter serializes tags.
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a keyword filtering box to the data-heavy Web UI listings, with a field selector on flat listings (Pro) (#1073).

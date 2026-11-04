@@ -68,3 +68,23 @@ services:
         bundle exec ruby test/integrations/container_metrics_strict_spec.rb &&
         bundle exec ruby test/integrations/os_metrics_spec.rb
       "
+
+  # Test container on JRuby
+  # This tests that Karafka Web loads and reports OS metrics when RUBY_PLATFORM is "java"
+  test-container-jruby:
+    build:
+      context: ../..
+      dockerfile: test/integrations/Dockerfile
+      args:
+        BASE_IMAGE: jruby:10.0.7.0-jdk21
+    container_name: karafka-web-test-jruby
+    environment:
+      - TEST_SCENARIO=jruby
+      - INTEGRATION_TEST=true
+    # No read-only source mount: Bundler adds the java platform to the image's Gemfile.lock
+    working_dir: /app
+    command: >
+      bash -c "
+        echo 'Running integration tests on JRuby...' &&
+        bundle exec ruby test/integrations/os_metrics_spec.rb
+      "

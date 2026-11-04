@@ -15,7 +15,7 @@ PATH
     karafka-web (1.0.1)
       erubi (~> 1.4)
       karafka (>= 2.6.0, < 2.7.0)
-      karafka-core (>= 2.6.3, < 2.7.0)
+      karafka-core (>= 2.6.6, < 2.7.0)
       roda (>= 3.100, < 4.0)
       tilt (~> 2.0)
 
@@ -42,7 +42,7 @@ GEM
       et-orbi (~> 1.4)
       raabro (~> 1.4)
     json (3.0.2)
-    karafka-core (2.6.4)
+    karafka-core (2.6.6)
       karafka-rdkafka (>= 0.20.0)
       logger (>= 1.6.0)
     karafka-rdkafka (0.31.0)

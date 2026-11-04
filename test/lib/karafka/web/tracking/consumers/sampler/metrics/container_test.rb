@@ -68,7 +68,7 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container do
 
     context "when cgroup memory limit is not available (simulated)" do
       before do
-        stub_const("RUBY_PLATFORM", "x86_64-linux")
+        stub_const("RbConfig::CONFIG", RbConfig::CONFIG.merge("host_os" => "linux-gnu"))
         described_class.stubs(:memory_limit).returns(nil)
         File.stubs(:read).with("/proc/meminfo").returns("MemTotal:       16384000 kB\n")
       end
