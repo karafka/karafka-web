@@ -20,6 +20,7 @@ module Karafka
             required(:dispatched_at) { |val| val.is_a?(Numeric) && val.positive? }
             required(:stats) { |val| val.is_a?(Hash) }
             required(:schema_state) { |val| VALID_SCHEMA_STATES.include?(val) }
+            optional(:rejected_reports) { |val| val.is_a?(Array) && val.all?(Hash) }
 
             required(:processes) do |val|
               next false unless val.is_a?(Hash)

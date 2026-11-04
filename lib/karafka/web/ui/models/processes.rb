@@ -37,6 +37,25 @@ module Karafka
 
             private
 
+            # The reports topic also holds reports the processing rejected, so we render only
+            # those that pass the same ingest contracts
+            #
+            # @param report [Object] deserialized report
+            # @param report_contract [Processing::Consumers::Contracts::Report]
+            # @param legacy_report_contract [Processing::Consumers::Contracts::LegacyReport]
+            # @return [Boolean] can we render this report
+            def renderable?(report, report_contract, legacy_report_contract)
+              return false unless report.is_a?(Hash)
+
+              contract = if report[:schema_version] == Tracking::Consumers::Sampler::SCHEMA_VERSION
+                report_contract
+              else
+                legacy_report_contract
+              end
+
+              contract.call(report).success?
+            end
+
             # Fetches the relevant processes reports from the reports topic
             # @param state [State]
             # @return [Array<Hash>] array with deserialized processes reports
@@ -64,14 +83,22 @@ module Karafka
               )
             end
 
-            # Collapses processes data and only keeps the most recent report for give process
-            # @param processes [Array<Hash>]
-            # @return [Array<Hash>] unique processes data
+            # Collapses processes data and only keeps the most recent renderable report for given
+            # process. Reports are checked newest first, so we deserialize and validate only until
+            # we find one per process
+            # @param processes [Array<Karafka::Messages::Message>]
+            # @return [Array<Karafka::Messages::Message>] unique processes data
             def squash_processes_data(processes)
-              processes
-                .reverse
-                .uniq(&:key)
-                .reverse
+              seen = {}
+              report_contract = Processing::Consumers::Contracts::Report.new
+              legacy_report_contract = Processing::Consumers::Contracts::LegacyReport.new
+
+              processes.reverse_each.select do |message|
+                next false if seen.key?(message.key)
+                next false unless renderable?(message.payload, report_contract, legacy_report_contract)
+
+                seen[message.key] = true
+              end.reverse
             end
 
             # Removes processes that are no longer active. They may still be here because the state

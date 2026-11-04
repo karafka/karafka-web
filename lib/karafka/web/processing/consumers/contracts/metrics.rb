@@ -19,6 +19,9 @@ module Karafka
               stats_contract = Contracts::AggregatedStats.new
 
               data.fetch(:aggregated).each_value do |range_sample|
+                # Ranges are empty until the first accepted report
+                next if range_sample.empty?
+
                 # Older metrics should have been validated previously so we need to check only
                 # the most recently materialized one
                 stats_contract.validate!(range_sample.last.last)
@@ -34,6 +37,8 @@ module Karafka
               topic_contract = Contracts::TopicStats.new
 
               data.fetch(:consumer_groups).each_value do |range_sample|
+                next if range_sample.empty?
+
                 consumer_group = range_sample.last.last
 
                 consumer_group.each_value do |topics|

@@ -50,6 +50,148 @@ describe_current do
     end
   end
 
+  context "when the reports topic also holds a report rejected at ingest" do
+    let(:rejected_report) do
+      {
+        schema_version: Karafka::Web::Tracking::Consumers::Sampler::SCHEMA_VERSION,
+        type: "consumer",
+        dispatched_at: Time.now.to_f,
+        process: { id: "go-app:1:1" }
+      }
+    end
+
+    before do
+      topics_config.consumers.states.name = states_topic
+      topics_config.consumers.reports.name = reports_topic
+
+      produce(states_topic, Fixtures.consumers_states_file)
+      produce(reports_topic, Fixtures.consumers_reports_file, key: "shinra:1:1")
+      produce(reports_topic, rejected_report.to_json, key: "go-app:1:1")
+    end
+
+    it "renders the consumers without the rejected report" do
+      get "consumers"
+
+      assert_ok
+      assert_body("shinra:1:1")
+      refute_body("go-app:1:1")
+    end
+
+    it "renders the status page" do
+      get "status"
+
+      assert_ok
+    end
+  end
+
+  context "when the reports topic also holds a report with an empty consumer group" do
+    let(:rejected_report) do
+      report = Fixtures.consumers_reports_json
+      report[:process][:id] = "go-app:1:1"
+      report[:consumer_groups] = { cg: {} }
+      report
+    end
+
+    before do
+      topics_config.consumers.states.name = states_topic
+      topics_config.consumers.reports.name = reports_topic
+
+      produce(states_topic, Fixtures.consumers_states_file)
+      produce(reports_topic, Fixtures.consumers_reports_file, key: "shinra:1:1")
+      produce(reports_topic, rejected_report.to_json, key: "go-app:1:1")
+    end
+
+    it "renders the consumers without that report" do
+      get "consumers"
+
+      assert_ok
+      assert_body("shinra:1:1")
+      refute_body("go-app:1:1")
+    end
+
+    it "renders the status page" do
+      get "status"
+
+      assert_ok
+    end
+  end
+
+  context "when the newest report of a process is rejected and an older one is valid" do
+    let(:rejected_report) do
+      report = Fixtures.consumers_reports_json
+      report[:consumer_groups] = { cg: {} }
+      report
+    end
+
+    before do
+      topics_config.consumers.states.name = states_topic
+      topics_config.consumers.reports.name = reports_topic
+
+      produce(states_topic, Fixtures.consumers_states_file)
+      produce(reports_topic, Fixtures.consumers_reports_file, key: "shinra:1:1")
+      produce(reports_topic, rejected_report.to_json, key: "shinra:1:1")
+
+      get "consumers"
+    end
+
+    it "renders the process from its older valid report" do
+      assert_ok
+      refute_body(no_processes)
+      assert_body("shinra:1:1")
+      assert_body("246 MB")
+    end
+  end
+
+  context "when a process has an older and a newer valid report" do
+    let(:newer_report) do
+      report = Fixtures.consumers_reports_json
+      report[:process][:started_at] = 2_690_818_999.5
+      report
+    end
+
+    before do
+      topics_config.consumers.states.name = states_topic
+      topics_config.consumers.reports.name = reports_topic
+
+      produce(states_topic, Fixtures.consumers_states_file)
+      produce(reports_topic, Fixtures.consumers_reports_file, key: "shinra:1:1")
+      produce(reports_topic, newer_report.to_json, key: "shinra:1:1")
+
+      get "consumers"
+    end
+
+    it "renders the process once from its newer report" do
+      assert_ok
+      assert_body("2690818999.5")
+      refute_body("2690818651.82293")
+      assert_equal(1, response.body.scan("2690818999.5").size)
+    end
+  end
+
+  context "when the report has a Float poll age as the Ruby tracking sends it" do
+    let(:report) do
+      report = Fixtures.consumers_reports_json
+      sg = report[:consumer_groups].values.first[:subscription_groups].values.first
+      sg[:state][:poll_age] = 12.38
+      report
+    end
+
+    before do
+      topics_config.consumers.states.name = states_topic
+      topics_config.consumers.reports.name = reports_topic
+
+      produce(states_topic, Fixtures.consumers_states_file)
+      produce(reports_topic, report.to_json, key: "shinra:1:1")
+    end
+
+    it "renders the consumer" do
+      get "consumers"
+
+      assert_ok
+      assert_body("shinra:1:1")
+    end
+  end
+
   context "when there is an active consumer but without any partitions assigned yet" do
     before do
       topics_config.consumers.states.name = states_topic
