@@ -437,6 +437,35 @@ describe_current do
       end
     end
 
+    context "when consumers send reports in an older schema shape" do
+      let(:states_topic) { create_topic }
+      let(:metrics_topic) { create_topic }
+      let(:reports_topic) { create_topic }
+
+      before do
+        topics_config.consumers.states.name = states_topic
+        topics_config.consumers.metrics.name = metrics_topic
+        topics_config.consumers.reports.name = reports_topic
+
+        produce(states_topic, Fixtures.consumers_states_file)
+        produce(metrics_topic, Fixtures.consumers_metrics_file)
+
+        report = Fixtures.consumers_reports_json("v1.4.0")
+        report[:dispatched_at] = Time.now.to_f
+
+        produce(reports_topic, report.to_json)
+
+        get "status"
+      end
+
+      it do
+        assert_ok
+        assert_body("Some consumers are using schema versions")
+        assert_body("alert-box-warning")
+        refute_body("no Karafka consumer processes actively reporting")
+      end
+    end
+
     context "when materializing lag is too high" do
       let(:states_topic) { create_topic }
       let(:metrics_topic) { create_topic }
