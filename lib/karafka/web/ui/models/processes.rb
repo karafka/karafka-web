@@ -41,14 +41,16 @@ module Karafka
             # those that pass the same ingest contracts
             #
             # @param report [Object] deserialized report
+            # @param report_contract [Processing::Consumers::Contracts::Report]
+            # @param legacy_report_contract [Processing::Consumers::Contracts::LegacyReport]
             # @return [Boolean] can we render this report
-            def renderable?(report)
+            def renderable?(report, report_contract, legacy_report_contract)
               return false unless report.is_a?(Hash)
 
               contract = if report[:schema_version] == Tracking::Consumers::Sampler::SCHEMA_VERSION
-                @report_contract ||= Processing::Consumers::Contracts::Report.new
+                report_contract
               else
-                @legacy_report_contract ||= Processing::Consumers::Contracts::LegacyReport.new
+                legacy_report_contract
               end
 
               contract.call(report).success?
@@ -88,10 +90,12 @@ module Karafka
             # @return [Array<Karafka::Messages::Message>] unique processes data
             def squash_processes_data(processes)
               seen = {}
+              report_contract = Processing::Consumers::Contracts::Report.new
+              legacy_report_contract = Processing::Consumers::Contracts::LegacyReport.new
 
               processes.reverse_each.select do |message|
                 next false if seen.key?(message.key)
-                next false unless renderable?(message.payload)
+                next false unless renderable?(message.payload, report_contract, legacy_report_contract)
 
                 seen[message.key] = true
               end.reverse
