@@ -91,7 +91,11 @@ env = { "KARAFKA_BOOT_FILE" => boot_file }
 # Kafka may still be starting when this scenario runs in its own container
 install_out = nil
 installed = 30.times.any? do
-  install_out, status = Open3.capture2e(env, "bundle", "exec", "karafka-web", "install")
+  install_out, status = Open3.capture2e(
+    env,
+    "bundle", "exec", "ruby", "-e",
+    'require ENV.fetch("KARAFKA_BOOT_FILE"); Karafka::Web::Installer.new.install'
+  )
   next true if status.success?
 
   sleep(2)
