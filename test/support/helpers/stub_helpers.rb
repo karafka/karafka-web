@@ -13,6 +13,10 @@ module StubHelpers
     is_singleton = obj.singleton_methods.include?(method_name.to_sym)
     original_for_restore = is_singleton ? obj.method(method_name) : nil
 
+    if obj.singleton_methods(false).include?(method_name.to_sym)
+      obj.singleton_class.remove_method(method_name)
+    end
+
     obj.define_singleton_method(method_name) do |*args, **kwargs, &blk|
       original.call(*args, **kwargs, &blk)
     end
