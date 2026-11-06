@@ -138,28 +138,28 @@ describe_current do
       end
 
       context "when no partition of a topic has lag" do
-      before do
-        topics_config.consumers.reports.name = reports_topic
+        before do
+          topics_config.consumers.reports.name = reports_topic
 
-        report = Fixtures.consumers_reports_json(symbolize_names: false)
+          report = Fixtures.consumers_reports_json(symbolize_names: false)
 
-        partition_data = report.dig(*partition_scope)
-        partition_data["lag"] = 0
-        partition_data["lag_stored"] = 0
+          partition_data = report.dig(*partition_scope)
+          partition_data["lag"] = 0
+          partition_data["lag_stored"] = 0
 
-        produce(reports_topic, report.to_json)
+          produce(reports_topic, report.to_json)
 
-        get "health/topics"
+          get "health/topics"
+        end
+
+        it "expect the max lag to name no hot partition" do
+          assert_ok
+          refute_body("(p0)")
+          refute_body("default/overview?sort=")
+        end
       end
 
-      it "expect the max lag to name no hot partition" do
-        assert_ok
-        refute_body("(p0)")
-        refute_body("default/overview?sort=")
-      end
-    end
-
-    context "when a topic's average lag is at the warning level (not yet an error)" do
+      context "when a topic's average lag is at the warning level (not yet an error)" do
         before do
           topics_config.consumers.reports.name = reports_topic
 
