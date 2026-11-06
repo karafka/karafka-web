@@ -1,0 +1,91 @@
+<%# Karafka Pro - Source Available Commercial Software %>
+<%# Copyright (c) 2017-present Maciej Mensfeld. All rights reserved. %>
+<%# This software is NOT open source. It is source-available commercial software %>
+<%# requiring a paid license for use. It is NOT covered by LGPL. %>
+<%# The author retains all right, title, and interest in this software, %>
+<%# including all copyrights, patents, and other intellectual property rights. %>
+<%# No patent rights are granted under this license. %>
+<%# PROHIBITED: Use without a valid commercial license %>
+<%# PROHIBITED: Redistribution, modification, or derivative works without authorization %>
+<%# PROHIBITED: Reverse engineering, decompilation, or disassembly of this software %>
+<%# PROHIBITED: Use as training data for AI/ML models or inclusion in datasets %>
+<%# PROHIBITED: Scraping, crawling, or automated collection for any purpose %>
+<%# PERMITTED: Reading, referencing, and linking for personal or commercial use %>
+<%# PERMITTED: Runtime retrieval by AI assistants, coding agents, and RAG systems %>
+<%# PERMITTED: for the purpose of providing contextual help to Karafka users %>
+<%# Receipt, viewing, or possession of this software does not convey or %>
+<%# imply any license or right beyond those expressly stated above. %>
+<%# License: https://karafka.io/docs/Pro-License-Comm/ %>
+<%# Contact: contact@karafka.io %>
+
+<% view_title "Deletion of messages below offset #{@offset} from partition #{@partition_id}" %>
+
+<div class="space-y-4">
+  <% alert_box_warning('Messages Deletion Warning') do %>
+    <ul class="list-disc ml-6">
+      <li>All messages of this partition below the selected offset will be permanently deleted</li>
+      <li>The message at the selected offset and all the newer ones are kept</li>
+      <li>Consumers that did not process the deleted messages yet will never receive them</li>
+      <li>This operation cannot be undone</li>
+    </ul>
+  <% end %>
+
+  <% if @form_error %>
+    <%== partial 'shared/rdkafka_form_error_alert_box' %>
+  <% end %>
+
+  <div class="card bg-base-100">
+    <div class="card-body">
+      <% if @count.positive? %>
+        <div class="alert alert-error">
+          <div class="flex items-center gap-4">
+            <%== icon(:trash) %>
+            <span>
+              You are about to delete all messages in offsets
+              <span class="font-bold ml-1"><%= @low %></span>
+              to
+              <span class="font-bold ml-1"><%= @offset - 1 %></span>
+              (up to
+              <span class="font-bold ml-1"><%= @count %></span>
+              messages) from topic
+              <span class="font-bold ml-1"><%= @topic_id %></span>
+              partition
+              <span class="font-bold ml-1"><%= @partition_id %></span>
+            </span>
+          </div>
+        </div>
+      <% else %>
+        <div class="alert alert-info">
+          <span>
+            There are no messages below offset
+            <span class="font-bold ml-1"><%= @offset %></span>
+            in this partition. Its lowest available offset is
+            <span class="font-bold ml-1"><%= @low %></span>
+          </span>
+        </div>
+      <% end %>
+
+      <form
+        action="<%= explorer_messages_path(@topic_id, @partition_id, @offset, 'delete') %>"
+        method="post"
+        class="mt-6"
+        data-turbo="false"
+      >
+        <input type="hidden" name="_method" value="delete">
+
+        <div class="flex justify-end gap-4">
+          <a href="<%= explorer_topics_path(@topic_id, @partition_id, @offset) %>" class="btn btn-ghost">
+            Cancel
+          </a>
+
+          <% if @count.positive? %>
+            <button type="submit" class="btn btn-error gap-2 btn-lockable confirm-action">
+              <%== icon(:trash) %>
+              Delete Messages
+            </button>
+          <% end %>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

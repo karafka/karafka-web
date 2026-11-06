@@ -1,3 +1,14 @@
+GIT
+  remote: https://github.com/karafka/karafka
+  revision: 7deb94854963e749da8bd6c178f2e4b904b28079
+  branch: master
+  specs:
+    karafka (2.6.1)
+      karafka-core (>= 2.6.3, < 2.7.0)
+      karafka-rdkafka (>= 0.31.0)
+      waterdrop (>= 2.10.2, < 3.0.0)
+      zeitwerk (~> 2.3)
+
 PATH
   remote: .
   specs:
@@ -31,11 +42,6 @@ GEM
       et-orbi (~> 1.4)
       raabro (~> 1.4)
     json (3.0.2)
-    karafka (2.6.1)
-      karafka-core (>= 2.6.2, < 2.7.0)
-      karafka-rdkafka (>= 0.28.0)
-      waterdrop (>= 2.10.2, < 3.0.0)
-      zeitwerk (~> 2.3)
     karafka-core (2.6.6)
       karafka-rdkafka (>= 0.20.0)
       logger (>= 1.6.0)
@@ -122,6 +128,7 @@ PLATFORMS
 
 DEPENDENCIES
   fugit
+  karafka!
   karafka-web!
   minitest
   mocha

@@ -88,4 +88,8 @@ describe_current do
   describe "#publish?" do
     it { assert(policy.publish?("some-topic")) }
   end
+
+  describe "#delete_records?" do
+    it { refute(policy.delete_records?("some-topic", 0)) }
+  end
 end

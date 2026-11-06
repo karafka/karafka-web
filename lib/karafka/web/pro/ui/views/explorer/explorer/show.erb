@@ -66,6 +66,16 @@
         </a>
       <% end %>
 
+      <% if @visibility_filter.delete_records?(@message.topic, @message.partition) %>
+        <a
+          href="<%= explorer_messages_path(@message.topic, @message.partition, @message.offset, 'delete') %>"
+          class="btn-action"
+          title="Delete messages up to this offset"
+        >
+          <%== icon(:trash) %>
+        </a>
+      <% end %>
+
       <button
         class="btn-action btn-toggle"
         title="Show the message metadata details"
