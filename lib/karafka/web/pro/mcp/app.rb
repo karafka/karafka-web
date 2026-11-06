@@ -34,9 +34,10 @@ module Karafka
       # Read-only Model Context Protocol (MCP) server for AI agents. It speaks MCP over plain
       # HTTP request/response (no SSE, no sessions), so it needs no gems beyond Roda and stdlib
       module Mcp
-        # Rack app with the MCP endpoint. Mounting it is the opt-in, for example:
+        # Rack app with the MCP endpoint. Mounting it (through `Karafka::Web::Mcp::App`) is the
+        # opt-in, for example:
         #
-        #   mount Karafka::Web::Pro::Mcp::App, at: "/karafka/mcp"
+        #   mount Karafka::Web::Mcp::App, at: "/karafka/mcp"
         #
         # Like the Web UI, it has no authentication of its own: the host app protects the mount.
         # It does not inherit from the Web UI base app, so it has no sessions and no browser CSRF

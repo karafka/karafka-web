@@ -32,7 +32,7 @@ describe_current do
   include Rack::Test::Methods
   include ControllerHelper
 
-  let(:app) { Karafka::Web::Pro::Mcp::App }
+  let(:app) { Karafka::Web::Mcp::App }
   let(:json_headers) { { "CONTENT_TYPE" => "application/json" } }
   let(:result) { JSON.parse(body).fetch("result") }
   let(:rpc_error) { JSON.parse(body).fetch("error") }
@@ -88,6 +88,12 @@ describe_current do
       it { assert_equal(400, status) }
     end
 
+    context "when protocol version header is one we do not support" do
+      before { rpc("ping", headers: { "HTTP_MCP_PROTOCOL_VERSION" => "2025-03-26" }) }
+
+      it { assert_equal(400, status) }
+    end
+
     context "when protocol version header is supported" do
       before { rpc("ping", headers: { "HTTP_MCP_PROTOCOL_VERSION" => "2025-11-25" }) }
 
@@ -125,6 +131,12 @@ describe_current do
 
     context "when jsonrpc version is missing" do
       before { post "/", { id: 1, method: "ping" }.to_json, json_headers }
+
+      it { assert_equal(-32_600, rpc_error["code"]) }
+    end
+
+    context "when request id is null" do
+      before { post "/", { jsonrpc: "2.0", id: nil, method: "ping" }.to_json, json_headers }
 
       it { assert_equal(-32_600, rpc_error["code"]) }
     end
@@ -187,6 +199,12 @@ describe_current do
 
     context "when client asks for an unknown version" do
       before { rpc("initialize", { protocolVersion: "2030-01-01", capabilities: {} }) }
+
+      it { assert_equal("2025-11-25", result["protocolVersion"]) }
+    end
+
+    context "when client asks for a version with JSON-RPC batches" do
+      before { rpc("initialize", { protocolVersion: "2025-03-26", capabilities: {} }) }
 
       it { assert_equal("2025-11-25", result["protocolVersion"]) }
     end
@@ -322,7 +340,43 @@ describe_current do
 
             assert_equal([0, 1], errors.map { |error| error["partition"] }.sort)
             assert_equal(%w[error_message], structured["untrusted_fields"])
-            assert(errors.all? { |error| error["error_message"].size <= 200 })
+            assert_nil(structured["next_page"])
+          end
+        end
+
+        context "when error message is long" do
+          let(:error_report) do
+            report = JSON.parse(Fixtures.errors_file)
+            report["error_message"] = ("a" * 200) + "b"
+            report.to_json
+          end
+
+          before do
+            produce(errors_topic, error_report)
+            call_tool("karafka_errors_list")
+          end
+
+          it "cuts it as the Web UI does" do
+            assert_equal("a" * 200, structured.dig("errors", 0, "error_message"))
+          end
+        end
+
+        context "when there are more errors than fit on a page" do
+          let(:per_page) { Karafka::Web.config.ui.per_page }
+
+          before { produce_many(errors_topic, Array.new(per_page + 1) { error_report }) }
+
+          it "pages through them" do
+            call_tool("karafka_errors_list")
+
+            assert_equal(per_page, structured["errors"].size)
+            assert_equal(2, structured["next_page"])
+
+            call_tool("karafka_errors_list", { page: 2 })
+            second = JSON.parse(body).dig("result", "structuredContent")
+
+            assert_equal(1, second["errors"].size)
+            assert_nil(second["next_page"])
           end
         end
 
@@ -374,13 +428,43 @@ describe_current do
             call_tool("karafka_error", { partition: 0, offset: 0 })
           end
 
-          it { assert(result["isError"]) }
+          it do
+            assert(result["isError"])
+            assert_includes(result.dig("content", 0, "text"), "is not a Karafka error report")
+          end
+        end
+
+        context "when offset is a transaction marker" do
+          before do
+            produce(errors_topic, error_report, partition: 0, type: :transactional)
+            call_tool("karafka_error", { partition: 0, offset: 1 })
+          end
+
+          it do
+            assert(result["isError"])
+            assert_includes(result.dig("content", 0, "text"), "is a transaction marker")
+          end
+        end
+
+        context "when partition is empty" do
+          before { call_tool("karafka_error", { partition: 0, offset: 0 }) }
+
+          it do
+            assert(result["isError"])
+            assert_includes(result.dig("content", 0, "text"), "the partition is empty")
+          end
         end
 
         context "when offset is beyond the data" do
-          before { call_tool("karafka_error", { partition: 0, offset: 100 }) }
+          before do
+            produce(errors_topic, error_report, partition: 0)
+            call_tool("karafka_error", { partition: 0, offset: 100 })
+          end
 
-          it { assert(result["isError"]) }
+          it do
+            assert(result["isError"])
+            assert_includes(result.dig("content", 0, "text"), "its offsets are 0 to 0")
+          end
         end
 
         context "when partition does not exist" do

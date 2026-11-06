@@ -88,19 +88,19 @@ module Karafka
 
               watermark_offsets = Web::Ui::Models::WatermarkOffsets.find(errors_topic, partition)
 
-              message = Web::Ui::Models::Message.find(
-                errors_topic,
-                partition,
-                offset,
-                watermark_offsets: watermark_offsets
-              )
+              message = find(partition, offset, watermark_offsets)
 
-              # A compacted offset or a transaction marker
-              raise Errors::Ui::NotFoundError unless message
+              unless message
+                raise NoDataError, "Offset #{offset} of partition #{partition} holds no message: " \
+                  "it was compacted or is a transaction marker"
+              end
 
               error = displayable_error(message)
 
-              raise Errors::Ui::NotFoundError unless error
+              unless error
+                raise NoDataError, "Message under offset #{offset} of partition #{partition} " \
+                  "is not a Karafka error report"
+              end
 
               {
                 partition: partition,
@@ -109,6 +109,26 @@ module Karafka
                 note: UNTRUSTED_NOTE,
                 error: error.merge(details: mask(error[:details]))
               }
+            end
+
+            # @param partition [Integer]
+            # @param offset [Integer]
+            # @param watermark_offsets [Web::Ui::Models::WatermarkOffsets]
+            # @return [Karafka::Messages::Message, nil] message or nil for an offset in the
+            #   partition range that holds no message
+            def find(partition, offset, watermark_offsets)
+              Web::Ui::Models::Message.find(
+                errors_topic,
+                partition,
+                offset,
+                watermark_offsets: watermark_offsets
+              )
+            rescue Errors::Ui::NotFoundError
+              low = watermark_offsets.low
+              high = watermark_offsets.high
+              range = (low == high) ? "the partition is empty" : "its offsets are #{low} to #{high - 1}"
+
+              raise NoDataError, "No message under offset #{offset} of partition #{partition}: #{range}"
             end
 
             # @param details [Hash] error details

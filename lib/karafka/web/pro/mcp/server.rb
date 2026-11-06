@@ -39,7 +39,6 @@ module Karafka
           PROTOCOL_VERSIONS = %w[
             2025-11-25
             2025-06-18
-            2025-03-26
           ].freeze
 
           # Tools available to the agents, in the order in which we list them
@@ -85,6 +84,8 @@ module Karafka
           def valid?(message)
             return false unless message["jsonrpc"] == "2.0"
             return true unless message.key?("method")
+            # Request ids must not be null
+            return false if message.key?("id") && message["id"].nil?
 
             message["method"].is_a?(String)
           end
