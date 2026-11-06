@@ -76,6 +76,11 @@ describe_current do
       before { get "health/topics/example_app6_app/default/overview?sort=id+desc" }
 
       it { assert_ok }
+
+      it "expect only the partition header to be marked as sorted" do
+        assert_body("Partition&nbsp;&#9662;")
+        assert_body("Process ID&nbsp;&#x21D5;")
+      end
     end
 
     context "when sorted by process id and partitions belong to different processes" do
@@ -107,8 +112,8 @@ describe_current do
         second = body.index("consumers/shinra:2:2/subscriptions")
 
         assert_operator(first, :<, second)
-        assert_body("sort=process_id+desc")
-        assert_body("sort=id+desc")
+        assert_body("Process ID&nbsp;&#9652;")
+        assert_body("Partition&nbsp;&#x21D5;")
       end
     end
 
