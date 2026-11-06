@@ -35,5 +35,6 @@ describe_current do
   it { assert_predicate(contract.call({ range: "hours" }), :success?) }
   it { refute_predicate(contract.call({ range: "weeks" }), :success?) }
   it { refute_predicate(contract.call({ range: :hours }), :success?) }
+  it { refute_predicate(contract.call({ range: nil }), :success?) }
   it { refute_predicate(contract.call({ page: 1 }), :success?) }
 end
