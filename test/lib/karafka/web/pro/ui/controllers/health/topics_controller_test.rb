@@ -440,6 +440,40 @@ describe_current do
       end
     end
 
+    context "when the highest lag is not on the first partition" do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        topic_data = report.dig(*partition_scope[0..5])
+        base_partition = report.dig(*partition_scope)
+
+        base_partition["lag"] = 10
+        base_partition["lag_stored"] = 10
+
+        { 1 => 20, 2 => 7_000 }.each do |id, lag|
+          partition = base_partition.dup
+          partition["id"] = id
+          partition["lag"] = lag
+          partition["lag_stored"] = lag
+          topic_data["partitions"][id.to_s] = partition
+        end
+
+        topic_data["partitions_cnt"] = 3
+
+        produce(reports_topic, report.to_json)
+
+        get "health/topics"
+      end
+
+      it "expect the max lag to name the hot partition and link to partitions sorted by lag" do
+        assert_ok
+        assert_body("(p2)")
+        assert_body("health/topics/example_app6_app/default/overview?sort=lag_hybrid+desc")
+      end
+    end
+
     context "when data is present but reported in a transactional fashion" do
       before do
         topics_config.consumers.reports.name = reports_topic
@@ -506,6 +540,12 @@ describe_current do
       it "expect each topic to drill down into the per-topic cluster lags lens" do
         assert_ok
         assert_body("health/topics/example_app6_app/orders/cluster_lags")
+      end
+
+      it "expect the max lag to name the hot partition and link to partitions sorted by lag" do
+        assert_ok
+        assert_body("(p1)")
+        assert_body("health/topics/example_app6_app/orders/cluster_lags?sort=lag+desc")
       end
 
       context "when sorted by an aggregate column" do

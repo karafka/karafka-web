@@ -111,6 +111,12 @@ describe_current do
       refute_body(breadcrumbs)
       refute_body(only_pro_feature)
     end
+
+    it "expect the total lag counter to link to the Health topics sorted by lag" do
+      assert_ok
+      assert_body("health/topics?sort=lag_hybrid+desc")
+      refute_body("health/lags")
+    end
   end
 
   # Transactionals have the management offset taken, hence we check it to make sure, that we have
