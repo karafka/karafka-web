@@ -9,6 +9,7 @@ describe_current do
     before { post "/", "{}", { "CONTENT_TYPE" => "application/json" } }
 
     it "refuses the request as a Pro-only feature" do
+      assert_equal(Karafka::Web::Mcp::ProOnlyApp, described_class.engine)
       assert_equal(402, last_response.status)
       assert_includes(last_response.body, "requires a Karafka Pro license")
     end

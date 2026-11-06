@@ -36,12 +36,9 @@ module Karafka
           # Historical metrics, the same as the charts of the Web UI dashboard
           class Metrics < Base
             # Time ranges of the metrics, as in the Web UI dashboard
-            RANGES = %w[
-              seconds
-              minutes
-              hours
-              days
-            ].freeze
+            RANGES = Web::Ui::Controllers::Requests::Params::ALLOWED_RANGES
+
+            private_constant :RANGES
 
             tool(
               "karafka_metrics",
@@ -53,7 +50,8 @@ module Karafka
                 "topic[consumer_group]", the lag (lag_hybrid), pace (sum of high watermarks)
                 and last stable offset freeze duration (ls_offset_fd, ms).
               TEXT
-              {
+              contract: Contracts::Metrics.new,
+              properties: {
                 range: {
                   type: "string",
                   enum: RANGES,
@@ -67,12 +65,7 @@ module Karafka
 
             # @return [Hash] metrics for the requested range
             def fetch
-              range = @arguments.fetch("range", RANGES.first)
-
-              unless RANGES.include?(range)
-                raise InvalidArgumentsError, "range must be one of: #{RANGES.join(", ")}"
-              end
-
+              range = @arguments.fetch(:range, RANGES.first)
               metrics = Web::Ui::Models::ConsumersMetrics.current!.to_h
               aggregated = Web::Ui::Models::Metrics::Aggregated.new(metrics.fetch(:aggregated))
               topics = Web::Ui::Models::Metrics::Topics.new(metrics.fetch(:consumer_groups))

@@ -58,7 +58,7 @@ module Karafka
             internal: -32_603
           }.freeze
 
-          private_constant :TOOLS, :ERRORS
+          private_constant :TOOLS
 
           # @param body [String] raw request body
           # @return [Array] Rack response
@@ -84,7 +84,6 @@ module Karafka
           def valid?(message)
             return false unless message["jsonrpc"] == "2.0"
             return true unless message.key?("method")
-            # Request ids must not be null
             return false if message.key?("id") && message["id"].nil?
 
             message["method"].is_a?(String)
@@ -146,7 +145,7 @@ module Karafka
             return error(id, :invalid_params, "Invalid arguments") unless arguments.is_a?(Hash)
 
             result(id, tool.new(arguments).call)
-          rescue Tools::Base::InvalidArgumentsError => e
+          rescue Errors::Mcp::InvalidArgumentsError => e
             error(id, :invalid_params, e.message)
           rescue => e
             ::Karafka.monitor.instrument(

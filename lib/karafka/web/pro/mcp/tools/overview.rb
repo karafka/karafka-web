@@ -37,11 +37,12 @@ module Karafka
           class Overview < Base
             tool(
               "karafka_overview",
-              <<~TEXT.tr("\n", " ").strip
+              <<~TEXT.tr("\n", " ").strip,
                 Current state of the Karafka consumers, as on the Web UI dashboard: processed
                 messages, batches and jobs, total lag, busy and pending jobs, errors, retries,
                 dead messages, processes, workers, memory usage, utilization and listeners.
               TEXT
+              contract: Contracts::Overview.new
             )
 
             private
