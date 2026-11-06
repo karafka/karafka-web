@@ -229,6 +229,15 @@ describe_current do
       it { assert_equal(-32_602, rpc_error["code"]) }
     end
 
+    context "when tool fails unexpectedly" do
+      before do
+        Karafka::Web::Ui::Models::ConsumersState.stubs(:current!).raises(StandardError)
+        call_tool("karafka_overview")
+      end
+
+      it { assert_equal(-32_603, rpc_error["code"]) }
+    end
+
     describe "karafka_overview" do
       context "when there is state" do
         before { call_tool("karafka_overview") }

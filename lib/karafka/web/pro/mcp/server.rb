@@ -147,6 +147,15 @@ module Karafka
             result(id, tool.new(arguments).call)
           rescue Tools::Base::InvalidArgumentsError => e
             error(id, :invalid_params, e.message)
+          rescue => e
+            ::Karafka.monitor.instrument(
+              "error.occurred",
+              error: e,
+              caller: self,
+              type: "web.ui.error"
+            )
+
+            error(id, :internal, "Internal error")
           end
 
           # @param id [String, Integer] request id
