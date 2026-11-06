@@ -1,4 +1,5 @@
 {
+  "test/lib/karafka/web/pro/mcp/app_test.rb": 8.51,
   "test/lib/karafka/web/pro/ui/controllers/explorer/explorer_controller_test.rb": 60.645,
   "test/lib/karafka/web/pro/ui/controllers/consumers/partitions/pauses_controller_test.rb": 55.802,
   "test/lib/karafka/web/pro/ui/controllers/cluster_controller_test.rb": 50.435,
