@@ -34,9 +34,6 @@ describe_current do
   # Stubs the cluster metadata so distribution edge cases (broker counts, imbalance) can be driven
   # deterministically. `brokers` are hashes wrapped by Models::Broker, `topics` mirror the metadata
   # shape (`:partitions` with `:leader`/`:replicas`/`:isrs`).
-  #
-  # Defined via `let` (a lambda) because a controller `describe_current` is `instance_eval`-ed, so a
-  # bare `def` would define a class method rather than an instance one.
   let(:stub_cluster) do
     lambda do |brokers:, topics:|
       double = Struct.new(:brokers, :topics).new(brokers, topics)
@@ -349,7 +346,6 @@ describe_current do
 
     # broker 1 leads 3/4, broker 2 leads 1/4 -> a working sort must flip their row order
     context "when sorting by leader_count (multi-broker)" do
-      # `let`-lambda (not `def`) because a controller describe_current is instance_eval-ed
       let(:seed) do
         lambda do
           stub_cluster.call(

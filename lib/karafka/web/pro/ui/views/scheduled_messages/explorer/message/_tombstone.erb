@@ -65,16 +65,6 @@
   </td>
 
   <td class="options">
-    <%
-      cancel_path = root_path(
-        "scheduled_messages/messages",
-        message.topic,
-        message.partition,
-        message.offset,
-        'cancel'
-      )
-    %>
-
     <%==
       link_button_primary_sm(
         icon(:info_circle),
