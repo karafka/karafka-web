@@ -80,3 +80,10 @@ en:
       missing: needs to be present
       partition_count_format: needs to be an integer that is 1 or greater
       partition_count_not_an_increase: 'Must be greater than the current partition count'
+    mcp_tools:
+      missing: needs to be present
+      arguments_unknown: contain an unknown argument
+      range_format: needs to be one of seconds, minutes, hours, days
+      page_format: needs to be an integer that is 1 or greater
+      partition_format: needs to be an integer that is 0 or greater
+      offset_format: needs to be an integer that is 0 or greater
