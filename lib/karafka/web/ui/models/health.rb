@@ -65,7 +65,7 @@ module Karafka
 
                 stats[cg_id][:topics][t_name][:partitions][pt_id] = partition
                 stats[cg_id][:topics][t_name][:partitions][pt_id][:process] = process
-                stats[cg_id][:topics][t_name][:partitions][pt_id][:process_id] = process.id
+                stats[cg_id][:topics][t_name][:partitions][pt_id][:process_id] = process[:process][:id]
                 stats[cg_id][:topics][t_name][:partitions][pt_id][:subscription_group_id] = sg_id
                 stats[cg_id][:topics][t_name][:partitions][pt_id][:instance_id] = subscription_group.instance_id
               end
