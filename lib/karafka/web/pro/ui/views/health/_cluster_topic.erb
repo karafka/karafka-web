@@ -31,9 +31,9 @@
     <%== lag_with_label topic_stats.lag %>
   </td>
   <td>
-    <% if topic_stats.max_lag_partition_id >= 0 %>
+    <% if topic_stats.max_lag.positive? %>
       <a
-        href="<%= root_path('health', 'topics', cg_name, topic_name, 'cluster_lags') %>?sort=lag+desc"
+        href="<%= health_cluster_lags_by_lag_path(cg_name, topic_name) %>"
         title="Highest lag is on partition <%= topic_stats.max_lag_partition_id %>"
       >
         <%== lag_with_label topic_stats.max_lag %>

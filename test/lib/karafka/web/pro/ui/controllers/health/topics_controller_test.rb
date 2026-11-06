@@ -594,6 +594,21 @@ describe_current do
       end
     end
 
+    context "when no partition of a cluster topic has lag" do
+      before do
+        Karafka::Admin.stubs(:read_lags_with_offsets).returns(
+          "example_app6_app" => { "orders" => { 0 => { lag: 0, offset: 5 } } }
+        )
+        get "health/cluster_lags"
+      end
+
+      it "expect the max lag to name no hot partition" do
+        assert_ok
+        refute_body("(p0)")
+        refute_body("orders/cluster_lags?sort=")
+      end
+    end
+
     context "when a cluster topic's lag is skewed across its partitions" do
       before do
         Karafka::Admin.stubs(:read_lags_with_offsets).returns(
