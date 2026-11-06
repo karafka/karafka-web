@@ -60,7 +60,11 @@ describe_current do
   context "when the configured ttl has sub-second precision" do
     let(:original_ttl) { Karafka::Web.config.ttl }
 
-    before { Karafka::Web.config.ttl = 30_999 }
+    before do
+      original_ttl
+      Karafka::Web.config.ttl = 30_999
+    end
+
     after { Karafka::Web.config.ttl = original_ttl }
 
     # 30.5s old: within the configured 30.999s ttl, but would be wrongly evicted if
