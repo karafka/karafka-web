@@ -22,6 +22,8 @@ dir = Dir.mktmpdir
 results_dir = File.join(dir, "results")
 Dir.mkdir(results_dir)
 boot_file = File.join(dir, "karafka.rb")
+# Every process loads the boot file, so the random names are fixed here
+suffix = SecureRandom.hex(6)
 
 File.write(boot_file, <<~RUBY)
   # frozen_string_literal: true
@@ -31,12 +33,12 @@ File.write(boot_file, <<~RUBY)
 
   BOOTSTRAP_SERVERS = ENV.fetch("KAFKA_BOOTSTRAP_SERVERS", "127.0.0.1:9092")
   RESULTS_DIR = #{results_dir.inspect}
-  TOPIC = "it-swarm-web-producer-#{SecureRandom.hex(6)}"
+  TOPIC = "it-swarm-web-producer-#{suffix}"
 
   class KarafkaApp < Karafka::App
     setup do |config|
       config.kafka = { "bootstrap.servers": BOOTSTRAP_SERVERS }
-      config.client_id = "it-swarm-web-producer"
+      config.client_id = "it-swarm-web-producer-#{suffix}"
       config.swarm.nodes = #{NODES}
       config.shutdown_timeout = 10_000
 
@@ -66,6 +68,12 @@ File.write(boot_file, <<~RUBY)
   Karafka::Web.setup do |config|
     config.ui.sessions.secret = "#{SecureRandom.hex(64)}"
     config.producer = WEB_PRODUCER
+    config.group_id = "it-swarm-web-#{suffix}"
+    config.topics.errors.name = "it-swarm-web-errors-#{suffix}"
+    config.topics.consumers.reports.name = "it-swarm-web-reports-#{suffix}"
+    config.topics.consumers.states.name = "it-swarm-web-states-#{suffix}"
+    config.topics.consumers.metrics.name = "it-swarm-web-metrics-#{suffix}"
+    config.topics.consumers.commands.name = "it-swarm-web-commands-#{suffix}"
   end
 
   Karafka::Web.enable!

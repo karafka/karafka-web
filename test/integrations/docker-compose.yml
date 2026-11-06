@@ -1,6 +1,6 @@
 # Docker Compose configuration for integration testing
 # This sets up containers to test cgroup detection and container metrics
-# Only the swarm scenario needs Kafka
+# Kafka runs for every scenario; scenarios that use it create randomized topics
 
 services:
   # Single-node Kafka for scenarios that run Karafka processes
@@ -29,9 +29,12 @@ services:
       context: ../..
       dockerfile: test/integrations/Dockerfile
     container_name: karafka-web-test-limited
+    depends_on:
+      - kafka
     environment:
       - TEST_SCENARIO=limited
       - INTEGRATION_TEST=true
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     mem_limit: 512m
     mem_reservation: 256m
     cpus: 1.0
@@ -52,9 +55,12 @@ services:
       context: ../..
       dockerfile: test/integrations/Dockerfile
     container_name: karafka-web-test-unlimited
+    depends_on:
+      - kafka
     environment:
       - TEST_SCENARIO=unlimited
       - INTEGRATION_TEST=true
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     volumes:
       - ../..:/app:ro
     working_dir: /app
@@ -72,9 +78,12 @@ services:
       context: ../..
       dockerfile: test/integrations/Dockerfile
     container_name: karafka-web-test-strict
+    depends_on:
+      - kafka
     environment:
       - TEST_SCENARIO=strict
       - INTEGRATION_TEST=true
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     mem_limit: 256m
     mem_reservation: 128m
     cpus: 0.5
@@ -97,9 +106,12 @@ services:
       args:
         BASE_IMAGE: jruby:10.0.7.0-jdk21
     container_name: karafka-web-test-jruby
+    depends_on:
+      - kafka
     environment:
       - TEST_SCENARIO=jruby
       - INTEGRATION_TEST=true
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     # No read-only source mount: Bundler adds the java platform to the image's Gemfile.lock
     working_dir: /app
     command: >
