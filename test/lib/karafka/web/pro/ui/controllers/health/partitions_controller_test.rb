@@ -76,6 +76,45 @@ describe_current do
       before { get "health/topics/example_app6_app/default/overview?sort=id+desc" }
 
       it { assert_ok }
+
+      it "expect only the partition header to be marked as sorted" do
+        assert_body("Partition&nbsp;&#9662;")
+        assert_body("Process ID&nbsp;&#x21D5;")
+      end
+    end
+
+    context "when sorted by process id and partitions belong to different processes" do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        # Partition 0 belongs to shinra:2:2 and partition 1 to shinra:1:1, so the partition id
+        # order is the opposite of the process id order
+        [["shinra:2:2", 0], ["shinra:1:1", 1]].each do |process_id, partition_id|
+          report = Fixtures.consumers_reports_json(symbolize_names: false)
+          report["process"]["id"] = process_id
+
+          topic_data = report.dig(*partition_scope[0..5])
+          partition = topic_data["partitions"].delete("0")
+          partition["id"] = partition_id
+          topic_data["partitions"][partition_id.to_s] = partition
+          topic_data["partitions_cnt"] = 2
+
+          produce(reports_topic, report.to_json, key: process_id)
+        end
+
+        get "health/topics/example_app6_app/default/overview?sort=process_id+asc"
+      end
+
+      it "expect rows in process id order and only the process id header marked as sorted" do
+        assert_ok
+
+        first = body.index("consumers/shinra:1:1/subscriptions")
+        second = body.index("consumers/shinra:2:2/subscriptions")
+
+        assert_operator(first, :<, second)
+        assert_body("Process ID&nbsp;&#9652;")
+        assert_body("Partition&nbsp;&#x21D5;")
+      end
     end
 
     it "expect a high-lag partition row to use the error border (lag wins over process status)" do
