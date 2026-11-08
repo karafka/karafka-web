@@ -34,16 +34,23 @@ module Karafka
       module Ui
         module Controllers
           module Health
-            # Deletes the committed offsets of a consumer group for a topic, so a topic the
-            # consumer group no longer consumes stops reporting cluster lags. Works for any topic,
-            # also one that is inactive or not in the Web UI routing.
-            class DeletingController < BaseController
-              # Shows the offsets that would be deleted and asks for a confirmation
+            # Committed offsets of a consumer group for a topic. Deleting them makes a topic the
+            # consumer group no longer consumes stop reporting cluster lags.
+            class OffsetsController < BaseController
+              # Renders a confirmation page for the offsets removal since it is a sensitive
+              # operation
               #
               # @param consumer_group_id [String]
               # @param topic_name [String] name of the topic
-              def confirm(consumer_group_id, topic_name)
+              # @param subscribed [Boolean] true when Kafka rejected the deletion because the
+              #   consumer group is subscribed to the topic
+              # @param form_error [Rdkafka::RdkafkaError, Rdkafka::Config::ConfigError, nil] error
+              #   of a failed deletion
+              def edit(consumer_group_id, topic_name, subscribed: false, form_error: nil)
                 bootstrap!(consumer_group_id, topic_name)
+
+                @subscribed = subscribed
+                @form_error = form_error
 
                 render
               end
@@ -58,17 +65,10 @@ module Karafka
                 begin
                   ::Karafka::Admin.delete_consumer_group_offsets(consumer_group_id, [topic_name])
                 rescue ::Karafka::Errors::ConsumerGroupSubscribedToTopicError
-                  @subscribed = true
+                  return edit(consumer_group_id, topic_name, subscribed: true)
                 rescue Rdkafka::RdkafkaError, Rdkafka::Config::ConfigError => e
-                  @form_error = e
+                  return edit(consumer_group_id, topic_name, form_error: e)
                 end
-
-                return confirm(consumer_group_id, topic_name) if @subscribed || @form_error
-
-                ::Karafka.logger.info(
-                  "Web UI deleted offsets of consumer group #{consumer_group_id} " \
-                  "for topic #{topic_name}"
-                )
 
                 redirect(
                   "health/cluster_lags",

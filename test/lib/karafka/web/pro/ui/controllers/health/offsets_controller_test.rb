@@ -47,7 +47,7 @@ describe_current do
     Karafka::Admin.seek_consumer_group(consumer_group_id, { topic => { 0 => 1, 1 => 2 } })
   end
 
-  describe "#confirm" do
+  describe "#edit" do
     context "when deleting is not allowed by the default policy" do
       before { get path }
 
@@ -157,7 +157,7 @@ describe_current do
         before do
           Karafka::Admin
             .stubs(:delete_consumer_group_offsets)
-            .raises(Rdkafka::RdkafkaError.new(1))
+            .raises(Rdkafka::RdkafkaError.new(Rdkafka::Bindings::RD_KAFKA_RESP_ERR__STATE))
 
           delete path
         end
