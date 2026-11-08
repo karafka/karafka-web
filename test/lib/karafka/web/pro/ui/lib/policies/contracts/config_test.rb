@@ -36,7 +36,8 @@ describe_current do
       ui: {
         policies: {
           messages: -> {},
-          requests: -> {}
+          requests: -> {},
+          consumer_groups: -> {}
         }
       }
     }
@@ -56,6 +57,12 @@ describe_current do
 
   context "when requests is nil" do
     before { params[:ui][:policies][:requests] = nil }
+
+    it { refute(contract.call(params).success?) }
+  end
+
+  context "when consumer_groups is nil" do
+    before { params[:ui][:policies][:consumer_groups] = nil }
 
     it { refute(contract.call(params).success?) }
   end

@@ -72,6 +72,16 @@ module Karafka
                     partitions_controller.cluster_lags(consumer_group_id, topic_name)
                   end
 
+                  deleting_controller = build(Controllers::Health::DeletingController)
+
+                  r.get "delete" do
+                    deleting_controller.confirm(consumer_group_id, topic_name)
+                  end
+
+                  r.delete "delete" do
+                    deleting_controller.delete(consumer_group_id, topic_name)
+                  end
+
                   # A bare topic path defaults to the overview lens
                   r.get do
                     r.redirect root_path("health", "topics", consumer_group_id, topic_name, "overview")

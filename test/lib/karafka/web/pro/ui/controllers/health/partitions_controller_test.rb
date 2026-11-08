@@ -425,6 +425,21 @@ describe_current do
         assert_ok
         assert_body(breadcrumbs)
         assert_body("4200")
+        refute_body("health/topics/example_app6_app/default/delete")
+      end
+
+      context "when deleting offsets is allowed" do
+        before do
+          Karafka::Web.config.ui.policies.consumer_groups.stubs(:delete_offsets?).returns(true)
+
+          get "health/topics/example_app6_app/default/cluster_lags"
+        end
+
+        it "expect to link to the offsets deletion" do
+          assert_ok
+          assert_body("health/topics/example_app6_app/default/delete")
+          assert_body("Delete Offsets")
+        end
       end
 
       context "when sorted" do

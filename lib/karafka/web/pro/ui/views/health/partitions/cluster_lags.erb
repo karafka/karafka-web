@@ -23,7 +23,20 @@
 <%== partial 'health/topic_tabs' %>
 
 <div class="col-span-12">
-  <h2 class="h2"><%= @consumer_group_id %></h2>
+  <div class="flex items-center justify-between">
+    <h2 class="h2"><%= @consumer_group_id %></h2>
+
+    <% if ::Karafka::Web.config.ui.policies.consumer_groups.delete_offsets?(@consumer_group_id, @topic_name) %>
+      <a
+        href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'delete') %>"
+        class="btn btn-error btn-sm gap-2"
+        title="Delete the committed offsets of this consumer group for this topic"
+      >
+        <%== icon(:trash) %>
+        Delete Offsets
+      </a>
+    <% end %>
+  </div>
 
   <div class="data-table-wrapper">
     <%==
