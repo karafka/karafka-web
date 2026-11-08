@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/karafka/karafka
-  revision: 4db6d537e85ad4b9f096b080709d0d695e417d00
+  revision: 4bf7e47e6ec067092d29b943e69d0a0664a9e449
   branch: 47274-delete-consumer-group-offsets
   specs:
     karafka (2.6.1)

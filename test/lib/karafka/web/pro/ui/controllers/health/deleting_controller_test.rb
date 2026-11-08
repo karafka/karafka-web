@@ -122,12 +122,14 @@ describe_current do
           end
 
           get "health/cluster_lags"
+          @listed_status = response.status
           @listed = body.include?(topic)
 
           delete path
         end
 
         it "is hidden from the cluster lags but its offsets can be deleted" do
+          assert_equal(200, @listed_status)
           refute(@listed)
           assert_equal(302, response.status)
           assert_equal({ 0 => -1, 1 => -1 }, committed)
