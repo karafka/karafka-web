@@ -23,7 +23,7 @@
 <%== partial 'health/topic_tabs' %>
 
 <div class="col-span-12">
-  <div class="flex items-center justify-between">
+  <div class="flex items-center gap-4">
     <h2 class="h2"><%= @consumer_group_id %></h2>
 
     <% if ::Karafka::Web.config.ui.policies.consumer_groups.delete_offsets?(@consumer_group_id, @topic_name) %>
