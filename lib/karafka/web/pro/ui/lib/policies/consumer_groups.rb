@@ -27,6 +27,7 @@
 #
 # License: https://karafka.io/docs/Pro-License-Comm/
 # Contact: contact@karafka.io
+
 module Karafka
   module Web
     module Pro
@@ -38,8 +39,8 @@ module Karafka
             class ConsumerGroups
               # Should it be allowed to delete the committed offsets of a consumer group for a topic
               #
-              # @param _consumer_group_id [String] id of the consumer group
-              # @param _topic_name [String] name of the topic
+              # @param _consumer_group_id [String] consumer group whose committed offsets would go
+              # @param _topic_name [String] topic for which the offsets would be deleted
               # @return [Boolean] true if we should allow deleting the offsets
               # @note Denied by default because the deletion is irreversible. Override it to enable
               #   the "Delete offsets" health capability.

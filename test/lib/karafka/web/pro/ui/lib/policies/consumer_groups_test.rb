@@ -27,6 +27,7 @@
 #
 # License: https://karafka.io/docs/Pro-License-Comm/
 # Contact: contact@karafka.io
+
 describe_current do
   let(:policy) { described_class.new }
 
