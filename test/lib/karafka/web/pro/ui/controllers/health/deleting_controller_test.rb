@@ -43,16 +43,8 @@ describe_current do
   end
 
   before do
+    produce_many(topic, Array.new(30) { |i| i.to_s }, partition: 1)
     Karafka::Admin.seek_consumer_group(consumer_group_id, { topic => { 0 => 1, 1 => 2 } })
-
-    Karafka::Admin.stubs(:read_lags_with_offsets).returns(
-      consumer_group_id => {
-        topic => {
-          0 => { lag: 10, offset: 1 },
-          1 => { lag: 20, offset: 2 }
-        }
-      }
-    )
   end
 
   describe "#confirm" do
@@ -68,7 +60,7 @@ describe_current do
     context "when deleting is allowed" do
       before { policy.stubs(:delete_offsets?).returns(true) }
 
-      context "when the topic has no cluster lags for the consumer group" do
+      context "when the topic does not exist" do
         before { get "health/topics/#{consumer_group_id}/non-existing/delete" }
 
         it do
@@ -77,13 +69,13 @@ describe_current do
         end
       end
 
-      context "when the topic has cluster lags for the consumer group" do
+      context "when the topic is not in the routing" do
         before { get path }
 
         it "shows the offsets that would go and the confirmation form" do
           assert_ok
           assert_body("Offsets Deletion Warning")
-          assert_body("20")
+          assert_body("<td>28</td>")
           assert_body(%(action="/health/topics/#{consumer_group_id}/#{topic}/delete"))
           assert_body("Delete Offsets")
           assert_equal({ 0 => 1, 1 => 2 }, committed)
@@ -112,6 +104,32 @@ describe_current do
           assert_equal(302, response.status)
           assert(response.location.end_with?("/health/cluster_lags"))
           assert_includes(flash[:success], "have been deleted")
+          assert_equal({ 0 => -1, 1 => -1 }, committed)
+        end
+      end
+
+      context "when the topic is inactive in the routing of the consumer group" do
+        before do
+          topic_name = topic
+          group_name = consumer_group_id
+
+          draw_routes do
+            consumer_group group_name do
+              topic topic_name do
+                active(false)
+              end
+            end
+          end
+
+          get "health/cluster_lags"
+          @listed = body.include?(topic)
+
+          delete path
+        end
+
+        it "is hidden from the cluster lags but its offsets can be deleted" do
+          refute(@listed)
+          assert_equal(302, response.status)
           assert_equal({ 0 => -1, 1 => -1 }, committed)
         end
       end

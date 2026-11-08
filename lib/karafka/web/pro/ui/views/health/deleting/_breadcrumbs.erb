@@ -25,14 +25,8 @@
 </li>
 
 <li>
-  <a href="<%== health_group_topics_path(@consumer_group_id) %>">
-    <%= @consumer_group_id %>
-  </a>
-</li>
-
-<li>
-  <a href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'cluster_lags') %>">
-    <%= @topic_name %>
+  <a href="<%= root_path('health', 'cluster_lags') %>">
+    Cluster Lags
   </a>
 </li>
 

@@ -35,7 +35,8 @@ module Karafka
         module Controllers
           module Health
             # Deletes the committed offsets of a consumer group for a topic, so a topic the
-            # consumer group no longer consumes stops reporting cluster lags
+            # consumer group no longer consumes stops reporting cluster lags. Works for any topic,
+            # also one that is inactive or not in the Web UI routing.
             class DeletingController < BaseController
               # Shows the offsets that would be deleted and asks for a confirmation
               #
@@ -91,12 +92,17 @@ module Karafka
                 @consumer_group_id = consumer_group_id
                 @topic_name = topic_name
 
-                @cluster_partitions = Models::Health.cluster_lags_with_offsets.dig(
-                  consumer_group_id,
-                  topic_name
-                )
+                # We query the topic directly, so topics hidden from the cluster lags (inactive or
+                # not in the Web UI routing) can still be reached
+                partitions = ::Karafka::Admin
+                  .read_lags_with_offsets({ consumer_group_id => [topic_name] })
+                  .dig(consumer_group_id, topic_name)
 
-                not_found!(topic_name) unless @cluster_partitions
+                not_found!(topic_name) if partitions.nil? || partitions.empty?
+
+                @cluster_partitions = partitions.map do |partition_id, details|
+                  { id: partition_id, lag: details.fetch(:lag), stored_offset: details.fetch(:offset) }
+                end
               end
             end
           end

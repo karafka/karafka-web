@@ -161,6 +161,23 @@ describe_current do
       assert_body("kafka.topic.metadata.refresh.interval.ms")
       assert_body(breadcrumbs)
       assert_body("kafka.statistics.interval.ms")
+      refute_body("Delete Offsets")
+    end
+
+    context "when deleting offsets is allowed" do
+      let(:topic) { Karafka::App.routes.first.topics.first }
+
+      before do
+        Karafka::Web.config.ui.policies.consumer_groups.stubs(:delete_offsets?).returns(true)
+
+        get "routing/#{topic.id}"
+      end
+
+      it "expect to link to the offsets deletion of its consumer group" do
+        assert_ok
+        assert_body("health/topics/#{topic.consumer_group.id}/#{topic.name}/delete")
+        assert_body("Delete Offsets")
+      end
     end
 
     context "when sorting the details by attribute name" do
