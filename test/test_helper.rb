@@ -24,6 +24,11 @@ Warning.process do |warning|
   next if warning.include?("OpenStruct use") && warning.include?("/test/")
   next if warning.include?("vendor/")
   next if warning.include?("fixture_file")
+  # JRuby reports parse warnings on Tilt's template locals assignments (negative line
+  # numbers), which MRI hides, so unused template locals (e.g. icon `size`) warn only there
+  next if defined?(JRUBY_VERSION) &&
+    warning.include?(".erb:") &&
+    warning.include?("assigned but unused variable")
   # Both Roda app classes (OSS and Pro) intentionally accumulate many object shapes because
   # different routes set different subsets of controller response attributes. Controller
   # classes themselves have the same characteristic: most conditionally set a handful of
