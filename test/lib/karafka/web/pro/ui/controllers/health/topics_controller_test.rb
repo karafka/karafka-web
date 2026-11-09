@@ -557,6 +557,21 @@ describe_current do
         assert_body("9100")
         # Biggest single-partition lag is surfaced
         assert_body("9000")
+        refute_body("health/topics/example_app6_app/orders/delete")
+      end
+
+      context "when deleting offsets is allowed" do
+        before do
+          Karafka::Web.config.ui.policies.consumer_groups.stubs(:delete_offsets?).returns(true)
+
+          get "health/cluster_lags"
+        end
+
+        it "expect to link each topic to the offsets deletion" do
+          assert_ok
+          assert_body("health/topics/example_app6_app/orders/delete")
+          assert_body("health/topics/example_app6_app/visits/delete")
+        end
       end
 
       it "expect each topic to drill down into the per-topic cluster lags lens" do

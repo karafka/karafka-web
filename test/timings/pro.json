@@ -1,5 +1,7 @@
 {
   "test/lib/karafka/web/pro/ui/controllers/explorer/explorer_controller_test.rb": 60.645,
+  "test/lib/karafka/web/pro/ui/controllers/health/offsets_controller_test.rb": 5.0,
+  "test/lib/karafka/web/pro/ui/lib/policies/consumer_groups_test.rb": 0.01,
   "test/lib/karafka/web/pro/ui/controllers/consumers/partitions/pauses_controller_test.rb": 55.802,
   "test/lib/karafka/web/pro/ui/controllers/cluster_controller_test.rb": 50.435,
   "test/lib/karafka/web/pro/ui/controllers/consumers/consumers_controller_test.rb": 48.319,

@@ -48,6 +48,7 @@ module Karafka
                   nested(:policies) do
                     required(:messages) { |val| !val.nil? }
                     required(:requests) { |val| !val.nil? }
+                    required(:consumer_groups) { |val| !val.nil? }
                   end
                 end
               end

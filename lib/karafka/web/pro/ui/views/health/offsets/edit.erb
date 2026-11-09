@@ -1,0 +1,83 @@
+<%# Karafka Pro - Source Available Commercial Software %>
+<%# Copyright (c) 2017-present Maciej Mensfeld. All rights reserved. %>
+<%# This software is NOT open source. It is source-available commercial software %>
+<%# requiring a paid license for use. It is NOT covered by LGPL. %>
+<%# The author retains all right, title, and interest in this software, %>
+<%# including all copyrights, patents, and other intellectual property rights. %>
+<%# No patent rights are granted under this license. %>
+<%# PROHIBITED: Use without a valid commercial license %>
+<%# PROHIBITED: Redistribution, modification, or derivative works without authorization %>
+<%# PROHIBITED: Reverse engineering, decompilation, or disassembly of this software %>
+<%# PROHIBITED: Use as training data for AI/ML models or inclusion in datasets %>
+<%# PROHIBITED: Scraping, crawling, or automated collection for any purpose %>
+<%# PERMITTED: Reading, referencing, and linking for personal or commercial use %>
+<%# PERMITTED: Runtime retrieval by AI assistants, coding agents, and RAG systems %>
+<%# PERMITTED: for the purpose of providing contextual help to Karafka users %>
+<%# Receipt, viewing, or possession of this software does not convey or %>
+<%# imply any license or right beyond those expressly stated above. %>
+<%# License: https://karafka.io/docs/Pro-License-Comm/ %>
+<%# Contact: contact@karafka.io %>
+
+<% view_title "Deletion of #{@consumer_group_id} offsets for #{@topic_name}" %>
+
+<div class="space-y-4">
+  <% alert_box_warning('Offsets Deletion Warning') do %>
+    <ul class="list-disc ml-6">
+      <li>The committed offsets of this consumer group for all partitions of this topic will be permanently deleted</li>
+      <li>The consumer group and its offsets for other topics are kept</li>
+      <li>If the consumer group consumes this topic again, it starts from its initial offset</li>
+      <li>Kafka rejects the deletion while a running consumer of this consumer group is subscribed to this topic</li>
+      <li>This operation cannot be undone</li>
+    </ul>
+  <% end %>
+
+  <% if @subscribed %>
+    <% alert_box_error('Consumer Group Subscribed To Topic') do %>
+      Kafka did not delete the offsets because consumer group
+      <span class="font-bold"><%= @consumer_group_id %></span>
+      has running consumers subscribed to topic
+      <span class="font-bold"><%= @topic_name %></span>.
+      Stop them or remove this topic from their routing, then try again.
+    <% end %>
+  <% end %>
+
+  <% if @form_error %>
+    <%== partial 'shared/rdkafka_form_error_alert_box' %>
+  <% end %>
+
+  <div class="card bg-base-100">
+    <div class="card-body">
+      <div class="data-table-wrapper">
+        <%==
+          partial(
+            'health/cluster_lags_table',
+            locals: {
+              topic_name: @topic_name,
+              partitions: @cluster_partitions
+            }
+          )
+        %>
+      </div>
+
+      <form
+        action="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'delete') %>"
+        method="post"
+        class="mt-6"
+        data-turbo="false"
+      >
+        <input type="hidden" name="_method" value="delete">
+
+        <div class="flex justify-end gap-4">
+          <a href="<%= root_path('health', 'cluster_lags') %>" class="btn btn-ghost">
+            Cancel
+          </a>
+
+          <button type="submit" class="btn btn-error gap-2 btn-lockable confirm-action">
+            <%== icon(:trash) %>
+            Delete Offsets
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

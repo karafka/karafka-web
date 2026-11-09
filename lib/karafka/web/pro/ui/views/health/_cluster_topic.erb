@@ -20,9 +20,21 @@
 
 <tr class="<%= topic_lag_status_row(topic_stats) %>">
   <td>
-    <a href="<%= root_path('health', 'topics', cg_name, topic_name, 'cluster_lags') %>">
-      <%= topic_name %>
-    </a>
+    <div class="flex items-center gap-4">
+      <a href="<%= root_path('health', 'topics', cg_name, topic_name, 'cluster_lags') %>">
+        <%= topic_name %>
+      </a>
+
+      <% if ::Karafka::Web.config.ui.policies.consumer_groups.delete_offsets?(cg_name, topic_name) %>
+        <a
+          href="<%= root_path('health', 'topics', cg_name, topic_name, 'delete') %>"
+          class="btn-action"
+          title="Delete the committed offsets of this consumer group for this topic"
+        >
+          <%== icon(:trash) %>
+        </a>
+      <% end %>
+    </div>
   </td>
   <td>
     <%= topic_stats.partitions_count %>

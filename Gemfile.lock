@@ -1,3 +1,14 @@
+GIT
+  remote: https://github.com/karafka/karafka
+  revision: 86063e804afd99fd365a36a9050af9a46fd01940
+  branch: 47274-delete-consumer-group-offsets
+  specs:
+    karafka (2.6.1)
+      karafka-core (>= 2.6.3, < 2.7.0)
+      karafka-rdkafka (>= 0.32.0)
+      waterdrop (>= 2.10.2, < 3.0.0)
+      zeitwerk (~> 2.3)
+
 PATH
   remote: .
   specs:
@@ -31,50 +42,35 @@ GEM
       et-orbi (~> 1.4)
       raabro (~> 1.4)
     json (3.0.2)
-    karafka (2.6.1)
-      karafka-core (>= 2.6.2, < 2.7.0)
-      karafka-rdkafka (>= 0.28.0)
-      waterdrop (>= 2.10.2, < 3.0.0)
-      zeitwerk (~> 2.3)
     karafka-core (2.6.6)
       karafka-rdkafka (>= 0.20.0)
       logger (>= 1.6.0)
-    karafka-rdkafka (0.31.0)
+    karafka-rdkafka (0.32.0)
       ffi (~> 1.17.1)
       json (> 2.0)
       logger
       mini_portile2 (~> 2.6)
       rake (> 12)
-    karafka-rdkafka (0.31.0-aarch64-linux-gnu)
+    karafka-rdkafka (0.32.0-aarch64-linux-gnu)
       ffi (~> 1.17.1)
       json (> 2.0)
       logger
-      mini_portile2 (~> 2.6)
-      rake (> 12)
-    karafka-rdkafka (0.31.0-aarch64-linux-musl)
+    karafka-rdkafka (0.32.0-aarch64-linux-musl)
       ffi (~> 1.17.1)
       json (> 2.0)
       logger
-      mini_portile2 (~> 2.6)
-      rake (> 12)
-    karafka-rdkafka (0.31.0-arm64-darwin)
+    karafka-rdkafka (0.32.0-arm64-darwin)
       ffi (~> 1.17.1)
       json (> 2.0)
       logger
-      mini_portile2 (~> 2.6)
-      rake (> 12)
-    karafka-rdkafka (0.31.0-x86_64-linux-gnu)
+    karafka-rdkafka (0.32.0-x86_64-linux-gnu)
       ffi (~> 1.17.1)
       json (> 2.0)
       logger
-      mini_portile2 (~> 2.6)
-      rake (> 12)
-    karafka-rdkafka (0.31.0-x86_64-linux-musl)
+    karafka-rdkafka (0.32.0-x86_64-linux-musl)
       ffi (~> 1.17.1)
       json (> 2.0)
       logger
-      mini_portile2 (~> 2.6)
-      rake (> 12)
     logger (1.7.0)
     mini_portile2 (2.8.9)
     minitest (6.0.6)
@@ -122,6 +118,7 @@ PLATFORMS
 
 DEPENDENCIES
   fugit
+  karafka!
   karafka-web!
   minitest
   mocha
