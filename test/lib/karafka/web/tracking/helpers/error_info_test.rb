@@ -11,12 +11,6 @@ describe_current do
 
   describe "#extract_error_info" do
     context "with standard error scenarios" do
-      let(:original_env) { ENV.to_h }
-
-      before { original_env }
-
-      after { ENV.replace(original_env) }
-
       it "extracts basic error information" do
         error = StandardError.new("test message")
         result = extractor.extract_error_info(error)
@@ -72,6 +66,12 @@ describe_current do
     end
 
     context "with backtrace processing" do
+      let(:original_env) { ENV.to_h }
+
+      before { original_env }
+
+      after { ENV.replace(original_env) }
+
       it "handles error without backtrace" do
         error = StandardError.new("no backtrace")
         error.stubs(:backtrace).returns(nil)
