@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+$VERBOSE = true
+
 require "simplecov"
 require "rack/test"
 require "ostruct"
@@ -21,8 +23,12 @@ Warning.process do |warning|
   # Allow OpenStruct usage only in tests
   next if warning.include?("OpenStruct use") && warning.include?("/test/")
   next if warning.include?("vendor/")
-  next if warning.include?("minitest_locator.rb")
   next if warning.include?("fixture_file")
+  # JRuby reports parse warnings on Tilt's template locals assignments (negative line
+  # numbers), which MRI hides, so unused template locals (e.g. icon `size`) warn only there
+  next if defined?(JRUBY_VERSION) &&
+    warning.include?(".erb:") &&
+    warning.include?("assigned but unused variable")
   # Both Roda app classes (OSS and Pro) intentionally accumulate many object shapes because
   # different routes set different subsets of controller response attributes. Controller
   # classes themselves have the same characteristic: most conditionally set a handful of
@@ -149,17 +155,18 @@ class Minitest::Spec
   end
 end
 
-# Extend Minitest::Spec with the locator for describe_current
-Minitest::Spec.extend MinitestLocator.new(__FILE__)
-
-# Make describe_current available at top level (like Minitest's describe via Kernel)
-module Kernel
-  private
-
-  def describe_current(&block)
-    Minitest::Spec.describe_current(&block)
-  end
+# Base class for controller specs, picked by `describe` for `*::Controllers::*Controller` classes
+class ControllerSpec < Minitest::Spec
+  include Rack::Test::Methods
+  include ControllerHelper
 end
+
+Minitest::Spec.register_spec_type(ControllerSpec) do |desc|
+  desc.is_a?(Module) && desc.to_s.include?("::Controllers") && desc.to_s.end_with?("Controller")
+end
+
+require "karafka/core/helpers/minitest_locator"
+extend Karafka::Core::Helpers::MinitestLocator.new(__FILE__)
 
 include TopicsManagerHelper
 

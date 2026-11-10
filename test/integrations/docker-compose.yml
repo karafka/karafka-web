@@ -1,8 +1,27 @@
 # Docker Compose configuration for integration testing
 # This sets up containers to test cgroup detection and container metrics
-# No Kafka needed - just testing metrics reading from cgroup files
+# Kafka runs for every scenario; scenarios that use it create randomized topics
 
 services:
+  # Single-node Kafka for scenarios that run Karafka processes
+  kafka:
+    image: confluentinc/cp-kafka:8.3.0
+    container_name: karafka-web-test-kafka
+    environment:
+      CLUSTER_ID: karafka-web-test-cluster-1
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+
   # Test container with cgroup v2 and memory limit
   # This tests container metrics detection with memory constraints
   test-container-limited:
@@ -10,9 +29,12 @@ services:
       context: ../..
       dockerfile: test/integrations/Dockerfile
     container_name: karafka-web-test-limited
+    depends_on:
+      - kafka
     environment:
       - TEST_SCENARIO=limited
       - INTEGRATION_TEST=true
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     mem_limit: 512m
     mem_reservation: 256m
     cpus: 1.0
@@ -33,9 +55,12 @@ services:
       context: ../..
       dockerfile: test/integrations/Dockerfile
     container_name: karafka-web-test-unlimited
+    depends_on:
+      - kafka
     environment:
       - TEST_SCENARIO=unlimited
       - INTEGRATION_TEST=true
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     volumes:
       - ../..:/app:ro
     working_dir: /app
@@ -53,9 +78,12 @@ services:
       context: ../..
       dockerfile: test/integrations/Dockerfile
     container_name: karafka-web-test-strict
+    depends_on:
+      - kafka
     environment:
       - TEST_SCENARIO=strict
       - INTEGRATION_TEST=true
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     mem_limit: 256m
     mem_reservation: 128m
     cpus: 0.5
@@ -78,13 +106,38 @@ services:
       args:
         BASE_IMAGE: jruby:10.0.7.0-jdk21
     container_name: karafka-web-test-jruby
+    depends_on:
+      - kafka
     environment:
       - TEST_SCENARIO=jruby
       - INTEGRATION_TEST=true
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     # No read-only source mount: Bundler adds the java platform to the image's Gemfile.lock
     working_dir: /app
     command: >
       bash -c "
         echo 'Running integration tests on JRuby...' &&
         bundle exec ruby test/integrations/os_metrics_spec.rb
+      "
+
+  # Test container running `karafka swarm` against Kafka
+  # This tests that swarm nodes keep a dedicated, non-idempotent Web UI producer
+  test-container-swarm:
+    build:
+      context: ../..
+      dockerfile: test/integrations/Dockerfile
+    container_name: karafka-web-test-swarm
+    depends_on:
+      - kafka
+    environment:
+      - TEST_SCENARIO=swarm
+      - INTEGRATION_TEST=true
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    volumes:
+      - ../..:/app:ro
+    working_dir: /app
+    command: >
+      bash -c "
+        echo 'Running swarm integration tests...' &&
+        bundle exec ruby test/integrations/swarm_dedicated_producer_spec.rb
       "

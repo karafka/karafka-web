@@ -70,6 +70,31 @@ module Karafka
               "#{root_path("health", "topics")}?filter[field]=consumer_group&filter[value]=#{value}"
             end
 
+            # @return [String] path to the aggregated topics list sorted by total lag, worst first
+            def health_topics_by_lag_path
+              "#{root_path("health", "topics")}?sort=lag_hybrid+desc"
+            end
+
+            # @param consumer_group_id [String] consumer group id
+            # @param topic_name [String] name of the topic
+            # @return [String] path to the topic overview lens with partitions sorted by lag,
+            #   worst first
+            def health_overview_by_lag_path(consumer_group_id, topic_name)
+              path = root_path("health", "topics", consumer_group_id, topic_name, "overview")
+
+              "#{path}?sort=lag_hybrid+desc"
+            end
+
+            # @param consumer_group_id [String] consumer group id
+            # @param topic_name [String] name of the topic
+            # @return [String] path to the topic cluster lags lens with partitions sorted by lag,
+            #   worst first
+            def health_cluster_lags_by_lag_path(consumer_group_id, topic_name)
+              path = root_path("health", "topics", consumer_group_id, topic_name, "cluster_lags")
+
+              "#{path}?sort=lag+desc"
+            end
+
             # Classifies a lag value against the configured high-lag threshold, for at-a-glance row
             # highlighting. The threshold marks an error; `warning_ratio` of it marks a warning.
             #

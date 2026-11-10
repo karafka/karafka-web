@@ -18,9 +18,16 @@ env:
   BUNDLE_JOBS: 4
 
 jobs:
+  # Docs-only pull requests skip the jobs below; CI Success still runs and reports success,
+  # so the required check does not stay pending
+  changes:
+    uses: ./.github/workflows/ci_changes.yml
+
   tests:
     timeout-minutes: 30
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     strategy:
       fail-fast: false
       matrix:
@@ -55,7 +62,7 @@ jobs:
           done
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
+        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
           ruby-version: ${{matrix.ruby}}
           bundler-cache: true
@@ -93,13 +100,15 @@ jobs:
   rubocop:
     timeout-minutes: 5
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     env:
       BUNDLE_GEMFILE: Gemfile.lint
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
+        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
           ruby-version: '4.0.9'
           bundler-cache: true
@@ -110,6 +119,8 @@ jobs:
   assets:
     timeout-minutes: 10
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -140,6 +151,8 @@ jobs:
   integrations:
     timeout-minutes: 15
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -152,13 +165,15 @@ jobs:
   yard-lint:
     timeout-minutes: 5
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     env:
       BUNDLE_GEMFILE: Gemfile.lint
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
+        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
           ruby-version: '4.0.9'
           bundler-cache: true
@@ -169,6 +184,8 @@ jobs:
   herb-lint:
     timeout-minutes: 5
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -188,6 +205,8 @@ jobs:
   lostconf:
     timeout-minutes: 5
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -211,6 +230,7 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     needs:
+      - changes
       - rubocop
       - tests
       - integrations
@@ -219,10 +239,12 @@ jobs:
       - herb-lint
       - lostconf
     steps:
+      # Skipped jobs are fine only when the change is docs-only
       - name: Check all jobs passed
         if: |
+          needs.changes.result != 'success' ||
           contains(needs.*.result, 'failure') ||
           contains(needs.*.result, 'cancelled') ||
-          contains(needs.*.result, 'skipped')
+          (needs.changes.outputs.code != 'false' && contains(needs.*.result, 'skipped'))
         run: exit 1
       - run: echo "All CI checks passed!"
