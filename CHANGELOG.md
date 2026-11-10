@@ -63,6 +63,7 @@
 - [Fix] Sort the Health topic overview by process when the "Process ID" header is used, instead of by partition id (Pro).
 - [Fix] Detect the OS from `RbConfig::CONFIG["host_os"]` instead of `RUBY_PLATFORM`, so Karafka Web loads on JRuby and reports its OS metrics (#847).
 - [Fix] Require karafka-core `>= 2.6.6`, whose thread-safe tags stop a JRuby crash when the reporter serializes tags.
+- [Fix] Republish the raw key and headers of the source message, like its payload, so custom key or headers deserializers no longer change the copy or fail the republish with a 500 (Pro).
 - [Fix] Keep a dedicated Web UI producer (e.g. a non-idempotent one) in `karafka swarm` nodes instead of replacing it with the app producer.
 
 ## 1.0.1 (2026-08-24)
