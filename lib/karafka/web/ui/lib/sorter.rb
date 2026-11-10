@@ -96,10 +96,7 @@ module Karafka
               # false is sortable but nil is not
               sorted = hash.sort_by { |key, _| key.to_s }
             else
-              values = hash.values.map { |value| sortable_value(value) }
-
-              return if values.any?(&:nil?)
-              return unless values.map(&:class).uniq.size == 1
+              return unless sortable?(hash.each_value)
 
               # Generate new hash that will have things in our desired order
               sorted = hash.sort_by { |_, value| sortable_value(value) }
@@ -125,13 +122,32 @@ module Karafka
             # Sort arrays containing hashes by a specific attribute
             array.map! { |element| call(element, current_depth + 1) }
 
-            values = array.map { |element| sortable_value(element) }
-
-            return if values.any?(&:nil?)
-            return unless values.map(&:class).uniq.size == 1
+            return unless sortable?(array)
 
             array.sort_by! { |element| sortable_value(element) }
             array.reverse! if desc?
+          end
+
+          # Checks that every element has a sortable value and that all of them are of the same
+          # class. Stops on the first element that fails, so a field that elements do not have
+          # does not run the (possibly deep) value lookup on all of them.
+          #
+          # @param elements [Enumerable] elements we want to sort
+          # @return [Boolean] true if elements can be sorted, otherwise false
+          def sortable?(elements)
+            value_class = nil
+
+            elements.each do |element|
+              value = sortable_value(element)
+
+              return false if value.nil?
+
+              value_class ||= value.class
+
+              return false unless value.instance_of?(value_class)
+            end
+
+            !value_class.nil?
           end
 
           # @return [Boolean] true if we sort in desc, otherwise false
