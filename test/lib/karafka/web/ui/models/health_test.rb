@@ -195,5 +195,68 @@ describe_current do
         assert_equal({ id: 0, lag: 10, stored_offset: 100 }, partitions.first)
       end
     end
+
+    context "when a consumer group has committed offsets for topics outside the routing" do
+      let(:consumer_group_id) { "it-cluster-lags-#{SecureRandom.uuid}" }
+      let(:routed_topic) { create_topic }
+      let(:inactive_topic) { create_topic }
+      let(:outside_topic) { create_topic(partitions: 2) }
+      let(:uncommitted_topic) { create_topic }
+      let(:consumer_group) { result.fetch(consumer_group_id) }
+
+      before do
+        Karafka::Admin.unstub(:read_lags_with_offsets)
+
+        produce_many(outside_topic, Array.new(10) { SecureRandom.uuid }, partition: 0)
+        produce_many(uncommitted_topic, Array.new(10) { SecureRandom.uuid })
+
+        group = consumer_group_id
+        active_topic_name = routed_topic
+        inactive_topic_name = inactive_topic
+        draw_routes do
+          consumer_group group do
+            topic active_topic_name do
+              consumer Karafka::BaseConsumer
+            end
+
+            topic inactive_topic_name do
+              active(false)
+            end
+          end
+        end
+
+        Karafka::Admin.seek_consumer_group(consumer_group_id, outside_topic => { 0 => 4 })
+      end
+
+      context "when cluster lags are limited to active topics" do
+        it "expect only the active routed topics" do
+          assert_equal([routed_topic], consumer_group.keys)
+        end
+      end
+
+      context "when cluster lags are not limited to active topics" do
+        before do
+          Karafka::Web.config.ui.visibility.stubs(:active_topics_cluster_lags_only).returns(false)
+        end
+
+        it "expect the routed topics and the topics with committed offsets" do
+          assert_equal(
+            [routed_topic, inactive_topic, outside_topic].sort,
+            consumer_group.keys
+          )
+        end
+
+        it "expect the lags and offsets of the topics outside the routing" do
+          assert_equal(
+            [{ id: 0, lag: 6, stored_offset: 4 }, { id: 1, lag: -1, stored_offset: -1 }],
+            consumer_group.fetch(outside_topic)
+          )
+        end
+
+        it "expect no topics outside the routing without committed offsets" do
+          refute_includes(consumer_group.keys, uncommitted_topic)
+        end
+      end
+    end
   end
 end

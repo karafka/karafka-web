@@ -45,6 +45,11 @@ docker compose -f test/integrations/docker-compose.yml up \
   --exit-code-from test-container-swarm \
   test-container-swarm
 
+docker compose -f test/integrations/docker-compose.yml up \
+  --abort-on-container-exit \
+  --exit-code-from test-container-cluster-lags \
+  test-container-cluster-lags
+
 echo ""
 echo "================================================"
 echo "All integration tests completed successfully!"

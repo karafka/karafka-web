@@ -799,5 +799,53 @@ describe_current do
         assert_body("health/topics/#{lagging_group}/#{lagging_topic}/cluster_lags")
       end
     end
+
+    context "when a routed consumer group has committed offsets for a topic outside the routing" do
+      let(:routed_topic) { create_topic }
+      let(:outside_topic) { create_topic }
+      let(:lagging_group) { "it-cluster-lags-#{SecureRandom.uuid}" }
+
+      before do
+        produce_many(outside_topic, Array.new(100) { SecureRandom.uuid })
+
+        group = lagging_group
+        topic_name = routed_topic
+        draw_routes do
+          consumer_group group do
+            topic topic_name do
+              consumer Karafka::BaseConsumer
+            end
+          end
+        end
+
+        Karafka::Admin.seek_consumer_group(lagging_group, outside_topic => { 0 => 30 })
+      end
+
+      context "when cluster lags are limited to active topics" do
+        before { get "health/cluster_lags" }
+
+        it do
+          assert_ok
+          assert_body(routed_topic)
+          refute_body(outside_topic)
+        end
+      end
+
+      context "when cluster lags are not limited to active topics" do
+        before do
+          Karafka::Web.config.ui.visibility.stubs(:active_topics_cluster_lags_only).returns(false)
+
+          get "health/cluster_lags"
+        end
+
+        it do
+          assert_ok
+          assert_body(routed_topic)
+          assert_body(outside_topic)
+          assert_body("70")
+          assert_body("health/topics/#{lagging_group}/#{outside_topic}/cluster_lags")
+        end
+      end
+    end
   end
 end

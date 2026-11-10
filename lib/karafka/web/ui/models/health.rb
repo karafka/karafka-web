@@ -25,9 +25,7 @@ module Karafka
               # We need to remap raw results so they comply with our sorting flows
               mapped_lags = {}
 
-              ::Karafka::Admin.read_lags_with_offsets(
-                active_topics_only: Web.config.ui.visibility.active_topics_cluster_lags_only
-              ).each do |consumer_group, topics|
+              read_lags_with_offsets.each do |consumer_group, topics|
                 mapped_lags[consumer_group] ||= {}
 
                 topics.each do |topic_name, partitions_details|
@@ -47,6 +45,32 @@ module Karafka
             end
 
             private
+
+            # @return [Hash] raw cluster lags with offsets of the routed consumer groups. Unless
+            #   limited to active topics, they also cover the topics outside the routing for which
+            #   those consumer groups have committed offsets
+            def read_lags_with_offsets
+              if Web.config.ui.visibility.active_topics_cluster_lags_only
+                return ::Karafka::Admin.read_lags_with_offsets
+              end
+
+              cluster_topics = ClusterInfo.fetch.topics.map { |topic| topic[:topic_name] }
+
+              routed_topics = ::Karafka::App.routes.consumer_groups.to_h do |consumer_group|
+                [consumer_group.id, consumer_group.topics.map(&:name)]
+              end
+
+              lags = ::Karafka::Admin.read_lags_with_offsets(
+                routed_topics.transform_values { |topics| topics | cluster_topics }
+              )
+
+              lags.each do |consumer_group, topics|
+                topics.select! do |topic_name, partitions|
+                  routed_topics.fetch(consumer_group).include?(topic_name) ||
+                    partitions.each_value.any? { |details| details.fetch(:offset) >= 0 }
+                end
+              end
+            end
 
             # Aggregates data on a per topic basis (in the context of a consumer group)
             # @param state [Hash]

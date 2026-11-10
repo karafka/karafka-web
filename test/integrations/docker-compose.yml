@@ -141,3 +141,25 @@ services:
         echo 'Running swarm integration tests...' &&
         bundle exec ruby test/integrations/swarm_dedicated_producer_spec.rb
       "
+
+  # Test container reading Health cluster lags from Kafka
+  # This tests that cluster lags cover topics outside the routing with committed offsets
+  test-container-cluster-lags:
+    build:
+      context: ../..
+      dockerfile: test/integrations/Dockerfile
+    container_name: karafka-web-test-cluster-lags
+    depends_on:
+      - kafka
+    environment:
+      - TEST_SCENARIO=cluster_lags
+      - INTEGRATION_TEST=true
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    volumes:
+      - ../..:/app:ro
+    working_dir: /app
+    command: >
+      bash -c "
+        echo 'Running cluster lags integration tests...' &&
+        bundle exec ruby test/integrations/cluster_lags_outside_routing_spec.rb
+      "
