@@ -11,6 +11,12 @@ describe_current do
 
   describe "#extract_error_info" do
     context "with standard error scenarios" do
+      let(:original_env) { ENV.to_h }
+
+      before { original_env }
+
+      after { ENV.replace(original_env) }
+
       it "extracts basic error information" do
         error = StandardError.new("test message")
         result = extractor.extract_error_info(error)
@@ -107,8 +113,7 @@ describe_current do
         error = StandardError.new("with gem paths")
 
         gem_home = "/test/gem/home"
-        ENV.stubs(:key?).with("GEM_HOME").returns(true)
-        ENV.stubs(:[]).with("GEM_HOME").returns(gem_home)
+        ENV["GEM_HOME"] = gem_home
 
         backtrace = [
           "#{gem_home}/gems/some_gem/lib/file.rb:10:in `gem_method'",
@@ -127,7 +132,7 @@ describe_current do
       it "handles backtrace when GEM_HOME not set" do
         error = StandardError.new("no gem home")
 
-        ENV.stubs(:key?).with("GEM_HOME").returns(false)
+        ENV.delete("GEM_HOME")
 
         backtrace = ["/some/path/file.rb:10:in `method'"]
         error.set_backtrace(backtrace)
