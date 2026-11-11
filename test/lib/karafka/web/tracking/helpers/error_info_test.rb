@@ -66,6 +66,12 @@ describe_current do
     end
 
     context "with backtrace processing" do
+      let(:original_env) { ENV.to_h }
+
+      before { original_env }
+
+      after { ENV.replace(original_env) }
+
       it "handles error without backtrace" do
         error = StandardError.new("no backtrace")
         error.stubs(:backtrace).returns(nil)
@@ -107,8 +113,7 @@ describe_current do
         error = StandardError.new("with gem paths")
 
         gem_home = "/test/gem/home"
-        ENV.stubs(:key?).with("GEM_HOME").returns(true)
-        ENV.stubs(:[]).with("GEM_HOME").returns(gem_home)
+        ENV["GEM_HOME"] = gem_home
 
         backtrace = [
           "#{gem_home}/gems/some_gem/lib/file.rb:10:in `gem_method'",
@@ -127,7 +132,7 @@ describe_current do
       it "handles backtrace when GEM_HOME not set" do
         error = StandardError.new("no gem home")
 
-        ENV.stubs(:key?).with("GEM_HOME").returns(false)
+        ENV.delete("GEM_HOME")
 
         backtrace = ["/some/path/file.rb:10:in `method'"]
         error.set_backtrace(backtrace)
