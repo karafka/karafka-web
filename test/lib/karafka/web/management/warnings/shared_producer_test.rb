@@ -25,7 +25,7 @@ describe_current do
       check
     end
 
-    it "expect to say that the Web UI reports and the application messages stop" do
+    it "expect to say that the application messages and the Web UI reports fail" do
       Karafka.logger
         .expects(:warn)
         .with { |message| message.include?("application messages, the Karafka Web UI reports") }
