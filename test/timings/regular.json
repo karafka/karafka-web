@@ -152,6 +152,7 @@
   "test/lib/karafka/web/management/migrations/consumers_states/1699543515_fill_missing_received_and_sent_bytes_test.rb": 0.005,
   "test/lib/karafka/web/management/migrations/consumers_metrics/1700234522_introduce_waiting_test.rb": 0.005,
   "test/lib/karafka/web/management/actions/extend_boot_file_test.rb": 0.005,
+  "test/lib/karafka/web/management/warnings/shared_producer_test.rb": 0.005,
   "test/lib/karafka/web/management/actions/enable_test.rb": 0.005,
   "test/lib/karafka/web/management/migrations/consumers_states/1704722380_split_listeners_into_active_and_paused_test.rb": 0.004,
   "test/lib/karafka/web/ui/models/status/checks/enabled_test.rb": 0.004,

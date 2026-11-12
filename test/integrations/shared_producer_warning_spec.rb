@@ -8,7 +8,6 @@
 
 require "bundler/setup"
 require "open3"
-require "securerandom"
 require "tmpdir"
 require_relative "helper"
 

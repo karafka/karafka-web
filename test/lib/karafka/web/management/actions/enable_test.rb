@@ -81,11 +81,12 @@ describe_current do
       end
     end
 
-    context "when the default Karafka producer is neither idempotent nor transactional" do
-      it "expect not to warn about the shared producer" do
-        Karafka.logger.expects(:warn).never
-        enable
-      end
+    it "expect to run the shared producer warning check" do
+      warning = stub
+      warning.expects(:call).once
+      Karafka::Web::Management::Warnings::SharedProducer.stubs(:new).returns(warning)
+
+      enable
     end
 
     context "when the default Karafka producer is idempotent" do
@@ -98,45 +99,6 @@ describe_current do
           .once
 
         enable
-      end
-
-      it "expect to point to the custom Web UI producer docs" do
-        Karafka.logger
-          .expects(:warn)
-          .with { |message| message.include?("#using-a-custom-web-ui-producer") }
-
-        enable
-      end
-
-      context "when a custom Web UI producer is configured" do
-        before { Karafka::Web.config.stubs(:producer).returns(stub) }
-
-        it "expect not to warn about the shared producer" do
-          Karafka.logger.expects(:warn).never
-          enable
-        end
-      end
-    end
-
-    context "when the default Karafka producer is transactional" do
-      before { producer.stubs(:transactional?).returns(true) }
-
-      it "expect to warn once that the Web UI reports through it" do
-        Karafka.logger
-          .expects(:warn)
-          .with { |message| message.include?("Unable to reconstruct MessageSet") }
-          .once
-
-        enable
-      end
-
-      context "when a custom Web UI producer is configured" do
-        before { Karafka::Web.config.stubs(:producer).returns(stub) }
-
-        it "expect not to warn about the shared producer" do
-          Karafka.logger.expects(:warn).never
-          enable
-        end
       end
     end
 
