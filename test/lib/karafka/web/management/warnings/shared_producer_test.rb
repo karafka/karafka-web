@@ -33,6 +33,14 @@ describe_current do
       check
     end
 
+    it "expect to say when the producer stops dispatching" do
+      Karafka.logger
+        .expects(:warn)
+        .with { |message| message.include?("stops dispatching unless reload_on_idempotent_fatal_error") }
+
+      check
+    end
+
     it "expect to point to the custom Web UI producer docs" do
       Karafka.logger
         .expects(:warn)
