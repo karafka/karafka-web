@@ -22,7 +22,7 @@ describe_current do
     let(:app_monitor) { stub }
     let(:wd_monitor) { stub }
     let(:producer_monitor) { FakeProducerMonitor.new }
-    let(:producer) { stub(monitor: producer_monitor) }
+    let(:producer) { stub(monitor: producer_monitor, idempotent?: false, transactional?: false) }
 
     before do
       # Config mocks
@@ -78,6 +78,65 @@ describe_current do
         enable
 
         assert_equal(1, producer_monitor.subscribed_count(producer_listener))
+      end
+    end
+
+    context "when the default Karafka producer is neither idempotent nor transactional" do
+      it "expect not to warn about the shared producer" do
+        Karafka.logger.expects(:warn).never
+        enable
+      end
+    end
+
+    context "when the default Karafka producer is idempotent" do
+      before { producer.stubs(:idempotent?).returns(true) }
+
+      it "expect to warn once that the Web UI reports through it" do
+        Karafka.logger
+          .expects(:warn)
+          .with { |message| message.include?("Unable to reconstruct MessageSet") }
+          .once
+
+        enable
+      end
+
+      it "expect to point to the custom Web UI producer docs" do
+        Karafka.logger
+          .expects(:warn)
+          .with { |message| message.include?("#using-a-custom-web-ui-producer") }
+
+        enable
+      end
+
+      context "when a custom Web UI producer is configured" do
+        before { Karafka::Web.config.stubs(:producer).returns(stub) }
+
+        it "expect not to warn about the shared producer" do
+          Karafka.logger.expects(:warn).never
+          enable
+        end
+      end
+    end
+
+    context "when the default Karafka producer is transactional" do
+      before { producer.stubs(:transactional?).returns(true) }
+
+      it "expect to warn once that the Web UI reports through it" do
+        Karafka.logger
+          .expects(:warn)
+          .with { |message| message.include?("Unable to reconstruct MessageSet") }
+          .once
+
+        enable
+      end
+
+      context "when a custom Web UI producer is configured" do
+        before { Karafka::Web.config.stubs(:producer).returns(stub) }
+
+        it "expect not to warn about the shared producer" do
+          Karafka.logger.expects(:warn).never
+          enable
+        end
       end
     end
 

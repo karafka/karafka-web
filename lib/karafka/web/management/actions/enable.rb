@@ -8,6 +8,17 @@ module Karafka
         #   also in the context of other processes types and not only karafka server, because it
         #   installs producers instrumentation and routing as well.
         class Enable < Base
+          # Logged when the Web UI reports through an idempotent or transactional app producer
+          SHARED_PRODUCER_WARNING = <<~MSG.tr("\n", " ").strip
+            Karafka Web UI reports through the idempotent or transactional Karafka.producer.
+            A fatal idempotence error on it (e.g. librdkafka "Unable to reconstruct MessageSet")
+            also stops your application produces.
+            Configure a dedicated Web UI producer to isolate them:
+            https://karafka.io/docs/Web-UI-Configuration/#using-a-custom-web-ui-producer
+          MSG
+
+          private_constant :SHARED_PRODUCER_WARNING
+
           # Enables routing consumer group and subscribes Web-UI listeners
           def call
             ensure_karafka_initialized!
@@ -20,6 +31,7 @@ module Karafka
             extend_routing
             extend_declaratives
             setup_tracking_activity
+            warn_on_shared_idempotent_producer
 
             # Do not subscribe monitors or do anything else if tracking is disabled
             return unless ::Karafka::Web.config.tracking.active
@@ -44,6 +56,18 @@ module Karafka
             return unless ::Karafka::Web.config.tracking.active.nil?
 
             ::Karafka::Web.config.tracking.active = true
+          end
+
+          # Warns when the Web UI dispatches through an idempotent or transactional app producer,
+          # because a fatal idempotence error raised there also stops the app produces
+          def warn_on_shared_idempotent_producer
+            return unless ::Karafka::Web.config.producer.instance_of?(::Karafka::Web::Producer)
+
+            app_producer = ::Karafka.producer
+
+            return unless app_producer.idempotent? || app_producer.transactional?
+
+            ::Karafka.logger.warn(SHARED_PRODUCER_WARNING)
           end
 
           # Enables all the needed routes
