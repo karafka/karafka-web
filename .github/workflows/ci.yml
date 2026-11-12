@@ -24,7 +24,8 @@ jobs:
     uses: ./.github/workflows/ci_changes.yml
 
   tests:
-    timeout-minutes: 30
+    # JRuby runs the OSS tests in one process, which takes about 20 minutes on its own
+    timeout-minutes: ${{ startsWith(matrix.ruby, 'jruby') && 45 || 30 }}
     runs-on: ubuntu-latest
     needs: changes
     if: needs.changes.outputs.code == 'true'
@@ -35,6 +36,7 @@ jobs:
           - '4.0'
           - '3.4'
           - '3.3'
+          - 'jruby-10.0'
         include:
           - ruby: '3.4'
             coverage: 'true'
@@ -65,7 +67,9 @@ jobs:
         uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
         with:
           ruby-version: ${{matrix.ruby}}
-          bundler-cache: true
+          # Gemfile.lock has no java platform, so a frozen cached install fails on JRuby;
+          # the Bundle install step below adds the platform
+          bundler-cache: ${{ !startsWith(matrix.ruby, 'jruby') }}
           bundler: 'latest'
 
       - name: Install latest bundler
@@ -83,12 +87,24 @@ jobs:
         run: bundle exec bin/wait_for_kafka
 
       - name: Run all tests
+        if: ${{ !startsWith(matrix.ruby, 'jruby') }}
         env:
           GITHUB_COVERAGE: ${{matrix.coverage}}
           KARAFKA_PRO_LICENSE_TOKEN: ${{ secrets.KARAFKA_PRO_LICENSE_TOKEN }}
         run: bin/tests_parallel
 
+      # JRuby runs the OSS tests only, in one process and without the Pro license
+      - name: Run OSS tests (JRuby)
+        if: ${{ startsWith(matrix.ruby, 'jruby') }}
+        env:
+          SPECS_TYPE: regular
+        run: |
+          mapfile -t files < <(find test/lib/karafka/web -name '*_test.rb' -not -path '*/pro/*' | sort)
+          bundle exec ruby -Itest -Ilib -e 'files = ARGV.dup; require "test_helper"; files.each { |f| require File.expand_path(f) }' "${files[@]}"
+
+      # Coverage thresholds count the Pro tests, which JRuby does not run
       - name: Check coverage
+        if: ${{ !startsWith(matrix.ruby, 'jruby') }}
         run: bin/check_coverage
 
       - name: Check Kafka logs for unexpected warnings
