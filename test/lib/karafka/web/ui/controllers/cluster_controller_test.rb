@@ -39,6 +39,7 @@ describe_current do
     it do
       assert_ok
       assert_body(breadcrumbs)
+      assert_match(%r{<h1 class="page-title[^"]*">\s*Cluster\s*</h1>}, body)
     end
 
     context "when the cluster has multiple brokers (simulated metadata)" do
