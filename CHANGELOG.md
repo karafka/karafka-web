@@ -58,6 +58,7 @@
 - [Fix] Republish the raw key and headers of the source message, like its payload, so custom key or headers deserializers no longer change the copy or fail the republish with a 500 (Pro).
 - [Fix] Keep a dedicated Web UI producer (e.g. a non-idempotent one) in `karafka swarm` nodes instead of replacing it with the app producer.
 - [Fix] Fix the "Configuraton" typo in the topic configuration page title (Pro).
+- [Fix] Show the "Cluster" page title on the Cluster Replication page.
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a keyword filtering box to the data-heavy Web UI listings, with a field selector on flat listings (Pro) (#1073).
