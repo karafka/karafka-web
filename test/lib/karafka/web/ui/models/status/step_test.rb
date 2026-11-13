@@ -13,6 +13,12 @@ describe_current do
       it { assert(step.success?) }
     end
 
+    context "when status is :info" do
+      let(:status) { :info }
+
+      it { assert(step.success?) }
+    end
+
     context "when status is :warning" do
       let(:status) { :warning }
 
@@ -37,6 +43,12 @@ describe_current do
       let(:status) { :success }
 
       it { assert_equal("successes", step.partial_namespace) }
+    end
+
+    context "when status is :info" do
+      let(:status) { :info }
+
+      it { assert_equal("info", step.partial_namespace) }
     end
 
     context "when status is :warning" do
