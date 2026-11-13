@@ -19,7 +19,7 @@ module Karafka
               # @return [Status::Step] info when the default Web UI producer wraps an idempotent
               #   or transactional `Karafka.producer`, success otherwise
               def call
-                # A custom Web UI producer is not shared with the application
+                # A producer set in the Web UI config is the user's explicit choice
                 return step(:success) unless ::Karafka::Web.config.producer.instance_of?(
                   ::Karafka::Web::Producer
                 )
