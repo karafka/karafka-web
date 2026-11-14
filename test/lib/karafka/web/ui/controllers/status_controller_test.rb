@@ -299,6 +299,57 @@ describe_current do
       end
     end
 
+    context "when the Web UI reports through a transactional app producer" do
+      before do
+        Karafka.stubs(:producer).returns(PRODUCERS.transactional)
+        get "status"
+      end
+
+      it do
+        assert_ok
+        assert_body("Web UI producer")
+        assert_body("reports through your transactional <code>Karafka.producer</code>")
+        assert_body("#using-a-custom-web-ui-producer")
+      end
+    end
+
+    context "when the Web UI reports through an idempotent app producer" do
+      let(:idempotent_producer) do
+        WaterDrop::Producer.new do |p_config|
+          p_config.kafka = Karafka::Setup::AttributesMap.producer(Karafka::App.config.kafka.dup)
+          p_config.kafka[:"enable.idempotence"] = true
+          p_config.logger = Karafka::App.config.logger
+        end
+      end
+
+      before do
+        Karafka.stubs(:producer).returns(idempotent_producer)
+        get "status"
+      end
+
+      after { idempotent_producer.close }
+
+      it do
+        assert_ok
+        assert_body("reports through your idempotent <code>Karafka.producer</code>")
+        assert_body("#using-a-custom-web-ui-producer")
+      end
+    end
+
+    context "when a custom Web UI producer is configured" do
+      before do
+        Karafka.stubs(:producer).returns(PRODUCERS.transactional)
+        Karafka::Web.config.stubs(:producer).returns(PRODUCERS.regular)
+        get "status"
+      end
+
+      it do
+        assert_ok
+        assert_body("Web UI producer")
+        refute_body("#using-a-custom-web-ui-producer")
+      end
+    end
+
     context "when consumers reports data is corrupted" do
       let(:states_topic) { create_topic }
       let(:metrics_topic) { create_topic }
