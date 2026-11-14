@@ -1,9 +1,6 @@
-<p class="mb-2">
-  The Web UI reports through your <%= details[:type] %> <code>Karafka.producer</code>, the same producer your application uses.
-  A fatal error on this producer affects all its dispatches, including the Web UI reports.
-</p>
-
 <p>
-  This is a valid setup. If you prefer to keep the Web UI reporting separate, configure a
+  The Web UI reports through your <%= details[:type] %> <code>Karafka.producer</code>,
+  so an error on this producer may affect the Web UI reports as well.
+  This is a valid setup. To keep them separate, you can configure a
   <a href="https://karafka.io/docs/Web-UI-Configuration/#using-a-custom-web-ui-producer" target="_blank" rel="noopener noreferrer">custom Web UI producer</a>.
 </p>

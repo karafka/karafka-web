@@ -9,8 +9,7 @@ module Karafka
             # Checks if the Web UI reports through an idempotent or transactional app producer.
             #
             # This is an independent, informational check. Sharing the producer is a valid setup,
-            # but a fatal error on such a producer affects all of its dispatches, the Web UI
-            # reports included, so users may prefer a dedicated Web UI producer.
+            # but an error on such a producer may affect the Web UI reports as well.
             class SharedProducer < Base
               independent!
 
