@@ -96,26 +96,22 @@ describe_current do
     end
 
     context "when cgroups are available (simulated)" do
-      it "instantiates Container metrics collector" do
+      it "uses the Container metrics collector memory limit" do
         Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container.stubs(:active?).returns(true)
+        Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container.stubs(:memory_limit).returns(123)
         sampler = described_class.new
 
-        assert_kind_of(
-          Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container,
-          sampler.instance_variable_get(:@system_metrics)
-        )
+        assert_equal(123, sampler.to_report[:process][:memory_size])
       end
     end
 
     context "when cgroups are not available (simulated)" do
-      it "instantiates Os metrics collector" do
+      it "uses the Os metrics collector memory size" do
         Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container.stubs(:active?).returns(false)
+        Karafka::Web::Tracking::Consumers::Sampler::Metrics::Container.stubs(:memory_limit).returns(123)
         sampler = described_class.new
 
-        assert_kind_of(
-          Karafka::Web::Tracking::Consumers::Sampler::Metrics::Os,
-          sampler.instance_variable_get(:@system_metrics)
-        )
+        refute_equal(123, sampler.to_report[:process][:memory_size])
       end
     end
   end
