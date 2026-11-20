@@ -86,6 +86,12 @@ module Karafka
             def broker_out_of_sync(count)
               count.positive? ? %(<span class="badge badge-warning">#{count}</span>) : count.to_s
             end
+
+            # @param source [Symbol] config value source (e.g. `:dynamic_topic_config`)
+            # @return [String] readable source label (e.g. `Dynamic topic config`)
+            def config_source_label(source)
+              source.to_s.tr("_", " ").capitalize
+            end
           end
         end
       end
