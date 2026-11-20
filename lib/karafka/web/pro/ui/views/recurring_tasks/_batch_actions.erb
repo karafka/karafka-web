@@ -19,51 +19,33 @@
 <%# Contact: contact@karafka.io %>
 
 <div class="col-span-12 flex justify-end space-x-2 mb-6">
-  <%
-    trigger_all_path = root_path('recurring_tasks', 'trigger_all')
-    disable_class = @tasks.empty? ? 'btn-disabled' : ''
+  <%==
+    action_form_button(
+      "#{icon(:play)} Trigger All",
+      root_path('recurring_tasks', 'trigger_all'),
+      classes: 'btn-primary btn-sm',
+      title: 'Trigger all recurring tasks',
+      disabled_reason: @tasks.empty? ? 'There are no recurring tasks to trigger' : nil
+    )
   %>
-  <form
-    action="<%= trigger_all_path %>"
-    method="post"
-    class="inline-flex items-center"
-    title="<%= @tasks.empty? ? 'There are no recurring tasks to trigger' : 'Trigger all recurring tasks' %>"
-  >
-    <button type="submit" class="btn btn-primary btn-sm <%= disable_class %>">
-      <%== icon(:play) %>
-      Trigger All
-    </button>
-  </form>
 
-  <%
-    enable_all_path = root_path('recurring_tasks', 'enable_all')
-    disable_class = @tasks.all?(&:enabled?) ? 'btn-disabled' : ''
+  <%==
+    action_form_button(
+      "#{icon(:check)} Enable All",
+      root_path('recurring_tasks', 'enable_all'),
+      classes: 'btn-success btn-sm',
+      title: 'Enable all recurring tasks',
+      disabled_reason: @tasks.all?(&:enabled?) ? 'All recurring tasks are already enabled' : nil
+    )
   %>
-  <form
-    action="<%= enable_all_path %>"
-    method="post"
-    class="inline-flex items-center"
-    title="<%= @tasks.all?(&:enabled?) ? 'All recurring tasks are already enabled' : 'Enable all recurring tasks' %>"
-  >
-    <button type="submit" class="btn btn-success btn-sm <%= disable_class %>">
-      <%== icon(:check) %>
-      Enable All
-    </button>
-  </form>
 
-  <%
-    disable_all_path = root_path('recurring_tasks', 'disable_all')
-    disable_class = @tasks.none?(&:enabled?) ? 'btn-disabled' : ''
+  <%==
+    action_form_button(
+      "#{icon(:pause)} Disable All",
+      root_path('recurring_tasks', 'disable_all'),
+      classes: 'btn-warning btn-sm',
+      title: 'Disable all recurring tasks',
+      disabled_reason: @tasks.none?(&:enabled?) ? 'All recurring tasks are already disabled' : nil
+    )
   %>
-  <form
-    action="<%= disable_all_path %>"
-    method="post"
-    class="inline-flex items-center"
-    title="<%= @tasks.none?(&:enabled?) ? 'All recurring tasks are already disabled' : 'Disable all recurring tasks' %>"
-  >
-    <button type="submit" class="btn btn-warning btn-sm <%= disable_class %>">
-      <%== icon(:pause) %>
-      Disable All
-    </button>
-  </form>
 </div>

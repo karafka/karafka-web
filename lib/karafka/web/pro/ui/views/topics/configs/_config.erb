@@ -32,12 +32,8 @@
   <td><%== config.read_only? ? badge_success(true) : badge_secondary(false) %></td>
   <td class="options">
     <%
-      edit_disabled_reason = nil
-      edit_disabled_reason = 'This property is read-only' if config.read_only?
-
-      unless features.topics_management?
-        edit_disabled_reason = 'Topics management is disabled in the Web UI configuration'
-      end
+      edit_disabled_reason = topics_management_disabled_reason
+      edit_disabled_reason ||= 'This property is read-only' if config.read_only?
     %>
     <%==
       action_link_button(

@@ -64,60 +64,34 @@
   </td>
 
   <td class="options">
-    <%
-      trace_path = consumers_path('commanding', process.id, 'trace')
-      if process.status != 'stopped'
-        disabled_class = ''
-        title = 'Trace'
-      else
-        disabled_class = 'btn-disabled'
-        title = 'This process is stopped'
-      end
+    <%==
+      action_form_button(
+        icon(:gear),
+        consumers_path('commanding', process.id, 'trace'),
+        classes: 'btn-info btn-sm btn-lockable',
+        title: 'Trace',
+        disabled_reason: process_command_disabled_reason(process, :trace)
+      )
     %>
-    <form action="<%= trace_path %>" method="post" class="inline" title="<%= title %>">
-      <button type="submit" class="btn btn-info btn-sm btn-lockable <%= disabled_class %>">
-        <%== icon(:gear) %>
-      </button>
-    </form>
 
-    <%
-      quiet_path = consumers_path('commanding', process.id, 'quiet')
-
-      if process.execution_mode != 'standalone'
-        disabled_class = 'btn-disabled'
-        title = 'Supported only in standalone consumer processes'
-      elsif process.status != 'running'
-        disabled_class = 'btn-disabled'
-        title = 'Only a running process can be quieted'
-      else
-        disabled_class = ''
-        title = 'Quiet'
-      end
+    <%==
+      action_form_button(
+        icon(:pause),
+        consumers_path('commanding', process.id, 'quiet'),
+        classes: 'btn-warning btn-sm btn-lockable',
+        title: 'Quiet',
+        disabled_reason: process_command_disabled_reason(process, :quiet)
+      )
     %>
-    <form action="<%= quiet_path %>" method="post" class="inline" title="<%= title %>">
-      <button type="submit" class="btn btn-warning btn-sm btn-lockable <%= disabled_class %>">
-        <%== icon(:pause) %>
-      </button>
-    </form>
 
-    <%
-      stop_path = consumers_path('commanding', process.id, 'stop')
-
-      if process.execution_mode != 'standalone'
-        disabled_class = 'btn-disabled'
-        title = 'Supported only in standalone consumer processes'
-      elsif process.status == 'stopping' || process.status == 'stopped'
-        disabled_class = 'btn-disabled'
-        title = 'This process is already stopping or stopped'
-      else
-        disabled_class = ''
-        title = 'Stop'
-      end
+    <%==
+      action_form_button(
+        icon(:stop),
+        consumers_path('commanding', process.id, 'stop'),
+        classes: 'btn-error btn-sm btn-lockable',
+        title: 'Stop',
+        disabled_reason: process_command_disabled_reason(process, :stop)
+      )
     %>
-    <form action="<%= stop_path %>" method="post" class="inline" title="<%= title %>">
-      <button type="submit" class="btn btn-error btn-sm btn-lockable <%= disabled_class %>">
-        <%== icon(:stop) %>
-      </button>
-    </form>
   </td>
 </tr>

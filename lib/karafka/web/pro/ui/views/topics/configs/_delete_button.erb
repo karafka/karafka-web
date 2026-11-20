@@ -25,7 +25,7 @@
       topics_path(@topic.topic_name, 'delete'),
       classes: 'btn-error btn-sm',
       title: 'Delete this topic',
-      disabled_reason: features.topics_management? ? nil : 'Topics management is disabled in the Web UI configuration'
+      disabled_reason: topics_management_disabled_reason
     )
   %>
 </div>

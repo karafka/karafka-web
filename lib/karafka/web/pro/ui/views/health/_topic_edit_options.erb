@@ -19,8 +19,6 @@
 <%# Contact: contact@karafka.io %>
 
 <%
-  disabled_reason = features.commanding? ? nil : 'Commanding is disabled in the Web UI configuration'
-
   partitions = topic_details[:partitions]
 
   # Only show buttons if we have partition data
@@ -53,7 +51,7 @@
         resume_path,
         classes: 'btn-success btn-sm',
         title: "Resume all paused partitions of this topic within the '#{consumer_group_name}' consumer group",
-        disabled_reason: disabled_reason
+        disabled_reason: commanding_disabled_reason
       )
     %>
   <% end %>
@@ -64,7 +62,7 @@
       pause_path,
       classes: 'btn-warning btn-sm',
       title: "Pause all partitions of this topic within the '#{consumer_group_name}' consumer group",
-      disabled_reason: disabled_reason
+      disabled_reason: commanding_disabled_reason
     )
   %>
 </div>
