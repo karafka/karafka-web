@@ -57,6 +57,7 @@
   "test/lib/karafka/web/tracking/helpers/error_info_test.rb": 0.044,
   "test/lib/karafka/web/tracking/consumers/contracts/subscription_group_test.rb": 0.043,
   "test/lib/karafka/web/ui/helpers/badges_helper_test.rb": 0.042,
+  "test/lib/karafka/web/ui/helpers/tailwind_helper_test.rb": 0.02,
   "test/lib/karafka/web/ui/helpers/formatting_helper_test.rb": 0.042,
   "test/lib/karafka/web/ui/helpers/partitions_helper_test.rb": 0.042,
   "test/lib/karafka/web/processing/consumers/schema_manager_test.rb": 0.039,
