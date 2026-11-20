@@ -841,4 +841,28 @@ describe_current do
       end
     end
   end
+
+  describe "#shared_producer" do
+    let(:result) { status.shared_producer }
+
+    context "when the app producer is not idempotent nor transactional" do
+      it "expect all to be ok" do
+        assert(result.success?)
+        assert_equal("success", result.to_s)
+        assert_equal({}, result.details)
+        assert_equal("successes", result.partial_namespace)
+      end
+    end
+
+    context "when the Web UI reports through a transactional app producer" do
+      before { Karafka.stubs(:producer).returns(PRODUCERS.transactional) }
+
+      it "expect to inform" do
+        assert(result.success?)
+        assert_equal("info", result.to_s)
+        assert_equal({ type: "transactional" }, result.details)
+        assert_equal("info", result.partial_namespace)
+      end
+    end
+  end
 end

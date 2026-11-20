@@ -111,7 +111,7 @@ module Karafka
               #
               # Helper method to create Step instances with less verbosity.
               #
-              # @param status [Symbol] the status (:success, :warning, :failure, :halted)
+              # @param status [Symbol] the status (:success, :info, :warning, :failure, :halted)
               # @param details [Hash, Array] optional details about the check result
               # @return [Status::Step] a new Step instance
               def step(status, details = {})
