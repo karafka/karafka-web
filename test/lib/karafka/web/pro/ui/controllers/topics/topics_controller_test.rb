@@ -345,6 +345,7 @@ describe_current do
         assert_body('type="hidden"')
         assert_body('name="_method" value="delete"')
         assert_body("Delete Topic")
+        assert_body('data-live-poll="disabled"')
         assert_body("Cancel")
       end
     end

@@ -78,6 +78,7 @@ describe_current do
           assert_body("<td>28</td>")
           assert_body(%(action="/health/topics/#{consumer_group_id}/#{topic}/delete"))
           assert_body("Delete Offsets")
+          assert_body('data-live-poll="disabled"')
           assert_equal({ 0 => 1, 1 => 2 }, committed)
         end
       end
@@ -149,6 +150,8 @@ describe_current do
           assert_ok
           assert_body("Consumer Group Subscribed To Topic")
           assert_body("has running consumers subscribed to topic")
+          # A live poll refresh would replace the rejection with a fresh confirmation page
+          assert_body('data-live-poll="disabled"')
           assert_equal({ 0 => 1, 1 => 2 }, committed)
         end
       end
@@ -166,6 +169,7 @@ describe_current do
           assert_ok
           assert_body("Offsets Deletion Warning")
           assert_body("Please Correct the Following Errors Before Continuing")
+          assert_body('data-live-poll="disabled"')
         end
       end
     end

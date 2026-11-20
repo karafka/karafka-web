@@ -92,6 +92,7 @@ describe_current do
           assert_ok
           assert_body("Messages Deletion Warning")
           assert_body("all messages in offsets")
+          assert_body('data-live-poll="disabled"')
           assert_body('<span class="font-bold ml-1">0</span>')
           assert_body('<span class="font-bold ml-1">1</span>')
           assert_body('<span class="font-bold ml-1">2</span>')
