@@ -33,8 +33,8 @@ module Karafka
     module Pro
       module Ui
         module Helpers
-          # Presentation helpers for the Pro-only cluster views (currently the per-broker partition
-          # distribution highlighting).
+          # Presentation helpers for the Pro-only cluster views (the per-broker partition
+          # distribution highlighting) and the broker and topic config source labels.
           module ClusterHelper
             # Classifies a broker's leadership load against its fair share, using the configurable
             # `config.ui.cluster.distribution` ratios. The raw `load_ratio` (config-free) comes from
@@ -87,6 +87,8 @@ module Karafka
               count.positive? ? %(<span class="badge badge-warning">#{count}</span>) : count.to_s
             end
 
+            # Readable label for the source of a broker or topic config value.
+            #
             # @param source [Symbol] config value source (e.g. `:dynamic_topic_config`)
             # @return [String] readable source label (e.g. `Dynamic topic config`)
             def config_source_label(source)
