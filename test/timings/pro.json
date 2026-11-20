@@ -1,5 +1,7 @@
 {
   "test/lib/karafka/web/pro/ui/controllers/explorer/explorer_controller_test.rb": 60.645,
+  "test/lib/karafka/web/pro/ui/controllers/health/offsets_controller_test.rb": 5.0,
+  "test/lib/karafka/web/pro/ui/lib/policies/consumer_groups_test.rb": 0.01,
   "test/lib/karafka/web/pro/ui/controllers/consumers/partitions/pauses_controller_test.rb": 55.802,
   "test/lib/karafka/web/pro/ui/controllers/cluster_controller_test.rb": 50.435,
   "test/lib/karafka/web/pro/ui/controllers/consumers/consumers_controller_test.rb": 48.319,
@@ -112,6 +114,7 @@
   "test/lib/karafka/web/pro/ui/models/health/aggregated_topic_test.rb": 3.0,
   "test/lib/karafka/web/pro/ui/models/health/aggregated_cluster_topic_test.rb": 3.0,
   "test/lib/karafka/web/pro/ui/helpers/health_helper_test.rb": 0.1,
+  "test/lib/karafka/web/pro/ui/helpers/actions_helper_test.rb": 0.02,
   "test/lib/karafka/web/pro/ui/helpers/cluster_helper_test.rb": 0.1,
   "test/lib/karafka/web/pro/ui/lib/health/contracts/config_test.rb": 0.075,
   "test/lib/karafka/web/pro/ui/lib/cluster/contracts/config_test.rb": 0.075

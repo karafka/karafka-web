@@ -30,6 +30,7 @@
 
 describe_current do
   let(:app) { Karafka::Web::Pro::Ui::App }
+  let(:delete_offsets_denied) { "Deleting these offsets is not allowed by the Web UI policies" }
 
   let(:reports_topic) { create_topic }
 
@@ -70,6 +71,23 @@ describe_current do
       assert_body("health/topics/example_app6_app/default/offsets")
       assert_body("health/topics/example_app6_app/default/changes")
       assert_body("health/topics/example_app6_app/default/cluster_lags")
+      assert_body("Pause all partitions of this topic within the")
+      refute_body("Commanding is disabled in the Web UI configuration")
+    end
+
+    context "when commanding is disabled" do
+      before do
+        Karafka::Web.config.commanding.active = false
+
+        get "health/topics/example_app6_app/default/overview"
+      end
+
+      it "expect the pause action to be disabled with the reason" do
+        assert_ok
+        assert_body('class="btn btn-warning btn-sm btn-disabled"')
+        refute_body("pause/new")
+        assert_body('title="Commanding is disabled in the Web UI configuration"')
+      end
     end
 
     context "when sorted" do
@@ -425,6 +443,27 @@ describe_current do
         assert_ok
         assert_body(breadcrumbs)
         assert_body("4200")
+        assert_body("Delete Offsets")
+        assert_body('class="btn btn-error btn-sm btn-disabled"')
+        refute_body("health/topics/example_app6_app/default/delete")
+        assert_body(%(title="#{delete_offsets_denied}"))
+      end
+
+      context "when deleting offsets is allowed" do
+        before do
+          Karafka::Web.config.ui.policies.consumer_groups.stubs(:delete_offsets?).returns(true)
+
+          get "health/topics/example_app6_app/default/cluster_lags"
+        end
+
+        it "expect to link to the offsets deletion" do
+          assert_ok
+          assert_body("health/topics/example_app6_app/default/delete")
+          assert_body("Delete Offsets")
+          refute_body(delete_offsets_denied)
+          assert_body('title="Delete the committed offsets of this consumer group for this topic"')
+          refute_body("btn-error btn-sm btn-disabled")
+        end
       end
 
       context "when sorted" do

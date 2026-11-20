@@ -40,6 +40,47 @@ module Karafka
             %(<a href="#{path}" class="btn #{classes}" title="#{title}">#{name}</a>)
           end
 
+          # Renders an action as a link with button styling or, when the action is not available,
+          # as a disabled button explaining why. The disabled button has no link to follow and
+          # its reason sits in the title of a wrapper, since disabled buttons do not receive
+          # pointer events.
+          #
+          # @param content [String] button html content (icon and label)
+          # @param path [String] path to where the action goes when available
+          # @param classes [String] extra css classes
+          # @param title [String] title describing the action when available
+          # @param disabled_reason [String, nil] why the action is not available or nil if it is
+          # @return [String] action button html
+          def action_link_button(content, path, classes:, title:, disabled_reason: nil)
+            unless disabled_reason
+              return %(<a href="#{path}" class="btn #{classes}" ) +
+                  %(title="#{::Rack::Utils.escape_html(title)}">#{content}</a>)
+            end
+
+            %(<span class="inline-flex" title="#{::Rack::Utils.escape_html(disabled_reason)}">) +
+              %(<button type="button" class="btn #{classes} btn-disabled" disabled>) +
+              %(#{content}</button></span>)
+          end
+
+          # Renders an action that posts to the given path as a form with a submit button or,
+          # when the action is not available, with a disabled one explaining why. The title sits
+          # on the form, since disabled buttons do not receive pointer events.
+          #
+          # @param content [String] button html content (icon and label)
+          # @param path [String] path the form posts to
+          # @param classes [String] extra css classes of the button
+          # @param title [String] title describing the action when available
+          # @param disabled_reason [String, nil] why the action is not available or nil if it is
+          # @return [String] action form html
+          def action_form_button(content, path, classes:, title:, disabled_reason: nil)
+            button_attributes = %(class="btn #{classes}")
+            button_attributes = %(class="btn #{classes} btn-disabled" disabled) if disabled_reason
+
+            %(<form action="#{path}" method="post" class="inline-flex items-center" ) +
+              %(title="#{::Rack::Utils.escape_html(disabled_reason || title)}">) +
+              %(<button type="submit" #{button_attributes}>#{content}</button></form>)
+          end
+
           # Defines various methods for badges and links that simplify defining them without
           # having to provide whole classes scopes always.
           TYPES.each do |type|

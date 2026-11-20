@@ -34,7 +34,13 @@
     </div>
 
     <% path = topics_path(@topic.topic_name) %>
-    <form action="<%= path %>" method="post" class="mt-6" data-turbo="false">
+    <form
+      action="<%= path %>"
+      method="post"
+      class="mt-6"
+      data-turbo="false"
+      data-live-poll="disabled"
+    >
       <input type="hidden" name="_method" value="delete">
 
       <div class="flex justify-end gap-4">

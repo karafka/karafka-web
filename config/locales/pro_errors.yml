@@ -18,6 +18,7 @@ en:
 
       ui.policies.messages_format: cannot be nil
       ui.policies.requests_format: cannot be nil
+      ui.policies.consumer_groups_format: cannot be nil
 
       ui.branding.type_format: 'must be :info, :error, :warning, :success, :primary or :secondary'
       ui.branding.label_format: must be false or non-empty string
