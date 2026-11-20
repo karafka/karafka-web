@@ -72,11 +72,16 @@
       <%== icon(:scissors) %>
     </button>
   </span>
-  <span class="inline-flex ml-2" title=".btn .btn-disabled (reason in the wrapper title)">
-    <a href="#dummy" class="btn btn-error btn-sm btn-disabled">
-      <%== icon(:trash) %>
-      .btn-disabled
-    </a>
+  <span class="ml-2">
+    <%==
+      action_link_button(
+        "#{icon(:trash)} action_link_button",
+        '#dummy',
+        classes: 'btn-error btn-sm',
+        title: 'action_link_button',
+        disabled_reason: 'action_link_button with disabled_reason (reason in the wrapper title)'
+      )
+    %>
   </span>
 </div>
 <div class="mb-6"></div>

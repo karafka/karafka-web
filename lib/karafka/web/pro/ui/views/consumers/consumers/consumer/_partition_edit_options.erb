@@ -19,38 +19,37 @@
 <%# Contact: contact@karafka.io %>
 
 <%
-  feature_class = 'btn-disabled'
-  feature_class = '' if features.commanding?
-
-  # Disabled buttons do not receive pointer events, so titles sit on wrappers
   disabled_reason = features.commanding? ? nil : 'Commanding is disabled in the Web UI configuration'
 %>
 
-<span class="inline-flex" title="<%= disabled_reason || 'Edit the offset position for this topic partition' %>">
-  <a
-    href="<%= consumers_path('partitions', consumer_group_id, topic_name, partition.id, 'offset', 'edit') %>"
-    class="btn btn-info btn-sm <%= feature_class %>"
-  >
-    <%== icon(:pencil_square) %>
-  </a>
-</span>
+<%==
+  action_link_button(
+    icon(:pencil_square),
+    consumers_path('partitions', consumer_group_id, topic_name, partition.id, 'offset', 'edit'),
+    classes: 'btn-info btn-sm',
+    title: 'Edit the offset position for this topic partition',
+    disabled_reason: disabled_reason
+  )
+%>
 
 <% if partition.poll_state != 'active' %>
-  <span class="inline-flex" title="<%= disabled_reason || 'Resume processing of this topic partition' %>">
-    <a
-      href="<%= consumers_path('partitions', consumer_group_id, topic_name, partition.id, 'pause', 'edit') %>"
-      class="btn btn-success btn-sm <%= feature_class %>"
-    >
-      <%== icon(:play) %>
-    </a>
-  </span>
+  <%==
+    action_link_button(
+      icon(:play),
+      consumers_path('partitions', consumer_group_id, topic_name, partition.id, 'pause', 'edit'),
+      classes: 'btn-success btn-sm',
+      title: 'Resume processing of this topic partition',
+      disabled_reason: disabled_reason
+    )
+  %>
 <% end %>
 
-<span class="inline-flex" title="<%= disabled_reason || 'Setup or configure pause duration for this topic partition' %>">
-  <a
-    href="<%= consumers_path('partitions', consumer_group_id, topic_name, partition.id, 'pause', 'new') %>"
-    class="btn btn-warning btn-sm <%= feature_class %>"
-  >
-    <%== icon(:pause) %>
-  </a>
-</span>
+<%==
+  action_link_button(
+    icon(:pause),
+    consumers_path('partitions', consumer_group_id, topic_name, partition.id, 'pause', 'new'),
+    classes: 'btn-warning btn-sm',
+    title: 'Setup or configure pause duration for this topic partition',
+    disabled_reason: disabled_reason
+  )
+%>

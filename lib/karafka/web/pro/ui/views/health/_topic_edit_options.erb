@@ -19,8 +19,6 @@
 <%# Contact: contact@karafka.io %>
 
 <%
-  feature_class = features.commanding? ? '' : 'btn-disabled'
-  # Disabled buttons do not receive pointer events, so titles sit on wrappers
   disabled_reason = features.commanding? ? nil : 'Commanding is disabled in the Web UI configuration'
 
   partitions = topic_details[:partitions]
@@ -49,34 +47,26 @@
 
 <div class="inline-flex gap-2">
   <% if has_paused %>
-    <%
-      resume_title = disabled_reason ||
-        "Resume all paused partitions of this topic within the '#{consumer_group_name}' consumer group"
+    <%==
+      action_link_button(
+        "#{icon(:play)} Resume All",
+        resume_path,
+        classes: 'btn-success btn-sm',
+        title: "Resume all paused partitions of this topic within the '#{consumer_group_name}' consumer group",
+        disabled_reason: disabled_reason
+      )
     %>
-    <span class="inline-flex" title="<%= resume_title %>">
-      <a
-        href="<%= resume_path %>"
-        class="btn btn-success btn-sm <%= feature_class %>"
-      >
-        <%== icon(:play) %>
-        Resume All
-      </a>
-    </span>
   <% end %>
 
-  <%
-    pause_title = disabled_reason ||
-      "Pause all partitions of this topic within the '#{consumer_group_name}' consumer group"
+  <%==
+    action_link_button(
+      "#{icon(:pause)} Pause All",
+      pause_path,
+      classes: 'btn-warning btn-sm',
+      title: "Pause all partitions of this topic within the '#{consumer_group_name}' consumer group",
+      disabled_reason: disabled_reason
+    )
   %>
-  <span class="inline-flex" title="<%= pause_title %>">
-    <a
-      href="<%= pause_path %>"
-      class="btn btn-warning btn-sm <%= feature_class %>"
-    >
-      <%== icon(:pause) %>
-      Pause All
-    </a>
-  </span>
 </div>
 
 <% end %>

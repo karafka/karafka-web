@@ -560,6 +560,7 @@ describe_current do
         assert_body("9000")
         assert_body('<th class="options">Options</th>')
         assert_body('class="btn btn-error btn-sm btn-disabled"')
+        refute_body("health/topics/example_app6_app/orders/delete")
         assert_body(%(title="#{delete_offsets_denied}"))
       end
 

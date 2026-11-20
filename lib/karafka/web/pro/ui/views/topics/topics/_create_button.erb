@@ -19,16 +19,13 @@
 <%# Contact: contact@karafka.io %>
 
 <div class="col-span-12 flex justify-end space-x-2 mb-6">
-  <span
-    class="inline-flex"
-    title="<%= features.topics_management? ? 'Create new topic' : 'Topics management is disabled in the Web UI configuration' %>"
-  >
-    <a
-      class="btn btn-primary btn-sm <%= 'btn-disabled' unless features.topics_management? %>"
-      href="<%= topics_path('new') %>"
-    >
-      <%== icon(:plus) %>
-      Create Topic
-    </a>
-  </span>
+  <%==
+    action_link_button(
+      "#{icon(:plus)} Create Topic",
+      topics_path('new'),
+      classes: 'btn-primary btn-sm',
+      title: 'Create new topic',
+      disabled_reason: features.topics_management? ? nil : 'Topics management is disabled in the Web UI configuration'
+    )
+  %>
 </div>

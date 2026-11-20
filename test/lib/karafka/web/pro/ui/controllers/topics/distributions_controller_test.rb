@@ -58,6 +58,7 @@ describe_current do
       it "expect the increase partitions button to be disabled with the reason" do
         assert_ok
         assert_body('class="btn btn-primary btn-sm btn-disabled"')
+        refute_body("distribution/edit")
         assert_body('title="Topics management is disabled in the Web UI configuration"')
       end
     end

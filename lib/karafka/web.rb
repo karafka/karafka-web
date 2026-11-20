@@ -2,6 +2,7 @@
 
 require "karafka"
 require "roda"
+require "erubi"
 require "etc"
 require "open3"
 require "zlib"

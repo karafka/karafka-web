@@ -31,17 +31,22 @@
   <td><%== config.sensitive? ? badge_success(true) : badge_secondary(false) %></td>
   <td><%== config.read_only? ? badge_success(true) : badge_secondary(false) %></td>
   <td class="options">
-    <% link_class = config.read_only? ? 'btn-disabled' : '' %>
-    <span
-      class="inline-flex"
-      title="<%= config.read_only? ? 'This property is read-only' : 'Edit this property value' %>"
-    >
-      <a
-        href="<%= topics_path(@topic.topic_name, 'config', config.name, 'edit') %>"
-        class="btn btn-info btn-sm <%= link_class %>"
-      >
-        <%== icon(:pencil_square) %>
-      </a>
-    </span>
+    <%
+      edit_disabled_reason = nil
+      edit_disabled_reason = 'This property is read-only' if config.read_only?
+
+      unless features.topics_management?
+        edit_disabled_reason = 'Topics management is disabled in the Web UI configuration'
+      end
+    %>
+    <%==
+      action_link_button(
+        icon(:pencil_square),
+        topics_path(@topic.topic_name, 'config', config.name, 'edit'),
+        classes: 'btn-info btn-sm',
+        title: 'Edit this property value',
+        disabled_reason: edit_disabled_reason
+      )
+    %>
   </td>
 </tr>

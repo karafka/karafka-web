@@ -67,9 +67,12 @@ describe_current do
         get "topics/#{topic}/config"
       end
 
-      it "expect the delete button to be disabled with the reason" do
+      it "expect the delete and edit buttons to be disabled with the reason" do
         assert_ok
         assert_body('class="btn btn-error btn-sm btn-disabled"')
+        assert_body('class="btn btn-info btn-sm btn-disabled"')
+        refute_body("/config/cleanup.policy/edit")
+        refute_body("#{topic}/delete")
         assert_body('title="Topics management is disabled in the Web UI configuration"')
       end
     end

@@ -164,6 +164,9 @@ describe_current do
       assert_body("kafka.statistics.interval.ms")
       assert_body("Delete Offsets")
       assert_body('class="btn btn-error btn-sm btn-disabled"')
+      routed = Karafka::App.routes.first.topics.first
+
+      refute_body("health/topics/#{routed.consumer_group.id}/#{routed.name}/delete")
       assert_body(%(title="#{delete_offsets_denied}"))
     end
 

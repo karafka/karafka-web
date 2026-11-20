@@ -85,6 +85,7 @@ describe_current do
       it "expect the pause action to be disabled with the reason" do
         assert_ok
         assert_body('class="btn btn-warning btn-sm btn-disabled"')
+        refute_body("pause/new")
         assert_body('title="Commanding is disabled in the Web UI configuration"')
       end
     end
@@ -444,6 +445,7 @@ describe_current do
         assert_body("4200")
         assert_body("Delete Offsets")
         assert_body('class="btn btn-error btn-sm btn-disabled"')
+        refute_body("health/topics/example_app6_app/default/delete")
         assert_body(%(title="#{delete_offsets_denied}"))
       end
 
