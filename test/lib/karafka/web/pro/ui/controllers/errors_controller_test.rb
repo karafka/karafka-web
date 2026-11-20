@@ -35,6 +35,14 @@ describe_current do
   let(:partitions) { 2 }
   let(:error_report) { Fixtures.errors_file }
   let(:no_errors) { "There are no errors in this errors topic partition" }
+  let(:search_button) { 'title="Search in this topic"' }
+  # Unavailable actions stay visible: a disabled button wrapped in a span carrying the reason
+  let(:disabled_action) do
+    lambda do |reason|
+      %(<span class="inline-flex" title="#{reason}">) +
+        '<button type="button" class="btn-action disabled" disabled>'
+    end
+  end
 
   before { topics_config.errors.name = errors_topic }
 
@@ -58,6 +66,8 @@ describe_current do
         assert_body("This topic is empty and does not contain any data")
         assert_body(breadcrumbs)
         refute_body(pagination)
+        refute_body(search_button)
+        assert_body(disabled_action.call("This topic is empty and does not contain any data"))
       end
     end
 
@@ -75,6 +85,7 @@ describe_current do
         assert_equal(3, body.scan("StandardError:").size)
         refute_body(pagination)
         assert_body(breadcrumbs)
+        assert_body(search_button)
       end
     end
 
@@ -162,6 +173,10 @@ describe_current do
         assert_body(no_errors)
         assert_body(breadcrumbs)
         refute_body(pagination)
+        refute_body(search_button)
+        refute_body("offset-lookup-datepicker")
+        refute_body("timestamp-form")
+        assert_body(disabled_action.call("This partition is empty and does not contain any data"))
       end
     end
 
@@ -181,6 +196,10 @@ describe_current do
         assert_body("high: 3")
         assert_body("low: 0")
         assert_body(breadcrumbs)
+        assert_body(search_button)
+        assert_body("search/?partition=1")
+        assert_body("offset-lookup-datepicker")
+        assert_body("timestamp-form")
       end
     end
 
@@ -256,6 +275,7 @@ describe_current do
         assert_body("high: 30")
         assert_body("low: 0")
         assert_body(breadcrumbs)
+        assert_body(search_button)
       end
     end
   end

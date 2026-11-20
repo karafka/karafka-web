@@ -23,7 +23,7 @@
 
   # Only show buttons if we have partition data
   if partitions.any?
-    # Check if any partition is paused (for showing Resume All button)
+    # Resume All is only usable when at least one partition is paused
     has_paused = partitions.values.any? { |p| p.poll_state != 'active' }
 
     pause_path = consumers_path(
@@ -44,17 +44,16 @@
 %>
 
 <div class="inline-flex gap-2">
-  <% if has_paused %>
-    <%==
-      action_link_button(
-        "#{icon(:play)} Resume All",
-        resume_path,
-        classes: 'btn-success btn-sm',
-        title: "Resume all paused partitions of this topic within the '#{consumer_group_name}' consumer group",
-        disabled_reason: commanding_disabled_reason
-      )
-    %>
-  <% end %>
+  <%==
+    action_link_button(
+      "#{icon(:play)} Resume All",
+      resume_path,
+      classes: 'btn-success btn-sm',
+      title: "Resume all paused partitions of this topic within the '#{consumer_group_name}' consumer group",
+      disabled_reason: commanding_disabled_reason ||
+        (has_paused ? nil : 'No partitions of this topic are paused')
+    )
+  %>
 
   <%==
     action_link_button(

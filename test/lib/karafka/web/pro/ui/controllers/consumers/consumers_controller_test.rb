@@ -90,9 +90,11 @@ describe_current do
         refute_body("Pro Feature")
       end
 
-      it "expect to show Controls and Commands tabs in disabled state" do
-        assert_body("disabled btn-disabled")
+      it "expect to show Controls and Commands tabs in disabled state without links" do
+        assert_equal(2, body.scan('class="custom-tab disabled cursor-default"').size)
         assert_body('title="Commanding is disabled in the Web UI configuration"')
+        refute_body('href="/consumers/controls"')
+        refute_body('href="/consumers/commands"')
       end
     end
 
@@ -110,7 +112,9 @@ describe_current do
       end
 
       it "expect to show Controls and Commands tabs without disabled state" do
-        refute_body("disabled btn-disabled")
+        refute_body("custom-tab disabled")
+        assert_body('href="/consumers/controls"')
+        assert_body('href="/consumers/commands"')
       end
     end
 

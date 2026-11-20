@@ -62,6 +62,29 @@ module Karafka
               %(#{content}</button></span>)
           end
 
+          # Renders an icon action of an actions bar as a link or, when the action is not
+          # available, as a disabled icon button explaining why. Unavailable actions stay visible
+          # so the actions bar keeps its shape and shows what can be done once possible.
+          #
+          # @param content [String] button html content (icon)
+          # @param path [String, nil] path to where the action goes when available
+          # @param title [String, nil] title describing the action when available
+          # @param disabled_reason [String, nil] why the action is not available or nil if it is
+          # @param turbo [Boolean] should the link be followed with Turbo (false for downloads)
+          # @return [String] icon action html
+          def action_icon_link(content, path, title:, disabled_reason: nil, turbo: true)
+            unless disabled_reason
+              turbo_attribute = turbo ? "" : ' data-turbo="false"'
+
+              return %(<a href="#{path}" class="btn-action" ) +
+                  %(title="#{::Rack::Utils.escape_html(title)}"#{turbo_attribute}>#{content}</a>)
+            end
+
+            %(<span class="inline-flex" title="#{::Rack::Utils.escape_html(disabled_reason)}">) +
+              %(<button type="button" class="btn-action disabled" disabled>#{content}</button>) +
+              %(</span>)
+          end
+
           # Renders an action that posts to the given path as a form with a submit button or,
           # when the action is not available, with a disabled one explaining why. The title sits
           # on the form, since disabled buttons do not receive pointer events.

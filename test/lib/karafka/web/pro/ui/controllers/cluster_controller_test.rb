@@ -279,6 +279,22 @@ describe_current do
         assert_body('name="filter[value]"')
       end
 
+      it "disables the reset with the reason when no filter is applied" do
+        get "cluster/replication"
+
+        assert_ok
+        assert_body('<span class="inline-flex" title="No filters are applied">')
+        assert_body('class="btn btn-outline font-normal btn-disabled" disabled>Reset</button>')
+      end
+
+      it "enables the reset when a filter is applied" do
+        get_filtered("cluster/replication", "orders")
+
+        assert_ok
+        assert_body('class="btn btn-outline font-normal" href=')
+        refute_body("No filters are applied")
+      end
+
       it "shows the no-results state when nothing matches" do
         get_filtered("cluster/replication", "zzz-no-such-topic")
 

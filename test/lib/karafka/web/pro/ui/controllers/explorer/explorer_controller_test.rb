@@ -36,10 +36,12 @@ describe_current do
   let(:removed_or_compacted) { "This offset does not contain any data." }
   let(:internal_topic) { "__#{generate_topic_name}" }
   let(:search_button) { 'title="Search in this topic"' }
-  # Denied actions stay visible: a disabled button wrapped in a span carrying the reason
+  let(:topic_no_data) { "This topic is empty and does not contain any data" }
+  let(:partition_no_data) { "This partition is empty and does not contain any data" }
+  # Unavailable actions stay visible: a disabled button wrapped in a span carrying the reason
   let(:disabled_action) do
     lambda do |reason|
-      %(<span class="inline-flex" title="#{reason}">\n  ) +
+      %(<span class="inline-flex" title="#{reason}">) +
         '<button type="button" class="btn-action disabled" disabled>'
     end
   end
@@ -140,6 +142,20 @@ describe_current do
         refute_body("total: 1")
         refute_body(pagination)
         refute_body(search_button)
+        assert_body(disabled_action.call(topic_no_data))
+      end
+    end
+
+    context "when we view a page beyond the data of a topic with messages" do
+      before do
+        produce_many(topic, %w[1])
+        get "explorer/topics/#{topic}?page=100"
+      end
+
+      it "keeps the navigation available" do
+        assert_ok
+        assert_body(search_button)
+        refute_body(disabled_action.call(topic_no_data))
       end
     end
 
@@ -363,6 +379,9 @@ describe_current do
         refute_body("Watermark offsets")
         refute_body(pagination)
         refute_body(search_button)
+        assert_body(disabled_action.call(partition_no_data))
+        refute_body("offset-lookup-datepicker")
+        refute_body("timestamp-form")
       end
     end
 
@@ -403,6 +422,8 @@ describe_current do
         assert_body("high: 1")
         assert_body("low: 0")
         assert_body(search_button)
+        assert_body("offset-lookup-datepicker")
+        assert_body("timestamp-form")
         refute_body(no_data)
         refute_body(pagination)
       end
