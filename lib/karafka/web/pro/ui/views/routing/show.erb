@@ -23,19 +23,6 @@
   view_title title
 %>
 
-<% if @topic.group.consumer_group? && ::Karafka::Web.config.ui.policies.consumer_groups.delete_offsets?(@topic.group.id, @topic.name) %>
-  <div class="col-span-12 mb-3">
-    <a
-      href="<%= root_path('health', 'topics', @topic.group.id, @topic.name, 'delete') %>"
-      class="btn btn-error btn-sm gap-2"
-      title="Delete the committed offsets of this consumer group for this topic"
-    >
-      <%== icon(:trash) %>
-      Delete Offsets
-    </a>
-  </div>
-<% end %>
-
 <% if filtering? || !@details.empty? %>
   <div class="col-span-12 mb-3">
     <%== filter_box(labels: { name: 'Attribute' }) %>
@@ -48,4 +35,15 @@
   </div>
 <% else %>
   <%== partial 'routing/details_table' %>
+<% end %>
+
+<% if @topic.group.consumer_group? %>
+  <div class="col-span-12 flex justify-end space-x-2 mt-6">
+    <%==
+      partial(
+        'health/offsets/delete_button',
+        locals: { consumer_group_id: @topic.group.id, topic_name: @topic.name, labeled: true }
+      )
+    %>
+  </div>
 <% end %>

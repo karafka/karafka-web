@@ -47,7 +47,21 @@
 
   <div class="card bg-base-100">
     <div class="card-body">
-      <div class="data-table-wrapper">
+      <div class="alert alert-error">
+        <div class="flex items-center gap-4">
+          <%== icon(:trash) %>
+          <span>
+            You are about to delete the committed offsets of consumer group
+            <span class="font-bold ml-1"><%= @consumer_group_id %></span>
+            for all
+            <span class="font-bold ml-1"><%= @cluster_partitions.size %></span>
+            partitions of topic
+            <span class="font-bold ml-1"><%= @topic_name %></span>
+          </span>
+        </div>
+      </div>
+
+      <div class="data-table-wrapper mt-6">
         <%==
           partial(
             'health/cluster_lags_table',
