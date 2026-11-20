@@ -19,25 +19,29 @@
 <%# Contact: contact@karafka.io %>
 
 <%
-  commanding_class = 'btn-disabled'
-  commanding_class = '' if features.commanding?
-  trace_class = 'btn-disabled'
-  trace_class = '' unless process.tags.include?('embedded')
+  # Disabled buttons do not receive pointer events, so the reason sits in the form title.
+  # Precedence: commanding off, then process capabilities, then the process state.
+  commanding_reason = features.commanding? ? nil : 'Commanding is disabled in the Web UI configuration'
 %>
 
 <div class="col-span-12 flex justify-end space-x-2 mb-6">
   <%
     trace_path = consumers_path('commanding', process.id, 'trace')
-    disabled_class = process.status != 'stopped' ? '' : 'btn-disabled'
+
+    title = commanding_reason
+    title ||= 'This process is stopped' if process.status == 'stopped'
+    disabled_class = title ? 'btn-disabled' : ''
+    title ||= 'Trace'
   %>
   <form
     action="<%= trace_path %>"
     method="post"
     class="inline-flex items-center"
+    title="<%= title %>"
   >
     <button
       type="submit"
-      class="btn btn-info btn-sm btn-lockable <%= disabled_class %> <%= commanding_class %>"
+      class="btn btn-info btn-sm btn-lockable <%= disabled_class %>"
     >
       <%== icon(:gear) %>
       Trace
@@ -46,12 +50,14 @@
 
   <%
     quiet_path = consumers_path('commanding', process.id, 'quiet')
-    disabled_class = process.status == 'running' ? '' : 'btn-disabled'
 
-    unless process.execution_mode == 'standalone'
-      disabled_class = 'btn-disabled'
-      title = 'Supported only in standalone consumer processes'
+    title = commanding_reason
+    if process.execution_mode != 'standalone' || process.tags.include?('embedded')
+      title ||= 'Supported only in standalone consumer processes'
     end
+    title ||= 'Only a running process can be quieted' unless process.status == 'running'
+    disabled_class = title ? 'btn-disabled' : ''
+    title ||= 'Quiet'
   %>
   <form
     action="<%= quiet_path %>"
@@ -61,7 +67,7 @@
   >
     <button
       type="submit"
-      class="btn btn-warning btn-sm btn-lockable <%= disabled_class %> <%= commanding_class %> <%= trace_class %>"
+      class="btn btn-warning btn-sm btn-lockable <%= disabled_class %>"
     >
       <%== icon(:pause) %>
       Quiet
@@ -70,12 +76,16 @@
 
   <%
     stop_path = consumers_path('commanding', process.id, 'stop')
-    disabled_class = process.status != 'stopping' && process.status != 'stopped' ? '' : 'btn-disabled'
 
-    unless process.execution_mode == 'standalone'
-      disabled_class = 'btn-disabled'
-      title = 'Supported only in standalone consumer processes'
+    title = commanding_reason
+    if process.execution_mode != 'standalone' || process.tags.include?('embedded')
+      title ||= 'Supported only in standalone consumer processes'
     end
+    if process.status == 'stopping' || process.status == 'stopped'
+      title ||= 'This process is already stopping or stopped'
+    end
+    disabled_class = title ? 'btn-disabled' : ''
+    title ||= 'Stop'
   %>
   <form
     action="<%= stop_path %>"
@@ -85,7 +95,7 @@
   >
     <button
       type="submit"
-      class="btn btn-error btn-sm btn-lockable <%= disabled_class %> <%= commanding_class %> <%= trace_class %>"
+      class="btn btn-error btn-sm btn-lockable <%= disabled_class %>"
     >
       <%== icon(:stop) %>
       Stop

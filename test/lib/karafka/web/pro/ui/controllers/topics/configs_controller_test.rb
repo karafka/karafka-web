@@ -55,6 +55,22 @@ describe_current do
         assert_body("max.message.bytes")
         assert_body("retention.ms")
         assert_body("min.insync.replicas")
+        assert_body('title="Delete this topic"')
+        refute_body("btn btn-error btn-sm btn-disabled")
+      end
+    end
+
+    context "when topics management is disabled" do
+      before do
+        Karafka::Web.config.ui.topics.management.active = false
+
+        get "topics/#{topic}/config"
+      end
+
+      it "expect the delete button to be disabled with the reason" do
+        assert_ok
+        assert_body('class="btn btn-error btn-sm btn-disabled"')
+        assert_body('title="Topics management is disabled in the Web UI configuration"')
       end
     end
 

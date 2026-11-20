@@ -38,6 +38,30 @@ describe_current do
     let(:no_data_msg) { "Those partitions are empty and do not contain any data" }
     let(:many_partitions_msg) { "distribution results are computed based only" }
 
+    context "when topics management is enabled" do
+      before { get "topics/#{topic}/distribution" }
+
+      it "expect the increase partitions button to be enabled" do
+        assert_ok
+        assert_body('title="Add more partitions to this topic"')
+        refute_body("btn btn-primary btn-sm btn-disabled")
+      end
+    end
+
+    context "when topics management is disabled" do
+      before do
+        Karafka::Web.config.ui.topics.management.active = false
+
+        get "topics/#{topic}/distribution"
+      end
+
+      it "expect the increase partitions button to be disabled with the reason" do
+        assert_ok
+        assert_body('class="btn btn-primary btn-sm btn-disabled"')
+        assert_body('title="Topics management is disabled in the Web UI configuration"')
+      end
+    end
+
     context "when trying to read distribution of a non-existing topic" do
       before { get "topics/#{generate_topic_name}/distribution" }
 

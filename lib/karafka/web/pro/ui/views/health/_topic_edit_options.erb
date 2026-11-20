@@ -20,6 +20,8 @@
 
 <%
   feature_class = features.commanding? ? '' : 'btn-disabled'
+  # Disabled buttons do not receive pointer events, so titles sit on wrappers
+  disabled_reason = features.commanding? ? nil : 'Commanding is disabled in the Web UI configuration'
 
   partitions = topic_details[:partitions]
 
@@ -47,24 +49,34 @@
 
 <div class="inline-flex gap-2">
   <% if has_paused %>
-    <a
-      href="<%= resume_path %>"
-      class="btn btn-success btn-sm <%= feature_class %>"
-      title="Resume all paused partitions of this topic within the '<%= consumer_group_name %>' consumer group"
-    >
-      <%== icon(:play) %>
-      Resume All
-    </a>
+    <%
+      resume_title = disabled_reason ||
+        "Resume all paused partitions of this topic within the '#{consumer_group_name}' consumer group"
+    %>
+    <span class="inline-flex" title="<%= resume_title %>">
+      <a
+        href="<%= resume_path %>"
+        class="btn btn-success btn-sm <%= feature_class %>"
+      >
+        <%== icon(:play) %>
+        Resume All
+      </a>
+    </span>
   <% end %>
 
-  <a
-    href="<%= pause_path %>"
-    class="btn btn-warning btn-sm <%= feature_class %>"
-    title="Pause all partitions of this topic within the '<%= consumer_group_name %>' consumer group"
-  >
-    <%== icon(:pause) %>
-    Pause All
-  </a>
+  <%
+    pause_title = disabled_reason ||
+      "Pause all partitions of this topic within the '#{consumer_group_name}' consumer group"
+  %>
+  <span class="inline-flex" title="<%= pause_title %>">
+    <a
+      href="<%= pause_path %>"
+      class="btn btn-warning btn-sm <%= feature_class %>"
+    >
+      <%== icon(:pause) %>
+      Pause All
+    </a>
+  </span>
 </div>
 
 <% end %>

@@ -37,10 +37,12 @@
     <%
       disabled = 'disabled btn-disabled'
       disabled = '' if features.commanding?
+      disabled_title = features.commanding? ? nil : 'Commanding is disabled in the Web UI configuration'
     %>
     <a
       href="<%= consumers_path('controls') %>"
       class="custom-tab <%= nav_class(include: 'controls') %> <%= disabled %>"
+      title="<%= disabled_title %>"
     >
       Controls
     </a>
@@ -48,6 +50,7 @@
     <a
       href="<%= consumers_path('commands') %>"
       class="custom-tab <%= nav_class(include: 'commands') %> <%= disabled %>"
+      title="<%= disabled_title %>"
     >
       Commands
     </a>

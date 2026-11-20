@@ -71,6 +71,22 @@ describe_current do
       assert_body("health/topics/example_app6_app/default/offsets")
       assert_body("health/topics/example_app6_app/default/changes")
       assert_body("health/topics/example_app6_app/default/cluster_lags")
+      assert_body("Pause all partitions of this topic within the")
+      refute_body("Commanding is disabled in the Web UI configuration")
+    end
+
+    context "when commanding is disabled" do
+      before do
+        Karafka::Web.config.commanding.active = false
+
+        get "health/topics/example_app6_app/default/overview"
+      end
+
+      it "expect the pause action to be disabled with the reason" do
+        assert_ok
+        assert_body('class="btn btn-warning btn-sm btn-disabled"')
+        assert_body('title="Commanding is disabled in the Web UI configuration"')
+      end
     end
 
     context "when sorted" do

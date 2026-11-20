@@ -19,12 +19,16 @@
 <%# Contact: contact@karafka.io %>
 
 <div class="col-span-12 flex justify-end space-x-2 mt-6">
-  <a
-    class="btn btn-error btn-sm <%= 'btn-disabled' unless features.topics_management? %>"
-    href="<%= topics_path(@topic.topic_name, 'delete') %>"
-    title="Delete this topic"
+  <span
+    class="inline-flex"
+    title="<%= features.topics_management? ? 'Delete this topic' : 'Topics management is disabled in the Web UI configuration' %>"
   >
-    <%== icon(:trash) %>
-    Delete Topic
-  </a>
+    <a
+      class="btn btn-error btn-sm <%= 'btn-disabled' unless features.topics_management? %>"
+      href="<%= topics_path(@topic.topic_name, 'delete') %>"
+    >
+      <%== icon(:trash) %>
+      Delete Topic
+    </a>
+  </span>
 </div>

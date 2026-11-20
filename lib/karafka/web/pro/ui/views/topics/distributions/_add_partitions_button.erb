@@ -19,12 +19,16 @@
 <%# Contact: contact@karafka.io %>
 
 <div class="col-span-12 flex justify-end space-x-2 mb-6">
-  <a
-    class="btn btn-primary btn-sm <%= 'btn-disabled' unless features.topics_management? %>"
-    href="<%= topics_path(@topic.topic_name, 'distribution', 'edit') %>"
-    title="Add more partitions to this topic"
+  <span
+    class="inline-flex"
+    title="<%= features.topics_management? ? 'Add more partitions to this topic' : 'Topics management is disabled in the Web UI configuration' %>"
   >
-    <%== icon(:plus) %>
-    Increase Partitions
-  </a>
+    <a
+      class="btn btn-primary btn-sm <%= 'btn-disabled' unless features.topics_management? %>"
+      href="<%= topics_path(@topic.topic_name, 'distribution', 'edit') %>"
+    >
+      <%== icon(:plus) %>
+      Increase Partitions
+    </a>
+  </span>
 </div>

@@ -26,11 +26,11 @@
   action="<%= trigger_path %>"
   method="post"
   class="inline"
+  title="<%= task.enabled? ? 'Trigger' : 'Enable this task to trigger it' %>"
 >
   <button
     type="submit"
     class="btn btn-primary btn-sm <%= disabled_class %>"
-    title="Trigger"
   >
     <%== icon(:play) %>
   </button>
@@ -44,7 +44,7 @@
   action="<%= enable_path %>"
   method="post"
   class="inline"
-  title="Enable"
+  title="<%= task.enabled? ? 'This task is already enabled' : 'Enable' %>"
 >
   <button
     type="submit"
@@ -62,13 +62,11 @@
   action="<%= disable_path %>"
   method="post"
   class="inline"
-  title="Disable"
-
+  title="<%= task.enabled? ? 'Disable' : 'This task is already disabled' %>"
 >
   <button
     type="submit"
     class="btn btn-warning btn-sm <%= disabled_class %>"
-
   >
     <%== icon(:pause) %>
   </button>
