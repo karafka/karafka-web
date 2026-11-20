@@ -39,7 +39,7 @@
       <% if @count.positive? %>
         <div class="alert alert-error">
           <div class="flex items-center gap-4">
-            <%== icon(:trash) %>
+            <%== icon(:scissors) %>
             <span>
               You are about to delete all messages in offsets
               <span class="font-bold ml-1"><%= @low %></span>
@@ -80,7 +80,7 @@
 
           <% if @count.positive? %>
             <button type="submit" class="btn btn-error gap-2 btn-lockable confirm-action">
-              <%== icon(:trash) %>
+              <%== icon(:scissors) %>
               Delete Messages
             </button>
           <% end %>
