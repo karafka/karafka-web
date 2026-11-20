@@ -7216,6 +7216,47 @@
       color: var(--color-base-content);
     }
   }
+  .alert-box-content {
+    border-bottom-right-radius: var(--radius-lg);
+    border-bottom-left-radius: var(--radius-lg);
+    background-color: var(--color-base-100);
+    padding: calc(var(--spacing) * 4);
+    & a:not(.btn) {
+      @layer daisyui.l1.l2.l3 {
+        cursor: pointer;
+        text-decoration-line: underline;
+      }
+      &:focus {
+        @layer daisyui.l1.l2.l3 {
+          --tw-outline-style: none;
+          outline-style: none;
+          @media (forced-colors: active) {
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+          }
+        }
+      }
+      &:focus-visible {
+        @layer daisyui.l1.l2.l3 {
+          outline: 2px solid currentColor;
+          outline-offset: 2px;
+        }
+      }
+      &:hover {
+        @layer daisyui.l1.l2 {
+          @media (hover: hover) {
+            color: var(--color-primary);
+            @supports (color: color-mix(in lab, red, red)) {
+              color: color-mix(in oklab, var(--color-primary) 80%, #000);
+            }
+          }
+        }
+      }
+      @layer daisyui.l1.l2 {
+        color: var(--color-primary);
+      }
+    }
+  }
   @layer daisyui.l1.l2.l3 {
     .drawer-content a:hover:not(.btn):not(.custom-tab) {
       cursor: pointer;
@@ -7459,12 +7500,6 @@
   }
   .rounded-sm {
     border-radius: var(--radius-sm);
-  }
-  .alert-box-content {
-    border-bottom-right-radius: var(--radius-lg);
-    border-bottom-left-radius: var(--radius-lg);
-    background-color: var(--color-base-100);
-    padding: calc(var(--spacing) * 4);
   }
   .code {
     border-style: var(--tw-border-style);
