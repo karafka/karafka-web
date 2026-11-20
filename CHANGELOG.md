@@ -5,6 +5,7 @@
 - **[Feature]** Add a **Publish message** capability to the Explorer (Pro) to produce new messages with an optional key, headers and a typed, uploaded or tombstone payload. Gated by the new `#publish?` policy, enabled by default (#956).
 - **[Feature]** Add a **Delete messages up to this offset** action to the Explorer message view (Pro), with a confirmation showing the offset range that goes. Gated by the new `#delete_records?` policy, denied by default. Requires karafka `2.6.2`.
 - **[Feature]** Aggregate the Health views per topic with drill-down to partitions, so they stay usable at scale. Thresholds are configurable under `config.ui.health.lags` (#112).
+- **[Feature]** Add a **Virtual Partitions** tab to topics (Pro) that runs the karafka Virtual Partitions estimator on the topic data and shows the score, verdict and per-partition metrics. Messages are grouped by key. Sample sizes and the time limit are configurable under `config.ui.topics.virtual_partitions`. Requires karafka `2.6.2`.
 - [Enhancement] Show the delivery outcome (persisted, possibly persisted or not persisted), latency and broker of failed producer deliveries in the error details, so it is clear whether a retry may duplicate the message. Requires karafka-rdkafka `0.31.0` or newer.
 - [Enhancement] Produce scheduled-message cancellations with `acks: 1` so the broker confirms receipt.
 - [Enhancement] Produce consumer commanding requests with `acks: 1` so the broker confirms receipt, and add a `Karafka::Web.producers` facade (#1241).
