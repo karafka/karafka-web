@@ -31,12 +31,6 @@
   },
   "packageRules": [
     {
-      "matchManagers": [
-        "*"
-      ],
-      "minimumReleaseAge": "7 days"
-    },
-    {
       "description": "Group ruby/setup-ruby action with ruby version updates",
       "matchPackageNames": [
         "ruby/setup-ruby",
@@ -51,6 +45,13 @@
         "ruby/setup-ruby"
       ],
       "minimumReleaseAge": "5 days"
+    },
+    {
+      "description": "Never automerge karafka/misc: its Gem Push action signs and pushes releases, review each bump",
+      "matchPackageNames": [
+        "karafka/misc"
+      ],
+      "automerge": false
     },
     {
       "description": "Major updates stay manual",
