@@ -164,6 +164,98 @@ describe_current do
       end
     end
 
+    context "when sorting by a metric with an empty partition on the page" do
+      let(:partitions) { 3 }
+
+      before do
+        messages = Array.new(100) do |i|
+          partition = (i < 50) ? 0 : 1
+          key = partition.zero? ? "same" : "key-#{i}"
+
+          { topic: topic, payload: "", key: key, partition: partition }
+        end
+
+        PRODUCERS.regular.produce_many_sync(messages)
+
+        get "topics/#{topic}/virtual_partitions?#{run_params}&sort=avg_speedup+desc"
+      end
+
+      it "sorts the partitions with data and lists the empty one last" do
+        assert_ok
+
+        positions = (0..2).map { |partition| body.index("explorer/topics/#{topic}/#{partition}\"") }
+
+        assert_operator(positions[1], :<, positions[0])
+        assert_operator(positions[0], :<, positions[2])
+      end
+    end
+
+    context "when estimating with non-default settings" do
+      let(:custom_params) { "concurrency=7&distribution=balanced&batch_size=3&sample_size=10000" }
+      let(:estimator_instance) do
+        estimator.new(concurrency: 7, distribution: :balanced, batch_size: 3, sample_size: 10_000)
+      end
+      let(:captured) { {} }
+
+      before do
+        produce_many(topic, Array.new(10, ""), key: "key")
+
+        instance = estimator_instance
+        estimator
+          .stubs(:new)
+          .with { |kwargs| captured.merge!(kwargs).is_a?(Hash) }
+          .returns(instance)
+
+        get "topics/#{topic}/virtual_partitions?#{custom_params}"
+      end
+
+      it "passes the form values to the estimator and shows them" do
+        assert_ok
+        assert_equal(
+          { concurrency: 7, distribution: :balanced, batch_size: 3, sample_size: 10_000 },
+          captured
+        )
+        assert_body("Concurrency: 7")
+        assert_body("distribution: balanced")
+        assert_body("batch size: 3")
+        assert_body("sample size: 10,000")
+      end
+    end
+
+    context "when estimating a topic with more partitions than one page" do
+      let(:partitions) { 30 }
+
+      before do
+        produce_many(topic, Array.new(10, ""), key: "key", partition: 0)
+        produce_many(topic, Array.new(20, ""), key: "key", partition: 20)
+      end
+
+      context "when on the first page" do
+        before { get "topics/#{topic}/virtual_partitions?#{run_params}" }
+
+        it "estimates only the partitions of that page" do
+          assert_ok
+          assert_body(many_partitions_msg)
+          assert_body("Messages: 10")
+          assert_body("Partitions: 0 to 14")
+          assert_body("explorer/topics/#{topic}/0\"")
+          refute_body("explorer/topics/#{topic}/20\"")
+        end
+      end
+
+      context "when on the second page" do
+        before { get "topics/#{topic}/virtual_partitions?#{run_params}&page=2" }
+
+        it "estimates only the partitions of that page" do
+          assert_ok
+          assert_body("Messages: 20")
+          assert_body("Partitions: 15 to 29")
+          assert_body("explorer/topics/#{topic}/20\"")
+          refute_body("explorer/topics/#{topic}/0\"")
+        end
+      end
+    end
+
     context "when the estimation exceeds the time limit" do
       before do
         Karafka::Web.config.ui.topics.virtual_partitions.stubs(:timeout).returns(1)

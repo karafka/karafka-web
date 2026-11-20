@@ -106,9 +106,15 @@ module Karafka
                   estimator.call(topic_name, partitions: @active_partitions)
                 end
 
-                @partitions = sort(
-                  @result[:partitions].map { |partition_id, stats| stats.merge(partition_id:) }
-                )
+                partitions = @result[:partitions].map do |partition_id, stats|
+                  stats.merge(partition_id:)
+                end
+
+                # Partitions without data have no metrics and the sorter does not sort rows with
+                # missing values, so they are sorted separately and listed last
+                estimated, empty = partitions.partition { |stats| stats[:batches].positive? }
+
+                @partitions = sort(estimated) + sort(empty)
               rescue Timeout::Error
                 @timeout = true
               end
