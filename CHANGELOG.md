@@ -62,6 +62,8 @@
 - [Fix] Keep a dedicated Web UI producer (e.g. a non-idempotent one) in `karafka swarm` nodes instead of replacing it with the app producer.
 - [Fix] Fix the "Configuraton" typo in the topic configuration page title (Pro).
 - [Fix] Show the "Cluster" page title on the Cluster Replication page.
+- [Maintenance] Sign the gem with `sigstore-cli` and push it with `gem push --attestation` (the `gem-push` action of `karafka/misc`), so a failed signing stops the release instead of publishing the gem without an attestation.
+- [Maintenance] Add the `Sigstore Check` workflow: nightly, and on pull requests that change the push workflow, it builds the gem, signs it like a release and verifies the attestation, without pushing.
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a keyword filtering box to the data-heavy Web UI listings, with a field selector on flat listings (Pro) (#1073).
