@@ -36,7 +36,8 @@ module Karafka
           module Topics
             module VirtualPartitions
               # Turns the raw estimation form params into a hash of raw strings, filling the
-              # values missing from the request with the estimator defaults
+              # values missing from the request with the estimator defaults (capped by the Web UI
+              # limits)
               #
               # Numbers are kept as strings and their format is validated by the contract, so a
               # malformed value fails validation instead of being silently truncated.
@@ -47,11 +48,15 @@ module Karafka
                   def call(params)
                     app_config = ::Karafka::App.config
                     estimator_config = app_config.consumer_groups.virtual_partitions.estimator
+                    vp_config = Web.config.ui.topics.virtual_partitions
+
+                    concurrency = [app_config.concurrency, vp_config.max_concurrency].min
+                    batch_size = [app_config.max_messages, vp_config.max_batch_size].min
 
                     {
-                      concurrency: params.fetch(:concurrency, app_config.concurrency).to_s,
+                      concurrency: params.fetch(:concurrency, concurrency).to_s,
                       distribution: params.fetch(:distribution, estimator_config.distribution).to_s,
-                      batch_size: params.fetch(:batch_size, app_config.max_messages).to_s,
+                      batch_size: params.fetch(:batch_size, batch_size).to_s,
                       sample_size: params.fetch(:sample_size, default_sample_size).to_s
                     }
                   end

@@ -71,6 +71,21 @@ describe_current do
     end
   end
 
+  context "when the app defaults are over the Web UI maximums" do
+    let(:raw) { {} }
+
+    before do
+      vp_config = Karafka::Web.config.ui.topics.virtual_partitions
+      vp_config.stubs(:max_concurrency).returns(2)
+      vp_config.stubs(:max_batch_size).returns(3)
+    end
+
+    it "caps them" do
+      assert_equal("2", result[:concurrency])
+      assert_equal("3", result[:batch_size])
+    end
+  end
+
   context "when the estimator default sample size is not an allowed one" do
     let(:raw) { {} }
 

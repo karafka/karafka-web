@@ -37,7 +37,9 @@ describe_current do
         topics: {
           virtual_partitions: {
             timeout: 100,
-            sample_sizes: [100, 1_000]
+            sample_sizes: [100, 1_000],
+            max_concurrency: 10,
+            max_batch_size: 100
           }
         }
       }
@@ -55,6 +57,16 @@ describe_current do
       before { vp_params[:timeout] = value }
 
       it { refute(contract.call(params).success?) }
+    end
+  end
+
+  %i[max_concurrency max_batch_size].each do |key|
+    [nil, 0, -1, "10", 1.5].each do |value|
+      context "when #{key} is #{value.inspect}" do
+        before { vp_params[key] = value }
+
+        it { refute(contract.call(params).success?) }
+      end
     end
   end
 

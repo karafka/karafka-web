@@ -51,6 +51,14 @@ module Karafka
                   100_000
                 ]
 
+                # Max concurrency users can estimate for. The balanced distribution cost grows
+                # with messages x concurrency, so it needs to be bound.
+                setting :max_concurrency, default: 128
+
+                # Max batch size users can estimate for. Each sampled partition keeps up to one
+                # batch of messages in memory.
+                setting :max_batch_size, default: 10_000
+
                 configure
               end
             end

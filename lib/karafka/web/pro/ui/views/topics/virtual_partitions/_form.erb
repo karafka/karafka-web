@@ -39,6 +39,7 @@
           name="concurrency"
           value="<%= @form[:concurrency] %>"
           min="1"
+          max="<%= Karafka::Web.config.ui.topics.virtual_partitions.max_concurrency %>"
           autocomplete="off"
           required
         >
@@ -69,6 +70,7 @@
           name="batch_size"
           value="<%= @form[:batch_size] %>"
           min="1"
+          max="<%= Karafka::Web.config.ui.topics.virtual_partitions.max_batch_size %>"
           autocomplete="off"
           required
         >

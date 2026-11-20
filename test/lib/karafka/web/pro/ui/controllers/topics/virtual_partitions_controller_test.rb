@@ -79,6 +79,8 @@ describe_current do
         assert_body(topic)
         assert_body('name="concurrency"')
         assert_body('name="sample_size"')
+        assert_body('max="128"')
+        assert_body('max="10000"')
         assert_body(key_grouping_msg)
         assert_body(share_groups_msg)
         assert_body('custom-tab active"')
@@ -179,6 +181,8 @@ describe_current do
     {
       "concurrency=0" => "concurrency needs to be an integer",
       "concurrency=5abc" => "concurrency needs to be an integer",
+      "concurrency=129" => "concurrency needs to be an integer",
+      "batch_size=10001" => "batch size needs to be an integer",
       "distribution=unknown" => "distribution needs to be either consistent or balanced",
       "batch_size=0" => "batch size needs to be an integer",
       "sample_size=1234" => "sample size needs to be one of the allowed sample sizes"

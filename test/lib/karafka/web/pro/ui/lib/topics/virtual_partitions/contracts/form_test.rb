@@ -59,7 +59,7 @@ describe_current do
 
         refute(result.success?)
         assert_equal(
-          "concurrency needs to be an integer that is 1 or greater",
+          "concurrency needs to be an integer from 1 to the configured maximum",
           result.errors[:concurrency]
         )
       end
@@ -73,10 +73,57 @@ describe_current do
 
         refute(result.success?)
         assert_equal(
-          "batch size needs to be an integer that is 1 or greater",
+          "batch size needs to be an integer from 1 to the configured maximum",
           result.errors[:batch_size]
         )
       end
+    end
+  end
+
+  context "when concurrency and batch size are at the configured maximums" do
+    before do
+      params[:concurrency] = "128"
+      params[:batch_size] = "10000"
+    end
+
+    it { assert(contract.call(params).success?) }
+  end
+
+  context "when concurrency is over the configured maximum" do
+    before { params[:concurrency] = "129" }
+
+    it do
+      result = contract.call(params)
+
+      refute(result.success?)
+      assert(result.errors.key?(:concurrency))
+    end
+  end
+
+  context "when batch size is over the configured maximum" do
+    before { params[:batch_size] = "10001" }
+
+    it do
+      result = contract.call(params)
+
+      refute(result.success?)
+      assert(result.errors.key?(:batch_size))
+    end
+  end
+
+  context "when the maximums are customized" do
+    before do
+      vp_config = Karafka::Web.config.ui.topics.virtual_partitions
+      vp_config.stubs(:max_concurrency).returns(4)
+      vp_config.stubs(:max_batch_size).returns(50)
+    end
+
+    it do
+      result = contract.call(params)
+
+      refute(result.success?)
+      assert(result.errors.key?(:concurrency))
+      assert(result.errors.key?(:batch_size))
     end
   end
 

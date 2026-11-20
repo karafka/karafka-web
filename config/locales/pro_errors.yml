@@ -17,6 +17,8 @@ en:
       ui.search.timeout_format: must be at least 1 ms
       ui.topics.virtual_partitions.timeout_format: must be at least 1 ms
       ui.topics.virtual_partitions.sample_sizes_format: all sample sizes need to be integers bigger than 0
+      ui.topics.virtual_partitions.max_concurrency_format: needs to be an integer bigger than 0
+      ui.topics.virtual_partitions.max_batch_size_format: needs to be an integer bigger than 0
 
       ui.policies.messages_format: cannot be nil
       ui.policies.requests_format: cannot be nil
@@ -84,7 +86,7 @@ en:
       partition_count_not_an_increase: 'Must be greater than the current partition count'
     virtual_partitions_form:
       missing: needs to be present
-      concurrency_format: concurrency needs to be an integer that is 1 or greater
-      batch_size_format: batch size needs to be an integer that is 1 or greater
+      concurrency_format: concurrency needs to be an integer from 1 to the configured maximum
+      batch_size_format: batch size needs to be an integer from 1 to the configured maximum
       distribution_format: distribution needs to be either consistent or balanced
       sample_size_format: sample size needs to be one of the allowed sample sizes

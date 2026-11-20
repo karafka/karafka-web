@@ -51,11 +51,15 @@ module Karafka
                   private_constant :COUNT_REGEXP
 
                   required(:concurrency) do |val|
-                    val.is_a?(String) && val.match?(COUNT_REGEXP) && val.to_i >= 1
+                    next false unless val.is_a?(String) && val.match?(COUNT_REGEXP)
+
+                    val.to_i.between?(1, Web.config.ui.topics.virtual_partitions.max_concurrency)
                   end
 
                   required(:batch_size) do |val|
-                    val.is_a?(String) && val.match?(COUNT_REGEXP) && val.to_i >= 1
+                    next false unless val.is_a?(String) && val.match?(COUNT_REGEXP)
+
+                    val.to_i.between?(1, Web.config.ui.topics.virtual_partitions.max_batch_size)
                   end
 
                   required(:distribution) { |val| %w[consistent balanced].include?(val) }

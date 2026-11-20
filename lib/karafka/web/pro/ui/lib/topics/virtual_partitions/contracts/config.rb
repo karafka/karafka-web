@@ -49,6 +49,10 @@ module Karafka
                       nested(:virtual_partitions) do
                         required(:timeout) { |val| val.is_a?(Integer) && val.positive? }
 
+                        required(:max_concurrency) { |val| val.is_a?(Integer) && val.positive? }
+
+                        required(:max_batch_size) { |val| val.is_a?(Integer) && val.positive? }
+
                         required(:sample_sizes) do |val|
                           next false unless val.is_a?(Array)
                           next false if val.empty?
