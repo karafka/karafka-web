@@ -102,6 +102,8 @@ module Karafka
                   sample_size: @form[:sample_size].to_i
                 )
 
+                # The read loop is inside `Estimator#call` and has no deadline hook. Reading the
+                # messages here for `Estimator#analyze` would keep the whole sample in memory
                 @result = Timeout.timeout(timeout) do
                   estimator.call(topic_name, partitions: @active_partitions)
                 end
