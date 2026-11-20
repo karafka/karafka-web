@@ -43,7 +43,7 @@ module Karafka
               # @param _topic_name [String] topic for which the offsets would be deleted
               # @return [Boolean] true if we should allow deleting the offsets
               # @note Denied by default because the deletion is irreversible. Override it to enable
-              #   the "Delete offsets" health capability.
+              #   the Delete Offsets action of the Health cluster lags and the Routing topic page.
               def delete_offsets?(_consumer_group_id, _topic_name)
                 false
               end

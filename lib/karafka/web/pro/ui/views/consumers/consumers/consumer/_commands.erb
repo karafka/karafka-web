@@ -20,7 +20,9 @@
 
 <%
   # Disabled buttons do not receive pointer events, so the reason sits in the form title.
-  # Precedence: commanding off, then process capabilities, then the process state.
+  # When several reasons apply, the first one wins: commanding being off, then a command the
+  # process does not support (only standalone processes can be quieted or stopped), then the
+  # current state of the process.
   commanding_reason = features.commanding? ? nil : 'Commanding is disabled in the Web UI configuration'
 %>
 

@@ -34,8 +34,10 @@ module Karafka
       module Ui
         module Controllers
           module Health
-            # Committed offsets of a consumer group for a topic. Deleting them makes a topic the
-            # consumer group no longer consumes stop reporting cluster lags.
+            # Committed offsets of a consumer group for a topic. Kafka keeps them after the
+            # consumer group stops consuming the topic, so the topic keeps showing up in the
+            # cluster lags with an ever-growing lag. Deleting them removes the topic from the
+            # consumer group's cluster lags.
             class OffsetsController < BaseController
               # Renders a confirmation page for the offsets removal since it is a sensitive
               # operation
@@ -92,8 +94,9 @@ module Karafka
                 @consumer_group_id = consumer_group_id
                 @topic_name = topic_name
 
-                # We query the topic directly, so topics hidden from the cluster lags (inactive or
-                # not in the Web UI routing) can still be reached
+                # We read the offsets of this topic straight from Kafka rather than through the
+                # cluster lags, which hide inactive topics and topics outside the Web UI routing.
+                # Those abandoned topics are the ones whose offsets usually need deleting.
                 partitions = ::Karafka::Admin
                   .read_lags_with_offsets({ consumer_group_id => [topic_name] })
                   .dig(consumer_group_id, topic_name)
