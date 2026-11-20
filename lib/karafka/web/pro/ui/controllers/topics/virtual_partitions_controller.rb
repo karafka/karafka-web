@@ -111,10 +111,11 @@ module Karafka
                 end
 
                 # Partitions without data have no metrics and the sorter does not sort rows with
-                # missing values, so they are sorted separately and listed last
-                estimated, empty = partitions.partition { |stats| stats[:batches].positive? }
+                # missing values, so rows without the sorted value keep partition order and go last
+                field = @params.current_sort.split.first.to_s.to_sym
+                with_value, without_value = partitions.partition { |stats| !stats[field].nil? }
 
-                @partitions = sort(estimated) + sort(empty)
+                @partitions = sort(with_value) + without_value
               rescue Timeout::Error
                 @timeout = true
               end

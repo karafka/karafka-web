@@ -190,6 +190,42 @@ describe_current do
       end
     end
 
+    context "when an empty partition comes before partitions with data" do
+      let(:partitions) { 3 }
+
+      before do
+        messages = Array.new(30) do |i|
+          { topic: topic, payload: "", key: "key-#{i}", partition: (i < 10) ? 1 : 2 }
+        end
+
+        PRODUCERS.regular.produce_many_sync(messages)
+      end
+
+      {
+        "" => [0, 1, 2],
+        "&sort=partition_id+asc" => [0, 1, 2],
+        "&sort=partition_id+desc" => [2, 1, 0],
+        "&sort=messages+asc" => [0, 1, 2],
+        "&sort=messages+desc" => [2, 1, 0],
+        "&sort=avg_speedup+asc" => [1, 2, 0],
+        "&sort=avg_speedup+desc" => [2, 1, 0]
+      }.each do |sort, expected|
+        context "when sorting with #{sort.inspect}" do
+          before { get "topics/#{topic}/virtual_partitions?#{run_params}#{sort}" }
+
+          it "renders the partitions in the expected order" do
+            assert_ok
+
+            positions = (0..2).to_h do |partition|
+              [partition, body.index("explorer/topics/#{topic}/#{partition}\"")]
+            end
+
+            assert_equal(expected, positions.keys.sort_by { |partition| positions[partition] })
+          end
+        end
+      end
+    end
+
     context "when estimating with non-default settings" do
       let(:custom_params) { "concurrency=7&distribution=balanced&batch_size=3&sample_size=10000" }
       let(:estimator_instance) do
