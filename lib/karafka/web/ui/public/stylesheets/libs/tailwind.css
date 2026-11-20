@@ -473,6 +473,10 @@
   }
 }
 
+@utility actions-danger-zone {
+  @apply ml-3 pl-3 border-l border-base-300 flex items-center;
+}
+
 @utility h2 {
   @apply text-xl text-left text-base-content mb-4 lg:font-light;
 }
