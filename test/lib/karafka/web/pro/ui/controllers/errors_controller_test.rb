@@ -36,13 +36,6 @@ describe_current do
   let(:error_report) { Fixtures.errors_file }
   let(:no_errors) { "There are no errors in this errors topic partition" }
   let(:search_button) { 'title="Search in this topic"' }
-  # Unavailable actions stay visible: a disabled button wrapped in a span carrying the reason
-  let(:disabled_action) do
-    lambda do |reason|
-      %(<span class="inline-flex" title="#{reason}">) +
-        '<button type="button" class="btn-action disabled" disabled>'
-    end
-  end
 
   before { topics_config.errors.name = errors_topic }
 
@@ -67,7 +60,7 @@ describe_current do
         assert_body(breadcrumbs)
         refute_body(pagination)
         refute_body(search_button)
-        assert_body(disabled_action.call("This topic is empty and does not contain any data"))
+        assert_body(disabled_action("This topic is empty and does not contain any data"))
       end
     end
 
@@ -176,7 +169,7 @@ describe_current do
         refute_body(search_button)
         refute_body("offset-lookup-datepicker")
         refute_body("timestamp-form")
-        assert_body(disabled_action.call("This partition is empty and does not contain any data"))
+        assert_body(disabled_action("This partition is empty and does not contain any data"))
       end
     end
 

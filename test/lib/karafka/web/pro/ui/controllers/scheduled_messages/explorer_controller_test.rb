@@ -35,13 +35,6 @@ describe_current do
   let(:search_button) { 'title="Search in this topic"' }
   let(:topic_no_data) { "This topic is empty and does not contain any data" }
   let(:partition_no_data) { "This partition is empty and does not contain any data" }
-  # Unavailable actions stay visible: a disabled button wrapped in a span carrying the reason
-  let(:disabled_action) do
-    lambda do |reason|
-      %(<span class="inline-flex" title="#{reason}">) +
-        '<button type="button" class="btn-action disabled" disabled>'
-    end
-  end
   let(:partitions) { 1 }
 
   describe "#topic" do
@@ -55,7 +48,7 @@ describe_current do
         refute_body("total: 1")
         refute_body(pagination)
         refute_body(search_button)
-        assert_body(disabled_action.call(topic_no_data))
+        assert_body(disabled_action(topic_no_data))
       end
     end
 
@@ -198,7 +191,7 @@ describe_current do
         refute_body("Watermark offsets")
         refute_body(pagination)
         refute_body(search_button)
-        assert_body(disabled_action.call(partition_no_data))
+        assert_body(disabled_action(partition_no_data))
         refute_body("offset-lookup-datepicker")
         refute_body("timestamp-form")
       end
