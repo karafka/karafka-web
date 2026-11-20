@@ -134,11 +134,38 @@ describe_current do
     end
 
     context "when sorting the configs by source" do
-      before { get "topics/#{topic}/config?sort=source+asc" }
+      let(:body) { response.body }
 
-      it do
-        assert_ok
-        assert_body("max.message.bytes")
+      before do
+        resource = Karafka::Admin::Configs::Resource.new(type: :topic, name: topic)
+        resource.set("retention.ms", "86400000")
+        Karafka::Admin::Configs.alter(resource)
+      end
+
+      context "when ascending" do
+        before { get "topics/#{topic}/config?sort=source+asc" }
+
+        it do
+          assert_ok
+          assert_operator(
+            body.rindex("<td>Default config</td>"),
+            :<,
+            body.index("<td>Dynamic topic config</td>")
+          )
+        end
+      end
+
+      context "when descending" do
+        before { get "topics/#{topic}/config?sort=source+desc" }
+
+        it do
+          assert_ok
+          assert_operator(
+            body.index("<td>Dynamic topic config</td>"),
+            :<,
+            body.index("<td>Default config</td>")
+          )
+        end
       end
     end
 

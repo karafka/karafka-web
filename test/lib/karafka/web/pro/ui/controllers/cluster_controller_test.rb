@@ -136,12 +136,29 @@ describe_current do
       end
     end
 
-    context "when sorting the broker config by source" do
+    context "when sorting the broker config by source ascending" do
       before { get "cluster/1?sort=source+asc" }
 
       it do
         assert_ok
-        assert_body("advertised.listeners")
+        assert_operator(
+          response.body.rindex("<td>Default config</td>"),
+          :<,
+          response.body.index("<td>Static broker config</td>")
+        )
+      end
+    end
+
+    context "when sorting the broker config by source descending" do
+      before { get "cluster/1?sort=source+desc" }
+
+      it do
+        assert_ok
+        assert_operator(
+          response.body.rindex("<td>Static broker config</td>"),
+          :<,
+          response.body.index("<td>Default config</td>")
+        )
       end
     end
 
