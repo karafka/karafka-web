@@ -31,15 +31,20 @@
 describe_current do
   include described_class
 
+  let(:features) { Karafka::Web::Pro::Ui::Lib::Features }
   let(:process) { Struct.new(:execution_mode, :status, :tags).new("standalone", "running", []) }
+
+  # Stubbed so the result does not depend on the config left by other tests
+  before do
+    features.stubs(:commanding?).returns(true)
+    features.stubs(:topics_management?).returns(true)
+  end
 
   describe "#commanding_disabled_reason" do
     it { assert_nil(commanding_disabled_reason) }
 
     context "when commanding is off" do
-      before { Karafka::Web.config.commanding.active = false }
-
-      after { Karafka::Web.config.commanding.active = true }
+      before { features.stubs(:commanding?).returns(false) }
 
       it { assert_equal("Commanding is disabled in the Web UI configuration", commanding_disabled_reason) }
     end
@@ -49,9 +54,7 @@ describe_current do
     it { assert_nil(topics_management_disabled_reason) }
 
     context "when topics management is off" do
-      before { Karafka::Web.config.ui.topics.management.active = false }
-
-      after { Karafka::Web.config.ui.topics.management.active = true }
+      before { features.stubs(:topics_management?).returns(false) }
 
       it do
         assert_equal(
@@ -116,11 +119,9 @@ describe_current do
 
     context "when commanding is off and the process is not standalone" do
       before do
-        Karafka::Web.config.commanding.active = false
+        features.stubs(:commanding?).returns(false)
         process.execution_mode = "swarm"
       end
-
-      after { Karafka::Web.config.commanding.active = true }
 
       it "expect commanding being off to win" do
         assert_equal(
