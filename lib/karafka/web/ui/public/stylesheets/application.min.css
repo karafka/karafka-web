@@ -6472,6 +6472,15 @@
       color: var(--color-base-100);
     }
   }
+  .actions-danger-zone {
+    margin-left: calc(var(--spacing) * 3);
+    display: flex;
+    align-items: center;
+    border-left-style: var(--tw-border-style);
+    border-left-width: 1px;
+    border-color: var(--color-base-300);
+    padding-left: calc(var(--spacing) * 3);
+  }
   .ml-1 {
     margin-left: var(--spacing);
   }
