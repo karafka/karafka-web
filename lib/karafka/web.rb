@@ -6,6 +6,7 @@ require "etc"
 require "open3"
 require "zlib"
 require "securerandom"
+require "timeout"
 require "uri"
 
 # Karafka framework main namespace

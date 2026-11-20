@@ -79,6 +79,13 @@ module Karafka
                   # Should we allow users to manage topics (edit config, resize, etc) from the UI
                   setting(:active, default: true)
                 end
+
+                setting :consumer_groups do
+                  setting(
+                    :virtual_partitions,
+                    default: Ui::Lib::Topics::ConsumerGroups::VirtualPartitions::Config.config
+                  )
+                end
               end
             end
           end
@@ -93,6 +100,7 @@ module Karafka
             Ui::Lib::Explorer::Search.post_setup(config)
             Ui::Lib::Health.post_setup(config)
             Ui::Lib::Cluster.post_setup(config)
+            Ui::Lib::Topics::ConsumerGroups::VirtualPartitions.post_setup(config)
 
             config.commanding.listeners.each do |listener|
               ::Karafka::App.monitor.subscribe(listener)

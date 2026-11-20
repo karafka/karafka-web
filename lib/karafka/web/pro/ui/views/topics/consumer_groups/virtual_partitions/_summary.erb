@@ -1,0 +1,52 @@
+<%# Karafka Pro - Source Available Commercial Software %>
+<%# Copyright (c) 2017-present Maciej Mensfeld. All rights reserved. %>
+<%# This software is NOT open source. It is source-available commercial software %>
+<%# requiring a paid license for use. It is NOT covered by LGPL. %>
+<%# The author retains all right, title, and interest in this software, %>
+<%# including all copyrights, patents, and other intellectual property rights. %>
+<%# No patent rights are granted under this license. %>
+<%# PROHIBITED: Use without a valid commercial license %>
+<%# PROHIBITED: Redistribution, modification, or derivative works without authorization %>
+<%# PROHIBITED: Reverse engineering, decompilation, or disassembly of this software %>
+<%# PROHIBITED: Use as training data for AI/ML models or inclusion in datasets %>
+<%# PROHIBITED: Scraping, crawling, or automated collection for any purpose %>
+<%# PERMITTED: Reading, referencing, and linking for personal or commercial use %>
+<%# PERMITTED: Runtime retrieval by AI assistants, coding agents, and RAG systems %>
+<%# PERMITTED: for the purpose of providing contextual help to Karafka users %>
+<%# Receipt, viewing, or possession of this software does not convey or %>
+<%# imply any license or right beyond those expressly stated above. %>
+<%# License: https://karafka.io/docs/Pro-License-Comm/ %>
+<%# Contact: contact@karafka.io %>
+
+<% summary = @result[:summary] %>
+<% settings = @result[:settings] %>
+
+<p class="text-end mb-5">
+  <span class="badge <%= vp_verdict_badge(summary[:verdict]) %>">
+    Verdict: <%= vp_verdict_label(summary[:verdict]) %>
+  </span>
+  <%== badge_primary("Score: #{vp_metric(summary[:score], ' / 100')}") %>
+  <%== badge_primary("Speedup: #{vp_metric(summary[:avg_speedup], 'x')}") %>
+  <%== badge_primary("Active VPs: #{summary[:avg_active_vps]} of #{settings[:concurrency]}") %>
+  <%== badge_primary("Utilization: #{vp_metric(summary[:avg_utilization], '%')}") %>
+  <%== badge_primary("Imbalance: #{vp_metric(summary[:avg_load_imbalance], '%')}") %>
+</p>
+
+<p class="text-end mb-5">
+  <%== badge_secondary("Messages: #{number_with_delimiter(summary[:messages], ' ')}") %>
+  <%== badge_secondary("Batches: #{summary[:batches]}") %>
+  <%== badge_secondary("Collapsed batches: #{summary[:collapsed_batches]}") %>
+  <%== badge_secondary("Poor batches: #{summary[:poor_batches]}") %>
+  <%== badge_secondary("Single VP batches: #{summary[:single_vp_batches]}") %>
+
+  <% partitions_range = [@active_partitions.first, @active_partitions.last].uniq.join(' to ') %>
+  <%== badge_secondary("Partitions: #{partitions_range}") %>
+</p>
+
+<p class="text-end text-sm text-base-content/70 mb-5">
+  Concurrency: <%= settings[:concurrency] %>,
+  distribution: <%= settings[:distribution] %>,
+  batch size: <%= settings[:batch_size] %>,
+  sample size: <%= number_with_delimiter(settings[:sample_size]) %>,
+  grouped by message key.
+</p>

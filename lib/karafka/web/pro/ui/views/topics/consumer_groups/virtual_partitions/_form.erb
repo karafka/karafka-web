@@ -1,0 +1,107 @@
+<%# Karafka Pro - Source Available Commercial Software %>
+<%# Copyright (c) 2017-present Maciej Mensfeld. All rights reserved. %>
+<%# This software is NOT open source. It is source-available commercial software %>
+<%# requiring a paid license for use. It is NOT covered by LGPL. %>
+<%# The author retains all right, title, and interest in this software, %>
+<%# including all copyrights, patents, and other intellectual property rights. %>
+<%# No patent rights are granted under this license. %>
+<%# PROHIBITED: Use without a valid commercial license %>
+<%# PROHIBITED: Redistribution, modification, or derivative works without authorization %>
+<%# PROHIBITED: Reverse engineering, decompilation, or disassembly of this software %>
+<%# PROHIBITED: Use as training data for AI/ML models or inclusion in datasets %>
+<%# PROHIBITED: Scraping, crawling, or automated collection for any purpose %>
+<%# PERMITTED: Reading, referencing, and linking for personal or commercial use %>
+<%# PERMITTED: Runtime retrieval by AI assistants, coding agents, and RAG systems %>
+<%# PERMITTED: for the purpose of providing contextual help to Karafka users %>
+<%# Receipt, viewing, or possession of this software does not convey or %>
+<%# imply any license or right beyond those expressly stated above. %>
+<%# License: https://karafka.io/docs/Pro-License-Comm/ %>
+<%# Contact: contact@karafka.io %>
+
+<div class="card bg-base-100 mb-10">
+  <div class="card-body">
+    <form
+      class="space-y-4"
+      method="get"
+      action="<%= topics_path(@topic.topic_name, 'consumer_groups', 'virtual_partitions') %>"
+      data-turbo="false"
+    >
+      <% if params.current_page > 1 %>
+        <input type="hidden" name="page" value="<%= params.current_page %>">
+      <% end %>
+
+      <div class="flex items-center w-full">
+        <label for="concurrency" class="w-1/4 text-base-content/70">Concurrency:</label>
+        <input
+          type="number"
+          class="w-3/4 block input input-bordered"
+          id="concurrency"
+          name="concurrency"
+          value="<%= @form[:concurrency] %>"
+          min="1"
+          max="<%= Karafka::Web.config.ui.topics.consumer_groups.virtual_partitions.max_concurrency %>"
+          autocomplete="off"
+          required
+        >
+      </div>
+
+      <div class="flex items-center w-full">
+        <label for="distribution" class="w-1/4 text-base-content/70">Distribution:</label>
+        <select
+          class="w-3/4 block select select-bordered"
+          id="distribution"
+          name="distribution"
+          required
+        >
+          <% %w[consistent balanced].each do |distribution| %>
+            <option value="<%= distribution %>" <%= 'selected' if @form[:distribution] == distribution %>>
+              <%= distribution.capitalize %>
+            </option>
+          <% end %>
+        </select>
+      </div>
+
+      <div class="flex items-center w-full">
+        <label for="batch_size" class="w-1/4 text-base-content/70">Batch size:</label>
+        <input
+          type="number"
+          class="w-3/4 block input input-bordered"
+          id="batch_size"
+          name="batch_size"
+          value="<%= @form[:batch_size] %>"
+          min="1"
+          max="<%= Karafka::Web.config.ui.topics.consumer_groups.virtual_partitions.max_batch_size %>"
+          autocomplete="off"
+          required
+        >
+      </div>
+
+      <div class="flex items-center w-full">
+        <label for="sample_size" class="w-1/4 text-base-content/70">Sample size:</label>
+        <select
+          class="w-3/4 block select select-bordered"
+          id="sample_size"
+          name="sample_size"
+          required
+        >
+          <% Karafka::Web.config.ui.topics.consumer_groups.virtual_partitions.sample_sizes.each do |sample_size| %>
+            <option value="<%= sample_size %>" <%= 'selected' if @form[:sample_size] == sample_size.to_s %>>
+              <%= number_with_delimiter(sample_size) %> messages per partition
+            </option>
+          <% end %>
+        </select>
+      </div>
+
+      <div class="text-sm text-base-content/70">
+        Messages are grouped by their key. Custom virtual partitioners are not used here.
+      </div>
+
+      <div class="flex justify-end">
+        <button type="submit" class="btn btn-primary gap-2 btn-lockable">
+          <%== icon(:play) %>
+          Estimate
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -43,6 +43,7 @@ module Karafka
           include Helpers::HealthHelper
           include Helpers::ClusterHelper
           include Helpers::ActionsHelper
+          include Helpers::VirtualPartitionsHelper
 
           opts[:root] = Karafka::Web.gem_root.join("lib/karafka/web/pro/ui")
 
