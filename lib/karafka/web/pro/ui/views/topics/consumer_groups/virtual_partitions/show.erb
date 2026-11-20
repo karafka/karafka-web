@@ -18,27 +18,27 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<% view_title "#{@topic.topic_name} Virtual Partitions" %>
+<% view_title "#{@topic.topic_name} Virtual Partitions (Consumer Groups)" %>
 
 <%== partial 'topics/topics/tabs' %>
 
 <% if @limited %>
-  <%== partial 'topics/virtual_partitions/limited' %>
+  <%== partial 'topics/consumer_groups/virtual_partitions/limited' %>
 <% end %>
 
 <% if @errors && !@errors.empty? %>
   <%== partial 'shared/form_errors_alert_box' %>
 <% end %>
 
-<%== partial 'topics/virtual_partitions/form' %>
+<%== partial 'topics/consumer_groups/virtual_partitions/form' %>
 
 <% if @timeout %>
-  <%== partial 'topics/virtual_partitions/timeout' %>
+  <%== partial 'topics/consumer_groups/virtual_partitions/timeout' %>
 <% elsif @result && @result[:summary][:batches].zero? %>
-  <%== partial 'topics/virtual_partitions/empty_partitions' %>
+  <%== partial 'topics/consumer_groups/virtual_partitions/empty_partitions' %>
 <% elsif @result %>
   <div class="col-span-12 mb-3">
-    <%== partial 'topics/virtual_partitions/summary' %>
+    <%== partial 'topics/consumer_groups/virtual_partitions/summary' %>
 
     <div class="data-table-wrapper">
       <table class="data-table">
@@ -62,7 +62,7 @@
           <%==
             each_partial(
               @partitions,
-              'topics/virtual_partitions/partition'
+              'topics/consumer_groups/virtual_partitions/partition'
             )
           %>
         </tbody>
@@ -71,4 +71,4 @@
   </div>
 <% end %>
 
-<%== partial 'topics/virtual_partitions/notes' %>
+<%== partial 'topics/consumer_groups/virtual_partitions/notes' %>

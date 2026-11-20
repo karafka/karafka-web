@@ -75,7 +75,7 @@ describe_current do
     let(:raw) { {} }
 
     before do
-      vp_config = Karafka::Web.config.ui.topics.virtual_partitions
+      vp_config = Karafka::Web.config.ui.topics.consumer_groups.virtual_partitions
       vp_config.stubs(:max_concurrency).returns(2)
       vp_config.stubs(:max_batch_size).returns(3)
     end
@@ -90,7 +90,7 @@ describe_current do
     let(:raw) { {} }
 
     before do
-      Karafka::Web.config.ui.topics.virtual_partitions.stubs(:sample_sizes).returns([500, 200])
+      Karafka::Web.config.ui.topics.consumer_groups.virtual_partitions.stubs(:sample_sizes).returns([500, 200])
     end
 
     it "uses the smallest allowed sample size" do

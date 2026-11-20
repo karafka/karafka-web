@@ -42,10 +42,10 @@
     </a>
 
     <a
-      href="<%= topics_path(@topic.topic_name, 'virtual_partitions') %>"
-      class="custom-tab <%= nav_class(end_with: 'virtual_partitions') %>"
+      href="<%= topics_path(@topic.topic_name, 'consumer_groups', 'virtual_partitions') %>"
+      class="custom-tab <%= nav_class(end_with: 'consumer_groups/virtual_partitions') %>"
     >
-      Virtual Partitions
+      Virtual Partitions (Consumer Groups)
     </a>
 
     <a

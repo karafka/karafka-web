@@ -44,7 +44,7 @@ describe_current do
     let(:share_groups_msg) { "It applies to consumer groups only, not to share groups" }
 
     context "when trying to estimate a non-existing topic" do
-      before { get "topics/#{generate_topic_name}/virtual_partitions" }
+      before { get "topics/#{generate_topic_name}/consumer_groups/virtual_partitions" }
 
       it do
         refute(response.ok?)
@@ -57,7 +57,7 @@ describe_current do
 
       before do
         create_topic(topic_name: internal_topic)
-        get "topics/#{internal_topic}/virtual_partitions"
+        get "topics/#{internal_topic}/consumer_groups/virtual_partitions"
       end
 
       it do
@@ -70,7 +70,7 @@ describe_current do
       before do
         estimator.expects(:new).never
         produce_many(topic, Array.new(10, ""))
-        get "topics/#{topic}/virtual_partitions"
+        get "topics/#{topic}/consumer_groups/virtual_partitions"
       end
 
       it do
@@ -84,14 +84,14 @@ describe_current do
         assert_body(key_grouping_msg)
         assert_body(share_groups_msg)
         assert_body('custom-tab active"')
-        assert_body("Virtual Partitions")
+        assert_body("Virtual Partitions (Consumer Groups)")
         refute_body("Verdict:")
         refute_body(no_data_msg)
       end
     end
 
     context "when estimating an empty topic" do
-      before { get "topics/#{topic}/virtual_partitions?#{run_params}" }
+      before { get "topics/#{topic}/consumer_groups/virtual_partitions?#{run_params}" }
 
       it do
         assert_ok
@@ -103,7 +103,7 @@ describe_current do
     context "when estimating an empty topic with many partitions" do
       let(:partitions) { 100 }
 
-      before { get "topics/#{topic}/virtual_partitions?#{run_params}" }
+      before { get "topics/#{topic}/consumer_groups/virtual_partitions?#{run_params}" }
 
       it do
         assert_ok
@@ -123,7 +123,7 @@ describe_current do
 
         PRODUCERS.regular.produce_many_sync(messages)
 
-        get "topics/#{topic}/virtual_partitions?#{run_params}"
+        get "topics/#{topic}/consumer_groups/virtual_partitions?#{run_params}"
       end
 
       it do
@@ -151,7 +151,7 @@ describe_current do
 
         PRODUCERS.regular.produce_many_sync(messages)
 
-        get "topics/#{topic}/virtual_partitions?#{run_params}&sort=messages+desc"
+        get "topics/#{topic}/consumer_groups/virtual_partitions?#{run_params}&sort=messages+desc"
       end
 
       it do
@@ -177,7 +177,7 @@ describe_current do
 
         PRODUCERS.regular.produce_many_sync(messages)
 
-        get "topics/#{topic}/virtual_partitions?#{run_params}&sort=avg_speedup+desc"
+        get "topics/#{topic}/consumer_groups/virtual_partitions?#{run_params}&sort=avg_speedup+desc"
       end
 
       it "sorts the partitions with data and lists the empty one last" do
@@ -211,7 +211,7 @@ describe_current do
         "&sort=avg_speedup+desc" => [2, 1, 0]
       }.each do |sort, expected|
         context "when sorting with #{sort.inspect}" do
-          before { get "topics/#{topic}/virtual_partitions?#{run_params}#{sort}" }
+          before { get "topics/#{topic}/consumer_groups/virtual_partitions?#{run_params}#{sort}" }
 
           it "renders the partitions in the expected order" do
             assert_ok
@@ -242,7 +242,7 @@ describe_current do
           .with { |kwargs| captured.merge!(kwargs).is_a?(Hash) }
           .returns(instance)
 
-        get "topics/#{topic}/virtual_partitions?#{custom_params}"
+        get "topics/#{topic}/consumer_groups/virtual_partitions?#{custom_params}"
       end
 
       it "passes the form values to the estimator and shows them" do
@@ -267,7 +267,7 @@ describe_current do
       end
 
       context "when on the first page" do
-        before { get "topics/#{topic}/virtual_partitions?#{run_params}" }
+        before { get "topics/#{topic}/consumer_groups/virtual_partitions?#{run_params}" }
 
         it "estimates only the partitions of that page" do
           assert_ok
@@ -280,7 +280,7 @@ describe_current do
       end
 
       context "when on the second page" do
-        before { get "topics/#{topic}/virtual_partitions?#{run_params}&page=2" }
+        before { get "topics/#{topic}/consumer_groups/virtual_partitions?#{run_params}&page=2" }
 
         it "estimates only the partitions of that page" do
           assert_ok
@@ -294,9 +294,9 @@ describe_current do
 
     context "when the estimation exceeds the time limit" do
       before do
-        Karafka::Web.config.ui.topics.virtual_partitions.stubs(:timeout).returns(1)
+        Karafka::Web.config.ui.topics.consumer_groups.virtual_partitions.stubs(:timeout).returns(1)
         produce_many(topic, Array.new(100, ""))
-        get "topics/#{topic}/virtual_partitions?#{run_params}"
+        get "topics/#{topic}/consumer_groups/virtual_partitions?#{run_params}"
       end
 
       it do
@@ -322,7 +322,7 @@ describe_current do
           key, value = invalid.split("=")
           params[key] = value
 
-          get "topics/#{topic}/virtual_partitions?#{URI.encode_www_form(params)}"
+          get "topics/#{topic}/consumer_groups/virtual_partitions?#{URI.encode_www_form(params)}"
         end
 
         it do

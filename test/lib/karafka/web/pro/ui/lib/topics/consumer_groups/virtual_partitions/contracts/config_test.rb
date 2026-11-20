@@ -35,18 +35,20 @@ describe_current do
     {
       ui: {
         topics: {
-          virtual_partitions: {
-            timeout: 100,
-            sample_sizes: [100, 1_000],
-            max_concurrency: 10,
-            max_batch_size: 100
+          consumer_groups: {
+            virtual_partitions: {
+              timeout: 100,
+              sample_sizes: [100, 1_000],
+              max_concurrency: 10,
+              max_batch_size: 100
+            }
           }
         }
       }
     }
   end
 
-  let(:vp_params) { params[:ui][:topics][:virtual_partitions] }
+  let(:vp_params) { params[:ui][:topics][:consumer_groups][:virtual_partitions] }
 
   context "when all values are valid" do
     it { assert(contract.call(params).success?) }

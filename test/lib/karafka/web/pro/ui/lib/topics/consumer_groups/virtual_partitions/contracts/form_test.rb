@@ -113,7 +113,7 @@ describe_current do
 
   context "when the maximums are customized" do
     before do
-      vp_config = Karafka::Web.config.ui.topics.virtual_partitions
+      vp_config = Karafka::Web.config.ui.topics.consumer_groups.virtual_partitions
       vp_config.stubs(:max_concurrency).returns(4)
       vp_config.stubs(:max_batch_size).returns(50)
     end
@@ -156,7 +156,7 @@ describe_current do
 
   context "when sample size is one of custom sample sizes" do
     before do
-      Karafka::Web.config.ui.topics.virtual_partitions.stubs(:sample_sizes).returns([1_234])
+      Karafka::Web.config.ui.topics.consumer_groups.virtual_partitions.stubs(:sample_sizes).returns([1_234])
       params[:sample_size] = "1234"
     end
 

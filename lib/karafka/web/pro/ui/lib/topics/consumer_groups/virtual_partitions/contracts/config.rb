@@ -34,30 +34,34 @@ module Karafka
       module Ui
         module Lib
           module Topics
-            module VirtualPartitions
-              module Contracts
-                # Makes sure the Virtual Partitions estimation config is valid
-                class Config < ::Karafka::Contracts::Base
-                  configure do |config|
-                    config.error_messages = YAML.safe_load_file(
-                      File.join(Karafka::Web.gem_root, "config", "locales", "pro_errors.yml")
-                    ).fetch("en").fetch("validations").fetch("config")
-                  end
+            module ConsumerGroups
+              module VirtualPartitions
+                module Contracts
+                  # Makes sure the Virtual Partitions estimation config is valid
+                  class Config < ::Karafka::Contracts::Base
+                    configure do |config|
+                      config.error_messages = YAML.safe_load_file(
+                        File.join(Karafka::Web.gem_root, "config", "locales", "pro_errors.yml")
+                      ).fetch("en").fetch("validations").fetch("config")
+                    end
 
-                  nested(:ui) do
-                    nested(:topics) do
-                      nested(:virtual_partitions) do
-                        required(:timeout) { |val| val.is_a?(Integer) && val.positive? }
+                    nested(:ui) do
+                      nested(:topics) do
+                        nested(:consumer_groups) do
+                          nested(:virtual_partitions) do
+                            required(:timeout) { |val| val.is_a?(Integer) && val.positive? }
 
-                        required(:max_concurrency) { |val| val.is_a?(Integer) && val.positive? }
+                            required(:max_concurrency) { |val| val.is_a?(Integer) && val.positive? }
 
-                        required(:max_batch_size) { |val| val.is_a?(Integer) && val.positive? }
+                            required(:max_batch_size) { |val| val.is_a?(Integer) && val.positive? }
 
-                        required(:sample_sizes) do |val|
-                          next false unless val.is_a?(Array)
-                          next false if val.empty?
+                            required(:sample_sizes) do |val|
+                              next false unless val.is_a?(Array)
+                              next false if val.empty?
 
-                          val.all? { |size| size.is_a?(Integer) && size.positive? }
+                              val.all? { |size| size.is_a?(Integer) && size.positive? }
+                            end
+                          end
                         end
                       end
                     end

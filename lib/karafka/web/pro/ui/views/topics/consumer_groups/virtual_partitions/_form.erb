@@ -23,7 +23,7 @@
     <form
       class="space-y-4"
       method="get"
-      action="<%= topics_path(@topic.topic_name, 'virtual_partitions') %>"
+      action="<%= topics_path(@topic.topic_name, 'consumer_groups', 'virtual_partitions') %>"
       data-turbo="false"
     >
       <% if params.current_page > 1 %>
@@ -39,7 +39,7 @@
           name="concurrency"
           value="<%= @form[:concurrency] %>"
           min="1"
-          max="<%= Karafka::Web.config.ui.topics.virtual_partitions.max_concurrency %>"
+          max="<%= Karafka::Web.config.ui.topics.consumer_groups.virtual_partitions.max_concurrency %>"
           autocomplete="off"
           required
         >
@@ -70,7 +70,7 @@
           name="batch_size"
           value="<%= @form[:batch_size] %>"
           min="1"
-          max="<%= Karafka::Web.config.ui.topics.virtual_partitions.max_batch_size %>"
+          max="<%= Karafka::Web.config.ui.topics.consumer_groups.virtual_partitions.max_batch_size %>"
           autocomplete="off"
           required
         >
@@ -84,7 +84,7 @@
           name="sample_size"
           required
         >
-          <% Karafka::Web.config.ui.topics.virtual_partitions.sample_sizes.each do |sample_size| %>
+          <% Karafka::Web.config.ui.topics.consumer_groups.virtual_partitions.sample_sizes.each do |sample_size| %>
             <option value="<%= sample_size %>" <%= 'selected' if @form[:sample_size] == sample_size.to_s %>>
               <%= number_with_delimiter(sample_size) %> messages per partition
             </option>
