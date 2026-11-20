@@ -173,6 +173,60 @@ describe_current do
           assert_includes(republished.headers.keys, "source_offset")
         end
       end
+
+      context "when the source topic has custom key and headers deserializers" do
+        let(:include_source_headers) { false }
+
+        before do
+          topic_name = topic
+
+          draw_routes do
+            topic topic_name do
+              active(false)
+              deserializers(
+                key: ->(metadata) { "deserialized-#{metadata.raw_key}" },
+                headers: ->(metadata) { metadata.raw_headers.transform_values(&:upcase) }
+              )
+            end
+          end
+
+          produce(topic, payload, key: "source-key", headers: { "h" => "v" })
+          post "explorer/messages/#{topic}/0/0/republish", params
+        end
+
+        it "republishes the raw key and headers" do
+          assert_equal(302, response.status)
+          assert_equal(payload, republished.raw_payload)
+          assert_equal("source-key", republished.raw_key)
+          assert_equal({ "h" => "v" }, republished.raw_headers)
+        end
+      end
+
+      context "when the source topic key and headers deserializers raise" do
+        before do
+          topic_name = topic
+
+          draw_routes do
+            topic topic_name do
+              active(false)
+              deserializers(
+                key: ->(_metadata) { raise StandardError, "broken key deserializer" },
+                headers: ->(_metadata) { raise StandardError, "broken headers deserializer" }
+              )
+            end
+          end
+
+          produce(topic, payload, key: "source-key", headers: { "h" => "v" })
+          post "explorer/messages/#{topic}/0/0/republish", params
+        end
+
+        it "republishes the raw key and headers instead of failing" do
+          assert_equal(302, response.status)
+          assert_equal("source-key", republished.raw_key)
+          assert_equal("v", republished.raw_headers["h"])
+          assert_equal(topic, republished.raw_headers["source_topic"])
+        end
+      end
     end
 
     context "when the target topic is blank" do

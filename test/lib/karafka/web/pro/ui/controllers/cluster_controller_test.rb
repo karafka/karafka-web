@@ -167,6 +167,7 @@ describe_current do
     it do
       assert_ok
       assert_body(breadcrumbs)
+      assert_match(%r{<h1 class="page-title[^"]*">\s*Cluster\s*</h1>}, body)
     end
 
     it "links the replica/in-sync broker badges to the broker details page" do

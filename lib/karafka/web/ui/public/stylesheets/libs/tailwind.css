@@ -238,6 +238,10 @@
 
 @utility alert-box-content {
   @apply p-4 rounded-b-lg bg-base-100;
+
+  & a:not(.btn) {
+    @apply link link-primary;
+  }
 }
 
 @utility alert-box-warning {
@@ -471,6 +475,10 @@
   &.active {
     @apply text-base-content;
   }
+}
+
+@utility actions-danger-zone {
+  @apply ml-3 pl-3 border-l border-base-300 flex items-center;
 }
 
 @utility h2 {

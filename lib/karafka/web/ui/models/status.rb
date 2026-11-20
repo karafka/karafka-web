@@ -32,7 +32,7 @@ module Karafka
         # @example Check result
         #   result = status.enabled
         #   result.success?       #=> true or false
-        #   result.status         #=> :success, :warning, :failure, or :halted
+        #   result.status         #=> :success, :info, :warning, :failure, or :halted
         #   result.details        #=> { ... } or []
         class Status
           # Registry of all check classes in execution order.
@@ -55,7 +55,8 @@ module Karafka
             consumers_reports_schema_state: Checks::ConsumersReportsSchemaState,
             routing_topics_presence: Checks::RoutingTopicsPresence,
             commands_topic_presence: Checks::CommandsTopicPresence,
-            pro_subscription: Checks::ProSubscription
+            pro_subscription: Checks::ProSubscription,
+            shared_producer: Checks::SharedProducer
           }.freeze
 
           # Initializes a new Status instance.

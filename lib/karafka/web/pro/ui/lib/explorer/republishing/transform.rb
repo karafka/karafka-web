@@ -36,8 +36,9 @@ module Karafka
           module Explorer
             module Republishing
               # Builds the message to produce from the source message and the normalized form data.
-              # The payload/key are copied verbatim from the source; the headers are duplicated and,
-              # when requested, augmented with source-tracking headers.
+              # The payload, key and headers are copied raw, so the copy carries the source bytes
+              # even when the source topic uses custom deserializers. When requested, the headers
+              # are augmented with source-tracking headers.
               module Transform
                 class << self
                   # @param message [Karafka::Messages::Message] source message being republished
@@ -48,7 +49,7 @@ module Karafka
                       topic: data[:target_topic],
                       payload: message.raw_payload,
                       headers: headers(message, data),
-                      key: message.key
+                      key: message.raw_key
                     }
 
                     partition = data[:target_partition]
@@ -59,9 +60,10 @@ module Karafka
 
                   # @param message [Karafka::Messages::Message] source message
                   # @param data [Hash] normalized form data
-                  # @return [Hash] the source headers, plus source-tracking headers when requested
+                  # @return [Hash] the raw source headers, plus source-tracking headers when
+                  #   requested
                   def headers(message, data)
-                    headers = message.headers.dup
+                    headers = message.raw_headers.dup
 
                     return headers unless data[:include_source_headers]
 

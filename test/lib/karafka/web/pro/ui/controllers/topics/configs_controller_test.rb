@@ -51,7 +51,7 @@ describe_current do
         assert_ok
         assert_body(breadcrumbs)
         refute_body(pagination)
-        assert_body(topic)
+        assert_body("#{topic} Configuration")
         assert_body("max.message.bytes")
         assert_body("retention.ms")
         assert_body("min.insync.replicas")

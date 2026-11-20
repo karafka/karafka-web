@@ -3,6 +3,7 @@
 ## 1.1.0 (Unreleased)
 - **[EOL]** Drop Ruby 3.2 support; require Ruby 3.3+.
 - **[Feature]** Add a **Publish message** capability to the Explorer (Pro) to produce new messages with an optional key, headers and a typed, uploaded or tombstone payload. Gated by the new `#publish?` policy, enabled by default (#956).
+- **[Feature]** Add a **Delete messages up to this offset** action to the Explorer message view (Pro), with a confirmation showing the offset range that goes. Gated by the new `#delete_records?` policy, denied by default. Requires karafka `2.6.2`.
 - **[Feature]** Aggregate the Health views per topic with drill-down to partitions, so they stay usable at scale. Thresholds are configurable under `config.ui.health.lags` (#112).
 - **[Feature]** Add a **Delete Offsets** action (Pro) to the Health cluster lags and the Routing topic page that deletes a consumer group's committed offsets for a topic. Gated by the new `ui.policies.consumer_groups` `#delete_offsets?` policy, denied by default. Requires karafka `2.6.2`.
 - [Enhancement] Show the delivery outcome (persisted, possibly persisted or not persisted), latency and broker of failed producer deliveries in the error details, so it is clear whether a retry may duplicate the message. Requires karafka-rdkafka `0.31.0` or newer.
@@ -17,19 +18,14 @@
 - [Enhancement] Skip the consumer commanding partition and topic checks in each fetch loop when no command is pending, avoiding a full assignment scan per loop (Pro).
 - [Enhancement] Evict outdated per-job tracking samples without scanning the whole 60 s window, so each processed job holds the tracking lock for a constant time.
 - [Enhancement] Link the Health lag counters worst-first: the Dashboard "Total lag" opens the Health topics sorted by lag, and each topic's "Max lag" shows the hot partition id and opens its partitions sorted by lag (Pro).
-- [Maintenance] Fix a recurring `/topics` link-validator flake in specs.
-- [Maintenance] Reorganize the Pro UI `Lib` pipelines into domain namespaces. No behavior change.
+- [Enhancement] Show an informational Status page check when the Web UI reports through an idempotent or transactional `Karafka.producer` shared with the application, with a link to configuring a custom Web UI producer.
+- [Enhancement] Speed up Web UI sorting on large data, most of all when sorting on an attribute the rows do not have.
 - [Maintenance] Extract the consumer commanding forms into `Lib::Commands` and validate offset and pause values server-side (#1241).
 - [Maintenance] Extract the topic configuration edit flow into `Lib::Configuring` and reject empty values (#1241).
 - [Maintenance] Extract topic creation and repartitioning into `Lib::TopicCreation` and `Lib::Repartitioning` with server-side validation (#1241).
 - [Maintenance] Extract the Explorer republish flow into `Lib::Republishing` and validate the form before producing (#1244).
-- [Maintenance] Retry transient 5xx responses in the test link validator.
 - [Maintenance] Update the vendored `AirDatepicker` CSS to `3.6.0` to match the JS.
-- [Maintenance] Drop `nokogiri` from the test dependencies.
-- [Maintenance] Build the assets with the `uglify-js` CLI instead of gulp, removing 188 npm development packages.
-- [Maintenance] Drop the unused `byebug` gem from the test bundle.
-- [Maintenance] Declare `rake` in the `Gemfile`. It came only through `karafka-rdkafka`, which will stop depending on it for precompiled platform gems.
-- [Maintenance] Fix a recurring Explorer link-validator flake in specs: skip links to the internal `__it-*` test topics, which parallel tests create and delete.
+- [Fix] Style links inside Status and other alert boxes so they stand out from the surrounding text instead of showing only on hover.
 - [Fix] Log consumers reporter dispatch failures instead of crashing the process when `produce_many_sync` times out (#1336).
 - [Fix] Sort Hash elements by key value even when the key name matches a `Hash` method.
 - [Fix] Reject a new partition count that is not greater than the current one with a form error instead of a broker error (Pro).
@@ -63,7 +59,12 @@
 - [Fix] Sort the Health topic overview by process when the "Process ID" header is used, instead of by partition id (Pro).
 - [Fix] Detect the OS from `RbConfig::CONFIG["host_os"]` instead of `RUBY_PLATFORM`, so Karafka Web loads on JRuby and reports its OS metrics (#847).
 - [Fix] Require karafka-core `>= 2.6.6`, whose thread-safe tags stop a JRuby crash when the reporter serializes tags.
+- [Fix] Republish the raw key and headers of the source message, like its payload, so custom key or headers deserializers no longer change the copy or fail the republish with a 500 (Pro).
 - [Fix] Keep a dedicated Web UI producer (e.g. a non-idempotent one) in `karafka swarm` nodes instead of replacing it with the app producer.
+- [Fix] Fix the "Configuraton" typo in the topic configuration page title (Pro).
+- [Fix] Show the "Cluster" page title on the Cluster Replication page.
+- [Maintenance] Sign the gem with `sigstore-cli` and push it with `gem push --attestation` (the `gem-push` action of `karafka/misc`), so a failed signing stops the release instead of publishing the gem without an attestation.
+- [Maintenance] Add the `Sigstore Check` workflow: nightly, and on pull requests that change the push workflow, it builds the gem, signs it like a release and verifies the attestation, without pushing.
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a keyword filtering box to the data-heavy Web UI listings, with a field selector on flat listings (Pro) (#1073).
