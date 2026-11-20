@@ -39,6 +39,7 @@ module Karafka
               self.sortable_attributes = %w[
                 name
                 value
+                source
                 default?
                 sensitive?
                 read_only?

@@ -60,6 +60,23 @@ describe_current do
       end
     end
 
+    context "when a topic config has been set dynamically" do
+      before do
+        resource = Karafka::Admin::Configs::Resource.new(type: :topic, name: topic)
+        resource.set("retention.ms", "86400000")
+        Karafka::Admin::Configs.alter(resource)
+
+        get "topics/#{topic}/config"
+      end
+
+      it "expect to show where each value comes from" do
+        assert_ok
+        assert_body("Source")
+        assert_body("Dynamic topic config")
+        assert_body("Default config")
+      end
+    end
+
     context "when topics management is disabled" do
       before do
         Karafka::Web.config.ui.topics.management.active = false
@@ -109,6 +126,15 @@ describe_current do
 
     context "when sorting the configs" do
       before { get "topics/#{topic}/config?sort=name+desc" }
+
+      it do
+        assert_ok
+        assert_body("max.message.bytes")
+      end
+    end
+
+    context "when sorting the configs by source" do
+      before { get "topics/#{topic}/config?sort=source+asc" }
 
       it do
         assert_ok

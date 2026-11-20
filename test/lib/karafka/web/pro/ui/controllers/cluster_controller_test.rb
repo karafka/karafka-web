@@ -121,11 +121,23 @@ describe_current do
         assert_body("controller.quota.window.num")
         assert_body("log.flush.interval.ms")
         assert_body("9223372036854775807")
+        assert_body("Source")
+        assert_body("Static broker config")
+        assert_body("Default config")
       end
     end
 
     context "when sorting the broker config" do
       before { get "cluster/1?sort=name+desc" }
+
+      it do
+        assert_ok
+        assert_body("advertised.listeners")
+      end
+    end
+
+    context "when sorting the broker config by source" do
+      before { get "cluster/1?sort=source+asc" }
 
       it do
         assert_ok
