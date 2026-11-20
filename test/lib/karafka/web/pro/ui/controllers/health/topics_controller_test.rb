@@ -30,6 +30,7 @@
 
 describe_current do
   let(:app) { Karafka::Web::Pro::Ui::App }
+  let(:delete_offsets_denied) { "Deleting these offsets is not allowed by the Web UI policies" }
 
   let(:reports_topic) { create_topic }
 
@@ -557,6 +558,27 @@ describe_current do
         assert_body("9100")
         # Biggest single-partition lag is surfaced
         assert_body("9000")
+        assert_body('<th class="options">Options</th>')
+        assert_body('class="btn btn-error btn-sm btn-disabled"')
+        refute_body("health/topics/example_app6_app/orders/delete")
+        assert_body(%(title="#{delete_offsets_denied}"))
+      end
+
+      context "when deleting offsets is allowed" do
+        before do
+          Karafka::Web.config.ui.policies.consumer_groups.stubs(:delete_offsets?).returns(true)
+
+          get "health/cluster_lags"
+        end
+
+        it "expect to link each topic to the offsets deletion" do
+          assert_ok
+          assert_body("health/topics/example_app6_app/orders/delete")
+          assert_body("health/topics/example_app6_app/visits/delete")
+          refute_body(delete_offsets_denied)
+          assert_body('title="Delete the committed offsets of this consumer group for this topic"')
+          refute_body("btn-error btn-sm btn-disabled")
+        end
       end
 
       it "expect each topic to drill down into the per-topic cluster lags lens" do

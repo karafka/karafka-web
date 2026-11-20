@@ -64,6 +64,28 @@
 </div>
 <div class="mb-6"></div>
 
+<%# An action that exists but is not available (policy, feature) stays visible, disabled, with
+    the reason in the title of a wrapper, since disabled buttons do not receive pointer events %>
+<div class="actions justify-start">
+  <span class="inline-flex" title=".btn-action.disabled (reason in the wrapper title)">
+    <button type="button" class="btn-action disabled" disabled>
+      <%== icon(:scissors) %>
+    </button>
+  </span>
+  <span class="ml-2">
+    <%==
+      action_link_button(
+        "#{icon(:trash)} action_link_button",
+        '#dummy',
+        classes: 'btn-error btn-sm',
+        title: 'action_link_button',
+        disabled_reason: 'action_link_button with disabled_reason (reason in the wrapper title)'
+      )
+    %>
+  </span>
+</div>
+<div class="mb-6"></div>
+
 <div class="actions justify-start">
   <a href="#dummy" class="btn-action" title=".btn-action (icon-only)">
     <%== icon(:pencil) %>

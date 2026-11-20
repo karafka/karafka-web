@@ -2058,6 +2058,16 @@
       }
     }
   }
+  .disabled.custom-tab {
+    color: var(--color-gray-500);
+  }
+  .disabled.sidebar-nav-item {
+    color: var(--color-gray-500);
+  }
+  .disabled.btn-action {
+    pointer-events: none;
+    opacity: 40%;
+  }
   @layer daisyui.l1.l2 {
     .tab-disabled {
       pointer-events: none;
@@ -8412,14 +8422,6 @@
       color: var(--color-warning-content);
       --input-color: var(--color-warning);
     }
-  }
-  .disabled.custom-tab {
-    color: var(--color-gray-500);
-  }
-  .disabled.sidebar-nav-item {
-    color: var(--color-gray-500);
-  }
-  @layer daisyui.l1.l2 {
     @media (hover: hover) {
       .link-accent:hover {
         color: var(--color-accent);

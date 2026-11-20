@@ -139,6 +139,10 @@
   &.sidebar-nav-item {
     @apply text-gray-500;
   }
+
+  &.btn-action {
+    @apply opacity-40 pointer-events-none;
+  }
 }
 
 @utility tab-container-wrapper {

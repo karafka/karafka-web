@@ -29,6 +29,16 @@
         >
           <%== icon(:plus) %>
         </a>
+      <% else %>
+        <%==
+          partial(
+            'explorer/explorer/disabled_action',
+            locals: {
+              icon_name: :plus,
+              reason: 'Publishing messages to this topic is not allowed by the Web UI policies'
+            }
+          )
+        %>
       <% end %>
 
       <% if @messages && !@messages.empty? %>
