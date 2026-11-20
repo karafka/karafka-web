@@ -16,19 +16,14 @@
 - [Enhancement] Tighten compaction on the `karafka_consumers_states` and `karafka_consumers_metrics` topics so superseded versions are removed sooner.
 - [Enhancement] Skip the consumer commanding partition and topic checks in each fetch loop when no command is pending, avoiding a full assignment scan per loop (Pro).
 - [Enhancement] Evict outdated per-job tracking samples without scanning the whole 60 s window, so each processed job holds the tracking lock for a constant time.
-- [Maintenance] Fix a recurring `/topics` link-validator flake in specs.
-- [Maintenance] Reorganize the Pro UI `Lib` pipelines into domain namespaces. No behavior change.
+- [Enhancement] Link the Health lag counters worst-first: the Dashboard "Total lag" opens the Health topics sorted by lag, and each topic's "Max lag" shows the hot partition id and opens its partitions sorted by lag (Pro).
+- [Enhancement] Show an informational Status page check when the Web UI reports through an idempotent or transactional `Karafka.producer` shared with the application, with a link to configuring a custom Web UI producer.
+- [Enhancement] Speed up Web UI sorting on large data, most of all when sorting on an attribute the rows do not have.
 - [Maintenance] Extract the consumer commanding forms into `Lib::Commands` and validate offset and pause values server-side (#1241).
 - [Maintenance] Extract the topic configuration edit flow into `Lib::Configuring` and reject empty values (#1241).
 - [Maintenance] Extract topic creation and repartitioning into `Lib::TopicCreation` and `Lib::Repartitioning` with server-side validation (#1241).
 - [Maintenance] Extract the Explorer republish flow into `Lib::Republishing` and validate the form before producing (#1244).
-- [Maintenance] Retry transient 5xx responses in the test link validator.
 - [Maintenance] Update the vendored `AirDatepicker` CSS to `3.6.0` to match the JS.
-- [Maintenance] Drop `nokogiri` from the test dependencies.
-- [Maintenance] Build the assets with the `uglify-js` CLI instead of gulp, removing 188 npm development packages.
-- [Maintenance] Drop the unused `byebug` gem from the test bundle.
-- [Maintenance] Declare `rake` in the `Gemfile`. It came only through `karafka-rdkafka`, which will stop depending on it for precompiled platform gems.
-- [Maintenance] Fix a recurring Explorer link-validator flake in specs: skip links to the internal `__it-*` test topics, which parallel tests create and delete.
 - [Fix] Log consumers reporter dispatch failures instead of crashing the process when `produce_many_sync` times out (#1336).
 - [Fix] Sort Hash elements by key value even when the key name matches a `Hash` method.
 - [Fix] Reject a new partition count that is not greater than the current one with a form error instead of a broker error (Pro).
@@ -59,8 +54,13 @@
 - [Fix] Read the Web UI templates as UTF-8, so a C/POSIX locale (`LANG=C`) cannot make pages with non-ASCII characters return 500.
 - [Fix] Stop the Dashboard current stats (processes, workers and others) from dropping for one flush after the Web UI's own consumer group rebalances.
 - [Fix] Do not flush partial current stats when a Web UI processing consumer shuts down within one tracking interval of taking over the reports.
+- [Fix] Sort the Health topic overview by process when the "Process ID" header is used, instead of by partition id (Pro).
 - [Fix] Detect the OS from `RbConfig::CONFIG["host_os"]` instead of `RUBY_PLATFORM`, so Karafka Web loads on JRuby and reports its OS metrics (#847).
 - [Fix] Require karafka-core `>= 2.6.6`, whose thread-safe tags stop a JRuby crash when the reporter serializes tags.
+- [Fix] Republish the raw key and headers of the source message, like its payload, so custom key or headers deserializers no longer change the copy or fail the republish with a 500 (Pro).
+- [Fix] Keep a dedicated Web UI producer (e.g. a non-idempotent one) in `karafka swarm` nodes instead of replacing it with the app producer.
+- [Fix] Fix the "Configuraton" typo in the topic configuration page title (Pro).
+- [Fix] Show the "Cluster" page title on the Cluster Replication page.
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a keyword filtering box to the data-heavy Web UI listings, with a field selector on flat listings (Pro) (#1073).

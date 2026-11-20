@@ -44,7 +44,7 @@
             </a>
           </li>
           <li class="p-1">
-            <a href="<%= root_path('health/lags') %>" class="hover:text-primary">
+            <a href="<%= health_topics_by_lag_path %>" class="hover:text-primary">
               <div class="count mb-1 text-md">
                 <%= number_with_delimiter @counters.lag_hybrid, ' ' %>
               </div>

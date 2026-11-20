@@ -40,6 +40,11 @@ docker compose -f test/integrations/docker-compose.yml up \
   --exit-code-from test-container-jruby \
   test-container-jruby
 
+docker compose -f test/integrations/docker-compose.yml up \
+  --abort-on-container-exit \
+  --exit-code-from test-container-swarm \
+  test-container-swarm
+
 echo ""
 echo "================================================"
 echo "All integration tests completed successfully!"

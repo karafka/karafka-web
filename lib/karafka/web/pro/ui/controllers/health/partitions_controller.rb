@@ -62,6 +62,7 @@ module Karafka
                 lso_risk_state
                 name
                 poll_state_ch
+                process_id
               ].freeze
 
               # @param consumer_group_id [String]

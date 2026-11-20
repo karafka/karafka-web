@@ -156,6 +156,7 @@
   "test/lib/karafka/web/management/migrations/consumers_states/1704722380_split_listeners_into_active_and_paused_test.rb": 0.004,
   "test/lib/karafka/web/ui/models/status/checks/enabled_test.rb": 0.004,
   "test/lib/karafka/web/ui/models/status/checks/pro_subscription_test.rb": 0.004,
+  "test/lib/karafka/web/ui/models/status/checks/shared_producer_test.rb": 0.004,
   "test/lib/karafka/web/management/migrations/consumers_states/1700234522_remove_processing_test.rb": 0.003,
   "test/lib/karafka/web/ui/models/subscription_group_test.rb": 0.003,
   "test/lib/karafka/web/ui/controllers/become_pro_controller_test.rb": 0.003,

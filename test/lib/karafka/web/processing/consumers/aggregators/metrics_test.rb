@@ -126,6 +126,7 @@ describe_current do
       end
 
       before do
+        original_ttl
         Karafka::Web.config.ttl = 30_999
 
         Karafka::Web::Management::Actions::CreateInitialStates.new.call
