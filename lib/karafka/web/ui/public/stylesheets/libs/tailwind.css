@@ -238,6 +238,10 @@
 
 @utility alert-box-content {
   @apply p-4 rounded-b-lg bg-base-100;
+
+  & a:not(.btn) {
+    @apply link link-primary;
+  }
 }
 
 @utility alert-box-warning {
