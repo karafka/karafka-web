@@ -34,6 +34,16 @@
         >
           <%== icon(:arrow_uturn_right) %>
         </a>
+      <% else %>
+        <%==
+          partial(
+            'explorer/explorer/disabled_action',
+            locals: {
+              icon_name: :arrow_uturn_right,
+              reason: 'Republishing this message is not allowed by the Web UI policies'
+            }
+          )
+        %>
       <% end %>
 
       <a
@@ -53,9 +63,39 @@
         >
           <%== icon(:arrow_down_tray) %>
         </a>
+      <% else %>
+        <%==
+          partial(
+            'explorer/explorer/disabled_action',
+            locals: {
+              icon_name: :arrow_down_tray,
+              reason: 'Downloading the raw payload of this message is not allowed by the Web UI policies'
+            }
+          )
+        %>
       <% end %>
 
-      <% if @visibility_filter.export?(@message) && @safe_payload.success? && @safe_pretty_payload.success? %>
+      <% if !@visibility_filter.export?(@message) %>
+        <%==
+          partial(
+            'explorer/explorer/disabled_action',
+            locals: {
+              icon_name: :arrow_down_on_square,
+              reason: 'Exporting this message is not allowed by the Web UI policies'
+            }
+          )
+        %>
+      <% elsif !@safe_payload.success? || !@safe_pretty_payload.success? %>
+        <%==
+          partial(
+            'explorer/explorer/disabled_action',
+            locals: {
+              icon_name: :arrow_down_on_square,
+              reason: 'Exporting is not available because the payload of this message could not be deserialized'
+            }
+          )
+        %>
+      <% else %>
         <a
           href="<%= explorer_messages_path(@message.topic, @message.partition, @message.offset, 'export') %>"
           class="btn-action"
@@ -84,9 +124,9 @@
         <%== icon(:cpu) %>
       </button>
 
-      <% if @visibility_filter.delete_records?(@message.topic, @message.partition) %>
-        <%# Destructive actions sit last and apart so they are not clicked by accident %>
-        <div class="actions-danger-zone">
+      <%# Destructive actions sit last and apart so they are not clicked by accident %>
+      <div class="actions-danger-zone">
+        <% if @visibility_filter.delete_records?(@message.topic, @message.partition) %>
           <a
             href="<%= explorer_messages_path(@message.topic, @message.partition, @message.offset, 'delete') %>"
             class="btn-action"
@@ -94,8 +134,18 @@
           >
             <%== icon(:scissors) %>
           </a>
-        </div>
-      <% end %>
+        <% else %>
+          <%==
+            partial(
+              'explorer/explorer/disabled_action',
+              locals: {
+                icon_name: :scissors,
+                reason: 'Deleting messages of this partition is not allowed by the Web UI policies'
+              }
+            )
+          %>
+        <% end %>
+      </div>
     </section>
   </div>
 
