@@ -63,6 +63,11 @@ module Karafka
                   controller.show(topic_id)
                 end
 
+                r.get String, "virtual_partitions" do |topic_id|
+                  controller = build(Controllers::Topics::VirtualPartitionsController)
+                  controller.show(topic_id)
+                end
+
                 r.on String, "config" do |topic_id|
                   controller = build(Controllers::Topics::ConfigsController)
 

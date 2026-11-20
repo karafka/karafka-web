@@ -1,0 +1,74 @@
+<%# Karafka Pro - Source Available Commercial Software %>
+<%# Copyright (c) 2017-present Maciej Mensfeld. All rights reserved. %>
+<%# This software is NOT open source. It is source-available commercial software %>
+<%# requiring a paid license for use. It is NOT covered by LGPL. %>
+<%# The author retains all right, title, and interest in this software, %>
+<%# including all copyrights, patents, and other intellectual property rights. %>
+<%# No patent rights are granted under this license. %>
+<%# PROHIBITED: Use without a valid commercial license %>
+<%# PROHIBITED: Redistribution, modification, or derivative works without authorization %>
+<%# PROHIBITED: Reverse engineering, decompilation, or disassembly of this software %>
+<%# PROHIBITED: Use as training data for AI/ML models or inclusion in datasets %>
+<%# PROHIBITED: Scraping, crawling, or automated collection for any purpose %>
+<%# PERMITTED: Reading, referencing, and linking for personal or commercial use %>
+<%# PERMITTED: Runtime retrieval by AI assistants, coding agents, and RAG systems %>
+<%# PERMITTED: for the purpose of providing contextual help to Karafka users %>
+<%# Receipt, viewing, or possession of this software does not convey or %>
+<%# imply any license or right beyond those expressly stated above. %>
+<%# License: https://karafka.io/docs/Pro-License-Comm/ %>
+<%# Contact: contact@karafka.io %>
+
+<% view_title "#{@topic.topic_name} Virtual Partitions" %>
+
+<%== partial 'topics/topics/tabs' %>
+
+<% if @limited %>
+  <%== partial 'topics/virtual_partitions/limited' %>
+<% end %>
+
+<% if @errors && !@errors.empty? %>
+  <%== partial 'shared/form_errors_alert_box' %>
+<% end %>
+
+<%== partial 'topics/virtual_partitions/form' %>
+
+<% if @timeout %>
+  <%== partial 'topics/virtual_partitions/timeout' %>
+<% elsif @result && @result[:summary][:batches].zero? %>
+  <%== partial 'topics/virtual_partitions/empty_partitions' %>
+<% elsif @result %>
+  <div class="col-span-12 mb-3">
+    <%== partial 'topics/virtual_partitions/summary' %>
+
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th><%== sort_link(:partition_id) %></th>
+            <th><%== sort_link(:messages) %></th>
+            <th><%== sort_link(:batches) %></th>
+            <th><%== sort_link(:score) %></th>
+            <th>Verdict</th>
+            <th><%== sort_link('Speedup', :avg_speedup) %></th>
+            <th><%== sort_link('Active VPs', :avg_active_vps) %></th>
+            <th><%== sort_link('Utilization', :avg_utilization) %></th>
+            <th><%== sort_link('Imbalance', :avg_load_imbalance) %></th>
+            <th><%== sort_link('Collapsed', :collapsed_batches) %></th>
+            <th><%== sort_link('Poor', :poor_batches) %></th>
+            <th><%== sort_link('Single VP', :single_vp_batches) %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <%==
+            each_partial(
+              @partitions,
+              'topics/virtual_partitions/partition'
+            )
+          %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% end %>
+
+<%== partial 'topics/virtual_partitions/notes' %>

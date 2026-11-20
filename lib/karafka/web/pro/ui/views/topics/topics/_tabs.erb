@@ -42,6 +42,13 @@
     </a>
 
     <a
+      href="<%= topics_path(@topic.topic_name, 'virtual_partitions') %>"
+      class="custom-tab <%= nav_class(end_with: 'virtual_partitions') %>"
+    >
+      Virtual Partitions
+    </a>
+
+    <a
       href="<%= topics_path(@topic.topic_name, 'offsets') %>"
       class="custom-tab <%= nav_class(end_with: 'offsets') %>"
     >
