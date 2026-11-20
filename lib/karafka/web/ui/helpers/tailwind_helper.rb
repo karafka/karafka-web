@@ -53,11 +53,11 @@ module Karafka
           # @return [String] action button html
           def action_link_button(content, path, classes:, title:, disabled_reason: nil)
             unless disabled_reason
-              return %(<a href="#{path}" class="btn #{classes}" title="#{::Erubi.h(title)}">) +
-                  %(#{content}</a>)
+              return %(<a href="#{path}" class="btn #{classes}" ) +
+                  %(title="#{::Rack::Utils.escape_html(title)}">#{content}</a>)
             end
 
-            %(<span class="inline-flex" title="#{::Erubi.h(disabled_reason)}">) +
+            %(<span class="inline-flex" title="#{::Rack::Utils.escape_html(disabled_reason)}">) +
               %(<button type="button" class="btn #{classes} btn-disabled" disabled>) +
               %(#{content}</button></span>)
           end
@@ -77,7 +77,7 @@ module Karafka
             button_attributes = %(class="btn #{classes} btn-disabled" disabled) if disabled_reason
 
             %(<form action="#{path}" method="post" class="inline-flex items-center" ) +
-              %(title="#{::Erubi.h(disabled_reason || title)}">) +
+              %(title="#{::Rack::Utils.escape_html(disabled_reason || title)}">) +
               %(<button type="submit" #{button_attributes}>#{content}</button></form>)
           end
 
