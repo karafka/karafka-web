@@ -4,9 +4,11 @@ describe_current do
   let(:ui) { Karafka::Web.config.ui }
 
   describe "ui.dlq_patterns" do
-    before { @previous = ui.dead_letter_queue_patterns }
+    let(:original_patterns) { ui.dead_letter_queue_patterns }
 
-    after { ui.dead_letter_queue_patterns = @previous }
+    before { original_patterns }
+
+    after { ui.dead_letter_queue_patterns = original_patterns }
 
     it "reads the dead_letter_queue_patterns value" do
       ui.dead_letter_queue_patterns = [/custom/]

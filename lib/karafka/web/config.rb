@@ -275,8 +275,15 @@ module Karafka
         setting :dead_letter_queue_patterns, default: [/(dlq)|(dead_letter)/i]
 
         # Former name of `dead_letter_queue_patterns`, kept as an alias of it
-        define_singleton_method(:dlq_patterns) { dead_letter_queue_patterns }
-        define_singleton_method(:dlq_patterns=) { |val| self.dead_letter_queue_patterns = val }
+        # @return [Array<String, Regexp>] dead letter queue topics patterns
+        def dlq_patterns
+          dead_letter_queue_patterns
+        end
+
+        # @param value [Array<String, Regexp>] dead letter queue topics patterns
+        def dlq_patterns=(value)
+          self.dead_letter_queue_patterns = value
+        end
 
         # Maximum in-memory size of payload that we will render. Anything bigger than this by
         # default will not be displayed not to hang the browser. 512KB of serialized data is a lot.
