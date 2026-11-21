@@ -34,26 +34,40 @@ describe_current do
   let(:structured) { result.fetch(:structuredContent) }
 
   context "when there is state" do
-    it "returns the per-topic health" do
+    let(:consumer_group) { structured.dig(:consumer_groups, "example_app6_app") }
+
+    it "returns the per-topic health without partition details" do
       refute(result[:isError])
+      assert_equal(%w[default test2 visits], consumer_group.fetch(:topics).keys)
 
-      consumer_groups = structured.fetch(:consumer_groups)
-
-      refute_empty(consumer_groups)
-
-      consumer_groups.each_value do |details|
-        assert_includes(details.keys, :rebalanced_at)
-        refute_empty(details.fetch(:topics))
-
-        details.fetch(:topics).each_value do |topic|
-          %i[name partitions_count lag_hybrid max_lag max_lag_partition_id lso_risk_state]
-            .each { |key| assert_includes(topic.keys, key) }
-
-          refute_includes(topic.keys, :partitions)
-        end
+      consumer_group.fetch(:topics).each_value do |topic|
+        refute_includes(topic.keys, :partitions)
       end
 
       assert_equal(JSON.parse(structured.to_json), JSON.parse(result.dig(:content, 0, :text)))
+    end
+
+    it "maps the aggregated topic health" do
+      assert_in_delta(2_690_818_656.575513, consumer_group[:rebalanced_at])
+
+      topic = consumer_group.dig(:topics, "default")
+
+      assert_equal("default", topic[:name])
+      assert_equal(1, topic[:partitions_count])
+      assert_equal(213_731_273, topic[:lag_hybrid])
+      assert_equal(-3, topic[:lag_hybrid_d])
+      assert_equal(213_731_273, topic[:max_lag])
+      assert_equal(0, topic[:max_lag_partition_id])
+      assert_equal(:active, topic[:lso_risk_state])
+      assert_equal(0, topic[:paused_count])
+    end
+
+    it "marks topics without lag data" do
+      topic = consumer_group.dig(:topics, "test2")
+
+      assert_equal(0, topic[:measurable_count])
+      assert_equal(-1, topic[:lag_hybrid])
+      assert_equal(-1, topic[:max_lag_partition_id])
     end
   end
 

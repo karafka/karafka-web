@@ -34,18 +34,47 @@ describe_current do
   let(:structured) { result.fetch(:structuredContent) }
 
   context "when there is state" do
+    let(:process) { structured.fetch(:processes).first }
+
     it "returns the active processes" do
       refute(result[:isError])
-
-      processes = structured.fetch(:processes)
-
-      refute_empty(processes)
-
-      %i[id status memory_usage utilization workers busy lag_hybrid subscribed_topics tags]
-        .each { |key| assert_includes(processes.first.keys, key) }
-
+      assert_equal(1, structured.fetch(:processes).size)
       assert_equal(%w[tags], structured.fetch(:untrusted_fields))
       assert_equal(JSON.parse(structured.to_json), JSON.parse(result.dig(:content, 0, :text)))
+    end
+
+    it "maps the process report" do
+      assert_equal("shinra:1:1", process[:id])
+      assert_equal("running", process[:status])
+      assert_in_delta(2_690_818_651.82293, process[:started_at])
+      assert_equal(123_852, process[:memory_usage])
+      assert_equal(26_421_728, process[:memory_total_usage])
+      assert_equal(32_763_220, process[:memory_size])
+      assert_equal([1.33, 1.1, 1.1], process[:cpu_usage])
+      assert_in_delta(5.634919553399087, process[:utilization])
+      assert_equal(5, process[:workers])
+      assert_equal(1, process[:busy])
+      assert_equal(1, process[:running_jobs])
+      assert_equal(0, process[:pending_jobs])
+      assert_equal(213_731_273, process[:lag_hybrid])
+      assert_equal(%w[default test2 visits], process[:subscribed_topics])
+      assert_equal(["#8cbff36"], process[:tags])
+    end
+  end
+
+  context "when a process report has an incompatible schema" do
+    let(:reports_topic) { create_topic }
+
+    before do
+      report = Fixtures.consumers_reports_json
+      report[:schema_version] = "0.1"
+      Karafka::Web.config.topics.consumers.reports.name = reports_topic
+      produce(reports_topic, report.to_json)
+    end
+
+    it "does not list it" do
+      refute(result[:isError])
+      assert_empty(structured.fetch(:processes))
     end
   end
 

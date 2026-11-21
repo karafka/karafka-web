@@ -62,6 +62,67 @@ describe_current do
     end
   end
 
+  context "when a routed consumer group has a live member" do
+    let(:described_topic) { create_topic(partitions: 2) }
+    let(:described_group) { "it-describe-#{SecureRandom.uuid}" }
+    let(:member) do
+      Rdkafka::Config.new(
+        "bootstrap.servers": "127.0.0.1:9092",
+        "group.id": described_group
+      ).consumer
+    end
+
+    before do
+      group = described_group
+      topic_name = described_topic
+      draw_routes do
+        consumer_group group do
+          topic topic_name do
+            consumer Karafka::BaseConsumer
+          end
+        end
+      end
+
+      member.subscribe(described_topic)
+      member.poll(100) while member.assignment.empty?
+    end
+
+    after { member.close }
+
+    it "describes its member with the assigned partitions" do
+      group = structured.fetch(:consumer_groups).find { |cg| cg[:group_id] == described_group }
+
+      assert_equal(:stable, group[:state])
+      assert_equal(1, group[:members].size)
+      assert_equal({ described_topic => [0, 1] }, group[:members].first[:assignment])
+    end
+  end
+
+  context "when the routing has a share group" do
+    let(:share_topic) { create_topic }
+    let(:share_group_id) { "it-share-#{SecureRandom.uuid}" }
+
+    before do
+      group = share_group_id
+      topic_name = share_topic
+      draw_routes do
+        share_group group do
+          topic topic_name do
+            consumer Karafka::ShareConsumer
+          end
+        end
+      end
+    end
+
+    it "does not describe it as a consumer group" do
+      refute(result[:isError])
+
+      group_ids = structured.fetch(:consumer_groups).map { |cg| cg[:group_id] }
+
+      refute_includes(group_ids, share_group_id)
+    end
+  end
+
   context "when Kafka refuses the request" do
     before do
       Karafka::Admin

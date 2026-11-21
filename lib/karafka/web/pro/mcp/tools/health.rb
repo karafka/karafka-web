@@ -41,7 +41,8 @@ module Karafka
                 Per consumer group and topic health reported by the running consumers, as on the
                 Web UI Health page: total, max and average lag, lag change, the partition with the
                 highest lag, LSO risk state, paused partitions and partitions without data. Lag
-                values of -1 mean not available yet.
+                values of -1 mean not available yet. The lag change can be negative, so use
+                measurable_count to check if any partition has lag data.
               TEXT
               contract: Contracts::Health.new
             )

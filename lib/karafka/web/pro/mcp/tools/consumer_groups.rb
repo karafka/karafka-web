@@ -50,7 +50,7 @@ module Karafka
 
             # @return [Hash] consumer groups data
             def fetch
-              group_ids = ::Karafka::App.routes.map(&:id)
+              group_ids = ::Karafka::App.routes.consumer_groups.map(&:id)
 
               { consumer_groups: ::Karafka::Admin.describe_consumer_groups(group_ids) }
             end
