@@ -272,7 +272,11 @@ module Karafka
         # Web UI uses auto DLQ discovery based on routing but this may not be fully operable when
         # using a multi-app setup. This config allows to add extra topics if needed without having
         # to explicitly define routing
-        setting :dlq_patterns, default: [/(dlq)|(dead_letter)/i]
+        setting :dead_letter_queue_patterns, default: [/(dlq)|(dead_letter)/i]
+
+        # Former name of `dead_letter_queue_patterns`, kept as an alias of it
+        define_singleton_method(:dlq_patterns) { dead_letter_queue_patterns }
+        define_singleton_method(:dlq_patterns=) { |val| self.dead_letter_queue_patterns = val }
 
         # Maximum in-memory size of payload that we will render. Anything bigger than this by
         # default will not be displayed not to hang the browser. 512KB of serialized data is a lot.
