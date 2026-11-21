@@ -45,6 +45,7 @@ describe_current do
         assert_body(breadcrumbs)
         assert_body('href="/dead_letter_queues"')
         refute_body('href="/dlq"')
+        assert_body('<span class="sidebar-nav-item-label">DLQ</span>')
         refute_body(pagination)
       end
     end
