@@ -10,7 +10,7 @@ module Karafka
             %w[
               health
               explorer
-              dlq
+              dead_letter_queues
               topics
               recurring_tasks
               scheduled_messages

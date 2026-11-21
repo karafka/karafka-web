@@ -27,8 +27,8 @@ describe_current do
     end
   end
 
-  describe "#dlq" do
-    before { get "dlq" }
+  describe "#dead_letter_queues" do
+    before { get "dead_letter_queues" }
 
     it do
       refute(response.ok?)

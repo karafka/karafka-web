@@ -50,6 +50,10 @@ module Karafka
                   r.redirect root_path("health/topics")
                 end
               end
+
+              r.get "dlq" do
+                r.redirect root_path("dead_letter_queues")
+              end
             end
           end
         end

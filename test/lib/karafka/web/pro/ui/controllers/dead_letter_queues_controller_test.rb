@@ -37,7 +37,7 @@ describe_current do
 
   describe "#index" do
     context "when there are no dlq topics" do
-      before { get "dlq" }
+      before { get "dead_letter_queues" }
 
       it do
         assert_ok
@@ -54,7 +54,7 @@ describe_current do
       before do
         topic.dead_letter_queue.stubs(:topic).returns(dlq_topic)
 
-        get "dlq"
+        get "dead_letter_queues"
       end
 
       it do
@@ -66,7 +66,7 @@ describe_current do
       end
 
       it "keeps the matching topic when filtering by its name" do
-        get_filtered("dlq", dlq_topic)
+        get_filtered("dead_letter_queues", dlq_topic)
 
         assert_ok
         assert_body(dlq_topic)
@@ -74,7 +74,7 @@ describe_current do
       end
 
       it "shows the filter-specific empty state when nothing matches" do
-        get_filtered("dlq", "zzz-no-such-dlq-topic")
+        get_filtered("dead_letter_queues", "zzz-no-such-dlq-topic")
 
         assert_ok
         assert_body("No results match your filter")
@@ -91,7 +91,7 @@ describe_current do
 
         create_topic(topic_name: dlq_topic)
 
-        get "dlq"
+        get "dead_letter_queues"
       end
 
       it do
@@ -111,7 +111,7 @@ describe_current do
       before do
         topic
         dlq_topic
-        get "dlq"
+        get "dead_letter_queues"
       end
 
       it do
@@ -122,6 +122,15 @@ describe_current do
         refute_body(pagination)
         refute_body("#{topic_name}\"")
       end
+    end
+  end
+
+  describe "legacy /dlq path" do
+    before { get "dlq" }
+
+    it "redirects to the dead letter queues view" do
+      assert_equal(302, response.status)
+      assert(response.location.end_with?("/dead_letter_queues"))
     end
   end
 end
