@@ -27,35 +27,27 @@
 #
 # License: https://karafka.io/docs/Pro-License-Comm/
 # Contact: contact@karafka.io
+describe_current do
+  let(:contract_class) do
+    Class.new(described_class) do
+      arguments :page
 
-module Karafka
-  module Web
-    module Pro
-      module Mcp
-        module Tools
-          module Contracts
-            # Validates the karafka_processes tool arguments. It takes none
-            class Processes < Web::Contracts::Base
-              configure do |config|
-                config.error_messages = YAML.safe_load_file(
-                  File.join(Karafka::Web.gem_root, "config", "locales", "pro_errors.yml")
-                ).fetch("en").fetch("validations").fetch("mcp_tools")
-              end
+      optional(:page) { |val| val.is_a?(Integer) }
+    end
+  end
 
-              # Names of the accepted arguments
-              ARGUMENTS = [].freeze
+  let(:contract) { contract_class.new }
 
-              private_constant :ARGUMENTS
+  it { assert_predicate(contract.call({}), :success?) }
+  it { assert_predicate(contract.call({ page: 1 }), :success?) }
+  it { refute_predicate(contract.call({ page: "1" }), :success?) }
 
-              virtual do |data|
-                next true if (data.keys - ARGUMENTS).empty?
+  context "when an unknown argument is given" do
+    let(:result) { contract.call({ page: 1, other: 1 }) }
 
-                [[%i[arguments], :unknown]]
-              end
-            end
-          end
-        end
-      end
+    it "reports it with the tools error message" do
+      refute_predicate(result, :success?)
+      assert_equal({ arguments: "contain an unknown argument" }, result.errors)
     end
   end
 end

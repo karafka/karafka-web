@@ -42,7 +42,7 @@ module Karafka
                 messages, batches and jobs, total lag, busy and pending jobs, errors, retries,
                 dead messages, processes, workers, memory usage, utilization and listeners.
               TEXT
-              contract: Contracts::Overview.new
+              contract: Contracts::NoArguments.new
             )
 
             private

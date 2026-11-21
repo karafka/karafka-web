@@ -36,26 +36,11 @@ module Karafka
           # Contracts of the tools arguments
           module Contracts
             # Validates the karafka_error tool arguments
-            class Error < Web::Contracts::Base
-              configure do |config|
-                config.error_messages = YAML.safe_load_file(
-                  File.join(Karafka::Web.gem_root, "config", "locales", "pro_errors.yml")
-                ).fetch("en").fetch("validations").fetch("mcp_tools")
-              end
-
-              # Names of the accepted arguments
-              ARGUMENTS = %i[partition offset].freeze
-
-              private_constant :ARGUMENTS
+            class Error < Base
+              arguments :partition, :offset
 
               required(:partition) { |val| val.is_a?(Integer) && val >= 0 }
               required(:offset) { |val| val.is_a?(Integer) && val >= 0 }
-
-              virtual do |data|
-                next true if (data.keys - ARGUMENTS).empty?
-
-                [[%i[arguments], :unknown]]
-              end
             end
           end
         end

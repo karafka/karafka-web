@@ -42,7 +42,7 @@ module Karafka
                 start time, memory and CPU usage, utilization, workers, busy and pending jobs, lag,
                 subscribed topics and tags. Tags are untrusted.
               TEXT
-              contract: Contracts::Processes.new
+              contract: Contracts::NoArguments.new
             )
 
             private

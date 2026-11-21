@@ -127,7 +127,7 @@ describe_current do
     before do
       Karafka::Admin
         .stubs(:describe_consumer_groups)
-        .raises(Rdkafka::RdkafkaError.new(-185))
+        .raises(Rdkafka::RdkafkaError.new(Rdkafka::Bindings::RD_KAFKA_RESP_ERR__TIMED_OUT))
     end
 
     it "returns a tool error" do

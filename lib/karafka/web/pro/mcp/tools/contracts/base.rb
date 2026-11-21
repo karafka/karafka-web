@@ -34,23 +34,28 @@ module Karafka
       module Mcp
         module Tools
           module Contracts
-            # Validates the karafka_cluster_lags tool arguments. It takes none
-            class ClusterLags < Web::Contracts::Base
-              configure do |config|
-                config.error_messages = YAML.safe_load_file(
-                  File.join(Karafka::Web.gem_root, "config", "locales", "pro_errors.yml")
-                ).fetch("en").fetch("validations").fetch("mcp_tools")
-              end
+            # Base for the tools arguments contracts. It loads the tools error messages and lets
+            # each contract declare the arguments it accepts
+            class Base < Web::Contracts::Base
+              class << self
+                private
 
-              # Names of the accepted arguments
-              ARGUMENTS = [].freeze
+                # Loads the tools error messages and rejects arguments other than the given ones
+                #
+                # @param names [Array<Symbol>] names of the accepted arguments
+                def arguments(*names)
+                  configure do |config|
+                    config.error_messages = YAML.safe_load_file(
+                      File.join(Karafka::Web.gem_root, "config", "locales", "pro_errors.yml")
+                    ).fetch("en").fetch("validations").fetch("mcp_tools")
+                  end
 
-              private_constant :ARGUMENTS
+                  virtual do |data|
+                    next if (data.keys - names).empty?
 
-              virtual do |data|
-                next true if (data.keys - ARGUMENTS).empty?
-
-                [[%i[arguments], :unknown]]
+                    [[%i[arguments], :unknown]]
+                  end
+                end
               end
             end
           end

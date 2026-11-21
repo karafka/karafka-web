@@ -43,7 +43,7 @@ module Karafka
                 the partition with the highest lag. It works also when no consumers run. Lag values
                 of -1 mean not available.
               TEXT
-              contract: Contracts::ClusterLags.new
+              contract: Contracts::NoArguments.new
             )
 
             private

@@ -43,7 +43,7 @@ module Karafka
                 members with their client id, host, group instance id and assigned partitions per
                 topic. Use it to check rebalances and which member consumes which partition.
               TEXT
-              contract: Contracts::ConsumerGroups.new
+              contract: Contracts::NoArguments.new
             )
 
             private

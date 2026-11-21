@@ -35,26 +35,11 @@ module Karafka
         module Tools
           module Contracts
             # Validates the karafka_metrics tool arguments
-            class Metrics < Web::Contracts::Base
-              configure do |config|
-                config.error_messages = YAML.safe_load_file(
-                  File.join(Karafka::Web.gem_root, "config", "locales", "pro_errors.yml")
-                ).fetch("en").fetch("validations").fetch("mcp_tools")
-              end
-
-              # Names of the accepted arguments
-              ARGUMENTS = %i[range].freeze
-
-              private_constant :ARGUMENTS
+            class Metrics < Base
+              arguments :range
 
               optional(:range) do |val|
                 Web::Ui::Controllers::Requests::Params::ALLOWED_RANGES.include?(val)
-              end
-
-              virtual do |data|
-                next true if (data.keys - ARGUMENTS).empty?
-
-                [[%i[arguments], :unknown]]
               end
             end
           end

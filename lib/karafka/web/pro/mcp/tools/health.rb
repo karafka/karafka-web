@@ -44,7 +44,7 @@ module Karafka
                 values of -1 mean not available yet. The lag change can be negative, so use
                 measurable_count to check if any partition has lag data.
               TEXT
-              contract: Contracts::Health.new
+              contract: Contracts::NoArguments.new
             )
 
             private

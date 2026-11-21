@@ -28,15 +28,19 @@
 # License: https://karafka.io/docs/Pro-License-Comm/
 # Contact: contact@karafka.io
 
-describe_current do
-  let(:contract) { described_class.new }
-
-  it { assert_predicate(contract.call({}), :success?) }
-
-  it "rejects unknown arguments" do
-    result = contract.call({ page: 1 })
-
-    refute_predicate(result, :success?)
-    assert(result.errors.key?(:arguments))
+module Karafka
+  module Web
+    module Pro
+      module Mcp
+        module Tools
+          module Contracts
+            # Validates the arguments of the tools that take none
+            class NoArguments < Base
+              arguments
+            end
+          end
+        end
+      end
+    end
   end
 end

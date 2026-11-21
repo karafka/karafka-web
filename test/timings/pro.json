@@ -4,7 +4,6 @@
   "test/lib/karafka/web/pro/mcp/tools/contracts/error_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/tools/contracts/errors_list_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/tools/contracts/metrics_test.rb": 1.0,
-  "test/lib/karafka/web/pro/mcp/tools/contracts/overview_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/tools/error_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/tools/errors_list_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/tools/metrics_test.rb": 1.0,
@@ -130,11 +129,9 @@
   "test/lib/karafka/web/pro/ui/lib/health/contracts/config_test.rb": 0.075,
   "test/lib/karafka/web/pro/ui/lib/cluster/contracts/config_test.rb": 0.075,
   "test/lib/karafka/web/pro/mcp/tools/health_test.rb": 1.0,
-  "test/lib/karafka/web/pro/mcp/tools/contracts/health_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/tools/cluster_lags_test.rb": 1.0,
-  "test/lib/karafka/web/pro/mcp/tools/contracts/cluster_lags_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/tools/processes_test.rb": 1.0,
-  "test/lib/karafka/web/pro/mcp/tools/contracts/processes_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/tools/consumer_groups_test.rb": 1.0,
-  "test/lib/karafka/web/pro/mcp/tools/contracts/consumer_groups_test.rb": 1.0
+  "test/lib/karafka/web/pro/mcp/tools/contracts/base_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/tools/contracts/no_arguments_test.rb": 1.0
 }

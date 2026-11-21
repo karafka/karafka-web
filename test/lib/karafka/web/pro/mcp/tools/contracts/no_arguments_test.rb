@@ -27,35 +27,10 @@
 #
 # License: https://karafka.io/docs/Pro-License-Comm/
 # Contact: contact@karafka.io
+describe_current do
+  let(:contract) { described_class.new }
 
-module Karafka
-  module Web
-    module Pro
-      module Mcp
-        module Tools
-          module Contracts
-            # Validates the karafka_overview tool arguments. It takes none
-            class Overview < Web::Contracts::Base
-              configure do |config|
-                config.error_messages = YAML.safe_load_file(
-                  File.join(Karafka::Web.gem_root, "config", "locales", "pro_errors.yml")
-                ).fetch("en").fetch("validations").fetch("mcp_tools")
-              end
-
-              # Names of the accepted arguments
-              ARGUMENTS = [].freeze
-
-              private_constant :ARGUMENTS
-
-              virtual do |data|
-                next true if (data.keys - ARGUMENTS).empty?
-
-                [[%i[arguments], :unknown]]
-              end
-            end
-          end
-        end
-      end
-    end
-  end
+  it { assert_predicate(contract.call({}), :success?) }
+  it { refute_predicate(contract.call({ topic: "test" }), :success?) }
+  it { refute_predicate(contract.call({ topic: nil }), :success?) }
 end
