@@ -10,7 +10,6 @@
 - [Enhancement] Explain every disabled action button (topics management, commanding, read-only configs, recurring tasks, process state) with the reason in its title, which a disabled button could not show before.
 - [Enhancement] Keep every navigation and row action visible, disabled with the reason in its title, when it cannot be used, instead of hiding it: the Explorer, Errors, scheduled messages and commands navigation on empty topics and partitions, Resume when nothing is paused, the Consumers Controls and Commands tabs when commanding is off, and the filter Reset when no filter is applied. The disabled tabs no longer link to a forbidden page.
 - [Enhancement] Show the time and timestamp selectors on the Errors partition view, and scope its search to the partition, as in the Explorer.
-- [Fix] Do not live-poll the topic, messages and offsets deletion confirmation pages, so a rejected deletion error is not replaced by a refresh a few seconds later.
 - [Enhancement] Show the delivery outcome (persisted, possibly persisted or not persisted), latency and broker of failed producer deliveries in the error details, so it is clear whether a retry may duplicate the message. Requires karafka-rdkafka `0.31.0` or newer.
 - [Enhancement] Produce scheduled-message cancellations with `acks: 1` so the broker confirms receipt.
 - [Enhancement] Produce consumer commanding requests with `acks: 1` so the broker confirms receipt, and add a `Karafka::Web.producers` facade (#1241).
@@ -68,8 +67,10 @@
 - [Fix] Keep a dedicated Web UI producer (e.g. a non-idempotent one) in `karafka swarm` nodes instead of replacing it with the app producer.
 - [Fix] Fix the "Configuraton" typo in the topic configuration page title (Pro).
 - [Fix] Show the "Cluster" page title on the Cluster Replication page.
+- [Fix] Do not live-poll the topic, messages and offsets deletion confirmation pages, so a rejected deletion error is not replaced by a refresh a few seconds later.
 - [Maintenance] Sign the gem with `sigstore-cli` and push it with `gem push --attestation` (the `gem-push` action of `karafka/misc`), so a failed signing stops the release instead of publishing the gem without an attestation.
 - [Maintenance] Add the `Sigstore Check` workflow: nightly, and on pull requests that change the push workflow, it builds the gem, signs it like a release and verifies the attestation, without pushing.
+- [Fix] Center single buttons in table "Options" columns, so they no longer sit closer to the right cell edge than to the left one. Columns with different button counts per row stay right-aligned.
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a keyword filtering box to the data-heavy Web UI listings, with a field selector on flat listings (Pro) (#1073).

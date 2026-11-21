@@ -9437,6 +9437,9 @@ table td.options {
   white-space: nowrap;
   text-align: right;
 }
+table:not(:has(td.options > :nth-child(2))) :is(th, td).options {
+  text-align: center;
+}
 #controls button {
   &:hover {
     @layer daisyui.l1.l2 {
