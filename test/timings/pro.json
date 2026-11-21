@@ -128,5 +128,11 @@
   "test/lib/karafka/web/pro/ui/helpers/actions_helper_test.rb": 0.02,
   "test/lib/karafka/web/pro/ui/helpers/cluster_helper_test.rb": 0.1,
   "test/lib/karafka/web/pro/ui/lib/health/contracts/config_test.rb": 0.075,
-  "test/lib/karafka/web/pro/ui/lib/cluster/contracts/config_test.rb": 0.075
+  "test/lib/karafka/web/pro/ui/lib/cluster/contracts/config_test.rb": 0.075,
+  "test/lib/karafka/web/pro/mcp/tools/health_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/tools/contracts/health_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/tools/cluster_lags_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/tools/contracts/cluster_lags_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/tools/processes_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/tools/contracts/processes_test.rb": 1.0
 }

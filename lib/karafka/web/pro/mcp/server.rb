@@ -45,6 +45,9 @@ module Karafka
           TOOLS = [
             Tools::Overview,
             Tools::Metrics,
+            Tools::Health,
+            Tools::ClusterLags,
+            Tools::Processes,
             Tools::ErrorsList,
             Tools::Error
           ].to_h { |tool| [tool.name, tool] }.freeze
