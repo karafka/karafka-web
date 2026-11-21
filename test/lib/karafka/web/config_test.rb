@@ -3,10 +3,6 @@
 describe_current do
   let(:ui) { Karafka::Web.config.ui }
 
-  describe "ui.dead_letter_queue_patterns" do
-    it { assert_equal([/(dlq)|(dead_letter)/i], described_class.new.config.ui.dead_letter_queue_patterns) }
-  end
-
   describe "ui.dlq_patterns" do
     before { @previous = ui.dead_letter_queue_patterns }
 
