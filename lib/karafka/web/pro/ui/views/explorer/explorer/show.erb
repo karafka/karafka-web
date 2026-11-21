@@ -26,87 +26,54 @@
   %>
   <div class="col-span-12">
     <section class="actions">
-      <% if @visibility_filter.republish?(@message) %>
-        <a
-          href="<%= explorer_messages_path(@message.topic, @message.partition, @message.offset, 'forward') %>"
-          class="btn-action"
-          title="Republish this message"
-        >
-          <%== icon(:arrow_uturn_right) %>
-        </a>
-      <% else %>
-        <%==
-          partial(
-            'explorer/explorer/disabled_action',
-            locals: {
-              icon_name: :arrow_uturn_right,
-              reason: 'Republishing this message is not allowed by the Web UI policies'
-            }
-          )
-        %>
-      <% end %>
+      <%==
+        action_icon_link(
+          icon(:arrow_uturn_right),
+          explorer_messages_path(@message.topic, @message.partition, @message.offset, 'forward'),
+          title: 'Republish this message',
+          disabled_reason: @visibility_filter.republish?(@message) ? nil : 'Republishing this message is not allowed by the Web UI policies'
+        )
+      %>
 
-      <a
-        href="<%= surrounding_path %>"
-        class="btn-action"
-        title="Go to this message surrounding position"
-      >
-        <%== icon(:arrows_right_left) %>
-      </a>
+      <%==
+        action_icon_link(
+          icon(:arrows_right_left),
+          surrounding_path,
+          title: 'Go to this message surrounding position'
+        )
+      %>
 
-      <% if @visibility_filter.download?(@message) %>
-        <a
-          href="<%= explorer_messages_path(@message.topic, @message.partition, @message.offset, 'download') %>"
-          class="btn-action"
-          title="Download raw payload"
-          data-turbo="false"
-        >
-          <%== icon(:arrow_down_tray) %>
-        </a>
-      <% else %>
-        <%==
-          partial(
-            'explorer/explorer/disabled_action',
-            locals: {
-              icon_name: :arrow_down_tray,
-              reason: 'Downloading the raw payload of this message is not allowed by the Web UI policies'
-            }
-          )
-        %>
-      <% end %>
+      <%==
+        action_icon_link(
+          icon(:arrow_down_tray),
+          explorer_messages_path(@message.topic, @message.partition, @message.offset, 'download'),
+          title: 'Download raw payload',
+          turbo: false,
+          disabled_reason: @visibility_filter.download?(@message) ? nil : 'Downloading the raw payload of this message is not allowed by the Web UI policies'
+        )
+      %>
 
-      <% if !@visibility_filter.export?(@message) %>
-        <%==
-          partial(
-            'explorer/explorer/disabled_action',
-            locals: {
-              icon_name: :arrow_down_on_square,
-              reason: 'Exporting this message is not allowed by the Web UI policies'
-            }
-          )
-        %>
-      <% elsif !@safe_payload.success? || !@safe_pretty_payload.success? %>
-        <%==
-          partial(
-            'explorer/explorer/disabled_action',
-            locals: {
-              icon_name: :arrow_down_on_square,
-              reason: 'Exporting is not available because the payload of this message could not be deserialized'
-            }
-          )
-        %>
-      <% else %>
-        <a
-          href="<%= explorer_messages_path(@message.topic, @message.partition, @message.offset, 'export') %>"
-          class="btn-action"
-          title="Export as JSON"
-          data-turbo="false"
-        >
-          <%== icon(:arrow_down_on_square) %>
-        </a>
-      <% end %>
+      <%
+        export_disabled_reason = nil
+
+        if !@visibility_filter.export?(@message)
+          export_disabled_reason = 'Exporting this message is not allowed by the Web UI policies'
+        elsif !@safe_payload.success? || !@safe_pretty_payload.success?
+          export_disabled_reason = 'Exporting is not available because the payload of this message could not be deserialized'
+        end
+      %>
+      <%==
+        action_icon_link(
+          icon(:arrow_down_on_square),
+          explorer_messages_path(@message.topic, @message.partition, @message.offset, 'export'),
+          title: 'Export as JSON',
+          turbo: false,
+          disabled_reason: export_disabled_reason
+        )
+      %>
 
       <button
+        type="button"
         class="btn-action btn-toggle"
         title="Show the message metadata details"
         id="metadata-button"
@@ -116,6 +83,7 @@
       </button>
 
       <button
+        type="button"
         class="btn-action btn-toggle"
         title="Show the message utilization details"
         id="utilization-button"
@@ -126,25 +94,14 @@
 
       <%# Destructive actions sit last and apart so they are not clicked by accident %>
       <div class="actions-danger-zone">
-        <% if @visibility_filter.delete_records?(@message.topic, @message.partition) %>
-          <a
-            href="<%= explorer_messages_path(@message.topic, @message.partition, @message.offset, 'delete') %>"
-            class="btn-action"
-            title="Delete messages up to this offset"
-          >
-            <%== icon(:scissors) %>
-          </a>
-        <% else %>
-          <%==
-            partial(
-              'explorer/explorer/disabled_action',
-              locals: {
-                icon_name: :scissors,
-                reason: 'Deleting messages of this partition is not allowed by the Web UI policies'
-              }
-            )
-          %>
-        <% end %>
+        <%==
+          action_icon_link(
+            icon(:scissors),
+            explorer_messages_path(@message.topic, @message.partition, @message.offset, 'delete'),
+            title: 'Delete messages up to this offset',
+            disabled_reason: @visibility_filter.delete_records?(@message.topic, @message.partition) ? nil : 'Deleting messages of this partition is not allowed by the Web UI policies'
+          )
+        %>
       </div>
     </section>
   </div>

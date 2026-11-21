@@ -19,12 +19,47 @@
 <%# Contact: contact@karafka.io %>
 
 <%#
-  Action that exists but is not available, for example because the Web UI policies deny it.
-  Rendered disabled so it is clear the action exists. The reason sits in the wrapper title
-  because a disabled button does not receive pointer events.
+  Navigation actions of a partition. They stay visible, but disabled, when the partition has
+  no data to navigate, so the actions bar keeps its shape.
+
+  @param closest_path [String] path for finding the message closest to the selected time
 %>
-<span class="inline-flex" title="<%= reason %>">
-  <button type="button" class="btn-action disabled" disabled>
-    <%== icon(icon_name) %>
-  </button>
-</span>
+<%
+  no_data_reason = if @watermark_offsets.empty?
+    'This partition is empty and does not contain any data'
+  elsif @watermark_offsets.cleaned?
+    'This partition no longer contains any data'
+  end
+%>
+
+<%==
+  action_icon_link(
+    icon(:play_circle),
+    explorer_topics_path(@topic_id, @partition_id, 'recent'),
+    title: 'Display the most recent message for this partition with auto-refresh',
+    disabled_reason: no_data_reason
+  )
+%>
+
+<%==
+  action_icon_link(
+    icon(:magnifying_glass),
+    explorer_path(@topic_id, 'search', "?partition=#{@partition_id}"),
+    title: 'Search in this topic',
+    disabled_reason: no_data_reason
+  )
+%>
+
+<%==
+  partial(
+    'explorer/explorer/partition/time_selector',
+    locals: { target: closest_path, disabled_reason: no_data_reason }
+  )
+%>
+
+<%==
+  partial(
+    'explorer/explorer/partition/timestamp_selector',
+    locals: { target: closest_path, disabled_reason: no_data_reason }
+  )
+%>

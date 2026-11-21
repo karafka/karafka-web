@@ -25,39 +25,14 @@
 <div class="grid grid-cols-12">
   <div class="col-span-4">
     <section class="actions">
-      <% if @messages && !@messages.empty? %>
-        <a
-          href="<%= explorer_topics_path(@topic_id, @partition_id, 'recent') %>"
-          class="btn-action"
-          title="Display the most recent message for this partition with auto-refresh"
-        >
-          <%== icon(:play_circle) %>
-        </a>
-
-        <a
-          href="<%= explorer_path(@topic_id, 'search', "?partition=#{@partition_id}") %>"
-          class="btn-action"
-          title="Search in this topic"
-        >
-          <%== icon(:magnifying_glass) %>
-        </a>
-
-        <% closest_path = scheduled_messages_explorer_path(@topic_id, @partition_id, 'closest') %>
-
-        <%==
-          partial(
-            'explorer/explorer/partition/time_selector',
-            locals: { target: closest_path }
-          )
-        %>
-
-        <%==
-          partial(
-            'explorer/explorer/partition/timestamp_selector',
-            locals: { target: closest_path }
-          )
-        %>
-      <% end %>
+      <%==
+        partial(
+          'explorer/explorer/partition/navigation',
+          locals: {
+            closest_path: scheduled_messages_explorer_path(@topic_id, @partition_id, 'closest')
+          }
+        )
+      %>
     </section>
   </div>
 

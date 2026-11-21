@@ -28,17 +28,16 @@
   )
 %>
 
-<% if partition.poll_state != 'active' %>
-  <%==
-    action_link_button(
-      icon(:play),
-      consumers_path('partitions', consumer_group_id, topic_name, partition.id, 'pause', 'edit'),
-      classes: 'btn-success btn-sm',
-      title: 'Resume processing of this topic partition',
-      disabled_reason: commanding_disabled_reason
-    )
-  %>
-<% end %>
+<%==
+  action_link_button(
+    icon(:play),
+    consumers_path('partitions', consumer_group_id, topic_name, partition.id, 'pause', 'edit'),
+    classes: 'btn-success btn-sm',
+    title: 'Resume processing of this topic partition',
+    disabled_reason: commanding_disabled_reason ||
+      (partition.poll_state == 'active' ? 'This partition is not paused' : nil)
+  )
+%>
 
 <%==
   action_link_button(

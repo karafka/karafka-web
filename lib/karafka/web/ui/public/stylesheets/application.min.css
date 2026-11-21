@@ -8111,6 +8111,9 @@
   .text-right {
     text-align: right;
   }
+  .align-middle {
+    vertical-align: middle;
+  }
   .font-mono {
     font-family: var(--font-mono);
   }
@@ -9436,6 +9439,9 @@ table td.options {
   width: 1%;
   white-space: nowrap;
   text-align: right;
+}
+table th.options:not(:has(.btn)) {
+  text-align: center;
 }
 table:not(:has(td.options > :nth-child(2))) :is(th, td).options {
   text-align: center;

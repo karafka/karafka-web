@@ -23,23 +23,7 @@
 <div class="grid grid-cols-12">
   <div class="col-span-4">
     <section class="actions">
-      <% if @error_messages && !@error_messages.empty? %>
-        <a
-          href="<%= explorer_topics_path(@topic_id, 'recent') %>"
-          class="btn-action"
-          title="Display the most recent message for this topic with auto-refresh"
-        >
-          <%== icon(:play_circle) %>
-        </a>
-
-        <a
-          href="<%= explorer_path(@topic_id, 'search') %>"
-          class="btn-action"
-          title="Search in this topic"
-        >
-          <%== icon(:magnifying_glass) %>
-        </a>
-      <% end %>
+      <%== partial 'explorer/explorer/topic/navigation', locals: { messages: @error_messages } %>
     </section>
   </div>
 

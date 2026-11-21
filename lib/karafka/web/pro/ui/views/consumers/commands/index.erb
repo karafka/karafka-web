@@ -23,17 +23,23 @@
 <%== partial 'consumers/consumers/tabs' %>
 
 <div class="col-span-12">
-  <% if @command_messages && !@command_messages.empty? %>
-    <section class="actions">
-      <a
-        href="<%= consumers_path('commands', 'recent') %>"
-        class="btn-action"
-        title="Display the most recent command"
-      >
-        <%== icon(:play_circle) %>
-      </a>
-    </section>
-  <% end %>
+  <%
+    no_commands_reason = nil
+
+    if @watermark_offsets.empty? || @watermark_offsets.cleaned?
+      no_commands_reason = 'There are no commands to display'
+    end
+  %>
+  <section class="actions">
+    <%==
+      action_icon_link(
+        icon(:play_circle),
+        consumers_path('commands', 'recent'),
+        title: 'Display the most recent command',
+        disabled_reason: no_commands_reason
+      )
+    %>
+  </section>
 
   <% if @command_messages.empty? && params.current_page == 1 %>
     <%== partial 'consumers/commands/empty' %>

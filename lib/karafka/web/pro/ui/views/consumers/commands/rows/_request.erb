@@ -43,11 +43,6 @@
   </td>
 
   <td class="options">
-    <a
-      href="<%= consumers_path('commands', command_message.offset) %>"
-      class="btn btn-sm btn-primary"
-    >
-      Details
-    </a>
+    <%== link_button_primary_sm 'Details', consumers_path('commands', command_message.offset) %>
   </td>
 </tr>

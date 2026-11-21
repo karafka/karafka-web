@@ -34,6 +34,8 @@ describe_current do
   let(:commands_topic) { create_topic }
   let(:no_commands) { "No commands found." }
 
+  let(:recent_button) { 'title="Display the most recent command"' }
+
   describe "#index" do
     context "when commands topic does not exist" do
       before do
@@ -60,6 +62,8 @@ describe_current do
         refute_body(pagination)
         assert_body(breadcrumbs)
         assert_body(no_commands)
+        refute_body(recent_button)
+        assert_body(disabled_action("There are no commands to display"))
       end
     end
 
@@ -97,6 +101,7 @@ describe_current do
         assert_body("quiet")
         assert_body("process_id:")
         assert_body("/commands/0")
+        assert_body(recent_button)
       end
     end
 
@@ -155,6 +160,7 @@ describe_current do
           assert_ok
           refute_body(pagination)
           assert_body(no_commands)
+          assert_body(recent_button)
         end
       end
     end
