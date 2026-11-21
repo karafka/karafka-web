@@ -82,7 +82,7 @@
             <div class="desc text-base-content/70">Retries</div>
           </li>
           <li class="p-1">
-            <a href="<%= root_path('dlq') %>" class="hover:text-primary">
+            <a href="<%= root_path('dead_letter_queues') %>" class="hover:text-primary">
               <div class="count mb-1 text-md">
                 <%= number_with_delimiter @counters.dead, ' ' %>
               </div>

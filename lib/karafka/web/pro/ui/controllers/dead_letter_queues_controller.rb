@@ -33,8 +33,8 @@ module Karafka
     module Pro
       module Ui
         module Controllers
-          # DLQ topics overview
-          class DlqController < BaseController
+          # Dead letter queue topics overview
+          class DeadLetterQueuesController < BaseController
             self.filterable_attributes = %w[
               topic_name
             ].freeze
@@ -43,20 +43,20 @@ module Karafka
             def index
               topics = Karafka::App.consumer_groups.flat_map(&:topics).flat_map(&:to_a)
 
-              dlq_topic_patterns = topics
+              dead_letter_queue_topic_patterns = topics
                 .map { |source_topic| source_topic.dead_letter_queue.topic }
                 .uniq
                 .compact
                 .select(&:itself)
 
-              dlq_topic_patterns += Web.config.ui.dlq_patterns
+              dead_letter_queue_topic_patterns += Web.config.ui.dlq_patterns
 
-              @dlq_topics = Models::ClusterInfo
+              @dead_letter_queue_topics = Models::ClusterInfo
                 .topics
-                .select { |topic| dlq?(dlq_topic_patterns, topic[:topic_name]) }
+                .select { |topic| dead_letter_queue?(dead_letter_queue_topic_patterns, topic[:topic_name]) }
                 .sort_by { |topic| topic[:topic_name] }
 
-              @dlq_topics = filter(@dlq_topics)
+              @dead_letter_queue_topics = filter(@dead_letter_queue_topics)
 
               render
             end
@@ -70,7 +70,7 @@ module Karafka
             #   from the routing and regular expressions for auto-discovery
             # @param name [String] topic name for which we want to know if it is used in DLQ
             # @return [Boolean] is the given topic a DLQ topic
-            def dlq?(topics_matches, name)
+            def dead_letter_queue?(topics_matches, name)
               topics_matches.any? do |candidate|
                 candidate.is_a?(Regexp) ? candidate.match?(name) : candidate == name
               end

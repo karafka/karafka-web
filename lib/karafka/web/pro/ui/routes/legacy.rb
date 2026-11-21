@@ -50,6 +50,13 @@ module Karafka
                   r.redirect root_path("health/topics")
                 end
               end
+
+              r.get "dlq" do
+                path = root_path("dead_letter_queues")
+                path += "?#{r.query_string}" unless r.query_string.empty?
+
+                r.redirect path
+              end
             end
           end
         end

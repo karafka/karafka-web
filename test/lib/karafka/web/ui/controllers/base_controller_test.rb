@@ -37,6 +37,16 @@ describe_current do
     end
   end
 
+  describe "#dead_letter_queues" do
+    before { get "dead_letter_queues" }
+
+    it do
+      refute(response.ok?)
+      assert_body(make_better)
+      assert_equal(402, status)
+    end
+  end
+
   describe "custom assets" do
     let(:custom_css) { "assets/#{Karafka::Web::VERSION}/stylesheets/custom.css" }
     let(:custom_js) { "assets/#{Karafka::Web::VERSION}/javascripts/custom.js" }

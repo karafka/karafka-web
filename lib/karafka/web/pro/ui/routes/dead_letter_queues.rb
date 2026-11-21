@@ -33,11 +33,11 @@ module Karafka
     module Pro
       module Ui
         module Routes
-          # Manages the dlq related routes
-          class Dlq < Base
+          # Manages the dead letter queues related routes
+          class DeadLetterQueues < Base
             route do |r|
-              r.get "dlq" do
-                controller = build(Controllers::DlqController)
+              r.get "dead_letter_queues" do
+                controller = build(Controllers::DeadLetterQueuesController)
                 controller.index
               end
             end

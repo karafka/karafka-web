@@ -94,7 +94,7 @@ module Karafka
             Routes::Cluster,
             Routes::Topics,
             Routes::Errors,
-            Routes::Dlq,
+            Routes::DeadLetterQueues,
             Routes::Status,
             Routes::Support,
             Routes::Ux

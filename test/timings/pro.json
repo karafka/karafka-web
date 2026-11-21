@@ -31,7 +31,7 @@
   "test/lib/karafka/web/pro/ui/controllers/topics/offsets_controller_test.rb": 7.406,
   "test/lib/karafka/web/pro/loader_test.rb": 5.294,
   "test/lib/karafka/web/pro/ui/controllers/routing_controller_test.rb": 3.103,
-  "test/lib/karafka/web/pro/ui/controllers/dlq_controller_test.rb": 2.878,
+  "test/lib/karafka/web/pro/ui/controllers/dead_letter_queues_controller_test.rb": 2.878,
   "test/lib/karafka/web/pro/ui/controllers/scheduled_messages/messages_controller_test.rb": 1.572,
   "test/lib/karafka/web/pro/ui/app_csrf_test.rb": 0.77,
   "test/lib/karafka/web/pro/commanding/handlers/partitions/tracker_test.rb": 0.525,
