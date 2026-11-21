@@ -76,6 +76,15 @@ module Karafka
         # Raised when we want to stop the flow and render 403
         ForbiddenError = Class.new(BaseError)
       end
+
+      # MCP server related errors
+      module Mcp
+        # Raised when tool arguments do not pass the tool contract
+        InvalidArgumentsError = Class.new(BaseError)
+
+        # Raised when the data requested by a tool does not exist. Its message tells why
+        NoDataError = Class.new(BaseError)
+      end
     end
   end
 end
