@@ -121,6 +121,9 @@ describe_current do
         assert_body("controller.quota.window.num")
         assert_body("log.flush.interval.ms")
         assert_body("9223372036854775807")
+        assert_body("Source")
+        assert_body("static_broker_config")
+        assert_body("default_config")
       end
     end
 
@@ -130,6 +133,32 @@ describe_current do
       it do
         assert_ok
         assert_body("advertised.listeners")
+      end
+    end
+
+    context "when sorting the broker config by source ascending" do
+      before { get "cluster/1?sort=source+asc" }
+
+      it do
+        assert_ok
+        assert_operator(
+          response.body.rindex("<td>default_config</td>"),
+          :<,
+          response.body.index("<td>static_broker_config</td>")
+        )
+      end
+    end
+
+    context "when sorting the broker config by source descending" do
+      before { get "cluster/1?sort=source+desc" }
+
+      it do
+        assert_ok
+        assert_operator(
+          response.body.rindex("<td>static_broker_config</td>"),
+          :<,
+          response.body.index("<td>default_config</td>")
+        )
       end
     end
 
