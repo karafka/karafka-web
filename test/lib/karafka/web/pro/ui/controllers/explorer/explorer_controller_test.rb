@@ -36,6 +36,25 @@ describe_current do
   let(:removed_or_compacted) { "This offset does not contain any data." }
   let(:internal_topic) { "__#{generate_topic_name}" }
   let(:search_button) { 'title="Search in this topic"' }
+  # Denied actions stay visible: a disabled button wrapped in a span carrying the reason
+  let(:disabled_action) do
+    lambda do |reason|
+      %(<span class="inline-flex" title="#{reason}">\n  ) +
+        '<button type="button" class="btn-action disabled" disabled>'
+    end
+  end
+  let(:publish_denied) { "Publishing messages to this topic is not allowed by the Web UI policies" }
+  let(:republish_denied) { "Republishing this message is not allowed by the Web UI policies" }
+  let(:download_denied) do
+    "Downloading the raw payload of this message is not allowed by the Web UI policies"
+  end
+  let(:export_denied) { "Exporting this message is not allowed by the Web UI policies" }
+  let(:export_unavailable) do
+    "Exporting is not available because the payload of this message could not be deserialized"
+  end
+  let(:delete_denied) do
+    "Deleting messages of this partition is not allowed by the Web UI policies"
+  end
 
   describe "#index" do
     before do
@@ -292,6 +311,7 @@ describe_current do
       it "shows the publish action" do
         assert_ok
         assert_body("messages/#{topic}/publish")
+        refute_body(publish_denied)
       end
     end
 
@@ -302,9 +322,10 @@ describe_current do
         get "explorer/topics/#{topic}"
       end
 
-      it "hides the publish action" do
+      it "disables the publish action with the reason" do
         assert_ok
         refute_body("messages/#{topic}/publish")
+        assert_body(disabled_action.call(publish_denied))
       end
     end
   end
@@ -351,6 +372,7 @@ describe_current do
       it "shows the publish action" do
         assert_ok
         assert_body("messages/#{topic}/publish")
+        refute_body(publish_denied)
       end
     end
 
@@ -361,9 +383,10 @@ describe_current do
         get "explorer/topics/#{topic}/0"
       end
 
-      it "hides the publish action" do
+      it "disables the publish action with the reason" do
         assert_ok
         refute_body("messages/#{topic}/publish")
+        assert_body(disabled_action.call(publish_denied))
       end
     end
 
@@ -523,6 +546,35 @@ describe_current do
       end
     end
 
+    context "when deleting messages is not allowed by the default policy" do
+      before do
+        produce(topic, { test: "me" }.to_json)
+        get "explorer/topics/#{topic}/0/0"
+      end
+
+      it "disables the delete action with the reason" do
+        assert_ok
+        refute_body("messages/#{topic}/0/0/delete")
+        assert_body(disabled_action.call(delete_denied))
+      end
+    end
+
+    context "when deleting messages is allowed by policy" do
+      before do
+        Karafka::Web.config.ui.policies.messages.stubs(:delete_records?).returns(true)
+
+        produce(topic, { test: "me" }.to_json)
+        get "explorer/topics/#{topic}/0/0"
+      end
+
+      it "shows the delete action" do
+        assert_ok
+        assert_body("messages/#{topic}/0/0/delete")
+        assert_body('title="Delete messages up to this offset"')
+        refute_body(delete_denied)
+      end
+    end
+
     context "when requested message exists and can be deserialized" do
       before do
         produce(topic, { test: "me" }.to_json)
@@ -539,6 +591,17 @@ describe_current do
         assert_body("Republish")
         refute_body(cannot_deserialize)
         refute_body(pagination)
+      end
+
+      it "expect the allowed actions to be enabled and the denied delete to be disabled" do
+        assert_body('title="Republish this message"')
+        assert_body('title="Download raw payload"')
+        assert_body('title="Export as JSON"')
+        refute_body(republish_denied)
+        refute_body(download_denied)
+        refute_body(export_denied)
+        refute_body(export_unavailable)
+        assert_body(disabled_action.call(delete_denied))
       end
 
       it "expect the topic, partition and offset in the metadata to link to the Explorer" do
@@ -594,7 +657,8 @@ describe_current do
         assert_body("Metadata")
         assert_body("Export as JSON")
         assert_body("Download raw")
-        refute_body("Republish")
+        refute_body("Republish this message")
+        assert_body(disabled_action.call(republish_denied))
         refute_body(cannot_deserialize)
         refute_body(pagination)
       end
@@ -642,6 +706,7 @@ describe_current do
         assert_body("Metadata")
         assert_body("Export as JSON")
         refute_body("Download raw")
+        assert_body(disabled_action.call(download_denied))
         refute_body(cannot_deserialize)
         refute_body(pagination)
       end
@@ -662,6 +727,7 @@ describe_current do
         assert_body("Metadata")
         assert_body("Download raw")
         refute_body("Export as JSON")
+        assert_body(disabled_action.call(export_denied))
         refute_body(cannot_deserialize)
         refute_body(pagination)
       end
@@ -762,6 +828,7 @@ describe_current do
         assert_body(cannot_deserialize)
         refute_body(pagination)
         refute_body("Export as JSON")
+        assert_body(disabled_action.call(export_unavailable))
       end
     end
 
@@ -787,6 +854,7 @@ describe_current do
         assert_body("JSON::GeneratorError")
         refute_body(pagination)
         refute_body("Export as JSON")
+        assert_body(disabled_action.call(export_unavailable))
       end
     end
 

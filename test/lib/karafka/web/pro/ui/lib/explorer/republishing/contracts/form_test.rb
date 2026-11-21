@@ -33,7 +33,7 @@ describe_current do
   let(:result) { contract.call(params) }
 
   let(:source_message) do
-    stub(raw_payload: '{"a":1}', headers: {}, key: nil, topic: "src", partition: 0, offset: 0)
+    stub(raw_payload: '{"a":1}', raw_headers: {}, raw_key: nil, topic: "src", partition: 0, offset: 0)
   end
 
   let(:params) do
@@ -51,6 +51,19 @@ describe_current do
   before { ::Karafka::Routing::Router.stubs(:find_by).returns(nil) }
 
   context "when everything is valid" do
+    it { assert(result.success?) }
+  end
+
+  context "when the source message key and headers cannot be deserialized" do
+    let(:source_message) do
+      message = stub(
+        raw_payload: '{"a":1}', raw_headers: {}, raw_key: nil, topic: "src", partition: 0, offset: 0
+      )
+      message.stubs(:key).raises(StandardError, "broken key deserializer")
+      message.stubs(:headers).raises(StandardError, "broken headers deserializer")
+      message
+    end
+
     it { assert(result.success?) }
   end
 

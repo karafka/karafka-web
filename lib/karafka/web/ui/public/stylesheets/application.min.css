@@ -2058,6 +2058,16 @@
       }
     }
   }
+  .disabled.custom-tab {
+    color: var(--color-gray-500);
+  }
+  .disabled.sidebar-nav-item {
+    color: var(--color-gray-500);
+  }
+  .disabled.btn-action {
+    pointer-events: none;
+    opacity: 40%;
+  }
   @layer daisyui.l1.l2 {
     .tab-disabled {
       pointer-events: none;
@@ -6472,6 +6482,15 @@
       color: var(--color-base-100);
     }
   }
+  .actions-danger-zone {
+    margin-left: calc(var(--spacing) * 3);
+    display: flex;
+    align-items: center;
+    border-left-style: var(--tw-border-style);
+    border-left-width: 1px;
+    border-color: var(--color-base-300);
+    padding-left: calc(var(--spacing) * 3);
+  }
   .ml-1 {
     margin-left: var(--spacing);
   }
@@ -7207,6 +7226,47 @@
       color: var(--color-base-content);
     }
   }
+  .alert-box-content {
+    border-bottom-right-radius: var(--radius-lg);
+    border-bottom-left-radius: var(--radius-lg);
+    background-color: var(--color-base-100);
+    padding: calc(var(--spacing) * 4);
+    & a:not(.btn) {
+      @layer daisyui.l1.l2.l3 {
+        cursor: pointer;
+        text-decoration-line: underline;
+      }
+      &:focus {
+        @layer daisyui.l1.l2.l3 {
+          --tw-outline-style: none;
+          outline-style: none;
+          @media (forced-colors: active) {
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+          }
+        }
+      }
+      &:focus-visible {
+        @layer daisyui.l1.l2.l3 {
+          outline: 2px solid currentColor;
+          outline-offset: 2px;
+        }
+      }
+      &:hover {
+        @layer daisyui.l1.l2 {
+          @media (hover: hover) {
+            color: var(--color-primary);
+            @supports (color: color-mix(in lab, red, red)) {
+              color: color-mix(in oklab, var(--color-primary) 80%, #000);
+            }
+          }
+        }
+      }
+      @layer daisyui.l1.l2 {
+        color: var(--color-primary);
+      }
+    }
+  }
   @layer daisyui.l1.l2.l3 {
     .drawer-content a:hover:not(.btn):not(.custom-tab) {
       cursor: pointer;
@@ -7450,12 +7510,6 @@
   }
   .rounded-sm {
     border-radius: var(--radius-sm);
-  }
-  .alert-box-content {
-    border-bottom-right-radius: var(--radius-lg);
-    border-bottom-left-radius: var(--radius-lg);
-    background-color: var(--color-base-100);
-    padding: calc(var(--spacing) * 4);
   }
   .code {
     border-style: var(--tw-border-style);
@@ -8368,14 +8422,6 @@
       color: var(--color-warning-content);
       --input-color: var(--color-warning);
     }
-  }
-  .disabled.custom-tab {
-    color: var(--color-gray-500);
-  }
-  .disabled.sidebar-nav-item {
-    color: var(--color-gray-500);
-  }
-  @layer daisyui.l1.l2 {
     @media (hover: hover) {
       .link-accent:hover {
         color: var(--color-accent);

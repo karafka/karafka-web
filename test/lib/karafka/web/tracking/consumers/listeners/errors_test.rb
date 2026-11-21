@@ -201,7 +201,7 @@ describe_current do
       let(:caller_ref) do
         Karafka::Connection::Listener.new(
           subscription_group,
-          Karafka::Processing::JobsQueue.new,
+          Karafka::Processing::ConsumerGroups::JobsQueue.new,
           nil
         )
       end

@@ -1,0 +1,7 @@
+<p>
+  The Web UI reports through your <%= details[:type] %> <code>Karafka.producer</code>.
+  If this producer hits a fatal error (for example, it gets fenced or runs into an idempotence
+  sequence error), the Web UI stops receiving reports too, so you lose visibility right when
+  your application has producer problems. If you want to keep them separate, you can configure a
+  <a href="https://karafka.io/docs/Web-UI-Configuration/#using-a-custom-web-ui-producer" target="_blank" rel="noopener noreferrer">custom Web UI producer</a>.
+</p>

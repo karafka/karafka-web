@@ -92,6 +92,7 @@ describe_current do
 
       it "expect to show Controls and Commands tabs in disabled state" do
         assert_body("disabled btn-disabled")
+        assert_body('title="Commanding is disabled in the Web UI configuration"')
       end
     end
 
@@ -681,7 +682,9 @@ describe_current do
 
       it do
         assert_ok
-        assert_body("btn-lockable  btn-disabled")
+        assert_body("btn-lockable btn-disabled")
+        assert_body('title="Commanding is disabled in the Web UI configuration"')
+        refute_body('title="Trace"')
         assert_body("Trace")
         assert_body("Quiet")
         assert_body("Stop")
@@ -944,6 +947,8 @@ describe_current do
         assert_ok
         refute_body("btn-info btn-sm btn-disabled")
         refute_body("btn-warning btn-sm btn-disabled")
+        refute_body("Commanding is disabled in the Web UI configuration")
+        assert_body('title="Edit the offset position for this topic partition"')
       end
     end
 
@@ -960,6 +965,8 @@ describe_current do
         assert_ok
         assert_body("btn-info btn-sm btn-disabled")
         assert_body("btn-warning btn-sm btn-disabled")
+        assert_body('title="Commanding is disabled in the Web UI configuration"')
+        refute_body('title="Edit the offset position for this topic partition"')
       end
     end
   end

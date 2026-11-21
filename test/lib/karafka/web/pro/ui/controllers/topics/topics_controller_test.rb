@@ -49,6 +49,22 @@ describe_current do
       assert_body(topics_config.consumers.reports.name)
       assert_body(topics_config.errors.name)
       refute_body(internal_topic)
+      assert_body('title="Create new topic"')
+      refute_body("btn btn-primary btn-sm btn-disabled")
+    end
+
+    context "when topics management is disabled" do
+      before do
+        Karafka::Web.config.ui.topics.management.active = false
+
+        get "topics"
+      end
+
+      it "expect the create button to be disabled with the reason" do
+        assert_ok
+        assert_body('class="btn btn-primary btn-sm btn-disabled"')
+        assert_body('title="Topics management is disabled in the Web UI configuration"')
+      end
     end
 
     context "when there are no topics" do
@@ -329,6 +345,7 @@ describe_current do
         assert_body('type="hidden"')
         assert_body('name="_method" value="delete"')
         assert_body("Delete Topic")
+        assert_body('data-live-poll="disabled"')
         assert_body("Cancel")
       end
     end

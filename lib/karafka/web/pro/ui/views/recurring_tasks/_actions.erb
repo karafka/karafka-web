@@ -18,58 +18,32 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
-<%
-  trigger_path = root_path('recurring_tasks', task.id, 'trigger')
-  disabled_class = task.enabled? ? '' : 'btn-disabled'
+<%==
+  action_form_button(
+    icon(:play),
+    root_path('recurring_tasks', task.id, 'trigger'),
+    classes: 'btn-primary btn-sm',
+    title: 'Trigger',
+    disabled_reason: task.enabled? ? nil : 'Enable this task to trigger it'
+  )
 %>
-<form
-  action="<%= trigger_path %>"
-  method="post"
-  class="inline"
->
-  <button
-    type="submit"
-    class="btn btn-primary btn-sm <%= disabled_class %>"
-    title="Trigger"
-  >
-    <%== icon(:play) %>
-  </button>
-</form>
 
-<%
-  enable_path = root_path('recurring_tasks', task.id, 'enable')
-  disabled_class = task.enabled? ? 'btn-disabled' : ''
+<%==
+  action_form_button(
+    icon(:check),
+    root_path('recurring_tasks', task.id, 'enable'),
+    classes: 'btn-success btn-sm',
+    title: 'Enable',
+    disabled_reason: task.enabled? ? 'This task is already enabled' : nil
+  )
 %>
-<form
-  action="<%= enable_path %>"
-  method="post"
-  class="inline"
-  title="Enable"
->
-  <button
-    type="submit"
-    class="btn btn-success btn-sm <%= disabled_class %>"
-  >
-    <%== icon(:check) %>
-  </button>
-</form>
 
-<%
-  disable_path = root_path('recurring_tasks', task.id, 'disable')
-  disabled_class = task.enabled? ? '' : 'btn-disabled'
+<%==
+  action_form_button(
+    icon(:pause),
+    root_path('recurring_tasks', task.id, 'disable'),
+    classes: 'btn-warning btn-sm',
+    title: 'Disable',
+    disabled_reason: task.enabled? ? nil : 'This task is already disabled'
+  )
 %>
-<form
-  action="<%= disable_path %>"
-  method="post"
-  class="inline"
-  title="Disable"
-
->
-  <button
-    type="submit"
-    class="btn btn-warning btn-sm <%= disabled_class %>"
-
-  >
-    <%== icon(:pause) %>
-  </button>
-</form>

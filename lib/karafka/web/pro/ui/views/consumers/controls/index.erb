@@ -30,41 +30,28 @@
       </span>
     <% end %>
     <%
-      quiet_all_path = consumers_path('commanding', 'quiet_all')
-      has_standalone = @processes.any? { |p| p.execution_mode == 'standalone' }
-
-      if has_standalone
-        quiet_all_disabled_class = ''
-        quiet_all_title = 'Quiet All'
-      else
-        quiet_all_disabled_class = 'btn-disabled'
-        quiet_all_title = 'Supported only with standalone consumer processes'
-      end
+      no_standalone_reason = 'Supported only with standalone consumer processes'
+      no_standalone_reason = nil if @processes.any? { |p| p.execution_mode == 'standalone' }
     %>
-    <form action="<%= quiet_all_path %>" method="post" class="inline-flex items-center" title="<%= quiet_all_title %>">
-      <button type="submit" class="btn btn-warning btn-sm <%= quiet_all_disabled_class %>">
-        <%== icon(:pause) %>
-        Quiet All
-      </button>
-    </form>
-
-    <%
-      stop_all_path = consumers_path('commanding', 'stop_all')
-
-      if has_standalone
-        stop_all_disabled_class = ''
-        stop_all_title = 'Stop All'
-      else
-        stop_all_disabled_class = 'btn-disabled'
-        stop_all_title = 'Supported only with standalone consumer processes'
-      end
+    <%==
+      action_form_button(
+        "#{icon(:pause)} Quiet All",
+        consumers_path('commanding', 'quiet_all'),
+        classes: 'btn-warning btn-sm',
+        title: 'Quiet All',
+        disabled_reason: no_standalone_reason
+      )
     %>
-    <form action="<%= stop_all_path %>" method="post" class="inline-flex items-center" title="<%= stop_all_title %>">
-      <button type="submit" class="btn btn-error btn-sm <%= stop_all_disabled_class %>">
-        <%== icon(:stop) %>
-        Stop All
-      </button>
-    </form>
+
+    <%==
+      action_form_button(
+        "#{icon(:stop)} Stop All",
+        consumers_path('commanding', 'stop_all'),
+        classes: 'btn-error btn-sm',
+        title: 'Stop All',
+        disabled_reason: no_standalone_reason
+      )
+    %>
   </div>
 <% end %>
 

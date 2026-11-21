@@ -65,10 +65,18 @@ describe_current do
   end
 
   describe "#initialize" do
-    let(:check) { described_class.new(context) }
+    let(:check_class) do
+      Class.new(described_class) do
+        def call
+          step(:success, { context: context })
+        end
+      end
+    end
+
+    let(:check) { check_class.new(context) }
 
     it "stores the context" do
-      assert_equal(context, check.send(:context))
+      assert_same(context, check.call.details[:context])
     end
   end
 
@@ -82,10 +90,24 @@ describe_current do
   end
 
   describe "#step" do
-    let(:check) { described_class.new(context) }
+    let(:success_class) do
+      Class.new(described_class) do
+        def call
+          step(:success, { key: "value" })
+        end
+      end
+    end
+
+    let(:failure_class) do
+      Class.new(described_class) do
+        def call
+          step(:failure)
+        end
+      end
+    end
 
     it "creates a Step with the given status and details" do
-      result = check.send(:step, :success, { key: "value" })
+      result = success_class.new(context).call
 
       assert_kind_of(Karafka::Web::Ui::Models::Status::Step, result)
       assert_equal(:success, result.status)
@@ -93,7 +115,7 @@ describe_current do
     end
 
     it "creates a Step with empty hash details when not provided" do
-      result = check.send(:step, :failure)
+      result = failure_class.new(context).call
 
       assert_equal(:failure, result.status)
       assert_equal({}, result.details)

@@ -46,6 +46,8 @@ module Karafka
               # accessing like explorer or any other as operates on the raw env level
               setting :requests, default: Policies::Requests.new
 
+              setting :consumer_groups, default: Policies::ConsumerGroups.new
+
               configure
             end
           end

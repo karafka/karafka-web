@@ -8,7 +8,7 @@ module Karafka
           # Represents the result of a single status check step.
           #
           # Each check in the status flow returns a Step that contains:
-          # - The status of the check (:success, :warning, :failure, or :halted)
+          # - The status of the check (:success, :info, :warning, :failure, or :halted)
           # - Optional details hash with check-specific information
           #
           # @example Creating a successful step
@@ -19,18 +19,19 @@ module Karafka
           Step = Struct.new(:status, :details) do
             # Checks if the step completed successfully (allows chain to continue).
             #
-            # Both :success and :warning are considered successful because warnings
-            # don't block the dependency chain - they just notify about potential issues.
+            # :success, :info and :warning are considered successful because info and warnings
+            # don't block the dependency chain - they just notify about the setup.
             #
-            # @return [Boolean] true if status is :success or :warning
+            # @return [Boolean] true if status is :success, :info or :warning
             def success?
-              %i[success warning].include?(status)
+              %i[success info warning].include?(status)
             end
 
             # Returns the partial namespace for rendering the appropriate view.
             #
             # Maps the status to a directory name used for view partial lookup:
             # - :success -> 'successes'
+            # - :info    -> 'info'
             # - :warning -> 'warnings'
             # - :failure -> 'failures'
             # - :halted  -> 'failures' (halted checks show failure partial)
@@ -40,6 +41,7 @@ module Karafka
             def partial_namespace
               case status
               when :success then "successes"
+              when :info then "info"
               when :warning then "warnings"
               when :failure then "failures"
               when :halted then "failures"

@@ -31,10 +31,14 @@
     <%== lag_with_label topic_stats.lag %>
   </td>
   <td>
-    <% if topic_stats.max_lag_partition_id >= 0 %>
-      <span title="Highest lag is on partition <%= topic_stats.max_lag_partition_id %>">
+    <% if topic_stats.max_lag.positive? %>
+      <a
+        href="<%= health_cluster_lags_by_lag_path(cg_name, topic_name) %>"
+        title="Highest lag is on partition <%= topic_stats.max_lag_partition_id %>"
+      >
         <%== lag_with_label topic_stats.max_lag %>
-      </span>
+        (p<%= topic_stats.max_lag_partition_id %>)
+      </a>
     <% else %>
       <%== lag_with_label topic_stats.max_lag %>
     <% end %>
@@ -49,5 +53,13 @@
   </td>
   <td>
     <%== lag_with_label topic_stats.avg_lag %>
+  </td>
+  <td class="options">
+    <%==
+      partial(
+        'health/offsets/delete_button',
+        locals: { consumer_group_id: cg_name, topic_name: topic_name, labeled: false }
+      )
+    %>
   </td>
 </tr>

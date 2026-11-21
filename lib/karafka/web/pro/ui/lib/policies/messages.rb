@@ -94,6 +94,17 @@ module Karafka
               def publish?(_topic)
                 true
               end
+
+              # Should it be allowed to delete all the messages of a partition below a given offset
+              #
+              # @param _topic [String] name of the topic
+              # @param _partition [Integer] partition from which we want to delete messages
+              # @return [Boolean] true if we should allow deleting messages
+              # @note Denied by default because the deletion is irreversible. Override it to enable
+              #   the "Delete messages up to this offset" explorer capability.
+              def delete_records?(_topic, _partition)
+                false
+              end
             end
           end
         end

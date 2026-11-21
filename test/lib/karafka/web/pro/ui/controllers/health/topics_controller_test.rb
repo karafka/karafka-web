@@ -30,6 +30,7 @@
 
 describe_current do
   let(:app) { Karafka::Web::Pro::Ui::App }
+  let(:delete_offsets_denied) { "Deleting these offsets is not allowed by the Web UI policies" }
 
   let(:reports_topic) { create_topic }
 
@@ -134,6 +135,28 @@ describe_current do
         it "expect the aggregated row to render N/A for the unavailable lag and trend" do
           assert_ok
           assert_body("N/A")
+        end
+      end
+
+      context "when no partition of a topic has lag" do
+        before do
+          topics_config.consumers.reports.name = reports_topic
+
+          report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+          partition_data = report.dig(*partition_scope)
+          partition_data["lag"] = 0
+          partition_data["lag_stored"] = 0
+
+          produce(reports_topic, report.to_json)
+
+          get "health/topics"
+        end
+
+        it "expect the max lag to name no hot partition" do
+          assert_ok
+          refute_body("(p0)")
+          refute_body("default/overview?sort=")
         end
       end
 
@@ -440,6 +463,40 @@ describe_current do
       end
     end
 
+    context "when the highest lag is not on the first partition" do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        topic_data = report.dig(*partition_scope[0..5])
+        base_partition = report.dig(*partition_scope)
+
+        base_partition["lag"] = 10
+        base_partition["lag_stored"] = 10
+
+        { 1 => 20, 2 => 7_000 }.each do |id, lag|
+          partition = base_partition.dup
+          partition["id"] = id
+          partition["lag"] = lag
+          partition["lag_stored"] = lag
+          topic_data["partitions"][id.to_s] = partition
+        end
+
+        topic_data["partitions_cnt"] = 3
+
+        produce(reports_topic, report.to_json)
+
+        get "health/topics"
+      end
+
+      it "expect the max lag to name the hot partition and link to partitions sorted by lag" do
+        assert_ok
+        assert_body("(p2)")
+        assert_body("health/topics/example_app6_app/default/overview?sort=lag_hybrid+desc")
+      end
+    end
+
     context "when data is present but reported in a transactional fashion" do
       before do
         topics_config.consumers.reports.name = reports_topic
@@ -501,11 +558,38 @@ describe_current do
         assert_body("9100")
         # Biggest single-partition lag is surfaced
         assert_body("9000")
+        assert_body('<th class="options">Options</th>')
+        assert_body('class="btn btn-error btn-sm btn-disabled"')
+        refute_body("health/topics/example_app6_app/orders/delete")
+        assert_body(%(title="#{delete_offsets_denied}"))
+      end
+
+      context "when deleting offsets is allowed" do
+        before do
+          Karafka::Web.config.ui.policies.consumer_groups.stubs(:delete_offsets?).returns(true)
+
+          get "health/cluster_lags"
+        end
+
+        it "expect to link each topic to the offsets deletion" do
+          assert_ok
+          assert_body("health/topics/example_app6_app/orders/delete")
+          assert_body("health/topics/example_app6_app/visits/delete")
+          refute_body(delete_offsets_denied)
+          assert_body('title="Delete the committed offsets of this consumer group for this topic"')
+          refute_body("btn-error btn-sm btn-disabled")
+        end
       end
 
       it "expect each topic to drill down into the per-topic cluster lags lens" do
         assert_ok
         assert_body("health/topics/example_app6_app/orders/cluster_lags")
+      end
+
+      it "expect the max lag to name the hot partition and link to partitions sorted by lag" do
+        assert_ok
+        assert_body("(p1)")
+        assert_body("health/topics/example_app6_app/orders/cluster_lags?sort=lag+desc")
       end
 
       context "when sorted by an aggregate column" do
@@ -551,6 +635,21 @@ describe_current do
         end
 
         it { assert_ok }
+      end
+    end
+
+    context "when no partition of a cluster topic has lag" do
+      before do
+        Karafka::Admin.stubs(:read_lags_with_offsets).returns(
+          "example_app6_app" => { "orders" => { 0 => { lag: 0, offset: 5 } } }
+        )
+        get "health/cluster_lags"
+      end
+
+      it "expect the max lag to name no hot partition" do
+        assert_ok
+        refute_body("(p0)")
+        refute_body("orders/cluster_lags?sort=")
       end
     end
 

@@ -240,6 +240,21 @@
 
   <%==
     partial(
+      "status/#{@status.shared_producer.to_s}",
+      locals: {
+        title: 'Web UI producer',
+        description: partial(
+          'status/info/shared_producer',
+          locals: {
+            details: @status.shared_producer.details
+          }
+        )
+      }
+    )
+  %>
+
+  <%==
+    partial(
       'status/info',
       locals: {
         title: 'Components info',

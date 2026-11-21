@@ -75,6 +75,7 @@ describe_current do
       assert_equal(22, partition_data[:process][:stats][:total][:messages])
       assert_equal(0, partition_data[:process][:stats][:total][:retries])
       assert_equal("c4ca4238a0b9_0", partition_data[:subscription_group_id])
+      assert_equal("shinra:1:1", partition_data[:process_id])
 
       cgs = partition_data[:process][:consumer_groups]
       sg = cgs[:example_app6_app][:subscription_groups][:c4ca4238a0b9_0]
@@ -102,7 +103,7 @@ describe_current do
         lag lag_d lag_stored lag_stored_d committed_offset stored_offset fetch_state hi_offset id
         poll_state process hi_offset_fd stored_offset_fd lo_offset ls_offset ls_offset_fd
         eof_offset committed_offset_fd poll_state_ch partition_id lag_hybrid lag_hybrid_d
-        subscription_group_id instance_id transactional
+        subscription_group_id instance_id transactional process_id
       ].sort
 
       assert_equal(keys, sg[:topics][:default][:partitions][:"0"].keys.sort)

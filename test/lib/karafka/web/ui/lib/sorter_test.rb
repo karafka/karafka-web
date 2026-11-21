@@ -156,4 +156,50 @@ describe_current do
       assert_equal(before_val, resource)
     end
   end
+
+  context "when the first element does not have a value for the attribute" do
+    let(:resource) do
+      [sortable_object.new(a: nil), sortable_object.new(a: 4), sortable_object.new(a: 3)]
+    end
+
+    let(:sort_query) { "a asc" }
+    let(:allowed_attributes) { %w[a] }
+
+    before { resource[1..].each { |element| element.expects(:a).never } }
+
+    it "does not look up the attribute on the other elements and keeps the order" do
+      before_val = resource.dup
+      sorting
+
+      assert_equal(before_val, resource)
+    end
+  end
+
+  context "when the first hash value does not have a value for the attribute" do
+    let(:resource) do
+      { x: sortable_object.new(a: nil), y: sortable_object.new(a: 4), z: sortable_object.new(a: 3) }
+    end
+
+    let(:sort_query) { "a asc" }
+    let(:allowed_attributes) { %w[a] }
+
+    before { resource.values[1..].each { |element| element.expects(:a).never } }
+
+    it "does not look up the attribute on the other values and keeps the order" do
+      sorting
+
+      assert_equal(%i[x y z], resource.keys)
+    end
+  end
+
+  context "when sorting hash values that respond to an attribute" do
+    let(:resource) do
+      { x: sortable_object.new(a: 5), y: sortable_object.new(a: 3), z: sortable_object.new(a: 4) }
+    end
+
+    let(:sort_query) { "a desc" }
+    let(:allowed_attributes) { %w[a] }
+
+    it { assert_equal(%i[x z y], sorting.keys) }
+  end
 end

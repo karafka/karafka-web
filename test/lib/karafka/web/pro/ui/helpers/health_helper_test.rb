@@ -52,6 +52,30 @@ describe_current do
     end
   end
 
+  describe "#health_topics_by_lag_path" do
+    it "builds the topics path sorted by total lag, worst first" do
+      assert_equal("/karafka/health/topics?sort=lag_hybrid+desc", health_topics_by_lag_path)
+    end
+  end
+
+  describe "#health_overview_by_lag_path" do
+    it "builds the topic overview path sorted by lag, worst first" do
+      assert_equal(
+        "/karafka/health/topics/app/orders/overview?sort=lag_hybrid+desc",
+        health_overview_by_lag_path("app", "orders")
+      )
+    end
+  end
+
+  describe "#health_cluster_lags_by_lag_path" do
+    it "builds the topic cluster lags path sorted by lag, worst first" do
+      assert_equal(
+        "/karafka/health/topics/app/orders/cluster_lags?sort=lag+desc",
+        health_cluster_lags_by_lag_path("app", "orders")
+      )
+    end
+  end
+
   describe "#health_lens_label" do
     it { assert_equal("Overview", health_lens_label(:overview)) }
     it { assert_equal("Lags", health_lens_label(:lags)) }
