@@ -43,6 +43,8 @@ describe_current do
         assert_ok
         assert_body("No Dead Letter Queue topics exist in Kafka")
         assert_body(breadcrumbs)
+        assert_body('href="/dead_letter_queues"')
+        refute_body('href="/dlq"')
         refute_body(pagination)
       end
     end
@@ -122,15 +124,6 @@ describe_current do
         refute_body(pagination)
         refute_body("#{topic_name}\"")
       end
-    end
-  end
-
-  describe "legacy /dlq path" do
-    before { get "dlq" }
-
-    it "redirects to the dead letter queues view" do
-      assert_equal(302, response.status)
-      assert(response.location.end_with?("/dead_letter_queues"))
     end
   end
 end

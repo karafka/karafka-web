@@ -27,6 +27,16 @@ describe_current do
     end
   end
 
+  describe "#dlq" do
+    before { get "dlq" }
+
+    it do
+      refute(response.ok?)
+      assert_body(make_better)
+      assert_equal(402, status)
+    end
+  end
+
   describe "#dead_letter_queues" do
     before { get "dead_letter_queues" }
 

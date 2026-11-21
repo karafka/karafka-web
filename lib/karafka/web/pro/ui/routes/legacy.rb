@@ -52,7 +52,10 @@ module Karafka
               end
 
               r.get "dlq" do
-                r.redirect root_path("dead_letter_queues")
+                path = root_path("dead_letter_queues")
+                path += "?#{r.query_string}" unless r.query_string.empty?
+
+                r.redirect path
               end
             end
           end
