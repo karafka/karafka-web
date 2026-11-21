@@ -64,7 +64,7 @@ describe_current do
           active_topics_cluster_lags_only: true
         },
         per_page: 50,
-        dlq_patterns: [],
+        dead_letter_queue_patterns: [],
         max_visible_payload_size: 100,
         kafka: {},
         custom: {
@@ -289,14 +289,14 @@ describe_current do
       it { refute(contract.call(params).success?) }
     end
 
-    context "when dlq_patterns is not an array" do
-      before { params[:ui][:dlq_patterns] = "1" }
+    context "when dead_letter_queue_patterns is not an array" do
+      before { params[:ui][:dead_letter_queue_patterns] = "1" }
 
       it { refute(contract.call(params).success?) }
     end
 
-    context "when dlq_patterns is array with things other than string or regexp" do
-      before { params[:ui][:dlq_patterns] = [1, 2, 3] }
+    context "when dead_letter_queue_patterns is array with things other than string or regexp" do
+      before { params[:ui][:dead_letter_queue_patterns] = [1, 2, 3] }
 
       it { refute(contract.call(params).success?) }
     end

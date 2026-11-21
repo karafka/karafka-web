@@ -33,7 +33,7 @@ describe_current do
 
   let(:topic_name) { generate_topic_name }
 
-  before { Karafka::Web.config.ui.dlq_patterns = [/#{topic_name}-dlq/] }
+  before { Karafka::Web.config.ui.dead_letter_queue_patterns = [/#{topic_name}-dlq/] }
 
   describe "#index" do
     context "when there are no dlq topics" do
@@ -124,6 +124,22 @@ describe_current do
         refute_body("No Dead Letter Queue topics exist in Kafka")
         refute_body(pagination)
         refute_body("#{topic_name}\"")
+      end
+    end
+
+    context "when the auto-discovery patterns are set through the former dlq_patterns name" do
+      let(:dlq_topic) { create_topic(topic_name: "#{topic_name}-legacy") }
+
+      before do
+        Karafka::Web.config.ui.dlq_patterns = [/#{topic_name}-legacy/]
+        dlq_topic
+        get "dead_letter_queues"
+      end
+
+      it do
+        assert_ok
+        assert_body(dlq_topic)
+        refute_body("No Dead Letter Queue topics exist in Kafka")
       end
     end
   end
