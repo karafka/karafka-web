@@ -100,11 +100,4 @@ describe_current do
       assert_includes(result, "3")
     end
   end
-
-  describe "#config_source_label" do
-    it "renders a readable source label" do
-      assert_equal("Dynamic topic config", config_source_label(:dynamic_topic_config))
-      assert_equal("Default config", config_source_label(:default_config))
-    end
-  end
 end

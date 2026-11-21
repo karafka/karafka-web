@@ -122,8 +122,8 @@ describe_current do
         assert_body("log.flush.interval.ms")
         assert_body("9223372036854775807")
         assert_body("Source")
-        assert_body("Static broker config")
-        assert_body("Default config")
+        assert_body("static_broker_config")
+        assert_body("default_config")
       end
     end
 
@@ -142,9 +142,9 @@ describe_current do
       it do
         assert_ok
         assert_operator(
-          response.body.rindex("<td>Default config</td>"),
+          response.body.rindex("<td>default_config</td>"),
           :<,
-          response.body.index("<td>Static broker config</td>")
+          response.body.index("<td>static_broker_config</td>")
         )
       end
     end
@@ -155,9 +155,9 @@ describe_current do
       it do
         assert_ok
         assert_operator(
-          response.body.rindex("<td>Static broker config</td>"),
+          response.body.rindex("<td>static_broker_config</td>"),
           :<,
-          response.body.index("<td>Default config</td>")
+          response.body.index("<td>default_config</td>")
         )
       end
     end

@@ -72,8 +72,8 @@ describe_current do
       it "expect to show where each value comes from" do
         assert_ok
         assert_body("Source")
-        assert_body("Dynamic topic config")
-        assert_body("Default config")
+        assert_body("dynamic_topic_config")
+        assert_body("default_config")
       end
     end
 
@@ -148,9 +148,9 @@ describe_current do
         it do
           assert_ok
           assert_operator(
-            body.rindex("<td>Default config</td>"),
+            body.rindex("<td>default_config</td>"),
             :<,
-            body.index("<td>Dynamic topic config</td>")
+            body.index("<td>dynamic_topic_config</td>")
           )
         end
       end
@@ -161,9 +161,9 @@ describe_current do
         it do
           assert_ok
           assert_operator(
-            body.index("<td>Dynamic topic config</td>"),
+            body.index("<td>dynamic_topic_config</td>"),
             :<,
-            body.index("<td>Default config</td>")
+            body.index("<td>default_config</td>")
           )
         end
       end
