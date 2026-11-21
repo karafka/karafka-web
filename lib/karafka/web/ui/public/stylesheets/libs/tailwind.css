@@ -786,7 +786,7 @@ table th.options,
 table td.options {
   width: 1%;
   white-space: nowrap;
-  @apply text-right;
+  @apply text-center;
 }
 
 #controls {

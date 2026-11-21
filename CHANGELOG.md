@@ -68,6 +68,7 @@
 - [Fix] Show the "Cluster" page title on the Cluster Replication page.
 - [Maintenance] Sign the gem with `sigstore-cli` and push it with `gem push --attestation` (the `gem-push` action of `karafka/misc`), so a failed signing stops the release instead of publishing the gem without an attestation.
 - [Maintenance] Add the `Sigstore Check` workflow: nightly, and on pull requests that change the push workflow, it builds the gem, signs it like a release and verifies the attestation, without pushing.
+- [Fix] Center the buttons in table "Options" columns, so they no longer sit closer to the right cell edge than to the left one.
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a keyword filtering box to the data-heavy Web UI listings, with a field selector on flat listings (Pro) (#1073).

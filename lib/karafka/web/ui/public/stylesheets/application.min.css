@@ -9435,7 +9435,7 @@ table th.options,
 table td.options {
   width: 1%;
   white-space: nowrap;
-  text-align: right;
+  text-align: center;
 }
 #controls button {
   &:hover {
