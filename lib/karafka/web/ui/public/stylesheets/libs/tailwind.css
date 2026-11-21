@@ -789,6 +789,11 @@ table td.options {
   @apply text-right;
 }
 
+/* Rows with different button counts stay right-aligned, so their buttons line up */
+table:not(:has(td.options > :nth-child(2))) :is(th, td).options {
+  @apply text-center;
+}
+
 #controls {
   button {
     &:hover {
