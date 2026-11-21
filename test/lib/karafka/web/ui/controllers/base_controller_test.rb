@@ -43,7 +43,6 @@ describe_current do
     it do
       refute(response.ok?)
       assert_body(make_better)
-      assert_body('<span class="sidebar-nav-item-label">DLQ</span>')
       assert_equal(402, status)
     end
   end

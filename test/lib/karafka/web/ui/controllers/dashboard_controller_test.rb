@@ -38,6 +38,7 @@ describe_current do
       refute_body(breadcrumbs)
       assert_body('id="refreshable"')
       assert_body('<div id="refreshable" class="col-span-12 mb-10">')
+      assert_body('<span class="sidebar-nav-item-label">DLQ</span>')
     end
   end
 
