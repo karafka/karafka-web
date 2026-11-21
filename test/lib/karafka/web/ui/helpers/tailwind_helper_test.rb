@@ -36,7 +36,7 @@ describe_current do
       end
 
       it "expect the escaped reason in the wrapper title" do
-        assert(result.start_with?('<span class="inline-flex" title="Topics management is &lt;disabled&gt;">'))
+        assert(result.start_with?('<span class="inline-flex align-middle" title="Topics management is &lt;disabled&gt;">'))
         assert(result.end_with?("<svg></svg> Delete</button></span>"))
       end
     end
@@ -103,7 +103,7 @@ describe_current do
       it "expect to render a posting form with an enabled submit button" do
         assert_equal(
           '<form action="/consumers/commanding/p1/stop" method="post" ' \
-          'class="inline-flex items-center" title="Stop">' \
+          'class="inline-flex items-center align-middle" title="Stop">' \
           '<button type="submit" class="btn btn-error btn-sm btn-lockable"><svg></svg> Stop</button>' \
           "</form>",
           result

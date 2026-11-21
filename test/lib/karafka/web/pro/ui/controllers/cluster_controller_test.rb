@@ -283,7 +283,7 @@ describe_current do
         get "cluster/replication"
 
         assert_ok
-        assert_body('<span class="inline-flex" title="No filters are applied">')
+        assert_body('<span class="inline-flex align-middle" title="No filters are applied">')
         assert_body('class="btn btn-outline font-normal btn-disabled" disabled>Reset</button>')
       end
 

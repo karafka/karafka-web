@@ -43,7 +43,7 @@ module Karafka
           # Renders an action as a link with button styling or, when the action is not available,
           # as a disabled button explaining why. The disabled button has no link to follow and
           # its reason sits in the title of a wrapper, since disabled buttons do not receive
-          # pointer events.
+          # pointer events. The wrapper is middle aligned like buttons, so it lines up with them.
           #
           # @param content [String] button html content (icon and label)
           # @param path [String] path to where the action goes when available
@@ -57,7 +57,8 @@ module Karafka
                   %(title="#{::Rack::Utils.escape_html(title)}">#{content}</a>)
             end
 
-            %(<span class="inline-flex" title="#{::Rack::Utils.escape_html(disabled_reason)}">) +
+            %(<span class="inline-flex align-middle" ) +
+              %(title="#{::Rack::Utils.escape_html(disabled_reason)}">) +
               %(<button type="button" class="btn #{classes} btn-disabled" disabled>) +
               %(#{content}</button></span>)
           end
@@ -87,7 +88,8 @@ module Karafka
 
           # Renders an action that posts to the given path as a form with a submit button or,
           # when the action is not available, with a disabled one explaining why. The title sits
-          # on the form, since disabled buttons do not receive pointer events.
+          # on the form, since disabled buttons do not receive pointer events. The form is middle
+          # aligned like buttons, so it lines up with link buttons next to it.
           #
           # @param content [String] button html content (icon and label)
           # @param path [String] path the form posts to
@@ -99,7 +101,7 @@ module Karafka
             button_attributes = %(class="btn #{classes}")
             button_attributes = %(class="btn #{classes} btn-disabled" disabled) if disabled_reason
 
-            %(<form action="#{path}" method="post" class="inline-flex items-center" ) +
+            %(<form action="#{path}" method="post" class="inline-flex items-center align-middle" ) +
               %(title="#{::Rack::Utils.escape_html(disabled_reason || title)}">) +
               %(<button type="submit" #{button_attributes}>#{content}</button></form>)
           end
