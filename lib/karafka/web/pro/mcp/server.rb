@@ -48,6 +48,7 @@ module Karafka
             Tools::Health,
             Tools::ClusterLags,
             Tools::Processes,
+            Tools::ConsumerGroups,
             Tools::ErrorsList,
             Tools::Error
           ].to_h { |tool| [tool.name, tool] }.freeze

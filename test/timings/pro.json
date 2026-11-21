@@ -134,5 +134,7 @@
   "test/lib/karafka/web/pro/mcp/tools/cluster_lags_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/tools/contracts/cluster_lags_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/tools/processes_test.rb": 1.0,
-  "test/lib/karafka/web/pro/mcp/tools/contracts/processes_test.rb": 1.0
+  "test/lib/karafka/web/pro/mcp/tools/contracts/processes_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/tools/consumer_groups_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/tools/contracts/consumer_groups_test.rb": 1.0
 }
