@@ -176,7 +176,7 @@ describe_current do
     before do
       Karafka::Web.config.ui.policies.requests
         .stubs(:allow?)
-        .with { |env| requested << env.values_at("REQUEST_PUT", "/consumers/partitions/#{consumer_group_id}/#{topic}/0/offset_INFO") }
+        .with { |env| requested << env.values_at("REQUEST_METHOD", "PATH_INFO") }
         .returns(false)
     end
 

@@ -167,12 +167,13 @@ describe_current do
   end
 
   context "when the requests policy denies the matching Web UI request" do
+    let(:arguments) { { topic: topic, confirm: true } }
     let(:requested) { [] }
 
     before do
       Karafka::Web.config.ui.policies.requests
         .stubs(:allow?)
-        .with { |env| requested << env.values_at("REQUEST_DELETE", "/topics/#{topic}_INFO") }
+        .with { |env| requested << env.values_at("REQUEST_METHOD", "PATH_INFO") }
         .returns(false)
     end
 

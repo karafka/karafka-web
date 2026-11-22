@@ -134,7 +134,7 @@ describe_current do
     before do
       Karafka::Web.config.ui.policies.requests
         .stubs(:allow?)
-        .with { |env| requested << env.values_at("REQUEST_POST", "/recurring_tasks/disable_all_INFO") }
+        .with { |env| requested << env.values_at("REQUEST_METHOD", "PATH_INFO") }
         .returns(false)
     end
 

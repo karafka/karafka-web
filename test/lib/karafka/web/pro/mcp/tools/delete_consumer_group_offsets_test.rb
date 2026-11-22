@@ -152,7 +152,7 @@ describe_current do
     before do
       Karafka::Web.config.ui.policies.requests
         .stubs(:allow?)
-        .with { |env| requested << env.values_at("REQUEST_DELETE", "/health/topics/#{consumer_group_id}/#{topic}/delete_INFO") }
+        .with { |env| requested << env.values_at("REQUEST_METHOD", "PATH_INFO") }
         .returns(false)
     end
 
