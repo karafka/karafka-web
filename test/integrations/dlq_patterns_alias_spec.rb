@@ -12,12 +12,21 @@ require_relative "helper"
 
 include IntegrationHelper
 
-$stderr = StringIO.new
+# @return [String] what the block wrote to stderr
+def capture_stderr
+  original = $stderr
+  $stderr = StringIO.new
+  yield
+  $stderr.string
+ensure
+  $stderr = original
+end
 
 Karafka::Web.setup do |config|
   config.ui.sessions.secret = SecureRandom.hex(64)
-  config.ui.dlq_patterns << /legacy_errors/
 end
+
+warnings = capture_stderr { Karafka::Web.config.ui.dlq_patterns << /legacy_errors/ }
 
 assert_equal(
   [/(dlq)|(dead_letter)/i, /legacy_errors/],
@@ -25,15 +34,21 @@ assert_equal(
   "dlq_patterns << should extend dead_letter_queue_patterns"
 )
 
-Karafka::Web.setup do |config|
-  config.ui.dlq_patterns = [/legacy_only/]
-end
+read_warned = warnings.include?("config.ui.dlq_patterns is deprecated")
+
+assert(read_warned, "Reading dlq_patterns should warn that it is deprecated")
+
+warnings = capture_stderr { Karafka::Web.config.ui.dlq_patterns = [/legacy_only/] }
 
 assert_equal(
   [/legacy_only/],
   Karafka::Web.config.ui.dead_letter_queue_patterns,
   "dlq_patterns= should set dead_letter_queue_patterns"
 )
+
+write_warned = warnings.include?("config.ui.dlq_patterns= is deprecated")
+
+assert(write_warned, "Setting dlq_patterns should warn that it is deprecated")
 
 assert_equal(
   [/legacy_only/],
@@ -43,32 +58,14 @@ assert_equal(
 
 Karafka::Web::Contracts::Config.new.validate!(Karafka::Web.config.to_h)
 
-warnings = $stderr.string
-$stderr = STDERR
-
-read_warned = warnings.include?("config.ui.dlq_patterns is deprecated")
-
-assert(read_warned, "Reading dlq_patterns should warn that it is deprecated")
-
-write_warned = warnings.include?("config.ui.dlq_patterns= is deprecated")
-
-assert(write_warned, "Setting dlq_patterns should warn that it is deprecated")
-
-$stderr = StringIO.new
-
-Karafka::Web.setup do |config|
-  config.ui.dead_letter_queue_patterns = [/current/]
-  config.ui.dead_letter_queue_patterns << /current_extra/
+warnings = capture_stderr do
+  Karafka::Web.config.ui.dead_letter_queue_patterns = [/current/]
+  Karafka::Web.config.ui.dead_letter_queue_patterns << /current_extra/
 end
-
-warnings = $stderr.string
-$stderr = STDERR
 
 assert_equal("", warnings, "The new name should not warn")
 
-$stderr = StringIO.new
-Karafka::Web.config.ui.dlq_patterns = "not-an-array"
-$stderr = STDERR
+capture_stderr { Karafka::Web.config.ui.dlq_patterns = "not-an-array" }
 
 error = begin
   Karafka::Web::Contracts::Config.new.validate!(Karafka::Web.config.to_h)
