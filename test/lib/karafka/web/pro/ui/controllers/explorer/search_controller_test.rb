@@ -422,14 +422,10 @@ describe_current do
     end
 
     ["a" * 513, "a" * 250, "a%20b"].each do |invalid|
-      %W[
-        explorer/#{invalid}/search
-      ].each do |path|
-        context "when getting #{path[0, 60]}" do
-          before { get path }
+      context "when getting explorer/an invalid topic/search" do
+        before { get "explorer/#{invalid}/search" }
 
-          it { assert_equal(404, response.status) }
-        end
+        it { assert_equal(404, response.status) }
       end
     end
   end

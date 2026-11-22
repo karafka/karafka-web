@@ -359,24 +359,16 @@ describe_current do
     end
 
     ["a" * 513, "a" * 250, "a%20b"].each do |invalid|
-      %W[
-        explorer/messages/#{invalid}/0/0/forward
-      ].each do |path|
-        context "when getting #{path[0, 60]}" do
-          before { get path }
+      context "when getting explorer/messages/an invalid topic/0/0/forward" do
+        before { get "explorer/messages/#{invalid}/0/0/forward" }
 
-          it { assert_equal(404, response.status) }
-        end
+        it { assert_equal(404, response.status) }
       end
 
-      %W[
-        explorer/messages/#{invalid}/0/0/republish
-      ].each do |path|
-        context "when posting #{path[0, 60]}" do
-          before { post path }
+      context "when posting explorer/messages/an invalid topic/0/0/republish" do
+        before { post "explorer/messages/#{invalid}/0/0/republish" }
 
-          it { assert_equal(404, response.status) }
-        end
+        it { assert_equal(404, response.status) }
       end
     end
   end

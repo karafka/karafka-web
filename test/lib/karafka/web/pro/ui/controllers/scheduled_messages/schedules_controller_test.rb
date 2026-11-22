@@ -197,14 +197,10 @@ describe_current do
     end
 
     ["a" * 513, "a" * 250, "a%20b"].each do |invalid|
-      %W[
-        scheduled_messages/schedules/#{invalid}
-      ].each do |path|
-        context "when getting #{path[0, 60]}" do
-          before { get path }
+      context "when getting scheduled_messages/schedules/an invalid topic" do
+        before { get "scheduled_messages/schedules/#{invalid}" }
 
-          it { assert_equal(404, response.status) }
-        end
+        it { assert_equal(404, response.status) }
       end
     end
   end

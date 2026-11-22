@@ -303,24 +303,16 @@ describe_current do
       context "when the policy allows deleting records" do
         before { policy.stubs(:delete_records?).returns(true) }
 
-        %W[
-          explorer/messages/#{invalid}/0/0/delete
-        ].each do |path|
-          context "when getting #{path[0, 60]}" do
-            before { get path }
+        context "when getting explorer/messages/an invalid topic/0/0/delete" do
+          before { get "explorer/messages/#{invalid}/0/0/delete" }
 
-            it { assert_equal(404, response.status) }
-          end
+          it { assert_equal(404, response.status) }
         end
 
-        %W[
-          explorer/messages/#{invalid}/0/0/delete
-        ].each do |path|
-          context "when deleting #{path[0, 60]}" do
-            before { delete path }
+        context "when deleting explorer/messages/an invalid topic/0/0/delete" do
+          before { delete "explorer/messages/#{invalid}/0/0/delete" }
 
-            it { assert_equal(404, response.status) }
-          end
+          it { assert_equal(404, response.status) }
         end
       end
     end

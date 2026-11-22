@@ -381,14 +381,10 @@ describe_current do
     end
 
     ["a" * 513, "a" * 250, "a%20b"].each do |invalid|
-      %W[
-        topics/#{invalid}/config
-      ].each do |path|
-        context "when getting #{path[0, 60]}" do
-          before { get path }
+      context "when getting topics/an invalid topic/config" do
+        before { get "topics/#{invalid}/config" }
 
-          it { assert_equal(404, response.status) }
-        end
+        it { assert_equal(404, response.status) }
       end
     end
   end
