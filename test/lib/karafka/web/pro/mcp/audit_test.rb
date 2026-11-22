@@ -143,9 +143,14 @@ describe_current do
       assert_equal("ArgumentError", record.dig("actor", "actor_error"))
     end
 
-    it "refuses the intent without writing it" do
+    it "refuses the intent and writes the rejection" do
       refute(audit.intent(call_id, "karafka_test_change", arguments))
-      assert_empty(records)
+      assert_equal(1, records.size)
+      assert_equal("result", record["type"])
+      assert_equal(call_id, record["call_id"])
+      assert_equal("rejected", record["outcome"])
+      assert_equal("Actor could not be resolved", record["error"])
+      assert_equal("ArgumentError", record.dig("actor", "actor_error"))
     end
   end
 

@@ -309,6 +309,19 @@ describe_current do
       end
     end
 
+    context "when unknown tool name is huge" do
+      let(:tool_name) { "x" * 5_000 }
+
+      it "writes the rejection with the name and the error cut" do
+        assert_equal(code(:invalid_params), rpc_error["code"])
+        assert_equal(1, records.size)
+        assert_equal(1_027, records.first["tool"].size)
+        assert_equal(1_027, records.first["error"].size)
+        assert(records.first["error"].start_with?("Unknown tool: xxx"))
+        assert(records.first["error"].end_with?("..."))
+      end
+    end
+
     context "when arguments do not pass the tool contract" do
       let(:arguments) { { what: 1 } }
 
@@ -437,9 +450,11 @@ describe_current do
 
         after { Karafka::Web.config.mcp.audit.actor = nil }
 
-        it "refuses the call without acting" do
+        it "refuses the call without acting and writes the rejection" do
           assert_equal("Audit log is not available, the call was refused", rpc_error["message"])
           assert_empty(executions)
+          assert_equal(%w[rejected], records.map { |record| record["outcome"] })
+          assert_equal("ArgumentError", records.first.dig("actor", "actor_error"))
         end
       end
 

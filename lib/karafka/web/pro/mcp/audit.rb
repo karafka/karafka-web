@@ -77,13 +77,23 @@ module Karafka
           # @param tool [String, nil] tool name
           # @param arguments [Object] tool arguments
           # @return [Boolean] true when the record was written with full acks. False also when
-          #   the actor callable failed, so a changing tool does not act on behalf of nobody
+          #   the actor callable failed: a changing tool does not act on behalf of nobody, and the
+          #   refused attempt is written as rejected instead
           def intent(call_id, tool, arguments)
             payload = record("intent", call_id, tool, arguments)
 
-            return false if @actor_failed
+            return write(payload, sync: true) unless @actor_failed
 
-            write(payload, sync: true)
+            result(
+              call_id,
+              tool,
+              arguments,
+              outcome: "rejected",
+              error: "Actor could not be resolved",
+              sync: true
+            )
+
+            false
           end
 
           # Writes the record with the call outcome
