@@ -33,7 +33,7 @@ describe_current do
 
   let(:topic) { create_topic(partitions: 2) }
   let(:group_id) { SecureRandom.uuid }
-  let(:stable_group_id) { "stable-#{group_id}" }
+  let(:stable_group_id) { "member-#{group_id}" }
 
   let(:consumer) do
     Rdkafka::Config.new(
@@ -113,7 +113,12 @@ describe_current do
     end
 
     context "when there is a stable and an empty consumer group" do
-      before { start_member }
+      let(:decoy_group_id) { "stable-#{group_id}" }
+
+      before do
+        Karafka::Admin.seek_consumer_group(decoy_group_id, { topic => { 1 => 1 } })
+        start_member
+      end
 
       after { consumer.close }
 
@@ -123,6 +128,7 @@ describe_current do
         assert_ok
         assert_body(%(href="/health/consumer_groups/#{stable_group_id}"))
         refute_body(%(href="/health/consumer_groups/#{group_id}"))
+        refute_body(%(href="/health/consumer_groups/#{decoy_group_id}"))
       end
 
       it "expect sorting by state to order the groups by it" do
@@ -162,6 +168,38 @@ describe_current do
   end
 
   describe "#show" do
+    context "when the consumer group id is not ASCII" do
+      let(:unicode_group_id) { "zażółć gęślą/#{group_id}" }
+      let(:unicode_path) { "/health/consumer_groups/#{URI.encode_uri_component(unicode_group_id)}" }
+
+      before do
+        Karafka::Admin.seek_consumer_group(unicode_group_id, { topic => { 1 => 7 } })
+        get_filtered("health/consumer_groups", id: group_id)
+      end
+
+      it "expect its link to lead to its page" do
+        assert_ok
+        assert_body(%(href="#{unicode_path}"))
+
+        get unicode_path
+
+        assert_ok
+        assert_body("<td>7</td>")
+        assert_body("<td>13</td>")
+      end
+    end
+
+    %w[%zz abc%].each do |malformed|
+      context "when the consumer group id is a malformed escape (#{malformed})" do
+        it do
+          env = Rack::MockRequest.env_for("http://example.org/")
+          env["PATH_INFO"] = "/health/consumer_groups/#{malformed}"
+
+          assert_equal(404, app.call(env).first)
+        end
+      end
+    end
+
     context "when the consumer group does not exist" do
       before { get "health/consumer_groups/#{SecureRandom.uuid}" }
 
