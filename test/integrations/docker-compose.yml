@@ -141,3 +141,25 @@ services:
         echo 'Running swarm integration tests...' &&
         bundle exec ruby test/integrations/swarm_dedicated_producer_spec.rb
       "
+
+  # Test container running the Web UI install against Kafka
+  # This tests that the install creates the MCP audit topic with its settings
+  test-container-mcp-audit:
+    build:
+      context: ../..
+      dockerfile: test/integrations/Dockerfile
+    container_name: karafka-web-test-mcp-audit
+    depends_on:
+      - kafka
+    environment:
+      - TEST_SCENARIO=mcp_audit
+      - INTEGRATION_TEST=true
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    volumes:
+      - ../..:/app:ro
+    working_dir: /app
+    command: >
+      bash -c "
+        echo 'Running MCP audit topic integration tests...' &&
+        bundle exec ruby test/integrations/mcp_audit_topic_spec.rb
+      "
