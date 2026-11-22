@@ -70,9 +70,11 @@ module Karafka
 
             # @return [Hash] deleted topic
             def fetch
+              change = plan
+
               ::Karafka::Admin.delete_topic(topic)
 
-              { deleted: true }.merge(plan)
+              { deleted: true }.merge(change)
             end
 
             # @return [Hash] topic that would be deleted

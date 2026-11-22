@@ -30,7 +30,7 @@
 
 describe_current do
   let(:contract) { described_class.new }
-  let(:params) { { mcp: { audit: { actor: nil, fail_closed_reads: false } } } }
+  let(:params) { { mcp: { changing_tools: [], audit: { actor: nil, fail_closed_reads: false } } } }
 
   it { assert(contract.call(params).success?) }
 
@@ -42,6 +42,30 @@ describe_current do
 
   context "when actor is not a callable" do
     before { params[:mcp][:audit][:actor] = "admin" }
+
+    it { refute(contract.call(params).success?) }
+  end
+
+  context "when changing_tools lists tool names" do
+    before { params[:mcp][:changing_tools] = %w[karafka_delete_topic] }
+
+    it { assert(contract.call(params).success?) }
+  end
+
+  context "when changing_tools enables all" do
+    before { params[:mcp][:changing_tools] = :all }
+
+    it { assert(contract.call(params).success?) }
+  end
+
+  context "when changing_tools is true" do
+    before { params[:mcp][:changing_tools] = true }
+
+    it { refute(contract.call(params).success?) }
+  end
+
+  context "when changing_tools lists symbols" do
+    before { params[:mcp][:changing_tools] = %i[karafka_delete_topic] }
 
     it { refute(contract.call(params).success?) }
   end

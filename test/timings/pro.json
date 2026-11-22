@@ -1,4 +1,11 @@
 {
+  "test/lib/karafka/web/pro/mcp/tools/trace_process_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/tools/quiet_process_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/tools/stop_process_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/tools/quiet_all_processes_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/tools/stop_all_processes_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/tools/delete_topic_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/tools/delete_consumer_group_offsets_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/responses_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/server_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/audit_test.rb": 1.0,
