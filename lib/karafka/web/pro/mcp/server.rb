@@ -58,6 +58,17 @@ module Karafka
             Tools::StopProcess,
             Tools::QuietAllProcesses,
             Tools::StopAllProcesses,
+            Tools::PausePartition,
+            Tools::ResumePartition,
+            Tools::SeekPartition,
+            Tools::PauseTopic,
+            Tools::ResumeTopic,
+            Tools::TriggerRecurringTask,
+            Tools::EnableRecurringTask,
+            Tools::DisableRecurringTask,
+            Tools::TriggerAllRecurringTasks,
+            Tools::EnableAllRecurringTasks,
+            Tools::DisableAllRecurringTasks,
             Tools::DeleteTopic,
             Tools::DeleteConsumerGroupOffsets
           ].to_h { |tool| [tool.name, tool] }.freeze
