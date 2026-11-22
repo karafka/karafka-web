@@ -75,6 +75,36 @@ describe_current do
     end
   end
 
+  context "when changing tool names no topics" do
+    let(:tool_operation) { :delete_topic }
+
+    it do
+      error = assert_raises(Karafka::Web::Errors::Mcp::PolicyDeniedError) do
+        described_class.check!(tool)
+      end
+
+      assert_equal("Changing tool does not name the topics it changes", error.message)
+    end
+  end
+
+  context "when changing tool does not override the topics" do
+    let(:tool_operation) { :delete_topic }
+    let(:tool) do
+      Class.new(Karafka::Web::Pro::Mcp::Tools::Base) do
+        tool(
+          "karafka_test_change",
+          "Test changing tool",
+          contract: Karafka::Web::Pro::Mcp::Tools::Contracts::NoArguments.new,
+          operation: :delete_topic
+        )
+      end.new({})
+    end
+
+    it do
+      assert_raises(Karafka::Web::Errors::Mcp::PolicyDeniedError) { described_class.check!(tool) }
+    end
+  end
+
   context "when tool declares an unknown operation" do
     let(:tool_operation) { :truncate }
 

@@ -51,14 +51,15 @@ module Karafka
         puts
       end
 
-      # Removes all the Karafka topics and creates them again with the same replication factor
+      # Removes all the Karafka Web UI topics but the MCP audit one and creates them again with the
+      # same replication factor
       # @param replication_factor [Integer] replication factor we want to use (1 by default)
       def reset(replication_factor: 1)
         enable!
         puts
         puts "Resetting Karafka Web UI..."
         puts
-        Management::Actions::DeleteTopics.new.call
+        Management::Actions::DeleteTopics.new.call(mcp_audit: false)
         puts
         Management::Actions::CreateTopics.new.call(replication_factor)
         wait_for_topics

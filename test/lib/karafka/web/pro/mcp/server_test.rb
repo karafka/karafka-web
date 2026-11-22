@@ -319,6 +319,49 @@ describe_current do
       end
     end
 
+    context "when tool arguments are not an object" do
+      let(:arguments) { [1, 2] }
+
+      it "writes the rejection with the arguments" do
+        assert_equal(code(:invalid_params), rpc_error["code"])
+        assert_equal(%w[rejected], records.map { |record| record["outcome"] })
+        assert_equal("Invalid arguments", records.first["error"])
+        assert_equal([1, 2], records.first["arguments"])
+      end
+    end
+
+    context "when tool is unknown and reads fail closed" do
+      let(:tool_name) { "karafka_unknown" }
+
+      before { Karafka::Web.config.mcp.audit.fail_closed_reads = true }
+
+      it "waits for the rejection write" do
+        Karafka::Web.producers.fully_acked.expects(:produce_sync).once
+        Karafka::Web.producers.default.expects(:produce_async).never
+
+        assert_equal(code(:invalid_params), rpc_error["code"])
+      end
+    end
+
+    context "when actor callable raises" do
+      before { Karafka::Web.config.mcp.audit.actor = ->(_env) { raise ArgumentError } }
+
+      after { Karafka::Web.config.mcp.audit.actor = nil }
+
+      it "answers the read and records it with the request actor" do
+        refute(result["isError"])
+        assert_equal("ok", records.first["outcome"])
+        assert_equal("ArgumentError", records.first.dig("actor", "actor_error"))
+        assert_equal("10.0.0.2", records.first.dig("actor", "remote_ip"))
+      end
+
+      it "records a policy denial" do
+        server.denied(request.to_json)
+
+        assert_equal(%w[rejected], records.map { |record| record["outcome"] })
+      end
+    end
+
     context "when tools/call params are not an object" do
       let(:params) { nil }
       let(:request) { { jsonrpc: "2.0", id: 1, method: "tools/call", params: [] } }
@@ -379,6 +422,35 @@ describe_current do
         assert_equal(1, records.map { |record| record["call_id"] }.uniq.size)
         assert_equal("ok", records.last["outcome"])
         assert_equal({ "topic" => "orders", "deleted" => 3 }, records.last["summary"])
+      end
+
+      it "waits for the intent and the outcome writes on the acks: all producer" do
+        Karafka::Web.producers.fully_acked.expects(:produce_sync).twice
+        Karafka::Web.producers.default.expects(:produce_async).never
+
+        refute(result["isError"])
+        assert_equal(%w[orders], executions)
+      end
+
+      context "when actor callable raises" do
+        before { Karafka::Web.config.mcp.audit.actor = ->(_env) { raise ArgumentError } }
+
+        after { Karafka::Web.config.mcp.audit.actor = nil }
+
+        it "refuses the call without acting" do
+          assert_equal("Audit log is not available, the call was refused", rpc_error["message"])
+          assert_empty(executions)
+        end
+      end
+
+      context "when tool does not name the topics it changes" do
+        before { changing_tool.any_instance.stubs(:topics).returns([]) }
+
+        it "refuses the call without acting" do
+          assert_equal(code(:invalid_params), rpc_error["code"])
+          assert_empty(executions)
+          assert_equal(%w[rejected], records.map { |record| record["outcome"] })
+        end
       end
 
       it "is not marked read-only" do

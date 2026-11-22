@@ -93,7 +93,7 @@ module Karafka
 
       # Builds an `acks`-adjusted variant of the default producer, when altering acks is allowed
       #
-      # @param acks [Integer] required acknowledgments for the variant
+      # @param acks [Integer, String] required acknowledgments for the variant (`0`, `1` or `"all"`)
       # @return [WaterDrop::Producer, WaterDrop::Producer::Variant] the variant, or the default
       #   producer unchanged for idempotent/transactional producers (acks cannot be altered - they
       #   require acks: all)

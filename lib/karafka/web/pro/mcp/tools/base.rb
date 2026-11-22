@@ -141,7 +141,8 @@ module Karafka
             end
 
             # @return [Array<String>] topics a changing tool would change with its arguments.
-            #   Changing tools must return every topic they touch, so {Mcp::Guard} can check them
+            #   Changing tools must return every topic they touch, so {Mcp::Guard} can check them.
+            #   {Mcp::Guard} refuses a changing tool that returns none
             def topics
               []
             end

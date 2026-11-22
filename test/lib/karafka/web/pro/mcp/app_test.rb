@@ -172,6 +172,29 @@ describe_current do
       end
     end
 
+    context "when requests policy denies the call and actor callable raises" do
+      before do
+        Karafka::Web.config.ui.policies.requests.stubs(:allow?).returns(false)
+        Karafka::Web.config.mcp.audit.actor = ->(_env) { raise ArgumentError }
+        rpc("tools/call", call, headers: agent)
+      end
+
+      it "still refuses with 403 and records the rejection" do
+        assert_equal(403, status)
+        assert_equal(%w[rejected], records.map { |record| record["outcome"] })
+      end
+    end
+
+    context "when the audit cannot be built for a denied call" do
+      before do
+        Karafka::Web.config.ui.policies.requests.stubs(:allow?).returns(false)
+        Karafka::Web::Pro::Mcp::Audit.any_instance.stubs(:result).raises(StandardError)
+        rpc("tools/call", call, headers: agent)
+      end
+
+      it { assert_equal(403, status) }
+    end
+
     context "when not calling a tool" do
       before { rpc("ping") }
 

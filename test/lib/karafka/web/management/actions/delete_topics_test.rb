@@ -109,4 +109,14 @@ describe_current do
       refute(after_val)
     end
   end
+
+  context "when mcp audit topic exists and is kept" do
+    let(:mcp_audit_topic) { create_topic }
+
+    it "expect not to remove it" do
+      described_class.new.call(mcp_audit: false)
+
+      assert_includes(topics.call, mcp_audit_topic)
+    end
+  end
 end

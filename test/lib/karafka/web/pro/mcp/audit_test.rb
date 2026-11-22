@@ -82,14 +82,70 @@ describe_current do
   end
 
   describe "#intent" do
-    it "writes the record synchronously with full acks" do
-      producer = Karafka::Web.producers.fully_acked
-      Karafka::Web.producers.expects(:fully_acked).returns(producer)
-
+    it "writes the record" do
       assert(audit.intent(call_id, "karafka_test_change", arguments))
       assert_equal("intent", record["type"])
       assert_equal(call_id, record["call_id"])
       refute(record.key?("outcome"))
+    end
+
+    it "waits for the write on an acks: all producer" do
+      producer = Karafka::Web.producers.fully_acked
+
+      assert_equal("all", producer.topic_config[:acks])
+
+      producer.expects(:produce_sync).once
+      Karafka::Web.producers.default.expects(:produce_async).never
+
+      assert(audit.intent(call_id, "karafka_test_change", arguments))
+    end
+  end
+
+  describe "#result" do
+    context "when sync" do
+      it "waits for the write on an acks: all producer" do
+        Karafka::Web.producers.fully_acked.expects(:produce_sync).once
+        Karafka::Web.producers.default.expects(:produce_async).never
+
+        assert(audit.result(call_id, "karafka_test", arguments, outcome: "ok", sync: true))
+      end
+    end
+
+    context "when async" do
+      it "hands the write over to the default producer" do
+        Karafka::Web.producers.default.expects(:produce_async).once
+        Karafka::Web.producers.fully_acked.expects(:produce_sync).never
+
+        assert(audit.result(call_id, "karafka_test", arguments, outcome: "ok", sync: false))
+      end
+    end
+  end
+
+  context "when actor callable raises" do
+    let(:events) { [] }
+
+    before do
+      Karafka::Web.config.mcp.audit.actor = ->(_rack_env) { raise ArgumentError }
+      Karafka.monitor.stubs(:instrument).with { |_name, payload| events << payload[:type] }
+    end
+
+    it "writes the result with the request actor and the error class" do
+      assert(audit.result(call_id, "karafka_test", arguments, outcome: "ok", sync: false))
+      assert_equal(
+        { "remote_ip" => "10.0.0.1", "user_agent" => "agent/1.0", "actor_error" => "ArgumentError" },
+        record["actor"]
+      )
+      assert_includes(events, "web.mcp.audit.error")
+    end
+
+    it "writes but reports a sync result as failed" do
+      refute(audit.result(call_id, "karafka_test", arguments, outcome: "ok", sync: true))
+      assert_equal("ArgumentError", record.dig("actor", "actor_error"))
+    end
+
+    it "refuses the intent without writing it" do
+      refute(audit.intent(call_id, "karafka_test_change", arguments))
+      assert_empty(records)
     end
   end
 
@@ -114,6 +170,31 @@ describe_current do
       assert(written["payload"].end_with?("..."))
       assert_equal(50, written["keys"].size)
       refute_includes(records.first.to_json, "secret")
+    end
+  end
+
+  context "when arguments are a huge hash" do
+    let(:arguments) { (1..60_000).to_h { |i| ["key#{i}", i] } }
+
+    before { audit.result(call_id, "x" * 5_000, arguments, outcome: "rejected", sync: true) }
+
+    it "writes the rejection with the hash and the tool name cut" do
+      assert_equal(1, records.size)
+      assert_equal(50, record["arguments"].size)
+      assert_equal(1_027, record["tool"].size)
+    end
+  end
+
+  context "when arguments stay big after the cuts" do
+    let(:arguments) { (1..50).to_h { |i| ["key#{i}", "v" * 2_000] } }
+
+    before { audit.result(call_id, "karafka_test", arguments, outcome: "ok", sync: true) }
+
+    it "writes a cut preview of them" do
+      assert(record.dig("arguments", "truncated"))
+      assert_operator(record.dig("arguments", "size"), :>, 16_384)
+      assert_equal(1_024, record.dig("arguments", "preview").bytesize)
+      assert_operator(records.first.to_json.bytesize, :<, 4_096)
     end
   end
 

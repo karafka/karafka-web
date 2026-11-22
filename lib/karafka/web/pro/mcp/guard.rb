@@ -47,7 +47,8 @@ module Karafka
 
           class << self
             # @param tool [Tools::Base] changing tool instance with validated arguments
-            # @raise [Errors::Mcp::PolicyDeniedError] when the tool would change the audit topic
+            # @raise [Errors::Mcp::PolicyDeniedError] when the tool would change the audit topic or
+            #   does not name the topics it changes
             def check!(tool)
               operation = tool.class.operation
 
@@ -55,7 +56,13 @@ module Karafka
                 raise Errors::Mcp::PolicyDeniedError, "Unknown change operation: #{operation}"
               end
 
-              return unless tool.topics.include?(::Karafka::Web.config.topics.mcp_audit.name)
+              topics = tool.topics
+
+              if !topics.is_a?(Array) || topics.empty?
+                raise Errors::Mcp::PolicyDeniedError, "Changing tool does not name the topics it changes"
+              end
+
+              return unless topics.include?(::Karafka::Web.config.topics.mcp_audit.name)
 
               raise Errors::Mcp::PolicyDeniedError, "The MCP audit topic cannot be changed through MCP"
             end

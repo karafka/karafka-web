@@ -49,13 +49,22 @@ module Karafka
           # Longer strings are cut so a record stays small
           MAX_STRING_SIZE = 1_024
 
-          # Longer arrays are cut so a record stays small
+          # Longer arrays and hashes are cut so a record stays small
           MAX_ITEMS = 50
+
+          # Arguments bigger than this once serialized are written only as a cut preview
+          MAX_ARGUMENTS_SIZE = 16_384
 
           # Longer strings are left out of the result summary
           MAX_SUMMARY_STRING_SIZE = 128
 
-          private_constant :SECRET_SCOPES, :MAX_STRING_SIZE, :MAX_ITEMS, :MAX_SUMMARY_STRING_SIZE
+          private_constant(
+            :SECRET_SCOPES,
+            :MAX_STRING_SIZE,
+            :MAX_ITEMS,
+            :MAX_ARGUMENTS_SIZE,
+            :MAX_SUMMARY_STRING_SIZE
+          )
 
           # @param env [Hash] Rack env of the MCP request
           def initialize(env)
@@ -67,9 +76,14 @@ module Karafka
           # @param call_id [String] id shared by all the records of one call
           # @param tool [String, nil] tool name
           # @param arguments [Object] tool arguments
-          # @return [Boolean] true when the record was written with full acks
+          # @return [Boolean] true when the record was written with full acks. False also when
+          #   the actor callable failed, so a changing tool does not act on behalf of nobody
           def intent(call_id, tool, arguments)
-            write(record("intent", call_id, tool, arguments), sync: true)
+            payload = record("intent", call_id, tool, arguments)
+
+            return false if @actor_failed
+
+            write(payload, sync: true)
           end
 
           # Writes the record with the call outcome
@@ -82,7 +96,8 @@ module Karafka
           # @param started_at [Float, nil] monotonic time the tool started at
           # @param error [String, nil] tool error message, rejection reason or exception class
           # @param summary [Hash, nil] short summary of the tool result
-          # @return [Boolean] true when the record was written (or handed over when async)
+          # @return [Boolean] true when the record was written (or handed over when async). False
+          #   for a sync write when the actor callable failed, so fail closed reads refuse it
           def result(
             call_id,
             tool,
@@ -95,12 +110,14 @@ module Karafka
           )
             payload = record("result", call_id, tool, arguments).merge(
               outcome: outcome,
-              error: error,
+              error: sanitize(error),
               duration: started_at ? (monotonic_now - started_at).round(2) : nil,
               summary: summary
             )
 
-            write(payload, sync: sync)
+            written = write(payload, sync: sync)
+
+            written && !(sync && @actor_failed)
           end
 
           # @param data [Object] structured content of a tool result
@@ -134,8 +151,8 @@ module Karafka
               call_id: call_id,
               type: type,
               dispatched_at: float_now,
-              tool: tool,
-              arguments: sanitize(arguments),
+              tool: sanitize(tool),
+              arguments: arguments_record(arguments),
               actor: actor
             }
           end
@@ -158,22 +175,55 @@ module Karafka
 
             true
           rescue => e
-            ::Karafka.monitor.instrument(
-              "error.occurred",
-              error: e,
-              caller: self,
-              type: "web.mcp.audit.error"
-            )
+            report(e)
 
             false
           end
 
-          # @return [Hash] who called, from the configured callable or from the request
+          # @return [Object] who called, from the configured callable or from the request. When
+          #   the callable raises, the request details with the error class
           def actor
-            @actor ||= ::Karafka::Web.config.mcp.audit.actor&.call(@env) || {
-              remote_ip: @env["REMOTE_ADDR"],
-              user_agent: @env["HTTP_USER_AGENT"]
+            return @actor if @actor
+
+            @actor = sanitize(::Karafka::Web.config.mcp.audit.actor&.call(@env)) || request_actor
+          rescue => e
+            @actor_failed = true
+            report(e)
+
+            @actor = request_actor.merge(actor_error: e.class.name)
+          end
+
+          # @return [Hash] remote IP and User-Agent of the request
+          def request_actor
+            {
+              remote_ip: sanitize(@env["REMOTE_ADDR"]),
+              user_agent: sanitize(@env["HTTP_USER_AGENT"])
             }
+          end
+
+          # @param arguments [Object]
+          # @return [Object] sanitized arguments, or a cut preview of them when they are too big
+          def arguments_record(arguments)
+            sanitized = sanitize(arguments)
+            serialized = sanitized.to_json
+
+            return sanitized if serialized.bytesize <= MAX_ARGUMENTS_SIZE
+
+            {
+              truncated: true,
+              size: serialized.bytesize,
+              preview: serialized.byteslice(0, MAX_STRING_SIZE).scrub("")
+            }
+          end
+
+          # @param error [Exception]
+          def report(error)
+            ::Karafka.monitor.instrument(
+              "error.occurred",
+              error: error,
+              caller: self,
+              type: "web.mcp.audit.error"
+            )
           end
 
           # @param value [Object]
@@ -181,11 +231,11 @@ module Karafka
           def sanitize(value)
             case value
             when Hash
-              value.to_h do |key, nested|
+              value.first(MAX_ITEMS).to_h do |key, nested|
                 if SECRET_SCOPES.any? { |scope| key.to_s.include?(scope) }
-                  [key, "***"]
+                  [sanitize(key), "***"]
                 else
-                  [key, sanitize(nested)]
+                  [sanitize(key), sanitize(nested)]
                 end
               end
             when Array

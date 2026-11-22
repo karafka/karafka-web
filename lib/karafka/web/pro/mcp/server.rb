@@ -102,6 +102,15 @@ module Karafka
             reject(params["name"], params["arguments"], "Forbidden")
           rescue JSON::ParserError
             nil
+          rescue => e
+            ::Karafka.monitor.instrument(
+              "error.occurred",
+              error: e,
+              caller: self,
+              type: "web.ui.error"
+            )
+
+            nil
           end
 
           private
