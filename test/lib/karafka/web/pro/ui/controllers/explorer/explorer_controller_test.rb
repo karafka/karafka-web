@@ -124,16 +124,78 @@ describe_current do
     end
   end
 
-  describe "#topic" do
-    context "when the topic name is longer than Kafka allows" do
-      before { get "explorer/topics/#{"a" * 513}" }
-
-      it do
-        refute(response.ok?)
-        assert_equal(404, response.status)
-      end
+  describe "routes with a topic name that is not a valid Kafka topic name" do
+    before do
+      Karafka::Admin.expects(:topic_info).never
+      Karafka::Admin.expects(:read_watermark_offsets).never
+      Karafka::Admin.expects(:read_topic).never
     end
 
+    ["a" * 513, "a" * 250, "a%20b"].each do |invalid|
+      %W[
+        explorer/topics/#{invalid}
+        explorer/topics/#{invalid}/recent
+        explorer/topics/#{invalid}/0
+        explorer/topics/#{invalid}/0/recent
+        explorer/topics/#{invalid}/0/0
+        explorer/topics/#{invalid}/0/0/surrounding
+        explorer/topics/#{invalid}/0/closest/1700000000000
+        explorer/topics/#{invalid}/0/closest/2025-04-18/12:37
+        explorer/#{invalid}/search
+        explorer/messages/#{invalid}/publish
+        explorer/messages/#{invalid}/0/0/forward
+        explorer/messages/#{invalid}/0/0/download
+        explorer/messages/#{invalid}/0/0/export
+      ].each do |path|
+        context "when getting #{path[0, 60]}" do
+          before { get path }
+
+          it { assert_equal(404, response.status) }
+        end
+      end
+
+      %W[
+        explorer/messages/#{invalid}/publish
+        explorer/messages/#{invalid}/0/0/republish
+      ].each do |path|
+        context "when posting #{path[0, 60]}" do
+          before { post path }
+
+          it { assert_equal(404, response.status) }
+        end
+      end
+
+      context "when deleting messages of #{invalid[0, 20]}" do
+        before do
+          Karafka::Web.config.ui.policies.messages.stubs(:delete_records?).returns(true)
+          get "explorer/messages/#{invalid}/0/0/delete"
+        end
+
+        it { assert_equal(404, response.status) }
+      end
+
+      context "when getting scheduled messages schedules of #{invalid[0, 20]}" do
+        before { get "scheduled_messages/schedules/#{invalid}" }
+
+        it { assert_equal(404, response.status) }
+      end
+
+      %W[
+        topics/#{invalid}/distribution
+        topics/#{invalid}/replication
+        topics/#{invalid}/offsets
+        topics/#{invalid}/config
+      ].each do |path|
+        context "when getting #{path[0, 60]}" do
+          before { get path }
+
+          it { assert_equal(404, response.status) }
+        end
+      end
+    end
+  end
+
+  describe "#topic" do
     context "when we view topic without any messages" do
       before { get "explorer/topics/#{topic}" }
 

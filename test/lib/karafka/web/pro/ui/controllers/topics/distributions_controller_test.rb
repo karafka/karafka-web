@@ -72,15 +72,6 @@ describe_current do
       end
     end
 
-    context "when the topic name is longer than Kafka allows" do
-      before { get "topics/#{"a" * 513}/distribution" }
-
-      it do
-        refute(response.ok?)
-        assert_equal(404, status)
-      end
-    end
-
     context "when the topic is internal and internal topics are hidden" do
       let(:internal_topic) { "__#{generate_topic_name}" }
 

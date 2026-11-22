@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-# Verifies that looking up a topic whose name is longer than Kafka allows (249 characters) gives
-# the Web UI "not found" error without querying the cluster. With a name over 512 characters
-# karafka-rdkafka 0.32.2 and older crash the whole process with a segmentation fault.
+# Verifies that the Web UI rejects a topic name Kafka cannot have (over 249 characters, characters
+# outside `[A-Za-z0-9._-]`, `.` or `..`) with its "not found" error, without querying the cluster.
+# With a name over 512 characters karafka-rdkafka 0.32.2 and older crash the whole process with a
+# segmentation fault; other invalid names hold the request for up to 60 seconds.
 #
 # Needs Kafka at `KAFKA_BOOTSTRAP_SERVERS` (default: 127.0.0.1:9092).
 
@@ -21,15 +22,29 @@ class KarafkaApp < Karafka::App
   end
 end
 
-[513, 250].each do |length|
-  not_found = begin
-    Karafka::Web::Ui::Models::ClusterInfo.topic("a" * length)
-    false
-  rescue Karafka::Web::Errors::Ui::NotFoundError
-    true
-  end
-
-  assert(not_found, "A #{length} characters topic name should not be found")
+def not_found?
+  yield
+  false
+rescue Karafka::Web::Errors::Ui::NotFoundError
+  true
 end
+
+started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
+["a" * 513, "a" * 250, "a b", ".."].each do |topic_name|
+  assert(
+    not_found? { Karafka::Web::Ui::Models::ClusterInfo.topic(topic_name) },
+    "Topic #{topic_name[0, 20].inspect} (#{topic_name.size} chars) should not be found"
+  )
+
+  assert(
+    not_found? { Karafka::Web::Ui::Models::WatermarkOffsets.find(topic_name, 0) },
+    "Watermark offsets of #{topic_name[0, 20].inspect} should not be found"
+  )
+end
+
+elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at
+
+assert(elapsed < 1, "Invalid topic names should be rejected without cluster calls (#{elapsed}s)")
 
 puts "Too long topic name: OK"
