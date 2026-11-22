@@ -1,4 +1,6 @@
 {
+  "test/lib/karafka/web/pro/mcp/tools/delete_messages_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/tools/cancel_scheduled_message_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/tools/trigger_recurring_task_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/tools/enable_recurring_task_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/tools/disable_recurring_task_test.rb": 1.0,

@@ -73,6 +73,7 @@ module Karafka
               change = plan
 
               ::Karafka::Admin.delete_topic(topic)
+              ::Karafka::Web.config.ui.cache.clear
 
               { deleted: true }.merge(change)
             end

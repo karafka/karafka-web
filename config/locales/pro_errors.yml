@@ -103,3 +103,7 @@ en:
       prevent_overtaking_format: needs to be either true or false
       force_resume_format: needs to be either true or false
       task_id_format: needs to be a task id
+      partitions_format: needs to be an integer that is 1 or greater
+      replication_factor_format: needs to be an integer that is 1 or greater
+      property_format: needs to be a non-empty string
+      value_format: needs to be a string

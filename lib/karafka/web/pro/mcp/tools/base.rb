@@ -205,6 +205,8 @@ module Karafka
               )
             rescue ::Rdkafka::RdkafkaError => e
               failure("Kafka request failed: #{e.code}")
+            rescue ::Rdkafka::Config::ConfigError => e
+              failure("Kafka request failed: #{e.message}")
             end
 
             # @return [Array<String>] topics a changing tool would change with its arguments.

@@ -69,8 +69,13 @@ module Karafka
             Tools::TriggerAllRecurringTasks,
             Tools::EnableAllRecurringTasks,
             Tools::DisableAllRecurringTasks,
+            Tools::CreateTopic,
+            Tools::RepartitionTopic,
+            Tools::UpdateTopicConfig,
             Tools::DeleteTopic,
-            Tools::DeleteConsumerGroupOffsets
+            Tools::DeleteConsumerGroupOffsets,
+            Tools::DeleteMessages,
+            Tools::CancelScheduledMessage
           ].to_h { |tool| [tool.name, tool] }.freeze
 
           # JSON-RPC error codes

@@ -37,6 +37,7 @@ module Karafka
         module Guard
           # Kinds of changes a changing tool can make to a topic
           OPERATIONS = %i[
+            create_topic
             delete_topic
             repartition_topic
             produce
