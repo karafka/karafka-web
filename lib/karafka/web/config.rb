@@ -278,7 +278,8 @@ module Karafka
         # @deprecated Use {#dead_letter_queue_patterns} instead
         def dlq_patterns
           warn "DEPRECATION WARNING: config.ui.dlq_patterns is deprecated. " \
-            "Use config.ui.dead_letter_queue_patterns instead."
+            "Use config.ui.dead_letter_queue_patterns instead. " \
+            "It will be removed in the next major release."
           dead_letter_queue_patterns
         end
 
@@ -286,7 +287,8 @@ module Karafka
         # @deprecated Use {#dead_letter_queue_patterns=} instead
         def dlq_patterns=(value)
           warn "DEPRECATION WARNING: config.ui.dlq_patterns= is deprecated. " \
-            "Use config.ui.dead_letter_queue_patterns= instead."
+            "Use config.ui.dead_letter_queue_patterns= instead. " \
+            "It will be removed in the next major release."
           self.dead_letter_queue_patterns = value
         end
 
