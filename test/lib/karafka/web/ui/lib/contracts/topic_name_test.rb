@@ -9,7 +9,7 @@ describe_current do
     end
   end
 
-  ["a" * 250, "a" * 513, ".", "..", "", "a b", "a/b", "ä", nil, 1].each do |topic_name|
+  ["a" * 250, "a" * 513, ".", "..", "", "a b", "a/b", "a\nb", "ä", nil, 1].each do |topic_name|
     context "when topic name is #{topic_name.inspect[0, 20]}" do
       let(:result) { contract.call({ topic_name: topic_name }) }
 
