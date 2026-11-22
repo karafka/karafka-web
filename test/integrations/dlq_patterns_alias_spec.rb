@@ -22,11 +22,12 @@ ensure
   $stderr = original
 end
 
-Karafka::Web.setup do |config|
-  config.ui.sessions.secret = SecureRandom.hex(64)
+warnings = capture_stderr do
+  Karafka::Web.setup do |config|
+    config.ui.sessions.secret = SecureRandom.hex(64)
+    config.ui.dlq_patterns << /legacy_errors/
+  end
 end
-
-warnings = capture_stderr { Karafka::Web.config.ui.dlq_patterns << /legacy_errors/ }
 
 assert_equal(
   [/(dlq)|(dead_letter)/i, /legacy_errors/],
@@ -38,7 +39,11 @@ read_warned = warnings.include?("config.ui.dlq_patterns is deprecated")
 
 assert(read_warned, "Reading dlq_patterns should warn that it is deprecated")
 
-warnings = capture_stderr { Karafka::Web.config.ui.dlq_patterns = [/legacy_only/] }
+warnings = capture_stderr do
+  Karafka::Web.setup do |config|
+    config.ui.dlq_patterns = [/legacy_only/]
+  end
+end
 
 assert_equal(
   [/legacy_only/],
@@ -59,8 +64,10 @@ assert_equal(
 Karafka::Web::Contracts::Config.new.validate!(Karafka::Web.config.to_h)
 
 warnings = capture_stderr do
-  Karafka::Web.config.ui.dead_letter_queue_patterns = [/current/]
-  Karafka::Web.config.ui.dead_letter_queue_patterns << /current_extra/
+  Karafka::Web.setup do |config|
+    config.ui.dead_letter_queue_patterns = [/current/]
+    config.ui.dead_letter_queue_patterns << /current_extra/
+  end
 end
 
 assert_equal("", warnings, "The new name should not warn")
