@@ -1,4 +1,9 @@
 {
+  "test/lib/karafka/web/pro/mcp/tools/create_topic_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/tools/repartition_topic_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/tools/update_topic_config_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/tools/publish_message_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/tools/republish_message_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/tools/delete_messages_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/tools/cancel_scheduled_message_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/tools/trigger_recurring_task_test.rb": 1.0,

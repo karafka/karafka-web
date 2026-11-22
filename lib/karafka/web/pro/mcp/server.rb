@@ -74,6 +74,8 @@ module Karafka
             Tools::UpdateTopicConfig,
             Tools::DeleteTopic,
             Tools::DeleteConsumerGroupOffsets,
+            Tools::PublishMessage,
+            Tools::RepublishMessage,
             Tools::DeleteMessages,
             Tools::CancelScheduledMessage
           ].to_h { |tool| [tool.name, tool] }.freeze

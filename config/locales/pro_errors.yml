@@ -107,3 +107,11 @@ en:
       replication_factor_format: needs to be an integer that is 1 or greater
       property_format: needs to be a non-empty string
       value_format: needs to be a string
+      payload_format: needs to be a string
+      key_format: needs to be a string
+      headers_format: needs to be a string
+      tombstone_format: needs to be either true or false
+      skip_validation_format: needs to be either true or false
+      target_topic_format: needs to be a non-empty string
+      target_partition_format: needs to be an integer that is 0 or greater
+      include_source_headers_format: needs to be either true or false
