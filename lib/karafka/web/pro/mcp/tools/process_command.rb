@@ -61,6 +61,16 @@ module Karafka
               deny!("Commanding is disabled") unless Ui::Lib::Features.commanding?
             end
 
+            # @return [Array(String, String)] Web UI request of the matching commanding action
+            def ui_request
+              process_id = @arguments[:process_id]
+              action = self.class.command.name.split(".").last
+
+              path = process_id ? "#{process_id}/#{action}" : "#{action}_all"
+
+              ["POST", "/consumers/commanding/#{path}"]
+            end
+
             # @return [Array<String>] the commands topic
             def topics
               [::Karafka::Web.config.topics.consumers.commands.name]

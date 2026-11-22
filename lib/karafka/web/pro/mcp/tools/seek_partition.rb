@@ -45,7 +45,7 @@ module Karafka
               TEXT
               contract: Contracts::PartitionSeek.new,
               operation: :produce,
-              idempotent: true,
+              idempotent: false,
               destructive: true,
               properties: TOPIC_PROPERTIES.merge(PARTITION_PROPERTIES).merge(
                 offset: { type: "integer", minimum: 0, description: "Offset to move to" },
@@ -60,6 +60,11 @@ module Karafka
               ),
               required: %w[consumer_group_id topic partition offset]
             )
+
+            # @return [Array(String, String)] Web UI request of the matching action
+            def ui_request
+              ["PUT", "/consumers/#{target_path}/offset"]
+            end
 
             private
 

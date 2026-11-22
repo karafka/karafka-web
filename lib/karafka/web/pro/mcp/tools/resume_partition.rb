@@ -50,6 +50,11 @@ module Karafka
               required: %w[consumer_group_id topic partition]
             )
 
+            # @return [Array(String, String)] Web UI request of the matching action
+            def ui_request
+              ["DELETE", "/consumers/#{target_path}/pause"]
+            end
+
             private
 
             # @return [Hash] command built from the arguments

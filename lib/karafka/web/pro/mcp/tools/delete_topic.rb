@@ -66,6 +66,11 @@ module Karafka
               [topic]
             end
 
+            # @return [Array(String, String)] Web UI request of the matching action
+            def ui_request
+              ["DELETE", "/topics/#{topic}"]
+            end
+
             private
 
             # @return [Hash] deleted topic

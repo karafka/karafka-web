@@ -54,6 +54,11 @@ module Karafka
               required: %w[topic property value]
             )
 
+            # @return [Array(String, String)] Web UI request of the matching action
+            def ui_request
+              ["PUT", "/topics/#{topic}/config/#{property}"]
+            end
+
             private
 
             # @return [Hash] changed property

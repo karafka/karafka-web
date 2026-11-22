@@ -57,6 +57,11 @@ module Karafka
               required: %w[topic partitions]
             )
 
+            # @return [Array(String, String)] Web UI request of the matching action
+            def ui_request
+              ["PUT", "/topics/#{topic}/distribution"]
+            end
+
             private
 
             # @return [Hash] repartitioning details

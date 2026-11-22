@@ -55,6 +55,17 @@ module Karafka
               required: %w[topic partitions replication_factor]
             )
 
+            # @return [Array(String, String)] Web UI request of the matching action
+            def ui_request
+              ["POST", "/topics"]
+            end
+
+            # Topics management must be enabled, as in the Web UI. The Web UI create action does
+            # not check the internal topics visibility
+            def authorize!
+              deny!("Topics management is disabled") unless Ui::Lib::Features.topics_management?
+            end
+
             private
 
             # @return [Hash] created topic

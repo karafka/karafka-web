@@ -80,6 +80,13 @@ module Karafka
               [@arguments.fetch(:target_topic)]
             end
 
+            # @return [Array(String, String)] Web UI request of the matching action
+            def ui_request
+              source = @arguments.values_at(:topic, :partition, :offset).join("/")
+
+              ["POST", "/explorer/messages/#{source}/republish"]
+            end
+
             private
 
             # @return [Hash] delivery details
@@ -95,7 +102,7 @@ module Karafka
 
               errors = Ui::Lib::Explorer::Republishing::Contracts::Form.new.call(
                 form.merge(
-                  target_partitions_count: Web::Ui::Models::ClusterInfo.partitions_count(target_topic),
+                  target_partitions_count: target_partitions_count(target_topic),
                   source_message: message
                 )
               ).errors
@@ -112,6 +119,15 @@ module Karafka
               ).call
 
               { topic: delivery.topic, partition: delivery.partition, offset: delivery.offset }
+            end
+
+            # @param target_topic [String]
+            # @return [Integer, nil] partitions count of the target topic or nil when it does not
+            #   exist, as in the Web UI, so the form contract reports it
+            def target_partitions_count(target_topic)
+              Web::Ui::Models::ClusterInfo.partitions_count(target_topic)
+            rescue Errors::Ui::NotFoundError
+              nil
             end
 
             # @return [Karafka::Messages::Message] source message

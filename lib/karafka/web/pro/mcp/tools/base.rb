@@ -209,6 +209,12 @@ module Karafka
               failure("Kafka request failed: #{e.message}")
             end
 
+            # @return [Array(String, String)] HTTP method and Web UI path of the action a changing
+            #   tool runs, so the requests policy can check it as a Web UI request
+            def ui_request
+              raise NotImplementedError, "Implement in a changing tool"
+            end
+
             # @return [Array<String>] topics a changing tool would change with its arguments.
             #   Changing tools must return every topic they touch, so {Mcp::Guard} can check them.
             #   {Mcp::Guard} refuses a changing tool that returns none

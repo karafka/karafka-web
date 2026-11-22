@@ -68,6 +68,11 @@ module Karafka
               [topic]
             end
 
+            # @return [Array(String, String)] Web UI request of the matching action
+            def ui_request
+              ["DELETE", "/health/topics/#{consumer_group_id}/#{topic}/delete"]
+            end
+
             private
 
             # @return [Hash] deleted offsets

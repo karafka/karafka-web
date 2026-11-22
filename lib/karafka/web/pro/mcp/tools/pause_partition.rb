@@ -44,12 +44,17 @@ module Karafka
               TEXT
               contract: Contracts::PartitionPause.new,
               operation: :produce,
-              idempotent: true,
+              idempotent: false,
               properties: TOPIC_PROPERTIES
                 .merge(PARTITION_PROPERTIES)
                 .merge(PAUSE_PROPERTIES),
               required: %w[consumer_group_id topic partition duration]
             )
+
+            # @return [Array(String, String)] Web UI request of the matching action
+            def ui_request
+              ["POST", "/consumers/#{target_path}/pause"]
+            end
 
             private
 

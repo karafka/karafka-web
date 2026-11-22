@@ -90,14 +90,47 @@ module Karafka
 
             # @return [Hash] dispatched command
             def fetch
+              change = plan
+
               Ui::Lib::Consumers::Commands::Dispatcher.new(@command).call
 
-              { dispatched: true }.merge(plan)
+              { dispatched: true }.merge(change)
             end
 
             # @return [Hash] command the tool would send
             def plan
+              ensure_target_exists!
+
               @command.slice(:name, :payload, :matchers)
+            end
+
+            # The Web UI actions answer 404 for a consumer group, topic or partition that the
+            # consumers do not report, so we refuse them too
+            #
+            # @raise [Errors::Mcp::NoDataError] when the consumers do not report the target
+            def ensure_target_exists!
+              stats = Web::Ui::Models::Health.current(Web::Ui::Models::ConsumersState.current!)
+
+              topic_stats = stats[target[:consumer_group_id]]&.dig(:topics, target[:topic])
+              partition_id = target[:partition_id]
+
+              found = if partition_id.nil?
+                !topic_stats.nil?
+              else
+                !topic_stats&.dig(:partitions, partition_id).nil?
+              end
+
+              return if found
+
+              raise Errors::Mcp::NoDataError, "Consumers do not report this consumer group, " \
+                "topic or partition. Check karafka_health for what they consume"
+            end
+
+            # @return [String] Web UI path of the consumer group topic or partition
+            def target_path
+              segments = [target[:consumer_group_id], target[:topic], target[:partition_id]]
+
+              (target.key?(:partition_id) ? "partitions/" : "topics/") + segments.compact.join("/")
             end
 
             # @return [Hash] command built from the arguments

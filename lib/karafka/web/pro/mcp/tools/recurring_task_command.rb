@@ -53,6 +53,14 @@ module Karafka
               end
             end
 
+            # @return [Array(String, String)] Web UI request of the matching recurring tasks action
+            def ui_request
+              task_id = @arguments[:task_id]
+              action = self.class.command
+
+              ["POST", task_id ? "/recurring_tasks/#{task_id}/#{action}" : "/recurring_tasks/#{action}_all"]
+            end
+
             # @return [Array<String>] the recurring tasks schedules topic
             def topics
               [::Karafka::App.config.recurring_tasks.topics.schedules.name]

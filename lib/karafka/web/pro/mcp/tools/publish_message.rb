@@ -75,6 +75,11 @@ module Karafka
               [topic]
             end
 
+            # @return [Array(String, String)] Web UI request of the matching action
+            def ui_request
+              ["POST", "/explorer/messages/#{topic}/publish"]
+            end
+
             private
 
             # @return [Hash] delivery details
@@ -89,7 +94,7 @@ module Karafka
               )
 
               errors = Ui::Lib::Explorer::Publishing::Contracts::Form.new.call(
-                form.merge(partitions_count: Web::Ui::Models::ClusterInfo.partitions_count(topic), topic: topic)
+                form.merge(partitions_count: partitions_count, topic: topic)
               ).errors
 
               unless errors.empty?
@@ -104,6 +109,14 @@ module Karafka
               ).call
 
               { topic: delivery.topic, partition: delivery.partition, offset: delivery.offset }
+            end
+
+            # @return [Integer] partitions count of the topic
+            # @raise [Errors::Mcp::NoDataError] when the topic does not exist
+            def partitions_count
+              Web::Ui::Models::ClusterInfo.partitions_count(topic)
+            rescue Errors::Ui::NotFoundError
+              raise Errors::Mcp::NoDataError, "Topic #{topic} does not exist"
             end
 
             # @return [String]

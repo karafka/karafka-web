@@ -59,6 +59,11 @@ module Karafka
               [topic]
             end
 
+            # @return [Array(String, String)] Web UI request of the matching action
+            def ui_request
+              ["POST", "/scheduled_messages/messages/#{topic}/#{partition}/#{offset}/cancel"]
+            end
+
             private
 
             # @return [Hash] cancelled message details
