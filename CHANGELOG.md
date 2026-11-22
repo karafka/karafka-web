@@ -74,6 +74,7 @@
 - [Maintenance] Add the `Sigstore Check` workflow: nightly, and on pull requests that change the push workflow, it builds the gem, signs it like a release and verifies the attestation, without pushing.
 - [Fix] Center single buttons in table "Options" columns, so they no longer sit closer to the right cell edge than to the left one. Columns with different button counts per row stay right-aligned.
 - [Fix] Center the "Options" label of table headers like the other headers, also when the buttons below it are right-aligned.
+- [Fix] Return 404 for a topic name longer than Kafka allows (249 characters) in topic and Explorer URLs, without querying the cluster. A name over 512 characters crashed the process on karafka-rdkafka `0.32.2` and older.
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a keyword filtering box to the data-heavy Web UI listings, with a field selector on flat listings (Pro) (#1073).

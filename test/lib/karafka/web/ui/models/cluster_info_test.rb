@@ -16,4 +16,11 @@ describe_current do
   it { assert_raises(not_found_error) { info.topic(non_existing_topic) } }
   it { refute_nil(info.topic(topic)) }
   it { assert_equal(1, info.partitions_count(topic)) }
+
+  context "when the topic name is longer than Kafka allows" do
+    before { Karafka::Web::Ui::Lib::Admin.expects(:topic_info).never }
+
+    it { assert_raises(not_found_error) { info.topic("a" * 250) } }
+    it { assert_raises(not_found_error) { info.topic("a" * 513) } }
+  end
 end

@@ -125,6 +125,15 @@ describe_current do
   end
 
   describe "#topic" do
+    context "when the topic name is longer than Kafka allows" do
+      before { get "explorer/topics/#{"a" * 513}" }
+
+      it do
+        refute(response.ok?)
+        assert_equal(404, response.status)
+      end
+    end
+
     context "when we view topic without any messages" do
       before { get "explorer/topics/#{topic}" }
 

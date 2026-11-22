@@ -7,6 +7,11 @@ module Karafka
         # Wraps around the `Lib::Admin#cluster_info` with caching and some additional aliases
         # so we can reference relevant information easily
         class ClusterInfo
+          # Kafka rejects longer topic names
+          MAX_TOPIC_NAME_LENGTH = 249
+
+          private_constant :MAX_TOPIC_NAME_LENGTH
+
           class << self
             # Gets us all the cluster metadata info
             #
@@ -30,7 +35,11 @@ module Karafka
             #
             # @param topic_name [String] name of the topic we are looking for
             # @return [Ui::Models::Topic] topic details
+            # @raise [Web::Errors::Ui::NotFoundError] when the topic does not exist
             def topic(topic_name)
+              # librdkafka crashes the process on some of the names Kafka rejects
+              raise(Web::Errors::Ui::NotFoundError, topic_name) if topic_name.size > MAX_TOPIC_NAME_LENGTH
+
               Lib::Admin
                 .topic_info(topic_name)
                 .then { |topic| Topic.new(topic) }
