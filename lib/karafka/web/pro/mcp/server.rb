@@ -248,7 +248,8 @@ module Karafka
             error(id, :internal, "Internal error")
           end
 
-          # Checks the requests policy as if the Web UI action of the changing tool was requested
+          # Checks the requests policy as if the Web UI action of the changing tool was requested:
+          # the env gets the method and the path of that action under `config.mcp.web_ui_path`
           #
           # @param tool [Tools::Base] changing tool instance with validated arguments
           # @raise [Errors::Mcp::PolicyDeniedError] when the requests policy denies that action
@@ -257,7 +258,16 @@ module Karafka
             return unless ::Karafka::Web.config.ui.respond_to?(:policies)
 
             method, path = tool.ui_request
-            env = @env.merge("REQUEST_METHOD" => method, "PATH_INFO" => path)
+            mount = ::Karafka::Web.config.mcp.web_ui_path
+
+            env = @env.merge(
+              "REQUEST_METHOD" => method,
+              "SCRIPT_NAME" => mount,
+              "PATH_INFO" => path,
+              "QUERY_STRING" => "",
+              "REQUEST_PATH" => "#{mount}#{path}",
+              "REQUEST_URI" => "#{mount}#{path}"
+            )
 
             return if ::Karafka::Web.config.ui.policies.requests.allow?(env)
 

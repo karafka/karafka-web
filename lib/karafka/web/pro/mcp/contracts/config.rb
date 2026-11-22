@@ -43,6 +43,10 @@ module Karafka
             end
 
             nested(:mcp) do
+              required(:web_ui_path) do |val|
+                val.is_a?(String) && (val.empty? || val.match?(%r{\A/.*[^/]\z}))
+              end
+
               required(:changing_tools) do |val|
                 val == :all || (val.is_a?(Array) && val.all?(String))
               end

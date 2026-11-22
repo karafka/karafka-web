@@ -30,7 +30,7 @@
 
 describe_current do
   let(:contract) { described_class.new }
-  let(:params) { { mcp: { changing_tools: [], audit: { actor: nil, fail_closed_reads: false } } } }
+  let(:params) { { mcp: { changing_tools: [], web_ui_path: "", audit: { actor: nil, fail_closed_reads: false } } } }
 
   it { assert(contract.call(params).success?) }
 
@@ -66,6 +66,24 @@ describe_current do
 
   context "when changing_tools lists symbols" do
     before { params[:mcp][:changing_tools] = %i[karafka_delete_topic] }
+
+    it { refute(contract.call(params).success?) }
+  end
+
+  context "when web_ui_path is a mount path" do
+    before { params[:mcp][:web_ui_path] = "/karafka" }
+
+    it { assert(contract.call(params).success?) }
+  end
+
+  context "when web_ui_path is the root" do
+    before { params[:mcp][:web_ui_path] = "/" }
+
+    it { refute(contract.call(params).success?) }
+  end
+
+  context "when web_ui_path is relative" do
+    before { params[:mcp][:web_ui_path] = "karafka" }
 
     it { refute(contract.call(params).success?) }
   end
