@@ -25,9 +25,15 @@ module Karafka
             # @note Kafka returns group ids as binary strings, so we match on bytes and query
             #   further with the listed id. A non-ASCII UTF-8 id never completes a describe.
             def find(group_id)
-              listed = ::Karafka::Admin
-                .list_consumer_groups
-                .find { |group| group[:group_id].b == group_id.b }
+              target = group_id.b
+
+              listed = ::Karafka::Admin.list_consumer_groups.find do |group|
+                listed_id = group[:group_id]
+
+                next false unless listed_id.bytesize == target.bytesize
+
+                (listed_id.encoding == target.encoding) ? listed_id == target : listed_id.b == target
+              end
 
               raise(Web::Errors::Ui::NotFoundError, group_id) unless listed
 
