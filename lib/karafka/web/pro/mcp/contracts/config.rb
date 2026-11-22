@@ -43,6 +43,10 @@ module Karafka
             end
 
             nested(:mcp) do
+              required(:changing_tools) do |val|
+                val == :all || (val.is_a?(Array) && val.all?(String))
+              end
+
               nested(:audit) do
                 required(:actor) { |val| val.nil? || val.respond_to?(:call) }
                 required(:fail_closed_reads) { |val| [true, false].include?(val) }
