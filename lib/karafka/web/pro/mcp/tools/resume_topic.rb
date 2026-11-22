@@ -33,7 +33,8 @@ module Karafka
     module Pro
       module Mcp
         module Tools
-          # Resumes all paused partitions of a topic in a consumer group, as the Web UI topic resume action
+          # Resumes all paused partitions of a topic in a consumer group, as the Web UI topic resume
+          # action
           class ResumeTopic < ConsumersCommand
             tool(
               "karafka_resume_topic",

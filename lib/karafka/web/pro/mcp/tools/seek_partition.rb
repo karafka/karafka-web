@@ -33,7 +33,8 @@ module Karafka
     module Pro
       module Mcp
         module Tools
-          # Moves the consumer group offset of a partition, as the Web UI partition offset edit action
+          # Moves the consumer group offset of a partition, as the Web UI partition offset edit
+          # action
           class SeekPartition < ConsumersCommand
             tool(
               "karafka_seek_partition",

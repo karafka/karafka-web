@@ -113,6 +113,15 @@ describe_current do
     end
   end
 
+  context "when asked for a dry run" do
+    let(:arguments) { { process_id: process_id, dry_run: true } }
+
+    it "refuses the call without sending a command" do
+      assert_equal("arguments contain an unknown argument", rpc_error["message"])
+      assert_empty(commands)
+    end
+  end
+
   context "when called" do
     let(:command_name) { "consumers.trace" }
 

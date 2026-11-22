@@ -43,7 +43,7 @@ module Karafka
                 Asks one consumer process to finish its work and shut down, as the Web UI Stop
                 action does. Use karafka_processes for the process id.
               TEXT
-              contract: Contracts::Process.new,
+              contract: Contracts::DestructiveProcess.new,
               operation: :produce,
               idempotent: true,
               destructive: true,

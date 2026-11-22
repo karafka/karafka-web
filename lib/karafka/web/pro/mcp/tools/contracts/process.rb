@@ -36,11 +36,9 @@ module Karafka
           module Contracts
             # Validates the arguments of the tools that command one process
             class Process < Base
-              arguments :process_id, :confirm, :dry_run
+              arguments :process_id
 
               required(:process_id) { |val| val.is_a?(String) && !val.empty? }
-              optional(:confirm) { |val| [true, false].include?(val) }
-              optional(:dry_run) { |val| [true, false].include?(val) }
             end
           end
         end
