@@ -23,7 +23,7 @@
 - [Enhancement] Show an informational Status page check when the Web UI reports through an idempotent or transactional `Karafka.producer` shared with the application, with a link to configuring a custom Web UI producer.
 - [Enhancement] Speed up Web UI sorting on large data, most of all when sorting on an attribute the rows do not have.
 - [Change] Move the Pro Dead Letter Queue Topics view from `/dlq` to `/dead_letter_queues`. Old `/dlq` links redirect to the new path. Label its navigation item `DLQ`.
-- [Change] Rename the `config.ui.dlq_patterns` setting to `config.ui.dead_letter_queue_patterns`. `config.ui.dlq_patterns` stays as an alias.
+- [Change] Rename the `config.ui.dlq_patterns` setting to `config.ui.dead_letter_queue_patterns`. `config.ui.dlq_patterns` still works but is deprecated and prints a deprecation warning.
 - [Maintenance] Extract the consumer commanding forms into `Lib::Commands` and validate offset and pause values server-side (#1241).
 - [Maintenance] Extract the topic configuration edit flow into `Lib::Configuring` and reject empty values (#1241).
 - [Maintenance] Extract topic creation and repartitioning into `Lib::TopicCreation` and `Lib::Repartitioning` with server-side validation (#1241).
