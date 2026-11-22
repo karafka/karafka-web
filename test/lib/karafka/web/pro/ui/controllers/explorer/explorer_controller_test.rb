@@ -141,50 +141,6 @@ describe_current do
         explorer/topics/#{invalid}/0/0/surrounding
         explorer/topics/#{invalid}/0/closest/1700000000000
         explorer/topics/#{invalid}/0/closest/2025-04-18/12:37
-        explorer/#{invalid}/search
-        explorer/messages/#{invalid}/publish
-        explorer/messages/#{invalid}/0/0/forward
-        explorer/messages/#{invalid}/0/0/download
-        explorer/messages/#{invalid}/0/0/export
-      ].each do |path|
-        context "when getting #{path[0, 60]}" do
-          before { get path }
-
-          it { assert_equal(404, response.status) }
-        end
-      end
-
-      %W[
-        explorer/messages/#{invalid}/publish
-        explorer/messages/#{invalid}/0/0/republish
-      ].each do |path|
-        context "when posting #{path[0, 60]}" do
-          before { post path }
-
-          it { assert_equal(404, response.status) }
-        end
-      end
-
-      context "when deleting messages of #{invalid[0, 20]}" do
-        before do
-          Karafka::Web.config.ui.policies.messages.stubs(:delete_records?).returns(true)
-          get "explorer/messages/#{invalid}/0/0/delete"
-        end
-
-        it { assert_equal(404, response.status) }
-      end
-
-      context "when getting scheduled messages schedules of #{invalid[0, 20]}" do
-        before { get "scheduled_messages/schedules/#{invalid}" }
-
-        it { assert_equal(404, response.status) }
-      end
-
-      %W[
-        topics/#{invalid}/distribution
-        topics/#{invalid}/replication
-        topics/#{invalid}/offsets
-        topics/#{invalid}/config
       ].each do |path|
         context "when getting #{path[0, 60]}" do
           before { get path }

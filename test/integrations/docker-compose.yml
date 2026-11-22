@@ -70,7 +70,7 @@ services:
         bundle exec ruby test/integrations/container_metrics_unlimited_spec.rb &&
         bundle exec ruby test/integrations/os_metrics_spec.rb &&
         LANG=C LC_ALL=C bundle exec ruby test/integrations/c_locale_templates_spec.rb &&
-        bundle exec ruby test/integrations/too_long_topic_name_spec.rb
+        bundle exec ruby test/integrations/invalid_topic_name_spec.rb
       "
 
   # Test container with strict memory limit (for testing low memory scenarios)

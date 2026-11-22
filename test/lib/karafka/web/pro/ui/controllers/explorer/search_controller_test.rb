@@ -413,4 +413,24 @@ describe_current do
       refute_body(pagination)
     end
   end
+
+  describe "routes with a topic name that is not a valid Kafka topic name" do
+    before do
+      Karafka::Admin.expects(:topic_info).never
+      Karafka::Admin.expects(:read_watermark_offsets).never
+      Karafka::Admin.expects(:read_topic).never
+    end
+
+    ["a" * 513, "a" * 250, "a%20b"].each do |invalid|
+      %W[
+        explorer/#{invalid}/search
+      ].each do |path|
+        context "when getting #{path[0, 60]}" do
+          before { get path }
+
+          it { assert_equal(404, response.status) }
+        end
+      end
+    end
+  end
 end

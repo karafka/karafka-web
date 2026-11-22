@@ -2,8 +2,7 @@
 
 # Verifies that the Web UI rejects a topic name Kafka cannot have (over 249 characters, characters
 # outside `[A-Za-z0-9._-]`, `.` or `..`) with its "not found" error, without querying the cluster.
-# With a name over 512 characters karafka-rdkafka 0.32.2 and older crash the whole process with a
-# segmentation fault; other invalid names hold the request for up to 60 seconds.
+# A cluster call with such a name can wait up to 60 seconds.
 #
 # Needs Kafka at `KAFKA_BOOTSTRAP_SERVERS` (default: 127.0.0.1:9092).
 
@@ -18,7 +17,7 @@ include IntegrationHelper
 class KarafkaApp < Karafka::App
   setup do |config|
     config.kafka = { "bootstrap.servers": ENV.fetch("KAFKA_BOOTSTRAP_SERVERS", "127.0.0.1:9092") }
-    config.client_id = "it-too-long-topic-name-#{SecureRandom.hex(6)}"
+    config.client_id = "it-invalid-topic-name-#{SecureRandom.hex(6)}"
   end
 end
 
@@ -47,4 +46,4 @@ elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at
 
 assert(elapsed < 1, "Invalid topic names should be rejected without cluster calls (#{elapsed}s)")
 
-puts "Too long topic name: OK"
+puts "Invalid topic name: OK"

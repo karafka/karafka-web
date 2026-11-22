@@ -14,11 +14,6 @@ module Karafka
         # @note We expose here only admin methods used in the Web UI interface. Processing uses the
         #   `Karafka::Admin` with the defaults
         class Admin
-          # Contracts are stateless, so one instance serves every call
-          TOPIC_NAME_CONTRACT = Contracts::TopicName.new
-
-          private_constant :TOPIC_NAME_CONTRACT
-
           class << self
             extend Forwardable
 
@@ -79,7 +74,7 @@ module Karafka
             # @param topic_name [String, Symbol] topic name
             # @raise [Web::Errors::Ui::NotFoundError] when the name is not a valid Kafka name
             def validate_topic_name!(topic_name)
-              return if TOPIC_NAME_CONTRACT.call({ topic_name: topic_name.to_s }).success?
+              return if Contracts::TopicName.new.call({ topic_name: topic_name.to_s }).success?
 
               raise(Web::Errors::Ui::NotFoundError, topic_name)
             end
