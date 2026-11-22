@@ -30,6 +30,22 @@ module IntegrationHelper
     exit 1
   end
 
+  # Asserts that a collection or a string includes an item, exits with error if not
+  #
+  # @param collection [#include?] the collection or string to check
+  # @param item [Object] the expected item
+  # @param message [String] error message to display if assertion fails
+  def assert_includes(collection, item, message)
+    return if collection.include?(item)
+
+    puts <<~ERROR
+      FAILED: #{message}
+        Expected to include: #{item}
+        Got: #{collection}
+    ERROR
+    exit 1
+  end
+
   # Asserts that a value is of a specific type, exits with error if not
   #
   # @param value [Object] the value to check
