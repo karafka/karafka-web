@@ -49,7 +49,7 @@ module Karafka
                 consumer_groups_controller = build(Controllers::Health::ConsumerGroupsController)
 
                 r.get "consumer_groups", String do |group_id|
-                  consumer_groups_controller.show(group_id)
+                  consumer_groups_controller.show(URI.decode_uri_component(group_id))
                 end
 
                 r.get "consumer_groups" do

@@ -33,10 +33,36 @@ describe_current do
 
   let(:topic) { create_topic(partitions: 2) }
   let(:group_id) { SecureRandom.uuid }
+  let(:stable_group_id) { "stable-#{group_id}" }
+
+  let(:consumer) do
+    Rdkafka::Config.new(
+      "bootstrap.servers": "127.0.0.1:9092",
+      "group.id": stable_group_id,
+      "client.id": "consumer-groups-controller-test"
+    ).consumer
+  end
+
+  def start_member
+    consumer.subscribe(topic)
+
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 30
+
+    while consumer.assignment.empty?
+      raise "no assignment" if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
+
+      consumer.poll(100)
+    end
+  end
+
+  def position(text)
+    response.body.index(text)
+  end
 
   before do
-    produce_many(topic, Array.new(10) { |i| i.to_s }, partition: 1)
-    Karafka::Admin.seek_consumer_group(group_id, { topic => { 1 => 4 } })
+    produce_many(topic, Array.new(10) { |i| i.to_s }, partition: 0)
+    produce_many(topic, Array.new(20) { |i| i.to_s }, partition: 1)
+    Karafka::Admin.seek_consumer_group(group_id, { topic => { 0 => 2, 1 => 5 } })
   end
 
   describe "#index" do
@@ -82,7 +108,55 @@ describe_current do
 
       it do
         assert_ok
-        assert(response.body.index(group_id) < response.body.index(other_group_id))
+        assert(position(group_id) < position(other_group_id))
+      end
+    end
+
+    context "when there is a stable and an empty consumer group" do
+      before { start_member }
+
+      after { consumer.close }
+
+      it "expect filtering by state to keep only the matching group" do
+        get_filtered("health/consumer_groups", state: "stable")
+
+        assert_ok
+        assert_body(%(href="/health/consumer_groups/#{stable_group_id}"))
+        refute_body(%(href="/health/consumer_groups/#{group_id}"))
+      end
+
+      it "expect sorting by state to order the groups by it" do
+        get "health/consumer_groups?sort=state+asc"
+
+        assert_ok
+        assert(position("/#{group_id}\"") < position("/#{stable_group_id}\""))
+
+        get "health/consumer_groups?sort=state+desc"
+
+        assert_ok
+        assert(position("/#{stable_group_id}\"") < position("/#{group_id}\""))
+      end
+    end
+
+    context "when the consumer group id has characters that are special in URLs" do
+      let(:special_group_id) { "a b/c?d#e%f-#{group_id}" }
+      let(:special_path) { "/health/consumer_groups/a%20b%2Fc%3Fd%23e%25f-#{group_id}" }
+
+      before do
+        Karafka::Admin.seek_consumer_group(special_group_id, { topic => { 1 => 3 } })
+        get_filtered("health/consumer_groups", id: group_id)
+      end
+
+      it "expect its link to lead to its page" do
+        assert_ok
+        assert_body(%(href="#{special_path}"))
+
+        get special_path
+
+        assert_ok
+        assert_body("Consumer group #{special_group_id}")
+        assert_body(%(href="#{special_path}"))
+        assert_body("<td>3</td>")
       end
     end
   end
@@ -106,40 +180,43 @@ describe_current do
         assert_body("empty")
         assert_body("This consumer group has no members.")
         assert_body(topic)
-        assert_body("<td>4</td>")
-        assert_body("<td>6</td>")
+        assert_body("<td>5</td>")
+        assert_body("<td>15</td>")
+      end
+    end
+
+    context "when sorting the partitions by lag" do
+      it "expect the rows in the lag order" do
+        get "health/consumer_groups/#{group_id}?sort=lag+desc"
+
+        assert_ok
+        assert(position("<td>15</td>") < position("<td>8</td>"))
+
+        get "health/consumer_groups/#{group_id}?sort=lag+asc"
+
+        assert_ok
+        assert(position("<td>8</td>") < position("<td>15</td>"))
       end
     end
 
     context "when the consumer group has an active member" do
-      let(:consumer) do
-        Rdkafka::Config.new(
-          "bootstrap.servers": "127.0.0.1:9092",
-          "group.id": group_id,
-          "client.id": "consumer-groups-controller-test"
-        ).consumer
-      end
+      let(:described) { Karafka::Admin.describe_consumer_groups([stable_group_id]).first }
 
       before do
-        consumer.subscribe(topic)
-
-        deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 30
-
-        while consumer.assignment.empty?
-          raise "no assignment" if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
-
-          consumer.poll(100)
-        end
-
-        get "health/consumer_groups/#{group_id}"
+        start_member
+        get "health/consumer_groups/#{stable_group_id}"
       end
 
       after { consumer.close }
 
-      it "shows the member with its client id and assignment" do
+      it "shows the member with its client id, host and assignment, and the coordinator" do
+        coordinator = described.fetch(:coordinator)
+
         assert_ok
         assert_body("stable")
         assert_body("consumer-groups-controller-test")
+        assert_body("<td>#{described.fetch(:members).first.fetch(:host)}</td>")
+        assert_body("#{coordinator[:id]} (#{coordinator[:host]}:#{coordinator[:port]})")
         assert_body("#{topic}: 0, 1")
         refute_body("This consumer group has no members.")
       end

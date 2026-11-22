@@ -6,7 +6,7 @@ module Karafka
       module Models
         # Representation of a consumer group as the cluster sees it, regardless of whether it is
         # managed or reported by Karafka. Covers groups of other (also non-Ruby) applications,
-        # applications that are down and leftover empty or dead groups.
+        # applications that are down and leftover empty groups.
         class ClusterConsumerGroup < Lib::HashProxy
           class << self
             # @return [Array<ClusterConsumerGroup>] all consumer groups in the cluster with their

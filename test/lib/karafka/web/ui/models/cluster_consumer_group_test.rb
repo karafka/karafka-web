@@ -57,5 +57,20 @@ describe_current do
         topics.fetch(topic).sort_by { |partition| partition[:id] }
       )
     end
+
+    context "when the consumer group has offsets on topics that do not come sorted" do
+      before do
+        Karafka::Admin
+          .stubs(:read_lags_with_offsets)
+          .returns(
+            group_id => {
+              "b-topic" => { 0 => { offset: 1, lag: 0 } },
+              "a-topic" => { 0 => { offset: 2, lag: 0 } }
+            }
+          )
+      end
+
+      it { assert_equal(%w[a-topic b-topic], topics.keys) }
+    end
   end
 end

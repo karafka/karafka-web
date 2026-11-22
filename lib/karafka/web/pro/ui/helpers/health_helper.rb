@@ -70,6 +70,13 @@ module Karafka
               "#{root_path("health", "topics")}?filter[field]=consumer_group&filter[value]=#{value}"
             end
 
+            # @param group_id [String] consumer group id
+            # @return [String] path to the cluster consumer group page. Kafka group ids may hold
+            #   any character, so the id is encoded as a single path segment.
+            def health_consumer_group_path(group_id)
+              root_path("health", "consumer_groups", URI.encode_uri_component(group_id))
+            end
+
             # @return [String] path to the aggregated topics list sorted by total lag, worst first
             def health_topics_by_lag_path
               "#{root_path("health", "topics")}?sort=lag_hybrid+desc"
