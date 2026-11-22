@@ -231,6 +231,7 @@ module Karafka
               self.class.destructive? && @arguments[:dry_run] == true
             end
 
+            # @param message [String] why the Web UI would deny the action
             # @raise [Errors::Mcp::PolicyDeniedError]
             def deny!(message)
               raise Errors::Mcp::PolicyDeniedError, message

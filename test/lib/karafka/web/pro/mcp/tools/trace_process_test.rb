@@ -86,7 +86,7 @@ describe_current do
     annotations = described_class.definition.fetch(:annotations)
 
     refute(annotations[:readOnlyHint])
-    assert_equal(false, annotations[:destructiveHint])
+    refute(annotations[:destructiveHint])
     assert(annotations[:idempotentHint])
   end
   let(:commands_topic) { create_topic }
