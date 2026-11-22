@@ -67,7 +67,7 @@ module Karafka
           private_constant :TOOLS
 
           # @param audit [Audit] audit log of the request tools calls
-          def initialize(audit = Audit.new({}))
+          def initialize(audit)
             @audit = audit
           end
 

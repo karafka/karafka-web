@@ -51,7 +51,7 @@ describe_current do
       topics_reseter.stubs(:call)
     end
 
-    it "expect to remote topics but the mcp audit one, create topics and their states" do
+    it "expect to remove topics but the mcp audit one, create topics and their states" do
       topics_reseter.expects(:call).with(mcp_audit: false)
       topics_creator.expects(:call)
       states_creator.expects(:call)

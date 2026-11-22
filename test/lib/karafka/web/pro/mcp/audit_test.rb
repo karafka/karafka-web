@@ -47,40 +47,6 @@ describe_current do
 
   after { Karafka::Web.config.mcp.audit.actor = nil }
 
-  describe "#result" do
-    before do
-      audit.result(
-        call_id,
-        "karafka_errors_list",
-        arguments,
-        outcome: "ok",
-        sync: false,
-        started_at: audit.monotonic_now - 10,
-        summary: { "errors" => 2 }
-      )
-    end
-
-    it "writes one record with the call details" do
-      assert_equal(1, records.size)
-      assert_equal("1.0.0", record["schema_version"])
-      assert_equal("result", record["type"])
-      assert_equal(call_id, record["call_id"])
-      assert_equal(call_id, Karafka::Admin.read_topic(audit_topic, 0, 1).first.key)
-      refute_equal(call_id, record["id"])
-      assert_equal("karafka_errors_list", record["tool"])
-      assert_equal({ "limit" => 5 }, record["arguments"])
-      assert_equal("ok", record["outcome"])
-      assert_nil(record["error"])
-      assert_operator(record["duration"], :>=, 10)
-      assert_equal({ "errors" => 2 }, record["summary"])
-      assert_in_delta(Time.now.to_f, record["dispatched_at"], 60)
-    end
-
-    it "uses the remote IP and User-Agent as the actor" do
-      assert_equal({ "remote_ip" => "10.0.0.1", "user_agent" => "agent/1.0" }, record["actor"])
-    end
-  end
-
   describe "#intent" do
     it "writes the record" do
       assert(audit.intent(call_id, "karafka_test_change", arguments))
@@ -102,6 +68,40 @@ describe_current do
   end
 
   describe "#result" do
+    context "when a call is recorded" do
+      before do
+        audit.result(
+          call_id,
+          "karafka_errors_list",
+          arguments,
+          outcome: "ok",
+          sync: false,
+          started_at: audit.monotonic_now - 10,
+          summary: { "errors" => 2 }
+        )
+      end
+
+      it "writes one record with the call details" do
+        assert_equal(1, records.size)
+        assert_equal("1.0.0", record["schema_version"])
+        assert_equal("result", record["type"])
+        assert_equal(call_id, record["call_id"])
+        assert_equal(call_id, Karafka::Admin.read_topic(audit_topic, 0, 1).first.key)
+        refute_equal(call_id, record["id"])
+        assert_equal("karafka_errors_list", record["tool"])
+        assert_equal({ "limit" => 5 }, record["arguments"])
+        assert_equal("ok", record["outcome"])
+        assert_nil(record["error"])
+        assert_operator(record["duration"], :>=, 10)
+        assert_equal({ "errors" => 2 }, record["summary"])
+        assert_in_delta(Time.now.to_f, record["dispatched_at"], 60)
+      end
+
+      it "uses the remote IP and User-Agent as the actor" do
+        assert_equal({ "remote_ip" => "10.0.0.1", "user_agent" => "agent/1.0" }, record["actor"])
+      end
+    end
+
     context "when sync" do
       it "waits for the write on an acks: all producer" do
         Karafka::Web.producers.fully_acked.expects(:produce_sync).once

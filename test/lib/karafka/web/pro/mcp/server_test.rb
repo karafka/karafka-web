@@ -29,7 +29,7 @@
 # Contact: contact@karafka.io
 
 describe_current do
-  let(:server) { described_class.new }
+  let(:server) { described_class.new(Karafka::Web::Pro::Mcp::Audit.new({})) }
   let(:response) { server.call(request.is_a?(String) ? request : request.to_json) }
   let(:status) { response[0] }
   let(:payload) { JSON.parse(response[2].join) }

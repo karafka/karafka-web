@@ -7,7 +7,7 @@
 - **[Feature]** Aggregate the Health views per topic with drill-down to partitions, so they stay usable at scale. Thresholds are configurable under `config.ui.health.lags` (#112).
 - **[Feature]** Add a **Delete Offsets** action (Pro) to the Health cluster lags and the Routing topic page that deletes a consumer group's committed offsets for a topic. Gated by the new `ui.policies.consumer_groups` `#delete_offsets?` policy, denied by default. Requires karafka `2.6.2`.
 - **[Feature]** Add a read-only MCP server, mounted with `Karafka::Web::Mcp::App`, so AI agents can read the dashboard overview, metrics, per-topic health, cluster lags, consumer processes, consumer groups and errors over plain HTTP. Mounting it is the opt-in and, like the Web UI, it relies on the host app for authentication (Pro).
-- **[Feature]** Record every MCP tool call, rejected ones included, to the new `karafka_mcp_audit` topic (`config.topics.mcp_audit`, 1 year retention, created by `install`/`migrate`, kept by `reset`) for incident review. Records hold the tool, masked arguments, actor (`config.mcp.audit.actor` callable, else remote IP and User-Agent), outcome, duration and a result summary. Changing tools write a fully acked intent record before acting and refuse to act when it fails; `config.mcp.audit.fail_closed_reads` does the same for read-only tools. MCP tools cannot change the audit topic (Pro).
+- **[Feature]** Record every MCP tool call to the new `karafka_mcp_audit` topic (`config.topics.mcp_audit`; kept by `reset`) with the caller (`config.mcp.audit.actor`). Changing tools are refused when the audit write fails (`config.mcp.audit.fail_closed_reads` for reads). MCP cannot change the topic (Pro).
 - [Enhancement] Show the Explorer publish, republish, download, export and delete actions disabled, with the reason in their title, when a policy denies them or the payload cannot be exported, instead of hiding them.
 - [Enhancement] Explain every disabled action button (topics management, commanding, read-only configs, recurring tasks, process state) with the reason in its title, which a disabled button could not show before.
 - [Fix] Do not live-poll the topic, messages and offsets deletion confirmation pages, so a rejected deletion error is not replaced by a refresh a few seconds later.
@@ -16,6 +16,7 @@
 - [Enhancement] Produce consumer commanding requests with `acks: 1` so the broker confirms receipt, and add a `Karafka::Web.producers` facade (#1241).
 - [Enhancement] After republishing, redirect to the partition that received the copy (#1239).
 - [Enhancement] Add `Karafka::Web.producer.acked`, an `acks: 1` producer variant, so user-initiated produces report the assigned offset (#956).
+- [Enhancement] Add `Karafka::Web.producer.fully_acked`, an `acks: all` producer variant for records that must not be lost.
 - [Enhancement] Add a per-broker partition **Distribution** view to the Cluster section (Pro) that flags over and under-loaded brokers (#962).
 - [Enhancement] Inject Web UI kafka settings through `Karafka::Web::Config::DefaultsInjector`, following the Karafka pattern (#653). Requires karafka-core `>= 2.6.3`.
 - [Enhancement] Read the Pro commands and scheduled-messages topics with the same Web UI kafka settings as the rest of the UI.
