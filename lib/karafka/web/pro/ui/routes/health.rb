@@ -49,9 +49,13 @@ module Karafka
                 consumer_groups_controller = build(Controllers::Health::ConsumerGroupsController)
 
                 r.get "consumer_groups", String do |group_id|
-                  consumer_groups_controller.show(URI.decode_uri_component(group_id))
-                rescue ArgumentError
-                  raise Web::Errors::Ui::NotFoundError, group_id
+                  decoded_group_id = begin
+                    URI.decode_uri_component(group_id)
+                  rescue ArgumentError
+                    raise Web::Errors::Ui::NotFoundError, group_id
+                  end
+
+                  consumer_groups_controller.show(decoded_group_id)
                 end
 
                 r.get "consumer_groups" do

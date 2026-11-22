@@ -189,6 +189,18 @@ describe_current do
       end
     end
 
+    context "when loading the consumer group page raises an ArgumentError" do
+      before do
+        Karafka::Admin.stubs(:read_lags_with_offsets).raises(ArgumentError)
+        get "health/consumer_groups/#{group_id}"
+      end
+
+      it do
+        refute(response.ok?)
+        assert_equal(500, response.status)
+      end
+    end
+
     %w[%zz abc%].each do |malformed|
       context "when the consumer group id is a malformed escape (#{malformed})" do
         it do
