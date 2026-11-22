@@ -61,9 +61,10 @@ module Karafka
             # Karafka::Pro::Loader prepends its defaults injector onto the OSS one.
             Web::Config::DefaultsInjector.singleton_class.prepend(Config::DefaultsInjector)
 
-            # Expand the config with commanding configuration
+            # Expand the config with commanding and MCP configuration
             config.instance_eval do
               setting(:commanding, default: Commanding::Config.config)
+              setting(:mcp, default: Mcp::Config.config)
             end
 
             # Expand UI config with extra search capabilities settings
@@ -93,6 +94,7 @@ module Karafka
             Ui::Lib::Explorer::Search.post_setup(config)
             Ui::Lib::Health.post_setup(config)
             Ui::Lib::Cluster.post_setup(config)
+            Mcp::Contracts::Config.new.validate!(config.to_h)
 
             config.commanding.listeners.each do |listener|
               ::Karafka::App.monitor.subscribe(listener)

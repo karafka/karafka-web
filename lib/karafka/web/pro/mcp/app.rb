@@ -55,6 +55,8 @@ module Karafka
             next if !Web.config.ui.respond_to?(:policies) ||
               Web.config.ui.policies.requests.allow?(env)
 
+            Server.new(Audit.new(env)).denied(request.body.read)
+
             request.halt(Responses.http_error(403, "Forbidden"))
           end
 
@@ -70,7 +72,7 @@ module Karafka
               r.halt(Responses.http_error(400, "Unsupported MCP-Protocol-Version"))
             end
 
-            r.halt(Server.new.call(r.body.read))
+            r.halt(Server.new(Audit.new(env)).call(r.body.read))
           end
 
           private

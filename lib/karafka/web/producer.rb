@@ -25,6 +25,7 @@ module Karafka
       def initialize
         @initialized = false
         @acked = nil
+        @fully_acked = nil
         @pid = ::Process.pid
         # Initialize with nil - will be set on first access
         super(nil)
@@ -56,6 +57,17 @@ module Karafka
         @acked ||= acks_variant(1)
       end
 
+      # A producer variant that waits for all the in-sync replicas (`acks: all`). Use it for
+      # records that must not be lost, like the MCP audit records written before an action.
+      #
+      # @return [WaterDrop::Producer, WaterDrop::Producer::Variant] the `acks: all` variant, or the
+      #   default producer when it is idempotent or transactional (those already use `acks: all`)
+      def fully_acked
+        reset_after_fork
+
+        @fully_acked ||= acks_variant("all")
+      end
+
       private
 
       # Drops the memoized variants when the process changed, so a forked child builds its own
@@ -75,6 +87,7 @@ module Karafka
         @initialized = false
         @delegate_sd_obj = nil
         @acked = nil
+        @fully_acked = nil
         @pid = ::Process.pid
       end
 

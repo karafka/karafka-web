@@ -56,6 +56,14 @@ module Karafka
               end
             end
           end
+
+          nested(:mcp_audit) do
+            required(:name) { |val| val.is_a?(String) && TOPIC_REGEXP.match?(val) }
+
+            required(:config) do |val|
+              val.is_a?(Hash) && !val.empty? && val.keys.all?(Symbol)
+            end
+          end
         end
 
         nested(:tracking) do

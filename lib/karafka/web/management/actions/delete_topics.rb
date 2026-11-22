@@ -13,7 +13,8 @@ module Karafka
               ::Karafka::Web.config.topics.consumers.reports.name,
               ::Karafka::Web.config.topics.consumers.metrics.name,
               ::Karafka::Web.config.topics.consumers.commands.name,
-              ::Karafka::Web.config.topics.errors.name
+              ::Karafka::Web.config.topics.errors.name,
+              ::Karafka::Web.config.topics.mcp_audit.name
             ].each do |topic_name|
               if existing_topics_names.include?(topic_name.to_s)
                 puts "Removing #{topic_name}..."

@@ -128,6 +128,17 @@ module Karafka
             }
           end
         end
+
+        # Audit log of the Pro MCP server tools calls. Set up in OSS for the same reason as the
+        # commands topic. Long retention so agents actions can be reviewed after an incident.
+        setting :mcp_audit do
+          setting :name, default: "karafka_mcp_audit"
+
+          setting :config, default: {
+            "cleanup.policy": "delete",
+            "retention.ms": 365 * 24 * 60 * 60 * 1_000 # 1 year
+          }
+        end
       end
 
       # Tracking and reporting related settings

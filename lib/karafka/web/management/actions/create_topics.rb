@@ -22,6 +22,7 @@ module Karafka
             consumers_reports_topic = ::Karafka::Web.config.topics.consumers.reports
             consumers_commands_topic = ::Karafka::Web.config.topics.consumers.commands
             errors_topic = ::Karafka::Web.config.topics.errors
+            mcp_audit_topic = ::Karafka::Web.config.topics.mcp_audit
 
             if existing_topics_names.include?(errors_topic.name)
               exists(errors_topic.name)
@@ -82,6 +83,19 @@ module Karafka
                 consumers_commands_topic.config
               )
               created(consumers_commands_topic.name)
+            end
+
+            if existing_topics_names.include?(mcp_audit_topic.name)
+              exists(mcp_audit_topic.name)
+            else
+              creating(mcp_audit_topic.name)
+              ::Karafka::Admin.create_topic(
+                mcp_audit_topic.name,
+                1,
+                replication_factor,
+                mcp_audit_topic.config
+              )
+              created(mcp_audit_topic.name)
             end
 
             # Create only if needed

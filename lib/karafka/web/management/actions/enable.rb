@@ -132,7 +132,8 @@ module Karafka
               ::Karafka::Web.config.topics.consumers.reports,
               ::Karafka::Web.config.topics.consumers.states,
               ::Karafka::Web.config.topics.consumers.metrics,
-              ::Karafka::Web.config.topics.consumers.commands
+              ::Karafka::Web.config.topics.consumers.commands,
+              ::Karafka::Web.config.topics.mcp_audit
             ]
 
             ::Karafka::App.declaratives.draw do

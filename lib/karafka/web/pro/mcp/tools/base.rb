@@ -53,6 +53,15 @@ module Karafka
               # @return [Web::Contracts::Base] contract of the tool arguments
               attr_reader :contract
 
+              # @return [Symbol, nil] kind of change ({Mcp::Guard::OPERATIONS}) a changing tool
+              #   makes, nil for read-only tools
+              attr_reader :operation
+
+              # @return [Boolean] does this tool change anything
+              def changing?
+                !operation.nil?
+              end
+
               # @return [Hash] JSON schema of the tool arguments
               def input_schema
                 schema = { type: "object", properties: properties, additionalProperties: false }
@@ -71,7 +80,7 @@ module Karafka
                   name: name,
                   description: description,
                   inputSchema: input_schema,
-                  annotations: { readOnlyHint: true, openWorldHint: false }
+                  annotations: { readOnlyHint: !changing?, openWorldHint: false }
                 }
               end
 
@@ -84,8 +93,10 @@ module Karafka
               # @param contract [Web::Contracts::Base] contract of the arguments
               # @param properties [Hash] properties of the arguments schema
               # @param required [Array<String>] names of the required arguments
-              def tool(name, description, contract:, properties: {}, required: [])
+              # @param operation [Symbol, nil] kind of change a changing tool makes
+              def tool(name, description, contract:, properties: {}, required: [], operation: nil)
                 @name = name
+                @operation = operation
                 @description = description
                 @contract = contract
                 @properties = properties
@@ -127,6 +138,12 @@ module Karafka
               )
             rescue ::Rdkafka::RdkafkaError => e
               failure("Kafka request failed: #{e.code}")
+            end
+
+            # @return [Array<String>] topics a changing tool would change with its arguments.
+            #   Changing tools must return every topic they touch, so {Mcp::Guard} can check them
+            def topics
+              []
             end
 
             private

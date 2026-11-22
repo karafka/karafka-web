@@ -18,6 +18,12 @@ module Karafka
         def acked
           default.respond_to?(:acked) ? default.acked : default
         end
+
+        # @return [WaterDrop::Producer] a variant that waits for all the in-sync replicas
+        #   (`acks: all`). Falls back to {.default} when it does not expose such a variant.
+        def fully_acked
+          default.respond_to?(:fully_acked) ? default.fully_acked : default
+        end
       end
     end
   end
