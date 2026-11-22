@@ -66,6 +66,12 @@ module Karafka
               required: %w[topic partition offset target_topic]
             )
 
+            # @param arguments [Hash] tool arguments
+            def initialize(arguments)
+              super
+              @message = nil
+            end
+
             # The messages policy must allow it, as for the Web UI action
             #
             # @raise [Errors::Mcp::InvalidArgumentsError] when the source message does not exist
@@ -100,19 +106,13 @@ module Karafka
                 skip_validation: @arguments[:skip_validation].to_s
               )
 
-              errors = Ui::Lib::Explorer::Republishing::Contracts::Form.new.call(
+              validate_form(
+                Ui::Lib::Explorer::Republishing::Contracts::Form,
                 form.merge(
                   target_partitions_count: target_partitions_count(target_topic),
                   source_message: message
                 )
-              ).errors
-
-              unless errors.empty?
-                raise(
-                  Errors::Mcp::NoDataError,
-                  errors.map { |key, error| "#{key} #{error}" }.join(", ")
-                )
-              end
+              )
 
               delivery = Ui::Lib::Explorer::Publishing::Dispatcher.new(
                 Ui::Lib::Explorer::Republishing::Transform.call(message, form)

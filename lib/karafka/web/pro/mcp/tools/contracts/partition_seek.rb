@@ -36,14 +36,14 @@ module Karafka
           module Contracts
             # Validates the karafka_seek_partition tool arguments
             class PartitionSeek < Base
-              arguments :consumer_group_id,
+              destructive_arguments(
+                :consumer_group_id,
                 :topic,
                 :partition,
                 :offset,
                 :prevent_overtaking,
-                :force_resume,
-                :confirm,
-                :dry_run
+                :force_resume
+              )
 
               required(:consumer_group_id) { |val| val.is_a?(String) && !val.empty? }
               required(:topic) { |val| val.is_a?(String) && !val.empty? }
@@ -51,8 +51,6 @@ module Karafka
               required(:offset) { |val| val.is_a?(Integer) && val >= 0 }
               optional(:prevent_overtaking) { |val| [true, false].include?(val) }
               optional(:force_resume) { |val| [true, false].include?(val) }
-              optional(:confirm) { |val| [true, false].include?(val) }
-              optional(:dry_run) { |val| [true, false].include?(val) }
             end
           end
         end

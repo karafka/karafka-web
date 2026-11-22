@@ -82,7 +82,7 @@ module Karafka
               begin
                 ::Karafka::Admin.delete_consumer_group_offsets(consumer_group_id, [topic])
               rescue ::Karafka::Errors::ConsumerGroupSubscribedToTopicError
-                raise Errors::Mcp::NoDataError, "Consumer group #{consumer_group_id} consumes " \
+                raise Errors::Mcp::ChangeRefusedError, "Consumer group #{consumer_group_id} consumes " \
                   "#{topic}: stop its consumers first"
               end
 

@@ -44,8 +44,7 @@ module Karafka
                 is sent asynchronously.
               TEXT
               contract: Contracts::NoArguments.new,
-              operation: :produce,
-              idempotent: false
+              operation: :produce
             )
           end
         end

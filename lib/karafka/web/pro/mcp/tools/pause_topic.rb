@@ -44,7 +44,6 @@ module Karafka
               TEXT
               contract: Contracts::TopicPause.new,
               operation: :produce,
-              idempotent: false,
               properties: TOPIC_PROPERTIES.merge(PAUSE_PROPERTIES),
               required: %w[consumer_group_id topic duration]
             )

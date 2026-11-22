@@ -41,18 +41,6 @@ module Karafka
               task_id: { type: "string", description: "Id of the task, as in the Web UI schedule" }
             }.freeze
 
-            class << self
-              # @return [Symbol] recurring tasks command the tool sends
-              attr_reader :command
-
-              private
-
-              # @param command [Symbol] recurring tasks command the tool sends
-              def sends(command)
-                @command = command
-              end
-            end
-
             # @return [Array(String, String)] Web UI request of the matching recurring tasks action
             def ui_request
               task_id = @arguments[:task_id]

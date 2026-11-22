@@ -36,12 +36,10 @@ module Karafka
           module Contracts
             # Validates the karafka_repartition_topic tool arguments
             class TopicRepartitioning < Base
-              arguments :topic, :partitions, :confirm, :dry_run
+              destructive_arguments :topic, :partitions
 
               required(:topic) { |val| val.is_a?(String) && !val.empty? }
               required(:partitions) { |val| val.is_a?(Integer) && val >= 1 }
-              optional(:confirm) { |val| [true, false].include?(val) }
-              optional(:dry_run) { |val| [true, false].include?(val) }
             end
           end
         end

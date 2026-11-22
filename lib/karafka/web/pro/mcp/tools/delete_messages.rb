@@ -99,14 +99,14 @@ module Karafka
               low, high = ::Karafka::Admin.read_watermark_offsets(topic, partition)
 
               if offset > high
-                raise Errors::Mcp::NoDataError, "Offset #{offset} is past the end of " \
+                raise Errors::Mcp::ChangeRefusedError, "Offset #{offset} is past the end of " \
                   "#{topic}##{partition}: its offsets are #{low} to #{high}"
               end
 
               count = [offset - low, 0].max
 
               unless count.positive?
-                raise Errors::Mcp::NoDataError, "There are no messages below offset #{offset} " \
+                raise Errors::Mcp::ChangeRefusedError, "There are no messages below offset #{offset} " \
                   "in #{topic}##{partition} to delete"
               end
 

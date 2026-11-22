@@ -36,12 +36,10 @@ module Karafka
           module Contracts
             # Validates the arguments of the destructive tools that change a consumer group topic
             class ConsumerGroupTopic < Base
-              arguments :consumer_group_id, :topic, :confirm, :dry_run
+              destructive_arguments :consumer_group_id, :topic
 
               required(:consumer_group_id) { |val| val.is_a?(String) && !val.empty? }
               required(:topic) { |val| val.is_a?(String) && !val.empty? }
-              optional(:confirm) { |val| [true, false].include?(val) }
-              optional(:dry_run) { |val| [true, false].include?(val) }
             end
           end
         end

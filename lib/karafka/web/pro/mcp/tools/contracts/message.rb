@@ -36,13 +36,11 @@ module Karafka
           module Contracts
             # Validates the arguments of the destructive tools that point to a message offset
             class Message < Base
-              arguments :topic, :partition, :offset, :confirm, :dry_run
+              destructive_arguments :topic, :partition, :offset
 
               required(:topic) { |val| val.is_a?(String) && !val.empty? }
               required(:partition) { |val| val.is_a?(Integer) && val >= 0 }
               required(:offset) { |val| val.is_a?(Integer) && val >= 0 }
-              optional(:confirm) { |val| [true, false].include?(val) }
-              optional(:dry_run) { |val| [true, false].include?(val) }
             end
           end
         end

@@ -34,7 +34,7 @@ module Karafka
       module Mcp
         module Tools
           # Deletes a topic, as the Web UI topic delete action
-          class DeleteTopic < Base
+          class DeleteTopic < TopicChange
             tool(
               "karafka_delete_topic",
               <<~TEXT.tr("\n", " ").strip,
@@ -50,21 +50,6 @@ module Karafka
               },
               required: %w[topic]
             )
-
-            # Topics management must be enabled and internal topics visible, as in the Web UI
-            def authorize!
-              deny!("Topics management is disabled") unless Ui::Lib::Features.topics_management?
-
-              return if ::Karafka::Web.config.ui.visibility.internal_topics
-              return unless topic.start_with?("__")
-
-              deny!("Internal topics are hidden in the Web UI")
-            end
-
-            # @return [Array<String>] the deleted topic
-            def topics
-              [topic]
-            end
 
             # @return [Array(String, String)] Web UI request of the matching action
             def ui_request
@@ -85,14 +70,7 @@ module Karafka
 
             # @return [Hash] topic that would be deleted
             def plan
-              { topic: topic, partitions: Web::Ui::Models::Topic.find(topic).partition_count }
-            rescue Errors::Ui::NotFoundError
-              raise Errors::Mcp::NoDataError, "Topic #{topic} does not exist"
-            end
-
-            # @return [String]
-            def topic
-              @arguments.fetch(:topic)
+              { topic: topic, partitions: current.partition_count }
             end
           end
         end

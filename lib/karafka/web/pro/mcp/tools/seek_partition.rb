@@ -45,7 +45,6 @@ module Karafka
               TEXT
               contract: Contracts::PartitionSeek.new,
               operation: :produce,
-              idempotent: false,
               destructive: true,
               properties: TOPIC_PROPERTIES.merge(PARTITION_PROPERTIES).merge(
                 offset: { type: "integer", minimum: 0, description: "Offset to move to" },
@@ -75,14 +74,15 @@ module Karafka
 
             # @return [Hash] Web UI offset form from the arguments
             def seek_form
-              validate(
-                Ui::Lib::Consumers::Commands::Contracts::Seek,
-                Ui::Lib::Consumers::Commands::Normalizer.seek(
-                  offset: @arguments.fetch(:offset).to_s,
-                  prevent_overtaking: @arguments[:prevent_overtaking].to_s,
-                  force_resume: @arguments[:force_resume].to_s
-                )
-              ).merge(target)
+              form = Ui::Lib::Consumers::Commands::Normalizer.seek(
+                offset: @arguments.fetch(:offset).to_s,
+                prevent_overtaking: @arguments[:prevent_overtaking].to_s,
+                force_resume: @arguments[:force_resume].to_s
+              )
+
+              validate_form(Ui::Lib::Consumers::Commands::Contracts::Seek, form)
+
+              form.merge(target)
             end
           end
         end

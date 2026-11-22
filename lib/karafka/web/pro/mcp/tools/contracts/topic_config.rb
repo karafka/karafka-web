@@ -36,13 +36,11 @@ module Karafka
           module Contracts
             # Validates the karafka_update_topic_config tool arguments
             class TopicConfig < Base
-              arguments :topic, :property, :value, :confirm, :dry_run
+              destructive_arguments :topic, :property, :value
 
               required(:topic) { |val| val.is_a?(String) && !val.empty? }
               required(:property) { |val| val.is_a?(String) && !val.empty? }
               required(:value) { |val| val.is_a?(String) }
-              optional(:confirm) { |val| [true, false].include?(val) }
-              optional(:dry_run) { |val| [true, false].include?(val) }
             end
           end
         end

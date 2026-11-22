@@ -70,14 +70,13 @@ module Karafka
 
             # @return [Hash] created topic
             def fetch
-              form = validate(
-                Ui::Lib::Topics::Creation::Contracts::Form,
-                Ui::Lib::Topics::Creation::Normalizer.call(
-                  topic_name: topic,
-                  partitions_count: @arguments.fetch(:partitions).to_s,
-                  replication_factor: @arguments.fetch(:replication_factor).to_s
-                )
+              form = Ui::Lib::Topics::Creation::Normalizer.call(
+                topic_name: topic,
+                partitions_count: @arguments.fetch(:partitions).to_s,
+                replication_factor: @arguments.fetch(:replication_factor).to_s
               )
+
+              validate_form(Ui::Lib::Topics::Creation::Contracts::Form, form)
 
               Ui::Lib::Topics::Creation::Dispatcher.new(form).call
               ::Karafka::Web.config.ui.cache.clear

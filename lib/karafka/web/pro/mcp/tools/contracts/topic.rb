@@ -36,11 +36,9 @@ module Karafka
           module Contracts
             # Validates the arguments of the destructive tools that change one topic
             class Topic < Base
-              arguments :topic, :confirm, :dry_run
+              destructive_arguments :topic
 
               required(:topic) { |val| val.is_a?(String) && !val.empty? }
-              optional(:confirm) { |val| [true, false].include?(val) }
-              optional(:dry_run) { |val| [true, false].include?(val) }
             end
           end
         end

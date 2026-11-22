@@ -66,7 +66,7 @@ module Karafka
               change = plan
 
               Ui::Lib::Topics::Configuring::Dispatcher.new(
-                Ui::Lib::Topics::Configuring::Transform.call(topic, property, @form)
+                Ui::Lib::Topics::Configuring::Transform.call(topic, property, form)
               ).call
 
               { altered: true }.merge(change)
@@ -77,14 +77,16 @@ module Karafka
               config = current.configs.find { |details| details.name == property }
 
               raise Errors::Mcp::NoDataError, "Topic #{topic} has no #{property} property" unless config
-              raise Errors::Mcp::NoDataError, "Property #{property} is read-only" if config.read_only?
+              raise Errors::Mcp::ChangeRefusedError, "Property #{property} is read-only" if config.read_only?
 
-              @form = validate(
-                Ui::Lib::Topics::Configuring::Contracts::Form,
-                Ui::Lib::Topics::Configuring::Normalizer.call(property_value: @arguments.fetch(:value))
-              )
+              validate_form(Ui::Lib::Topics::Configuring::Contracts::Form, form)
 
               { topic: topic, property: property, from: config.value, to: @arguments.fetch(:value) }
+            end
+
+            # @return [Hash] Web UI config form from the arguments
+            def form
+              Ui::Lib::Topics::Configuring::Normalizer.call(property_value: @arguments.fetch(:value))
             end
 
             # @return [String]

@@ -93,16 +93,10 @@ module Karafka
                 skip_validation: @arguments[:skip_validation].to_s
               )
 
-              errors = Ui::Lib::Explorer::Publishing::Contracts::Form.new.call(
+              validate_form(
+                Ui::Lib::Explorer::Publishing::Contracts::Form,
                 form.merge(partitions_count: partitions_count, topic: topic)
-              ).errors
-
-              unless errors.empty?
-                raise(
-                  Errors::Mcp::NoDataError,
-                  errors.map { |key, message| "#{key} #{message}" }.join(", ")
-                )
-              end
+              )
 
               delivery = Ui::Lib::Explorer::Publishing::Dispatcher.new(
                 Ui::Lib::Explorer::Publishing::Transform.call(topic, form)

@@ -36,6 +36,12 @@ module Karafka
           # Base for the tools that create or change topics, as the Web UI topics management
           # actions do
           class TopicChange < Base
+            # @param arguments [Hash] tool arguments
+            def initialize(arguments)
+              super
+              @current = nil
+            end
+
             # Topics management must be enabled and internal topics visible, as in the Web UI
             def authorize!
               deny!("Topics management is disabled") unless Ui::Lib::Features.topics_management?
@@ -52,21 +58,6 @@ module Karafka
             end
 
             private
-
-            # @param contract [Web::Contracts::Base] Web UI form contract
-            # @param form [Hash] normalized Web UI form
-            # @return [Hash] form when it passes the same checks as in the Web UI
-            # @raise [Errors::Mcp::NoDataError] when the Web UI would refuse the form
-            def validate(contract, form)
-              errors = contract.new.call(form).errors
-
-              return form if errors.empty?
-
-              raise(
-                Errors::Mcp::NoDataError,
-                errors.map { |key, message| "#{key} #{message}" }.join(", ")
-              )
-            end
 
             # @return [Web::Ui::Models::Topic]
             # @raise [Errors::Mcp::NoDataError] when the topic does not exist

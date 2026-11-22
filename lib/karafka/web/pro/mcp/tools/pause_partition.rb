@@ -44,7 +44,6 @@ module Karafka
               TEXT
               contract: Contracts::PartitionPause.new,
               operation: :produce,
-              idempotent: false,
               properties: TOPIC_PROPERTIES
                 .merge(PARTITION_PROPERTIES)
                 .merge(PAUSE_PROPERTIES),

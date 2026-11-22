@@ -65,6 +65,9 @@ module Karafka
               # @return [Web::Contracts::Base] contract of the tool arguments
               attr_reader :contract
 
+              # @return [Object, nil] command a commanding tool sends
+              attr_reader :command
+
               # @return [Symbol, nil] kind of change ({Mcp::Guard::OPERATIONS}) a changing tool
               #   makes, nil for read-only tools
               attr_reader :operation
@@ -123,6 +126,11 @@ module Karafka
 
               private
 
+              # @param command [Object] command a commanding tool sends
+              def sends(command)
+                @command = command
+              end
+
               # Defines the tool metadata
               #
               # @param name [String]
@@ -160,14 +168,7 @@ module Karafka
             def initialize(arguments)
               @arguments = arguments.transform_keys(&:to_sym)
 
-              result = self.class.contract.call(@arguments)
-
-              unless result.success?
-                raise(
-                  Errors::Mcp::InvalidArgumentsError,
-                  result.errors.map { |key, message| "#{key} #{message}" }.join(", ")
-                )
-              end
+              check!(self.class.contract.call(@arguments), Errors::Mcp::InvalidArgumentsError)
 
               return unless self.class.destructive?
               return if dry_run? || @arguments[:confirm] == true
@@ -196,7 +197,7 @@ module Karafka
                 structuredContent: data,
                 isError: false
               }
-            rescue Errors::Mcp::NoDataError => e
+            rescue Errors::Mcp::NoDataError, Errors::Mcp::ChangeRefusedError => e
               failure(e.message)
             rescue Errors::Ui::NotFoundError
               failure(
@@ -232,6 +233,22 @@ module Karafka
             # @return [Hash] what a destructive tool would change, without changing it
             def plan
               raise NotImplementedError, "Implement in a subclass"
+            end
+
+            # @param contract [Class] Web UI form contract
+            # @param form [Hash] normalized Web UI form with the data its contract needs
+            # @raise [Errors::Mcp::ChangeRefusedError] when the Web UI would refuse the form
+            def validate_form(contract, form)
+              check!(contract.new.call(form), Errors::Mcp::ChangeRefusedError)
+            end
+
+            # @param result [Karafka::Core::Contractable::Result] contract result
+            # @param error [Class] error to raise when the result has errors
+            # @raise [Errors::Mcp::BaseError] with the contract errors as the message
+            def check!(result, error)
+              return if result.success?
+
+              raise error, result.errors.map { |key, message| "#{key} #{message}" }.join(", ")
             end
 
             # @return [Boolean] should a destructive tool only describe its change

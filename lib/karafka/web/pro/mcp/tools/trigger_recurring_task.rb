@@ -45,7 +45,6 @@ module Karafka
               TEXT
               contract: Contracts::RecurringTask.new,
               operation: :produce,
-              idempotent: false,
               properties: TASK_ID,
               required: %w[task_id]
             )

@@ -85,6 +85,9 @@ module Karafka
         # Raised when the data requested by a tool does not exist. Its message tells why
         NoDataError = Class.new(BaseError)
 
+        # Raised when the Web UI would refuse the change a tool asks for. Its message tells why
+        ChangeRefusedError = Class.new(BaseError)
+
         # Raised when a changing tool would change something MCP must not change
         PolicyDeniedError = Class.new(BaseError)
       end

@@ -44,18 +44,6 @@ module Karafka
               }
             }.freeze
 
-            class << self
-              # @return [Class] commanding command the tool sends
-              attr_reader :command
-
-              private
-
-              # @param command [Class] commanding command the tool sends
-              def sends(command)
-                @command = command
-              end
-            end
-
             # Commanding must be enabled, as for the Web UI commanding actions
             def authorize!
               deny!("Commanding is disabled") unless Ui::Lib::Features.commanding?

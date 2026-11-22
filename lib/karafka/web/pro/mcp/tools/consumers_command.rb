@@ -68,14 +68,6 @@ module Karafka
               }
             }.freeze
 
-            # @param arguments [Hash] tool arguments
-            # @raise [Errors::Mcp::InvalidArgumentsError] when arguments do not pass the tool
-            #   contract or the Web UI form contract
-            def initialize(arguments)
-              super
-              @command = command
-            end
-
             # Commanding must be enabled, as for the Web UI actions
             def authorize!
               deny!("Commanding is disabled") unless Ui::Lib::Features.commanding?
@@ -92,16 +84,16 @@ module Karafka
             def fetch
               change = plan
 
-              Ui::Lib::Consumers::Commands::Dispatcher.new(@command).call
+              Ui::Lib::Consumers::Commands::Dispatcher.new(change).call
 
               { dispatched: true }.merge(change)
             end
 
-            # @return [Hash] command the tool would send
+            # @return [Hash] command the tool would send, as the Web UI builds it
             def plan
               ensure_target_exists!
 
-              @command.slice(:name, :payload, :matchers)
+              command.slice(:name, :payload, :matchers)
             end
 
             # The Web UI actions answer 404 for a consumer group, topic or partition that the
@@ -138,20 +130,6 @@ module Karafka
               raise NotImplementedError, "Implement in a subclass"
             end
 
-            # @param contract [Web::Contracts::Base] Web UI form contract
-            # @param form [Hash] normalized Web UI form
-            # @return [Hash] form when it passes the same checks as in the Web UI
-            def validate(contract, form)
-              errors = contract.new.call(form).errors
-
-              return form if errors.empty?
-
-              raise(
-                Errors::Mcp::InvalidArgumentsError,
-                errors.map { |key, message| "#{key} #{message}" }.join(", ")
-              )
-            end
-
             # @return [Hash] consumer group, topic and partition the command is for
             def target
               target = {
@@ -165,13 +143,14 @@ module Karafka
 
             # @return [Hash] Web UI pause form from the arguments
             def pause_form
-              validate(
-                Ui::Lib::Consumers::Commands::Contracts::Pause,
-                Ui::Lib::Consumers::Commands::Normalizer.pause(
-                  duration: @arguments.fetch(:duration).to_s,
-                  prevent_override: @arguments[:prevent_override].to_s
-                )
-              ).merge(target)
+              form = Ui::Lib::Consumers::Commands::Normalizer.pause(
+                duration: @arguments.fetch(:duration).to_s,
+                prevent_override: @arguments[:prevent_override].to_s
+              )
+
+              validate_form(Ui::Lib::Consumers::Commands::Contracts::Pause, form)
+
+              form.merge(target)
             end
 
             # @return [Hash] Web UI resume form from the arguments

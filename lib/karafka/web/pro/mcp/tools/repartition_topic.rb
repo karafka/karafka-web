@@ -68,23 +68,26 @@ module Karafka
             def fetch
               change = plan
 
-              Ui::Lib::Topics::Repartitioning::Dispatcher.new(topic, @form).call
+              Ui::Lib::Topics::Repartitioning::Dispatcher.new(topic, form).call
 
               { started: true }.merge(change)
             end
 
             # @return [Hash] partitions count change
             def plan
-              @form = Ui::Lib::Topics::Repartitioning::Normalizer.call(
-                partition_count: @arguments.fetch(:partitions).to_s
-              )
-
-              validate(
+              validate_form(
                 Ui::Lib::Topics::Repartitioning::Contracts::Form,
-                @form.merge(current_partition_count: current.partition_count)
+                form.merge(current_partition_count: current.partition_count)
               )
 
               { topic: topic, from: current.partition_count, to: @arguments.fetch(:partitions) }
+            end
+
+            # @return [Hash] Web UI repartitioning form from the arguments
+            def form
+              Ui::Lib::Topics::Repartitioning::Normalizer.call(
+                partition_count: @arguments.fetch(:partitions).to_s
+              )
             end
           end
         end

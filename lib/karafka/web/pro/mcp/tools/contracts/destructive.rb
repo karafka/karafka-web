@@ -36,10 +36,7 @@ module Karafka
           module Contracts
             # Validates the arguments of destructive tools that take only the safety arguments
             class Destructive < Base
-              arguments :confirm, :dry_run
-
-              optional(:confirm) { |val| [true, false].include?(val) }
-              optional(:dry_run) { |val| [true, false].include?(val) }
+              destructive_arguments
             end
           end
         end
