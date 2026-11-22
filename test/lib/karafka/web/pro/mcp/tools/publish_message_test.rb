@@ -126,4 +126,30 @@ describe_current do
       assert_equal("ok", records.last["outcome"])
     end
   end
+
+  context "when the requests policy denies the matching Web UI request" do
+    let(:requested) { [] }
+
+    before do
+      Karafka::Web.config.ui.policies.requests
+        .stubs(:allow?)
+        .with { |env| requested << env.values_at("REQUEST_POST", "/explorer/messages/#{topic}/publish_INFO") }
+        .returns(false)
+    end
+
+    it "refuses the call and writes the rejection" do
+      assert_equal("The requests policy denies POST /explorer/messages/#{topic}/publish", rpc_error["message"])
+      assert_equal(["POST", "/explorer/messages/#{topic}/publish"], requested.first)
+      assert_equal(%w[rejected], records.map { |record| record["outcome"] })
+    end
+  end
+
+  context "when the topic does not exist" do
+    let(:arguments) { { topic: generate_topic_name, payload: "hello" } }
+
+    it "says so" do
+      assert(result["isError"])
+      assert_equal("Topic #{arguments[:topic]} does not exist", result.dig("content", 0, "text"))
+    end
+  end
 end

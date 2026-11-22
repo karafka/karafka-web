@@ -145,4 +145,40 @@ describe_current do
       assert_equal("ok", records.last["outcome"])
     end
   end
+
+  context "when the requests policy denies the matching Web UI request" do
+    let(:requested) { [] }
+
+    before do
+      Karafka::Web.config.ui.policies.requests
+        .stubs(:allow?)
+        .with { |env| requested << env.values_at("REQUEST_PUT", "/topics/#{topic}/config/retention.ms_INFO") }
+        .returns(false)
+    end
+
+    it "refuses the call and writes the rejection" do
+      assert_equal("The requests policy denies PUT /topics/#{topic}/config/retention.ms", rpc_error["message"])
+      assert_equal(["PUT", "/topics/#{topic}/config/retention.ms"], requested.first)
+      assert_equal(%w[rejected], records.map { |record| record["outcome"] })
+    end
+  end
+
+  context "when the topic is internal and internal topics are hidden" do
+    let(:arguments) { base_arguments.merge(topic: "__consumer_offsets", confirm: true) }
+
+    it "refuses the call" do
+      assert_equal("Internal topics are hidden in the Web UI", rpc_error["message"])
+      assert_equal(%w[rejected], records.map { |record| record["outcome"] })
+    end
+  end
+
+  context "when the property is read-only" do
+    before { Karafka::Admin::Configs::Config.any_instance.stubs(:read_only?).returns(true) }
+
+    it "fails without changing the config" do
+      assert(result["isError"])
+      assert_equal("Property retention.ms is read-only", result.dig("content", 0, "text"))
+      assert_equal("604800000", retention)
+    end
+  end
 end

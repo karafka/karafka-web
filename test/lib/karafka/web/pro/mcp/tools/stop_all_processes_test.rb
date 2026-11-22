@@ -154,4 +154,21 @@ describe_current do
       assert_equal("ok", records.last["outcome"])
     end
   end
+
+  context "when the requests policy denies the matching Web UI request" do
+    let(:requested) { [] }
+
+    before do
+      Karafka::Web.config.ui.policies.requests
+        .stubs(:allow?)
+        .with { |env| requested << env.values_at("REQUEST_POST", "/consumers/commanding/stop_all_INFO") }
+        .returns(false)
+    end
+
+    it "refuses the call and writes the rejection" do
+      assert_equal("The requests policy denies POST /consumers/commanding/stop_all", rpc_error["message"])
+      assert_equal(["POST", "/consumers/commanding/stop_all"], requested.first)
+      assert_equal(%w[rejected], records.map { |record| record["outcome"] })
+    end
+  end
 end

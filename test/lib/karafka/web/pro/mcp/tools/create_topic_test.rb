@@ -123,4 +123,30 @@ describe_current do
       assert_equal("ok", records.last["outcome"])
     end
   end
+
+  context "when the requests policy denies the matching Web UI request" do
+    let(:requested) { [] }
+
+    before do
+      Karafka::Web.config.ui.policies.requests
+        .stubs(:allow?)
+        .with { |env| requested << env.values_at("REQUEST_POST", "/topics_INFO") }
+        .returns(false)
+    end
+
+    it "refuses the call and writes the rejection" do
+      assert_equal("The requests policy denies POST /topics", rpc_error["message"])
+      assert_equal(["POST", "/topics"], requested.first)
+      assert_equal(%w[rejected], records.map { |record| record["outcome"] })
+    end
+  end
+
+  context "when the topic name is internal and internal topics are hidden" do
+    let(:topic) { "__#{generate_topic_name}" }
+
+    it "creates it, as the Web UI does" do
+      refute(result["isError"])
+      assert_includes(cluster_topics, topic)
+    end
+  end
 end

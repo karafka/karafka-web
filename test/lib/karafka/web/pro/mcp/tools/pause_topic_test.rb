@@ -31,8 +31,10 @@
 describe_current do
   let(:server) { Karafka::Web::Pro::Mcp::Server.new(Karafka::Web::Pro::Mcp::Audit.new({})) }
   let(:audit_topic) { create_topic }
-  let(:consumer_group_id) { SecureRandom.uuid }
-  let(:topic) { SecureRandom.uuid }
+  let(:consumer_group_id) { "example_app6_app" }
+  let(:topic) { "default" }
+  let(:states_topic) { create_topic }
+  let(:reports_topic) { create_topic }
   let(:base_arguments) { { consumer_group_id: consumer_group_id, topic: topic, duration: 0, prevent_override: true } }
   let(:arguments) { base_arguments }
   let(:payload) { rpc("tools/call", { name: described_class.name, arguments: arguments }) }
@@ -61,6 +63,11 @@ describe_current do
     failing.stubs(:produce_sync).raises(WaterDrop::Errors::ProduceError)
     Karafka::Web.config.topics.consumers.commands.name = commands_topic
     Karafka::Web.config.commanding.active = true
+    Karafka::Web.config.topics.consumers.states.name = states_topic
+    Karafka::Web.config.topics.consumers.reports.name = reports_topic
+
+    produce(states_topic, Fixtures.consumers_states_file)
+    produce(reports_topic, Fixtures.consumers_reports_file)
   end
 
   after do
@@ -89,7 +96,7 @@ describe_current do
 
     refute(annotations[:readOnlyHint])
     refute(annotations[:destructiveHint])
-    assert(annotations[:idempotentHint])
+    refute(annotations[:idempotentHint])
   end
   let(:commands_topic) { create_topic }
   let(:commands) do
@@ -144,6 +151,33 @@ describe_current do
       refute(result["isError"])
       assert_equal(%w[intent result], records.map { |record| record["type"] })
       assert_equal("ok", records.last["outcome"])
+    end
+  end
+
+  context "when the requests policy denies the matching Web UI request" do
+    let(:requested) { [] }
+
+    before do
+      Karafka::Web.config.ui.policies.requests
+        .stubs(:allow?)
+        .with { |env| requested << env.values_at("REQUEST_POST", "/consumers/topics/#{consumer_group_id}/#{topic}/pause_INFO") }
+        .returns(false)
+    end
+
+    it "refuses the call and writes the rejection" do
+      assert_equal("The requests policy denies POST /consumers/topics/#{consumer_group_id}/#{topic}/pause", rpc_error["message"])
+      assert_equal(["POST", "/consumers/topics/#{consumer_group_id}/#{topic}/pause"], requested.first)
+      assert_equal(%w[rejected], records.map { |record| record["outcome"] })
+    end
+  end
+
+  context "when consumers do not report the target" do
+    let(:consumer_group_id) { "unknown-group" }
+
+    it "fails without sending a command" do
+      assert(result["isError"])
+      assert_includes(result.dig("content", 0, "text"), "Consumers do not report")
+      assert_empty(commands)
     end
   end
 end
