@@ -29,33 +29,14 @@
 # Contact: contact@karafka.io
 
 describe_current do
-  let(:server) { Karafka::Web::Pro::Mcp::Server.new(Karafka::Web::Pro::Mcp::Audit.new({})) }
-  let(:audit_topic) { create_topic }
+  include McpToolsHelper
+
   let(:consumer_group_id) { "example_app6_app" }
   let(:topic) { "default" }
   let(:states_topic) { create_topic }
   let(:reports_topic) { create_topic }
   let(:base_arguments) { { consumer_group_id: consumer_group_id, topic: topic, partition: 0, offset: 10 } }
   let(:arguments) { base_arguments.merge(confirm: true) }
-  let(:payload) { rpc("tools/call", { name: described_class.name, arguments: arguments }) }
-  let(:result) { payload.fetch("result") }
-  let(:rpc_error) { payload.fetch("error") }
-  let(:listed) { rpc("tools/list").dig("result", "tools").map { |tool| tool["name"] } }
-  let(:failing) { stub }
-  let(:records) do
-    Karafka.producer.client.flush
-
-    Karafka::Admin
-      .read_topic(audit_topic, 0, 100)
-      .map { |message| JSON.parse(message.raw_payload) }
-  end
-
-  def rpc(rpc_method, params = nil)
-    request = { jsonrpc: "2.0", id: 1, method: rpc_method }
-    request[:params] = params if params
-
-    JSON.parse(server.call(request.to_json)[2].join)
-  end
 
   before do
     Karafka::Web.config.topics.mcp_audit.name = audit_topic
