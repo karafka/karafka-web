@@ -46,6 +46,16 @@ module Karafka
                   topics_controller.cluster_lags
                 end
 
+                consumer_groups_controller = build(Controllers::Health::ConsumerGroupsController)
+
+                r.get "consumer_groups", String do |group_id|
+                  consumer_groups_controller.show(group_id)
+                end
+
+                r.get "consumer_groups" do
+                  consumer_groups_controller.index
+                end
+
                 # Per-topic drill-down. The per-partition lenses (overview/lags/offsets/changes and
                 # cluster_lags) live here, scoped to a single topic, instead of the old top-level
                 # all-topics views which became unusable with many topics/partitions.
