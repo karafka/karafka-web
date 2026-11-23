@@ -112,7 +112,7 @@ describe_current do
     it "mutes JRuby core frames" do
       assert_equal(muted, helper.backtrace_frame_class("org/jruby/RubyArray.java:2097:in 'each'"))
       assert_equal(muted, helper.backtrace_frame_class("org/jruby/ext/monitor/Monitor.java:85:in 'synchronize'"))
-      assert_equal(muted, helper.backtrace_frame_class("uri:classloader:/META-INF/jruby.home/lib/ruby/stdlib/set.rb:1"))
+      assert_equal(muted, helper.backtrace_frame_class("uri:classloader:/jruby/kernel/kernel.rb:28:in 'x'"))
       assert_equal(muted, helper.backtrace_frame_class("java/lang/Thread.java:1583:in 'run'"))
     end
   end
