@@ -74,7 +74,7 @@
       </div>
 
       <form
-        action="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'delete') %>"
+        action="<%= health_consumer_group_offsets_deletion_path(@consumer_group_id, @topic_name) %>"
         method="post"
         class="mt-6"
         data-turbo="false"
@@ -83,7 +83,7 @@
         <input type="hidden" name="_method" value="delete">
 
         <div class="flex justify-end gap-4">
-          <a href="<%= root_path('health', 'cluster_lags') %>" class="btn btn-ghost">
+          <a href="<%= health_consumer_group_path(@consumer_group_id, 'topics') %>" class="btn btn-ghost">
             Cancel
           </a>
 

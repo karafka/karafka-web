@@ -36,8 +36,8 @@ module Karafka
           module Health
             # Committed offsets of a consumer group for a topic. Kafka keeps them after the
             # consumer group stops consuming the topic, so the topic keeps showing up in the
-            # cluster lags with an ever-growing lag. Deleting them removes the topic from the
-            # consumer group's cluster lags.
+            # consumer group topics and lags with an ever-growing lag. Deleting them removes the
+            # topic from there.
             class OffsetsController < BaseController
               # Renders a confirmation page for the offsets removal since it is a sensitive
               # operation
@@ -73,7 +73,7 @@ module Karafka
                 end
 
                 redirect(
-                  "health/cluster_lags",
+                  "health/consumer_groups/#{URI.encode_uri_component(consumer_group_id)}/topics",
                   success: format_flash(
                     "Offsets of consumer group ? for topic ? have been deleted",
                     consumer_group_id,

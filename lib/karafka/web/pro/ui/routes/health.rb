@@ -67,6 +67,22 @@ module Karafka
                     consumer_groups_controller.members(decoded_group_id)
                   end
 
+                  r.get "topics" do
+                    consumer_groups_controller.topics(decoded_group_id)
+                  end
+
+                  r.on "topics", String do |topic_name|
+                    offsets_controller = build(Controllers::Health::OffsetsController)
+
+                    r.get "delete" do
+                      offsets_controller.edit(decoded_group_id, topic_name)
+                    end
+
+                    r.delete "delete" do
+                      offsets_controller.delete(decoded_group_id, topic_name)
+                    end
+                  end
+
                   r.get "offsets" do
                     consumer_groups_controller.offsets(decoded_group_id)
                   end
@@ -101,16 +117,6 @@ module Karafka
 
                   r.get "cluster_lags" do
                     partitions_controller.cluster_lags(consumer_group_id, topic_name)
-                  end
-
-                  offsets_controller = build(Controllers::Health::OffsetsController)
-
-                  r.get "delete" do
-                    offsets_controller.edit(consumer_group_id, topic_name)
-                  end
-
-                  r.delete "delete" do
-                    offsets_controller.delete(consumer_group_id, topic_name)
                   end
 
                   # A bare topic path defaults to the overview lens

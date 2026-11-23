@@ -166,7 +166,7 @@ describe_current do
       assert_body('class="btn btn-error btn-sm btn-disabled"')
       routed = Karafka::App.routes.first.topics.first
 
-      refute_body("health/topics/#{routed.consumer_group.id}/#{routed.name}/delete")
+      refute_body("health/consumer_groups/#{routed.consumer_group.id}/topics/#{routed.name}/delete")
       assert_body(%(title="#{delete_offsets_denied}"))
     end
 
@@ -181,7 +181,7 @@ describe_current do
 
       it "expect to link to the offsets deletion of its consumer group" do
         assert_ok
-        assert_body("health/topics/#{topic.consumer_group.id}/#{topic.name}/delete")
+        assert_body("health/consumer_groups/#{topic.consumer_group.id}/topics/#{topic.name}/delete")
         assert_body("Delete Offsets")
         refute_body(delete_offsets_denied)
         assert_body('title="Delete the committed offsets of this consumer group for this topic"')

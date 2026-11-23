@@ -43,6 +43,12 @@
         Members
       </a>
     </li>
+  <% elsif current_path.end_with?('/topics') %>
+    <li>
+      <a href="<%= health_consumer_group_path(@consumer_group.id, 'topics') %>">
+        Topics
+      </a>
+    </li>
   <% elsif current_path.end_with?('/offsets') %>
     <li>
       <a href="<%= health_consumer_group_path(@consumer_group.id, 'offsets') %>">

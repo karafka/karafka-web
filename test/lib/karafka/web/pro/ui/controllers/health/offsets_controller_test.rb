@@ -34,7 +34,7 @@ describe_current do
   let(:topic) { create_topic(partitions: 2) }
   let(:consumer_group_id) { SecureRandom.uuid }
   let(:policy) { Karafka::Web.config.ui.policies.consumer_groups }
-  let(:path) { "health/topics/#{consumer_group_id}/#{topic}/delete" }
+  let(:path) { "health/consumer_groups/#{consumer_group_id}/topics/#{topic}/delete" }
   let(:committed) do
     Karafka::Admin::ConsumerGroups
       .read_lags_with_offsets({ consumer_group_id => [topic] })
@@ -61,7 +61,7 @@ describe_current do
       before { policy.stubs(:delete_offsets?).returns(true) }
 
       context "when the topic does not exist" do
-        before { get "health/topics/#{consumer_group_id}/non-existing/delete" }
+        before { get "health/consumer_groups/#{consumer_group_id}/topics/non-existing/delete" }
 
         it do
           refute(response.ok?)
@@ -76,7 +76,8 @@ describe_current do
           assert_ok
           assert_body("Offsets Deletion Warning")
           assert_body("<td>28</td>")
-          assert_body(%(action="/health/topics/#{consumer_group_id}/#{topic}/delete"))
+          assert_body(%(action="/#{path}"))
+          assert_body(%(href="/health/consumer_groups/#{consumer_group_id}/topics"))
           assert_body("Delete Offsets")
           assert_body('data-live-poll="disabled"')
           assert_equal({ 0 => 1, 1 => 2 }, committed)
@@ -101,10 +102,32 @@ describe_current do
       context "when the consumer group is not subscribed to the topic" do
         before { delete path }
 
-        it "deletes the offsets and redirects to the cluster lags" do
+        it "deletes the offsets and redirects to the consumer group topics" do
           assert_equal(302, response.status)
-          assert(response.location.end_with?("/health/cluster_lags"))
+          assert(response.location.end_with?("/health/consumer_groups/#{consumer_group_id}/topics"))
           assert_includes(flash[:success], "have been deleted")
+          assert_equal({ 0 => -1, 1 => -1 }, committed)
+        end
+      end
+
+      context "when the consumer group id has characters that are special in URLs and HTML" do
+        let(:consumer_group_id) { "<b>a b/c?d#e%f</b>-#{SecureRandom.uuid}" }
+        let(:encoded_id) { URI.encode_uri_component(consumer_group_id) }
+        let(:path) { "health/consumer_groups/#{encoded_id}/topics/#{topic}/delete" }
+
+        before do
+          get path
+          @edit_status = response.status
+
+          delete path
+        end
+
+        it "deletes its offsets and escapes it in the flash" do
+          assert_equal(200, @edit_status)
+          assert_equal(302, response.status)
+          assert(response.location.end_with?("/health/consumer_groups/#{encoded_id}/topics"))
+          assert_includes(flash[:success], "&lt;b&gt;a b/c?d#e%f&lt;/b&gt;")
+          refute_includes(flash[:success], "<b>a b")
           assert_equal({ 0 => -1, 1 => -1 }, committed)
         end
       end

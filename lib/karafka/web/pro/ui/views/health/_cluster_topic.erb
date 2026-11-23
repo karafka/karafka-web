@@ -54,12 +54,4 @@
   <td>
     <%== lag_with_label topic_stats.avg_lag %>
   </td>
-  <td class="options">
-    <%==
-      partial(
-        'health/offsets/delete_button',
-        locals: { consumer_group_id: cg_name, topic_name: topic_name, labeled: false }
-      )
-    %>
-  </td>
 </tr>

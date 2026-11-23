@@ -79,6 +79,30 @@ module Karafka
             end
 
             # @param group_id [String] consumer group id
+            # @param topic_name [String] name of the topic
+            # @return [String] path to the deletion of the consumer group offsets for the topic
+            def health_consumer_group_offsets_deletion_path(group_id, topic_name)
+              root_path(
+                "health",
+                "consumer_groups",
+                URI.encode_uri_component(group_id),
+                "topics",
+                topic_name,
+                "delete"
+              )
+            end
+
+            # @param group_id [String] consumer group id
+            # @param topic_name [String] name of the topic
+            # @return [String] path to the consumer group committed offsets filtered to the topic
+            def health_consumer_group_topic_offsets_path(group_id, topic_name)
+              value = Rack::Utils.escape(topic_name)
+
+              "#{health_consumer_group_path(group_id, "offsets")}" \
+                "?filter[field]=topic_name&filter[value]=#{value}"
+            end
+
+            # @param group_id [String] consumer group id
             # @param member_id [String] member id of the consumer group
             # @return [String] path to the consumer group members filtered to the given member
             def health_consumer_group_member_path(group_id, member_id)

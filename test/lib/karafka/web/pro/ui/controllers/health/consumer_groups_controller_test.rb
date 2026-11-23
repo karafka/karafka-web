@@ -322,6 +322,77 @@ describe_current do
       end
     end
 
+    context "when listing the topics of the consumer group" do
+      let(:other_topic) { create_topic }
+
+      before do
+        produce_many(other_topic, Array.new(50) { |i| i.to_s })
+        Karafka::Admin.seek_consumer_group(group_id, { other_topic => { 0 => 10 } })
+      end
+
+      it "expect one row per topic with its aggregated lags and the offsets deletion" do
+        get "health/consumer_groups/#{group_id}/topics"
+
+        assert_ok
+        assert_body(breadcrumbs)
+        assert_body(%(href="/health/consumer_groups/#{group_id}/topics"))
+        assert_body(
+          "/health/consumer_groups/#{group_id}/offsets" \
+          "?filter[field]=topic_name&amp;filter[value]=#{other_topic}"
+        )
+        # topic: 8 + 15 lag, other_topic: 40 lag
+        assert_body("23")
+        assert_body("40")
+        assert_body("Delete the committed offsets of this consumer group for this topic")
+      end
+
+      it "expect the deletion to be allowed only by the policy" do
+        Karafka::Web.config.ui.policies.consumer_groups.stubs(:delete_offsets?).returns(true)
+
+        get "health/consumer_groups/#{group_id}/topics"
+
+        assert_ok
+        assert_body(%(href="/health/consumer_groups/#{group_id}/topics/#{topic}/delete"))
+        assert_body(%(href="/health/consumer_groups/#{group_id}/topics/#{other_topic}/delete"))
+      end
+
+      it "expect sorting by total lag to order the topics" do
+        get "health/consumer_groups/#{group_id}/topics?sort=lag+desc"
+
+        assert_ok
+        assert(position("filter[value]=#{other_topic}") < position("filter[value]=#{topic}"))
+      end
+
+      it "expect filtering by the topic to keep only it" do
+        get_filtered("health/consumer_groups/#{group_id}/topics", name: other_topic)
+
+        assert_ok
+        assert_body("filter[value]=#{other_topic}")
+        refute_body("filter[value]=#{topic}\"")
+      end
+
+      it "expect the topics to be paginated" do
+        get "health/consumer_groups/#{group_id}/topics?per_page=1"
+
+        assert_ok
+        assert_body(pagination)
+      end
+    end
+
+    context "when the consumer group has no committed offsets on any topic" do
+      before do
+        start_member
+        get "health/consumer_groups/#{stable_group_id}/topics"
+      end
+
+      after { consumer.close }
+
+      it do
+        assert_ok
+        assert_body("This consumer group has no committed offsets.")
+      end
+    end
+
     context "when sorting the partitions by lag" do
       it "expect the rows in the lag order" do
         get "health/consumer_groups/#{group_id}/offsets?sort=lag+desc"

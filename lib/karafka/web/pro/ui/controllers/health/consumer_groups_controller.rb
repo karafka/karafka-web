@@ -41,12 +41,14 @@ module Karafka
               self.sortable_attributes = {
                 index: %w[id state].freeze,
                 members: %w[member_id client_id host group_instance_id].freeze,
+                topics: %w[name partitions_count lag max_lag avg_lag].freeze,
                 offsets: %w[topic_name id lag stored_offset].freeze
               }.freeze
 
               self.filterable_attributes = {
                 index: %i[id state],
                 members: %i[member_id client_id host group_instance_id],
+                topics: %i[name],
                 offsets: %i[topic_name]
               }.freeze
 
@@ -89,6 +91,30 @@ module Karafka
                 paginate(@params.current_page, !last_page)
 
                 @processes_by_member_id = processes_by_member_id
+
+                render
+              end
+
+              # Displays the topics a consumer group committed offsets for, with their lags
+              # aggregated per topic and the offsets deletion action, which works per topic
+              #
+              # @param group_id [String] consumer group id
+              def topics(group_id)
+                @consumer_group = Models::Cluster::ConsumerGroup.find(group_id)
+
+                topics = @consumer_group
+                  .offsets
+                  .group_by { |partition| partition[:topic_name] }
+                  .map do |topic_name, partitions|
+                    Models::Health::AggregatedClusterTopic.new(topic_name, partitions)
+                  end
+
+                @topics, last_page = Paginators::Arrays.call(
+                  filter(sort(topics)),
+                  @params.current_page
+                )
+
+                paginate(@params.current_page, !last_page)
 
                 render
               end

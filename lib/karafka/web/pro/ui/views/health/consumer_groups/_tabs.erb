@@ -35,6 +35,13 @@
     </a>
 
     <a
+      href="<%= health_consumer_group_path(@consumer_group.id, 'topics') %>"
+      class="custom-tab <%= nav_class(match: %r{/topics\z}) %>"
+    >
+      Topics
+    </a>
+
+    <a
       href="<%= health_consumer_group_path(@consumer_group.id, 'offsets') %>"
       class="custom-tab <%= nav_class(match: %r{/offsets\z}) %>"
     >
