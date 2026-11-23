@@ -41,20 +41,16 @@ describe_current do
     end
   end
 
-  describe "#topics" do
-    let(:topics) { model.find(group_id).topics }
+  describe "#offsets" do
+    let(:offsets) { model.find(group_id).offsets }
 
-    it "returns only the topics with committed offsets" do
-      assert_equal([topic], topics.keys)
-    end
-
-    it "returns offsets and lags of all the partitions of the topic" do
+    it "returns offsets and lags of all the partitions of the topics with committed offsets" do
       assert_equal(
         [
-          { id: 0, lag: -1, stored_offset: -1 },
-          { id: 1, lag: 6, stored_offset: 4 }
+          { topic_name: topic, id: 0, lag: -1, stored_offset: -1 },
+          { topic_name: topic, id: 1, lag: 6, stored_offset: 4 }
         ],
-        topics.fetch(topic).sort_by { |partition| partition[:id] }
+        offsets
       )
     end
 
@@ -65,12 +61,35 @@ describe_current do
           .returns(
             group_id => {
               "b-topic" => { 0 => { offset: 1, lag: 0 } },
-              "a-topic" => { 0 => { offset: 2, lag: 0 } }
+              "a-topic" => {
+                1 => { offset: 2, lag: 0 },
+                0 => { offset: 3, lag: 0 }
+              }
             }
           )
       end
 
-      it { assert_equal(%w[a-topic b-topic], topics.keys) }
+      it "orders them by topic name and partition" do
+        assert_equal(
+          [%w[a-topic 0], %w[a-topic 1], %w[b-topic 0]],
+          offsets.map { |partition| [partition[:topic_name], partition[:id].to_s] }
+        )
+      end
+    end
+
+    context "when no partition of a topic has a committed offset" do
+      before do
+        Karafka::Admin
+          .stubs(:read_lags_with_offsets)
+          .returns(
+            group_id => {
+              "a-topic" => { 0 => { offset: -1, lag: -1 } },
+              "b-topic" => { 0 => { offset: 1, lag: 0 } }
+            }
+          )
+      end
+
+      it { assert_equal(%w[b-topic], offsets.map { |partition| partition[:topic_name] }) }
     end
   end
 end

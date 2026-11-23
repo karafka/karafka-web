@@ -56,28 +56,27 @@ module Karafka
             # group committed offsets for, so we query all the cluster topics and keep only those
             # with at least one committed offset.
             #
-            # @return [Hash{String => Array<Hash>}] topics with partitions details (`:id`, `:lag`,
-            #   `:stored_offset`), in alphabetical order
-            def topics
+            # @return [Array<Hash>] partitions of those topics (`:topic_name`, `:id`, `:lag`,
+            #   `:stored_offset`), ordered by topic name and partition
+            def offsets
               topics_names = Info.topics.map { |topic| topic[:topic_name] }
 
-              return {} if topics_names.empty?
+              return [] if topics_names.empty?
 
               lags = ::Karafka::Admin.read_lags_with_offsets({ id => topics_names }).fetch(id, {})
 
               lags
                 .select { |_, partitions| partitions.any? { |_, details| details[:offset] >= 0 } }
                 .sort_by(&:first)
-                .to_h do |topic_name, partitions|
-                  details = partitions.map do |partition_id, lag_with_offset|
+                .flat_map do |topic_name, partitions|
+                  partitions.sort_by(&:first).map do |partition_id, lag_with_offset|
                     {
+                      topic_name: topic_name,
                       id: partition_id,
                       lag: lag_with_offset.fetch(:lag),
                       stored_offset: lag_with_offset.fetch(:offset)
                     }
                   end
-
-                  [topic_name, details]
                 end
             end
           end

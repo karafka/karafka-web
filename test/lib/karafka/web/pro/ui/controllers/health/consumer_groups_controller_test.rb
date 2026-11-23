@@ -146,6 +146,32 @@ describe_current do
       end
     end
 
+    context "when there are more consumer groups than fit on a page" do
+      let(:other_group_id) { "0-#{group_id}" }
+
+      before do
+        Karafka::Admin.seek_consumer_group(other_group_id, { topic => { 1 => 2 } })
+        get "health/consumer_groups?filter[field]=id&filter[value]=#{group_id}&per_page=1"
+      end
+
+      it "expect the groups to be paginated" do
+        assert_ok
+        assert_body(pagination)
+        assert_body(%(href="/health/consumer_groups/#{other_group_id}/overview"))
+        refute_body(%(href="/health/consumer_groups/#{group_id}/overview"))
+      end
+    end
+
+    context "when the page is past the last one" do
+      before { get "health/consumer_groups?page=100000" }
+
+      it do
+        assert_ok
+        refute_body(%(href="/health/consumer_groups/#{group_id}/overview"))
+        assert_body("This page does not contain any data")
+      end
+    end
+
     context "when the consumer group id has characters that are special in URLs" do
       let(:special_group_id) { "a b/c?d#e%f-#{group_id}" }
       let(:special_path) { "/health/consumer_groups/a%20b%2Fc%3Fd%23e%25f-#{group_id}" }
@@ -336,6 +362,117 @@ describe_current do
         assert_body("<td>#{described.fetch(:members).first.fetch(:host)}</td>")
         assert_body("#{topic}: 0, 1")
         refute_body("This consumer group has no members.")
+      end
+    end
+
+    context "when the consumer group has many members" do
+      let(:members) do
+        %w[b a c].map do |name|
+          {
+            member_id: "member-#{name}",
+            client_id: "client-#{name}",
+            group_instance_id: nil,
+            host: "/10.0.0.#{name.ord}",
+            assignment: { topic => [name.ord % 2] },
+            target_assignment: nil
+          }
+        end
+      end
+
+      before do
+        described = Karafka::Admin.describe_consumer_groups([group_id]).first
+
+        Karafka::Admin
+          .stubs(:describe_consumer_groups)
+          .returns([described.merge(members: members)])
+      end
+
+      it "expect the members to be paginated with the total in the tab" do
+        get "health/consumer_groups/#{group_id}/members?per_page=2"
+
+        assert_ok
+        assert_body(pagination)
+        assert_body("Members (3)")
+        assert_body("client-b")
+        assert_body("client-a")
+        refute_body("client-c")
+      end
+
+      it "expect sorting by the client id to order them by it" do
+        get "health/consumer_groups/#{group_id}/members?sort=client_id+desc"
+
+        assert_ok
+        assert(position("client-c") < position("client-b"))
+        assert(position("client-b") < position("client-a"))
+      end
+
+      it "expect filtering by the host to keep only the matching member" do
+        get_filtered("health/consumer_groups/#{group_id}/members", host: "10.0.0.#{"c".ord}")
+
+        assert_ok
+        assert_body("Members (3)")
+        assert_body("client-c")
+        refute_body("client-a")
+        refute_body("client-b")
+      end
+
+      it "expect a filter that matches nothing to say so" do
+        get_filtered("health/consumer_groups/#{group_id}/members", client_id: "zzz")
+
+        assert_ok
+        assert_body("No results match your filter")
+      end
+
+      it "expect a page past the last one to say it has no data" do
+        get "health/consumer_groups/#{group_id}/members?page=100"
+
+        assert_ok
+        assert_body("This page does not contain any data")
+      end
+    end
+
+    context "when the consumer group has committed offsets on many topics" do
+      let(:other_topic) { create_topic }
+
+      before do
+        produce_many(other_topic, Array.new(50) { |i| i.to_s })
+        Karafka::Admin.seek_consumer_group(group_id, { other_topic => { 0 => 10 } })
+      end
+
+      it "expect the offsets to be paginated across topics" do
+        get "health/consumer_groups/#{group_id}/offsets?per_page=2"
+
+        assert_ok
+        assert_body(pagination)
+        refute_body("<td>40</td>")
+
+        get "health/consumer_groups/#{group_id}/offsets?per_page=2&page=2"
+
+        assert_ok
+        assert_body("<td>40</td>")
+      end
+
+      it "expect sorting by lag to order the partitions of all the topics" do
+        get "health/consumer_groups/#{group_id}/offsets?sort=lag+desc"
+
+        assert_ok
+        assert(position("<td>40</td>") < position("<td>15</td>"))
+        assert(position("<td>15</td>") < position("<td>8</td>"))
+      end
+
+      it "expect filtering by the topic to keep only its partitions" do
+        get_filtered("health/consumer_groups/#{group_id}/offsets", topic_name: other_topic)
+
+        assert_ok
+        assert_body("<td>40</td>")
+        refute_body("<td>15</td>")
+      end
+
+      it "expect a page past the last one to say it has no data" do
+        get "health/consumer_groups/#{group_id}/offsets?page=100"
+
+        assert_ok
+        assert_body("This page does not contain any data")
       end
     end
 

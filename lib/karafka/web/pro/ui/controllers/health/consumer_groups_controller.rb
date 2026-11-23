@@ -40,11 +40,14 @@ module Karafka
             class ConsumerGroupsController < BaseController
               self.sortable_attributes = {
                 index: %w[id state].freeze,
-                offsets: %w[id lag stored_offset].freeze
+                members: %w[member_id client_id host group_instance_id].freeze,
+                offsets: %w[topic_name id lag stored_offset].freeze
               }.freeze
 
               self.filterable_attributes = {
-                index: %i[id state]
+                index: %i[id state],
+                members: %i[member_id client_id host group_instance_id],
+                offsets: %i[topic_name]
               }.freeze
 
               # Cluster state should always be fresh and not from cache
@@ -52,7 +55,12 @@ module Karafka
 
               # Lists all the consumer groups in the cluster with their states
               def index
-                @consumer_groups = filter(sort(Models::Cluster::ConsumerGroup.all))
+                @consumer_groups, last_page = Paginators::Arrays.call(
+                  filter(sort(Models::Cluster::ConsumerGroup.all)),
+                  @params.current_page
+                )
+
+                paginate(@params.current_page, !last_page)
 
                 render
               end
@@ -72,6 +80,14 @@ module Karafka
               def members(group_id)
                 @consumer_group = Models::Cluster::ConsumerGroup.find(group_id)
 
+                # Filtering and sorting work in place, so we use a copy to keep the members count
+                @members, last_page = Paginators::Arrays.call(
+                  filter(sort(@consumer_group.members.dup)),
+                  @params.current_page
+                )
+
+                paginate(@params.current_page, !last_page)
+
                 render
               end
 
@@ -80,8 +96,13 @@ module Karafka
               # @param group_id [String] consumer group id
               def offsets(group_id)
                 @consumer_group = Models::Cluster::ConsumerGroup.find(group_id)
-                @topics = @consumer_group.topics
-                @topics.each_value { |partitions| sort(partitions) }
+
+                @offsets, last_page = Paginators::Arrays.call(
+                  filter(sort(@consumer_group.offsets)),
+                  @params.current_page
+                )
+
+                paginate(@params.current_page, !last_page)
 
                 render
               end
