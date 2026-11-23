@@ -64,10 +64,11 @@
               <td><%= member[:host] %></td>
               <td><%= member[:group_instance_id] %></td>
               <td>
-                <% process = @processes_by_member_id[member[:member_id]] %>
-                <% if process %>
-                  <a href="<%= consumer_path(process[:process_id], 'subscriptions') %>#<%= process[:subscription_group_id] %>">
-                    <%= truncate(process[:process_id], strategy: :middle) %>
+                <% membership = @processes_by_member_id[member[:member_id]] %>
+                <% if membership %>
+                  <% process_id = membership[:process].id %>
+                  <a href="<%= consumer_path(process_id, 'subscriptions') %>#<%= membership[:subscription_group].id %>">
+                    <%= truncate(process_id, strategy: :middle) %>
                   </a>
                 <% else %>
                   <span

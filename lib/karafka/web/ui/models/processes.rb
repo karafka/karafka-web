@@ -35,6 +35,28 @@ module Karafka
               all(state).delete_if { |process| !process.schema_compatible? }
             end
 
+            # Maps the group member ids the active processes report to the process and the
+            # subscription group (librdkafka client) holding each of them. Allows matching the
+            # members the cluster reports with the processes running them. Members of applications
+            # that do not report to the Web UI (e.g. non-Ruby ones) have no entry.
+            #
+            # @param state [State] current system state from which we can get processes metadata
+            # @return [Hash{String => Hash}] `:process` and `:subscription_group` by member id
+            def by_member_id(state)
+              active(state).each_with_object({}) do |process, mapping|
+                process.consumer_groups.each do |consumer_group|
+                  consumer_group.subscription_groups.each do |subscription_group|
+                    # Reports of processes running versions that do not track it have no member id
+                    member_id = subscription_group[:member_id].to_s
+
+                    next if member_id.empty?
+
+                    mapping[member_id] = { process: process, subscription_group: subscription_group }
+                  end
+                end
+              end
+            end
+
             private
 
             # Fetches the relevant processes reports from the reports topic
