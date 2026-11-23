@@ -107,6 +107,16 @@
       <%== badge_secondary_sm(subscription_group.rebalance_cnt) %>
     </div>
   </div>
+
+  <%# Reports of processes running versions before the member id was tracked do not have it %>
+  <% unless subscription_group[:member_id].to_s.empty? %>
+    <div class="card-detail">
+      <div class="card-detail-body">
+        Member ID
+        <span class="badge badge-secondary badge-sm"><%= subscription_group[:member_id] %></span>
+      </div>
+    </div>
+  <% end %>
 </div>
 
 <div class="text-right mt-3 mb-4">

@@ -64,6 +64,31 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups d
         assert_equal(300_000, result["cg1"][:subscription_groups]["sg1"][:state][:poll_interval])
       end
 
+      it "reports an empty member id when it is not known" do
+        result = enricher.call
+
+        assert_equal("", result["cg1"][:subscription_groups]["sg1"][:member_id])
+      end
+
+      context "when the member id is known" do
+        let(:subscription_groups) do
+          {
+            "sg1" => {
+              polled_at: polled_at,
+              poll_interval: 300_000,
+              member_id: "rdkafka-member-1",
+              topics: {}
+            }
+          }
+        end
+
+        it "copies it from subscription group tracking" do
+          result = enricher.call
+
+          assert_equal("rdkafka-member-1", result["cg1"][:subscription_groups]["sg1"][:member_id])
+        end
+      end
+
       context "when poll_interval is custom configured" do
         let(:subscription_groups) do
           {
