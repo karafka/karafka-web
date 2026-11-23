@@ -255,6 +255,7 @@ describe_current do
         assert_body('<span class="text-muted">&lt;internal:thread_sync&gt;:18:in')
         assert_body('<span class="font-bold">/mnt/software/Karafka/karafka/lib/karafka/runner.rb')
         assert_body('<span class="text-muted">/home/mencio/.rbenv/versions/3.3.0/lib/ruby/')
+        assert_body('<span class="text-muted">/home/mencio/.rbenv/versions/3.3.0/bin/bundle:25:in')
       end
 
       it "expect to render one frame per line" do

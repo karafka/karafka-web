@@ -109,6 +109,12 @@ describe_current do
       assert_equal(muted, helper.backtrace_frame_class("/usr/local/lib/ruby/3.4.0/monitor.rb:201:in 'synchronize'"))
     end
 
+    it "mutes the bundle executable frames" do
+      assert_equal(muted, helper.backtrace_frame_class("/home/mencio/.rbenv/versions/3.3.0/bin/bundle:25:in 'load'"))
+      assert_equal(muted, helper.backtrace_frame_class("/usr/local/bin/bundle:25:in '<main>'"))
+      assert_equal(muted, helper.backtrace_frame_class("/usr/local/bin/bundler:25:in '<main>'"))
+    end
+
     it "mutes JRuby core frames" do
       assert_equal(muted, helper.backtrace_frame_class("org/jruby/RubyArray.java:2097:in 'each'"))
       assert_equal(muted, helper.backtrace_frame_class("org/jruby/ext/monitor/Monitor.java:85:in 'synchronize'"))
