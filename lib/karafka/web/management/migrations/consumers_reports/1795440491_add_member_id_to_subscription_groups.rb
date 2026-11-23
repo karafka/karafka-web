@@ -10,8 +10,8 @@ module Karafka
           # In schema versions before 1.8.0, subscription groups did not include the member_id
           # field which holds the group member id the cluster assigned to the consumer.
           #
-          # This migration ensures old reports can be processed by adding the field with false
-          # value (indicating the member id is not known).
+          # This migration ensures old reports can be processed by adding the field with an empty
+          # string, which is how Kafka represents a member id that is not known.
           class AddMemberIdToSubscriptionGroups < Base
             self.versions_until = "1.8.0"
             self.type = :consumers_reports
@@ -30,7 +30,7 @@ module Karafka
                 subscription_groups.each_value do |sg_details|
                   next if sg_details.key?(:member_id)
 
-                  sg_details[:member_id] = false
+                  sg_details[:member_id] = ""
                 end
               end
             end

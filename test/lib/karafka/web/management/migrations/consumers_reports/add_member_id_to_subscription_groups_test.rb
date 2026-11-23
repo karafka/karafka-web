@@ -48,9 +48,8 @@ describe_current do
     context "when subscription groups do not have member_id" do
       before { migration.migrate(report) }
 
-      it "adds member_id with false value to subscription group" do
-        assert(migrated_sg.key?(:member_id))
-        refute(migrated_sg[:member_id])
+      it "adds member_id with an empty string to subscription group" do
+        assert_equal("", migrated_sg[:member_id])
       end
 
       it "preserves other subscription group fields" do
@@ -84,8 +83,7 @@ describe_current do
       it "adds member_id to all of them" do
         report[:consumer_groups].each_value do |cg|
           cg[:subscription_groups].each_value do |sg|
-            assert(sg.key?(:member_id))
-            refute(sg[:member_id])
+            assert_equal("", sg[:member_id])
           end
         end
       end

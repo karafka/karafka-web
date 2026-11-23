@@ -109,7 +109,7 @@
   </div>
 
   <%# Reports of processes running versions before the member id was tracked do not have it %>
-  <% if subscription_group[:member_id] %>
+  <% unless subscription_group[:member_id].to_s.empty? %>
     <div class="card-detail">
       <div class="card-detail-body">
         Member ID

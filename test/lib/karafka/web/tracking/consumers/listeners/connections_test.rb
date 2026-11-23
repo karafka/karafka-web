@@ -171,7 +171,7 @@ describe_current do
     end
 
     before do
-      subscription_groups[sg_id] = {}
+      subscription_groups[sg_id] = { member_id: "" }
     end
 
     it "updates polled_at timestamp when poll is received" do
@@ -206,7 +206,7 @@ describe_current do
 
       it "creates the subscription group entry" do
         sampler.stubs(:track).yields(sampler)
-        subscription_groups.stubs(:[]).with(sg_id).returns({})
+        subscription_groups.stubs(:[]).with(sg_id).returns({ member_id: "" })
 
         listener.on_connection_listener_fetch_loop_received(event)
       end
@@ -219,7 +219,7 @@ describe_current do
 
     before do
       sampler.stubs(:track).yields(sampler)
-      subscription_groups[sg_id] = { member_id: false }
+      subscription_groups[sg_id] = { member_id: "" }
     end
 
     context "when the member id is not known yet" do
@@ -248,7 +248,7 @@ describe_current do
       it "keeps it unknown" do
         listener.on_connection_listener_fetch_loop_received(event)
 
-        refute(subscription_groups[sg_id][:member_id])
+        assert_equal("", subscription_groups[sg_id][:member_id])
       end
     end
 
@@ -258,7 +258,7 @@ describe_current do
       it "keeps it unknown" do
         listener.on_connection_listener_fetch_loop_received(event)
 
-        refute(subscription_groups[sg_id][:member_id])
+        assert_equal("", subscription_groups[sg_id][:member_id])
       end
     end
 
@@ -268,7 +268,7 @@ describe_current do
       it "keeps it unknown" do
         listener.on_connection_listener_fetch_loop_received(event)
 
-        refute(subscription_groups[sg_id][:member_id])
+        assert_equal("", subscription_groups[sg_id][:member_id])
       end
     end
 
@@ -280,7 +280,7 @@ describe_current do
       it "reads it again on the next poll" do
         listener.on_rebalance_partitions_assigned(rebalance_event)
 
-        refute(subscription_groups[sg_id][:member_id])
+        assert_equal("", subscription_groups[sg_id][:member_id])
 
         listener.on_connection_listener_fetch_loop_received(event)
 
@@ -324,7 +324,7 @@ describe_current do
     before do
       # Setup proper tracking calls
       sampler.stubs(:track).yields(sampler)
-      subscription_groups[sg_id] = {}
+      subscription_groups[sg_id] = { member_id: "" }
       consumer_groups[cg_id][:subscription_groups][sg_id] = {}
     end
 

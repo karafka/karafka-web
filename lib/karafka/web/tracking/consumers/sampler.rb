@@ -57,7 +57,7 @@ module Karafka
                 id: sg_id,
                 polled_at: monotonic_now,
                 poll_interval: DEFAULT_POLL_INTERVAL_MS,
-                member_id: false,
+                member_id: "",
                 topics: Hash.new do |h1, topic|
                   h1[topic] = Hash.new do |h2, partition|
                     # We track those details in case we need to fill statistical gaps for

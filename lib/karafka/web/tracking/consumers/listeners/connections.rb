@@ -57,7 +57,7 @@ module Karafka
               track do |sampler|
                 sg = sampler.subscription_groups[sg_id]
                 sg[:polled_at] = monotonic_now
-                sg[:member_id] = read_member_id(client) unless sg[:member_id]
+                sg[:member_id] = read_member_id(client) if sg[:member_id].empty?
               end
             end
 
@@ -71,19 +71,17 @@ module Karafka
               track do |sampler|
                 next unless sampler.subscription_groups.key?(sg_id)
 
-                sampler.subscription_groups[sg_id][:member_id] = false
+                sampler.subscription_groups[sg_id][:member_id] = ""
               end
             end
 
             private
 
             # @param client [Karafka::Connection::ConsumerGroups::Client]
-            # @return [String, false] group member id or false when the consumer did not join the
+            # @return [String] group member id or an empty string when the consumer did not join the
             #   group yet
             def read_member_id(client)
-              member_id = client.wrapped_kafka&.member_id
-
-              (member_id.nil? || member_id.empty?) ? false : member_id
+              client.wrapped_kafka&.member_id || ""
             end
           end
         end

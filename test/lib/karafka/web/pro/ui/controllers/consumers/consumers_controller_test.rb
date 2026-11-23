@@ -941,7 +941,7 @@ describe_current do
         report = Fixtures.consumers_reports_json(symbolize_names: false)
 
         report["consumer_groups"].each_value do |cg|
-          cg["subscription_groups"].each_value { |sg| sg["member_id"] = false }
+          cg["subscription_groups"].each_value { |sg| sg["member_id"] = "" }
         end
 
         produce(reports_topic, report.to_json)

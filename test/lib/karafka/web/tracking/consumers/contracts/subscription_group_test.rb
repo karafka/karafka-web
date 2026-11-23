@@ -217,14 +217,14 @@ describe_current do
     it { refute(contract.call(subscription_group).success?) }
   end
 
-  context "when member_id is false" do
-    before { subscription_group[:member_id] = false }
+  context "when member_id is an empty string" do
+    before { subscription_group[:member_id] = "" }
 
     it { assert(contract.call(subscription_group).success?) }
   end
 
-  context "when member_id is an empty string" do
-    before { subscription_group[:member_id] = "" }
+  context "when member_id is false" do
+    before { subscription_group[:member_id] = false }
 
     it { refute(contract.call(subscription_group).success?) }
   end
@@ -235,7 +235,7 @@ describe_current do
     it { refute(contract.call(subscription_group).success?) }
   end
 
-  context "when member_id is not false or string" do
+  context "when member_id is not a string" do
     before { subscription_group[:member_id] = 123 }
 
     it { refute(contract.call(subscription_group).success?) }

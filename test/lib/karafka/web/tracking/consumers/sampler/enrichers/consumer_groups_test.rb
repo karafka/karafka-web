@@ -64,10 +64,10 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Enrichers::ConsumerGroups d
         assert_equal(300_000, result["cg1"][:subscription_groups]["sg1"][:state][:poll_interval])
       end
 
-      it "reports the member id as false when it is not known" do
+      it "reports an empty member id when it is not known" do
         result = enricher.call
 
-        refute(result["cg1"][:subscription_groups]["sg1"][:member_id])
+        assert_equal("", result["cg1"][:subscription_groups]["sg1"][:member_id])
       end
 
       context "when the member id is known" do
