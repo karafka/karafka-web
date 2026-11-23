@@ -50,6 +50,7 @@ module Karafka
                 sg_details[:state][:poll_age] = (monotonic_now - polled_at).round(2)
                 sg_details[:state][:poll_interval] = sg_tracking.fetch(:poll_interval)
                 sg_details[:instance_id] = sg_tracking[:instance_id]
+                sg_details[:member_id] = sg_tracking[:member_id] || false
 
                 sg_details[:topics].each do |topic_name, topic_details|
                   topic_details[:partitions].each do |partition_id, partition_details|

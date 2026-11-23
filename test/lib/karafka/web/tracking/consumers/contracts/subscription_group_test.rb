@@ -37,6 +37,7 @@ describe_current do
         }
       },
       instance_id: false,
+      member_id: "rdkafka-member-1",
       state: {
         state: "up",
         join_state: "steady",
@@ -206,6 +207,36 @@ describe_current do
 
   context "when instance_id is nil" do
     before { subscription_group[:instance_id] = nil }
+
+    it { refute(contract.call(subscription_group).success?) }
+  end
+
+  context "when member_id is missing" do
+    before { subscription_group.delete(:member_id) }
+
+    it { refute(contract.call(subscription_group).success?) }
+  end
+
+  context "when member_id is false" do
+    before { subscription_group[:member_id] = false }
+
+    it { assert(contract.call(subscription_group).success?) }
+  end
+
+  context "when member_id is an empty string" do
+    before { subscription_group[:member_id] = "" }
+
+    it { refute(contract.call(subscription_group).success?) }
+  end
+
+  context "when member_id is nil" do
+    before { subscription_group[:member_id] = nil }
+
+    it { refute(contract.call(subscription_group).success?) }
+  end
+
+  context "when member_id is not false or string" do
+    before { subscription_group[:member_id] = 123 }
 
     it { refute(contract.call(subscription_group).success?) }
   end

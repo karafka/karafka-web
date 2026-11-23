@@ -6,6 +6,7 @@
 - **[Feature]** Add a **Delete messages up to this offset** action to the Explorer message view (Pro), with a confirmation showing the offset range that goes. Gated by the new `#delete_records?` policy, denied by default. Requires karafka `2.6.2`.
 - **[Feature]** Aggregate the Health views per topic with drill-down to partitions, so they stay usable at scale. Thresholds are configurable under `config.ui.health.lags` (#112).
 - **[Feature]** Add a **Delete Offsets** action (Pro) to the Health cluster lags and the Routing topic page that deletes a consumer group's committed offsets for a topic. Gated by the new `ui.policies.consumer_groups` `#delete_offsets?` policy, denied by default. Requires karafka `2.6.2`.
+- [Enhancement] Report the group member id of each subscription group and show it on the consumer subscriptions page (Pro). Bumps the consumers reports schema to `1.8.0` and migrates older reports.
 - [Enhancement] Show the source of each config value (dynamic topic, dynamic broker, static broker, default, ...) on the topic and broker configuration pages (Pro). Requires karafka `2.6.2`.
 - [Enhancement] Show the Explorer publish, republish, download, export and delete actions disabled, with the reason in their title, when a policy denies them or the payload cannot be exported, instead of hiding them.
 - [Enhancement] Explain every disabled action button (topics management, commanding, read-only configs, recurring tasks, process state) with the reason in its title, which a disabled button could not show before.

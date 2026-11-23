@@ -10,6 +10,8 @@ describe_current do
   let(:consumer_group) { stub }
   let(:sg_id) { "subscription_group_1" }
   let(:cg_id) { "consumer_group_1" }
+  let(:client) { stub(wrapped_kafka: kafka) }
+  let(:kafka) { stub(member_id: "rdkafka-member-1") }
 
   before do
     Karafka::Web.config.tracking.consumers.stubs(:sampler).returns(sampler)
@@ -165,7 +167,7 @@ describe_current do
 
   describe "#on_connection_listener_fetch_loop_received" do
     let(:event) do
-      { subscription_group: subscription_group }
+      { subscription_group: subscription_group, client: client }
     end
 
     before do
@@ -211,6 +213,92 @@ describe_current do
     end
   end
 
+  describe "member id tracking" do
+    let(:event) { { subscription_group: subscription_group, client: client } }
+    let(:rebalance_event) { { subscription_group_id: sg_id } }
+
+    before do
+      sampler.stubs(:track).yields(sampler)
+      subscription_groups[sg_id] = { member_id: false }
+    end
+
+    context "when the member id is not known yet" do
+      it "reads it from the consumer" do
+        listener.on_connection_listener_fetch_loop_received(event)
+
+        assert_equal("rdkafka-member-1", subscription_groups[sg_id][:member_id])
+      end
+    end
+
+    context "when the member id is already known" do
+      before { subscription_groups[sg_id][:member_id] = "rdkafka-member-0" }
+
+      it "does not read it again on each poll" do
+        kafka.expects(:member_id).never
+
+        listener.on_connection_listener_fetch_loop_received(event)
+
+        assert_equal("rdkafka-member-0", subscription_groups[sg_id][:member_id])
+      end
+    end
+
+    context "when the consumer did not join the group yet" do
+      let(:kafka) { stub(member_id: "") }
+
+      it "keeps it unknown" do
+        listener.on_connection_listener_fetch_loop_received(event)
+
+        refute(subscription_groups[sg_id][:member_id])
+      end
+    end
+
+    context "when the consumer has no member id" do
+      let(:kafka) { stub(member_id: nil) }
+
+      it "keeps it unknown" do
+        listener.on_connection_listener_fetch_loop_received(event)
+
+        refute(subscription_groups[sg_id][:member_id])
+      end
+    end
+
+    context "when the connection is not established" do
+      let(:client) { stub(wrapped_kafka: nil) }
+
+      it "keeps it unknown" do
+        listener.on_connection_listener_fetch_loop_received(event)
+
+        refute(subscription_groups[sg_id][:member_id])
+      end
+    end
+
+    context "when partitions get assigned after the member id is known" do
+      let(:kafka) { stub(member_id: "rdkafka-member-2") }
+
+      before { subscription_groups[sg_id][:member_id] = "rdkafka-member-1" }
+
+      it "reads it again on the next poll" do
+        listener.on_rebalance_partitions_assigned(rebalance_event)
+
+        refute(subscription_groups[sg_id][:member_id])
+
+        listener.on_connection_listener_fetch_loop_received(event)
+
+        assert_equal("rdkafka-member-2", subscription_groups[sg_id][:member_id])
+      end
+    end
+
+    context "when partitions get assigned to a subscription group that is no longer tracked" do
+      before { subscription_groups.delete(sg_id) }
+
+      it "does not start tracking it again" do
+        listener.on_rebalance_partitions_assigned(rebalance_event)
+
+        refute(subscription_groups.key?(sg_id))
+      end
+    end
+  end
+
   describe "inheritance from Base" do
     it "inherits from Base listener" do
       assert_equal(Karafka::Web::Tracking::Consumers::Listeners::Base, described_class.superclass)
@@ -230,7 +318,7 @@ describe_current do
 
   describe "integration scenarios" do
     let(:event_before) { { subscription_group: subscription_group } }
-    let(:event_received) { { subscription_group: subscription_group } }
+    let(:event_received) { { subscription_group: subscription_group, client: client } }
     let(:event_after) { { subscription_group: subscription_group } }
 
     before do
