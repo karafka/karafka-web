@@ -52,8 +52,9 @@ module Karafka
                 offsets: %i[topic_name]
               }.freeze
 
-              # Cluster state should always be fresh and not from cache
-              before { cache.clear }
+              # Consumer groups are never cached, but the topics and offsets pages query all the
+              # topics from the cached cluster metadata, which would miss recently created topics
+              before(:topics, :offsets) { cache.clear }
 
               # Lists all the consumer groups in the cluster with their states
               def index
