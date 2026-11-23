@@ -71,10 +71,22 @@ module Karafka
             end
 
             # @param group_id [String] consumer group id
+            # @param page [String] page of the consumer group (`overview`, `members` or `offsets`)
             # @return [String] path to the cluster consumer group page. Kafka group ids may hold
             #   any character, so the id is encoded as a single path segment.
-            def health_consumer_group_path(group_id)
-              root_path("health", "consumer_groups", URI.encode_uri_component(group_id))
+            def health_consumer_group_path(group_id, page = "overview")
+              root_path("health", "consumer_groups", URI.encode_uri_component(group_id), page)
+            end
+
+            # @param type [Symbol, nil] consumer group type (rebalance protocol) reported by Kafka
+            # @return [String] human readable rebalance protocol of the consumer group
+            def consumer_group_protocol_label(type)
+              case type
+              when :consumer then "consumer (KIP-848)"
+              when :classic then "classic"
+              else
+                "unknown"
+              end
             end
 
             # @return [String] path to the aggregated topics list sorted by total lag, worst first

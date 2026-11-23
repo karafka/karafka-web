@@ -463,6 +463,11 @@ describe_current do
         assert_body(%(title="#{delete_offsets_denied}"))
       end
 
+      it "expect the consumer group to link to its cluster consumer group page" do
+        assert_ok
+        assert_body("health/consumer_groups/example_app6_app")
+      end
+
       context "when deleting offsets is allowed" do
         before do
           Karafka::Web.config.ui.policies.consumer_groups.stubs(:delete_offsets?).returns(true)

@@ -39,7 +39,8 @@ describe_current do
     Rdkafka::Config.new(
       Karafka::App.config.kafka.merge(
         "group.id": stable_group_id,
-        "client.id": "consumer-groups-controller-test"
+        "client.id": "consumer-groups-controller-test",
+        "enable.auto.commit": false
       )
     ).consumer
   end
@@ -74,7 +75,7 @@ describe_current do
         assert_ok
         assert_body(breadcrumbs)
         assert_body("Consumer Groups")
-        assert_body(%(href="/health/consumer_groups/#{group_id}"))
+        assert_body(%(href="/health/consumer_groups/#{group_id}/overview"))
         assert_body("empty")
       end
     end
@@ -84,7 +85,7 @@ describe_current do
 
       it do
         assert_ok
-        assert_body(%(href="/health/consumer_groups/#{group_id}"))
+        assert_body(%(href="/health/consumer_groups/#{group_id}/overview"))
         refute_body("No results match your filter")
       end
     end
@@ -94,7 +95,7 @@ describe_current do
 
       it do
         assert_ok
-        refute_body(%(href="/health/consumer_groups/#{group_id}"))
+        refute_body(%(href="/health/consumer_groups/#{group_id}/overview"))
         assert_body("No results match your filter")
       end
     end
@@ -127,21 +128,21 @@ describe_current do
         get_filtered("health/consumer_groups", state: "stable")
 
         assert_ok
-        assert_body(%(href="/health/consumer_groups/#{stable_group_id}"))
-        refute_body(%(href="/health/consumer_groups/#{group_id}"))
-        refute_body(%(href="/health/consumer_groups/#{decoy_group_id}"))
+        assert_body(%(href="/health/consumer_groups/#{stable_group_id}/overview"))
+        refute_body(%(href="/health/consumer_groups/#{group_id}/overview"))
+        refute_body(%(href="/health/consumer_groups/#{decoy_group_id}/overview"))
       end
 
       it "expect sorting by state to order the groups by it" do
         get "health/consumer_groups?sort=state+asc"
 
         assert_ok
-        assert(position("/#{group_id}\"") < position("/#{stable_group_id}\""))
+        assert(position("/#{group_id}/overview\"") < position("/#{stable_group_id}/overview\""))
 
         get "health/consumer_groups?sort=state+desc"
 
         assert_ok
-        assert(position("/#{stable_group_id}\"") < position("/#{group_id}\""))
+        assert(position("/#{stable_group_id}/overview\"") < position("/#{group_id}/overview\""))
       end
     end
 
@@ -156,19 +157,23 @@ describe_current do
 
       it "expect its link to lead to its page" do
         assert_ok
-        assert_body(%(href="#{special_path}"))
+        assert_body(%(href="#{special_path}/overview"))
 
-        get special_path
+        get "#{special_path}/overview"
 
         assert_ok
         assert_body("Consumer group #{special_group_id}")
-        assert_body(%(href="#{special_path}"))
+        assert_body(%(href="#{special_path}/offsets"))
+
+        get "#{special_path}/offsets"
+
+        assert_ok
         assert_body("<td>3</td>")
       end
     end
   end
 
-  describe "#show" do
+  describe "consumer group pages" do
     context "when the consumer group id is not ASCII" do
       let(:unicode_group_id) { "zażółć gęślą/#{group_id}" }
       let(:unicode_path) { "/health/consumer_groups/#{URI.encode_uri_component(unicode_group_id)}" }
@@ -180,9 +185,9 @@ describe_current do
 
       it "expect its link to lead to its page" do
         assert_ok
-        assert_body(%(href="#{unicode_path}"))
+        assert_body(%(href="#{unicode_path}/overview"))
 
-        get unicode_path
+        get "#{unicode_path}/offsets"
 
         assert_ok
         assert_body("<td>7</td>")
@@ -190,10 +195,19 @@ describe_current do
       end
     end
 
-    context "when loading the consumer group page raises an ArgumentError" do
+    context "when opening the consumer group path without a page" do
+      before { get "health/consumer_groups/#{group_id}" }
+
+      it "expect a redirect to its overview" do
+        assert_equal(302, response.status)
+        assert(response.location.end_with?("/health/consumer_groups/#{group_id}/overview"))
+      end
+    end
+
+    context "when loading the committed offsets raises an ArgumentError" do
       before do
         Karafka::Admin.stubs(:read_lags_with_offsets).raises(ArgumentError)
-        get "health/consumer_groups/#{group_id}"
+        get "health/consumer_groups/#{group_id}/offsets"
       end
 
       it do
@@ -206,15 +220,26 @@ describe_current do
       context "when the consumer group id is a malformed escape (#{malformed})" do
         it do
           env = Rack::MockRequest.env_for("http://example.org/")
-          env["PATH_INFO"] = "/health/consumer_groups/#{malformed}"
+          env["PATH_INFO"] = "/health/consumer_groups/#{malformed}/overview"
 
           assert_equal(404, app.call(env).first)
         end
       end
     end
 
-    context "when the consumer group does not exist" do
-      before { get "health/consumer_groups/#{SecureRandom.uuid}" }
+    %w[overview members offsets].each do |page|
+      context "when the consumer group does not exist (#{page})" do
+        before { get "health/consumer_groups/#{SecureRandom.uuid}/#{page}" }
+
+        it do
+          refute(response.ok?)
+          assert_equal(404, response.status)
+        end
+      end
+    end
+
+    context "when the consumer group page does not exist" do
+      before { get "health/consumer_groups/#{group_id}/unknown" }
 
       it do
         refute(response.ok?)
@@ -223,27 +248,62 @@ describe_current do
     end
 
     context "when the consumer group has only committed offsets" do
-      before { get "health/consumer_groups/#{group_id}" }
+      it "expect the overview to show its state with the tabs replacing the Health ones" do
+        get "health/consumer_groups/#{group_id}/overview"
 
-      it "shows its state, no members and the committed offsets with lags" do
         assert_ok
         assert_body(breadcrumbs)
         assert_body("empty")
+        assert_body("Members (0)")
+        assert_body(%(href="/health/consumer_groups/#{group_id}/members"))
+        assert_body(%(href="/health/consumer_groups/#{group_id}/offsets"))
+        refute_body(%(href="/health/cluster_lags"))
+      end
+
+      it "expect the members page to show it has no members" do
+        get "health/consumer_groups/#{group_id}/members"
+
+        assert_ok
+        assert_body(breadcrumbs)
         assert_body("This consumer group has no members.")
+        refute_body(topic)
+      end
+
+      it "expect the committed offsets page to show the offsets with lags" do
+        get "health/consumer_groups/#{group_id}/offsets"
+
+        assert_ok
+        assert_body(breadcrumbs)
+        assert_body("Committed Offsets")
         assert_body(topic)
         assert_body("<td>5</td>")
         assert_body("<td>15</td>")
+        refute_body("This consumer group has no committed offsets.")
+      end
+    end
+
+    context "when the consumer group has no committed offsets" do
+      before do
+        start_member
+        get "health/consumer_groups/#{stable_group_id}/offsets"
+      end
+
+      after { consumer.close }
+
+      it do
+        assert_ok
+        assert_body("This consumer group has no committed offsets.")
       end
     end
 
     context "when sorting the partitions by lag" do
       it "expect the rows in the lag order" do
-        get "health/consumer_groups/#{group_id}?sort=lag+desc"
+        get "health/consumer_groups/#{group_id}/offsets?sort=lag+desc"
 
         assert_ok
         assert(position("<td>15</td>") < position("<td>8</td>"))
 
-        get "health/consumer_groups/#{group_id}?sort=lag+asc"
+        get "health/consumer_groups/#{group_id}/offsets?sort=lag+asc"
 
         assert_ok
         assert(position("<td>8</td>") < position("<td>15</td>"))
@@ -253,23 +313,64 @@ describe_current do
     context "when the consumer group has an active member" do
       let(:described) { Karafka::Admin.describe_consumer_groups([stable_group_id]).first }
 
-      before do
-        start_member
-        get "health/consumer_groups/#{stable_group_id}"
-      end
+      before { start_member }
 
       after { consumer.close }
 
-      it "shows the member with its client id, host and assignment, and the coordinator" do
+      it "expect the overview to show its state and coordinator" do
+        get "health/consumer_groups/#{stable_group_id}/overview"
+
         coordinator = described.fetch(:coordinator)
 
         assert_ok
         assert_body("stable")
+        assert_body("Members (1)")
+        assert_body("#{coordinator[:id]} (#{coordinator[:host]}:#{coordinator[:port]})")
+      end
+
+      it "expect the members page to show the member with its client id, host and assignment" do
+        get "health/consumer_groups/#{stable_group_id}/members"
+
+        assert_ok
         assert_body("consumer-groups-controller-test")
         assert_body("<td>#{described.fetch(:members).first.fetch(:host)}</td>")
-        assert_body("#{coordinator[:id]} (#{coordinator[:host]}:#{coordinator[:port]})")
         assert_body("#{topic}: 0, 1")
         refute_body("This consumer group has no members.")
+      end
+    end
+
+    context "when Kafka reports the consumer group protocol" do
+      before do
+        described = Karafka::Admin.describe_consumer_groups([group_id]).first
+
+        Karafka::Admin
+          .stubs(:describe_consumer_groups)
+          .returns([described.merge(type: :consumer)])
+
+        get "health/consumer_groups/#{group_id}/overview"
+      end
+
+      it do
+        assert_ok
+        assert_body("<td>Protocol</td>")
+        assert_body("consumer (KIP-848)")
+      end
+    end
+
+    context "when the protocol is not available" do
+      before do
+        described = Karafka::Admin.describe_consumer_groups([group_id]).first
+
+        Karafka::Admin
+          .stubs(:describe_consumer_groups)
+          .returns([described.except(:type)])
+
+        get "health/consumer_groups/#{group_id}/overview"
+      end
+
+      it do
+        assert_ok
+        refute_body("<td>Protocol</td>")
       end
     end
   end

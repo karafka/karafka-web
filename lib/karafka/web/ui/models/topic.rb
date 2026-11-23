@@ -9,7 +9,7 @@ module Karafka
           class << self
             # @return [Array<Broker>] all topics in the cluster
             def all
-              ClusterInfo.fetch.topics.map do |topic|
+              Cluster::Info.fetch.topics.map do |topic|
                 new(topic)
               end
             end
@@ -20,7 +20,7 @@ module Karafka
             # @return [Topic]
             # @raise [::Karafka::Web::Errors::Ui::NotFoundError]
             def find(topic_name)
-              found = ClusterInfo.topic(topic_name)
+              found = Cluster::Info.topic(topic_name)
 
               return found if found
 

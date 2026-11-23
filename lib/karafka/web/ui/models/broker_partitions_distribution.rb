@@ -9,7 +9,8 @@ module Karafka
         # share of the total. It surfaces load imbalance across brokers (one node leading far more
         # partitions than the rest) without any external tooling.
         #
-        # It is read-only - it only aggregates {ClusterInfo} data, so it adds no tracking overhead.
+        # It is read-only - it only aggregates {Cluster::Info} data, so it adds no tracking
+        # overhead.
         class BrokerPartitionsDistribution < Lib::HashProxy
           class << self
             # @param brokers [Array<Broker>] cluster brokers

@@ -45,7 +45,7 @@ module Karafka
                 def forward(topic_id, partition_id, offset)
                   load_source_message(topic_id, partition_id, offset)
 
-                  @topics = Models::ClusterInfo
+                  @topics = Models::Cluster::Info
                     .topics
                     .sort_by { |topic| topic[:topic_name] }
 
@@ -122,7 +122,7 @@ module Karafka
                 def target_partitions_count(target_topic)
                   return nil if target_topic.empty?
 
-                  Models::ClusterInfo.partitions_count(target_topic)
+                  Models::Cluster::Info.partitions_count(target_topic)
                 rescue ::Karafka::Web::Errors::Ui::NotFoundError
                   nil
                 end

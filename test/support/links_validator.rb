@@ -33,7 +33,7 @@ class LinksValidator
     "StatusController" => [/.*/],
     # Also deals with invalid state that affects dashboard
     "RoutingController" => [%r{/dashboard}, %r{/jobs}, %r{/health}],
-    # The distribution/replication specs stub `ClusterInfo.fetch` with fabricated multi-broker
+    # The distribution/replication specs stub `Cluster::Info.fetch` with fabricated multi-broker
     # metadata; crawling `/topics` renders it against that stubbed state plus real Kafka calls on
     # a fresh cluster, which intermittently 500s. `/topics` is validated by its own controller
     # specs, so we skip it (and `/explorer`) when crawling from the cluster views.

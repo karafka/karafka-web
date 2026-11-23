@@ -51,7 +51,7 @@ module Karafka
 
               dead_letter_queue_topic_patterns += Web.config.ui.dlq_patterns
 
-              @dead_letter_queue_topics = Models::ClusterInfo
+              @dead_letter_queue_topics = Models::Cluster::Info
                 .topics
                 .select { |topic| dead_letter_queue?(dead_letter_queue_topic_patterns, topic[:topic_name]) }
                 .sort_by { |topic| topic[:topic_name] }

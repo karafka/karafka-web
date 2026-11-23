@@ -586,6 +586,11 @@ describe_current do
         assert_body("health/topics/example_app6_app/orders/cluster_lags")
       end
 
+      it "expect each consumer group to link to its cluster consumer group page" do
+        assert_ok
+        assert_body("health/consumer_groups/example_app6_app")
+      end
+
       it "expect the max lag to name the hot partition and link to partitions sorted by lag" do
         assert_ok
         assert_body("(p1)")

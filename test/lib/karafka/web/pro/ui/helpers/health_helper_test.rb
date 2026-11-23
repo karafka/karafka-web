@@ -52,6 +52,28 @@ describe_current do
     end
   end
 
+  describe "#health_consumer_group_path" do
+    it "builds the consumer group overview path by default" do
+      assert_equal(
+        "/karafka/health/consumer_groups/app/overview",
+        health_consumer_group_path("app")
+      )
+    end
+
+    it "encodes the consumer group id as one path segment" do
+      assert_equal(
+        "/karafka/health/consumer_groups/a%20b%2Fc%3Fd/members",
+        health_consumer_group_path("a b/c?d", "members")
+      )
+    end
+  end
+
+  describe "#consumer_group_protocol_label" do
+    it { assert_equal("consumer (KIP-848)", consumer_group_protocol_label(:consumer)) }
+    it { assert_equal("classic", consumer_group_protocol_label(:classic)) }
+    it { assert_equal("unknown", consumer_group_protocol_label(:unknown)) }
+  end
+
   describe "#health_topics_by_lag_path" do
     it "builds the topics path sorted by total lag, worst first" do
       assert_equal("/karafka/health/topics?sort=lag_hybrid+desc", health_topics_by_lag_path)

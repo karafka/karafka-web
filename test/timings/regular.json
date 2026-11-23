@@ -1,5 +1,5 @@
 {
-  "test/lib/karafka/web/ui/models/cluster_consumer_group_test.rb": 3.0,
+  "test/lib/karafka/web/ui/models/cluster/consumer_group_test.rb": 3.0,
   "test/lib/karafka/web/ui/models/metrics/aggregated_test.rb": 3.0,
   "test/lib/karafka/web/ui/models/broker_partitions_distribution_test.rb": 1.0,
   "test/lib/karafka/web/ui/models/status_test.rb": 135.926,
@@ -19,7 +19,7 @@
   "test/lib/karafka/web/ui/models/consumers_state_test.rb": 6.564,
   "test/lib/karafka/web/management/actions/create_initial_states_test.rb": 6.355,
   "test/lib/karafka/web/ui/controllers/dashboard_controller_test.rb": 6.107,
-  "test/lib/karafka/web/ui/models/cluster_info_test.rb": 5.396,
+  "test/lib/karafka/web/ui/models/cluster/info_test.rb": 5.396,
   "test/lib/karafka/web/ui/models/process_test.rb": 5.183,
   "test/lib/karafka/web/ui/models/consumers_metrics_test.rb": 4.07,
   "test/lib/karafka/web/ui/models/jobs_test.rb": 3.366,

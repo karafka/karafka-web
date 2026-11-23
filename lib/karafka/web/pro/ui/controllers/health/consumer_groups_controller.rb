@@ -35,12 +35,12 @@ module Karafka
         module Controllers
           module Health
             # Consumer groups of the whole cluster, including the ones the Web UI does not manage
-            # or receive reports from. The list shows states only; members, committed offsets and
-            # lags are loaded per group on its own page.
+            # or receive reports from. The list shows states only; details, members and committed
+            # offsets with lags are loaded per group, each on its own page.
             class ConsumerGroupsController < BaseController
               self.sortable_attributes = {
                 index: %w[id state].freeze,
-                show: %w[id lag stored_offset].freeze
+                offsets: %w[id lag stored_offset].freeze
               }.freeze
 
               self.filterable_attributes = {
@@ -52,16 +52,34 @@ module Karafka
 
               # Lists all the consumer groups in the cluster with their states
               def index
-                @consumer_groups = filter(sort(Models::ClusterConsumerGroup.all))
+                @consumer_groups = filter(sort(Models::Cluster::ConsumerGroup.all))
 
                 render
               end
 
-              # Displays a single consumer group with its members, committed offsets and lags
+              # Displays the state, protocol, assignor and coordinator of a consumer group
               #
               # @param group_id [String] consumer group id
-              def show(group_id)
-                @consumer_group = Models::ClusterConsumerGroup.find(group_id)
+              def overview(group_id)
+                @consumer_group = Models::Cluster::ConsumerGroup.find(group_id)
+
+                render
+              end
+
+              # Displays the members of a consumer group with their assignments
+              #
+              # @param group_id [String] consumer group id
+              def members(group_id)
+                @consumer_group = Models::Cluster::ConsumerGroup.find(group_id)
+
+                render
+              end
+
+              # Displays the committed offsets of a consumer group with their lags
+              #
+              # @param group_id [String] consumer group id
+              def offsets(group_id)
+                @consumer_group = Models::Cluster::ConsumerGroup.find(group_id)
                 @topics = @consumer_group.topics
                 @topics.each_value { |partitions| sort(partitions) }
 
