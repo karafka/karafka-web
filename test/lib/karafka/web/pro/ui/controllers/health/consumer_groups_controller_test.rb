@@ -343,6 +343,9 @@ describe_current do
         # topic: 8 + 15 lag, other_topic: 40 lag
         assert_body("23")
         assert_body("40")
+        assert_body('title="Highest lag is on partition 1"')
+        assert_match(%r{\[1\]\s*</a>}, body)
+        assert_body("filter[value]=#{topic}&amp;sort=lag+desc")
         assert_body("Delete the committed offsets of this consumer group for this topic")
       end
 

@@ -59,9 +59,16 @@
               <td><%= topic.partitions_count %></td>
               <td><%== lag_with_label topic.lag %></td>
               <td>
-                <%== lag_with_label topic.max_lag %>
                 <% if topic.max_lag.positive? %>
-                  <%= topics_partition_identifier(topic.name, topic.max_lag_partition_id) %>
+                  <a
+                    href="<%= "#{health_consumer_group_topic_offsets_path(@consumer_group.id, topic.name)}&sort=lag+desc" %>"
+                    title="Highest lag is on partition <%= topic.max_lag_partition_id %>"
+                  >
+                    <%== lag_with_label topic.max_lag %>
+                    [<%= topic.max_lag_partition_id %>]
+                  </a>
+                <% else %>
+                  <%== lag_with_label topic.max_lag %>
                 <% end %>
               </td>
               <td><%== lag_with_label topic.avg_lag %></td>
