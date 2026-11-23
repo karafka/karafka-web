@@ -82,6 +82,117 @@ describe_current do
       end
     end
 
+    context "when an error has a topic, a partition and a last offset" do
+      before do
+        produce(errors_topic, error_report, partition: 0)
+
+        get "errors"
+      end
+
+      it "expect the origin badge to link to the last offset message in the Explorer" do
+        assert_ok
+        assert_body('<a href="/explorer/topics/default/0/3788359">')
+        assert_body("default-0")
+      end
+    end
+
+    context "when an error has a topic and a partition but no last offset" do
+      let(:error_report) do
+        Fixtures.errors_json.merge(
+          type: "librdkafka.dispatch_error",
+          details: { topic: "default", partition: 2, offset: 100 }
+        ).to_json
+      end
+
+      before do
+        produce(errors_topic, error_report, partition: 0)
+
+        get "errors"
+      end
+
+      it "expect the origin badge to link to the partition in the Explorer" do
+        assert_ok
+        assert_body('<a href="/explorer/topics/default/2">')
+        assert_body("default-2")
+      end
+    end
+
+    context "when an error has a topic, a partition and an empty batch last offset" do
+      let(:error_report) do
+        Fixtures.errors_json.merge(
+          type: "consumer.tick.error",
+          details: { topic: "default", partition: 0, first_offset: -1001, last_offset: -1001 }
+        ).to_json
+      end
+
+      before do
+        produce(errors_topic, error_report, partition: 0)
+
+        get "errors"
+      end
+
+      it "expect the origin badge to link to the partition in the Explorer" do
+        assert_ok
+        assert_body('<a href="/explorer/topics/default/0">')
+      end
+    end
+
+    context "when a producer error was never assigned a partition" do
+      let(:error_report) do
+        Fixtures.errors_json.merge(
+          type: "librdkafka.dispatch_error",
+          details: { topic: "default", partition: -1, offset: -1001 }
+        ).to_json
+      end
+
+      before do
+        produce(errors_topic, error_report, partition: 0)
+
+        get "errors"
+      end
+
+      it "expect the origin badge to link to the topic in the Explorer" do
+        assert_ok
+        assert_body('<a href="/explorer/topics/default">')
+        refute_body("explorer/topics/default/-1")
+      end
+    end
+
+    context "when an error has a topic but no partition" do
+      let(:error_report) do
+        Fixtures.errors_json.merge(details: { topic: "default", last_offset: 10 }).to_json
+      end
+
+      before do
+        produce(errors_topic, error_report, partition: 0)
+
+        get "errors"
+      end
+
+      it "expect the origin badge to link to the topic in the Explorer" do
+        assert_ok
+        assert_body('<a href="/explorer/topics/default">')
+      end
+    end
+
+    context "when an error has no topic" do
+      let(:error_report) do
+        Fixtures.errors_json.merge(type: "web.ui.error", details: {}).to_json
+      end
+
+      before do
+        produce(errors_topic, error_report, partition: 0)
+
+        get "errors"
+      end
+
+      it "expect the origin badge to stay plain" do
+        assert_ok
+        assert_match(%r{<td>\s*<span class="badge badge-secondary">\s*web\.ui\.error}, body)
+        refute_match(%r{<a [^>]*>\s*<span class="badge badge-secondary">\s*web\.ui\.error}, body)
+      end
+    end
+
     context "when a partition contains a foreign message published by a user" do
       before do
         produce_many(errors_topic, Array.new(2) { error_report }, partition: 0)
