@@ -523,18 +523,28 @@ describe_current do
         Karafka::Admin.seek_consumer_group(group_id, { other_topic => { 0 => 10 } })
       end
 
+      # Partitions are ordered by topic name and the topics names are random, so we only check
+      # that each of the three partitions is on exactly one of the two pages
       it "expect the offsets to be paginated across topics" do
         paginate_by(2)
         get "health/consumer_groups/#{group_id}/offsets"
 
         assert_ok
         assert_body(pagination)
-        refute_body("<td>40</td>")
+        first_page = body
 
         get "health/consumer_groups/#{group_id}/offsets?page=2"
 
         assert_ok
-        assert_body("<td>40</td>")
+        second_page = body
+
+        %w[8 15 40].each do |lag|
+          assert_equal(
+            1,
+            [first_page, second_page].count { |page| page.include?("<td>#{lag}</td>") },
+            "lag #{lag} should be on exactly one page"
+          )
+        end
       end
 
       it "expect sorting by lag to order the partitions of all the topics" do

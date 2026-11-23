@@ -24,7 +24,7 @@ class LinksValidator
     %r{/consumers/[a-f0-9-]+/subscriptions},
     # Consumer groups from the reports fixtures and the routing that never committed offsets, so
     # the cluster does not have them and their cluster consumer group pages 404
-    %r{\A/health/consumer_groups/(example_app6_app|karafka_web)/}
+    %r{\A/health/consumer_groups/(example_app6_[a-z_]+|karafka_web)/}
   ].freeze
 
   # Controllers on which we do not want to run checks or want to run only some checks.
