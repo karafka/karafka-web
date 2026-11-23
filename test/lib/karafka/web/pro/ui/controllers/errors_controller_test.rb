@@ -315,7 +315,7 @@ describe_current do
         refute_body("wrapped json")
         assert_body('<code class="wrapped hljs nohighlight p-0 m-0">')
         assert_body('<span class="font-bold">app/jobs/visitors_job.rb:9:in')
-        assert_body('<span class="text-base-content/60">gems/activejob-7.0.6/lib/active_job/')
+        assert_body('<span class="text-muted">gems/activejob-7.0.6/lib/active_job/')
       end
 
       it "expect the topic, partition and offsets to link to the Explorer" do

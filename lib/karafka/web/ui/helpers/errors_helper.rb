@@ -11,7 +11,7 @@ module Karafka
           # the gem directory (`karafka-2.5.0/`, or `karafka-a1b2c3d4e5f6/` for a git gem). Thread
           # backtraces keep absolute paths. JRuby core frames are Java classes or
           # JRuby kernel files.
-          FRAMEWORK_FRAME = %r{
+          GEM_OR_RUBY_FRAME_REGEXP = %r{
             (\A|/)gems/
             | \A[^/\s]+-\d+(\.\d+)*[^/\s]*/
             | \A[^/\s]+-\h{12}/
@@ -21,7 +21,7 @@ module Karafka
             | \.java:\d
           }x
 
-          private_constant :FRAMEWORK_FRAME
+          private_constant :GEM_OR_RUBY_FRAME_REGEXP
 
           # The errors topic can also receive foreign or malformed messages (for example one a
           # user published to it by mistake). Returns the deserialized error payload only when it
@@ -64,7 +64,7 @@ module Karafka
           # @param frame [String] one backtrace line
           # @return [String] css class that mutes gem and Ruby frames and marks application ones
           def backtrace_frame_class(frame)
-            frame.match?(FRAMEWORK_FRAME) ? "text-base-content/60" : "font-bold"
+            frame.match?(GEM_OR_RUBY_FRAME_REGEXP) ? "text-muted" : "font-bold"
           end
         end
       end

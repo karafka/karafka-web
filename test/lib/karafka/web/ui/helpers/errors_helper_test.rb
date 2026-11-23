@@ -79,7 +79,7 @@ describe_current do
   end
 
   describe "#backtrace_frame_class" do
-    let(:muted) { "text-base-content/60" }
+    let(:muted) { "text-muted" }
     let(:marked) { "font-bold" }
 
     it "marks frames of the application" do
