@@ -311,6 +311,13 @@ describe_current do
         refute_body("This feature is available only")
       end
 
+      it "expect to render the backtrace as plain text with application frames marked" do
+        refute_body("wrapped json")
+        assert_body('<code class="wrapped hljs nohighlight p-0 m-0">')
+        assert_body('<span class="font-bold">app/jobs/visitors_job.rb:9:in')
+        assert_body('<span class="text-base-content/60">gems/activejob-7.0.6/lib/active_job/')
+      end
+
       it "expect the topic, partition and offsets to link to the Explorer" do
         # Details from the errors/current.json fixture
         assert_body('href="/explorer/topics/default"')

@@ -22,4 +22,4 @@
   <%= backtrace[:label] %>
 </h3>
 
-<pre class="code"><code class="wrapped json p-0 m-0"><%= backtrace[:backtrace] %></code></pre>
+<pre class="code"><code class="wrapped hljs nohighlight p-0 m-0"><% backtrace[:backtrace].to_s.each_line(chomp: true) do |frame| %><span class="<%= backtrace_frame_class(frame) %>"><%= frame %></span><%= "\n" %><% end %></code></pre>

@@ -248,6 +248,14 @@ describe_current do
         assert_body("trace result")
         assert_body("shinra:397793:6fa3f39acf46")
       end
+
+      it "expect to render backtraces as plain text with gem and Ruby frames muted" do
+        refute_body("wrapped json")
+        assert_body('<code class="wrapped hljs nohighlight p-0 m-0">')
+        assert_body('<span class="text-base-content/60">&lt;internal:thread_sync&gt;:18:in')
+        assert_body('<span class="font-bold">/mnt/software/Karafka/karafka/lib/karafka/runner.rb')
+        assert_body('<span class="text-base-content/60">/home/mencio/.rbenv/versions/3.3.0/lib/ruby/')
+      end
     end
 
     context "when visiting trace result that is not with a compatible schema" do

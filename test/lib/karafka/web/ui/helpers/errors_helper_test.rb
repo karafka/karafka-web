@@ -77,4 +77,31 @@ describe_current do
       assert_equal("99", helper.delivery_status_name(99))
     end
   end
+
+  describe "#backtrace_frame_class" do
+    let(:muted) { "text-base-content/60" }
+    let(:marked) { "font-bold" }
+
+    it "marks frames of the application" do
+      assert_equal(marked, helper.backtrace_frame_class("app/consumers/orders_consumer.rb:7:in 'consume'"))
+      assert_equal(marked, helper.backtrace_frame_class("karafka.rb:7:in 'block in <top (required)>'"))
+      assert_equal(marked, helper.backtrace_frame_class("/srv/app/lib/orders.rb:3:in 'call'"))
+    end
+
+    it "mutes gem frames with the gem home stripped" do
+      assert_equal(muted, helper.backtrace_frame_class("gems/karafka-2.5.0/lib/karafka/runner.rb:36:in 'call'"))
+      assert_equal(muted, helper.backtrace_frame_class("karafka-2.5.0/lib/karafka/runner.rb:36:in 'call'"))
+      assert_equal(muted, helper.backtrace_frame_class("rdkafka-0.20.0-x86_64-linux-gnu/lib/rdkafka.rb:1"))
+    end
+
+    it "mutes gem frames installed in the application or kept with absolute paths" do
+      assert_equal(muted, helper.backtrace_frame_class("vendor/bundle/ruby/3.4.0/gems/karafka-2.5.0/lib/a.rb:1"))
+      assert_equal(muted, helper.backtrace_frame_class("/usr/local/bundle/gems/karafka-2.5.0/lib/a.rb:1"))
+    end
+
+    it "mutes Ruby frames" do
+      assert_equal(muted, helper.backtrace_frame_class("<internal:thread_sync>:18:in 'pop'"))
+      assert_equal(muted, helper.backtrace_frame_class("/usr/local/lib/ruby/3.4.0/monitor.rb:201:in 'synchronize'"))
+    end
+  end
 end
