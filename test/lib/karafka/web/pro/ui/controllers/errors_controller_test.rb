@@ -422,10 +422,12 @@ describe_current do
         refute_body("This feature is available only")
       end
 
-      it "expect to render the backtrace as plain text with application frames marked" do
+      it "expect to render the backtrace as plain text with gem frames muted and application ones plain" do
         refute_body("wrapped json")
         assert_body('<code class="wrapped hljs nohighlight p-0 m-0">')
-        assert_body('<span class="font-bold">app/jobs/visitors_job.rb:9:in')
+        assert_body("app/jobs/visitors_job.rb:9:in")
+        refute_body('<span class="text-muted">app/jobs/visitors_job.rb')
+        refute_body('<span class="font-bold">app/')
         assert_body('<span class="text-muted">gems/activejob-7.0.6/lib/active_job/')
       end
 

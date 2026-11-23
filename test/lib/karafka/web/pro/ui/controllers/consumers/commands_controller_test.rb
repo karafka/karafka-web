@@ -253,7 +253,8 @@ describe_current do
         refute_body("wrapped json")
         assert_body('<code class="wrapped hljs nohighlight p-0 m-0">')
         assert_body('<span class="text-muted">&lt;internal:thread_sync&gt;:18:in')
-        assert_body('<span class="font-bold">/mnt/software/Karafka/karafka/lib/karafka/runner.rb')
+        assert_body('<span class="backtrace-prefix">/mnt/software/Karafka/</span><span class="backtrace-ellipsis"></span>karafka/lib/karafka/runner.rb')
+        refute_body('<span class="font-bold">')
         assert_body('<span class="text-muted">/home/mencio/.rbenv/versions/3.3.0/lib/ruby/')
         assert_body('<span class="text-muted">/home/mencio/.rbenv/versions/3.3.0/bin/bundle:25:in')
       end
@@ -261,8 +262,14 @@ describe_current do
       it "expect to render one frame per line" do
         assert_body(
           "&lt;internal:thread_sync&gt;:18:in `pop&#39;</span>\n" \
-          '<span class="font-bold">/mnt/software/Karafka/karafka/lib/karafka/connection/conductor.rb'
+          '<span class="backtrace-prefix">/mnt/software/Karafka/</span><span class="backtrace-ellipsis"></span>karafka/lib/karafka/connection/conductor.rb'
         )
+      end
+
+      it "expect to collapse the paths prefix shared by the application frames by default" do
+        assert_body('<div id="backtrace-paths" class="backtrace-short-paths">')
+        assert_body('class="btn-action btn-toggle-backtrace-paths"')
+        assert_body('data-toggle-target="backtrace-paths"')
       end
     end
 

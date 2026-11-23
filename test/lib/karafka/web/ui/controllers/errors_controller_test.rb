@@ -319,18 +319,63 @@ describe_current do
         get "errors/0"
       end
 
-      it "expect to render it as plain text with application frames marked" do
+      it "expect to render it as plain text with gem frames muted and application ones plain" do
         assert_body('<code class="wrapped hljs nohighlight p-0 m-0">')
         refute_body("wrapped json")
-        assert_body('<span class="font-bold">app/jobs/visitors_job.rb:9:in')
+        assert_body("app/jobs/visitors_job.rb:9:in")
+        refute_body('<span class="text-muted">app/jobs/visitors_job.rb')
+        refute_body('<span class="font-bold">app/')
         assert_body('<span class="text-muted">gems/activejob-7.0.6/lib/active_job/')
       end
 
       it "expect to render one frame per line" do
         assert_body(
-          "in `perform&#39;</span>\n" \
+          "in `perform&#39;\n" \
           '<span class="text-muted">gems/activejob-7.0.6/lib/active_job/execution.rb:65:in'
         )
+      end
+    end
+
+    context "when visiting an error with absolute application paths" do
+      let(:root) { "/home/user/Karafka" }
+
+      before do
+        report = JSON.parse(error_report)
+        report["backtrace"] = [
+          "#{root}/karafka-web/lib/karafka/web/processing/consumer.rb:16:in 'consume'",
+          "gems/karafka-core-2.6.8/lib/karafka/core/monitoring/monitor.rb:42:in 'instrument'",
+          "#{root}/karafka/lib/karafka/processing/worker.rb:80:in 'process'"
+        ].join("\n")
+        produce(errors_topic, report.to_json)
+        get "errors/0"
+      end
+
+      it "expect to collapse their shared prefix by default with a toggle to expand it" do
+        assert_body('<div id="backtrace-paths" class="backtrace-short-paths">')
+        assert_body('class="btn-action btn-toggle-backtrace-paths"')
+        assert_body(
+          '<span class="backtrace-prefix">/home/user/Karafka/</span>' \
+          '<span class="backtrace-ellipsis"></span>karafka-web/lib/karafka/web/processing/consumer.rb'
+        )
+        assert_body('<span class="text-muted">gems/karafka-core-2.6.8/lib/')
+      end
+    end
+
+    context "when visiting an error with only relative paths" do
+      before do
+        report = JSON.parse(error_report)
+        report["backtrace"] = [
+          "app/jobs/visitors_job.rb:9:in 'perform'",
+          "gems/activejob-7.0.6/lib/active_job/execution.rb:65:in 'block in _perform_job'"
+        ].join("\n")
+        produce(errors_topic, report.to_json)
+        get "errors/0"
+      end
+
+      it "expect not to offer collapsing paths" do
+        assert_body("app/jobs/visitors_job.rb:9:in")
+        refute_body("btn-toggle-backtrace-paths")
+        refute_body("backtrace-prefix")
       end
     end
 

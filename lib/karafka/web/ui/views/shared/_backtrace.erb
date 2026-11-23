@@ -1,0 +1,10 @@
+<%#
+  Backtrace as plain text, one frame per line. Gem and Ruby frames are muted so the application
+  frames stand out. The paths prefix, when given, is hidden behind an ellipsis while an ancestor
+  has the `backtrace-short-paths` class (see `shared/backtrace_paths_toggle`).
+
+  @param backtrace [String] backtrace with one frame per line
+  @param prefix [String, nil] shared paths prefix to collapse
+  @param classes [String] css classes of the pre element
+%>
+<pre class="<%= classes %>"><code class="wrapped hljs nohighlight p-0 m-0"><% backtrace.to_s.each_line(chomp: true) do |frame| %><%== backtrace_frame(frame, prefix) %><%= "\n" %><% end %></code></pre>
