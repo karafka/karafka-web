@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Karafka::Web::Tracking::Ui::Listeners::Errors do
+describe_current do
   let(:listener) { described_class.new }
 
   let(:producer) { stub }
