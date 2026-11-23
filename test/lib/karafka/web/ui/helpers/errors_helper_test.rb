@@ -51,6 +51,29 @@ describe_current do
     end
   end
 
+  describe "#error_message_preview" do
+    it "returns a message of 200 characters escaped and not cut" do
+      message = "<b>#{"x" * 193}</b>"
+
+      assert_equal(Rack::Utils.escape_html(message), helper.error_message_preview(message))
+    end
+
+    it "cuts a longer message with an ellipsis and puts the escaped full message in the title" do
+      message = "#{"x" * 200}<b>tail</b>"
+
+      assert_equal(
+        %(<span title="#{"x" * 200}&lt;b&gt;tail&lt;/b&gt;">#{"x" * 200}…</span>),
+        helper.error_message_preview(message)
+      )
+    end
+
+    it "escapes the cut part of the message" do
+      message = "#{"x" * 197}<b>tail</b>"
+
+      assert_includes(helper.error_message_preview(message), ">#{"x" * 197}&lt;b&gt;…</span>")
+    end
+  end
+
   describe "#delivery_status_name" do
     it "names a persisted message" do
       assert_equal(

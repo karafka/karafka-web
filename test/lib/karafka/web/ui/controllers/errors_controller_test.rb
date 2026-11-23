@@ -51,6 +51,23 @@ describe_current do
       end
     end
 
+    context "when an error message is longer than 200 characters" do
+      let(:error_message) { "#{"x" * 200}<b>tail</b>" }
+      let(:error_report) { Fixtures.errors_json.merge(error_message: error_message).to_json }
+
+      before do
+        produce(errors_topic, error_report)
+
+        get "errors"
+      end
+
+      it "expect to cut it with an ellipsis and show the full escaped message in the title" do
+        assert_ok
+        assert_body(%(<span title="#{"x" * 200}&lt;b&gt;tail&lt;/b&gt;">#{"x" * 200}…</span>))
+        refute_body("<b>tail</b>")
+      end
+    end
+
     context "when the errors topic contains a non-deserializable message" do
       before do
         produce(errors_topic, error_report)

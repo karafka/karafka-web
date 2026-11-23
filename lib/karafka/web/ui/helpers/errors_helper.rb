@@ -29,6 +29,20 @@ module Karafka
             false
           end
 
+          # @param message [String] error message
+          # @param length [Integer] max number of characters to show
+          # @return [String] escaped message, cut with an ellipsis and with the full message in
+          #   the title when longer than `length`
+          def error_message_preview(message, length: 200)
+            escaped = ::Rack::Utils.escape_html(message)
+
+            return escaped if message.length <= length
+
+            preview = ::Rack::Utils.escape_html(message[0...length])
+
+            %(<span title="#{escaped}">#{preview}…</span>)
+          end
+
           # @param status [Integer] librdkafka message persistence status
           # @return [String] human readable status
           def delivery_status_name(status)
