@@ -26,12 +26,14 @@
 - [Enhancement] Show an informational Status page check when the Web UI reports through an idempotent or transactional `Karafka.producer` shared with the application, with a link to configuring a custom Web UI producer.
 - [Enhancement] Speed up Web UI sorting on large data, most of all when sorting on an attribute the rows do not have.
 - [Enhancement] Show error and thread backtraces as plain text instead of JSON-highlighted, with application frames in bold and gem and Ruby frames muted.
+- [Enhancement] Link the Origin badge on the Pro Errors list to the Explorer: to the last offset of the failed batch when known, else to the partition, else to the topic.
 - [Change] Move the Pro Dead Letter Queue Topics view from `/dlq` to `/dead_letter_queues`. Old `/dlq` links redirect to the new path. Label its navigation item `DLQ`.
 - [Maintenance] Extract the consumer commanding forms into `Lib::Commands` and validate offset and pause values server-side (#1241).
 - [Maintenance] Extract the topic configuration edit flow into `Lib::Configuring` and reject empty values (#1241).
 - [Maintenance] Extract topic creation and repartitioning into `Lib::TopicCreation` and `Lib::Repartitioning` with server-side validation (#1241).
 - [Maintenance] Extract the Explorer republish flow into `Lib::Republishing` and validate the form before producing (#1244).
 - [Maintenance] Update the vendored `AirDatepicker` CSS to `3.6.0` to match the JS.
+- [Maintenance] Sign the gem with `sigstore-cli` and push it with `gem push --attestation` (the `gem-push` action of `karafka/misc`), so a failed signing stops the release instead of publishing the gem without an attestation.
 - [Fix] Style links inside Status and other alert boxes so they stand out from the surrounding text instead of showing only on hover.
 - [Fix] Log consumers reporter dispatch failures instead of crashing the process when `produce_many_sync` times out (#1336).
 - [Fix] Sort Hash elements by key value even when the key name matches a `Hash` method.
@@ -71,8 +73,6 @@
 - [Fix] Fix the "Configuraton" typo in the topic configuration page title (Pro).
 - [Fix] Show the "Cluster" page title on the Cluster Replication page.
 - [Fix] Do not live-poll the topic, messages and offsets deletion confirmation pages, so a rejected deletion error is not replaced by a refresh a few seconds later.
-- [Maintenance] Sign the gem with `sigstore-cli` and push it with `gem push --attestation` (the `gem-push` action of `karafka/misc`), so a failed signing stops the release instead of publishing the gem without an attestation.
-- [Maintenance] Add the `Sigstore Check` workflow: nightly, and on pull requests that change the push workflow, it builds the gem, signs it like a release and verifies the attestation, without pushing.
 - [Fix] Center single buttons in table "Options" columns, so they no longer sit closer to the right cell edge than to the left one. Columns with different button counts per row stay right-aligned.
 - [Fix] Center the "Options" label of table headers like the other headers, also when the buttons below it are right-aligned.
 

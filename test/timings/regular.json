@@ -142,7 +142,7 @@
   "test/lib/karafka/web/tracking/consumers/listeners/pausing_test.rb": 0.006,
   "test/lib/karafka/web/tracking/consumers/listeners/booting_test.rb": 0.006,
   "test/lib/karafka/web/tracking/consumers/reporter_test.rb": 0.006,
-  "test/lib/karafka/web/tracking/ui/errors_test.rb": 0.006,
+  "test/lib/karafka/web/tracking/ui/listeners/errors_test.rb": 0.006,
   "test/lib/karafka/web/tracking/reporter_test.rb": 0.006,
   "test/lib/karafka/web/management/migrations/consumers_states/1700234522_introduce_waiting_test.rb": 0.006,
   "test/lib/karafka/web/management/migrations/consumers_metrics/1716218393_populate_jobs_metrics_test.rb": 0.005,
