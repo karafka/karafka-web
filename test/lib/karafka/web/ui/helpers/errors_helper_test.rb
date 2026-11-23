@@ -78,48 +78,113 @@ describe_current do
     end
   end
 
-  describe "#backtrace_frame_class" do
-    let(:muted) { "text-muted" }
-    let(:marked) { "font-bold" }
-
-    it "marks frames of the application" do
-      assert_equal(marked, helper.backtrace_frame_class("app/consumers/orders_consumer.rb:7:in 'consume'"))
-      assert_equal(marked, helper.backtrace_frame_class("karafka.rb:7:in 'block in <top (required)>'"))
-      assert_equal(marked, helper.backtrace_frame_class("/srv/app/lib/orders.rb:3:in 'call'"))
+  describe "#backtrace_frame_muted?" do
+    it "does not mute frames of the application" do
+      refute(helper.backtrace_frame_muted?("app/consumers/orders_consumer.rb:7:in 'consume'"))
+      refute(helper.backtrace_frame_muted?("karafka.rb:7:in 'block in <top (required)>'"))
+      refute(helper.backtrace_frame_muted?("/srv/app/lib/orders.rb:3:in 'call'"))
     end
 
     it "mutes gem frames with the gem home stripped" do
-      assert_equal(muted, helper.backtrace_frame_class("gems/karafka-2.5.0/lib/karafka/runner.rb:36:in 'call'"))
-      assert_equal(muted, helper.backtrace_frame_class("karafka-2.5.0/lib/karafka/runner.rb:36:in 'call'"))
-      assert_equal(muted, helper.backtrace_frame_class("rdkafka-0.20.0-x86_64-linux-gnu/lib/rdkafka.rb:1"))
+      assert(helper.backtrace_frame_muted?("gems/karafka-2.5.0/lib/karafka/runner.rb:36:in 'call'"))
+      assert(helper.backtrace_frame_muted?("karafka-2.5.0/lib/karafka/runner.rb:36:in 'call'"))
+      assert(helper.backtrace_frame_muted?("rdkafka-0.20.0-x86_64-linux-gnu/lib/rdkafka.rb:1"))
     end
 
     it "mutes git gem frames with the gem home stripped" do
-      assert_equal(muted, helper.backtrace_frame_class("karafka-a1b2c3d4e5f6/lib/karafka/runner.rb:36:in 'call'"))
-      assert_equal(muted, helper.backtrace_frame_class("karafka-0123456789ab/lib/karafka/runner.rb:36:in 'call'"))
+      assert(helper.backtrace_frame_muted?("karafka-a1b2c3d4e5f6/lib/karafka/runner.rb:36:in 'call'"))
+      assert(helper.backtrace_frame_muted?("karafka-0123456789ab/lib/karafka/runner.rb:36:in 'call'"))
     end
 
     it "mutes gem frames installed in the application or kept with absolute paths" do
-      assert_equal(muted, helper.backtrace_frame_class("vendor/bundle/ruby/3.4.0/gems/karafka-2.5.0/lib/a.rb:1"))
-      assert_equal(muted, helper.backtrace_frame_class("/usr/local/bundle/gems/karafka-2.5.0/lib/a.rb:1"))
+      assert(helper.backtrace_frame_muted?("vendor/bundle/ruby/3.4.0/gems/karafka-2.5.0/lib/a.rb:1"))
+      assert(helper.backtrace_frame_muted?("/usr/local/bundle/gems/karafka-2.5.0/lib/a.rb:1"))
     end
 
     it "mutes Ruby frames" do
-      assert_equal(muted, helper.backtrace_frame_class("<internal:thread_sync>:18:in 'pop'"))
-      assert_equal(muted, helper.backtrace_frame_class("/usr/local/lib/ruby/3.4.0/monitor.rb:201:in 'synchronize'"))
+      assert(helper.backtrace_frame_muted?("<internal:thread_sync>:18:in 'pop'"))
+      assert(helper.backtrace_frame_muted?("/usr/local/lib/ruby/3.4.0/monitor.rb:201:in 'synchronize'"))
     end
 
     it "mutes the bundle executable frames" do
-      assert_equal(muted, helper.backtrace_frame_class("/home/mencio/.rbenv/versions/3.3.0/bin/bundle:25:in 'load'"))
-      assert_equal(muted, helper.backtrace_frame_class("/usr/local/bin/bundle:25:in '<main>'"))
-      assert_equal(muted, helper.backtrace_frame_class("/usr/local/bin/bundler:25:in '<main>'"))
+      assert(helper.backtrace_frame_muted?("/home/mencio/.rbenv/versions/3.3.0/bin/bundle:25:in 'load'"))
+      assert(helper.backtrace_frame_muted?("/usr/local/bin/bundle:25:in '<main>'"))
+      assert(helper.backtrace_frame_muted?("/usr/local/bin/bundler:25:in '<main>'"))
     end
 
     it "mutes JRuby core frames" do
-      assert_equal(muted, helper.backtrace_frame_class("org/jruby/RubyArray.java:2097:in 'each'"))
-      assert_equal(muted, helper.backtrace_frame_class("org/jruby/ext/monitor/Monitor.java:85:in 'synchronize'"))
-      assert_equal(muted, helper.backtrace_frame_class("uri:classloader:/jruby/kernel/kernel.rb:28:in 'x'"))
-      assert_equal(muted, helper.backtrace_frame_class("java/lang/Thread.java:1583:in 'run'"))
+      assert(helper.backtrace_frame_muted?("org/jruby/RubyArray.java:2097:in 'each'"))
+      assert(helper.backtrace_frame_muted?("org/jruby/ext/monitor/Monitor.java:85:in 'synchronize'"))
+      assert(helper.backtrace_frame_muted?("uri:classloader:/jruby/kernel/kernel.rb:28:in 'x'"))
+      assert(helper.backtrace_frame_muted?("java/lang/Thread.java:1583:in 'run'"))
+    end
+  end
+
+  describe "#backtrace_paths_prefix" do
+    let(:web) { "/home/user/Karafka/karafka-web/lib/karafka/web" }
+    let(:core) { "/home/user/Karafka/karafka/lib/karafka" }
+
+    it "returns the directory prefix shared by the application frames" do
+      backtrace = [
+        "#{web}/processing/consumer.rb:16:in 'consume'",
+        "gems/karafka-core-2.6.8/lib/karafka/core/monitoring/monitor.rb:42:in 'instrument'",
+        "#{core}/processing/worker.rb:80:in 'process'"
+      ].join("\n")
+
+      assert_equal("/home/user/Karafka/", helper.backtrace_paths_prefix(backtrace))
+    end
+
+    it "ignores gem and Ruby frames living under a different root" do
+      backtrace = [
+        "/home/user/.rbenv/versions/3.3.0/lib/ruby/3.3.0/monitor.rb:201:in 'synchronize'",
+        "#{web}/processing/consumer.rb:16:in 'consume'",
+        "#{web}/management/migrator.rb:44:in 'call'"
+      ].join("\n")
+
+      assert_equal("#{web}/", helper.backtrace_paths_prefix(backtrace))
+    end
+
+    it "looks across all the given backtraces" do
+      assert_equal(
+        "/home/user/Karafka/",
+        helper.backtrace_paths_prefix("#{web}/a.rb:1", "#{core}/b.rb:2")
+      )
+    end
+
+    it "returns nil without at least two absolute application frames" do
+      assert_nil(helper.backtrace_paths_prefix("app/jobs/visitors_job.rb:9:in 'perform'"))
+      assert_nil(helper.backtrace_paths_prefix("#{web}/a.rb:1\napp/b.rb:2"))
+      assert_nil(helper.backtrace_paths_prefix(nil))
+    end
+
+    it "returns nil when the shared prefix is too short to be worth collapsing" do
+      assert_nil(helper.backtrace_paths_prefix("/srv/a.rb:1\n/opt/b.rb:2"))
+      assert_nil(helper.backtrace_paths_prefix("/srv/a.rb:1\n/srv/b.rb:2"))
+    end
+  end
+
+  describe "#backtrace_frame" do
+    it "escapes application frames without wrapping them" do
+      assert_equal("app/a.rb:1:in &#39;call&#39;", helper.backtrace_frame("app/a.rb:1:in 'call'"))
+    end
+
+    it "mutes gem frames" do
+      assert_equal(
+        '<span class="text-muted">gems/karafka-2.5.0/lib/a.rb:1</span>',
+        helper.backtrace_frame("gems/karafka-2.5.0/lib/a.rb:1")
+      )
+    end
+
+    it "makes the given prefix collapsible" do
+      assert_equal(
+        '<span class="backtrace-prefix">/srv/app/</span>' \
+        '<span class="backtrace-ellipsis">…/</span>lib/a.rb:1:in &lt;main&gt;',
+        helper.backtrace_frame("/srv/app/lib/a.rb:1:in <main>", "/srv/app/")
+      )
+    end
+
+    it "leaves frames outside of the prefix intact" do
+      assert_equal("/opt/b.rb:2", helper.backtrace_frame("/opt/b.rb:2", "/srv/app/"))
     end
   end
 end

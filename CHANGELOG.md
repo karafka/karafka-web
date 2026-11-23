@@ -25,7 +25,8 @@
 - [Enhancement] Link the Health lag counters worst-first: the Dashboard "Total lag" opens the Health topics sorted by lag, and each topic's "Max lag" shows the hot partition id and opens its partitions sorted by lag (Pro).
 - [Enhancement] Show an informational Status page check when the Web UI reports through an idempotent or transactional `Karafka.producer` shared with the application, with a link to configuring a custom Web UI producer.
 - [Enhancement] Speed up Web UI sorting on large data, most of all when sorting on an attribute the rows do not have.
-- [Enhancement] Show error and thread backtraces as plain text instead of JSON-highlighted, with application frames in bold and gem and Ruby frames muted.
+- [Enhancement] Show error and thread backtraces as plain text instead of JSON-highlighted, with gem and Ruby frames muted so the application frames stand out.
+- [Enhancement] Collapse the directory prefix shared by the absolute application paths of error and thread backtraces behind an ellipsis, with a toggle to show the full paths.
 - [Enhancement] Link the Origin badge on the Pro Errors list to the Explorer: to the last offset of the failed batch when known, else to the partition, else to the topic.
 - [Change] Move the Pro Dead Letter Queue Topics view from `/dlq` to `/dead_letter_queues`. Old `/dlq` links redirect to the new path. Label its navigation item `DLQ`.
 - [Maintenance] Extract the consumer commanding forms into `Lib::Commands` and validate offset and pause values server-side (#1241).

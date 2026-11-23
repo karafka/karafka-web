@@ -799,6 +799,19 @@ table:not(:has(td.options > :nth-child(2))) :is(th, td).options {
   @apply text-center;
 }
 
+/* Collapsed backtrace paths show an ellipsis instead of the prefix shared by the frames */
+.backtrace-ellipsis {
+  display: none;
+}
+
+.backtrace-short-paths .backtrace-prefix {
+  display: none;
+}
+
+.backtrace-short-paths .backtrace-ellipsis {
+  display: inline;
+}
+
 #controls {
   button {
     &:hover {
