@@ -6,6 +6,7 @@ describe_current do
   let(:errors_topic) { create_topic }
   let(:no_errors) { "There are no errors in this errors topic partition" }
   let(:error_report) { Fixtures.errors_file }
+  let(:partitions_limited) { "The OSS Web UI shows only" }
 
   before { topics_config.errors.name = errors_topic }
 
@@ -29,6 +30,7 @@ describe_current do
         assert_body(no_errors)
         assert_body(breadcrumbs)
         refute_body(pagination)
+        refute_body(partitions_limited)
       end
     end
 
@@ -48,6 +50,59 @@ describe_current do
         assert_body("high: 3")
         assert_body("low: 0")
         assert_body(breadcrumbs)
+        refute_body(partitions_limited)
+      end
+    end
+
+    context "when the errors topic has many partitions" do
+      let(:errors_topic) { create_topic(partitions: 4) }
+
+      before do
+        produce(errors_topic, error_report, partition: 0)
+        produce(errors_topic, error_report, partition: 2)
+
+        get "errors"
+      end
+
+      it "expect to list only partition 0 and say that other partitions are not listed" do
+        assert_ok
+        assert_equal(1, body.scan("StandardError:").size)
+        assert_body("high: 1")
+        assert_body("This errors topic has 4 partitions.")
+        assert_body("errors in partitions 1 to 3 are not listed")
+      end
+    end
+
+    context "when the errors topic has many partitions and partition 0 has no errors" do
+      let(:errors_topic) { create_topic(partitions: 2) }
+
+      before do
+        produce(errors_topic, error_report, partition: 1)
+
+        get "errors"
+      end
+
+      it "expect to say that other partitions are not listed" do
+        assert_ok
+        assert_body(no_errors)
+        assert_body("This errors topic has 2 partitions.")
+        assert_body("errors in partition 1 are not listed")
+      end
+    end
+
+    context "when the cached cluster metadata does not have the errors topic yet" do
+      let(:new_errors_topic) { create_topic(partitions: 4) }
+
+      before do
+        get "errors"
+        topics_config.errors.name = new_errors_topic
+        get "errors"
+      end
+
+      it "expect to render without the partitions notice" do
+        assert_ok
+        assert_body(no_errors)
+        refute_body(partitions_limited)
       end
     end
 
