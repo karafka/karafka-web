@@ -52,6 +52,7 @@
             <th><%== sort_link('Client ID', :client_id) %></th>
             <th><%== sort_link(:host) %></th>
             <th><%== sort_link('Group instance ID', :group_instance_id) %></th>
+            <th>Process</th>
             <th>Assignment</th>
           </tr>
         </thead>
@@ -62,6 +63,21 @@
               <td><%= member[:client_id] %></td>
               <td><%= member[:host] %></td>
               <td><%= member[:group_instance_id] %></td>
+              <td>
+                <% process = @processes_by_member_id[member[:member_id]] %>
+                <% if process %>
+                  <a href="<%= consumer_path(process[:process_id], 'subscriptions') %>#<%= process[:subscription_group_id] %>">
+                    <%= truncate(process[:process_id], strategy: :middle) %>
+                  </a>
+                <% else %>
+                  <span
+                    class="tooltip"
+                    data-tip="Not a Karafka process reporting to the Web UI (e.g. another application)"
+                  >
+                    N/A
+                  </span>
+                <% end %>
+              </td>
               <td>
                 <% (member[:assignment] || {}).each do |topic_name, partitions| %>
                   <div><%= topic_name %>: <%= partitions.join(', ') %></div>

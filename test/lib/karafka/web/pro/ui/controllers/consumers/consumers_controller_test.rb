@@ -926,11 +926,15 @@ describe_current do
         get "consumers/shinra:1:1/subscriptions"
       end
 
-      it "expect to show it escaped" do
+      it "expect to show it escaped and linked to the consumer group members" do
         assert_ok
         assert_body("Member ID")
         assert_body("karafka-&lt;b&gt;member&lt;/b&gt;-123")
         refute_body("<b>member</b>")
+        assert_body(
+          "/health/consumer_groups/example_app6_app/members" \
+          "?filter[field]=member_id&amp;filter[value]=karafka-%3Cb%3Emember%3C%2Fb%3E-123"
+        )
       end
     end
 

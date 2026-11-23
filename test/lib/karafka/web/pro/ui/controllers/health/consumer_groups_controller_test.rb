@@ -476,6 +476,77 @@ describe_current do
       end
     end
 
+    context "when a member runs in a Karafka process that reports to the Web UI" do
+      let(:report) { Fixtures.consumers_reports_json }
+      let(:member_id) { "karafka-1c5e2b3a-7d4f-4e8a-b6c9-0f2a3d4e5b6c" }
+
+      let(:members) do
+        [
+          {
+            member_id: member_id,
+            client_id: "karafka",
+            group_instance_id: nil,
+            host: "/10.0.0.1",
+            assignment: { topic => [0] },
+            target_assignment: nil
+          },
+          {
+            member_id: "other-app-member",
+            client_id: "other-app",
+            group_instance_id: nil,
+            host: "/10.0.0.2",
+            assignment: { topic => [1] },
+            target_assignment: nil
+          }
+        ]
+      end
+
+      before do
+        described = Karafka::Admin.describe_consumer_groups([group_id]).first
+
+        Karafka::Admin
+          .stubs(:describe_consumer_groups)
+          .returns([described.merge(members: members)])
+
+        Karafka::Web::Ui::Models::ConsumersState.stubs(:current).returns({})
+        Karafka::Web::Ui::Models::Processes
+          .stubs(:active)
+          .returns([Karafka::Web::Ui::Models::Process.new(report)])
+
+        get "health/consumer_groups/#{group_id}/members"
+      end
+
+      it "expect to link the member to its process subscription group" do
+        assert_ok
+        assert_body("<th>Process</th>")
+        assert_body(%(href="/consumers/shinra:1:1/subscriptions#c4ca4238a0b9_0"))
+        assert_equal(1, response.body.scan("/consumers/shinra:1:1/subscriptions#").size)
+      end
+
+      it "expect a member of an application that does not report to show it has no process" do
+        assert_ok
+        assert_body("other-app")
+        assert_equal(1, response.body.scan("Not a Karafka process reporting to the Web UI").size)
+      end
+    end
+
+    context "when there is no consumers state" do
+      before do
+        Karafka::Web::Ui::Models::ConsumersState.stubs(:current).returns(false)
+        start_member
+        get "health/consumer_groups/#{stable_group_id}/members"
+      end
+
+      after { consumer.close }
+
+      it "expect to list the members without process links" do
+        assert_ok
+        assert_body("consumer-groups-controller-test")
+        assert_body("Not a Karafka process reporting to the Web UI")
+        refute_body("/subscriptions#")
+      end
+    end
+
     context "when Kafka reports the consumer group protocol" do
       before do
         described = Karafka::Admin.describe_consumer_groups([group_id]).first

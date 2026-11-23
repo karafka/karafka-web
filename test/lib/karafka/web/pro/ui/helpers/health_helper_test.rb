@@ -68,6 +68,22 @@ describe_current do
     end
   end
 
+  describe "#health_consumer_group_member_path" do
+    it "builds the members path filtered to the member" do
+      assert_equal(
+        "/karafka/health/consumer_groups/app/members?filter[field]=member_id&filter[value]=m-1",
+        health_consumer_group_member_path("app", "m-1")
+      )
+    end
+
+    it "URL-encodes the member id so it cannot inject extra query params" do
+      result = health_consumer_group_member_path("app", "evil&injected=1")
+
+      assert_includes(result, "filter[value]=evil%26injected%3D1")
+      refute_includes(result, "evil&injected=1")
+    end
+  end
+
   describe "#consumer_group_protocol_label" do
     it { assert_equal("consumer (KIP-848)", consumer_group_protocol_label(:consumer)) }
     it { assert_equal("classic", consumer_group_protocol_label(:classic)) }

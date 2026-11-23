@@ -113,7 +113,9 @@
     <div class="card-detail">
       <div class="card-detail-body">
         Member ID
-        <span class="badge badge-secondary badge-sm"><%= subscription_group[:member_id] %></span>
+        <a href="<%= health_consumer_group_member_path(consumer_group.id, subscription_group[:member_id]) %>">
+          <span class="badge badge-secondary badge-sm"><%= subscription_group[:member_id] %></span>
+        </a>
       </div>
     </div>
   <% end %>

@@ -88,6 +88,8 @@ module Karafka
 
                 paginate(@params.current_page, !last_page)
 
+                @processes_by_member_id = processes_by_member_id
+
                 render
               end
 
@@ -105,6 +107,33 @@ module Karafka
                 paginate(@params.current_page, !last_page)
 
                 render
+              end
+
+              private
+
+              # @return [Hash{String => Hash}] Karafka processes subscription groups by the member
+              #   id they report (`:process_id`, `:subscription_group_id`). Members of applications
+              #   that do not report to the Web UI (e.g. non-Ruby ones) have no entry.
+              def processes_by_member_id
+                state = Models::ConsumersState.current
+
+                return {} unless state
+
+                Models::Processes.active(state).each_with_object({}) do |process, mapping|
+                  process.consumer_groups.each do |consumer_group|
+                    consumer_group.subscription_groups.each do |subscription_group|
+                      # Reports of processes running versions that do not track it have no member id
+                      member_id = subscription_group[:member_id].to_s
+
+                      next if member_id.empty?
+
+                      mapping[member_id] = {
+                        process_id: process.id,
+                        subscription_group_id: subscription_group.id
+                      }
+                    end
+                  end
+                end
               end
             end
           end

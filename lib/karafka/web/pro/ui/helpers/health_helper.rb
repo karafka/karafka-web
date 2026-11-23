@@ -78,6 +78,16 @@ module Karafka
               root_path("health", "consumer_groups", URI.encode_uri_component(group_id), page)
             end
 
+            # @param group_id [String] consumer group id
+            # @param member_id [String] member id of the consumer group
+            # @return [String] path to the consumer group members filtered to the given member
+            def health_consumer_group_member_path(group_id, member_id)
+              value = Rack::Utils.escape(member_id)
+
+              "#{health_consumer_group_path(group_id, "members")}" \
+                "?filter[field]=member_id&filter[value]=#{value}"
+            end
+
             # @param type [Symbol, nil] consumer group type (rebalance protocol) reported by Kafka
             # @return [String] human readable rebalance protocol of the consumer group
             def consumer_group_protocol_label(type)
