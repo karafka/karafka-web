@@ -124,6 +124,18 @@ describe_current do
       end
     end
 
+    context "when the string has html and is cut with the middle strategy" do
+      let(:string) { "<b>#{"x" * 60}</b>" }
+
+      it "escapes both kept ends and the full string in the title" do
+        assert_equal(
+          %(<span title="&lt;b&gt;#{"x" * 60}&lt;/b&gt;">) +
+            %(&lt;b&gt;#{"x" * 20}...#{"x" * 19}&lt;/b&gt;</span>),
+          truncate(string, strategy: :middle)
+        )
+      end
+    end
+
     context "when an unsupported strategy is provided" do
       let(:expected_error) { Karafka::Errors::UnsupportedCaseError }
 
