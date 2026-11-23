@@ -106,6 +106,17 @@ module Karafka
                 render
               end
 
+              # Group memberships of the process, one per subscription group (librdkafka client),
+              # with the member ids the cluster assigned to them
+              #
+              # @param process_id [String] id of the process we're interested in
+              def memberships(process_id)
+                current_state = Models::ConsumersState.current!
+                @process = Models::Process.find(current_state, process_id)
+
+                render
+              end
+
               # @param process_id [String] id of the process we're interested in
               def subscriptions(process_id)
                 details(process_id)

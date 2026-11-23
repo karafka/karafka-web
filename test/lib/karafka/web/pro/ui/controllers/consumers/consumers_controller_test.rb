@@ -912,71 +912,19 @@ describe_current do
       end
     end
 
-    context "when subscription group reports its member id" do
+    context "when subscription groups report their member ids" do
       before do
         topics_config.consumers.reports.name = reports_topic
 
-        report = Fixtures.consumers_reports_json(symbolize_names: false)
-
-        sg = report["consumer_groups"]["example_app6_app"]["subscription_groups"]["c4ca4238a0b9_0"]
-        sg["member_id"] = "karafka-<b>member</b>-123"
-
-        produce(reports_topic, report.to_json)
+        produce(reports_topic, Fixtures.consumers_reports_file)
 
         get "consumers/shinra:1:1/subscriptions"
       end
 
-      it "expect to show it escaped and linked to the consumer group members" do
+      it "expect them to be on the memberships tab, not here" do
         assert_ok
-        assert_body("Member ID")
-        assert_body("karafka-&lt;b&gt;member&lt;/b&gt;-123")
-        refute_body("<b>member</b>")
-        assert_body(
-          "/health/consumer_groups/example_app6_app/members" \
-          "?filter[field]=member_id&amp;filter[value]=karafka-%3Cb%3Emember%3C%2Fb%3E-123"
-        )
-      end
-    end
-
-    context "when subscription groups do not know their member ids" do
-      before do
-        topics_config.consumers.reports.name = reports_topic
-
-        report = Fixtures.consumers_reports_json(symbolize_names: false)
-
-        report["consumer_groups"].each_value do |cg|
-          cg["subscription_groups"].each_value { |sg| sg["member_id"] = "" }
-        end
-
-        produce(reports_topic, report.to_json)
-
-        get "consumers/shinra:1:1/subscriptions"
-      end
-
-      it do
-        assert_ok
-        refute_body("Member ID")
-      end
-    end
-
-    context "when the report comes from a process that does not report member ids" do
-      before do
-        topics_config.consumers.reports.name = reports_topic
-
-        report = Fixtures.consumers_reports_json(symbolize_names: false)
-
-        report["consumer_groups"].each_value do |cg|
-          cg["subscription_groups"].each_value { |sg| sg.delete("member_id") }
-        end
-
-        produce(reports_topic, report.to_json)
-
-        get "consumers/shinra:1:1/subscriptions"
-      end
-
-      it do
-        assert_ok
-        refute_body("Member ID")
+        assert_body("consumers/shinra:1:1/memberships")
+        refute_body("karafka-1c5e2b3a-7d4f-4e8a-b6c9-0f2a3d4e5b6c")
       end
     end
 
@@ -1220,6 +1168,107 @@ describe_current do
             refute_body("match-me:9:9")
           end
         end
+      end
+    end
+  end
+
+  describe "#memberships" do
+    let(:report) { Fixtures.consumers_reports_json(symbolize_names: false) }
+    let(:subscription_groups) do
+      report["consumer_groups"].values.flat_map { |cg| cg["subscription_groups"].values }
+    end
+
+    before { topics_config.consumers.reports.name = reports_topic }
+
+    context "when the process does not exist" do
+      before { get "consumers/4e8f7174ae53/memberships" }
+
+      it do
+        refute(response.ok?)
+        assert_equal(404, status)
+      end
+    end
+
+    context "when subscription groups report their member ids" do
+      before do
+        produce(reports_topic, report.to_json)
+
+        get "consumers/shinra:1:1/memberships"
+      end
+
+      it "expect to list each subscription group with its member id linked to the group members" do
+        assert_ok
+        assert_body(breadcrumbs)
+        assert_body("Memberships (2)")
+        assert_body("karafka-1c5e2b3a-7d4f-4e8a-b6c9-0f2a3d4e5b6c")
+        assert_body(
+          "/health/consumer_groups/example_app6_app/members" \
+          "?filter[field]=member_id&amp;filter[value]=karafka-1c5e2b3a-7d4f-4e8a-b6c9-0f2a3d4e5b6c"
+        )
+        assert_body("my-static-instance-8b1f6c2e-3f2d-4a8e-9c1b-2d7e5f4a9b10")
+        assert_body("my-static-instance")
+        assert_body(%(href="/consumers/shinra:1:1/subscriptions#c4ca4238a0b9_0"))
+        refute_body("Not known yet")
+      end
+    end
+
+    context "when a member id holds HTML" do
+      before do
+        subscription_groups.first["member_id"] = "karafka-<b>member</b>-123"
+        produce(reports_topic, report.to_json)
+
+        get "consumers/shinra:1:1/memberships"
+      end
+
+      it "expect it escaped in the text and in the link" do
+        assert_ok
+        assert_body("karafka-&lt;b&gt;member&lt;/b&gt;-123")
+        assert_body("filter[value]=karafka-%3Cb%3Emember%3C%2Fb%3E-123")
+        refute_body("<b>member</b>")
+      end
+    end
+
+    context "when subscription groups do not know their member ids" do
+      before do
+        subscription_groups.each { |sg| sg["member_id"] = "" }
+        produce(reports_topic, report.to_json)
+
+        get "consumers/shinra:1:1/memberships"
+      end
+
+      it do
+        assert_ok
+        assert_body("Not known yet")
+        refute_body("filter[field]=member_id")
+      end
+    end
+
+    context "when the report comes from a process that does not report member ids" do
+      before do
+        subscription_groups.each { |sg| sg.delete("member_id") }
+        produce(reports_topic, report.to_json)
+
+        get "consumers/shinra:1:1/memberships"
+      end
+
+      it do
+        assert_ok
+        assert_body("Not known yet")
+      end
+    end
+
+    context "when the process is not subscribed to anything" do
+      before do
+        report["consumer_groups"] = {}
+        produce(reports_topic, report.to_json)
+
+        get "consumers/shinra:1:1/memberships"
+      end
+
+      it do
+        assert_ok
+        assert_body("Memberships (0)")
+        refute_body("<th>Member ID</th>")
       end
     end
   end
