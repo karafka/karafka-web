@@ -6,6 +6,24 @@ module Karafka
       module Helpers
         # Helpers for rendering the errors views
         module ErrorsHelper
+          # Backtrace frames that come from gems or Ruby itself. Error reports strip the app root
+          # and the gem home, so depending on `GEM_HOME` a gem frame starts with `gems/` or with
+          # the gem directory (`karafka-2.5.0/`, or `karafka-a1b2c3d4e5f6/` for a git gem). Thread
+          # backtraces keep absolute paths; the main thread of a `bundle exec` process ends in the
+          # `bundle` executable. JRuby core frames are Java classes or JRuby kernel files.
+          GEM_OR_RUBY_FRAME_REGEXP = %r{
+            (\A|/)gems/
+            | \A[^/\s]+-\d+(\.\d+)*[^/\s]*/
+            | \A[^/\s]+-\h{12}/
+            | \A<internal:
+            | /lib/ruby/
+            | /bin/bundler?:\d
+            | \Auri:classloader:
+            | \.java:\d
+          }x
+
+          private_constant :GEM_OR_RUBY_FRAME_REGEXP
+
           # The errors topic can also receive foreign or malformed messages (for example one a
           # user published to it by mistake). Returns the deserialized error payload only when it
           # is one of our own error reports (identified by the `schema_version` all of them carry);
@@ -42,6 +60,12 @@ module Karafka
             else
               status.to_s
             end
+          end
+
+          # @param frame [String] one backtrace line
+          # @return [String] css class that mutes gem and Ruby frames and marks application ones
+          def backtrace_frame_class(frame)
+            frame.match?(GEM_OR_RUBY_FRAME_REGEXP) ? "text-muted" : "font-bold"
           end
         end
       end

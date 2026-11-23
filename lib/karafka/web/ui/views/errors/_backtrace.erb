@@ -3,5 +3,5 @@
     Backtrace
   </h2>
 
-  <pre class="mb-5 p-0 border border-base-300 text-sm"><code class="wrapped json p-0 m-0"><%= error[:backtrace] %></code></pre>
+  <pre class="mb-5 p-0 border border-base-300 text-sm"><code class="wrapped hljs nohighlight p-0 m-0"><% error[:backtrace].to_s.each_line(chomp: true) do |frame| %><span class="<%= backtrace_frame_class(frame) %>"><%= frame %></span><%= "\n" %><% end %></code></pre>
 </div>
