@@ -431,7 +431,7 @@ describe_current do
         assert_ok
         assert_body("consumer-groups-controller-test")
         assert_body("<td>#{described.fetch(:members).first.fetch(:host)}</td>")
-        assert_body("#{topic}: 0, 1")
+        assert_body("#{topic}-[0-1]")
         refute_body("This consumer group has no members.")
       end
     end

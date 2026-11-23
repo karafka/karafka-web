@@ -54,7 +54,7 @@
         title="Highest lag is on partition <%= topic_stats.max_lag_partition_id %>"
       >
         <%== lag_with_label topic_stats.max_lag %>
-        (p<%= topic_stats.max_lag_partition_id %>)
+        <%= topics_partition_identifier(topic_name, topic_stats.max_lag_partition_id) %>
       </a>
     <% else %>
       <%== lag_with_label topic_stats.max_lag %>

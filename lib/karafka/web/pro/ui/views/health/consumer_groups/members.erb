@@ -81,7 +81,9 @@
               </td>
               <td>
                 <% (member[:assignment] || {}).each do |topic_name, partitions| %>
-                  <div><%= topic_name %>: <%= partitions.join(', ') %></div>
+                  <div title="<%= topics_assignment_label(topic_name, partitions, limit: 25) %>">
+                    <%= topics_assignment_text(topic_name, partitions) %>
+                  </div>
                 <% end %>
               </td>
             </tr>

@@ -154,7 +154,7 @@ describe_current do
 
         it "expect the max lag to name no hot partition" do
           assert_ok
-          refute_body("(p0)")
+          refute_body("default-[0]")
           refute_body("default/overview?sort=")
         end
       end
@@ -491,7 +491,7 @@ describe_current do
 
       it "expect the max lag to name the hot partition and link to partitions sorted by lag" do
         assert_ok
-        assert_body("(p2)")
+        assert_body("default-[2]")
         assert_body("health/topics/example_app6_app/default/overview?sort=lag_hybrid+desc")
       end
     end
@@ -585,7 +585,7 @@ describe_current do
 
       it "expect the max lag to name the hot partition and link to partitions sorted by lag" do
         assert_ok
-        assert_body("(p1)")
+        assert_body("orders-[1]")
         assert_body("health/topics/example_app6_app/orders/cluster_lags?sort=lag+desc")
       end
 
@@ -645,7 +645,7 @@ describe_current do
 
       it "expect the max lag to name no hot partition" do
         assert_ok
-        refute_body("(p0)")
+        refute_body("orders-[0]")
         refute_body("orders/cluster_lags?sort=")
       end
     end

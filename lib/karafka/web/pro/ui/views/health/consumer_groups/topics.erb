@@ -61,7 +61,7 @@
               <td>
                 <%== lag_with_label topic.max_lag %>
                 <% if topic.max_lag.positive? %>
-                  (p<%= topic.max_lag_partition_id %>)
+                  <%= topics_partition_identifier(topic.name, topic.max_lag_partition_id) %>
                 <% end %>
               </td>
               <td><%== lag_with_label topic.avg_lag %></td>
