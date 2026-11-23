@@ -85,7 +85,7 @@ describe_current do
   end
 
   describe "#consumer_group_protocol_label" do
-    it { assert_equal("consumer (KIP-848)", consumer_group_protocol_label(:consumer)) }
+    it { assert_equal("consumer", consumer_group_protocol_label(:consumer)) }
     it { assert_equal("classic", consumer_group_protocol_label(:classic)) }
     it { assert_equal("unknown", consumer_group_protocol_label(:unknown)) }
   end

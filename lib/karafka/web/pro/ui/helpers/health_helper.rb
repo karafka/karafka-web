@@ -116,7 +116,7 @@ module Karafka
             # @return [String] human readable rebalance protocol of the consumer group
             def consumer_group_protocol_label(type)
               case type
-              when :consumer then "consumer (KIP-848)"
+              when :consumer then "consumer"
               when :classic then "classic"
               else
                 "unknown"

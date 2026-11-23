@@ -632,7 +632,7 @@ describe_current do
       it do
         assert_ok
         assert_body("<td>Protocol</td>")
-        assert_body("consumer (KIP-848)")
+        assert_body("<td>consumer</td>")
       end
     end
 
