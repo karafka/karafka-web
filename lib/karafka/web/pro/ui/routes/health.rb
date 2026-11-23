@@ -46,6 +46,53 @@ module Karafka
                   topics_controller.cluster_lags
                 end
 
+                # Per-topic drill-down. The per-partition lenses (overview/lags/offsets/changes and
+                # cluster_lags) live here, scoped to a single topic, instead of the old top-level
+                # all-topics views which became unusable with many topics/partitions.
+                r.on "topics", String, String do |consumer_group_id, topic_name|
+                  partitions_controller = build(Controllers::Health::PartitionsController)
+
+                  r.get "overview" do
+                    partitions_controller.overview(consumer_group_id, topic_name)
+                  end
+
+                  r.get "lags" do
+                    partitions_controller.lags(consumer_group_id, topic_name)
+                  end
+
+                  r.get "offsets" do
+                    partitions_controller.offsets(consumer_group_id, topic_name)
+                  end
+
+                  r.get "changes" do
+                    partitions_controller.changes(consumer_group_id, topic_name)
+                  end
+
+                  r.get "cluster_lags" do
+                    partitions_controller.cluster_lags(consumer_group_id, topic_name)
+                  end
+
+                  # A bare topic path defaults to the overview lens
+                  r.get do
+                    r.redirect root_path("health", "topics", consumer_group_id, topic_name, "overview")
+                  end
+                end
+
+                # A consumer-group path without a topic has no page of its own, so send it to the
+                # topics list scoped to that group rather than 404-ing. `health_group_topics_path`
+                # URL-encodes the group value (it comes from the URL path) so it cannot inject extra
+                # query params.
+                r.get "topics", String do |consumer_group_id|
+                  r.redirect health_group_topics_path(consumer_group_id)
+                end
+
+                r.get "topics" do
+                  topics_controller.index
+                end
+
+                # Consumer groups as the cluster sees them, including the ones the Web UI does not
+                # manage or receive reports from. Group ids may hold any character, so they are
+                # encoded as one path segment.
                 consumer_groups_controller = build(Controllers::Health::ConsumerGroupsController)
 
                 r.get "consumer_groups" do
@@ -91,50 +138,6 @@ module Karafka
                   r.get do
                     r.redirect health_consumer_group_path(decoded_group_id)
                   end
-                end
-
-                # Per-topic drill-down. The per-partition lenses (overview/lags/offsets/changes and
-                # cluster_lags) live here, scoped to a single topic, instead of the old top-level
-                # all-topics views which became unusable with many topics/partitions.
-                r.on "topics", String, String do |consumer_group_id, topic_name|
-                  partitions_controller = build(Controllers::Health::PartitionsController)
-
-                  r.get "overview" do
-                    partitions_controller.overview(consumer_group_id, topic_name)
-                  end
-
-                  r.get "lags" do
-                    partitions_controller.lags(consumer_group_id, topic_name)
-                  end
-
-                  r.get "offsets" do
-                    partitions_controller.offsets(consumer_group_id, topic_name)
-                  end
-
-                  r.get "changes" do
-                    partitions_controller.changes(consumer_group_id, topic_name)
-                  end
-
-                  r.get "cluster_lags" do
-                    partitions_controller.cluster_lags(consumer_group_id, topic_name)
-                  end
-
-                  # A bare topic path defaults to the overview lens
-                  r.get do
-                    r.redirect root_path("health", "topics", consumer_group_id, topic_name, "overview")
-                  end
-                end
-
-                # A consumer-group path without a topic has no page of its own, so send it to the
-                # topics list scoped to that group rather than 404-ing. `health_group_topics_path`
-                # URL-encodes the group value (it comes from the URL path) so it cannot inject extra
-                # query params.
-                r.get "topics", String do |consumer_group_id|
-                  r.redirect health_group_topics_path(consumer_group_id)
-                end
-
-                r.get "topics" do
-                  topics_controller.index
                 end
 
                 r.get do
