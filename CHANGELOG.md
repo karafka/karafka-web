@@ -32,6 +32,7 @@
 - [Maintenance] Extract topic creation and repartitioning into `Lib::TopicCreation` and `Lib::Repartitioning` with server-side validation (#1241).
 - [Maintenance] Extract the Explorer republish flow into `Lib::Republishing` and validate the form before producing (#1244).
 - [Maintenance] Update the vendored `AirDatepicker` CSS to `3.6.0` to match the JS.
+- [Maintenance] Sign the gem with `sigstore-cli` and push it with `gem push --attestation` (the `gem-push` action of `karafka/misc`), so a failed signing stops the release instead of publishing the gem without an attestation.
 - [Fix] Style links inside Status and other alert boxes so they stand out from the surrounding text instead of showing only on hover.
 - [Fix] Log consumers reporter dispatch failures instead of crashing the process when `produce_many_sync` times out (#1336).
 - [Fix] Sort Hash elements by key value even when the key name matches a `Hash` method.
@@ -71,8 +72,6 @@
 - [Fix] Fix the "Configuraton" typo in the topic configuration page title (Pro).
 - [Fix] Show the "Cluster" page title on the Cluster Replication page.
 - [Fix] Do not live-poll the topic, messages and offsets deletion confirmation pages, so a rejected deletion error is not replaced by a refresh a few seconds later.
-- [Maintenance] Sign the gem with `sigstore-cli` and push it with `gem push --attestation` (the `gem-push` action of `karafka/misc`), so a failed signing stops the release instead of publishing the gem without an attestation.
-- [Maintenance] Add the `Sigstore Check` workflow: nightly, and on pull requests that change the push workflow, it builds the gem, signs it like a release and verifies the attestation, without pushing.
 - [Fix] Center single buttons in table "Options" columns, so they no longer sit closer to the right cell edge than to the left one. Columns with different button counts per row stay right-aligned.
 - [Fix] Center the "Options" label of table headers like the other headers, also when the buttons below it are right-aligned.
 
