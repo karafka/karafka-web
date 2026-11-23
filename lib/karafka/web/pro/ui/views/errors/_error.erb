@@ -26,9 +26,10 @@
           topic = error[:details][:topic]
           partition = error[:details][:partition]
           last_offset = error[:details][:last_offset]
-          offset = last_offset if partition && last_offset && last_offset >= 0
+          path_partition = partition if partition && partition >= 0
+          offset = last_offset if path_partition && last_offset && last_offset >= 0
         %>
-        <a href="<%= explorer_topics_path(topic, partition, offset) %>">
+        <a href="<%= explorer_topics_path(topic, path_partition, offset) %>">
           <span class="badge badge-secondary">
             <%= topics_partition_identifier(topic, partition) %>
           </span>
