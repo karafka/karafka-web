@@ -30,6 +30,7 @@ module Karafka
             #
             # @param topic_name [String] name of the topic we are looking for
             # @return [Ui::Models::Topic] topic details
+            # @raise [Web::Errors::Ui::NotFoundError] when the topic does not exist
             def topic(topic_name)
               Lib::Admin
                 .topic_info(topic_name)

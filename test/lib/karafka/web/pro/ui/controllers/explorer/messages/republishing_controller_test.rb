@@ -350,4 +350,26 @@ describe_current do
       end
     end
   end
+
+  describe "routes with a topic name that is not a valid Kafka topic name" do
+    before do
+      Karafka::Admin.expects(:topic_info).never
+      Karafka::Admin.expects(:read_watermark_offsets).never
+      Karafka::Admin.expects(:read_topic).never
+    end
+
+    ["a" * 513, "a" * 250, "a%20b"].each do |invalid|
+      context "when getting explorer/messages/an invalid topic/0/0/forward" do
+        before { get "explorer/messages/#{invalid}/0/0/forward" }
+
+        it { assert_equal(404, response.status) }
+      end
+
+      context "when posting explorer/messages/an invalid topic/0/0/republish" do
+        before { post "explorer/messages/#{invalid}/0/0/republish" }
+
+        it { assert_equal(404, response.status) }
+      end
+    end
+  end
 end

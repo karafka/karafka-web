@@ -17,8 +17,28 @@ module Karafka
           class << self
             extend Forwardable
 
-            def_delegators ::Karafka::Admin,
-              :read_watermark_offsets, :cluster_info, :topic_info, :with_consumer
+            def_delegators ::Karafka::Admin, :cluster_info, :with_consumer
+
+            # @param name_or_hash [String, Symbol, Hash] topic name or hash with topics and
+            #   partitions
+            # @param partition [Array<Integer>] partition (when name is given)
+            # @return [Array<Integer, Integer>, Hash] low and high watermark offsets
+            # @raise [Web::Errors::Ui::NotFoundError] when a topic name is not a valid Kafka name
+            def read_watermark_offsets(name_or_hash, *partition)
+              topic_names = name_or_hash.is_a?(Hash) ? name_or_hash.keys : [name_or_hash]
+              topic_names.each { |topic_name| validate_topic_name!(topic_name) }
+
+              ::Karafka::Admin.read_watermark_offsets(name_or_hash, *partition)
+            end
+
+            # @param topic_name [String] name of the topic
+            # @return [Hash] topic details
+            # @raise [Web::Errors::Ui::NotFoundError] when the name is not a valid Kafka name
+            def topic_info(topic_name)
+              validate_topic_name!(topic_name)
+
+              ::Karafka::Admin.topic_info(topic_name)
+            end
 
             # Allows us to read messages from the topic
             #
@@ -31,7 +51,10 @@ module Karafka
             # @param settings [Hash] kafka extra settings (optional)
             #
             # @return [Array<Karafka::Messages::Message>] array with messages
+            # @raise [Web::Errors::Ui::NotFoundError] when the name is not a valid Kafka name
             def read_topic(name, partition, count, start_offset = -1, settings = {})
+              validate_topic_name!(name)
+
               ::Karafka::Admin.read_topic(
                 name,
                 partition,
@@ -41,6 +64,19 @@ module Karafka
                 # passes explicitly win over them
                 Config::DefaultsInjector.call(settings.dup)
               )
+            end
+
+            private
+
+            # Rejects a topic name Kafka cannot have, as an unknown topic, without a cluster call.
+            # Some of those names crash librdkafka (karafka-rdkafka 0.32.2 and older).
+            #
+            # @param topic_name [String, Symbol] topic name
+            # @raise [Web::Errors::Ui::NotFoundError] when the name is not a valid Kafka name
+            def validate_topic_name!(topic_name)
+              return if Contracts::TopicName.new.call({ topic_name: topic_name.to_s }).success?
+
+              raise(Web::Errors::Ui::NotFoundError, topic_name)
             end
           end
         end
