@@ -37,9 +37,10 @@ describe_current do
 
   let(:consumer) do
     Rdkafka::Config.new(
-      "bootstrap.servers": "127.0.0.1:9092",
-      "group.id": stable_group_id,
-      "client.id": "consumer-groups-controller-test"
+      Karafka::App.config.kafka.merge(
+        "group.id": stable_group_id,
+        "client.id": "consumer-groups-controller-test"
+      )
     ).consumer
   end
 

@@ -56,7 +56,7 @@
   <h2 class="h2">Members</h2>
 
   <% if @consumer_group.members.empty? %>
-    <p class="text-sm">This consumer group has no members.</p>
+    <% empty_state('This consumer group has no members.', card: false) %>
   <% else %>
     <div class="data-table-wrapper">
       <table class="data-table">
@@ -93,7 +93,7 @@
   <h2 class="h2">Committed offsets</h2>
 
   <% if @topics.empty? %>
-    <p class="text-sm">This consumer group has no committed offsets.</p>
+    <% empty_state('This consumer group has no committed offsets.', card: false) %>
   <% end %>
 
   <% @topics.each do |topic_name, partitions| %>
