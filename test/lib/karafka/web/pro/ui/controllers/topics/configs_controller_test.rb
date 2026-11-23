@@ -62,9 +62,7 @@ describe_current do
 
     context "when a topic config has been set dynamically" do
       before do
-        resource = Karafka::Admin::Configs::Resource.new(type: :topic, name: topic)
-        resource.set("retention.ms", "86400000")
-        Karafka::Admin::Configs.alter(resource)
+        alter_topic_config(topic, "retention.ms", "86400000")
 
         get "topics/#{topic}/config"
       end
@@ -136,11 +134,7 @@ describe_current do
     context "when sorting the configs by source" do
       let(:body) { response.body }
 
-      before do
-        resource = Karafka::Admin::Configs::Resource.new(type: :topic, name: topic)
-        resource.set("retention.ms", "86400000")
-        Karafka::Admin::Configs.alter(resource)
-      end
+      before { alter_topic_config(topic, "retention.ms", "86400000") }
 
       context "when ascending" do
         before { get "topics/#{topic}/config?sort=source+asc" }
