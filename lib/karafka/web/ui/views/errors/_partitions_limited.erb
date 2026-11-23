@@ -1,0 +1,14 @@
+<% hidden = (@partitions_count == 2) ? 'partition 1' : "partitions 1 to #{@partitions_count - 1}" %>
+
+<div class="mb-6">
+  <%==
+    alert_warning(
+      "
+        This errors topic has #{@partitions_count} partitions. The OSS Web UI shows only
+        partition 0; errors in #{hidden} are not listed. Multi-partition errors are a
+        <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://karafka.io/#become-pro\" class=\"underline\">Pro</a>
+        feature.
+      "
+    )
+  %>
+</div>

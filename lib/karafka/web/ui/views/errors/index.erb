@@ -1,6 +1,10 @@
 <% view_title 'Errors' %>
 
 <div class="col-span-12">
+  <% if @partitions_count > 1 %>
+    <%== partial 'errors/partitions_limited' %>
+  <% end %>
+
   <% if @watermark_offsets.empty? %>
     <%== partial 'errors/no_errors' %>
   <% elsif @watermark_offsets.cleaned? %>

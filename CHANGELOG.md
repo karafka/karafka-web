@@ -11,6 +11,7 @@
 - [Enhancement] Explain every disabled action button (topics management, commanding, read-only configs, recurring tasks, process state) with the reason in its title, which a disabled button could not show before.
 - [Enhancement] Keep every navigation and row action visible, disabled with the reason in its title, when it cannot be used, instead of hiding it: the Explorer, Errors, scheduled messages and commands navigation on empty topics and partitions, Resume when nothing is paused, the Consumers Controls and Commands tabs when commanding is off, and the filter Reset when no filter is applied. The disabled tabs no longer link to a forbidden page.
 - [Enhancement] Show the time and timestamp selectors on the Errors partition view, and scope its search to the partition, as in the Explorer.
+- [Enhancement] Show a notice on the OSS Errors page when the errors topic has more than one partition, with the partition count, as it lists only partition 0.
 - [Enhancement] Show the delivery outcome (persisted, possibly persisted or not persisted), latency and broker of failed producer deliveries in the error details, so it is clear whether a retry may duplicate the message. Requires karafka-rdkafka `0.31.0` or newer.
 - [Enhancement] Produce scheduled-message cancellations with `acks: 1` so the broker confirms receipt.
 - [Enhancement] Produce consumer commanding requests with `acks: 1` so the broker confirms receipt, and add a `Karafka::Web.producers` facade (#1241).
