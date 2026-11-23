@@ -270,6 +270,13 @@ describe_current do
         assert_body('<span class="font-bold">app/jobs/visitors_job.rb:9:in')
         assert_body('<span class="text-base-content/60">gems/activejob-7.0.6/lib/active_job/')
       end
+
+      it "expect to render one frame per line" do
+        assert_body(
+          "in `perform&#39;</span>\n" \
+          '<span class="text-base-content/60">gems/activejob-7.0.6/lib/active_job/execution.rb:65:in'
+        )
+      end
     end
 
     context "when visiting a forceful shutdown error carrying blocking details" do

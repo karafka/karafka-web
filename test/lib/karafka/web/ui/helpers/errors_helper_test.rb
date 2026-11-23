@@ -94,6 +94,11 @@ describe_current do
       assert_equal(muted, helper.backtrace_frame_class("rdkafka-0.20.0-x86_64-linux-gnu/lib/rdkafka.rb:1"))
     end
 
+    it "mutes git gem frames with the gem home stripped" do
+      assert_equal(muted, helper.backtrace_frame_class("karafka-a1b2c3d4e5f6/lib/karafka/runner.rb:36:in 'call'"))
+      assert_equal(muted, helper.backtrace_frame_class("karafka-0123456789ab/lib/karafka/runner.rb:36:in 'call'"))
+    end
+
     it "mutes gem frames installed in the application or kept with absolute paths" do
       assert_equal(muted, helper.backtrace_frame_class("vendor/bundle/ruby/3.4.0/gems/karafka-2.5.0/lib/a.rb:1"))
       assert_equal(muted, helper.backtrace_frame_class("/usr/local/bundle/gems/karafka-2.5.0/lib/a.rb:1"))
@@ -102,6 +107,13 @@ describe_current do
     it "mutes Ruby frames" do
       assert_equal(muted, helper.backtrace_frame_class("<internal:thread_sync>:18:in 'pop'"))
       assert_equal(muted, helper.backtrace_frame_class("/usr/local/lib/ruby/3.4.0/monitor.rb:201:in 'synchronize'"))
+    end
+
+    it "mutes JRuby core frames" do
+      assert_equal(muted, helper.backtrace_frame_class("org/jruby/RubyArray.java:2097:in 'each'"))
+      assert_equal(muted, helper.backtrace_frame_class("org/jruby/ext/monitor/Monitor.java:85:in 'synchronize'"))
+      assert_equal(muted, helper.backtrace_frame_class("uri:classloader:/META-INF/jruby.home/lib/ruby/stdlib/set.rb:1"))
+      assert_equal(muted, helper.backtrace_frame_class("java/lang/Thread.java:1583:in 'run'"))
     end
   end
 end

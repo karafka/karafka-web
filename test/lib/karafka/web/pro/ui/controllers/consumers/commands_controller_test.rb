@@ -256,6 +256,13 @@ describe_current do
         assert_body('<span class="font-bold">/mnt/software/Karafka/karafka/lib/karafka/runner.rb')
         assert_body('<span class="text-base-content/60">/home/mencio/.rbenv/versions/3.3.0/lib/ruby/')
       end
+
+      it "expect to render one frame per line" do
+        assert_body(
+          "&lt;internal:thread_sync&gt;:18:in `pop&#39;</span>\n" \
+          '<span class="font-bold">/mnt/software/Karafka/karafka/lib/karafka/connection/conductor.rb'
+        )
+      end
     end
 
     context "when visiting trace result that is not with a compatible schema" do

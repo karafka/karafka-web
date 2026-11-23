@@ -8,12 +8,17 @@ module Karafka
         module ErrorsHelper
           # Backtrace frames that come from gems or Ruby itself. Error reports strip the app root
           # and the gem home, so depending on `GEM_HOME` a gem frame starts with `gems/` or with
-          # the gem directory (`karafka-2.5.0/`). Thread backtraces keep absolute paths.
+          # the gem directory (`karafka-2.5.0/`, or `karafka-a1b2c3d4e5f6/` for a git gem). Thread
+          # backtraces keep absolute paths. JRuby core frames are Java classes.
           FRAMEWORK_FRAME = %r{
             (\A|/)gems/
             | \A[^/\s]+-\d+(\.\d+)*[^/\s]*/
+            | \A[^/\s]+-\h{12}/
             | \A<internal:
             | /lib/ruby/
+            | \Aorg/jruby/
+            | \Auri:classloader:
+            | \.java:\d
           }x
 
           private_constant :FRAMEWORK_FRAME
