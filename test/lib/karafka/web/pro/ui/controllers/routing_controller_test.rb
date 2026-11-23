@@ -30,7 +30,6 @@
 
 describe_current do
   let(:app) { Karafka::Web::Pro::Ui::App }
-  let(:delete_offsets_denied) { "Deleting these offsets is not allowed by the Web UI policies" }
 
   describe "#index" do
     context "when running against defaults" do
@@ -162,12 +161,6 @@ describe_current do
       assert_body("kafka.topic.metadata.refresh.interval.ms")
       assert_body(breadcrumbs)
       assert_body("kafka.statistics.interval.ms")
-      assert_body("Delete Offsets")
-      assert_body('class="btn btn-error btn-sm btn-disabled"')
-      routed = Karafka::App.routes.first.topics.first
-
-      refute_body("health/consumer_groups/#{routed.consumer_group.id}/topics/#{routed.name}/delete")
-      assert_body(%(title="#{delete_offsets_denied}"))
     end
 
     context "when deleting offsets is allowed" do
@@ -179,13 +172,10 @@ describe_current do
         get "routing/#{topic.id}"
       end
 
-      it "expect to link to the offsets deletion of its consumer group" do
+      it "expect the deletion to be on the consumer group topics page, not here" do
         assert_ok
-        assert_body("health/consumer_groups/#{topic.consumer_group.id}/topics/#{topic.name}/delete")
-        assert_body("Delete Offsets")
-        refute_body(delete_offsets_denied)
-        assert_body('title="Delete the committed offsets of this consumer group for this topic"')
-        refute_body("btn-error btn-sm btn-disabled")
+        refute_body("Delete Offsets")
+        refute_body("/delete")
       end
     end
 

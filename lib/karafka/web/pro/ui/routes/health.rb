@@ -134,8 +134,8 @@ module Karafka
                     consumer_groups_controller.offsets(decoded_group_id)
                   end
 
-                  # A bare consumer group path defaults to its overview
-                  r.get do
+                  # A bare consumer group path defaults to its overview. Unknown pages are 404s.
+                  r.is do
                     r.redirect health_consumer_group_path(decoded_group_id)
                   end
                 end

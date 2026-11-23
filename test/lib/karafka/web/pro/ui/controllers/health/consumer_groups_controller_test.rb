@@ -61,6 +61,11 @@ describe_current do
     response.body.index(text)
   end
 
+  # Lists are paginated with the configured page size, which the per_page param does not change
+  def paginate_by(per_page)
+    Karafka::Web.config.ui.stubs(:per_page).returns(per_page)
+  end
+
   before do
     produce_many(topic, Array.new(10) { |i| i.to_s }, partition: 0)
     produce_many(topic, Array.new(20) { |i| i.to_s }, partition: 1)
@@ -68,8 +73,9 @@ describe_current do
   end
 
   describe "#index" do
+    # The shared test cluster has more groups than fit on a page, so we search for ours
     context "when listing all the consumer groups" do
-      before { get "health/consumer_groups" }
+      before { get_filtered("health/consumer_groups", group_id) }
 
       it "lists a group the Web UI does not manage with its state" do
         assert_ok
@@ -105,7 +111,7 @@ describe_current do
 
       before do
         Karafka::Admin.seek_consumer_group(other_group_id, { topic => { 1 => 2 } })
-        get "health/consumer_groups?sort=id+desc"
+        get_filtered("health/consumer_groups", id: group_id, sort: "id desc")
       end
 
       it do
@@ -134,12 +140,12 @@ describe_current do
       end
 
       it "expect sorting by state to order the groups by it" do
-        get "health/consumer_groups?sort=state+asc"
+        get_filtered("health/consumer_groups", id: group_id, sort: "state asc")
 
         assert_ok
         assert(position("/#{group_id}/overview\"") < position("/#{stable_group_id}/overview\""))
 
-        get "health/consumer_groups?sort=state+desc"
+        get_filtered("health/consumer_groups", id: group_id, sort: "state desc")
 
         assert_ok
         assert(position("/#{stable_group_id}/overview\"") < position("/#{group_id}/overview\""))
@@ -151,7 +157,8 @@ describe_current do
 
       before do
         Karafka::Admin.seek_consumer_group(other_group_id, { topic => { 1 => 2 } })
-        get "health/consumer_groups?filter[field]=id&filter[value]=#{group_id}&per_page=1"
+        paginate_by(1)
+        get_filtered("health/consumer_groups", id: group_id)
       end
 
       it "expect the groups to be paginated" do
@@ -346,7 +353,8 @@ describe_current do
         assert_body('title="Highest lag is on partition 1"')
         assert_match(%r{\[1\]\s*</a>}, body)
         assert_body("filter[value]=#{topic}&amp;sort=lag+desc")
-        assert_body("Delete the committed offsets of this consumer group for this topic")
+        # The default policy denies the deletion, so the button is disabled with the reason
+        assert_body("Deleting these offsets is not allowed by the Web UI policies")
       end
 
       it "expect the deletion to be allowed only by the policy" do
@@ -375,7 +383,8 @@ describe_current do
       end
 
       it "expect the topics to be paginated" do
-        get "health/consumer_groups/#{group_id}/topics?per_page=1"
+        paginate_by(1)
+        get "health/consumer_groups/#{group_id}/topics"
 
         assert_ok
         assert_body(pagination)
@@ -462,7 +471,8 @@ describe_current do
       end
 
       it "expect the members to be paginated with the total in the tab" do
-        get "health/consumer_groups/#{group_id}/members?per_page=2"
+        paginate_by(2)
+        get "health/consumer_groups/#{group_id}/members"
 
         assert_ok
         assert_body(pagination)
@@ -514,13 +524,14 @@ describe_current do
       end
 
       it "expect the offsets to be paginated across topics" do
-        get "health/consumer_groups/#{group_id}/offsets?per_page=2"
+        paginate_by(2)
+        get "health/consumer_groups/#{group_id}/offsets"
 
         assert_ok
         assert_body(pagination)
         refute_body("<td>40</td>")
 
-        get "health/consumer_groups/#{group_id}/offsets?per_page=2&page=2"
+        get "health/consumer_groups/#{group_id}/offsets?page=2"
 
         assert_ok
         assert_body("<td>40</td>")

@@ -26,7 +26,7 @@
 %>
 <%==
   action_link_button(
-    labeled ? "#{icon(:trash)} Delete Offsets" : icon(:trash),
+    icon(:trash),
     health_consumer_group_offsets_deletion_path(consumer_group_id, topic_name),
     classes: 'btn-error btn-sm',
     title: 'Delete the committed offsets of this consumer group for this topic',
