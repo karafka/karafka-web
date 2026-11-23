@@ -19,7 +19,7 @@
     </td>
     <td>
       <%= error[:error_class] %>:
-      <%== error_message_preview(error[:error_message]) %>
+      <%== truncate(error[:error_message], length: 200, omission: "…") %>
     </td>
     <td>
       <%== relative_time error[:occurred_at] %>

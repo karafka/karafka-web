@@ -113,7 +113,7 @@ describe_current do
 
       it "expect to cut it with an ellipsis and show the full escaped message in the title" do
         assert_ok
-        assert_body(%(<span title="#{"x" * 200}&lt;b&gt;tail&lt;/b&gt;">#{"x" * 200}…</span>))
+        assert_body(%(<span title="#{"x" * 200}&lt;b&gt;tail&lt;/b&gt;">#{"x" * 199}…</span>))
         refute_body("<b>tail</b>")
       end
     end

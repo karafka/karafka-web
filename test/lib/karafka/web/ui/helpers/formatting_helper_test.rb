@@ -107,6 +107,23 @@ describe_current do
       end
     end
 
+    context "when the string has html and is not longer than the length" do
+      it "returns it escaped" do
+        assert_equal("&lt;b&gt;x&lt;/b&gt;", truncate("<b>x</b>", length: 8))
+      end
+    end
+
+    context "when the string has html and is longer than the length" do
+      let(:string) { "<b>#{"x" * 200}</b>" }
+
+      it "escapes the cut part and the full string in the title" do
+        assert_equal(
+          %(<span title="&lt;b&gt;#{"x" * 200}&lt;/b&gt;">&lt;b&gt;#{"x" * 196}…</span>),
+          truncate(string, length: 200, omission: "…")
+        )
+      end
+    end
+
     context "when an unsupported strategy is provided" do
       let(:expected_error) { Karafka::Errors::UnsupportedCaseError }
 
