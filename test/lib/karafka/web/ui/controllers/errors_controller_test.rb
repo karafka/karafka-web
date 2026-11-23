@@ -300,7 +300,7 @@ describe_current do
         assert_body('class="btn-action btn-toggle-backtrace-paths"')
         assert_body(
           '<span class="backtrace-prefix">/home/user/Karafka/</span>' \
-          '<span class="backtrace-ellipsis">…/</span>karafka-web/lib/karafka/web/processing/consumer.rb'
+          '<span class="backtrace-ellipsis"></span>karafka-web/lib/karafka/web/processing/consumer.rb'
         )
         assert_body('<span class="text-muted">gems/karafka-core-2.6.8/lib/')
       end

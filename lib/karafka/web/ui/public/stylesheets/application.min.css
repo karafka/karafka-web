@@ -7361,9 +7361,6 @@
   .items-start {
     align-items: flex-start;
   }
-  .justify-between {
-    justify-content: space-between;
-  }
   .justify-center {
     justify-content: center;
   }
@@ -9449,14 +9446,16 @@ table th.options:not(:has(.btn)) {
 table:not(:has(td.options > :nth-child(2))) :is(th, td).options {
   text-align: center;
 }
-.backtrace-ellipsis {
-  display: none;
-}
 .backtrace-short-paths .backtrace-prefix {
-  display: none;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
-.backtrace-short-paths .backtrace-ellipsis {
-  display: inline;
+.backtrace-short-paths .backtrace-ellipsis::before {
+  content: "…/";
 }
 #controls button {
   &:hover {

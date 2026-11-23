@@ -9,15 +9,16 @@ module Karafka
           # Backtrace frames that come from gems or Ruby itself. Error reports strip the app root
           # and the gem home, so depending on `GEM_HOME` a gem frame starts with `gems/` or with
           # the gem directory (`karafka-2.5.0/`, or `karafka-a1b2c3d4e5f6/` for a git gem). Thread
-          # backtraces keep absolute paths; the main thread of a `bundle exec` process ends in the
-          # `bundle` executable. JRuby core frames are Java classes or JRuby kernel files.
+          # backtraces keep absolute paths; the main thread ends in an executable such as `bundle`,
+          # a `karafka` binstub or a version manager shim, all living in a `bin/` directory. JRuby
+          # core frames are Java classes or JRuby kernel files.
           GEM_OR_RUBY_FRAME_REGEXP = %r{
             (\A|/)gems/
             | \A[^/\s]+-\d+(\.\d+)*[^/\s]*/
             | \A[^/\s]+-\h{12}/
             | \A<internal:
             | /lib/ruby/
-            | /bin/bundler?:\d
+            | /bin/[^/\s]+:\d
             | \Auri:classloader:
             | \.java:\d
           }x
@@ -72,7 +73,8 @@ module Karafka
           end
 
           # Renders one backtrace frame. Gem and Ruby frames are muted and the given paths prefix
-          # is wrapped so it can be collapsed behind an ellipsis.
+          # is wrapped so it can be collapsed. The ellipsis shown instead of it comes from css, so
+          # copying a collapsed backtrace still copies the full paths.
           #
           # @param frame [String] one backtrace line
           # @param prefix [String, nil] shared paths prefix to make collapsible
@@ -80,7 +82,7 @@ module Karafka
           def backtrace_frame(frame, prefix = nil)
             html = if prefix && frame.start_with?(prefix)
               %(<span class="backtrace-prefix">#{::Rack::Utils.escape_html(prefix)}</span>) +
-                %(<span class="backtrace-ellipsis">…/</span>) +
+                %(<span class="backtrace-ellipsis"></span>) +
                 ::Rack::Utils.escape_html(frame.delete_prefix(prefix))
             else
               ::Rack::Utils.escape_html(frame)

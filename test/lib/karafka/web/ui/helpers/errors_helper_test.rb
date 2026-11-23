@@ -106,6 +106,17 @@ describe_current do
       assert(helper.backtrace_frame_muted?("/usr/local/lib/ruby/3.4.0/monitor.rb:201:in 'synchronize'"))
     end
 
+    it "mutes binstub and version manager shim frames" do
+      assert(helper.backtrace_frame_muted?("/usr/local/bundle/bin/karafka:25:in '<main>'"))
+      assert(helper.backtrace_frame_muted?("/home/user/.rbenv/shims/../bin/karafka:3:in 'load'"))
+      assert(helper.backtrace_frame_muted?("/app/bin/karafka:27:in 'load'"))
+    end
+
+    it "does not mute application code in a directory named like an executable" do
+      refute(helper.backtrace_frame_muted?("/app/lib/bin_packing/solver.rb:3:in 'call'"))
+      refute(helper.backtrace_frame_muted?("bin/karafka_setup.rb:3:in 'call'"))
+    end
+
     it "mutes the bundle executable frames" do
       assert(helper.backtrace_frame_muted?("/home/mencio/.rbenv/versions/3.3.0/bin/bundle:25:in 'load'"))
       assert(helper.backtrace_frame_muted?("/usr/local/bin/bundle:25:in '<main>'"))
@@ -144,6 +155,16 @@ describe_current do
       assert_equal("#{web}/", helper.backtrace_paths_prefix(backtrace))
     end
 
+    it "is not shortened by the binstub frame of the main thread" do
+      backtrace = [
+        "/srv/app/src/consumers/orders_consumer.rb:12:in 'consume'",
+        "/srv/app/src/lib/pricing.rb:42:in 'call'",
+        "/usr/local/bundle/bin/karafka:25:in 'load'"
+      ].join("\n")
+
+      assert_equal("/srv/app/src/", helper.backtrace_paths_prefix(backtrace))
+    end
+
     it "looks across all the given backtraces" do
       assert_equal(
         "/home/user/Karafka/",
@@ -178,7 +199,7 @@ describe_current do
     it "makes the given prefix collapsible" do
       assert_equal(
         '<span class="backtrace-prefix">/srv/app/</span>' \
-        '<span class="backtrace-ellipsis">…/</span>lib/a.rb:1:in &lt;main&gt;',
+        '<span class="backtrace-ellipsis"></span>lib/a.rb:1:in &lt;main&gt;',
         helper.backtrace_frame("/srv/app/lib/a.rb:1:in <main>", "/srv/app/")
       )
     end
