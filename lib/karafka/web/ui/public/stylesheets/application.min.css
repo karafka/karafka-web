@@ -7342,9 +7342,7 @@
     padding-top: 0px;
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-    & > ul,
-  & > ol,
-  & > menu {
+    & > ul, & > ol, & > menu {
       flex-wrap: wrap;
       white-space: normal;
     }
@@ -9434,8 +9432,7 @@
 tr:not(:first-child) th[colspan]:not([colspan="1"]) {
   text-align: center;
 }
-table th.options,
-table td.options {
+table th.options, table td.options {
   width: 1%;
   white-space: nowrap;
   text-align: right;

@@ -1,0 +1,94 @@
+/* Metric, support, detail and summary cards, and topic tiles */
+
+@utility topic-tiles {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4;
+}
+
+@utility topic-tile {
+  @apply bg-base-100 rounded-md border border-gray-300;
+}
+
+@utility topic-tile-body {
+  @apply p-2;
+}
+
+@utility topic-tile-text {
+  @apply mb-0 p-2;
+  overflow-wrap: anywhere;
+}
+
+@utility topic-tile-link {
+  @apply text-blue-500 hover:underline;
+}
+
+@utility card-metric {
+  @apply bg-base-100 p-3 border border-gray-300 rounded-md;
+
+  & h3 {
+    @apply text-lg mb-2;
+  }
+
+  & li {
+    @apply flex justify-between text-sm;
+  }
+
+  & .badge {
+    @apply badge-sm;
+  }
+}
+
+@utility card-support {
+  @apply bg-base-100 rounded-lg p-6 border border-gray-300;
+
+  & h3 {
+    @apply text-2xl mb-4 flex items-center;
+  }
+
+  & h3 span {
+    @apply ml-2;
+  }
+
+  & a:not(.btn) {
+    @apply text-blue-500 hover:underline;
+  }
+
+  & p {
+    @apply mb-4;
+  }
+}
+
+@utility card-detail-container {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 text-center;
+}
+
+@utility card-detail {
+  @apply card bg-base-100 border border-gray-300 rounded-md;
+}
+
+@utility card-detail-body {
+  @apply card-body flex flex-col items-center justify-center p-3;
+
+  & badge {
+    @apply mt-1 mb-1;
+  }
+}
+
+@utility card-summary-container {
+  @apply flex justify-center;
+}
+
+@utility card-summary {
+  @apply card bg-base-100 border border-gray-300 rounded-md p-1 w-full max-w-xs;
+}
+
+@utility card-summary-body {
+  @apply card-body p-2;
+}
+
+@utility card-summary-value {
+  @apply mb-0 text-lg;
+}
+
+@utility card-summary-title {
+  @apply text-gray-500;
+}
