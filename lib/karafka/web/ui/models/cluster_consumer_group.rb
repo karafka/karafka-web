@@ -51,6 +51,12 @@ module Karafka
             @hash.fetch(:members, [])
           end
 
+          # @return [Boolean] true when any member has a target assignment. Only `consumer`
+          #   (KIP-848) groups have it and it differs from the current one during a rebalance.
+          def target_assignments?
+            members.any? { |member| member[:target_assignment] }
+          end
+
           # Reads the committed offsets and lags of this group. Kafka cannot list the topics a
           # group committed offsets for, so we query all the cluster topics and keep only those
           # with at least one committed offset.

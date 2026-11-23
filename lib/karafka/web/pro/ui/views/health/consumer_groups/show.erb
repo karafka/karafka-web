@@ -58,6 +58,7 @@
   <% if @consumer_group.members.empty? %>
     <% empty_state('This consumer group has no members.', card: false) %>
   <% else %>
+    <% target_assignments = @consumer_group.target_assignments? %>
     <div class="data-table-wrapper">
       <table class="data-table">
         <thead>
@@ -67,6 +68,9 @@
             <th>Host</th>
             <th>Group instance ID</th>
             <th>Assignment</th>
+            <% if target_assignments %>
+              <th>Target assignment</th>
+            <% end %>
           </tr>
         </thead>
         <tbody>
@@ -81,6 +85,13 @@
                   <div><%= topic_name %>: <%= partitions.join(', ') %></div>
                 <% end %>
               </td>
+              <% if target_assignments %>
+                <td>
+                  <% (member[:target_assignment] || {}).each do |topic_name, partitions| %>
+                    <div><%= topic_name %>: <%= partitions.join(', ') %></div>
+                  <% end %>
+                </td>
+              <% end %>
             </tr>
           <% end %>
         </tbody>

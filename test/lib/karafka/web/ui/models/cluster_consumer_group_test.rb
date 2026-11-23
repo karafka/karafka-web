@@ -41,6 +41,29 @@ describe_current do
     end
   end
 
+  describe "#target_assignments?" do
+    let(:group) { model.new(group_id: group_id, members: members) }
+    let(:member) { { member_id: "m1", assignment: { topic => [0] }, target_assignment: nil } }
+
+    context "when the group has no members" do
+      let(:members) { [] }
+
+      it { refute_predicate(group, :target_assignments?) }
+    end
+
+    context "when no member has a target assignment (classic group)" do
+      let(:members) { [member] }
+
+      it { refute_predicate(group, :target_assignments?) }
+    end
+
+    context "when a member has a target assignment (consumer group)" do
+      let(:members) { [member, member.merge(target_assignment: { topic => [1] })] }
+
+      it { assert_predicate(group, :target_assignments?) }
+    end
+  end
+
   describe "#topics" do
     let(:topics) { model.find(group_id).topics }
 

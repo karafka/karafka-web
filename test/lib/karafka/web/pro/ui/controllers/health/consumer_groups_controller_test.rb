@@ -35,10 +35,13 @@ describe_current do
   let(:group_id) { SecureRandom.uuid }
   let(:stable_group_id) { "member-#{group_id}" }
 
+  let(:group_protocol) { "classic" }
+
   let(:consumer) do
     Rdkafka::Config.new(
       Karafka::App.config.kafka.merge(
         "group.id": stable_group_id,
+        "group.protocol": group_protocol,
         "client.id": "consumer-groups-controller-test"
       )
     ).consumer
@@ -270,6 +273,18 @@ describe_current do
         assert_body("#{coordinator[:id]} (#{coordinator[:host]}:#{coordinator[:port]})")
         assert_body("#{topic}: 0, 1")
         refute_body("This consumer group has no members.")
+        refute_body("Target assignment")
+      end
+
+      context "when the group uses the consumer (KIP-848) protocol" do
+        let(:group_protocol) { "consumer" }
+
+        it "shows the member current and target assignment" do
+          assert_ok
+          assert_body("stable")
+          assert_body("<th>Target assignment</th>")
+          assert_equal(2, response.body.scan("#{topic}: 0, 1").size)
+        end
       end
     end
   end
