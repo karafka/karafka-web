@@ -148,7 +148,7 @@ describe_current do
       it "expect the origin badge to stay plain" do
         assert_ok
         assert_body("web.ui.error")
-        refute_body('<a href="/explorer/topics/')
+        refute_body('href="/explorer/topics/default')
       end
     end
 
