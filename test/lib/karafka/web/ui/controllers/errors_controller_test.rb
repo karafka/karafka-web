@@ -90,6 +90,22 @@ describe_current do
       end
     end
 
+    context "when the cached cluster metadata does not have the errors topic yet" do
+      let(:new_errors_topic) { create_topic(partitions: 4) }
+
+      before do
+        get "errors"
+        topics_config.errors.name = new_errors_topic
+        get "errors"
+      end
+
+      it "expect to render without the partitions notice" do
+        assert_ok
+        assert_body(no_errors)
+        refute_body(partitions_limited)
+      end
+    end
+
     context "when the errors topic contains a non-deserializable message" do
       before do
         produce(errors_topic, error_report)

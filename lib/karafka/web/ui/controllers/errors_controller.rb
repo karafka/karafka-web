@@ -56,7 +56,7 @@ module Karafka
             )
           end
 
-          # Uses the cached cluster metadata, so the page does not make an extra metadata request
+          # Reads the count from the UI-cached cluster metadata; a cold cache fetches it once
           #
           # @return [Integer] number of partitions of the errors topic or 1 when the cached
           #   metadata does not have it yet
