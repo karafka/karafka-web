@@ -10,6 +10,7 @@ module Karafka
           # Lists first page of the errors
           def index
             @watermark_offsets = Models::WatermarkOffsets.find(errors_topic, 0)
+            @partition_count = partition_count
             previous_offset, @error_messages, next_offset, = current_page_data
 
             paginate(
@@ -53,6 +54,19 @@ module Karafka
               @params.current_offset,
               @watermark_offsets
             )
+          end
+
+          # Reads the count from the UI-cached cluster metadata; a cold cache fetches it once
+          #
+          # @return [Integer] number of partitions of the errors topic or 1 when the cached
+          #   metadata does not have it yet
+          def partition_count
+            topic = Models::Cluster::Info
+              .fetch
+              .topics
+              .find { |details| details[:topic_name] == errors_topic }
+
+            topic ? topic[:partition_count] : 1
           end
 
           # @return [String] errors topic

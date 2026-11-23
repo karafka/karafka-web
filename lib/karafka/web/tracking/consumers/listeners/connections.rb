@@ -43,15 +43,45 @@ module Karafka
               end
             end
 
-            # Tracks the moment a poll happened on a given subscription group
+            # Tracks the moment a poll happened on a given subscription group and its member id
+            #
+            # The cluster assigns the member id when the consumer joins the group and may assign a
+            # new one when it rejoins, so we read it until it is known and again after each
+            # rebalance. This runs in the listener thread that owns the consumer.
             #
             # @param event [Karafka::Core::Monitoring::Event]
             def on_connection_listener_fetch_loop_received(event)
               sg_id = event[:subscription_group].id
+              client = event[:client]
 
               track do |sampler|
-                sampler.subscription_groups[sg_id][:polled_at] = monotonic_now
+                sg = sampler.subscription_groups[sg_id]
+                sg[:polled_at] = monotonic_now
+                sg[:member_id] = read_member_id(client) if sg[:member_id].empty?
               end
+            end
+
+            # Marks the member id of the subscription group to be read again on the next poll, as
+            # it may have changed when the consumer rejoined the group
+            #
+            # @param event [Karafka::Core::Monitoring::Event]
+            def on_rebalance_partitions_assigned(event)
+              sg_id = event[:subscription_group_id]
+
+              track do |sampler|
+                next unless sampler.subscription_groups.key?(sg_id)
+
+                sampler.subscription_groups[sg_id][:member_id] = ""
+              end
+            end
+
+            private
+
+            # @param client [Karafka::Connection::ConsumerGroups::Client]
+            # @return [String] group member id or an empty string when the consumer did not join the
+            #   group yet
+            def read_member_id(client)
+              client.wrapped_kafka&.member_id || ""
             end
           end
         end

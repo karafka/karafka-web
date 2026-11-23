@@ -1,0 +1,21 @@
+/* Page titles, headings, muted text and code blocks */
+
+@utility page-title {
+  overflow-wrap: anywhere;
+}
+
+@utility h2 {
+  @apply text-xl text-left text-base-content mb-4 lg:font-light;
+}
+
+@utility h3 {
+  @apply text-lg text-left text-base-content mb-4 lg:font-light;
+}
+
+@utility text-muted {
+  @apply text-gray-500;
+}
+
+@utility code {
+  @apply text-sm border border-gray-300;
+}

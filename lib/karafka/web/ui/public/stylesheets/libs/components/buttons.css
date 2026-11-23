@@ -1,0 +1,35 @@
+/* Buttons, icon actions and actions bars */
+
+@utility btn {
+  .data-table td:has(&) {
+    @apply text-right;
+  }
+
+  .data-table th:has(&) {
+    @apply text-right;
+  }
+
+  @apply font-normal;
+}
+
+@utility btn-active {
+  &.btn-outline {
+    color: var(--btn-fg);
+  }
+}
+
+@utility actions {
+  @apply flex items-center text-end text-gray-700 mb-6;
+}
+
+@utility btn-action {
+  @apply py-1 px-3 rounded-md text-sm hover:bg-gray-200 text-gray-500 hover:cursor-pointer;
+
+  &.active {
+    @apply text-base-content;
+  }
+}
+
+@utility actions-danger-zone {
+  @apply ml-3 pl-3 border-l border-base-300 flex items-center;
+}

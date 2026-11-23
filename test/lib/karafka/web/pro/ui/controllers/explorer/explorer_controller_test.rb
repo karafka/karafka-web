@@ -124,6 +124,33 @@ describe_current do
     end
   end
 
+  describe "routes with a topic name that is not a valid Kafka topic name" do
+    before do
+      Karafka::Admin.expects(:topic_info).never
+      Karafka::Admin.expects(:read_watermark_offsets).never
+      Karafka::Admin.expects(:read_topic).never
+    end
+
+    ["a" * 513, "a" * 250, "a%20b"].each do |invalid|
+      %W[
+        explorer/topics/#{invalid}
+        explorer/topics/#{invalid}/recent
+        explorer/topics/#{invalid}/0
+        explorer/topics/#{invalid}/0/recent
+        explorer/topics/#{invalid}/0/0
+        explorer/topics/#{invalid}/0/0/surrounding
+        explorer/topics/#{invalid}/0/closest/1700000000000
+        explorer/topics/#{invalid}/0/closest/2025-04-18/12:37
+      ].each do |path|
+        context "when getting #{path[0, 60]}" do
+          before { get path }
+
+          it { assert_equal(404, response.status) }
+        end
+      end
+    end
+  end
+
   describe "#topic" do
     context "when we view topic without any messages" do
       before { get "explorer/topics/#{topic}" }
