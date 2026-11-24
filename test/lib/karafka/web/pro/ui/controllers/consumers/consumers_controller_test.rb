@@ -90,9 +90,11 @@ describe_current do
         refute_body("Pro Feature")
       end
 
-      it "expect to show Controls and Commands tabs in disabled state" do
-        assert_body("disabled btn-disabled")
+      it "expect to show Controls and Commands tabs in disabled state without links" do
+        assert_equal(2, body.scan('class="custom-tab disabled cursor-default"').size)
         assert_body('title="Commanding is disabled in the Web UI configuration"')
+        refute_body('href="/consumers/controls"')
+        refute_body('href="/consumers/commands"')
       end
     end
 
@@ -110,7 +112,9 @@ describe_current do
       end
 
       it "expect to show Controls and Commands tabs without disabled state" do
-        refute_body("disabled btn-disabled")
+        refute_body("custom-tab disabled")
+        assert_body('href="/consumers/controls"')
+        assert_body('href="/consumers/commands"')
       end
     end
 
@@ -905,6 +909,70 @@ describe_current do
         assert_body("tooltip")
         assert_body("Consumer Group")
         assert_body("Subscription Group")
+      end
+    end
+
+    context "when subscription group reports its member id" do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        sg = report["consumer_groups"]["example_app6_app"]["subscription_groups"]["c4ca4238a0b9_0"]
+        sg["member_id"] = "karafka-<b>member</b>-123"
+
+        produce(reports_topic, report.to_json)
+
+        get "consumers/shinra:1:1/subscriptions"
+      end
+
+      it "expect to show it escaped" do
+        assert_ok
+        assert_body("Member ID")
+        assert_body("karafka-&lt;b&gt;member&lt;/b&gt;-123")
+        refute_body("<b>member</b>")
+      end
+    end
+
+    context "when subscription groups do not know their member ids" do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        report["consumer_groups"].each_value do |cg|
+          cg["subscription_groups"].each_value { |sg| sg["member_id"] = "" }
+        end
+
+        produce(reports_topic, report.to_json)
+
+        get "consumers/shinra:1:1/subscriptions"
+      end
+
+      it do
+        assert_ok
+        refute_body("Member ID")
+      end
+    end
+
+    context "when the report comes from a process that does not report member ids" do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+
+        report["consumer_groups"].each_value do |cg|
+          cg["subscription_groups"].each_value { |sg| sg.delete("member_id") }
+        end
+
+        produce(reports_topic, report.to_json)
+
+        get "consumers/shinra:1:1/subscriptions"
+      end
+
+      it do
+        assert_ok
+        refute_body("Member ID")
       end
     end
 

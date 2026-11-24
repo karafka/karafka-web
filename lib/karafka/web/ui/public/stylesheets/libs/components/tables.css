@@ -1,0 +1,111 @@
+/* Data tables, their Options column and status rows */
+
+@utility data-table {
+  @apply table w-full bg-base-100 border border-gray-300 rounded-sm rounded-md mb-5;
+
+  & .badge {
+    @apply mt-1 badge-sm;
+  }
+
+  [data-theme='corporate'] & thead {
+    @apply bg-gray-100;
+  }
+
+  & thead th {
+    @apply border border-gray-300 p-2 text-gray-500;
+  }
+
+  & thead tr {
+    @apply align-middle;
+  }
+
+  [data-theme='corporate'] & tbody tr {
+    @apply even:bg-gray-50 hover:bg-base-200;
+  }
+
+  [data-theme='dark'] & tbody tr {
+    @apply even:bg-base-200 hover:bg-base-300;
+  }
+
+  & tbody td {
+    @apply border border-gray-300 p-2;
+  }
+
+  & td:has(.btn) {
+    @apply text-right;
+  }
+
+  & th:has(.btn) {
+    @apply text-right;
+  }
+}
+
+@utility data-table-wrapper {
+  @apply col-span-12 mb-3 overflow-x-auto;
+}
+
+@utility table_metadata {
+  @apply text-end text-gray-500 mb-3 text-sm;
+
+  & .badge {
+    @apply badge-sm;
+  }
+}
+
+@utility status-row-quiet {
+  table & td:first-child {
+    @apply border-l border-l-warning;
+  }
+}
+
+@utility status-row-quieting {
+  table & td:first-child {
+    @apply border-l border-l-warning;
+  }
+}
+
+@utility status-row-stopping {
+  table & td:first-child {
+    @apply border-l border-l-warning;
+  }
+}
+
+@utility status-row-stopped {
+  table & td:first-child {
+    @apply border-l border-l-error;
+  }
+}
+
+@utility status-row-warning {
+  table & td:first-child {
+    @apply border-l border-l-warning;
+  }
+}
+
+@utility status-row-error {
+  table & td:first-child {
+    @apply border-l border-l-error;
+  }
+}
+
+tr:not(:first-child) th[colspan]:not([colspan="1"]) {
+  @apply text-center;
+}
+
+table th.options,
+
+table td.options {
+  width: 1%;
+  white-space: nowrap;
+  @apply text-right;
+}
+
+/* The Options label is centered like the other headers, whatever the buttons alignment */
+table th.options:not(:has(.btn)) {
+  @apply text-center;
+}
+
+/* Rows with different button counts stay right-aligned, so their buttons line up */
+table:not(:has(td.options > :nth-child(2))) :is(th, td).options {
+  @apply text-center;
+}

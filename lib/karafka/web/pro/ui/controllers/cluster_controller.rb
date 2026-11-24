@@ -42,6 +42,7 @@ module Karafka
               name
               port
               value
+              source
               default?
               read_only?
               synonym?

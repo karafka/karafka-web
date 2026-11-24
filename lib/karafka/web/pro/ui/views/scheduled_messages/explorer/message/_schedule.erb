@@ -74,19 +74,14 @@
         'cancel'
       )
     %>
-    <form
-      action="<%= cancel_path %>"
-      method="post"
-      class="inline"
-    >
-      <button
-        type="submit"
-        class="btn btn-error btn-sm confirm-action"
-        title="Cancel dispatch of this scheduled message"
-      >
-        <%== icon(:trash) %>
-      </button>
-    </form>
+    <%==
+      action_form_button(
+        icon(:trash),
+        cancel_path,
+        classes: 'btn-error btn-sm confirm-action',
+        title: 'Cancel dispatch of this scheduled message'
+      )
+    %>
 
     <%==
       link_button_primary_sm(

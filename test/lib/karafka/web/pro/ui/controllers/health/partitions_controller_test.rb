@@ -75,6 +75,13 @@ describe_current do
       refute_body("Commanding is disabled in the Web UI configuration")
     end
 
+    it "expect the resume actions to be disabled when nothing is paused" do
+      assert_body('class="btn btn-success btn-sm btn-disabled"')
+      assert_body('title="No partitions of this topic are paused"')
+      assert_body('title="This partition is not paused"')
+      refute_body("pause/edit")
+    end
+
     context "when commanding is disabled" do
       before do
         Karafka::Web.config.commanding.active = false
@@ -241,6 +248,13 @@ describe_current do
         assert_ok
         assert_body("status-row-warning")
         refute_body("status-row-error")
+      end
+
+      it "expect the resume actions to be available" do
+        assert_body("default/pause/edit")
+        assert_body("0/pause/edit")
+        refute_body("No partitions of this topic are paused")
+        refute_body("This partition is not paused")
       end
     end
 

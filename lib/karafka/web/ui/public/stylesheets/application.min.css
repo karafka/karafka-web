@@ -7342,9 +7342,7 @@
     padding-top: 0px;
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-    & > ul,
-  & > ol,
-  & > menu {
+    & > ul, & > ol, & > menu {
       flex-wrap: wrap;
       white-space: normal;
     }
@@ -8110,6 +8108,9 @@
   }
   .text-right {
     text-align: right;
+  }
+  .align-middle {
+    vertical-align: middle;
   }
   .font-mono {
     font-family: var(--font-mono);
@@ -9431,14 +9432,27 @@
 tr:not(:first-child) th[colspan]:not([colspan="1"]) {
   text-align: center;
 }
-table th.options,
-table td.options {
+table th.options, table td.options {
   width: 1%;
   white-space: nowrap;
   text-align: right;
 }
+table th.options:not(:has(.btn)) {
+  text-align: center;
+}
 table:not(:has(td.options > :nth-child(2))) :is(th, td).options {
   text-align: center;
+}
+.backtrace-short-paths .backtrace-prefix {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.backtrace-short-paths .backtrace-ellipsis::before {
+  content: "…/";
 }
 #controls button {
   &:hover {

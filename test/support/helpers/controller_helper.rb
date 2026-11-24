@@ -137,6 +137,16 @@ module ControllerHelper
     "first page to get meaningful results"
   end
 
+  # Unavailable icon actions stay visible as a disabled button wrapped in a span carrying the
+  # reason, since a disabled button does not receive pointer events
+  #
+  # @param reason [String] why the action is not available
+  # @return [String] disabled icon action matching string
+  def disabled_action(reason)
+    %(<span class="inline-flex" title="#{reason}">) +
+      '<button type="button" class="btn-action disabled" disabled>'
+  end
+
   private
 
   # @return [String] formatted report of all Web UI errors captured during this test via

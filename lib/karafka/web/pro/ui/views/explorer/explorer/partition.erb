@@ -23,59 +23,21 @@
 <div class="grid grid-cols-12">
   <div class="col-span-4">
     <section class="actions">
-      <% if @visibility_filter.publish?(@topic_id) %>
-        <a
-          href="<%= "#{explorer_messages_path(@topic_id, 'publish')}?partition=#{@partition_id}" %>"
-          class="btn-action"
-          title="Publish a new message to this partition"
-        >
-          <%== icon(:plus) %>
-        </a>
-      <% else %>
-        <%==
-          partial(
-            'explorer/explorer/disabled_action',
-            locals: {
-              icon_name: :plus,
-              reason: 'Publishing messages to this topic is not allowed by the Web UI policies'
-            }
-          )
-        %>
-      <% end %>
+      <%==
+        action_icon_link(
+          icon(:plus),
+          "#{explorer_messages_path(@topic_id, 'publish')}?partition=#{@partition_id}",
+          title: 'Publish a new message to this partition',
+          disabled_reason: @visibility_filter.publish?(@topic_id) ? nil : 'Publishing messages to this topic is not allowed by the Web UI policies'
+        )
+      %>
 
-      <% if @messages && !@messages.empty? %>
-        <a
-          href="<%= explorer_topics_path(@topic_id, @partition_id, 'recent') %>"
-          class="btn-action"
-          title="Display the most recent message for this partition with auto-refresh"
-        >
-          <%== icon(:play_circle) %>
-        </a>
-
-        <a
-          href="<%= explorer_path(@topic_id, 'search', "?partition=#{@partition_id}") %>"
-          class="btn-action"
-          title="Search in this topic"
-        >
-          <%== icon(:magnifying_glass) %>
-        </a>
-
-        <% closest_path = explorer_topics_path(@topic_id, @partition_id, 'closest') %>
-
-        <%==
-          partial(
-            'explorer/explorer/partition/time_selector',
-            locals: { target: closest_path }
-          )
-        %>
-
-        <%==
-          partial(
-            'explorer/explorer/partition/timestamp_selector',
-            locals: { target: closest_path }
-          )
-        %>
-      <% end %>
+      <%==
+        partial(
+          'explorer/explorer/partition/navigation',
+          locals: { closest_path: explorer_topics_path(@topic_id, @partition_id, 'closest') }
+        )
+      %>
     </section>
   </div>
 
