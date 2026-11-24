@@ -37,19 +37,19 @@
     </a>
   </li>
 
-  <% if current_path.end_with?('/members') %>
+  <% if request.path.end_with?('/members') %>
     <li>
       <a href="<%= health_consumer_group_path(@consumer_group.id, 'members') %>">
         Members
       </a>
     </li>
-  <% elsif current_path.end_with?('/topics') %>
+  <% elsif request.path.end_with?('/topics') %>
     <li>
       <a href="<%= health_consumer_group_path(@consumer_group.id, 'topics') %>">
         Topics
       </a>
     </li>
-  <% elsif current_path.end_with?('/offsets') %>
+  <% elsif request.path.end_with?('/offsets') %>
     <li>
       <a href="<%= health_consumer_group_path(@consumer_group.id, 'offsets') %>">
         Committed Offsets
