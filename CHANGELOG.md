@@ -46,6 +46,7 @@
 - [Fix] Apply the stored state of toggled sections (message metadata and utilization, backtrace paths, collapsed navigation) before Turbo renders a page, so they no longer show up in their default state first.
 - [Fix] Keep the icon of an active action button readable on hover in the dark theme.
 - [Fix] Link the Running breadcrumb of a consumer jobs page (Pro) to the running jobs instead of the pending ones.
+- [Fix] Follow system dark and light mode changes until a theme is picked. The theme applied on each page load was stored as if picked, so the Web UI stopped following the system after the first visit.
 - [Fix] Style links inside Status and other alert boxes so they stand out from the surrounding text instead of showing only on hover.
 - [Fix] Log consumers reporter dispatch failures instead of crashing the process when `produce_many_sync` times out (#1336).
 - [Fix] Sort Hash elements by key value even when the key name matches a `Hash` method.

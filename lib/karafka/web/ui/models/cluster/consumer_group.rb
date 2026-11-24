@@ -22,23 +22,27 @@ module Karafka
               # @param group_id [String] consumer group id
               # @return [ConsumerGroup] described consumer group with its members
               # @raise [Web::Errors::Ui::NotFoundError] when the cluster has no such group
+              def find(group_id)
+                listed_id = kafka_id(group_id)
+
+                raise(Web::Errors::Ui::NotFoundError, group_id) unless listed_id
+
+                new(::Karafka::Admin.describe_consumer_groups([listed_id]).first)
+              end
+
+              # @param group_id [String] consumer group id
+              # @return [String, nil] id of the group to query Kafka with or nil when the cluster
+              #   has no such group
               #
               # @note Kafka returns group ids as binary strings, so we match on bytes and query
               #   further with the listed id. A non-ASCII UTF-8 id never completes a describe.
-              def find(group_id)
+              def kafka_id(group_id)
                 target = group_id.b
 
-                listed = ::Karafka::Admin.list_consumer_groups.find do |group|
-                  listed_id = group[:group_id]
-
-                  next false unless listed_id.bytesize == target.bytesize
-
-                  (listed_id.encoding == target.encoding) ? listed_id == target : listed_id.b == target
-                end
-
-                raise(Web::Errors::Ui::NotFoundError, group_id) unless listed
-
-                new(::Karafka::Admin.describe_consumer_groups([listed[:group_id]]).first)
+                ::Karafka::Admin
+                  .list_consumer_groups
+                  .find { |group| group[:group_id].b == target }
+                  &.fetch(:group_id)
               end
             end
 

@@ -160,6 +160,33 @@ describe_current do
         end
       end
 
+      context "when the consumer group id is not ASCII" do
+        let(:consumer_group_id) { "zażółć gęślą-#{SecureRandom.uuid}" }
+        let(:path) do
+          "health/consumer_groups/#{URI.encode_uri_component(consumer_group_id)}" \
+            "/topics/#{topic}/delete"
+        end
+
+        it "shows its offsets and deletes them" do
+          get path
+
+          assert_ok
+          assert_body("<td>28</td>")
+
+          delete path
+
+          assert_equal(302, response.status)
+
+          # Kafka reports the offsets under the group id it lists
+          kafka_id = Karafka::Web::Ui::Models::Cluster::ConsumerGroup.kafka_id(consumer_group_id)
+          offsets = Karafka::Admin::ConsumerGroups
+            .read_lags_with_offsets({ kafka_id => [topic] })
+            .dig(kafka_id, topic)
+
+          assert_equal([-1, -1], offsets.values.map { |details| details[:offset] })
+        end
+      end
+
       context "when the consumer group is subscribed to the topic" do
         before do
           Karafka::Admin

@@ -271,6 +271,21 @@ describe_current do
       end
     end
 
+    context "when the consumer group is deleted after it is listed" do
+      before do
+        Karafka::Admin
+          .stubs(:describe_consumer_groups)
+          .raises(Rdkafka::RdkafkaError.new(69))
+
+        get "health/consumer_groups/#{group_id}/overview"
+      end
+
+      it do
+        refute(response.ok?)
+        assert_equal(404, status)
+      end
+    end
+
     context "when the consumer group page does not exist" do
       before { get "health/consumer_groups/#{group_id}/unknown" }
 
