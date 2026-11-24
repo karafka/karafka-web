@@ -107,7 +107,7 @@ module Karafka
                 @consumer_group_id = consumer_group_id
                 @topic_name = topic_name
 
-                partitions = Models::Health.cluster_lags_with_offsets.dig(
+                partitions = Models::Cluster::Lags.all.dig(
                   consumer_group_id,
                   topic_name
                 )

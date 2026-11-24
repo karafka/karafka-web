@@ -9,7 +9,7 @@ module Karafka
         class ErrorsController < BaseController
           # Lists first page of the errors
           def index
-            @watermark_offsets = Models::WatermarkOffsets.find(errors_topic, 0)
+            @watermark_offsets = Models::Cluster::WatermarkOffsets.find(errors_topic, 0)
             @partition_count = partition_count
             previous_offset, @error_messages, next_offset, = current_page_data
 
@@ -29,7 +29,7 @@ module Karafka
             @partition_id = 0
             @offset = offset
 
-            watermark_offsets = Models::WatermarkOffsets.find(errors_topic, @partition_id)
+            watermark_offsets = Models::Cluster::WatermarkOffsets.find(errors_topic, @partition_id)
 
             @error_message = Models::Message.find(
               errors_topic,

@@ -39,6 +39,7 @@
 - [Maintenance] Extract the Explorer republish flow into `Lib::Republishing` and validate the form before producing (#1244).
 - [Maintenance] Update the vendored `AirDatepicker` CSS to `3.6.0` to match the JS.
 - [Maintenance] Sign the gem with `sigstore-cli` and push it with `gem push --attestation` (the `gem-push` action of `karafka/misc`), so a failed signing stops the release instead of publishing the gem without an attestation.
+- [Maintenance] Move the cluster-sourced Web UI models (`Broker`, `BrokerPartitionsDistribution`, `WatermarkOffsets`, cluster `Topic` and the cluster lags) into `Models::Cluster` and keep `Models::Topic` and `Models::Health` for consumer reports data.
 - [Fix] Stop the first page visit after each full page load from stalling for 2 seconds. Turbo saw the enabled code highlighting stylesheet as a new one and waited for it to load, which a disabled stylesheet never does. Both highlighting themes now come from one stylesheet scoped to the Web UI theme, built from the vendored highlight.js themes by `bin/scope_highlight_themes`.
 - [Fix] Apply the stored or system theme before the page renders instead of after it loads, so pages no longer flash in the light theme first.
 - [Fix] Stop every page visit from keeping the previous page in browser memory, through the theme manager color scheme listener and the charts that were never destroyed. Long open Web UI tabs could grow and slow the browser down.

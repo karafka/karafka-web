@@ -10,7 +10,7 @@ module Karafka
           # instead of one row per partition.
           #
           # Unlike {AggregatedTopic}, the cluster lags come straight from Kafka
-          # ({Health.cluster_lags_with_offsets}) as plain `{ id:, lag:, stored_offset: }` hashes, so
+          # ({Cluster::Lags.all}) as plain `{ id:, lag:, stored_offset: }` hashes, so
           # there is no LSO risk state, poll state or freeze-duration data here - only lag.
           #
           # It is a {Lib::HashProxy} (like {AggregatedTopic}) so it stays a filterable/"prunable"

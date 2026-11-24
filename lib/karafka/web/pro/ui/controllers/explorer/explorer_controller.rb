@@ -93,7 +93,7 @@ module Karafka
                 @visibility_filter = ::Karafka::Web.config.ui.policies.messages
                 @topic_id = topic_id
                 @partition_id = partition_id
-                @watermark_offsets = Models::WatermarkOffsets.find(topic_id, partition_id)
+                @watermark_offsets = Models::Cluster::WatermarkOffsets.find(topic_id, partition_id)
                 @partitions_count = Models::Cluster::Info.partitions_count(topic_id)
 
                 previous_offset, @messages, next_offset = current_partition_data
@@ -123,7 +123,7 @@ module Karafka
                 @partition_id = partition_id
                 @offset = offset
 
-                watermark_offsets = Models::WatermarkOffsets.find(topic_id, partition_id)
+                watermark_offsets = Models::Cluster::WatermarkOffsets.find(topic_id, partition_id)
 
                 @message = Models::Message.find(
                   @topic_id,
@@ -196,7 +196,7 @@ module Karafka
               # @param partition_id [Integer]
               # @param offset [Integer] offset of the message we want to display
               def surrounding(topic_id, partition_id, offset)
-                watermark_offsets = Models::WatermarkOffsets.find(topic_id, partition_id)
+                watermark_offsets = Models::Cluster::WatermarkOffsets.find(topic_id, partition_id)
 
                 not_found! if offset < watermark_offsets.low
                 not_found! if offset >= watermark_offsets.high

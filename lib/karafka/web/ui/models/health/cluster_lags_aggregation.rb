@@ -5,7 +5,7 @@ module Karafka
     module Ui
       module Models
         class Health
-          # Collapses the cluster lags from {Health.cluster_lags_with_offsets} into a single
+          # Collapses the cluster lags from {Cluster::Lags.all} into a single
           # {AggregatedClusterTopic} summary per topic, for the per-topic cluster lags view. The
           # `cg => topic_name` tree shape (and its ordering) is preserved so the existing filtering
           # and sorting flows keep working.
@@ -13,7 +13,7 @@ module Karafka
             class << self
               # @return [Hash] hash with per-topic aggregated cluster lag data
               def call
-                stats = Health.cluster_lags_with_offsets
+                stats = Cluster::Lags.all
 
                 stats.each_value do |topics|
                   topics.each do |topic_name, partitions|

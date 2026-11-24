@@ -56,7 +56,7 @@ module Karafka
               def show(topic_name)
                 ensure_visible!(topic_name)
 
-                @topic = Models::Topic.find(topic_name)
+                @topic = Models::Cluster::Topic.find(topic_name)
 
                 @active_partitions, _materialized_page, @limited = Paginators::Partitions.call(
                   @topic.partition_count, @params.current_page
@@ -77,7 +77,7 @@ module Karafka
                 features.topics_management!
                 ensure_visible!(topic_name)
 
-                @topic = Models::Topic.find(topic_name)
+                @topic = Models::Cluster::Topic.find(topic_name)
 
                 render
               end

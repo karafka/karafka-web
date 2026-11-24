@@ -18,7 +18,7 @@ module Karafka
             # @param topic_id [String]
             # @param partition_id [Integer]
             # @param offset [Integer]
-            # @param watermark_offsets [WatermarkOffsets, false] watermark offsets for this topic
+            # @param watermark_offsets [Cluster::WatermarkOffsets, false] watermark offsets for this topic
             #   partition or false if not provided
             # @return [Karafka::Messages::Message, nil] found message or nil in case watermark
             #   offsets were provided and we encountered a message matching watermarks
@@ -57,7 +57,7 @@ module Karafka
             # @param topic_id [String]
             # @param partition_id [Integer]
             # @param start_offset [Integer] oldest offset from which we want to get the data
-            # @param watermark_offsets [Ui::Models::WatermarkOffsets] watermark offsets
+            # @param watermark_offsets [Ui::Models::Cluster::WatermarkOffsets] watermark offsets
             # @return [Array] We return page data as well as all the details needed to build
             #   the pagination details.
             def offset_page(topic_id, partition_id, start_offset, watermark_offsets)
@@ -146,7 +146,7 @@ module Karafka
             def topic_page(topic_id, partitions_ids, page)
               # This is the bottleneck, for each partition we make one request :(
               offsets = partitions_ids.to_h do |partition_id|
-                [partition_id, Models::WatermarkOffsets.find(topic_id, partition_id)]
+                [partition_id, Models::Cluster::WatermarkOffsets.find(topic_id, partition_id)]
               end
 
               # Count number of elements we have in each partition

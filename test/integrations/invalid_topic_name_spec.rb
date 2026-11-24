@@ -37,7 +37,7 @@ started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
   )
 
   assert(
-    not_found? { Karafka::Web::Ui::Models::WatermarkOffsets.find(topic_name, 0) },
+    not_found? { Karafka::Web::Ui::Models::Cluster::WatermarkOffsets.find(topic_name, 0) },
     "Watermark offsets of #{topic_name[0, 20].inspect} should not be found"
   )
 end

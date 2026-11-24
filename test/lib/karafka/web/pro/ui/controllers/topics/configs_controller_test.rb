@@ -258,7 +258,7 @@ describe_current do
     let(:property_value) { rand(1_000..100_000) }
     let(:default_params) { { property_value: property_value } }
     let(:updated_value) do
-      Karafka::Web::Ui::Models::Topic.find(topic_name).configs.find do |config|
+      Karafka::Web::Ui::Models::Cluster::Topic.find(topic_name).configs.find do |config|
         config.name == "max.message.bytes"
       end.value
     end

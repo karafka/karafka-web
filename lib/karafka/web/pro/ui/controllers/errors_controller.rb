@@ -57,7 +57,7 @@ module Karafka
             def partition(partition_id)
               @topic_id = errors_topic
               @partition_id = partition_id
-              @watermark_offsets = Models::WatermarkOffsets.find(errors_topic, @partition_id)
+              @watermark_offsets = Models::Cluster::WatermarkOffsets.find(errors_topic, @partition_id)
               @partitions_count = Models::Cluster::Info.partitions_count(errors_topic)
 
               previous_offset, @error_messages, next_offset = Models::Message.offset_page(
@@ -85,7 +85,7 @@ module Karafka
               @partition_id = partition_id
               @offset = offset
 
-              watermark_offsets = Models::WatermarkOffsets.find(errors_topic, partition_id)
+              watermark_offsets = Models::Cluster::WatermarkOffsets.find(errors_topic, partition_id)
 
               @error_message = Models::Message.find(
                 errors_topic,

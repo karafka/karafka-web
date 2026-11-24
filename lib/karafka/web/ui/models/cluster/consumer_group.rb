@@ -74,12 +74,7 @@ module Karafka
                 .sort_by(&:first)
                 .flat_map do |topic_name, partitions|
                   partitions.sort_by(&:first).map do |partition_id, lag_with_offset|
-                    {
-                      topic_name: topic_name,
-                      id: partition_id,
-                      lag: lag_with_offset.fetch(:lag),
-                      stored_offset: lag_with_offset.fetch(:offset)
-                    }
+                    { topic_name: topic_name, **Lags.partition(partition_id, lag_with_offset) }
                   end
                 end
             end

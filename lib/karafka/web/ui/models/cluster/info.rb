@@ -21,7 +21,7 @@ module Karafka
 
               # Returns us all the info about available topics from the cluster
               #
-              # @return [Array<Ui::Models::Topic>] topics details
+              # @return [Array<Ui::Models::Cluster::Topic>] topics details
               def topics
                 fetch
                   .topics
@@ -31,7 +31,7 @@ module Karafka
               # Fetches us details about particular topic
               #
               # @param topic_name [String] name of the topic we are looking for
-              # @return [Ui::Models::Topic] topic details
+              # @return [Ui::Models::Cluster::Topic] topic details
               # @raise [Web::Errors::Ui::NotFoundError] when the topic does not exist
               def topic(topic_name)
                 Lib::Admin

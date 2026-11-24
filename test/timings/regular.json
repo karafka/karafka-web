@@ -1,7 +1,7 @@
 {
   "test/lib/karafka/web/ui/models/cluster/consumer_group_test.rb": 3.0,
   "test/lib/karafka/web/ui/models/metrics/aggregated_test.rb": 3.0,
-  "test/lib/karafka/web/ui/models/broker_partitions_distribution_test.rb": 1.0,
+  "test/lib/karafka/web/ui/models/cluster/broker_partitions_distribution_test.rb": 1.0,
   "test/lib/karafka/web/ui/models/status_test.rb": 135.926,
   "test/lib/karafka/web/ui/controllers/cluster_controller_test.rb": 125.172,
   "test/lib/karafka/web/ui/controllers/jobs_controller_test.rb": 30.673,
@@ -25,7 +25,7 @@
   "test/lib/karafka/web/ui/models/jobs_test.rb": 3.366,
   "test/lib/karafka/web/processing/consumers/state_test.rb": 2.615,
   "test/lib/karafka/web/processing/consumers/metrics_test.rb": 2.553,
-  "test/lib/karafka/web/ui/models/watermark_offsets_test.rb": 2.376,
+  "test/lib/karafka/web/ui/models/cluster/watermark_offsets_test.rb": 2.376,
   "test/lib/karafka/web/ui/models/counters_test.rb": 1.709,
   "test/lib/karafka/web/ui/models/health_test.rb": 1.655,
   "test/lib/karafka/web/ui/models/job_test.rb": 0.894,
