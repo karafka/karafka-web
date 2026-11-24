@@ -45,6 +45,7 @@
 - [Fix] Link the single message pagination (Explorer, Errors) to the other message directly instead of through a redirect, which made Turbo render the page twice. Disabled pagination buttons link to the current page.
 - [Fix] Apply the stored state of toggled sections (message metadata and utilization, backtrace paths, collapsed navigation) before Turbo renders a page, so they no longer show up in their default state first.
 - [Fix] Keep the icon of an active action button readable on hover in the dark theme.
+- [Fix] Link the Running breadcrumb of a consumer jobs page (Pro) to the running jobs instead of the pending ones.
 - [Fix] Style links inside Status and other alert boxes so they stand out from the surrounding text instead of showing only on hover.
 - [Fix] Log consumers reporter dispatch failures instead of crashing the process when `produce_many_sync` times out (#1336).
 - [Fix] Sort Hash elements by key value even when the key name matches a `Hash` method.
