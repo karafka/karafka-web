@@ -645,6 +645,9 @@ describe_current do
         Karafka::Web::Ui::Models::ConsumersState.stubs(:current).returns(false)
         start_member
         get "health/consumer_groups/#{stable_group_id}/members"
+        # The links of the page are validated after the spec and would otherwise reach pages
+        # that require the consumers state (the dashboard) with it still missing
+        Karafka::Web::Ui::Models::ConsumersState.unstub(:current)
       end
 
       after { consumer.close }

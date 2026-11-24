@@ -91,7 +91,7 @@ module Karafka
 
                 paginate(@params.current_page, !last_page)
 
-                state = Models::ConsumersState.current
+                state = Web::Ui::Models::ConsumersState.current
                 @processes_by_member_id = state ? Models::Processes.by_member_id(state) : {}
 
                 render

@@ -77,7 +77,7 @@ module Karafka
 
             # Lists available brokers in the cluster
             def index
-              @brokers = filter(sort(Models::Broker.all))
+              @brokers = filter(sort(Models::Cluster::Broker.all))
 
               render
             end
@@ -86,7 +86,7 @@ module Karafka
             #
             # @param broker_id [String]
             def show(broker_id)
-              @broker = Models::Broker.find(broker_id)
+              @broker = Models::Cluster::Broker.find(broker_id)
 
               @configs = filter(sort(@broker.configs))
 
@@ -109,8 +109,8 @@ module Karafka
             # broker's share), so an imbalanced cluster - one broker leading far more partitions
             # than the rest - is visible at a glance.
             def distribution
-              distribution = Models::BrokerPartitionsDistribution.all(
-                brokers: Models::Broker.all,
+              distribution = Models::Cluster::BrokerPartitionsDistribution.all(
+                brokers: Models::Cluster::Broker.all,
                 topics: displayable_topics
               )
 
@@ -124,9 +124,9 @@ module Karafka
             #
             # @param broker_id [String]
             def broker_partitions(broker_id)
-              @broker = Models::Broker.find(broker_id)
+              @broker = Models::Cluster::Broker.find(broker_id)
 
-              assignments = Models::BrokerPartitionsDistribution.partitions_for(
+              assignments = Models::Cluster::BrokerPartitionsDistribution.partitions_for(
                 broker_id: @broker.id,
                 topics: displayable_topics
               )
@@ -162,7 +162,7 @@ module Karafka
             # @return [Array<Hash>] cluster topics to display in an alphabetical order, with
             #   internal topics excluded unless the visibility config allows them
             def displayable_topics
-              all = Models::Cluster::Info
+              all = Web::Ui::Models::Cluster::Info
                 .fetch
                 .topics
                 .sort_by { |topic| topic[:topic_name] }

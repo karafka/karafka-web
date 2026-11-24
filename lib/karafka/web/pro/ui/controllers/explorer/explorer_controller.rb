@@ -42,8 +42,8 @@ module Karafka
 
               # Lists all the topics we can explore
               def index
-                @topics = Models::Cluster::Info
-                  .topics
+                @topics = Models::Cluster::Topic
+                  .all
                   .sort_by { |topic| topic[:topic_name] }
 
                 unless ::Karafka::Web.config.ui.visibility.internal_topics
@@ -70,7 +70,7 @@ module Karafka
                 @visibility_filter = ::Karafka::Web.config.ui.policies.messages
 
                 @topic_id = topic_id
-                @partitions_count = Models::Cluster::Info.partitions_count(topic_id)
+                @partitions_count = Models::Cluster::Topic.partitions_count(topic_id)
 
                 @active_partitions, materialized_page, @limited = Paginators::Partitions.call(
                   @partitions_count, @params.current_page
@@ -93,8 +93,8 @@ module Karafka
                 @visibility_filter = ::Karafka::Web.config.ui.policies.messages
                 @topic_id = topic_id
                 @partition_id = partition_id
-                @watermark_offsets = Models::WatermarkOffsets.find(topic_id, partition_id)
-                @partitions_count = Models::Cluster::Info.partitions_count(topic_id)
+                @watermark_offsets = Web::Ui::Models::Cluster::WatermarkOffsets.find(topic_id, partition_id)
+                @partitions_count = Models::Cluster::Topic.partitions_count(topic_id)
 
                 previous_offset, @messages, next_offset = current_partition_data
 
@@ -123,7 +123,7 @@ module Karafka
                 @partition_id = partition_id
                 @offset = offset
 
-                watermark_offsets = Models::WatermarkOffsets.find(topic_id, partition_id)
+                watermark_offsets = Web::Ui::Models::Cluster::WatermarkOffsets.find(topic_id, partition_id)
 
                 @message = Models::Message.find(
                   @topic_id,
@@ -162,7 +162,7 @@ module Karafka
                 if partition_id
                   active_partitions = [partition_id]
                 else
-                  partitions_count = Models::Cluster::Info.partitions_count(topic_id)
+                  partitions_count = Models::Cluster::Topic.partitions_count(topic_id)
                   active_partitions, = Paginators::Partitions.call(partitions_count, 1)
                 end
 
@@ -196,7 +196,7 @@ module Karafka
               # @param partition_id [Integer]
               # @param offset [Integer] offset of the message we want to display
               def surrounding(topic_id, partition_id, offset)
-                watermark_offsets = Models::WatermarkOffsets.find(topic_id, partition_id)
+                watermark_offsets = Web::Ui::Models::Cluster::WatermarkOffsets.find(topic_id, partition_id)
 
                 not_found! if offset < watermark_offsets.low
                 not_found! if offset >= watermark_offsets.high

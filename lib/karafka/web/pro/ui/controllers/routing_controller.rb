@@ -57,7 +57,7 @@ module Karafka
                 sort(consumer_group.topics)
               end
 
-              current_state = Models::ConsumersState.current
+              current_state = Web::Ui::Models::ConsumersState.current
               @assigned = Hash.new { |h, k| h[k] = Set.new }
 
               # If there are active processes, we can use their data to mark certain topics as

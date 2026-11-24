@@ -32,7 +32,7 @@ describe_current do
   let(:app) { Karafka::Web::Pro::Ui::App }
 
   # Stubs the cluster metadata so distribution edge cases (broker counts, imbalance) can be driven
-  # deterministically. `brokers` are hashes wrapped by Models::Broker, `topics` mirror the metadata
+  # deterministically. `brokers` are hashes wrapped by Models::Cluster::Broker, `topics` mirror the metadata
   # shape (`:partitions` with `:leader`/`:replicas`/`:isrs`).
   let(:stub_cluster) do
     lambda do |brokers:, topics:|

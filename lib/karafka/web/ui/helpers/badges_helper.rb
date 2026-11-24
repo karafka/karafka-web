@@ -60,19 +60,6 @@ module Karafka
             end
           end
 
-          # Takes a consumer group state reported by Kafka and recommends background style color
-          # @param state [Symbol] consumer group state
-          # @return [String] background style
-          def consumer_group_state_badge(state)
-            case state
-            when :stable then "badge-success"
-            when :empty then "badge-secondary"
-            when :dead then "badge-error"
-            else
-              "badge-warning"
-            end
-          end
-
           # Takes a producer delivery status and recommends background style color
           # @param status [Integer] librdkafka message persistence status
           # @return [String] background style

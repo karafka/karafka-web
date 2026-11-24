@@ -42,7 +42,7 @@ module Karafka
 
               # Displays list of groups
               def index
-                topics = Models::Topic.all
+                topics = Models::Cluster::Topic.all
 
                 # Names of scheduled messages topics defined in the routing
                 # They may not exist (yet) so we filter them based on the existing topics in the

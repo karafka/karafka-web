@@ -32,12 +32,12 @@ started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 
 ["a" * 513, "a" * 250, "a b", ".."].each do |topic_name|
   assert(
-    not_found? { Karafka::Web::Ui::Models::Cluster::Info.topic(topic_name) },
+    not_found? { Karafka::Web::Ui::Lib::Admin.topic_info(topic_name) },
     "Topic #{topic_name[0, 20].inspect} (#{topic_name.size} chars) should not be found"
   )
 
   assert(
-    not_found? { Karafka::Web::Ui::Models::WatermarkOffsets.find(topic_name, 0) },
+    not_found? { Karafka::Web::Ui::Models::Cluster::WatermarkOffsets.find(topic_name, 0) },
     "Watermark offsets of #{topic_name[0, 20].inspect} should not be found"
   )
 end
