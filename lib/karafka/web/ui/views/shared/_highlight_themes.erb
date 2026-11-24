@@ -1,0 +1,21 @@
+<%#
+  The theme manager enables one of those stylesheets, so they no longer match the disabled ones
+  of the next page. In the head, Turbo would treat them as new stylesheets on each visit and
+  wait for them to load, which disabled stylesheets never do, stalling the visit until its 2s
+  timeout. As permanent body elements they are kept across visits as they are.
+%>
+<div id="highlight-themes" data-turbo-permanent>
+  <link <%# herb:disable html-head-only-elements %>
+    rel="stylesheet"
+    href="<%= asset_path('stylesheets/libs/highlight_light.min.css') %>"
+    class="highlight-light"
+    disabled
+  >
+
+  <link <%# herb:disable html-head-only-elements %>
+    rel="stylesheet"
+    href="<%= asset_path('stylesheets/libs/highlight_dark.min.css') %>"
+    class="highlight-dark"
+    disabled
+  >
+</div>

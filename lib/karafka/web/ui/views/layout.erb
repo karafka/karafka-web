@@ -4,6 +4,8 @@
 
   <% if @error %>
     <body class="min-h-screen bg-base-200">
+      <%== partial 'shared/highlight_themes' %>
+
       <%== yield %>
     </body>
   <% else %>
@@ -11,6 +13,8 @@
       class="drawer min-h-screen lg:drawer-open bg-base-200 action-<%= @current_action_name %> controller-<%= @current_controller_name %>"
     >
       <div class="turbo-progress-bar"></div>
+
+      <%== partial 'shared/highlight_themes' %>
 
       <input id="main-drawer" type="checkbox" class="drawer-toggle">
 
