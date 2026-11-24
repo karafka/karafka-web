@@ -42,6 +42,9 @@
 - [Fix] Stop the first page visit after each full page load from stalling for 2 seconds. Turbo saw the enabled code highlighting stylesheet as a new one and waited for it to load, which a disabled stylesheet never does. Both highlighting themes now come from one stylesheet scoped to the Web UI theme, built from the vendored highlight.js themes by `bin/scope_highlight_themes`.
 - [Fix] Apply the stored or system theme before the page renders instead of after it loads, so pages no longer flash in the light theme first.
 - [Fix] Stop every page visit from keeping the previous page in browser memory, through the theme manager color scheme listener and the charts that were never destroyed. Long open Web UI tabs could grow and slow the browser down.
+- [Fix] Link the single message pagination (Explorer, Errors) to the other message directly instead of through a redirect, which made Turbo render the page twice. Disabled pagination buttons link to the current page.
+- [Fix] Apply the stored state of toggled sections (message metadata and utilization, backtrace paths, collapsed navigation) before Turbo renders a page, so they no longer show up in their default state first.
+- [Fix] Keep the icon of an active action button readable on hover in the dark theme.
 - [Fix] Style links inside Status and other alert boxes so they stand out from the surrounding text instead of showing only on hover.
 - [Fix] Log consumers reporter dispatch failures instead of crashing the process when `produce_many_sync` times out (#1336).
 - [Fix] Sort Hash elements by key value even when the key name matches a `Hash` method.

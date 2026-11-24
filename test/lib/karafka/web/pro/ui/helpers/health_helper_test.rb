@@ -71,8 +71,8 @@ describe_current do
   describe "#health_consumer_group_member_path" do
     it "builds the members path filtered to the member" do
       assert_equal(
-        "/karafka/health/consumer_groups/app/members?filter[field]=member_id&filter[value]=m-1",
-        health_consumer_group_member_path("app", "m-1")
+        "/karafka/health/consumer_groups/app/members?filter[field]=member_id&filter[value]=member-1",
+        health_consumer_group_member_path("app", "member-1")
       )
     end
 
