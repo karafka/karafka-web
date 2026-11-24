@@ -137,7 +137,7 @@ module Karafka
 
               # @param process_id [String] find given process
               def find_process(process_id)
-                Web::Ui::Models::Process.find(
+                Models::Processes.find(
                   Web::Ui::Models::ConsumersState.current!,
                   process_id
                 )

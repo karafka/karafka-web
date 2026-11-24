@@ -127,5 +127,12 @@
   "test/lib/karafka/web/pro/ui/models/health/topics_aggregation_test.rb": 3.0,
   "test/lib/karafka/web/pro/ui/models/health/cluster_lags_aggregation_test.rb": 1.0,
   "test/lib/karafka/web/pro/ui/models/cluster/lags_test.rb": 0.01,
-  "test/lib/karafka/web/pro/ui/models/cluster/topic_test.rb": 1.0
+  "test/lib/karafka/web/pro/ui/models/cluster/topic_test.rb": 1.0,
+  "test/lib/karafka/web/pro/ui/helpers/partitions_helper_test.rb": 0.05,
+  "test/lib/karafka/web/pro/ui/helpers/paths_helper_test.rb": 0.05,
+  "test/lib/karafka/web/pro/ui/helpers/badges_helper_test.rb": 0.05,
+  "test/lib/karafka/web/pro/ui/helpers/tailwind_helper_test.rb": 0.05,
+  "test/lib/karafka/web/pro/ui/helpers/time_helper_test.rb": 0.05,
+  "test/lib/karafka/web/pro/ui/models/message_test.rb": 3.0,
+  "test/lib/karafka/web/pro/ui/models/processes_test.rb": 0.05
 }

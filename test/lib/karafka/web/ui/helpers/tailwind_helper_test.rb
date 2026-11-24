@@ -85,40 +85,4 @@ describe_current do
       end
     end
   end
-
-  describe "#action_form_button" do
-    let(:result) do
-      action_form_button(
-        "<svg></svg> Stop",
-        "/consumers/commanding/p1/stop",
-        classes: "btn-error btn-sm btn-lockable",
-        title: "Stop",
-        disabled_reason: disabled_reason
-      )
-    end
-
-    context "when the action is available" do
-      let(:disabled_reason) { nil }
-
-      it "expect to render a posting form with an enabled submit button" do
-        assert_equal(
-          '<form action="/consumers/commanding/p1/stop" method="post" ' \
-          'class="inline-flex items-center align-middle" title="Stop">' \
-          '<button type="submit" class="btn btn-error btn-sm btn-lockable"><svg></svg> Stop</button>' \
-          "</form>",
-          result
-        )
-      end
-    end
-
-    context "when the action is not available" do
-      let(:disabled_reason) { "Only a running process can be <stopped>" }
-
-      it "expect to disable the button and put the escaped reason in the form title" do
-        assert_includes(result, 'title="Only a running process can be &lt;stopped&gt;"')
-        assert_includes(result, 'class="btn btn-error btn-sm btn-lockable btn-disabled" disabled>')
-        refute_includes(result, 'title="Stop"')
-      end
-    end
-  end
 end
