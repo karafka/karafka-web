@@ -2,8 +2,7 @@
 
 rm -f lib/karafka/web/ui/public/javascripts/application.min.*
 rm -f lib/karafka/web/ui/public/stylesheets/application.min.*
-rm -f lib/karafka/web/ui/public/stylesheets/libs/highlight_light.min.css.*
-rm -f lib/karafka/web/ui/public/stylesheets/libs/highlight_dark.min.css.*
+rm -f lib/karafka/web/ui/public/stylesheets/libs/highlight.min.css*
 
 set -e
 
@@ -39,6 +38,13 @@ if [ "$KARAFKA_RELEASE" != "true" ]; then
 fi
 
 npx uglifyjs "${tmp_files[@]}" "${uglify_options[@]}" -o "$js_dir/application.min.js"
+
+# One code highlighting stylesheet with both vendored highlight.js themes scoped to the Web UI
+# theme, so switching themes never swaps stylesheets
+bin/scope_highlight_themes \
+  "$css_dir/libs/highlight_light.min.css" \
+  "$css_dir/libs/highlight_dark.min.css" \
+  "$css_dir/libs/highlight.min.css"
 
 css_files=(
   "$css_dir/libs/datepicker.min.css"
@@ -85,5 +91,4 @@ compress_file() {
 compress_file "lib/karafka/web/ui/public/stylesheets/application.min.css"
 compress_file "lib/karafka/web/ui/public/javascripts/application.min.js"
 
-compress_file "lib/karafka/web/ui/public/stylesheets/libs/highlight_light.min.css"
-compress_file "lib/karafka/web/ui/public/stylesheets/libs/highlight_dark.min.css"
+compress_file "lib/karafka/web/ui/public/stylesheets/libs/highlight.min.css"
