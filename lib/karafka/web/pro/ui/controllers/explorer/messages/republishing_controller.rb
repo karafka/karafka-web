@@ -107,7 +107,7 @@ module Karafka
                 # @param partition_id [Integer]
                 # @param offset [Integer]
                 def load_source_message(topic_id, partition_id, offset)
-                  @message = Web::Ui::Models::Message.find(topic_id, partition_id, offset)
+                  @message = Models::Message.find(topic_id, partition_id, offset)
 
                   deny! unless visibility_filter.republish?(@message)
 
