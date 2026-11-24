@@ -44,7 +44,7 @@ module Karafka
                 @partitions_count, @params.current_page
               )
 
-              @error_messages, next_page = Web::Ui::Models::Message.topic_page(
+              @error_messages, next_page = Models::Message.topic_page(
                 errors_topic, @active_partitions, materialized_page
               )
 
@@ -60,7 +60,7 @@ module Karafka
               @watermark_offsets = Web::Ui::Models::Cluster::WatermarkOffsets.find(errors_topic, @partition_id)
               @partitions_count = Models::Cluster::Topic.partitions_count(errors_topic)
 
-              previous_offset, @error_messages, next_offset = Web::Ui::Models::Message.offset_page(
+              previous_offset, @error_messages, next_offset = Models::Message.offset_page(
                 errors_topic,
                 @partition_id,
                 @params.current_offset,
@@ -87,7 +87,7 @@ module Karafka
 
               watermark_offsets = Web::Ui::Models::Cluster::WatermarkOffsets.find(errors_topic, partition_id)
 
-              @error_message = Web::Ui::Models::Message.find(
+              @error_message = Models::Message.find(
                 errors_topic,
                 partition_id,
                 offset,

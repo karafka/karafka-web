@@ -82,7 +82,7 @@ module Karafka
                 @counters = Web::Ui::Models::Counters.new(@current_state)
 
                 @processes, last_page = Paginators::Arrays.call(
-                  filter(sort(Web::Ui::Models::Processes.active(@current_state))),
+                  filter(sort(Models::Processes.active(@current_state))),
                   @params.current_page
                 )
 
@@ -101,7 +101,7 @@ module Karafka
               # @param process_id [String] id of the process we're interested in
               def details(process_id)
                 current_state = Web::Ui::Models::ConsumersState.current!
-                @process = Web::Ui::Models::Process.find(current_state, process_id)
+                @process = Models::Processes.find(current_state, process_id)
 
                 render
               end
@@ -112,7 +112,7 @@ module Karafka
               # @param process_id [String] id of the process we're interested in
               def memberships(process_id)
                 current_state = Web::Ui::Models::ConsumersState.current!
-                @process = Web::Ui::Models::Process.find(current_state, process_id)
+                @process = Models::Processes.find(current_state, process_id)
 
                 render
               end

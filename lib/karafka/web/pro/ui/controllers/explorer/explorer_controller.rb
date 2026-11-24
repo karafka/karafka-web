@@ -76,7 +76,7 @@ module Karafka
                   @partitions_count, @params.current_page
                 )
 
-                @messages, next_page = Web::Ui::Models::Message.topic_page(
+                @messages, next_page = Models::Message.topic_page(
                   topic_id, @active_partitions, materialized_page
                 )
 
@@ -125,7 +125,7 @@ module Karafka
 
                 watermark_offsets = Web::Ui::Models::Cluster::WatermarkOffsets.find(topic_id, partition_id)
 
-                @message = Web::Ui::Models::Message.find(
+                @message = Models::Message.find(
                   @topic_id,
                   @partition_id,
                   @offset,
@@ -174,7 +174,7 @@ module Karafka
                 # We do it until we find a message we could refer to (if doable) within first
                 # ten pages
                 10.times do |page|
-                  messages, = Web::Ui::Models::Message.topic_page(topic_id, active_partitions, page + 1)
+                  messages, = Models::Message.topic_page(topic_id, active_partitions, page + 1)
 
                   # Selects newest out of all partitions
                   # Reject compacted messages and transaction-related once
@@ -247,7 +247,7 @@ module Karafka
               # @return [Array] fetched data with pagination information for the requested
               #   partition
               def current_partition_data
-                Web::Ui::Models::Message.offset_page(
+                Models::Message.offset_page(
                   @topic_id,
                   @partition_id,
                   @params.current_offset,

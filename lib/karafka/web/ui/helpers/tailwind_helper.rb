@@ -86,26 +86,6 @@ module Karafka
               %(</span>)
           end
 
-          # Renders an action that posts to the given path as a form with a submit button or,
-          # when the action is not available, with a disabled one explaining why. The title sits
-          # on the form, since disabled buttons do not receive pointer events. The form is middle
-          # aligned like buttons, so it lines up with link buttons next to it.
-          #
-          # @param content [String] button html content (icon and label)
-          # @param path [String] path the form posts to
-          # @param classes [String] extra css classes of the button
-          # @param title [String] title describing the action when available
-          # @param disabled_reason [String, nil] why the action is not available or nil if it is
-          # @return [String] action form html
-          def action_form_button(content, path, classes:, title:, disabled_reason: nil)
-            button_attributes = %(class="btn #{classes}")
-            button_attributes = %(class="btn #{classes} btn-disabled" disabled) if disabled_reason
-
-            %(<form action="#{path}" method="post" class="inline-flex items-center align-middle" ) +
-              %(title="#{::Rack::Utils.escape_html(disabled_reason || title)}">) +
-              %(<button type="submit" #{button_attributes}>#{content}</button></form>)
-          end
-
           # Defines various methods for badges and links that simplify defining them without
           # having to provide whole classes scopes always.
           TYPES.each do |type|
