@@ -1,7 +1,5 @@
 {
-  "test/lib/karafka/web/ui/models/cluster/consumer_group_test.rb": 3.0,
   "test/lib/karafka/web/ui/models/metrics/aggregated_test.rb": 3.0,
-  "test/lib/karafka/web/ui/models/cluster/broker_partitions_distribution_test.rb": 1.0,
   "test/lib/karafka/web/ui/models/status_test.rb": 135.926,
   "test/lib/karafka/web/ui/controllers/cluster_controller_test.rb": 125.172,
   "test/lib/karafka/web/ui/controllers/jobs_controller_test.rb": 30.673,
@@ -130,7 +128,6 @@
   "test/lib/karafka/web/ui/models/status/checks/partitions_test.rb": 0.009,
   "test/lib/karafka/web/tracking/sampler_test.rb": 0.009,
   "test/lib/karafka/web/tracking/consumers/contracts/topic_test.rb": 0.009,
-  "test/lib/karafka/web/ui/models/recurring_tasks/schedule_test.rb": 0.008,
   "test/lib/karafka/web/ui/models/status/checks/connection_test.rb": 0.008,
   "test/lib/karafka/web/tracking/producers/listeners/errors_test.rb": 0.008,
   "test/lib/karafka/web/ui/models/status/checks/replication_test.rb": 0.008,
@@ -167,12 +164,10 @@
   "test/lib/karafka/web/ui/controllers/become_pro_controller_test.rb": 0.003,
   "test/lib/karafka/web/ui/models/topic_test.rb": 0.003,
   "test/lib/karafka/web/ui/controllers/support_controller_test.rb": 0.003,
-  "test/lib/karafka/web/ui/models/recurring_tasks/task_test.rb": 0.003,
   "test/lib/karafka/web/management/actions/clean_boot_file_test.rb": 0.003,
   "test/lib/karafka/web/tracking/producers/sampler_test.rb": 0.002,
   "test/lib/karafka/web/tracking/scheduler_test.rb": 0.002,
   "test/lib/karafka/web/management/migrations/consumers_states/0_set_initial_test.rb": 0.002,
-  "test/lib/karafka/web/ui/models/recurring_tasks/log_test.rb": 0.002,
   "test/lib/karafka/web/management/migrations/consumers_metrics/0_set_initial_test.rb": 0.002,
   "test/lib/karafka/web/management/actions/migrate_states_data_test.rb": 0.002,
   "test/lib/karafka/web/tracking/producers/listeners/booting_test.rb": 0.001,
@@ -180,8 +175,5 @@
   "test/lib/karafka/web/tracking/helpers/ttls/windows_test.rb": 0.0,
   "test/lib/karafka/web/cli/help_test.rb": 0.0,
   "test/lib/karafka/web/config/defaults_injector_test.rb": 0.01,
-  "test/lib/karafka/web/ui/models/health/topics_aggregation_test.rb": 3.0,
-  "test/lib/karafka/web/ui/models/health/cluster_lags_aggregation_test.rb": 1.0,
-  "test/lib/karafka/web/management/migrations/base_test.rb": 0.009,
-  "test/lib/karafka/web/ui/models/cluster/lags_test.rb": 0.01
+  "test/lib/karafka/web/management/migrations/base_test.rb": 0.009
 }

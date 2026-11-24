@@ -63,7 +63,7 @@ module Karafka
 
             # Displays the execution logs
             def logs
-              @watermark_offsets = Models::Cluster::WatermarkOffsets.find(logs_topic, 0)
+              @watermark_offsets = Web::Ui::Models::Cluster::WatermarkOffsets.find(logs_topic, 0)
               previous_offset, @logs, next_offset, = current_page_data
 
               paginate(
@@ -111,7 +111,7 @@ module Karafka
             # @return [Array] Array with requested messages as well as pagination details and other
             #   obtained metadata
             def current_page_data
-              Models::Message.offset_page(
+              Web::Ui::Models::Message.offset_page(
                 logs_topic,
                 0,
                 @params.current_offset,

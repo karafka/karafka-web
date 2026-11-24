@@ -28,7 +28,7 @@
 # License: https://karafka.io/docs/Pro-License-Comm/
 # Contact: contact@karafka.io
 
-describe Karafka::Web::Ui::Models::Health::AggregatedTopic do
+describe_current do
   let(:aggregated) { described_class.new(topic_name, topic_details) }
 
   let(:topic_name) { "orders" }

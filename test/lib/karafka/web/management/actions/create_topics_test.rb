@@ -3,7 +3,7 @@
 describe_current do
   let(:create) { described_class.new.call(1) }
 
-  let(:topics) { Karafka::Web::Ui::Models::Cluster::Info.topics.map(&:topic_name) }
+  let(:topics) { Karafka::Web::Ui::Models::Cluster::Info.fetch.topics.map { |topic| topic[:topic_name] } }
 
   context "when consumers states topic exists" do
     let(:consumers_states_topic) { create_topic }

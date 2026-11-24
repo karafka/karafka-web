@@ -145,8 +145,8 @@ module Karafka
                   @topic = topic
 
                   # Get aggregated stats from all processes
-                  current_state = Models::ConsumersState.current!
-                  @stats = Models::Health.current(current_state)
+                  current_state = Web::Ui::Models::ConsumersState.current!
+                  @stats = Web::Ui::Models::Health.current(current_state)
 
                   # Find the consumer group
                   cg_stats = @stats[@consumer_group_id]
@@ -164,7 +164,7 @@ module Karafka
                   @topic_lrj = @routing_topic&.long_running_job?
 
                   # Check if any active process is running (needed to issue commands)
-                  @any_process_running = Models::Processes.active(current_state).any? do |process|
+                  @any_process_running = Web::Ui::Models::Processes.active(current_state).any? do |process|
                     process.status == "running"
                   end
                 end
