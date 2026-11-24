@@ -6,12 +6,11 @@ module Karafka
       module Models
         module Cluster
           # Rolls the cluster metadata up into a per-broker partition distribution: how many
-          # partitions each broker leads and how many partition replicas it hosts, plus each broker's
-          # share of the total. It surfaces load imbalance across brokers (one node leading far more
-          # partitions than the rest) without any external tooling.
+          # partitions each broker leads and how many partition replicas it hosts, plus each
+          # broker's share of the total. It surfaces load imbalance across brokers (one node
+          # leading far more partitions than the rest) without any external tooling.
           #
-          # It is read-only - it only aggregates {Info} data, so it adds no tracking
-          # overhead.
+          # It is read-only - it only aggregates {Info} data, so it adds no tracking overhead.
           class BrokerPartitionsDistribution < Lib::HashProxy
             class << self
               # @param brokers [Array<Broker>] cluster brokers

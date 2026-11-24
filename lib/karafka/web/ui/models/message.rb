@@ -18,8 +18,8 @@ module Karafka
             # @param topic_id [String]
             # @param partition_id [Integer]
             # @param offset [Integer]
-            # @param watermark_offsets [Cluster::WatermarkOffsets, false] watermark offsets for this topic
-            #   partition or false if not provided
+            # @param watermark_offsets [Cluster::WatermarkOffsets, false] watermark offsets for
+            #   this topic partition or false if not provided
             # @return [Karafka::Messages::Message, nil] found message or nil in case watermark
             #   offsets were provided and we encountered a message matching watermarks
             # @raise [::Karafka::Web::Errors::Ui::NotFoundError] when not found
