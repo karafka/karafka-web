@@ -132,7 +132,7 @@ module Karafka
               def reported_topic?(consumer_group_id, topic_name)
                 state = Web::Ui::Models::ConsumersState.current!
 
-                Models::Processes.active(state).any? do |process|
+                Web::Ui::Models::Processes.active(state).any? do |process|
                   process.consumer_groups.any? do |consumer_group|
                     next false unless consumer_group.id == consumer_group_id
 

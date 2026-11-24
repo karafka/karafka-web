@@ -164,7 +164,7 @@ module Karafka
                   @topic_lrj = @routing_topic&.long_running_job?
 
                   # Check if any active process is running (needed to issue commands)
-                  @any_process_running = Models::Processes.active(current_state).any? do |process|
+                  @any_process_running = Web::Ui::Models::Processes.active(current_state).any? do |process|
                     process.status == "running"
                   end
                 end

@@ -64,7 +64,7 @@ module Karafka
               # assigned. This does not cover the full scope as some partitions may be assigned
               # and some not, but provides general overview
               if current_state
-                Models::Processes.active(current_state).each do |process|
+                Web::Ui::Models::Processes.active(current_state).each do |process|
                   process.consumer_groups.each do |consumer_group|
                     consumer_group.subscription_groups.each do |subscription_group|
                       subscription_group.topics.each do |topic|

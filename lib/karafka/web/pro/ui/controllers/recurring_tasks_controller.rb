@@ -111,7 +111,7 @@ module Karafka
             # @return [Array] Array with requested messages as well as pagination details and other
             #   obtained metadata
             def current_page_data
-              Models::Message.offset_page(
+              Web::Ui::Models::Message.offset_page(
                 logs_topic,
                 0,
                 @params.current_offset,
