@@ -61,7 +61,7 @@ module Karafka
           # @return [Integer] number of partitions of the errors topic or 1 when the cached
           #   metadata does not have it yet
           def partition_count
-            topic = Models::ClusterInfo
+            topic = Models::Cluster::Info
               .fetch
               .topics
               .find { |details| details[:topic_name] == errors_topic }

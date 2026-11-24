@@ -38,7 +38,7 @@ module Karafka
             # Lists all the errors from all the partitions
             def index
               @topic_id = errors_topic
-              @partitions_count = Models::ClusterInfo.partitions_count(errors_topic)
+              @partitions_count = Models::Cluster::Info.partitions_count(errors_topic)
 
               @active_partitions, materialized_page, @limited = Paginators::Partitions.call(
                 @partitions_count, @params.current_page
@@ -58,7 +58,7 @@ module Karafka
               @topic_id = errors_topic
               @partition_id = partition_id
               @watermark_offsets = Models::WatermarkOffsets.find(errors_topic, @partition_id)
-              @partitions_count = Models::ClusterInfo.partitions_count(errors_topic)
+              @partitions_count = Models::Cluster::Info.partitions_count(errors_topic)
 
               previous_offset, @error_messages, next_offset = Models::Message.offset_page(
                 errors_topic,

@@ -27,7 +27,7 @@ module Karafka
         #   if we are supposed to compute the factor automatically
         # @return [Integer] replication factor for Karafka Web UI topics
         def compute_replication_factor(cli_replication_factor)
-          cli_replication_factor || ((Ui::Models::ClusterInfo.fetch.brokers.size > 1) ? 2 : 1)
+          cli_replication_factor || ((Ui::Models::Cluster::Info.fetch.brokers.size > 1) ? 2 : 1)
         end
       end
     end

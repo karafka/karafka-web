@@ -37,7 +37,7 @@ describe_current do
   let(:stub_cluster) do
     lambda do |brokers:, topics:|
       double = Struct.new(:brokers, :topics).new(brokers, topics)
-      Karafka::Web::Ui::Models::ClusterInfo.stubs(:fetch).returns(double)
+      Karafka::Web::Ui::Models::Cluster::Info.stubs(:fetch).returns(double)
     end
   end
 
@@ -257,7 +257,7 @@ describe_current do
       end
 
       before do
-        Karafka::Web::Ui::Models::ClusterInfo
+        Karafka::Web::Ui::Models::Cluster::Info
           .stubs(:fetch)
           .returns(stub(topics: fake_topics, brokers: fake_brokers))
       end
@@ -293,7 +293,7 @@ describe_current do
       end
 
       before do
-        Karafka::Web::Ui::Models::ClusterInfo
+        Karafka::Web::Ui::Models::Cluster::Info
           .stubs(:fetch)
           .returns(stub(topics: fake_topics, brokers: fake_brokers))
       end

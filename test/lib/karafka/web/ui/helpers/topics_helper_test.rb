@@ -224,34 +224,34 @@ describe_current do
   end
 
   describe "#topics_partition_identifier" do
-    it "returns topic and partition separated by dash" do
+    it "returns the topic with the partition in brackets" do
       result = helper.topics_partition_identifier("user-events", 0)
 
-      assert_equal("user-events-0", result)
+      assert_equal("user-events-[0]", result)
     end
 
     it "handles string partition numbers" do
       result = helper.topics_partition_identifier("user-events", "5")
 
-      assert_equal("user-events-5", result)
+      assert_equal("user-events-[5]", result)
     end
 
     it "handles topics with special characters" do
       result = helper.topics_partition_identifier("user_events.v1", 3)
 
-      assert_equal("user_events.v1-3", result)
+      assert_equal("user_events.v1-[3]", result)
     end
 
     it "handles negative partition numbers" do
       result = helper.topics_partition_identifier("user-events", -1)
 
-      assert_equal("user-events--1", result)
+      assert_equal("user-events-[-1]", result)
     end
 
     it "handles large partition numbers" do
       result = helper.topics_partition_identifier("user-events", 999)
 
-      assert_equal("user-events-999", result)
+      assert_equal("user-events-[999]", result)
     end
   end
 

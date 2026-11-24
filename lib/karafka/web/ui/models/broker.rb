@@ -9,7 +9,7 @@ module Karafka
           class << self
             # @return [Array<Broker>] all brokers in the cluster
             def all
-              ClusterInfo.fetch.brokers.map do |broker|
+              Cluster::Info.fetch.brokers.map do |broker|
                 new(broker)
               end
             end

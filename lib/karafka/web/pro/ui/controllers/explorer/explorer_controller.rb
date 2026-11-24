@@ -42,7 +42,7 @@ module Karafka
 
               # Lists all the topics we can explore
               def index
-                @topics = Models::ClusterInfo
+                @topics = Models::Cluster::Info
                   .topics
                   .sort_by { |topic| topic[:topic_name] }
 
@@ -70,7 +70,7 @@ module Karafka
                 @visibility_filter = ::Karafka::Web.config.ui.policies.messages
 
                 @topic_id = topic_id
-                @partitions_count = Models::ClusterInfo.partitions_count(topic_id)
+                @partitions_count = Models::Cluster::Info.partitions_count(topic_id)
 
                 @active_partitions, materialized_page, @limited = Paginators::Partitions.call(
                   @partitions_count, @params.current_page
@@ -94,7 +94,7 @@ module Karafka
                 @topic_id = topic_id
                 @partition_id = partition_id
                 @watermark_offsets = Models::WatermarkOffsets.find(topic_id, partition_id)
-                @partitions_count = Models::ClusterInfo.partitions_count(topic_id)
+                @partitions_count = Models::Cluster::Info.partitions_count(topic_id)
 
                 previous_offset, @messages, next_offset = current_partition_data
 
@@ -162,7 +162,7 @@ module Karafka
                 if partition_id
                   active_partitions = [partition_id]
                 else
-                  partitions_count = Models::ClusterInfo.partitions_count(topic_id)
+                  partitions_count = Models::Cluster::Info.partitions_count(topic_id)
                   active_partitions, = Paginators::Partitions.call(partitions_count, 1)
                 end
 

@@ -288,6 +288,32 @@ describe_current do
       end
     end
 
+    context "when partitions get revoked after the member id is known" do
+      let(:kafka) { stub(member_id: "rdkafka-member-2") }
+
+      before { subscription_groups[sg_id][:member_id] = "rdkafka-member-1" }
+
+      it "reads it again on the next poll, as the consumer may rejoin without partitions" do
+        listener.on_rebalance_partitions_revoked(rebalance_event)
+
+        assert_equal("", subscription_groups[sg_id][:member_id])
+
+        listener.on_connection_listener_fetch_loop_received(event)
+
+        assert_equal("rdkafka-member-2", subscription_groups[sg_id][:member_id])
+      end
+    end
+
+    context "when partitions get revoked from a subscription group that is no longer tracked" do
+      before { subscription_groups.delete(sg_id) }
+
+      it "does not start tracking it again" do
+        listener.on_rebalance_partitions_revoked(rebalance_event)
+
+        refute(subscription_groups.key?(sg_id))
+      end
+    end
+
     context "when partitions get assigned to a subscription group that is no longer tracked" do
       before { subscription_groups.delete(sg_id) }
 

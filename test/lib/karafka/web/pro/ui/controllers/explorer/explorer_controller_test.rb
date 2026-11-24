@@ -70,7 +70,7 @@ describe_current do
 
     context "when there are no topics" do
       before do
-        Karafka::Web::Ui::Models::ClusterInfo.stubs(:topics).returns([])
+        Karafka::Web::Ui::Models::Cluster::Info.stubs(:topics).returns([])
         get "explorer/topics"
       end
 

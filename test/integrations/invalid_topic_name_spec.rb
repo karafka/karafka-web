@@ -32,7 +32,7 @@ started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 
 ["a" * 513, "a" * 250, "a b", ".."].each do |topic_name|
   assert(
-    not_found? { Karafka::Web::Ui::Models::ClusterInfo.topic(topic_name) },
+    not_found? { Karafka::Web::Ui::Models::Cluster::Info.topic(topic_name) },
     "Topic #{topic_name[0, 20].inspect} (#{topic_name.size} chars) should not be found"
   )
 

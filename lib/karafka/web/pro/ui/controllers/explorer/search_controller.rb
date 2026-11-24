@@ -48,7 +48,7 @@ module Karafka
               #   that need to provide only granular search can do so.
               def index(topic_id)
                 @topic_id = topic_id
-                @partitions_count = Models::ClusterInfo.partitions_count(topic_id)
+                @partitions_count = Models::Cluster::Info.partitions_count(topic_id)
                 # Select only matchers that should be available in the context of the current topic
                 available_matchers = Web.config.ui.search.matchers
                 @matchers = available_matchers.select { |match| match.active?(@topic_id) }

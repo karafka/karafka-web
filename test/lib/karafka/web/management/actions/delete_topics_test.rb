@@ -6,7 +6,7 @@ describe_current do
   let(:topics) do
     lambda do
       Karafka::Web.config.ui.cache.clear
-      Karafka::Web::Ui::Models::ClusterInfo.topics.map(&:topic_name)
+      Karafka::Web::Ui::Models::Cluster::Info.topics.map(&:topic_name)
     end
   end
 

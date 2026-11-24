@@ -74,7 +74,7 @@ describe_current do
       end
 
       before do
-        Karafka::Web::Ui::Models::ClusterInfo
+        Karafka::Web::Ui::Models::Cluster::Info
           .stubs(:fetch)
           .returns(stub(topics: fake_topics, brokers: fake_brokers))
         get "cluster/replication"

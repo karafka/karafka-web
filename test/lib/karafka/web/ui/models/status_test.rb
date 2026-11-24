@@ -78,7 +78,7 @@ describe_current do
 
     context "when we cannot connect" do
       before do
-        Karafka::Web::Ui::Models::ClusterInfo.stubs(:fetch).raises(Rdkafka::RdkafkaError.new(0))
+        Karafka::Web::Ui::Models::Cluster::Info.stubs(:fetch).raises(Rdkafka::RdkafkaError.new(0))
       end
 
       it { refute(result.success?) }
@@ -93,7 +93,7 @@ describe_current do
 
     context "when there is no connection" do
       before do
-        Karafka::Web::Ui::Models::ClusterInfo.stubs(:fetch).raises(Rdkafka::RdkafkaError.new(0))
+        Karafka::Web::Ui::Models::Cluster::Info.stubs(:fetch).raises(Rdkafka::RdkafkaError.new(0))
       end
 
       it { refute(result.success?) }

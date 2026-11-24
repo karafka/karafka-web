@@ -37,7 +37,7 @@
         title="Highest lag is on partition <%= topic_stats.max_lag_partition_id %>"
       >
         <%== lag_with_label topic_stats.max_lag %>
-        (p<%= topic_stats.max_lag_partition_id %>)
+        [<%= topic_stats.max_lag_partition_id %>]
       </a>
     <% else %>
       <%== lag_with_label topic_stats.max_lag %>
@@ -53,13 +53,5 @@
   </td>
   <td>
     <%== lag_with_label topic_stats.avg_lag %>
-  </td>
-  <td class="options">
-    <%==
-      partial(
-        'health/offsets/delete_button',
-        locals: { consumer_group_id: cg_name, topic_name: topic_name, labeled: false }
-      )
-    %>
   </td>
 </tr>

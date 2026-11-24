@@ -66,16 +66,27 @@ module Karafka
             #
             # @param event [Karafka::Core::Monitoring::Event]
             def on_rebalance_partitions_assigned(event)
-              sg_id = event[:subscription_group_id]
+              reset_member_id(event[:subscription_group_id])
+            end
 
+            # A consumer that lost or gave up its partitions may rejoin under a new member id
+            # without getting any partitions assigned, so we read it again on revocation as well
+            #
+            # @param event [Karafka::Core::Monitoring::Event]
+            def on_rebalance_partitions_revoked(event)
+              reset_member_id(event[:subscription_group_id])
+            end
+
+            private
+
+            # @param sg_id [String] subscription group id
+            def reset_member_id(sg_id)
               track do |sampler|
                 next unless sampler.subscription_groups.key?(sg_id)
 
                 sampler.subscription_groups[sg_id][:member_id] = ""
               end
             end
-
-            private
 
             # @param client [Karafka::Connection::ConsumerGroups::Client]
             # @return [String] group member id or an empty string when the consumer did not join the

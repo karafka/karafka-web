@@ -92,7 +92,7 @@ describe_current do
       it "expect the origin badge to link to the last offset message in the Explorer" do
         assert_ok
         assert_body('<a href="/explorer/topics/default/0/3788359">')
-        assert_body("default-0")
+        assert_body("default-[0]")
       end
     end
 
@@ -113,7 +113,7 @@ describe_current do
       it "expect the origin badge to link to the partition in the Explorer" do
         assert_ok
         assert_body('<a href="/explorer/topics/default/2">')
-        assert_body("default-2")
+        assert_body("default-[2]")
       end
     end
 
