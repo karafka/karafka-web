@@ -45,8 +45,8 @@ module Karafka
                 def forward(topic_id, partition_id, offset)
                   load_source_message(topic_id, partition_id, offset)
 
-                  @topics = Models::Cluster::Info
-                    .topics
+                  @topics = Models::Cluster::Topic
+                    .all
                     .sort_by { |topic| topic[:topic_name] }
 
                   unless ::Karafka::Web.config.ui.visibility.internal_topics
@@ -107,7 +107,7 @@ module Karafka
                 # @param partition_id [Integer]
                 # @param offset [Integer]
                 def load_source_message(topic_id, partition_id, offset)
-                  @message = Models::Message.find(topic_id, partition_id, offset)
+                  @message = Web::Ui::Models::Message.find(topic_id, partition_id, offset)
 
                   deny! unless visibility_filter.republish?(@message)
 
@@ -122,7 +122,7 @@ module Karafka
                 def target_partitions_count(target_topic)
                   return nil if target_topic.empty?
 
-                  Models::Cluster::Info.partitions_count(target_topic)
+                  Models::Cluster::Topic.partitions_count(target_topic)
                 rescue ::Karafka::Web::Errors::Ui::NotFoundError
                   nil
                 end

@@ -162,7 +162,7 @@ module Karafka
             # @return [Array<Hash>] cluster topics to display in an alphabetical order, with
             #   internal topics excluded unless the visibility config allows them
             def displayable_topics
-              all = Models::Cluster::Info
+              all = Web::Ui::Models::Cluster::Info
                 .fetch
                 .topics
                 .sort_by { |topic| topic[:topic_name] }

@@ -41,7 +41,7 @@ module Karafka
                 features.commanding!
 
                 @schema_version = Commanding::Dispatcher::SCHEMA_VERSION
-                @watermark_offsets = Models::Cluster::WatermarkOffsets.find(commands_topic, 0)
+                @watermark_offsets = Web::Ui::Models::Cluster::WatermarkOffsets.find(commands_topic, 0)
 
                 previous_offset, @command_messages, next_offset = current_partition_data
 
@@ -67,7 +67,7 @@ module Karafka
                 features.commanding!
 
                 @schema_version = Commanding::Dispatcher::SCHEMA_VERSION
-                @command_message = Models::Message.find(
+                @command_message = Web::Ui::Models::Message.find(
                   commands_topic,
                   0,
                   offset
@@ -102,7 +102,7 @@ module Karafka
               # @return [Array] Array with requested messages as well as pagination details
               #   and other obtained metadata
               def current_partition_data
-                Models::Message.offset_page(
+                Web::Ui::Models::Message.offset_page(
                   commands_topic,
                   0,
                   @params.current_offset,

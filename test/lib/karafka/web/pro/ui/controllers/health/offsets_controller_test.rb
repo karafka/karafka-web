@@ -178,7 +178,7 @@ describe_current do
           assert_equal(302, response.status)
 
           # Kafka reports the offsets under the group id it lists
-          kafka_id = Karafka::Web::Ui::Models::Cluster::ConsumerGroup.kafka_id(consumer_group_id)
+          kafka_id = Karafka::Web::Pro::Ui::Models::Cluster::ConsumerGroup.kafka_id(consumer_group_id)
           offsets = Karafka::Admin::ConsumerGroups
             .read_lags_with_offsets({ kafka_id => [topic] })
             .dig(kafka_id, topic)

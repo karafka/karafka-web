@@ -44,7 +44,7 @@ module Karafka
                 # @param partition_id [Integer]
                 # @param offset [Integer] offset of the message we want to download
                 def download(topic_id, partition_id, offset)
-                  message = Models::Message.find(topic_id, partition_id, offset)
+                  message = Web::Ui::Models::Message.find(topic_id, partition_id, offset)
 
                   deny! unless visibility_filter.download?(message)
 
@@ -65,7 +65,7 @@ module Karafka
                 def export(topic_id, partition_id, offset)
                   Lib::PatternsDetector.new.call
 
-                  message = Models::Message.find(topic_id, partition_id, offset)
+                  message = Web::Ui::Models::Message.find(topic_id, partition_id, offset)
 
                   # Check if exports are allowed
                   deny! unless visibility_filter.export?(message)

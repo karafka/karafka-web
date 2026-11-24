@@ -130,9 +130,9 @@ module Karafka
               #   Scans the active processes directly and short-circuits, so we do not build (and
               #   throw away) the whole aggregated health tree just to answer a presence check.
               def reported_topic?(consumer_group_id, topic_name)
-                state = Models::ConsumersState.current!
+                state = Web::Ui::Models::ConsumersState.current!
 
-                Models::Processes.active(state).any? do |process|
+                Web::Ui::Models::Processes.active(state).any? do |process|
                   process.consumer_groups.any? do |consumer_group|
                     next false unless consumer_group.id == consumer_group_id
 
@@ -149,7 +149,7 @@ module Karafka
               # @param consumer_group_id [String]
               # @param topic_name [String] name of the topic
               def load_report_topic(consumer_group_id, topic_name)
-                stats = Models::Health.current(Models::ConsumersState.current!)
+                stats = Web::Ui::Models::Health.current(Web::Ui::Models::ConsumersState.current!)
 
                 @consumer_group_id = consumer_group_id
                 @topic_name = topic_name

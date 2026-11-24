@@ -47,7 +47,7 @@ module Karafka
 
                   # Ensures the topic exists (raises a not found otherwise) and gives the form the
                   # number of partitions to render the partition selector
-                  @partitions_count = Models::Cluster::Info.partitions_count(topic_id)
+                  @partitions_count = Models::Cluster::Topic.partitions_count(topic_id)
 
                   # Lets the form warn when the payload cannot be validated (topic not in routing)
                   @payload_checkable = Lib::Explorer::Publishing::Consistency.checkable?(topic_id)
@@ -69,7 +69,7 @@ module Karafka
 
                   deny! unless visibility_filter.publish?(@topic_id)
 
-                  @partitions_count = Models::Cluster::Info.partitions_count(topic_id)
+                  @partitions_count = Models::Cluster::Topic.partitions_count(topic_id)
 
                   @publish_form = Lib::Explorer::Publishing::Normalizer.call(params)
 
