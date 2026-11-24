@@ -274,23 +274,9 @@ module Karafka
         # to explicitly define routing
         setting :dead_letter_queue_patterns, default: [/(dlq)|(dead_letter)/i]
 
-        # @return [Array<String, Regexp>] dead letter queue topic patterns
-        # @deprecated Use {#dead_letter_queue_patterns} instead
-        def dlq_patterns
-          warn "DEPRECATION WARNING: config.ui.dlq_patterns is deprecated. " \
-            "Use config.ui.dead_letter_queue_patterns instead. " \
-            "It will be removed in the next major release."
-          dead_letter_queue_patterns
-        end
-
-        # @param value [Array<String, Regexp>] dead letter queue topic patterns
-        # @deprecated Use {#dead_letter_queue_patterns=} instead
-        def dlq_patterns=(value)
-          warn "DEPRECATION WARNING: config.ui.dlq_patterns= is deprecated. " \
-            "Use config.ui.dead_letter_queue_patterns= instead. " \
-            "It will be removed in the next major release."
-          self.dead_letter_queue_patterns = value
-        end
+        # Former name of `dead_letter_queue_patterns`, kept as an alias of it
+        singleton_class.alias_method :dlq_patterns, :dead_letter_queue_patterns
+        singleton_class.alias_method :dlq_patterns=, :dead_letter_queue_patterns=
 
         # Maximum in-memory size of payload that we will render. Anything bigger than this by
         # default will not be displayed not to hang the browser. 512KB of serialized data is a lot.
