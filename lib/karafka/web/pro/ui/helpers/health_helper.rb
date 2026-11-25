@@ -181,14 +181,14 @@ module Karafka
             #   rather than spread evenly, that is the biggest single-partition lag is at least
             #   `config.ui.health.lags.skew_threshold`x the average of the *remaining* partitions.
             #   Only meaningful with more than one lagging partition and once the biggest lag
-            #   clears `config.ui.health.lags.skew_minimum` (so trivial imbalances are not
+            #   clears `config.ui.health.lags.min_skewed_lag` (so trivial imbalances are not
             #   flagged). An evenly lagging topic and a topic with one hot/stuck partition can
             #   share the same total lag, so this is what distinguishes them at a glance.
             def skewed?(topic_stats)
               lags = ::Karafka::Web.config.ui.health.lags
 
               return false if topic_stats.measurable_count < 2
-              return false if topic_stats.max_lag < lags.skew_minimum
+              return false if topic_stats.max_lag < lags.min_skewed_lag
 
               # Compared against the average of the other partitions rather than the average of
               # all of them. A self-inclusive average caps `max / avg` at the partition count, so

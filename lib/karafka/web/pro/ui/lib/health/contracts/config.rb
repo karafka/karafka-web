@@ -52,7 +52,7 @@ module Karafka
                       required(:skew_threshold) { |val| val.is_a?(Numeric) && val > 1 }
 
                       # Minimum biggest-partition lag below which a topic is never flagged as "skewed"
-                      required(:skew_minimum) { |val| val.is_a?(Integer) && val >= 0 }
+                      required(:min_skewed_lag) { |val| val.is_a?(Integer) && val >= 0 }
 
                       # Lag at/above which a row is highlighted as high-lag in the health views
                       required(:high_threshold) { |val| val.is_a?(Integer) && val.positive? }
