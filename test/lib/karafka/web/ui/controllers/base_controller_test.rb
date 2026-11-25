@@ -115,6 +115,33 @@ describe_current do
       end
     end
 
+    context "when custom css and js are nil" do
+      before do
+        ui_config.custom.css = nil
+        ui_config.custom.js = nil
+      end
+
+      it "expect not to serve them" do
+        get custom_css
+
+        assert_equal(404, status)
+
+        get custom_js
+
+        assert_equal(404, status)
+      end
+
+      context "when rendering the layout" do
+        before { get "ux" }
+
+        it do
+          assert_ok
+          refute_body("custom.css")
+          refute_body("custom.js")
+        end
+      end
+    end
+
     context "when there is custom inline css" do
       let(:css_content) { "div { display: none }" }
 
@@ -364,6 +391,15 @@ describe_current do
     end
 
     after { ui_config.custom.nav_erb = false }
+
+    context "when nav_erb is nil" do
+      let(:nav_erb) { nil }
+
+      it "expect to render the default navigation" do
+        assert_ok
+        assert_body("Dashboard")
+      end
+    end
 
     context "when nav_erb is set to an erb template code" do
       let(:nav_erb) do

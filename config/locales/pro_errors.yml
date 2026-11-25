@@ -21,8 +21,8 @@ en:
       ui.policies.consumer_groups_format: cannot be nil
 
       ui.branding.type_format: 'must be :info, :error, :warning, :success, :primary or :secondary'
-      ui.branding.label_format: must be false or non-empty string
-      ui.branding.notice_format: must be false or non-empty string
+      ui.branding.label_format: must be nil, false or non-empty string
+      ui.branding.notice_format: must be nil, false or non-empty string
       ui.branding.nav_extras_format: must be an ERB template code or a path to one
 
       ui.health.lags.skew_threshold_format: needs to be a numeric bigger than 1

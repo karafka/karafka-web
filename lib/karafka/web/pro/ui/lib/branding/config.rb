@@ -41,10 +41,11 @@ module Karafka
               # Type of styling aligned with Daisy. info, error, warning, success, primary
               setting :type, default: :info
 
-              # String label with env name. Will be displayed below the logo
+              # String label with env name. Will be displayed below the logo. Nothing if nil (or
+              # false)
               setting :label, default: false
 
-              # Additional wide alert notice to highlight extra details. Nothing if false
+              # Additional wide alert notice to highlight extra details. Nothing if nil (or false)
               setting :notice, default: false
 
               configure

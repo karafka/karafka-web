@@ -32,6 +32,7 @@
 - [Enhancement] Collapse the directory prefix shared by the absolute application paths of error and thread backtraces behind an ellipsis, with a toggle to show the full paths.
 - [Enhancement] Link the Origin badge on the Pro Errors list to the Explorer: to the last offset of the failed batch when known, else to the partition, else to the topic.
 - [Change] Move the Pro Dead Letter Queue Topics view from `/dlq` to `/dead_letter_queues`. Old `/dlq` links redirect to the new path. Label its navigation item `DLQ`.
+- [Change] Accept `nil` as not set for `ui.custom.css`, `ui.custom.js`, `ui.custom.nav_erb` and the Pro `ui.branding.label` and `ui.branding.notice` (`false` still works).
 - [Maintenance] Split the Web UI Tailwind stylesheet into per-component files.
 - [Maintenance] Extract the consumer commanding forms into `Lib::Commands` and validate offset and pause values server-side (#1241).
 - [Maintenance] Extract the topic configuration edit flow into `Lib::Configuring` and reject empty values (#1241).

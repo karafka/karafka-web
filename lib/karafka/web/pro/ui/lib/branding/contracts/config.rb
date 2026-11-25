@@ -53,11 +53,11 @@ module Karafka
                     end
 
                     required(:label) do |val|
-                      val == false || (val.is_a?(String) && val.size.positive?)
+                      val.nil? || val == false || (val.is_a?(String) && val.size.positive?)
                     end
 
                     required(:notice) do |val|
-                      val == false || (val.is_a?(String) && val.size.positive?)
+                      val.nil? || val == false || (val.is_a?(String) && val.size.positive?)
                     end
                   end
                 end

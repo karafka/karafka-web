@@ -310,6 +310,12 @@ describe_current do
             it { assert(contract.call(params).success?) }
           end
 
+          context "when set to nil" do
+            before { params[:ui][:custom][key] = nil }
+
+            it { assert(contract.call(params).success?) }
+          end
+
           context "when set to an empty string" do
             before { params[:ui][:custom][key] = "" }
 

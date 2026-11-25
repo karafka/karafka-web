@@ -71,6 +71,17 @@ describe_current do
       end
     end
 
+    context "when label and notice are nil" do
+      let(:label) { nil }
+      let(:notice) { nil }
+
+      it "expect not to have them" do
+        assert_ok
+        refute_body("branding_label")
+        refute_body("branding_notice")
+      end
+    end
+
     context "when there is only info label" do
       let(:notice) { false }
 

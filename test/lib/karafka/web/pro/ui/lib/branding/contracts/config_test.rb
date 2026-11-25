@@ -60,7 +60,9 @@ describe_current do
   context "when label is nil" do
     before { params[:ui][:branding][:label] = nil }
 
-    it { refute(contract.call(params).success?) }
+    it "is valid" do
+      assert(contract.call(params).success?)
+    end
   end
 
   context "when label is false" do
@@ -82,7 +84,9 @@ describe_current do
   context "when notice is nil" do
     before { params[:ui][:branding][:notice] = nil }
 
-    it { refute(contract.call(params).success?) }
+    it "is valid" do
+      assert(contract.call(params).success?)
+    end
   end
 
   context "when notice is false" do

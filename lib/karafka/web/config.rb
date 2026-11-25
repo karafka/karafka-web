@@ -279,14 +279,15 @@ module Karafka
         setting :max_visible_payload_size, default: 524_288
 
         setting :custom do
-          # Path to a custom CSS, string with the CSS or false if not used
+          # Path to a custom CSS, string with the CSS or nil (or false) if not used
           setting :css, default: false
 
-          # Path to a custom JS, string with the JS or false if not used
+          # Path to a custom JS, string with the JS or nil (or false) if not used
           setting :js, default: false
 
           # ERB template (path or string) for injecting extra navigation items below the default
-          # menu. Useful for adding "Back to app" links or other quick access actions.
+          # menu. Useful for adding "Back to app" links or other quick access actions. nil (or
+          # false) if not used.
           setting :nav_erb, default: false
         end
 

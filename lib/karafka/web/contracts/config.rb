@@ -100,9 +100,9 @@ module Karafka
           required(:kafka) { |val| val.is_a?(Hash) }
 
           nested(:custom) do
-            required(:css) { |val| val == false || (val.is_a?(String) && !val.empty?) }
-            required(:js) { |val| val == false || (val.is_a?(String) && !val.empty?) }
-            required(:nav_erb) { |val| val == false || (val.is_a?(String) && !val.empty?) }
+            required(:css) { |val| val.nil? || val == false || (val.is_a?(String) && !val.empty?) }
+            required(:js) { |val| val.nil? || val == false || (val.is_a?(String) && !val.empty?) }
+            required(:nav_erb) { |val| val.nil? || val == false || (val.is_a?(String) && !val.empty?) }
           end
 
           required(:dlq_patterns) do |val|
