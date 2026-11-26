@@ -214,7 +214,7 @@ describe_current do
       end
     end
 
-    context "when the skew minimum is raised via config" do
+    context "when the min skewed lag is raised via config" do
       before { ::Karafka::Web.config.ui.health.lags.min_skewed_lag = 100_000 }
 
       after { ::Karafka::Web.config.ui.health.lags.min_skewed_lag = 1_000 }
