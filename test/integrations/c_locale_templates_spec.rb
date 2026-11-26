@@ -4,7 +4,7 @@
 # locale (`LANG=C`, common in slim Docker images). There Ruby's default external encoding is
 # US-ASCII, and a template with a non-ASCII byte must still render instead of returning 500.
 #
-# Run it with `LANG=C LC_ALL=C`.
+# Env: LANG=C LC_ALL=C
 
 require "bundler/setup"
 require "karafka/web"

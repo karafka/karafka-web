@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+# Runs every integration spec of the current scenario (TEST_SCENARIO), so a new spec needs no
+# entry in docker-compose.yml.
+#
+# Spec header lines:
+#   # Scenarios: limited, strict  - scenarios the spec runs in (default: unlimited)
+#   # Env: LANG=C LC_ALL=C        - environment variables the spec runs with
+
+set -e
+
+cd "$(dirname "${BASH_SOURCE[0]}")/../.."
+
+ran=0
+
+for spec in test/integrations/*_spec.rb; do
+  scenarios="$(sed -n 's/^# Scenarios: //p' "$spec" | tr ',' ' ')"
+
+  [[ " ${scenarios:-unlimited} " == *" ${TEST_SCENARIO} "* ]] || continue
+
+  read -r -a env_vars <<< "$(sed -n 's/^# Env: //p' "$spec")"
+
+  echo "Running $spec..."
+  env "${env_vars[@]}" bundle exec ruby "$spec"
+  ran=$((ran + 1))
+done
+
+if [ "$ran" -eq 0 ]; then
+  echo "No integration specs for scenario: ${TEST_SCENARIO}"
+  exit 1
+fi

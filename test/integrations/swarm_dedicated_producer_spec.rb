@@ -5,6 +5,8 @@
 # this producer can deliver from within the node.
 #
 # Needs Kafka at `KAFKA_BOOTSTRAP_SERVERS` (default: 127.0.0.1:9092).
+#
+# Scenarios: swarm
 
 require "bundler/setup"
 require "json"
