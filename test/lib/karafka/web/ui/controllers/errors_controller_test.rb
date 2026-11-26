@@ -142,6 +142,30 @@ describe_current do
       end
     end
 
+    context "when an error has html in its type and process id" do
+      let(:error_report) do
+        Fixtures.errors_json.merge(
+          type: "<script>alert(1)</script>",
+          details: {},
+          process: { id: "<b>process</b>" }
+        ).to_json
+      end
+
+      before do
+        produce(errors_topic, error_report)
+
+        get "errors"
+      end
+
+      it "expect to render them escaped" do
+        assert_ok
+        assert_body("&lt;script&gt;alert(1)&lt;/script&gt;")
+        assert_body("&lt;b&gt;process&lt;/b&gt;")
+        refute_body("<script>alert(1)</script>")
+        refute_body("<b>process</b>")
+      end
+    end
+
     context "when the errors topic contains a non-deserializable message" do
       before do
         produce(errors_topic, error_report)
@@ -346,6 +370,28 @@ describe_current do
         refute_body(pagination)
         assert_body(breadcrumbs)
         assert_body("app/jobs/visitors_job.rb:9:in")
+      end
+    end
+
+    context "when visiting an error with html in its type and tags" do
+      let(:error_report) do
+        Fixtures.errors_json.merge(
+          type: "<script>alert(1)</script>",
+          details: { tags: ["<b>tag</b>"] }
+        ).to_json
+      end
+
+      before do
+        produce(errors_topic, error_report)
+        get "errors/0"
+      end
+
+      it "expect to render them escaped" do
+        assert_ok
+        assert_body('<span class="badge badge-secondary">&lt;script&gt;alert(1)&lt;/script&gt;</span>')
+        assert_body('<span class="badge badge-info">&lt;b&gt;tag&lt;/b&gt;</span>')
+        refute_body("<script>alert(1)</script>")
+        refute_body("<b>tag</b>")
       end
     end
 
