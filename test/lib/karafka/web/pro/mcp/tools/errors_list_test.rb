@@ -42,6 +42,7 @@ describe_current do
       refute(result[:isError])
       assert_empty(structured[:errors])
       assert_nil(structured[:next_page])
+      refute(structured[:limited])
     end
   end
 
@@ -88,6 +89,51 @@ describe_current do
 
       assert_equal(1, second[:errors].size)
       assert_nil(second[:next_page])
+    end
+  end
+
+  context "when there are more partitions than fit on a page" do
+    let(:per_page) { Karafka::Web.config.ui.per_page }
+    let(:errors_topic) { create_topic(partitions: per_page + 1) }
+    let(:second) { described_class.new({ "page" => 2 }).call.fetch(:structuredContent) }
+
+    before do
+      (per_page + 1).times { |partition| produce(errors_topic, error_report, partition: partition) }
+    end
+
+    it "points to the page with the other partitions" do
+      first_partitions = (0..(per_page / 2)).to_a
+      second_partitions = ((per_page / 2) + 1..per_page).to_a
+
+      assert(structured[:limited])
+      assert_equal(per_page + 1, structured[:partitions_count])
+      assert_equal(first_partitions, structured[:partitions])
+      assert_equal(first_partitions, structured[:errors].map { |error| error[:partition] }.sort)
+      assert_equal(2, structured[:next_page])
+
+      assert_equal(second_partitions, second[:partitions])
+      assert_equal(second_partitions, second[:errors].map { |error| error[:partition] }.sort)
+      assert_nil(second[:next_page])
+    end
+  end
+
+  context "when the first partitions have more errors than the later ones" do
+    let(:per_page) { Karafka::Web.config.ui.per_page }
+    let(:errors_topic) { create_topic(partitions: per_page + 1) }
+
+    before do
+      (per_page + 1).times { |partition| produce(errors_topic, error_report, partition: partition) }
+      produce_many(errors_topic, Array.new(per_page) { error_report }, partition: 0)
+    end
+
+    it "keeps paging after the last partitions run out" do
+      second = described_class.new({ "page" => 2 }).call.fetch(:structuredContent)
+
+      third = described_class.new({ "page" => 3 }).call.fetch(:structuredContent)
+
+      assert_equal(3, second[:next_page])
+      assert_equal([0], third[:errors].map { |error| error[:partition] }.uniq)
+      assert_nil(third[:next_page])
     end
   end
 

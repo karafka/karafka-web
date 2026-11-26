@@ -48,9 +48,19 @@ describe_current do
       assert_equal(:success, checks.dig(:initial_consumers_state, :status))
       assert(checks.dig(:topics, :details, topics_config.errors.name, :present))
 
-      assert_equal(Karafka::VERSION, structured.dig(:components, :karafka))
-      assert_equal(Karafka::Web::VERSION, structured.dig(:components, :karafka_web))
-      assert_equal(WaterDrop::VERSION, structured.dig(:components, :waterdrop))
+      assert_equal(
+        {
+          ruby: Karafka::Web::Tracking::Sampler.new.ruby_version,
+          karafka: Karafka::VERSION,
+          karafka_web: Karafka::Web::VERSION,
+          karafka_core: Karafka::Core::VERSION,
+          rdkafka: Rdkafka::VERSION,
+          librdkafka: Rdkafka::LIBRDKAFKA_VERSION,
+          waterdrop: WaterDrop::VERSION
+        },
+        structured[:components]
+      )
+      assert_includes(structured.dig(:components, :ruby), RUBY_ENGINE)
 
       assert_equal(JSON.parse(structured.to_json), JSON.parse(result.dig(:content, 0, :text)))
     end
@@ -71,6 +81,21 @@ describe_current do
       refute(checks.dig(:topics, :details, topics_config.errors.name, :present))
       assert_equal(:halted, checks.dig(:partitions, :status))
       assert_equal(:halted, checks.dig(:initial_consumers_state, :status))
+    end
+  end
+
+  context "when cluster info was cached before the errors topic was created" do
+    let(:errors_topic) { generate_topic_name }
+
+    before do
+      topics_config.errors.name = errors_topic
+      Karafka::Web::Ui::Models::Cluster::Info.fetch
+      create_topic(topic_name: errors_topic)
+    end
+
+    it "reads the current topics" do
+      assert_equal(:success, checks.dig(:topics, :status))
+      assert(checks.dig(:topics, :details, errors_topic, :present))
     end
   end
 
