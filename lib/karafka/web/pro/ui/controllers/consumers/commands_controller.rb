@@ -41,7 +41,7 @@ module Karafka
                 features.commanding!
 
                 @schema_version = Commanding::Dispatcher::SCHEMA_VERSION
-                @watermark_offsets = Models::WatermarkOffsets.find(commands_topic, 0)
+                @watermark_offsets = Web::Ui::Models::Cluster::WatermarkOffsets.find(commands_topic, 0)
 
                 previous_offset, @command_messages, next_offset = current_partition_data
 

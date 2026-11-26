@@ -21,7 +21,10 @@ class LinksValidator
     # Fixture-based topic name (errors/consumers reports) that does not exist in the test
     # cluster, so the bare topic link (no partition/offset segment) always 404s
     "/explorer/topics/default",
-    %r{/consumers/[a-f0-9-]+/subscriptions}
+    %r{/consumers/[a-f0-9-]+/subscriptions},
+    # Consumer groups from the reports fixtures and the routing that never committed offsets, so
+    # the cluster does not have them and their cluster consumer group pages 404
+    %r{\A/health/consumer_groups/(example_app6_[a-z_]+|karafka_web)/}
   ].freeze
 
   # Controllers on which we do not want to run checks or want to run only some checks.
@@ -33,7 +36,7 @@ class LinksValidator
     "StatusController" => [/.*/],
     # Also deals with invalid state that affects dashboard
     "RoutingController" => [%r{/dashboard}, %r{/jobs}, %r{/health}],
-    # The distribution/replication specs stub `ClusterInfo.fetch` with fabricated multi-broker
+    # The distribution/replication specs stub `Cluster::Info.fetch` with fabricated multi-broker
     # metadata; crawling `/topics` renders it against that stubbed state plus real Kafka calls on
     # a fresh cluster, which intermittently 500s. `/topics` is validated by its own controller
     # specs, so we skip it (and `/explorer`) when crawling from the cluster views.

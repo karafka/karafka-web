@@ -53,6 +53,12 @@
         Subscriptions
       </a>
     </li>
+  <% elsif current_path.include?('/memberships') %>
+    <li>
+      <a href="<%= consumer_path(@process.id, 'memberships') %>">
+        Memberships
+      </a>
+    </li>
   <% else %>
     <li>
       <a href="<%= consumer_path(@process.id, 'details') %>">

@@ -23,7 +23,9 @@
 <%== partial 'health/topic_tabs' %>
 
 <div class="col-span-12">
-  <h2 class="h2"><%= @consumer_group_id %></h2>
+  <h2 class="h2">
+    <a href="<%= health_consumer_group_path(@consumer_group_id) %>"><%= @consumer_group_id %></a>
+  </h2>
 
   <div class="data-table-wrapper">
     <%==
@@ -36,13 +38,4 @@
       )
     %>
   </div>
-</div>
-
-<div class="col-span-12 flex justify-end space-x-2 mt-6">
-  <%==
-    partial(
-      'health/offsets/delete_button',
-      locals: { consumer_group_id: @consumer_group_id, topic_name: @topic_name, labeled: true }
-    )
-  %>
 </div>

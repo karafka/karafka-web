@@ -63,22 +63,6 @@ module Karafka
 
           # @param details [::Karafka::Web::Ui::Models::Partition] partition information with
           #   lso risk state info
-          # @return [String] background classes for row marking
-          def lso_risk_state_bg(details)
-            case details.lso_risk_state
-            when :active
-              ""
-            when :at_risk
-              "bg-warning bg-opacity-25"
-            when :stopped
-              "bg-error bg-opacity-25"
-            else
-              raise ::Karafka::Errors::UnsupportedCaseError
-            end
-          end
-
-          # @param details [::Karafka::Web::Ui::Models::Partition] partition information with
-          #   lso risk state info
           # @return [String] the full daisyUI badge color class for the state. Callers should use
           #   this alone (e.g. `class="badge #{lso_risk_state_badge(details)}"`) rather than adding
           #   their own `badge-success`, otherwise `at_risk`/`stopped` end up with two colliding
@@ -108,32 +92,19 @@ module Karafka
             end
           end
 
-          # @param topic_name [String] name of the topic for explorer path
-          # @param partition_id [Integer] partition for the explorer path
+          # @param _topic_name [String] name of the topic (Pro links the offset to the Explorer)
+          # @param _partition_id [Integer] partition (Pro links the offset to the Explorer)
           # @param offset [Integer] offset
-          # @param explore [Boolean] should we generate (when allowed) a link to message explorer
           # @return [String] offset if correct or `N/A` with labeled explanation for offsets
           #   that are less than 0. Offset with less than 0 indicates, that the offset was not
           #   yet committed and there is no value we know of
-          def offset_with_label(topic_name, partition_id, offset, explore: false)
+          def offset_with_label(_topic_name, _partition_id, offset)
             if offset.negative?
               title = "Not available until first offset commit"
               %(<span class="badge badge-secondary" title="#{title}">N/A</span>)
-            elsif explore
-              path = explorer_topics_path(topic_name, partition_id, offset)
-              %(<a href="#{path}">#{offset}</a>)
             else
               offset.to_s
             end
-          end
-
-          # Normalizes the metric value for display. Negative values coming from statistics usually
-          #   mean, that the value is not (yet) available.
-          #
-          # @param value [Integer]
-          # @return [String] input value if not negative or N/A
-          def normalized_metric(value)
-            value.negative? ? "N/A" : value.to_s
           end
 
           private

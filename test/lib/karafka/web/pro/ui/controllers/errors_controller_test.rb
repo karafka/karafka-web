@@ -92,7 +92,7 @@ describe_current do
       it "expect the origin badge to link to the last offset message in the Explorer" do
         assert_ok
         assert_body('<a href="/explorer/topics/default/0/3788359">')
-        assert_body("default-0")
+        assert_body("default-[0]")
       end
     end
 
@@ -113,7 +113,7 @@ describe_current do
       it "expect the origin badge to link to the partition in the Explorer" do
         assert_ok
         assert_body('<a href="/explorer/topics/default/2">')
-        assert_body("default-2")
+        assert_body("default-[2]")
       end
     end
 
@@ -190,6 +190,42 @@ describe_current do
         assert_ok
         assert_match(%r{<td>\s*<span class="badge badge-secondary">\s*web\.ui\.error}, body)
         refute_match(%r{<a [^>]*>\s*<span class="badge badge-secondary">\s*web\.ui\.error}, body)
+      end
+    end
+
+    context "when an error message has 200 characters" do
+      let(:error_message) { "<b>#{"x" * 193}</b>" }
+      let(:error_report) { Fixtures.errors_json.merge(error_message: error_message).to_json }
+
+      before do
+        produce(errors_topic, error_report, partition: 0)
+
+        get "errors"
+      end
+
+      it "expect to show the full escaped message with no ellipsis" do
+        assert_ok
+        assert_body("&lt;b&gt;#{"x" * 193}&lt;/b&gt;")
+        refute_body("<b>#{"x" * 193}</b>")
+        refute_body("…")
+        refute_body('<span title="&lt;b&gt;')
+      end
+    end
+
+    context "when an error message is longer than 200 characters" do
+      let(:error_message) { "#{"x" * 200}<b>tail</b>" }
+      let(:error_report) { Fixtures.errors_json.merge(error_message: error_message).to_json }
+
+      before do
+        produce(errors_topic, error_report, partition: 0)
+
+        get "errors"
+      end
+
+      it "expect to cut it with an ellipsis and show the full escaped message in the title" do
+        assert_ok
+        assert_body(%(<span title="#{"x" * 200}&lt;b&gt;tail&lt;/b&gt;">#{"x" * 199}…</span>))
+        refute_body("<b>tail</b>")
       end
     end
 

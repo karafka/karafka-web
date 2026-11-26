@@ -7224,6 +7224,11 @@
     }
     &.active {
       color: var(--color-base-content);
+      &:hover {
+        @media (hover: hover) {
+          color: var(--color-gray-700);
+        }
+      }
     }
   }
   .alert-box-content {

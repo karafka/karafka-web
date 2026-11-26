@@ -68,7 +68,7 @@ describe_current do
 
     context "when cluster_info has topic data" do
       let(:cluster_info) do
-        # cluster_info from ClusterInfo.fetch is an Rdkafka::Metadata object
+        # cluster_info from Cluster::Info.fetch is an Rdkafka::Metadata object
         # that responds to #topics returning an array of hashes
         Struct.new(:topics).new(
           [

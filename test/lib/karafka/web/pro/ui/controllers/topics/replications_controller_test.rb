@@ -180,7 +180,7 @@ describe_current do
       end
 
       let(:topic_model) do
-        Karafka::Web::Ui::Models::Topic.new(
+        Karafka::Web::Pro::Ui::Models::Cluster::Topic.new(
           topic_name: topic,
           partition_count: 2,
           partitions: partitions_data
@@ -197,8 +197,8 @@ describe_current do
       before do
         topic_model.stubs(:configs).returns([mock_config])
         topic_model.stubs(:distribution).returns(distribution_result)
-        stub_and_passthrough(Karafka::Web::Ui::Models::Topic, :find)
-        Karafka::Web::Ui::Models::Topic.stubs(:find).with(topic).returns(topic_model)
+        stub_and_passthrough(Karafka::Web::Pro::Ui::Models::Cluster::Topic, :find)
+        Karafka::Web::Pro::Ui::Models::Cluster::Topic.stubs(:find).with(topic).returns(topic_model)
         errors_topic = Karafka::Web.config.topics.errors.name
         Karafka::Admin.stubs(:read_watermark_offsets).returns([0, 0])
         Karafka::Admin.stubs(:read_watermark_offsets).with(errors_topic => [0]).returns({ errors_topic => { 0 => [0, 0] } })
@@ -248,7 +248,7 @@ describe_current do
       end
 
       let(:topic_model) do
-        Karafka::Web::Ui::Models::Topic.new(
+        Karafka::Web::Pro::Ui::Models::Cluster::Topic.new(
           topic_name: topic,
           partition_count: 2,
           partitions: partitions_data
@@ -265,8 +265,8 @@ describe_current do
       before do
         topic_model.stubs(:configs).returns([mock_config])
         topic_model.stubs(:distribution).returns(distribution_result)
-        stub_and_passthrough(Karafka::Web::Ui::Models::Topic, :find)
-        Karafka::Web::Ui::Models::Topic.stubs(:find).with(topic).returns(topic_model)
+        stub_and_passthrough(Karafka::Web::Pro::Ui::Models::Cluster::Topic, :find)
+        Karafka::Web::Pro::Ui::Models::Cluster::Topic.stubs(:find).with(topic).returns(topic_model)
         errors_topic = Karafka::Web.config.topics.errors.name
         Karafka::Admin.stubs(:read_watermark_offsets).returns([0, 0])
         Karafka::Admin.stubs(:read_watermark_offsets).with(errors_topic => [0]).returns({ errors_topic => { 0 => [0, 0] } })
@@ -315,7 +315,7 @@ describe_current do
       end
 
       let(:topic_model) do
-        Karafka::Web::Ui::Models::Topic.new(
+        Karafka::Web::Pro::Ui::Models::Cluster::Topic.new(
           topic_name: topic,
           partition_count: 2,
           partitions: partitions_data
@@ -332,8 +332,8 @@ describe_current do
       before do
         topic_model.stubs(:configs).returns([mock_config])
         topic_model.stubs(:distribution).returns(distribution_result)
-        stub_and_passthrough(Karafka::Web::Ui::Models::Topic, :find)
-        Karafka::Web::Ui::Models::Topic.stubs(:find).with(topic).returns(topic_model)
+        stub_and_passthrough(Karafka::Web::Pro::Ui::Models::Cluster::Topic, :find)
+        Karafka::Web::Pro::Ui::Models::Cluster::Topic.stubs(:find).with(topic).returns(topic_model)
         errors_topic = Karafka::Web.config.topics.errors.name
         Karafka::Admin.stubs(:read_watermark_offsets).returns([0, 0])
         Karafka::Admin.stubs(:read_watermark_offsets).with(errors_topic => [0]).returns({ errors_topic => { 0 => [0, 0] } })

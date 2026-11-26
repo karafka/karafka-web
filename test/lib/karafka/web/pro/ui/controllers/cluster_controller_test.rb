@@ -32,12 +32,12 @@ describe_current do
   let(:app) { Karafka::Web::Pro::Ui::App }
 
   # Stubs the cluster metadata so distribution edge cases (broker counts, imbalance) can be driven
-  # deterministically. `brokers` are hashes wrapped by Models::Broker, `topics` mirror the metadata
+  # deterministically. `brokers` are hashes wrapped by Models::Cluster::Broker, `topics` mirror the metadata
   # shape (`:partitions` with `:leader`/`:replicas`/`:isrs`).
   let(:stub_cluster) do
     lambda do |brokers:, topics:|
       double = Struct.new(:brokers, :topics).new(brokers, topics)
-      Karafka::Web::Ui::Models::ClusterInfo.stubs(:fetch).returns(double)
+      Karafka::Web::Ui::Models::Cluster::Info.stubs(:fetch).returns(double)
     end
   end
 
@@ -257,7 +257,7 @@ describe_current do
       end
 
       before do
-        Karafka::Web::Ui::Models::ClusterInfo
+        Karafka::Web::Ui::Models::Cluster::Info
           .stubs(:fetch)
           .returns(stub(topics: fake_topics, brokers: fake_brokers))
       end
@@ -293,7 +293,7 @@ describe_current do
       end
 
       before do
-        Karafka::Web::Ui::Models::ClusterInfo
+        Karafka::Web::Ui::Models::Cluster::Info
           .stubs(:fetch)
           .returns(stub(topics: fake_topics, brokers: fake_brokers))
       end
