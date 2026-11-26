@@ -85,8 +85,6 @@ describe_current do
         Karafka::Admin.seek_consumer_group(lagging_group, inactive_topic => { 0 => 5 })
       end
 
-      after { visibility.active_topics_cluster_lags_only = true }
-
       it "hides that topic as the Web UI does by default" do
         topics = structured.dig(:consumer_groups, lagging_group, :topics)
 
@@ -95,7 +93,7 @@ describe_current do
       end
 
       it "shows that topic when the Web UI shows inactive topics lags" do
-        visibility.active_topics_cluster_lags_only = false
+        visibility.stubs(:active_topics_cluster_lags_only).returns(false)
 
         row = structured.dig(:consumer_groups, lagging_group, :topics, inactive_topic)
 

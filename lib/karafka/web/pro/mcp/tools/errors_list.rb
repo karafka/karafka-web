@@ -67,22 +67,22 @@ module Karafka
             # @return [Hash] errors page
             def fetch
               page = @arguments.fetch(:page, 1)
-              partitions_count = Ui::Models::Cluster::Topic.partitions_count(errors_topic)
+              partition_count = Ui::Models::Cluster::Topic.partitions_count(errors_topic)
 
               active_partitions, materialized_page, limited = PARTITIONS_PAGINATOR.call(
-                partitions_count, page
+                partition_count, page
               )
 
               messages, next_page = Ui::Models::Message.topic_page(
                 errors_topic, active_partitions, materialized_page
               )
 
-              next_page ||= limited && later_slices?(partitions_count, active_partitions, materialized_page)
+              next_page ||= limited && later_slices?(partition_count, page, active_partitions)
 
               {
                 page: page,
                 next_page: next_page ? page + 1 : nil,
-                partitions_count: partitions_count,
+                partition_count: partition_count,
                 partitions: active_partitions,
                 limited: limited,
                 untrusted_fields: %w[error_message],
@@ -91,35 +91,32 @@ module Karafka
               }
             end
 
-            # Pages cycle through the partition slices, so later pages also read the other slices.
-            # A slice has data on a materialized page when it has more messages than all the
-            # earlier materialized pages hold.
+            # Pages cycle through the partition slices, so the pages after the current one, up to
+            # the next page of the current slice, read each of the other slices once. A slice has
+            # data on its page when it has more messages than its earlier materialized pages hold.
             #
-            # @param partitions_count [Integer] number of the errors topic partitions
+            # @param partition_count [Integer] number of the errors topic partitions
+            # @param page [Integer] current page
             # @param active_partitions [Array<Integer>] partitions of the current page slice
-            # @param materialized_page [Integer] materialized page of the current page
             # @return [Boolean] true if any other slice has data on a later page
-            def later_slices?(partitions_count, active_partitions, materialized_page)
-              slices_count = (partitions_count / PARTITIONS_PAGINATOR.per_page.to_f).ceil
-              in_slice = (partitions_count / slices_count.to_f).ceil
-              current_slice = active_partitions.first / in_slice
-              other_partitions = (0...partitions_count).to_a - active_partitions
+            def later_slices?(partition_count, page, active_partitions)
+              later_slices = (page + 1..)
+                .lazy
+                .map { |later_page| PARTITIONS_PAGINATOR.call(partition_count, later_page) }
+                .take_while { |partitions, _, _| partitions != active_partitions }
+                .to_a
 
               offsets = Web::Ui::Lib::Admin
-                .read_watermark_offsets(errors_topic => other_partitions)
+                .read_watermark_offsets(errors_topic => later_slices.flat_map(&:first))
                 .fetch(errors_topic)
 
-              (0...partitions_count).each_slice(in_slice).with_index.any? do |partitions, index|
-                next false if index == current_slice
-
-                slice_page = (index > current_slice) ? materialized_page : materialized_page + 1
-
+              later_slices.any? do |partitions, materialized_page, _|
                 count = partitions.sum do |partition|
                   low, high = offsets.fetch(partition)
                   high - low
                 end
 
-                count > PARTITIONS_PAGINATOR.per_page * (slice_page - 1)
+                count > PARTITIONS_PAGINATOR.per_page * (materialized_page - 1)
               end
             end
 

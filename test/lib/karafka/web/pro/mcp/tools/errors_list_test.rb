@@ -106,7 +106,7 @@ describe_current do
       second_partitions = ((per_page / 2) + 1..per_page).to_a
 
       assert(structured[:limited])
-      assert_equal(per_page + 1, structured[:partitions_count])
+      assert_equal(per_page + 1, structured[:partition_count])
       assert_equal(first_partitions, structured[:partitions])
       assert_equal(first_partitions, structured[:errors].map { |error| error[:partition] }.sort)
       assert_equal(2, structured[:next_page])
