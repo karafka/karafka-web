@@ -70,6 +70,19 @@ describe_current do
     it { assert_equal(code(:invalid_request), rpc_error["code"]) }
   end
 
+  context "when request id is neither a string nor a number" do
+    %w[true [] {} 1.5].each do |id|
+      context "when it is #{id}" do
+        let(:request) { { jsonrpc: "2.0", id: JSON.parse(id), method: "ping" } }
+
+        it do
+          assert_equal(code(:invalid_request), rpc_error["code"])
+          assert_nil(payload["id"])
+        end
+      end
+    end
+  end
+
   context "when method is not a string" do
     let(:request) { { jsonrpc: "2.0", id: 1, method: 1 } }
 
@@ -103,6 +116,16 @@ describe_current do
     it do
       assert_equal(code(:invalid_params), rpc_error["code"])
       assert_equal(7, payload["id"])
+    end
+  end
+
+  context "when params are false or null" do
+    [false, nil].each do |value|
+      context "when they are #{value.inspect}" do
+        let(:request) { { jsonrpc: "2.0", id: 7, method: "ping", params: value } }
+
+        it { assert_equal(code(:invalid_params), rpc_error["code"]) }
+      end
     end
   end
 
@@ -187,6 +210,22 @@ describe_current do
       let(:arguments) { [] }
 
       it { assert_equal(code(:invalid_params), rpc_error["code"]) }
+    end
+
+    context "when arguments are false or null" do
+      [false, nil].each do |value|
+        context "when they are #{value.inspect}" do
+          let(:arguments) { value }
+
+          it { assert_equal(code(:invalid_params), rpc_error["code"]) }
+        end
+      end
+    end
+
+    context "when arguments are omitted" do
+      let(:params) { { name: tool_name } }
+
+      it { refute(result["isError"]) }
     end
 
     context "when arguments do not pass the tool contract" do

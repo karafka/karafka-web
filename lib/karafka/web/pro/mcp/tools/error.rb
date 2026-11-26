@@ -128,17 +128,22 @@ module Karafka
               raise Errors::Mcp::NoDataError, "No message under offset #{offset} of partition #{partition}: #{range}"
             end
 
-            # @param details [Hash] error details
-            # @return [Hash] details with credentials masked, the same way as in the Web UI
+            # @param details [Object] error details or a value nested in them
+            # @return [Object] details with credentials masked, the same way as in the Web UI
             def mask(details)
-              details.to_h do |key, value|
-                if SECRET_SCOPES.any? { |scope| key.to_s.include?(scope) }
-                  [key, "***"]
-                elsif value.is_a?(Hash)
-                  [key, mask(value)]
-                else
-                  [key, value]
+              case details
+              when Hash
+                details.to_h do |key, value|
+                  if SECRET_SCOPES.any? { |scope| key.to_s.include?(scope) }
+                    [key, "***"]
+                  else
+                    [key, mask(value)]
+                  end
                 end
+              when Array
+                details.map { |value| mask(value) }
+              else
+                details
               end
             end
           end
