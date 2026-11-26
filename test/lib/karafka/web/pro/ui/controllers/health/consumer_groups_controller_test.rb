@@ -638,6 +638,17 @@ describe_current do
         assert_body("other-app")
         assert_equal(1, response.body.scan("Not a Karafka process reporting to the Web UI").size)
       end
+
+      context "when the process id is longer than the shown part" do
+        let(:process_id) { "#{"a" * 60}:1:1" }
+        let(:report) { Fixtures.consumers_reports_json.tap { |r| r[:process][:id] = process_id } }
+
+        it "expect to show it shortened with the full id in the title" do
+          assert_ok
+          assert_body(%(<span title="#{process_id}">#{"a" * 23}...#{"a" * 19}:1:1</span>))
+          refute_body("&lt;span")
+        end
+      end
     end
 
     context "when there is no consumers state" do
