@@ -70,6 +70,59 @@ module Karafka
               "#{root_path("health", "topics")}?filter[field]=consumer_group&filter[value]=#{value}"
             end
 
+            # @param group_id [String] consumer group id
+            # @param page [String] page of the consumer group (`overview`, `members` or `offsets`)
+            # @return [String] path to the cluster consumer group page. Kafka group ids may hold
+            #   any character, so the id is encoded as a single path segment.
+            def health_consumer_group_path(group_id, page = "overview")
+              root_path("health", "consumer_groups", URI.encode_uri_component(group_id), page)
+            end
+
+            # @param group_id [String] consumer group id
+            # @param topic_name [String] name of the topic
+            # @return [String] path to the deletion of the consumer group offsets for the topic
+            def health_consumer_group_offsets_deletion_path(group_id, topic_name)
+              root_path(
+                "health",
+                "consumer_groups",
+                URI.encode_uri_component(group_id),
+                "topics",
+                topic_name,
+                "delete"
+              )
+            end
+
+            # @param group_id [String] consumer group id
+            # @param topic_name [String] name of the topic
+            # @return [String] path to the consumer group committed offsets filtered to the topic
+            def health_consumer_group_topic_offsets_path(group_id, topic_name)
+              value = Rack::Utils.escape(topic_name)
+
+              "#{health_consumer_group_path(group_id, "offsets")}" \
+                "?filter[field]=topic_name&filter[value]=#{value}"
+            end
+
+            # @param group_id [String] consumer group id
+            # @param member_id [String] member id of the consumer group
+            # @return [String] path to the consumer group members filtered to the given member
+            def health_consumer_group_member_path(group_id, member_id)
+              value = Rack::Utils.escape(member_id)
+
+              "#{health_consumer_group_path(group_id, "members")}" \
+                "?filter[field]=member_id&filter[value]=#{value}"
+            end
+
+            # @param type [Symbol, nil] consumer group type (rebalance protocol) reported by Kafka
+            # @return [String] human readable rebalance protocol of the consumer group
+            def consumer_group_protocol_label(type)
+              case type
+              when :consumer then "consumer"
+              when :classic then "classic"
+              else
+                "unknown"
+              end
+            end
+
             # @return [String] path to the aggregated topics list sorted by total lag, worst first
             def health_topics_by_lag_path
               "#{root_path("health", "topics")}?sort=lag_hybrid+desc"

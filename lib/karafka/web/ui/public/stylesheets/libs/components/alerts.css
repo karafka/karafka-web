@@ -1,0 +1,180 @@
+/* Alerts and alert boxes */
+
+@utility alert {
+  @apply rounded-sm;
+
+  & span {
+    overflow-wrap: anywhere;
+    min-width: 0;
+  }
+}
+
+@utility alert-primary {
+  @apply bg-primary border-primary;
+  @apply text-base-100;
+}
+
+@utility alert-secondary {
+  @apply bg-secondary border-secondary;
+  @apply text-base-100;
+}
+
+@utility alert-box {
+  @apply border rounded-sm;
+}
+
+@utility alert-box-header {
+  @apply p-4 flex items-center justify-between;
+
+  & span {
+    @apply ml-4;
+  }
+
+  & div {
+    @apply flex items-center;
+  }
+
+  .alert-box-warning & {
+    @apply bg-warning;
+  }
+
+  [data-theme='dark'] .alert-box-warning & {
+    @apply text-base-100;
+  }
+
+  .alert-box-success & {
+    @apply bg-success;
+  }
+
+  .alert-box-info & {
+    @apply bg-info;
+  }
+
+  .alert-box-error & {
+    @apply bg-error;
+  }
+
+  .alert-box-primary & {
+    @apply bg-primary;
+  }
+
+  .alert-box-secondary & {
+    @apply bg-secondary;
+  }
+
+  .alert-box-info & {
+    @apply text-base-100;
+  }
+
+  .alert-box-primary & {
+    @apply text-base-100;
+  }
+
+  .alert-box-error & {
+    @apply text-base-100;
+  }
+
+  .alert-box-success & {
+    @apply text-base-100;
+  }
+
+  .alert-box-secondary & {
+    @apply text-base-100;
+  }
+}
+
+@utility alert-box-content {
+  @apply p-4 rounded-b-lg bg-base-100;
+
+  & a:not(.btn) {
+    @apply link link-primary;
+  }
+}
+
+@utility alert-box-warning {
+  @apply border-warning;
+
+  & .alert-box-header {
+    @apply bg-warning;
+  }
+
+  [data-theme='dark'] & .alert-box-header {
+    @apply text-base-100;
+  }
+}
+
+@utility alert-box-success {
+  @apply border-success;
+
+  & .alert-box-header {
+    @apply bg-success;
+  }
+
+  & .alert-box-header {
+    @apply text-base-100;
+  }
+}
+
+@utility alert-box-info {
+  @apply border-info;
+
+  & .alert-box-header {
+    @apply bg-info;
+  }
+
+  & .alert-box-header {
+    @apply text-base-100;
+  }
+}
+
+@utility alert-box-error {
+  @apply border-error;
+
+  & .alert-box-header {
+    @apply bg-error;
+  }
+
+  & .alert-box-header {
+    @apply text-base-100;
+  }
+}
+
+@utility alert-box-primary {
+  @apply border-primary;
+
+  & .alert-box-header {
+    @apply bg-primary;
+  }
+
+  & .alert-box-header {
+    @apply text-base-100;
+  }
+}
+
+@utility alert-box-secondary {
+  @apply border-secondary;
+
+  & .alert-box-header {
+    @apply bg-secondary;
+  }
+
+  & .alert-box-header {
+    @apply text-base-100;
+  }
+}
+
+@utility alert-info {
+  @apply text-base-100;
+}
+
+@utility alert-error {
+  @apply text-base-100;
+}
+
+@utility alert-success {
+  @apply text-base-100;
+}
+
+.close-alert {
+  @apply cursor-pointer
+}

@@ -39,6 +39,7 @@ module Karafka
               self.sortable_attributes = %w[
                 name
                 value
+                source
                 default?
                 sensitive?
                 read_only?
@@ -55,7 +56,7 @@ module Karafka
               def index(topic_name)
                 ensure_visible!(topic_name)
 
-                @topic = Models::Topic.find(topic_name)
+                @topic = Models::Cluster::Topic.find(topic_name)
 
                 @configs = filter(sort(@topic.configs))
 

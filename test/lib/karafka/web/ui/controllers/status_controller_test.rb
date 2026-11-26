@@ -192,7 +192,7 @@ describe_current do
 
     context "when connection to Kafka fails" do
       before do
-        Karafka::Web::Ui::Models::ClusterInfo.stubs(:fetch).raises(Rdkafka::RdkafkaError.new(0))
+        Karafka::Web::Ui::Models::Cluster::Info.stubs(:fetch).raises(Rdkafka::RdkafkaError.new(0))
 
         get "status"
       end

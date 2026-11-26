@@ -115,7 +115,7 @@ module Karafka
                   @partition_id = partition_id
                   @offset = offset
 
-                  @low, @high = Admin.read_watermark_offsets(topic_id, partition_id)
+                  @low, @high = Web::Ui::Lib::Admin.read_watermark_offsets(topic_id, partition_id)
 
                   # Kafka rejects deleting above the high watermark
                   not_found!(offset) if offset > @high

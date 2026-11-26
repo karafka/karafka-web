@@ -109,4 +109,20 @@ describe_current do
       end
     end
   end
+
+  describe "routes with a topic name that is not a valid Kafka topic name" do
+    before do
+      Karafka::Admin.expects(:topic_info).never
+      Karafka::Admin.expects(:read_watermark_offsets).never
+      Karafka::Admin.expects(:read_topic).never
+    end
+
+    ["a" * 513, "a" * 250, "a%20b"].each do |invalid|
+      context "when getting topics/an invalid topic/offsets" do
+        before { get "topics/#{invalid}/offsets" }
+
+        it { assert_equal(404, response.status) }
+      end
+    end
+  end
 end

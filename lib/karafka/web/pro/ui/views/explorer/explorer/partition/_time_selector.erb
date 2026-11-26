@@ -18,16 +18,32 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
+<% disabled_reason ||= nil %>
+
 <div class="datepicker-input-wrapper">
-  <input
-    type="image"
-    src="<%= asset_path('images/calendar.svg') %>"
-    width="45"
-    height="32"
-    class="btn-action p-1 opacity-60"
-    id="offset-lookup-datepicker"
-    value=""
-    title="Select a point in time to browse the topic partition data"
-    data-target="<%= target %>"
-  >
+  <% if disabled_reason %>
+    <span class="inline-flex" title="<%= disabled_reason %>">
+      <input
+        type="image"
+        src="<%= asset_path('images/calendar.svg') %>"
+        width="45"
+        height="32"
+        class="btn-action p-1 disabled"
+        alt="Select a point in time"
+        disabled
+      >
+    </span>
+  <% else %>
+    <input
+      type="image"
+      src="<%= asset_path('images/calendar.svg') %>"
+      width="45"
+      height="32"
+      class="btn-action p-1 opacity-60"
+      id="offset-lookup-datepicker"
+      value=""
+      title="Select a point in time to browse the topic partition data"
+      data-target="<%= target %>"
+    >
+  <% end %>
 </div>
