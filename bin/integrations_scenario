@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Runs every integration spec of the current scenario (TEST_SCENARIO), so a new spec needs no
-# entry in docker-compose.yml.
+# Runs every test/integrations/*_spec.rb of the current scenario (TEST_SCENARIO), so a new spec
+# needs no entry in test/integrations/docker-compose.yml.
 #
 # Spec header lines:
 #   # Scenarios: limited, strict  - scenarios the spec runs in (default: unlimited)
@@ -18,7 +18,7 @@ if [[ " ${known_scenarios[*]} " != *" ${TEST_SCENARIO} "* ]]; then
   exit 1
 fi
 
-cd "$(dirname "${BASH_SOURCE[0]}")/../.."
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 ran=0
 
