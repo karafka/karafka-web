@@ -30,7 +30,6 @@
 
 describe_current do
   let(:app) { Karafka::Web::Pro::Ui::App }
-  let(:delete_offsets_denied) { "Deleting these offsets is not allowed by the Web UI policies" }
 
   let(:reports_topic) { create_topic }
 
@@ -155,7 +154,7 @@ describe_current do
 
         it "expect the max lag to name no hot partition" do
           assert_ok
-          refute_body("(p0)")
+          refute_body("Highest lag is on partition")
           refute_body("default/overview?sort=")
         end
       end
@@ -492,7 +491,8 @@ describe_current do
 
       it "expect the max lag to name the hot partition and link to partitions sorted by lag" do
         assert_ok
-        assert_body("(p2)")
+        assert_body('title="Highest lag is on partition 2"')
+        assert_match(%r{\[2\]\s*</a>}, body)
         assert_body("health/topics/example_app6_app/default/overview?sort=lag_hybrid+desc")
       end
     end
@@ -558,10 +558,6 @@ describe_current do
         assert_body("9100")
         # Biggest single-partition lag is surfaced
         assert_body("9000")
-        assert_body('<th class="options">Options</th>')
-        assert_body('class="btn btn-error btn-sm btn-disabled"')
-        refute_body("health/topics/example_app6_app/orders/delete")
-        assert_body(%(title="#{delete_offsets_denied}"))
       end
 
       context "when deleting offsets is allowed" do
@@ -571,13 +567,10 @@ describe_current do
           get "health/cluster_lags"
         end
 
-        it "expect to link each topic to the offsets deletion" do
+        it "expect the deletion to be on the consumer group topics page, not here" do
           assert_ok
-          assert_body("health/topics/example_app6_app/orders/delete")
-          assert_body("health/topics/example_app6_app/visits/delete")
-          refute_body(delete_offsets_denied)
-          assert_body('title="Delete the committed offsets of this consumer group for this topic"')
-          refute_body("btn-error btn-sm btn-disabled")
+          refute_body('<th class="options">Options</th>')
+          refute_body("/delete")
         end
       end
 
@@ -586,9 +579,15 @@ describe_current do
         assert_body("health/topics/example_app6_app/orders/cluster_lags")
       end
 
+      it "expect each consumer group to link to its cluster consumer group page" do
+        assert_ok
+        assert_body("health/consumer_groups/example_app6_app")
+      end
+
       it "expect the max lag to name the hot partition and link to partitions sorted by lag" do
         assert_ok
-        assert_body("(p1)")
+        assert_body('title="Highest lag is on partition 1"')
+        assert_match(%r{\[1\]\s*</a>}, body)
         assert_body("health/topics/example_app6_app/orders/cluster_lags?sort=lag+desc")
       end
 
@@ -648,7 +647,7 @@ describe_current do
 
       it "expect the max lag to name no hot partition" do
         assert_ok
-        refute_body("(p0)")
+        refute_body("Highest lag is on partition")
         refute_body("orders/cluster_lags?sort=")
       end
     end

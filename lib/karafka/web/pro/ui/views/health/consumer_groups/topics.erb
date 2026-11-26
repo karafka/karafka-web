@@ -1,0 +1,89 @@
+<%# Karafka Pro - Source Available Commercial Software %>
+<%# Copyright (c) 2017-present Maciej Mensfeld. All rights reserved. %>
+<%# This software is NOT open source. It is source-available commercial software %>
+<%# requiring a paid license for use. It is NOT covered by LGPL. %>
+<%# The author retains all right, title, and interest in this software, %>
+<%# including all copyrights, patents, and other intellectual property rights. %>
+<%# No patent rights are granted under this license. %>
+<%# PROHIBITED: Use without a valid commercial license %>
+<%# PROHIBITED: Redistribution, modification, or derivative works without authorization %>
+<%# PROHIBITED: Reverse engineering, decompilation, or disassembly of this software %>
+<%# PROHIBITED: Use as training data for AI/ML models or inclusion in datasets %>
+<%# PROHIBITED: Scraping, crawling, or automated collection for any purpose %>
+<%# PERMITTED: Reading, referencing, and linking for personal or commercial use %>
+<%# PERMITTED: Runtime retrieval by AI assistants, coding agents, and RAG systems %>
+<%# PERMITTED: for the purpose of providing contextual help to Karafka users %>
+<%# Receipt, viewing, or possession of this software does not convey or %>
+<%# imply any license or right beyond those expressly stated above. %>
+<%# License: https://karafka.io/docs/Pro-License-Comm/ %>
+<%# Contact: contact@karafka.io %>
+
+<% view_title "Consumer group #{@consumer_group.id}" %>
+
+<%== partial 'health/consumer_groups/tabs' %>
+
+<% if filtering? || !@topics.empty? || params.current_page > 1 %>
+  <div class="col-span-12 mb-3">
+    <%== filter_box(labels: { name: 'Topic' }) %>
+  </div>
+<% end %>
+
+<div class="col-span-12">
+  <% if @topics.empty? && filtering? %>
+    <%== partial 'shared/no_filter_results' %>
+  <% elsif @topics.empty? && params.current_page <= 1 %>
+    <% empty_state('This consumer group has no committed offsets.') %>
+  <% elsif @topics.empty? %>
+    <%== partial 'shared/no_paginated_data' %>
+  <% else %>
+    <div class="data-table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th><%== sort_link('Topic', :name) %></th>
+            <th><%== sort_link('Partitions', :partitions_count) %></th>
+            <th><%== sort_link('Total lag', :lag) %></th>
+            <th><%== sort_link('Max lag', :max_lag) %></th>
+            <th><%== sort_link('Avg lag', :avg_lag) %></th>
+            <th class="options">Options</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @topics.each do |topic| %>
+            <tr class="<%= topic_lag_status_row(topic) %>">
+              <td>
+                <a href="<%= health_consumer_group_topic_offsets_path(@consumer_group.id, topic.name) %>">
+                  <%= topic.name %>
+                </a>
+              </td>
+              <td><%= topic.partitions_count %></td>
+              <td><%== lag_with_label topic.lag %></td>
+              <td>
+                <% if topic.max_lag.positive? %>
+                  <a
+                    href="<%= "#{health_consumer_group_topic_offsets_path(@consumer_group.id, topic.name)}&sort=lag+desc" %>"
+                    title="Highest lag is on partition <%= topic.max_lag_partition_id %>"
+                  >
+                    <%== lag_with_label topic.max_lag %>
+                    [<%= topic.max_lag_partition_id %>]
+                  </a>
+                <% else %>
+                  <%== lag_with_label topic.max_lag %>
+                <% end %>
+              </td>
+              <td><%== lag_with_label topic.avg_lag %></td>
+              <td class="options">
+                <%==
+                  partial(
+                    'health/offsets/delete_button',
+                    locals: { consumer_group_id: @consumer_group.id, topic_name: topic.name }
+                  )
+                %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

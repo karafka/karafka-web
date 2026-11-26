@@ -26,8 +26,8 @@
 %>
 <%==
   action_link_button(
-    labeled ? "#{icon(:trash)} Delete Offsets" : icon(:trash),
-    root_path('health', 'topics', consumer_group_id, topic_name, 'delete'),
+    icon(:trash),
+    health_consumer_group_offsets_deletion_path(consumer_group_id, topic_name),
     classes: 'btn-error btn-sm',
     title: 'Delete the committed offsets of this consumer group for this topic',
     disabled_reason: allowed ? nil : 'Deleting these offsets is not allowed by the Web UI policies'

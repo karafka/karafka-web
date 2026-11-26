@@ -1,0 +1,80 @@
+# frozen_string_literal: true
+
+# Karafka Pro - Source Available Commercial Software
+# Copyright (c) 2017-present Maciej Mensfeld. All rights reserved.
+#
+# This software is NOT open source. It is source-available commercial software
+# requiring a paid license for use. It is NOT covered by LGPL.
+#
+# The author retains all right, title, and interest in this software,
+# including all copyrights, patents, and other intellectual property rights.
+# No patent rights are granted under this license.
+#
+# PROHIBITED:
+# - Use without a valid commercial license
+# - Redistribution, modification, or derivative works without authorization
+# - Reverse engineering, decompilation, or disassembly of this software
+# - Use as training data for AI/ML models or inclusion in datasets
+# - Scraping, crawling, or automated collection for any purpose
+#
+# PERMITTED:
+# - Reading, referencing, and linking for personal or commercial use
+# - Runtime retrieval by AI assistants, coding agents, and RAG systems
+#   for the purpose of providing contextual help to Karafka users
+#
+# Receipt, viewing, or possession of this software does not convey or
+# imply any license or right beyond those expressly stated above.
+#
+# License: https://karafka.io/docs/Pro-License-Comm/
+# Contact: contact@karafka.io
+
+module Karafka
+  module Web
+    module Pro
+      module Ui
+        module Models
+          # Namespace for the per-topic aggregations of the Pro Health views
+          module Health
+            # Aggregates the per-partition cluster lag data of a single topic (within a consumer
+            # group) into a topic-level summary, so the cluster lags view can show one row per topic
+            # instead of one row per partition.
+            #
+            # Unlike {AggregatedTopic}, the cluster lags come straight from Kafka
+            # ({Cluster::Lags.all}) as plain `{ id:, lag:, stored_offset: }` hashes, so
+            # there is no LSO risk state, poll state or freeze-duration data here - only lag.
+            #
+            # It is a {Web::Ui::Lib::HashProxy} (like {AggregatedTopic}) so it stays a
+            # filterable/"prunable" leaf in the cluster lags tree and the keyword filter keeps
+            # matching on topic name keys.
+            class AggregatedClusterTopic < Web::Ui::Lib::HashProxy
+              # @param name [String] topic name (stored so the aggregated rows can be sorted by it)
+              # @param partitions [Array<Hash>] cluster lag entries for the topic, each a hash with
+              #   `:id`, `:lag` and `:stored_offset`
+              def initialize(name, partitions)
+                # Negative lag means the topic was never consumed by the group, so it is excluded
+                measurable = partitions.select { |partition| partition[:lag] >= 0 }
+                lags = measurable.map { |partition| partition[:lag] }
+                worst_lag_partition = measurable.max_by { |partition| partition[:lag] }
+
+                super(
+                  name: name,
+                  partitions_count: partitions.size,
+                  measurable_count: lags.size,
+                  lag: lags.empty? ? -1 : lags.sum,
+                  # Same number as `lag`, under a name the report rows share, so lag
+                  # distribution can be judged the same way for both row types.
+                  total_lag: lags.empty? ? -1 : lags.sum,
+                  max_lag: lags.max || -1,
+                  avg_lag: lags.empty? ? -1 : (lags.sum.to_f / lags.size).round,
+                  # -1 (not a valid partition id) when no partition has a lag. `HashProxy` treats a nil
+                  # value as "not found", so a sentinel is used rather than nil.
+                  max_lag_partition_id: worst_lag_partition ? worst_lag_partition[:id] : -1
+                )
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+end

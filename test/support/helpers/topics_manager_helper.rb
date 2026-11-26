@@ -208,6 +208,38 @@ module TopicsManagerHelper
     end
   end
 
+  # Alters a topic config and polls until the new value is visible as set on the topic, or the
+  # timeout elapses. A describe issued right after the alter can still return the old value and
+  # source, so tests that render the topic configs right away would race without this.
+  #
+  # @param topic [String] topic name
+  # @param name [String] config name
+  # @param value [String] config value
+  # @param timeout [Numeric] maximum time to wait in seconds
+  def alter_topic_config(topic, name, value, timeout: 10)
+    resource = Karafka::Admin::Configs::Resource.new(type: :topic, name: topic)
+    resource.set(name, value)
+    Karafka::Admin::Configs.alter(resource)
+
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
+
+    loop do
+      config = Karafka::Admin::Configs
+        .describe(Karafka::Admin::Configs::Resource.new(type: :topic, name: topic))
+        .first
+        .configs
+        .find { |described| described.name == name }
+
+      return if config.value == value && config.source == :dynamic_topic_config
+
+      if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
+        raise "Timed out after #{timeout}s waiting for #{name}=#{value} to be visible on #{topic}"
+      end
+
+      sleep(0.1)
+    end
+  end
+
   private
 
   # Short hash (6 chars) derived from the calling test file path for topic name traceability.

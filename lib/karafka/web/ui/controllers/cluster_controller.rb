@@ -22,7 +22,7 @@ module Karafka
 
           # Lists available brokers in the cluster
           def brokers
-            @brokers = sort(Models::ClusterInfo.fetch.brokers)
+            @brokers = sort(Models::Cluster::Info.fetch.brokers)
 
             render
           end
@@ -60,7 +60,7 @@ module Karafka
           # @return [Array<Hash>] cluster topics to display in an alphabetical order, with internal
           #   topics excluded unless the visibility config allows them
           def displayable_topics
-            all = Models::ClusterInfo
+            all = Models::Cluster::Info
               .fetch
               .topics
               .sort_by { |topic| topic[:topic_name] }

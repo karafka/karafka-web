@@ -10,24 +10,8 @@ describe_current do
     produce(reports_topic, report.to_json)
   end
 
-  describe ".find" do
-    let(:lookup) { described_class.find(state, process_id) }
-
-    context "when process with given id does not exist in the state" do
-      let(:process_id) { SecureRandom.uuid }
-
-      it { assert_raises(Karafka::Web::Errors::Ui::NotFoundError) { lookup } }
-    end
-
-    context "when process exists" do
-      let(:process_id) { "shinra:1:1" }
-
-      it { assert_kind_of(described_class, lookup) }
-    end
-  end
-
   describe "process attributes" do
-    let(:process) { described_class.find(state, "shinra:1:1") }
+    let(:process) { Karafka::Web::Ui::Models::Processes.active(state).find { |process| process.id == "shinra:1:1" } }
 
     it "expect to have valid attributes configured" do
       assert_equal("shinra:1:1", process.id)
@@ -45,7 +29,7 @@ describe_current do
   end
 
   describe "#schema_compatible?" do
-    let(:process) { described_class.find(state, "shinra:1:1") }
+    let(:process) { Karafka::Web::Ui::Models::Processes.active(state).find { |process| process.id == "shinra:1:1" } }
 
     context "when schema matches the one in memory" do
       it { assert(process.schema_compatible?) }

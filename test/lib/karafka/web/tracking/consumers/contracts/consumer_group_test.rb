@@ -10,6 +10,7 @@ describe_current do
         "c81e728d9d4c_1" => {
           id: "c81e728d9d4c_1",
           instance_id: false,
+          member_id: "rdkafka-member-1",
           state: {
             state: "up",
             join_state: "steady",

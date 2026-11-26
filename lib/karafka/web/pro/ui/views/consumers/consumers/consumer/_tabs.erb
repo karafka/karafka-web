@@ -28,6 +28,13 @@
     </a>
 
     <a
+      href="<%= consumer_path(@process.id, 'memberships') %>"
+      class="custom-tab <%= nav_class(include: 'memberships') %>"
+    >
+      Memberships (<%= @process.consumer_groups.sum { |cg| cg.subscription_groups.size } %>)
+    </a>
+
+    <a
       href="<%= consumer_path(@process.id, 'jobs', 'running') %>"
       class="custom-tab <%= nav_class(include: 'jobs/running') %>"
     >
