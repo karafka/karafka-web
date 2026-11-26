@@ -33,15 +33,17 @@ module Karafka
     module Pro
       module Mcp
         module Tools
-          # Per-topic lags read from Kafka, as on the Web UI Health cluster lags page
+          # Per-topic lags read from Kafka and not from the consumers reports, as on the Web UI
+          # Health cluster lags page
           class ClusterLags < Base
             tool(
               "karafka_cluster_lags",
               <<~TEXT.tr("\n", " ").strip,
-                Per consumer group and topic lags read from Kafka for the consumer groups in the
-                routing, as on the Web UI Health cluster lags page: total, max and average lag and
-                the partition with the highest lag. It works also when no consumers run. Lag values
-                of -1 mean not available.
+                Per consumer group and topic lags read from Kafka, as on the Web UI Health cluster
+                lags page: the committed offsets of the consumer groups compared with the topics
+                high watermarks, with total, max and average lag and the partition with the highest
+                lag. It does not use the statistics the consumers report, so it works also when no
+                consumers run. Lag values of -1 mean not available.
               TEXT
               contract: Contracts::NoArguments.new
             )
