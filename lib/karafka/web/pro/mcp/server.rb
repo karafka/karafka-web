@@ -43,6 +43,7 @@ module Karafka
 
           # Tools available to the agents, in the order in which we list them
           TOOLS = [
+            Tools::Status,
             Tools::Overview,
             Tools::Metrics,
             Tools::Health,

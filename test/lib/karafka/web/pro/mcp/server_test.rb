@@ -151,7 +151,8 @@ describe_current do
     it "lists the read-only tools" do
       assert_equal(
         %w[
-          karafka_overview karafka_metrics karafka_health karafka_cluster_lags karafka_processes
+          karafka_status karafka_overview karafka_metrics karafka_health karafka_cluster_lags
+          karafka_processes
           karafka_consumer_groups karafka_errors_list karafka_error
         ],
         tools.map { |tool| tool["name"] }

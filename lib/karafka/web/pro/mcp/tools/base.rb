@@ -122,8 +122,8 @@ module Karafka
               failure(e.message)
             rescue Errors::Ui::NotFoundError
               failure(
-                "Requested data was not found. Check the Web UI Status page to make sure " \
-                "the Web UI is enabled and consumers report their state."
+                "Requested data was not found. Call karafka_status to check that the Web UI is " \
+                "enabled and consumers report their state."
               )
             rescue ::Rdkafka::RdkafkaError => e
               failure("Kafka request failed: #{e.code}")

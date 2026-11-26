@@ -8,6 +8,7 @@
   "test/lib/karafka/web/pro/mcp/tools/errors_list_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/tools/metrics_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/tools/overview_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/tools/status_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/app_test.rb": 8.51,
   "test/lib/karafka/web/pro/ui/controllers/health/consumer_groups_controller_test.rb": 5.0,
   "test/lib/karafka/web/pro/ui/controllers/explorer/explorer_controller_test.rb": 60.645,
