@@ -130,6 +130,18 @@ describe_current do
     end
   end
 
+  context "when only the first partition has errors" do
+    let(:errors_topic) { create_topic(partitions: Karafka::Web.config.ui.per_page + 1) }
+
+    before { produce(errors_topic, error_report, partition: 0) }
+
+    it "does not point to the empty pages of the other partitions" do
+      assert(structured[:limited])
+      assert_equal([0], structured[:errors].map { |error| error[:partition] })
+      assert_nil(structured[:next_page])
+    end
+  end
+
   context "when the first partitions have more errors than the later ones" do
     let(:per_page) { Karafka::Web.config.ui.per_page }
     let(:errors_topic) { create_topic(partitions: per_page + 1) }
