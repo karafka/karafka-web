@@ -140,5 +140,6 @@ services:
     command: >
       bash -c "
         echo 'Running swarm integration tests...' &&
-        bundle exec ruby test/integrations/swarm_dedicated_producer_spec.rb
+        bundle exec ruby test/integrations/swarm_dedicated_producer_spec.rb &&
+        bundle exec ruby test/integrations/state_replay_spec.rb
       "
