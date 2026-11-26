@@ -34,7 +34,10 @@ cpu_usage.each_with_index do |load, i|
   assert(load >= 0, "Load average #{i} should be non-negative")
 end
 
+memory_usage_before = os_metrics.memory_usage
 memory_threads_ps = os_metrics.memory_threads_ps
+memory_usage_after = os_metrics.memory_usage
+
 if memory_threads_ps
   assert_type(memory_threads_ps, Array, "memory_threads_ps should be an array")
   assert(memory_threads_ps.any?, "memory_threads_ps should not be empty")
@@ -52,7 +55,19 @@ if memory_threads_ps
 
   assert(current_process, "memory_threads_ps should include the current process")
   assert(current_process.first > 0, "Current process memory should be positive")
-  assert(memory_total >= current_process.first, "Total memory should be >= process memory")
+
+  # statm and VmRSS cannot be read at the same moment and RSS moves between reads (JRuby GC),
+  # so the statm value is checked against the VmRSS reads around it with a 10% slack
+  min_rss, max_rss = [memory_usage_before, memory_usage_after].minmax
+  min_rss = (min_rss * 0.9).floor
+  max_rss = (max_rss * 1.1).ceil
+
+  assert(
+    current_process.first.between?(min_rss, max_rss),
+    "Process memory from statm (#{current_process.first}) should be within " \
+    "#{min_rss}..#{max_rss} of VmRSS"
+  )
+  assert(memory_total >= min_rss, "Total memory should be >= process memory")
 
   threads = os_metrics.threads(memory_threads_ps)
 
