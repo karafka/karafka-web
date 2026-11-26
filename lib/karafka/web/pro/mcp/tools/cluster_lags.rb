@@ -50,7 +50,7 @@ module Karafka
 
             # @return [Hash] cluster lags data
             def fetch
-              stats = Web::Ui::Models::Health::ClusterLagsAggregation.call
+              stats = Ui::Models::Health::ClusterLagsAggregation.call
 
               consumer_groups = stats.transform_values do |topics|
                 { topics: topics.transform_values(&:to_h) }

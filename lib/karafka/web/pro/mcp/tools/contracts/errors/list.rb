@@ -34,11 +34,13 @@ module Karafka
       module Mcp
         module Tools
           module Contracts
-            # Validates the karafka_errors_list tool arguments
-            class ErrorsList < Base
-              arguments :page
+            module Errors
+              # Validates the karafka_errors_list tool arguments
+              class List < Base
+                arguments :page
 
-              optional(:page) { |val| val.is_a?(Integer) && val >= 1 }
+                optional(:page) { |val| val.is_a?(Integer) && val >= 1 }
+              end
             end
           end
         end

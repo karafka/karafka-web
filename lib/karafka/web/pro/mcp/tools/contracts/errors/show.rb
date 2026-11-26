@@ -33,14 +33,16 @@ module Karafka
     module Pro
       module Mcp
         module Tools
-          # Contracts of the tools arguments
           module Contracts
-            # Validates the karafka_error tool arguments
-            class Error < Base
-              arguments :partition, :offset
+            # Contracts of the errors tools arguments
+            module Errors
+              # Validates the karafka_error tool arguments
+              class Show < Base
+                arguments :partition, :offset
 
-              required(:partition) { |val| val.is_a?(Integer) && val >= 0 }
-              required(:offset) { |val| val.is_a?(Integer) && val >= 0 }
+                required(:partition) { |val| val.is_a?(Integer) && val >= 0 }
+                required(:offset) { |val| val.is_a?(Integer) && val >= 0 }
+              end
             end
           end
         end

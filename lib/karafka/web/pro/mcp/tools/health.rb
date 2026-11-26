@@ -52,7 +52,7 @@ module Karafka
             # @return [Hash] health data
             def fetch
               state = Web::Ui::Models::ConsumersState.current!
-              stats = Web::Ui::Models::Health::TopicsAggregation.call(state)
+              stats = Ui::Models::Health::TopicsAggregation.call(state)
 
               consumer_groups = stats.transform_values do |details|
                 {
