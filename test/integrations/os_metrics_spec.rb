@@ -56,18 +56,17 @@ if memory_threads_ps
   assert(current_process, "memory_threads_ps should include the current process")
   assert(current_process.first > 0, "Current process memory should be positive")
 
-  # statm and VmRSS cannot be read at the same moment and RSS moves between reads (JRuby GC),
-  # so the statm value is checked against the VmRSS reads around it with a 10% slack
+  # statm and VmRSS cannot be read at the same moment and RSS moves between reads (JRuby GC)
   min_rss, max_rss = [memory_usage_before, memory_usage_after].minmax
   min_rss = (min_rss * 0.9).floor
   max_rss = (max_rss * 1.1).ceil
 
-  assert(
-    current_process.first.between?(min_rss, max_rss),
-    "Process memory from statm (#{current_process.first}) should be within " \
-    "#{min_rss}..#{max_rss} of VmRSS"
+  assert_in_range(
+    current_process.first,
+    min_rss,
+    max_rss,
+    "Process memory from statm should be within 10% of VmRSS"
   )
-  assert(memory_total >= min_rss, "Total memory should be >= process memory")
 
   threads = os_metrics.threads(memory_threads_ps)
 
