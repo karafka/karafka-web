@@ -72,4 +72,16 @@ describe_current do
       assert_equal(100, state[:processes][:"process-5678"][:offset])
     end
   end
+
+  context "when the state already holds a newer report of the process" do
+    let(:process_id) { "process-1234" }
+    let(:stored) { { dispatched_at: dispatched_at + 10, offset: 200 } }
+    let(:state) { { processes: { "process-1234": stored } } }
+
+    it "keeps the stored offset and dispatch time" do
+      step.call
+
+      assert_equal({ dispatched_at: dispatched_at + 10, offset: 200 }, state[:processes][:"process-1234"])
+    end
+  end
 end
