@@ -142,6 +142,24 @@ describe_current do
     end
   end
 
+  context "when only the first and the last of three partition slices have errors" do
+    let(:partition_count) { (2 * Karafka::Web.config.ui.per_page) + 1 }
+    let(:errors_topic) { create_topic(partitions: partition_count) }
+    let(:pages) do
+      (1..3).map { |page| described_class.new({ "page" => page }).call.fetch(:structuredContent) }
+    end
+
+    before do
+      produce(errors_topic, error_report, partition: 0)
+      produce(errors_topic, error_report, partition: partition_count - 1)
+    end
+
+    it "pages through the empty middle slice to the last one" do
+      assert_equal([2, 3, nil], pages.map { |page| page[:next_page] })
+      assert_equal([[0], [], [partition_count - 1]], pages.map { |page| page[:errors].map { |error| error[:partition] } })
+    end
+  end
+
   context "when the first partitions have more errors than the later ones" do
     let(:per_page) { Karafka::Web.config.ui.per_page }
     let(:errors_topic) { create_topic(partitions: per_page + 1) }
