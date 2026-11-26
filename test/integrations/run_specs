@@ -9,14 +9,31 @@
 
 set -e
 
+known_scenarios=(limited unlimited strict jruby swarm)
+
+: "${TEST_SCENARIO:?TEST_SCENARIO is not set}"
+
+if [[ " ${known_scenarios[*]} " != *" ${TEST_SCENARIO} "* ]]; then
+  echo "Unknown scenario: ${TEST_SCENARIO}"
+  exit 1
+fi
+
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 ran=0
 
 for spec in test/integrations/*_spec.rb; do
-  scenarios="$(sed -n 's/^# Scenarios: //p' "$spec" | tr ',' ' ')"
+  read -r -a scenarios <<< "$(sed -n 's/^# Scenarios: //p' "$spec" | tr ',' ' ')"
+  scenarios=("${scenarios[@]:-unlimited}")
 
-  [[ " ${scenarios:-unlimited} " == *" ${TEST_SCENARIO} "* ]] || continue
+  for scenario in "${scenarios[@]}"; do
+    if [[ " ${known_scenarios[*]} " != *" ${scenario} "* ]]; then
+      echo "Unknown scenario ${scenario} in $spec"
+      exit 1
+    fi
+  done
+
+  [[ " ${scenarios[*]} " == *" ${TEST_SCENARIO} "* ]] || continue
 
   read -r -a env_vars <<< "$(sed -n 's/^# Env: //p' "$spec")"
 
