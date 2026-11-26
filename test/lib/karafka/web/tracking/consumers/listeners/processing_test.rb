@@ -148,10 +148,12 @@ describe_current do
   describe "#on_worker_processed" do
     before { event.time = 123.456 }
 
-    it "expect to track execution time in totals" do
+    it "expect to add execution time to the processing times" do
+      before_sum = sampler.processing_times.sum
+
       listener.on_worker_processed(event)
 
-      assert_includes(sampler.windows.m1[:processed_total_time], 123.456)
+      assert_in_delta(before_sum + 123.456, sampler.processing_times.sum)
     end
   end
 

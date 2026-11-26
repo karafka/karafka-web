@@ -149,6 +149,7 @@
   "test/lib/karafka/web/management/migrations/consumers_metrics/1716218393_populate_jobs_metrics_test.rb": 0.005,
   "test/lib/karafka/web/management/migrations/consumers_metrics/1704722380_split_listeners_into_active_and_paused_test.rb": 0.005,
   "test/lib/karafka/web/tracking/helpers/ttls/stats_test.rb": 0.005,
+  "test/lib/karafka/web/tracking/helpers/ttls/sum_test.rb": 1.2,
   "test/lib/karafka/web/management/migrations/consumers_states/1706611396_rename_lag_total_to_lag_hybrid_test.rb": 0.005,
   "test/lib/karafka/web/tracking/consumers/sampler/metrics/network_test.rb": 0.005,
   "test/lib/karafka/web/management/migrations/consumers_states/1699543515_fill_missing_received_and_sent_bytes_test.rb": 0.005,
