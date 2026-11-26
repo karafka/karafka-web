@@ -8,8 +8,8 @@ module Karafka
           # Sum of values added within the ttl, kept as one second buckets, so it does not hold
           # an object per added value
           #
-          # @note A bucket expires when its newest possible value is older than the ttl, so the sum
-          #   may include values up to one second older than the ttl
+          # @note A bucket expires when its oldest possible value is older than the ttl, so the sum
+          #   may miss values added up to one second before the ttl ends
           class Sum
             include ::Karafka::Core::Helpers::Time
 
@@ -57,7 +57,7 @@ module Karafka
             def clear
               now = monotonic_now
 
-              while !@buckets.empty? && now - ((@buckets.first + 1) * 1_000) > @ttl
+              while !@buckets.empty? && now - (@buckets.first * 1_000) > @ttl
                 @buckets.shift
                 @sums.shift
               end

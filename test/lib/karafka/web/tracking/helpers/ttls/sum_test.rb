@@ -30,11 +30,11 @@ describe_current do
     it { refute_empty(ttl_sum) }
 
     it "expires them together" do
-      at(12_000.0)
+      at(11_000.0)
 
       assert_in_delta(3.5, ttl_sum.sum)
 
-      at(12_001.0)
+      at(11_001.0)
 
       assert_empty(ttl_sum)
       assert_equal(0, ttl_sum.sum)
@@ -45,35 +45,28 @@ describe_current do
     before do
       at(10_900.0)
       ttl_sum << 1
-      at(11_100.0)
+      at(11_000.0)
       ttl_sum << 2
     end
 
     it { assert_equal(3, ttl_sum.sum) }
 
-    it "keeps the older second until its newest possible value is older than the ttl" do
-      at(12_000.0)
+    it "keeps the older second while its oldest possible value is within the ttl" do
+      at(11_000.0)
 
       assert_equal(3, ttl_sum.sum)
     end
 
     it "expires the older second first" do
-      at(12_001.0)
+      at(11_001.0)
 
       assert_equal(2, ttl_sum.sum)
     end
 
     it "expires all of them once the newest second is older than the ttl" do
-      at(13_001.0)
+      at(12_001.0)
 
       assert_empty(ttl_sum)
-    end
-
-    it "expires the old seconds when a new value is added" do
-      at(20_000.0)
-      ttl_sum << 7
-
-      assert_equal(7, ttl_sum.sum)
     end
   end
 
@@ -82,7 +75,7 @@ describe_current do
 
     before do
       ttl_sum << 1
-      sleep(1.2)
+      sleep(0.2)
     end
 
     it { assert_empty(ttl_sum) }

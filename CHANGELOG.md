@@ -25,7 +25,7 @@
 - [Enhancement] Tighten compaction on the `karafka_consumers_states` and `karafka_consumers_metrics` topics so superseded versions are removed sooner.
 - [Enhancement] Skip the consumer commanding partition and topic checks in each fetch loop when no command is pending, avoiding a full assignment scan per loop (Pro).
 - [Enhancement] Evict outdated per-job tracking samples without scanning the whole 60 s window, so each processed job holds the tracking lock for a constant time.
-- [Enhancement] Keep the 60 s worker utilization window as per-second sums instead of one object per processed job, lowering GC pressure and the time each report holds the tracking lock. The window edge is now one second wide, so the reported utilization may differ slightly.
+- [Enhancement] Keep the 60 s worker utilization window as per-second sums instead of one object per processed job, lowering GC pressure and the time each report holds the tracking lock. The window edge is now one second wide, so the reported utilization may be up to ~1.7% lower.
 - [Enhancement] Link the Health lag counters worst-first: the Dashboard "Total lag" opens the Health topics sorted by lag, and each topic's "Max lag" shows the hot partition id and opens its partitions sorted by lag (Pro).
 - [Enhancement] Show an informational Status page check when the Web UI reports through an idempotent or transactional `Karafka.producer` shared with the application, with a link to configuring a custom Web UI producer.
 - [Enhancement] Speed up Web UI sorting on large data, most of all when sorting on an attribute the rows do not have.
