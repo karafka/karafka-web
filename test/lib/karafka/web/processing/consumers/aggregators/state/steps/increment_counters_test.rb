@@ -2,7 +2,8 @@
 
 describe_current do
   let(:state) { { stats: initial_stats, processes: processes } }
-  let(:report) { { process: { id: "process-1" }, stats: { total: total } } }
+  let(:report) { { process: { id: "process-1" }, dispatched_at: dispatched_at, stats: { total: total } } }
+  let(:dispatched_at) { Time.now.to_f }
   let(:processes) { {} }
 
   let(:context) do
@@ -55,7 +56,7 @@ describe_current do
   context "when the state already holds this report of the process" do
     let(:initial_stats) { { batches: 3 } }
     let(:total) { { batches: 2 } }
-    let(:processes) { { "process-1": { dispatched_at: Time.now.to_f, offset: 10 } } }
+    let(:processes) { { "process-1": { dispatched_at: dispatched_at, offset: 10 } } }
 
     it "does not count it again" do
       step.call
@@ -67,7 +68,7 @@ describe_current do
   context "when the state already holds a newer report of the process" do
     let(:initial_stats) { { batches: 3 } }
     let(:total) { { batches: 2 } }
-    let(:processes) { { "process-1": { dispatched_at: Time.now.to_f, offset: 11 } } }
+    let(:processes) { { "process-1": { dispatched_at: dispatched_at + 5, offset: 11 } } }
 
     it "does not count it again" do
       step.call
@@ -79,7 +80,19 @@ describe_current do
   context "when the state holds an older report of the process" do
     let(:initial_stats) { { batches: 3 } }
     let(:total) { { batches: 2 } }
-    let(:processes) { { "process-1": { dispatched_at: Time.now.to_f, offset: 9 } } }
+    let(:processes) { { "process-1": { dispatched_at: dispatched_at - 5, offset: 9 } } }
+
+    it "counts it" do
+      step.call
+
+      assert_equal(5, state[:stats][:batches])
+    end
+  end
+
+  context "when the state holds a higher offset with an older report of the process" do
+    let(:initial_stats) { { batches: 3 } }
+    let(:total) { { batches: 2 } }
+    let(:processes) { { "process-1": { dispatched_at: dispatched_at - 5, offset: 1_000 } } }
 
     it "counts it" do
       step.call
