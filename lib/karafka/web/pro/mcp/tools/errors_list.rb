@@ -103,6 +103,11 @@ module Karafka
               slices_count = (partitions_count / PARTITIONS_PAGINATOR.per_page.to_f).ceil
               in_slice = (partitions_count / slices_count.to_f).ceil
               current_slice = active_partitions.first / in_slice
+              other_partitions = (0...partitions_count).to_a - active_partitions
+
+              offsets = Web::Ui::Lib::Admin
+                .read_watermark_offsets(errors_topic => other_partitions)
+                .fetch(errors_topic)
 
               (0...partitions_count).each_slice(in_slice).with_index.any? do |partitions, index|
                 next false if index == current_slice
@@ -110,8 +115,8 @@ module Karafka
                 slice_page = (index > current_slice) ? materialized_page : materialized_page + 1
 
                 count = partitions.sum do |partition|
-                  offsets = Web::Ui::Models::Cluster::WatermarkOffsets.find(errors_topic, partition)
-                  offsets[:high] - offsets[:low]
+                  low, high = offsets.fetch(partition)
+                  high - low
                 end
 
                 count > PARTITIONS_PAGINATOR.per_page * (slice_page - 1)

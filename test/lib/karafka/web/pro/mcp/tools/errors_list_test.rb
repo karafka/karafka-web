@@ -115,6 +115,19 @@ describe_current do
       assert_equal(second_partitions, second[:errors].map { |error| error[:partition] }.sort)
       assert_nil(second[:next_page])
     end
+
+    it "reads the watermarks of the other partitions in one batch" do
+      other_partitions = ((per_page / 2) + 1..per_page).to_a
+
+      Karafka::Admin.stubs(:read_watermark_offsets).with(errors_topic, anything).returns([0, 1])
+      Karafka::Admin
+        .expects(:read_watermark_offsets)
+        .with({ errors_topic => other_partitions })
+        .once
+        .returns(errors_topic => other_partitions.to_h { |partition| [partition, [0, 1]] })
+
+      assert_equal(2, structured[:next_page])
+    end
   end
 
   context "when the first partitions have more errors than the later ones" do
