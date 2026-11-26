@@ -47,7 +47,12 @@ if memory_threads_ps
 
   assert(memory_total > 0, "Total memory usage should be positive")
   assert_type(memory_total, Integer, "Total memory usage should be an integer")
-  assert(memory_total >= memory_usage, "Total memory should be >= process memory")
+
+  current_process = memory_threads_ps.find { |row| row.last == Process.pid }
+
+  assert(current_process, "memory_threads_ps should include the current process")
+  assert(current_process.first > 0, "Current process memory should be positive")
+  assert(memory_total >= current_process.first, "Total memory should be >= process memory")
 
   threads = os_metrics.threads(memory_threads_ps)
 
