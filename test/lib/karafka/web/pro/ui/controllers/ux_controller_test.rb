@@ -79,6 +79,7 @@ describe_current do
         assert_ok
         refute_body("branding_label")
         refute_body("branding_notice")
+        refute_body('id="branding"')
       end
     end
 
