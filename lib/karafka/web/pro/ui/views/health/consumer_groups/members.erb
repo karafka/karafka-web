@@ -68,7 +68,7 @@
                 <% if membership %>
                   <% process_id = membership[:process].id %>
                   <a href="<%= consumer_path(process_id, 'subscriptions') %>#<%= membership[:subscription_group].id %>">
-                    <%= truncate(process_id, strategy: :middle) %>
+                    <%== truncate(process_id, strategy: :middle) %>
                   </a>
                 <% else %>
                   <span

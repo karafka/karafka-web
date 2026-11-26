@@ -193,6 +193,42 @@ describe_current do
       end
     end
 
+    context "when an error message has 200 characters" do
+      let(:error_message) { "<b>#{"x" * 193}</b>" }
+      let(:error_report) { Fixtures.errors_json.merge(error_message: error_message).to_json }
+
+      before do
+        produce(errors_topic, error_report, partition: 0)
+
+        get "errors"
+      end
+
+      it "expect to show the full escaped message with no ellipsis" do
+        assert_ok
+        assert_body("&lt;b&gt;#{"x" * 193}&lt;/b&gt;")
+        refute_body("<b>#{"x" * 193}</b>")
+        refute_body("…")
+        refute_body('<span title="&lt;b&gt;')
+      end
+    end
+
+    context "when an error message is longer than 200 characters" do
+      let(:error_message) { "#{"x" * 200}<b>tail</b>" }
+      let(:error_report) { Fixtures.errors_json.merge(error_message: error_message).to_json }
+
+      before do
+        produce(errors_topic, error_report, partition: 0)
+
+        get "errors"
+      end
+
+      it "expect to cut it with an ellipsis and show the full escaped message in the title" do
+        assert_ok
+        assert_body(%(<span title="#{"x" * 200}&lt;b&gt;tail&lt;/b&gt;">#{"x" * 199}…</span>))
+        refute_body("<b>tail</b>")
+      end
+    end
+
     context "when a partition contains a foreign message published by a user" do
       before do
         produce_many(errors_topic, Array.new(2) { error_report }, partition: 0)
