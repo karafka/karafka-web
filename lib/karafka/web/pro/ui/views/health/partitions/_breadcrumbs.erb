@@ -40,13 +40,13 @@
 </li>
 
 <li>
-  <a href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'overview') %>">
+  <a href="<%= health_topic_path(@consumer_group_id, @topic_name) %>">
     <%= @topic_name %>
   </a>
 </li>
 
 <li>
-  <a href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, @current_action_name) %>">
+  <a href="<%= health_topic_path(@consumer_group_id, @topic_name, @current_action_name) %>">
     <%= health_lens_label(@current_action_name) %>
   </a>
 </li>

@@ -48,6 +48,46 @@ describe_current do
   let(:env) { { "SCRIPT_NAME" => "/web-ui" } }
   let(:current_action_name) { :show }
 
+  describe "#encode_path_segment" do
+    it "returns a plain value itself" do
+      value = "app_6.x-y"
+
+      assert_same(value, helper.encode_path_segment(value))
+    end
+
+    {
+      "a%b" => "a%25b",
+      "a b" => "a%20b",
+      "a/b" => "a%2Fb",
+      "a?b" => "a%3Fb",
+      "a#b" => "a%23b",
+      "a~b" => "a%7Eb",
+      "a&b" => "a%26b",
+      "a+b" => "a%2Bb",
+      "ażb" => "a%C5%BCb"
+    }.each do |value, encoded|
+      it "encodes #{value} as one path segment" do
+        assert_equal(encoded, helper.encode_path_segment(value))
+      end
+    end
+  end
+
+  describe "#decode_path_segment" do
+    it "decodes what #encode_path_segment encodes" do
+      value = "a b/c?d#e%f-ż"
+
+      assert_equal(value, helper.decode_path_segment(helper.encode_path_segment(value)))
+    end
+
+    %w[%zz abc%].each do |malformed|
+      it "raises a not found error for a malformed escape (#{malformed})" do
+        assert_raises(Karafka::Web::Errors::Ui::NotFoundError) do
+          helper.decode_path_segment(malformed)
+        end
+      end
+    end
+  end
+
   describe "#explorer_path" do
     it "builds basic explorer paths" do
       result = helper.explorer_path("topics")

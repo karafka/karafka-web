@@ -70,12 +70,21 @@ module Karafka
               "#{root_path("health", "topics")}?filter[field]=consumer_group&filter[value]=#{value}"
             end
 
+            # @param consumer_group_id [String] consumer group id
+            # @param topic_name [String] name of the topic
+            # @param lens [String, Symbol] per-topic lens (`overview`, `lags`, `offsets`, `changes`
+            #   or `cluster_lags`)
+            # @return [String] path to the per-topic health lens
+            def health_topic_path(consumer_group_id, topic_name, lens = "overview")
+              root_path("health", "topics", encode_path_segment(consumer_group_id), topic_name, lens)
+            end
+
             # @param group_id [String] consumer group id
             # @param page [String] page of the consumer group (`overview`, `members` or `offsets`)
             # @return [String] path to the cluster consumer group page. Kafka group ids may hold
             #   any character, so the id is encoded as a single path segment.
             def health_consumer_group_path(group_id, page = "overview")
-              root_path("health", "consumer_groups", URI.encode_uri_component(group_id), page)
+              root_path("health", "consumer_groups", encode_path_segment(group_id), page)
             end
 
             # @param group_id [String] consumer group id
@@ -85,7 +94,7 @@ module Karafka
               root_path(
                 "health",
                 "consumer_groups",
-                URI.encode_uri_component(group_id),
+                encode_path_segment(group_id),
                 "topics",
                 topic_name,
                 "delete"
@@ -133,9 +142,7 @@ module Karafka
             # @return [String] path to the topic overview lens with partitions sorted by lag,
             #   worst first
             def health_overview_by_lag_path(consumer_group_id, topic_name)
-              path = root_path("health", "topics", consumer_group_id, topic_name, "overview")
-
-              "#{path}?sort=lag_hybrid+desc"
+              "#{health_topic_path(consumer_group_id, topic_name)}?sort=lag_hybrid+desc"
             end
 
             # @param consumer_group_id [String] consumer group id
@@ -143,9 +150,7 @@ module Karafka
             # @return [String] path to the topic cluster lags lens with partitions sorted by lag,
             #   worst first
             def health_cluster_lags_by_lag_path(consumer_group_id, topic_name)
-              path = root_path("health", "topics", consumer_group_id, topic_name, "cluster_lags")
-
-              "#{path}?sort=lag+desc"
+              "#{health_topic_path(consumer_group_id, topic_name, "cluster_lags")}?sort=lag+desc"
             end
 
             # Classifies a lag value against the configured high-lag threshold, for at-a-glance row

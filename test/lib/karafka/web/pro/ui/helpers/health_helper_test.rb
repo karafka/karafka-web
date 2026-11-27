@@ -30,6 +30,7 @@
 
 describe_current do
   include described_class
+  include Karafka::Web::Pro::Ui::Helpers::PathsHelper
 
   # `health_group_topics_path` builds on PathsHelper#root_path (mixed into the app at runtime)
   def root_path(*args)
@@ -49,6 +50,23 @@ describe_current do
 
       assert_includes(result, "filter[value]=evil%26injected%3D1")
       refute_includes(result, "evil&injected=1")
+    end
+  end
+
+  describe "#health_topic_path" do
+    it "builds the topic overview path by default" do
+      assert_equal("/karafka/health/topics/app/orders/overview", health_topic_path("app", "orders"))
+    end
+
+    it "encodes the consumer group id as one path segment" do
+      assert_equal(
+        "/karafka/health/topics/a%20b%2Fc%3Fd/orders/lags",
+        health_topic_path("a b/c?d", "orders", "lags")
+      )
+    end
+
+    it "accepts the lens as a symbol" do
+      assert_equal("/karafka/health/topics/app/orders/lags", health_topic_path("app", "orders", :lags))
     end
   end
 
@@ -103,6 +121,13 @@ describe_current do
         health_overview_by_lag_path("app", "orders")
       )
     end
+
+    it "encodes the consumer group id as one path segment" do
+      assert_equal(
+        "/karafka/health/topics/a%23b/orders/overview?sort=lag_hybrid+desc",
+        health_overview_by_lag_path("a#b", "orders")
+      )
+    end
   end
 
   describe "#health_cluster_lags_by_lag_path" do
@@ -110,6 +135,13 @@ describe_current do
       assert_equal(
         "/karafka/health/topics/app/orders/cluster_lags?sort=lag+desc",
         health_cluster_lags_by_lag_path("app", "orders")
+      )
+    end
+
+    it "encodes the consumer group id as one path segment" do
+      assert_equal(
+        "/karafka/health/topics/a%23b/orders/cluster_lags?sort=lag+desc",
+        health_cluster_lags_by_lag_path("a#b", "orders")
       )
     end
   end

@@ -21,35 +21,35 @@
 <div class="tab-container-wrapper">
   <div class="tab-container">
     <a
-      href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'overview') %>"
+      href="<%= health_topic_path(@consumer_group_id, @topic_name, 'overview') %>"
       class="custom-tab <%= nav_class(match: %r{/overview\z}) %>"
     >
       <%= health_lens_label(:overview) %>
     </a>
 
     <a
-      href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'lags') %>"
+      href="<%= health_topic_path(@consumer_group_id, @topic_name, 'lags') %>"
       class="custom-tab <%= nav_class(match: %r{/lags\z}) %>"
     >
       <%= health_lens_label(:lags) %>
     </a>
 
     <a
-      href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'offsets') %>"
+      href="<%= health_topic_path(@consumer_group_id, @topic_name, 'offsets') %>"
       class="custom-tab <%= nav_class(match: %r{/offsets\z}) %>"
     >
       <%= health_lens_label(:offsets) %>
     </a>
 
     <a
-      href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'changes') %>"
+      href="<%= health_topic_path(@consumer_group_id, @topic_name, 'changes') %>"
       class="custom-tab <%= nav_class(match: %r{/changes\z}) %>"
     >
       <%= health_lens_label(:changes) %>
     </a>
 
     <a
-      href="<%= root_path('health', 'topics', @consumer_group_id, @topic_name, 'cluster_lags') %>"
+      href="<%= health_topic_path(@consumer_group_id, @topic_name, 'cluster_lags') %>"
       class="custom-tab <%= nav_class(match: %r{/cluster_lags\z}) %>"
     >
       <%= health_lens_label(:cluster_lags) %>

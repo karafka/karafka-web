@@ -55,6 +55,152 @@ describe_current do
     end
   end
 
+  context "when the consumer group id needs encoding in the path" do
+    let(:group_id) { "my group/a?b#c-zażółć" }
+    let(:encoded_group_id) { URI.encode_uri_component(group_id) }
+    let(:topic_path) { "/health/topics/#{encoded_group_id}/default" }
+
+    def produce_group_report(poll_state: "active")
+      topics_config.consumers.reports.name = reports_topic
+
+      report = Fixtures.consumers_reports_json(symbolize_names: false)
+      consumer_group = report["consumer_groups"].delete("example_app6_app")
+      consumer_group["id"] = group_id
+      report["consumer_groups"][group_id] = consumer_group
+      report.dig(partition_scope[0], group_id, *partition_scope[2..])["poll_state"] = poll_state
+
+      produce(reports_topic, report.to_json, key: report["process"]["id"])
+    end
+
+    before do
+      produce_group_report
+
+      Karafka::Admin.stubs(:read_lags_with_offsets).returns(
+        group_id => { "default" => { 0 => { lag: 4_200, offset: 10 } } }
+      )
+    end
+
+    it "expect every lens tab and breadcrumb link to render the topic of that group" do
+      get "#{topic_path}/overview"
+
+      assert_ok
+
+      %w[overview lags offsets changes].each do |lens|
+        assert_body(%(href="#{topic_path}/#{lens}"))
+
+        get "#{topic_path}/#{lens}"
+
+        assert_ok
+        assert_body("Topic default in #{group_id}")
+      end
+
+      assert_body(%(href="#{topic_path}/cluster_lags"))
+
+      get "#{topic_path}/cluster_lags"
+
+      assert_ok
+      assert_body("4200")
+    end
+
+    it "expect the topic and lens breadcrumbs to link to the topic of that group" do
+      get "#{topic_path}/lags"
+
+      crumbs = body[%r{<div class="breadcrumbs">.*?</ul>}m]
+
+      assert_includes(crumbs, %(href="#{topic_path}/overview"))
+      assert_includes(crumbs, %(href="#{topic_path}/lags"))
+    end
+
+    context "when commanding is on" do
+      let(:commands_topic) { create_topic }
+
+      before do
+        Karafka::Web.config.commanding.active = true
+        topics_config.consumers.commands.name = commands_topic
+      end
+
+      it "expect the pause and offset links and forms to reach that group" do
+        {
+          "/consumers/topics/#{encoded_group_id}/default/pause" => [:post, "new", { duration: 60 }],
+          "/consumers/partitions/#{encoded_group_id}/default/0/pause" => [:post, "new", { duration: 60 }],
+          "/consumers/partitions/#{encoded_group_id}/default/0/offset" => [:put, "edit", { offset: 1 }]
+        }.each do |action_path, (verb, page, params)|
+          get "#{topic_path}/overview"
+
+          assert_body(%(href="#{action_path}/#{page}"))
+
+          get "#{action_path}/#{page}"
+
+          assert_ok
+          assert_body(%(action="#{action_path}"))
+
+          public_send(verb, action_path, params)
+
+          assert_equal(302, response.status)
+          assert_includes(flash[:success], group_id)
+        end
+      end
+
+      context "when the partition is paused" do
+        before { produce_group_report(poll_state: "paused") }
+
+        it "expect the resume links and forms to reach that group" do
+          [
+            "/consumers/topics/#{encoded_group_id}/default/pause",
+            "/consumers/partitions/#{encoded_group_id}/default/0/pause"
+          ].each do |action_path|
+            get "#{topic_path}/overview"
+
+            assert_body(%(href="#{action_path}/edit"))
+
+            get "#{action_path}/edit"
+
+            assert_ok
+            assert_body(%(action="#{action_path}"))
+
+            delete(action_path, reset_attempts: "on")
+
+            assert_equal(302, response.status)
+            assert_includes(flash[:success], group_id)
+          end
+        end
+      end
+    end
+
+    it "expect the group breadcrumb to scope the topics list to the decoded group id" do
+      get "#{topic_path}/overview"
+
+      assert_body(
+        %(href="/health/topics?filter[field]=consumer_group&filter[value]=#{Rack::Utils.escape(group_id)}")
+      )
+    end
+
+    it "expect a bare topic path to redirect to the overview of that group" do
+      get topic_path
+
+      assert_equal(302, response.status)
+      assert_equal("#{topic_path}/overview", response.headers["location"])
+    end
+  end
+
+  %w[%zz abc%].each do |malformed|
+    context "when the consumer group id is a malformed escape (#{malformed})" do
+      it do
+        [
+          "/health/topics/#{malformed}/default/overview",
+          "/consumers/topics/#{malformed}/default/pause/new",
+          "/consumers/partitions/#{malformed}/default/0/pause/new",
+          "/consumers/partitions/#{malformed}/default/0/offset/edit"
+        ].each do |path|
+          env = Rack::MockRequest.env_for("http://example.org/")
+          env["PATH_INFO"] = path
+
+          assert_equal(404, app.call(env).first)
+        end
+      end
+    end
+  end
+
   describe "#overview" do
     before { get "health/topics/example_app6_app/default/overview" }
 

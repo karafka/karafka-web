@@ -21,7 +21,7 @@
 <%
   pause_path = consumers_path(
     'topics',
-    @consumer_group_id,
+    encode_path_segment(@consumer_group_id),
     @topic,
     'pause'
   )
