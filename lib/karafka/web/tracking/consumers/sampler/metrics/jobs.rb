@@ -10,11 +10,11 @@ module Karafka
             class Jobs < Base
               include ::Karafka::Core::Helpers::Time
 
-              # @param windows [Helpers::Ttls::Windows] time windows for aggregating metrics
+              # @param processing_times [Helpers::Ttls::Sum] processing times of the last minute
               # @param started_at [Float] process start time
-              def initialize(windows, started_at)
+              def initialize(processing_times, started_at)
                 super()
-                @windows = windows
+                @processing_times = processing_times
                 @started_at = started_at
               end
 
@@ -22,9 +22,7 @@ module Karafka
               #   utilized all the time within the given time window. 0% means, nothing is happening
               #   most if not all the time.
               def utilization
-                totals = windows.m1[:processed_total_time]
-
-                return 0 if totals.empty?
+                return 0 if processing_times.empty?
 
                 timefactor = [float_now - started_at, 60].min
 
@@ -35,7 +33,7 @@ module Karafka
 
                 # We divide by 1_000 to convert from milliseconds
                 # We multiply by 100 to have it in % scale
-                (totals.sum / 1_000 / workers_count / timefactor * 100).round(2)
+                (processing_times.sum / 1_000 / workers_count / timefactor * 100).round(2)
               end
 
               # @return [Hash] job queue statistics
@@ -53,7 +51,7 @@ module Karafka
 
               private
 
-              attr_reader :windows, :started_at
+              attr_reader :processing_times, :started_at
 
               # @return [Integer] current number of worker threads
               # @note Not memoized because the thread pool can be dynamically scaled at runtime

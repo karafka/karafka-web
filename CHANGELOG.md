@@ -6,8 +6,8 @@
 - **[Feature]** Add a **Delete messages up to this offset** action to the Explorer message view (Pro), with a confirmation showing the offset range that goes. Gated by the new `#delete_records?` policy, denied by default. Requires karafka `2.6.2`.
 - **[Feature]** Aggregate the Health views per topic with drill-down to partitions, so they stay usable at scale. Thresholds are configurable under `config.ui.health.lags` (#112).
 - **[Feature]** Add a **Delete Offsets** action (Pro) to the Health consumer group Topics page that deletes a consumer group's committed offsets for a topic. Gated by the new `ui.policies.consumer_groups` `#delete_offsets?` policy, denied by default. Requires karafka `2.6.2`.
-- [Enhancement] Add a Health **Consumer Groups** view (Pro) listing every consumer group in the cluster with its state, including groups the Web UI does not track. Each group has an overview (state, protocol, assignor, coordinator), a members page with hosts, assignments and links to the Karafka processes running them (matched by member id), and a topics page with lags per topic and the offsets deletion, and a committed offsets page with lags per partition. Lists are paginated, sortable and filterable. Cluster Lags link each consumer group to its page.
-- [Enhancement] Report the group member id of each subscription group and list them on a new consumer **Memberships** tab (Pro), one row per subscription group (librdkafka client) with its consumer group, member id, static membership id and state. Bumps the consumers reports schema to `1.8.0` and migrates older reports.
+- [Enhancement] Add a Health **Consumer Groups** view (Pro) listing every consumer group in the cluster with its state, also those the Web UI does not track. Each has overview, members (linked to their Karafka processes), topics (lags, offsets deletion) and committed offsets pages. Cluster Lags link each group to its page.
+- [Enhancement] Report the group member id of each subscription group and list it on a new consumer **Memberships** tab (Pro), one row per subscription group with its consumer group, member id, static membership id and state. Bumps the consumers reports schema to `1.8.0` and migrates older reports.
 - [Enhancement] Show the source of each config value (dynamic topic, dynamic broker, static broker, default, ...) on the topic and broker configuration pages (Pro). Requires karafka `2.6.2`.
 - [Enhancement] Show the Explorer publish, republish, download, export and delete actions disabled, with the reason in their title, when a policy denies them or the payload cannot be exported, instead of hiding them.
 - [Enhancement] Explain every disabled action button (topics management, commanding, read-only configs, recurring tasks, process state) with the reason in its title, which a disabled button could not show before.
@@ -20,29 +20,21 @@
 - [Enhancement] After republishing, redirect to the partition that received the copy (#1239).
 - [Enhancement] Add `Karafka::Web.producer.acked`, an `acks: 1` producer variant, so user-initiated produces report the assigned offset (#956).
 - [Enhancement] Add a per-broker partition **Distribution** view to the Cluster section (Pro) that flags over and under-loaded brokers (#962).
-- [Enhancement] Inject Web UI kafka settings through `Karafka::Web::Config::DefaultsInjector`, following the Karafka pattern (#653). Requires karafka-core `>= 2.6.3`.
 - [Enhancement] Read the Pro commands and scheduled-messages topics with the same Web UI kafka settings as the rest of the UI.
 - [Enhancement] Tighten compaction on the `karafka_consumers_states` and `karafka_consumers_metrics` topics so superseded versions are removed sooner.
 - [Enhancement] Skip the consumer commanding partition and topic checks in each fetch loop when no command is pending, avoiding a full assignment scan per loop (Pro).
 - [Enhancement] Evict outdated per-job tracking samples without scanning the whole 60 s window, so each processed job holds the tracking lock for a constant time.
+- [Enhancement] Lower GC pressure and the time each report holds the tracking lock when tracking worker utilization. Each job's processing time now leaves the 60 s window up to one second earlier, so the reported utilization may be slightly lower (about 1.7% under steady load).
 - [Enhancement] Link the Health lag counters worst-first: the Dashboard "Total lag" opens the Health topics sorted by lag, and each topic's "Max lag" shows the hot partition id and opens its partitions sorted by lag (Pro).
 - [Enhancement] Show an informational Status page check when the Web UI reports through an idempotent or transactional `Karafka.producer` shared with the application, with a link to configuring a custom Web UI producer.
 - [Enhancement] Speed up Web UI sorting on large data, most of all when sorting on an attribute the rows do not have.
 - [Enhancement] Show error and thread backtraces as plain text instead of JSON-highlighted, with gem and Ruby frames muted so the application frames stand out.
 - [Enhancement] Collapse the directory prefix shared by the absolute application paths of error and thread backtraces behind an ellipsis, with a toggle to show the full paths.
 - [Enhancement] Link the Origin badge on the Pro Errors list to the Explorer: to the last offset of the failed batch when known, else to the partition, else to the topic.
+- [Enhancement] Validate the Explorer republish form before producing: the target topic must exist, the target partition must be in range and the payload must suit the target topic's deserializer (skippable). Errors re-render the form (Pro) (#1244).
 - [Change] Move the Pro Dead Letter Queue Topics view from `/dlq` to `/dead_letter_queues`. Old `/dlq` links redirect to the new path. Label its navigation item `DLQ`.
-- [Maintenance] Split the Web UI Tailwind stylesheet into per-component files.
-- [Maintenance] Extract the consumer commanding forms into `Lib::Commands` and validate offset and pause values server-side (#1241).
-- [Maintenance] Extract the topic configuration edit flow into `Lib::Configuring` and reject empty values (#1241).
-- [Maintenance] Extract topic creation and repartitioning into `Lib::TopicCreation` and `Lib::Repartitioning` with server-side validation (#1241).
-- [Maintenance] Extract the Explorer republish flow into `Lib::Republishing` and validate the form before producing (#1244).
 - [Maintenance] Update the vendored `AirDatepicker` CSS to `3.6.0` to match the JS.
-- [Maintenance] Sign the gem with `sigstore-cli` and push it with `gem push --attestation` (the `gem-push` action of `karafka/misc`), so a failed signing stops the release instead of publishing the gem without an attestation.
-- [Maintenance] Move the cluster-sourced Web UI models (`Broker`, `BrokerPartitionsDistribution`, `WatermarkOffsets`, cluster `Topic` and the cluster lags) into `Models::Cluster` and keep `Models::Topic` and `Models::Health` for consumer reports data.
-- [Maintenance] Move the models used only by the Pro Web UI (cluster brokers, topics, consumer groups and lags, the Health aggregations and the recurring tasks) into `Pro::Ui::Models`, leaving `Models::Cluster::Info` with the cluster metadata only.
-- [Maintenance] Move the Pro-only parts of the shared Web UI models, helpers and partials into Pro: topic-wide message pages, process lookups by id and member id, the Explorer, topics and consumer paths, and the partition, badge, button and time helpers used only by Pro views.
-- [Fix] Stop the first page visit after each full page load from stalling for 2 seconds. Turbo saw the enabled code highlighting stylesheet as a new one and waited for it to load, which a disabled stylesheet never does. Both highlighting themes now come from one stylesheet scoped to the Web UI theme, built from the vendored highlight.js themes by `bin/scope_highlight_themes`.
+- [Fix] Stop the first page visit after each full page load from stalling for 2 seconds while Turbo waited for a code highlighting stylesheet to load.
 - [Fix] Apply the stored or system theme before the page renders instead of after it loads, so pages no longer flash in the light theme first.
 - [Fix] Stop every page visit from keeping the previous page in browser memory, through the theme manager color scheme listener and the charts that were never destroyed. Long open Web UI tabs could grow and slow the browser down.
 - [Fix] Link the single message pagination (Explorer, Errors) to the other message directly instead of through a redirect, which made Turbo render the page twice. Disabled pagination buttons link to the current page.
@@ -55,7 +47,7 @@
 - [Fix] Sort Hash elements by key value even when the key name matches a `Hash` method.
 - [Fix] Reject a new partition count that is not greater than the current one with a form error instead of a broker error (Pro).
 - [Fix] Enrich each subscription group only once per consumer report.
-- [Fix] Reject seek offsets and pause durations that overflow librdkafka limits instead of crashing the running consumer.
+- [Fix] Reject seek offsets and pause durations that are not whole numbers or overflow librdkafka limits with an error message, so the running consumer gets no command and no longer crashes on an overflow (Pro) (#1241).
 - [Fix] Return 403 for partition and topic commanding requests when commanding is disabled.
 - [Fix] Render tombstone messages on Web UI topics as a placeholder instead of failing the view.
 - [Fix] Render foreign or malformed messages in the Errors views as a placeholder instead of failing the view (#1243).
@@ -63,7 +55,7 @@
 - [Fix] Stop live polling from overwriting an unsubmitted search or filter input.
 - [Fix] Report malformed partition count, replication factor and repartition values as form errors instead of truncating them.
 - [Fix] Show admin client configuration errors in the topic creation and configuration forms instead of returning a 500.
-- [Fix] Reject the reserved topic names `.` and `..` in the topic creation form (Pro).
+- [Fix] Reject topic names Kafka does not accept (over 249 characters, characters other than letters, digits, `.`, `_` and `-`, or `.` / `..`) in the topic creation form with a form error instead of a broker error (Pro).
 - [Fix] Reject a `config.ui.health.lags.skew_threshold` of `1` or less.
 - [Fix] Correct the republish form label for the source-headers checkbox (Pro).
 - [Fix] Hide internal topics from the per-topic config, distribution and removal pages when `internal_topics` visibility is off (Pro).
@@ -91,10 +83,11 @@
 - [Fix] Do not live-poll the topic, messages and offsets deletion confirmation pages, so a rejected deletion error is not replaced by a refresh a few seconds later.
 - [Fix] Center single buttons in table "Options" columns, so they no longer sit closer to the right cell edge than to the left one. Columns with different button counts per row stay right-aligned.
 - [Fix] Center the "Options" label of table headers like the other headers, also when the buttons below it are right-aligned.
-- [Fix] Return 404 for a topic name Kafka cannot have (over 249 characters, characters other than letters, digits, `.`, `_` and `-`, or `.` / `..`) in topic, Explorer and scheduled messages URLs, without querying the cluster. A name over 512 characters crashed the process on karafka-rdkafka `0.32.2` and older.
+- [Fix] Return 404 for a topic name Kafka cannot have (over 249 characters, characters other than letters, digits, `.`, `_` and `-`, or `.` / `..`) in topic, Explorer and scheduled messages URLs. A name over 512 characters crashed the process on karafka-rdkafka `0.32.2` and older.
 - [Fix] End error messages cut on the Errors list with an ellipsis and show the full message in their title.
 - [Fix] Escape shortened values (process IDs, command arguments) and their title, which rendered as raw HTML.
 - [Fix] Do not count consumer reports again in the Web UI totals (messages, errors, retries, etc.) when the Web UI consumer consumes them again after a restart or rebalance that happened after the state was stored.
+- [Fix] Reject an empty value in the topic configuration form with a form error instead of sending it to the broker (Pro) (#1241).
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a keyword filtering box to the data-heavy Web UI listings, with a field selector on flat listings (Pro) (#1073).
