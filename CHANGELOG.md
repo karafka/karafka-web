@@ -20,7 +20,6 @@
 - [Enhancement] After republishing, redirect to the partition that received the copy (#1239).
 - [Enhancement] Add `Karafka::Web.producer.acked`, an `acks: 1` producer variant, so user-initiated produces report the assigned offset (#956).
 - [Enhancement] Add a per-broker partition **Distribution** view to the Cluster section (Pro) that flags over and under-loaded brokers (#962).
-- [Enhancement] Inject Web UI kafka settings through `Karafka::Web::Config::DefaultsInjector`, following the Karafka pattern (#653). Requires karafka-core `>= 2.6.3`.
 - [Enhancement] Read the Pro commands and scheduled-messages topics with the same Web UI kafka settings as the rest of the UI.
 - [Enhancement] Tighten compaction on the `karafka_consumers_states` and `karafka_consumers_metrics` topics so superseded versions are removed sooner.
 - [Enhancement] Skip the consumer commanding partition and topic checks in each fetch loop when no command is pending, avoiding a full assignment scan per loop (Pro).
@@ -47,7 +46,7 @@
 - [Fix] Sort Hash elements by key value even when the key name matches a `Hash` method.
 - [Fix] Reject a new partition count that is not greater than the current one with a form error instead of a broker error (Pro).
 - [Fix] Enrich each subscription group only once per consumer report.
-- [Fix] Reject seek offsets and pause durations that overflow librdkafka limits instead of crashing the running consumer.
+- [Fix] Reject seek offsets and pause durations that are not whole numbers or overflow librdkafka limits with an error message, so the running consumer gets no command and no longer crashes on an overflow (Pro) (#1241).
 - [Fix] Return 403 for partition and topic commanding requests when commanding is disabled.
 - [Fix] Render tombstone messages on Web UI topics as a placeholder instead of failing the view.
 - [Fix] Render foreign or malformed messages in the Errors views as a placeholder instead of failing the view (#1243).
@@ -55,7 +54,7 @@
 - [Fix] Stop live polling from overwriting an unsubmitted search or filter input.
 - [Fix] Report malformed partition count, replication factor and repartition values as form errors instead of truncating them.
 - [Fix] Show admin client configuration errors in the topic creation and configuration forms instead of returning a 500.
-- [Fix] Reject the reserved topic names `.` and `..` in the topic creation form (Pro).
+- [Fix] Reject topic names Kafka does not accept (over 249 characters, characters other than letters, digits, `.`, `_` and `-`, or `.` / `..`) in the topic creation form with a form error instead of a broker error (Pro).
 - [Fix] Reject a `config.ui.health.lags.skew_threshold` of `1` or less.
 - [Fix] Correct the republish form label for the source-headers checkbox (Pro).
 - [Fix] Hide internal topics from the per-topic config, distribution and removal pages when `internal_topics` visibility is off (Pro).
@@ -86,9 +85,7 @@
 - [Fix] Return 404 for a topic name Kafka cannot have (over 249 characters, characters other than letters, digits, `.`, `_` and `-`, or `.` / `..`) in topic, Explorer and scheduled messages URLs. A name over 512 characters crashed the process on karafka-rdkafka `0.32.2` and older.
 - [Fix] End error messages cut on the Errors list with an ellipsis and show the full message in their title.
 - [Fix] Escape shortened values (process IDs, command arguments) and their title, which rendered as raw HTML.
-- [Fix] Reject invalid seek offsets and pause durations with a form error instead of sending them to the running consumer (Pro) (#1241).
 - [Fix] Reject an empty value in the topic configuration form with a form error instead of sending it to the broker (Pro) (#1241).
-- [Fix] Validate the topic creation and repartition forms server-side and show a form error instead of the broker error (Pro) (#1241).
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a keyword filtering box to the data-heavy Web UI listings, with a field selector on flat listings (Pro) (#1073).
