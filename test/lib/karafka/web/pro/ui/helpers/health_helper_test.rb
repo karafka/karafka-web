@@ -52,6 +52,43 @@ describe_current do
     end
   end
 
+  describe "#health_path_segment" do
+    it { assert_equal("app_6.x-y", health_path_segment("app_6.x-y")) }
+
+    it "encodes the value as one path segment" do
+      assert_equal("a%20b%2Fc%3Fd%23e%25f-%C5%BC", health_path_segment("a b/c?d#e%f-ż"))
+    end
+  end
+
+  describe "#health_decode_path_segment" do
+    it "decodes what #health_path_segment encodes" do
+      group_id = "a b/c?d#e%f-ż"
+
+      assert_equal(group_id, health_decode_path_segment(health_path_segment(group_id)))
+    end
+
+    %w[%zz abc%].each do |malformed|
+      it "raises a not found error for a malformed escape (#{malformed})" do
+        assert_raises(Karafka::Web::Errors::Ui::NotFoundError) do
+          health_decode_path_segment(malformed)
+        end
+      end
+    end
+  end
+
+  describe "#health_topic_path" do
+    it "builds the topic overview path by default" do
+      assert_equal("/karafka/health/topics/app/orders/overview", health_topic_path("app", "orders"))
+    end
+
+    it "encodes the consumer group id as one path segment" do
+      assert_equal(
+        "/karafka/health/topics/a%20b%2Fc%3Fd/orders/lags",
+        health_topic_path("a b/c?d", "orders", "lags")
+      )
+    end
+  end
+
   describe "#health_consumer_group_path" do
     it "builds the consumer group overview path by default" do
       assert_equal(
@@ -103,6 +140,13 @@ describe_current do
         health_overview_by_lag_path("app", "orders")
       )
     end
+
+    it "encodes the consumer group id as one path segment" do
+      assert_equal(
+        "/karafka/health/topics/a%23b/orders/overview?sort=lag_hybrid+desc",
+        health_overview_by_lag_path("a#b", "orders")
+      )
+    end
   end
 
   describe "#health_cluster_lags_by_lag_path" do
@@ -110,6 +154,13 @@ describe_current do
       assert_equal(
         "/karafka/health/topics/app/orders/cluster_lags?sort=lag+desc",
         health_cluster_lags_by_lag_path("app", "orders")
+      )
+    end
+
+    it "encodes the consumer group id as one path segment" do
+      assert_equal(
+        "/karafka/health/topics/a%23b/orders/cluster_lags?sort=lag+desc",
+        health_cluster_lags_by_lag_path("a#b", "orders")
       )
     end
   end
