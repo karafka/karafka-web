@@ -47,15 +47,33 @@ describe_current do
   end
 
   context "when changing_tools lists tool names" do
-    before { params[:mcp][:changing_tools] = %w[karafka_delete_topic] }
+    before { params[:mcp][:changing_tools] = %w[karafka_pause_partition karafka_trace_process] }
 
     it { assert(contract.call(params).success?) }
   end
 
-  context "when changing_tools enables all" do
-    before { params[:mcp][:changing_tools] = :all }
+  context "when changing_tools lists an unknown tool name" do
+    before { params[:mcp][:changing_tools] = %w[karafka_pause_partition karafka_delete_topic] }
+
+    it { refute(contract.call(params).success?) }
+  end
+
+  context "when changing_tools lists a read-only tool name" do
+    before { params[:mcp][:changing_tools] = %w[karafka_overview] }
+
+    it { refute(contract.call(params).success?) }
+  end
+
+  context "when changing_tools is the operate preset" do
+    before { params[:mcp][:changing_tools] = :operate }
 
     it { assert(contract.call(params).success?) }
+  end
+
+  context "when changing_tools is an unknown preset" do
+    before { params[:mcp][:changing_tools] = :all }
+
+    it { refute(contract.call(params).success?) }
   end
 
   context "when changing_tools is true" do
@@ -65,7 +83,7 @@ describe_current do
   end
 
   context "when changing_tools lists symbols" do
-    before { params[:mcp][:changing_tools] = %i[karafka_delete_topic] }
+    before { params[:mcp][:changing_tools] = %i[karafka_pause_partition] }
 
     it { refute(contract.call(params).success?) }
   end

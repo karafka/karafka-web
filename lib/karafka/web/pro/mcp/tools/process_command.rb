@@ -33,10 +33,10 @@ module Karafka
     module Pro
       module Mcp
         module Tools
-          # Base for the tools that send a command to consumer processes, as the Web UI
+          # Base for the tools that send a command to one consumer process, as the Web UI
           # commanding actions do
           class ProcessCommand < Base
-            # Process id argument of the tools that command one process
+            # Process id argument of the tools
             PROCESS_ID = {
               process_id: {
                 type: "string",
@@ -51,12 +51,9 @@ module Karafka
 
             # @return [Array(String, String)] Web UI request of the matching commanding action
             def ui_request
-              process_id = @arguments[:process_id]
               action = self.class.command.name.split(".").last
 
-              path = process_id ? "#{process_id}/#{action}" : "#{action}_all"
-
-              ["POST", "/consumers/commanding/#{path}"]
+              ["POST", "/consumers/commanding/#{@arguments.fetch(:process_id)}/#{action}"]
             end
 
             # @return [Array<String>] the commands topic
@@ -68,26 +65,15 @@ module Karafka
 
             # @return [Hash] dispatched command details
             def fetch
-              Commanding::Dispatcher.request(self.class.command.name, {}, matchers: matchers)
+              process_id = @arguments.fetch(:process_id)
 
-              { dispatched: true }.merge(plan)
-            end
+              Commanding::Dispatcher.request(
+                self.class.command.name,
+                {},
+                matchers: { process_id: process_id }
+              )
 
-            # @return [Hash] command the tool would send and to which processes
-            def plan
-              process_id = @arguments[:process_id]
-
-              {
-                command: self.class.command.name,
-                processes: process_id ? [process_id] : "all"
-              }
-            end
-
-            # @return [Hash] matchers of the processes that should run the command
-            def matchers
-              process_id = @arguments[:process_id]
-
-              process_id ? { process_id: process_id } : {}
+              { dispatched: true, command: self.class.command.name, processes: [process_id] }
             end
           end
         end

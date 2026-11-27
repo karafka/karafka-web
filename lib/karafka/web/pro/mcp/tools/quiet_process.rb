@@ -44,10 +44,9 @@ module Karafka
                 wait for a stop. As the Web UI Quiet action. It resumes only after a restart.
                 Use karafka_processes for the process id.
               TEXT
-              contract: Contracts::DestructiveProcess.new,
+              contract: Contracts::Process.new,
               operation: :produce,
               idempotent: true,
-              destructive: true,
               properties: PROCESS_ID,
               required: %w[process_id]
             )

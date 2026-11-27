@@ -32,44 +32,43 @@ module Karafka
   module Web
     module Pro
       module Mcp
-        module Tools
-          # Base for the tools that create or change topics, as the Web UI topics management
-          # actions do
-          class TopicChange < Base
-            # @param arguments [Hash] tool arguments
-            def initialize(arguments)
-              super
-              @current = nil
+        # Named sets of changing tools for `config.mcp.changing_tools`. A preset lists its tools by
+        # name, so a release that adds a changing tool does not enable it in apps using a preset
+        module Presets
+          # Operations that can be reverted: pause and resume, trace, quiet a process, trigger a
+          # recurring task and republish a message (for example from a DLQ)
+          OPERATE = %w[
+            karafka_pause_partition
+            karafka_resume_partition
+            karafka_pause_topic
+            karafka_resume_topic
+            karafka_trace_process
+            karafka_quiet_process
+            karafka_trigger_recurring_task
+            karafka_republish_message
+          ].freeze
+
+          # Presets by name
+          ALL = { operate: OPERATE }.freeze
+
+          private_constant :OPERATE, :ALL
+
+          class << self
+            # @param name [Symbol] preset name
+            # @return [Boolean] is there such a preset
+            def exists?(name)
+              ALL.key?(name)
             end
 
-            # Topics management must be enabled and internal topics visible, as in the Web UI
-            def authorize!
-              deny!("Topics management is disabled") unless Ui::Lib::Features.topics_management?
-
-              return if ::Karafka::Web.config.ui.visibility.internal_topics
-              return unless topic.start_with?("__")
-
-              deny!("Internal topics are hidden in the Web UI")
+            # @return [Array<String>] names of all the changing tools the presets know
+            def names
+              ALL.values.flatten.uniq
             end
 
-            # @return [Array<String>] the changed topic
-            def topics
-              [topic]
-            end
-
-            private
-
-            # @return [Web::Ui::Models::Topic]
-            # @raise [Errors::Mcp::NoDataError] when the topic does not exist
-            def current
-              @current ||= Web::Ui::Models::Topic.find(topic)
-            rescue Errors::Ui::NotFoundError
-              raise Errors::Mcp::NoDataError, "Topic #{topic} does not exist"
-            end
-
-            # @return [String]
-            def topic
-              @arguments.fetch(:topic)
+            # @param setting [Symbol, Array<String>] `config.mcp.changing_tools` value
+            # @return [Array<String>] names of the changing tools it enables
+            def tools(setting)
+              setting.is_a?(Symbol) ? ALL.fetch(setting) : setting
             end
           end
         end

@@ -54,8 +54,8 @@ describe_current do
     end
   end
 
-  context "when all changing tools are enabled" do
-    before { Karafka::Web.config.mcp.changing_tools = :all }
+  context "when the operate preset is enabled" do
+    before { Karafka::Web.config.mcp.changing_tools = :operate }
 
     it { assert_includes(listed, described_class.name) }
   end
@@ -64,12 +64,11 @@ describe_current do
     annotations = described_class.definition.fetch(:annotations)
 
     refute(annotations[:readOnlyHint])
-    assert(annotations[:destructiveHint])
+    refute(annotations[:destructiveHint])
     assert(annotations[:idempotentHint])
   end
   let(:process_id) { SecureRandom.uuid }
-  let(:arguments) { base_arguments.merge(confirm: true) }
-  let(:base_arguments) { { process_id: process_id } }
+  let(:arguments) { { process_id: process_id } }
   let(:command_name) { "consumers.quiet" }
 
   let(:commands_topic) { create_topic }
@@ -96,30 +95,16 @@ describe_current do
     end
   end
 
-  context "when confirm is missing" do
-    let(:arguments) { base_arguments }
+  context "when asked for a dry run" do
+    let(:arguments) { { process_id: process_id, dry_run: true } }
 
     it "refuses the call without sending a command" do
-      assert_includes(rpc_error["message"], "confirm: true")
+      assert_equal("arguments contain an unknown argument", rpc_error["message"])
       assert_empty(commands)
-      assert_equal(%w[rejected], records.map { |record| record["outcome"] })
     end
   end
 
-  context "when it is a dry run" do
-    let(:arguments) { base_arguments.merge(dry_run: true) }
-
-    it "describes the command without sending it" do
-      structured = result.fetch("structuredContent")
-
-      assert(structured["dry_run"])
-      assert_equal(command_name, structured.dig("change", "command"))
-      assert_empty(commands)
-      assert_equal(%w[intent result], records.map { |record| record["type"] })
-    end
-  end
-
-  context "when confirmed" do
+  context "when called" do
     it "sends the same command as the Web UI action" do
       refute(result["isError"])
       sleep(1)

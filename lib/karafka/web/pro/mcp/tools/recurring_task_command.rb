@@ -33,20 +33,17 @@ module Karafka
     module Pro
       module Mcp
         module Tools
-          # Base for the tools that trigger, enable or disable recurring tasks, as the Web UI
-          # recurring tasks actions do
+          # Base for the tools that command one recurring task, as the Web UI recurring tasks
+          # actions do
           class RecurringTaskCommand < Base
-            # Task id argument of the tools that command one task
+            # Task id argument of the tools
             TASK_ID = {
               task_id: { type: "string", description: "Id of the task, as in the Web UI schedule" }
             }.freeze
 
             # @return [Array(String, String)] Web UI request of the matching recurring tasks action
             def ui_request
-              task_id = @arguments[:task_id]
-              action = self.class.command
-
-              ["POST", task_id ? "/recurring_tasks/#{task_id}/#{action}" : "/recurring_tasks/#{action}_all"]
+              ["POST", "/recurring_tasks/#{@arguments.fetch(:task_id)}/#{self.class.command}"]
             end
 
             # @return [Array<String>] the recurring tasks schedules topic
@@ -58,9 +55,9 @@ module Karafka
 
             # @return [Hash] dispatched command details
             def fetch
-              task_id = @arguments.fetch(:task_id, "*")
+              task_id = @arguments.fetch(:task_id)
 
-              ensure_task_exists!(task_id) unless task_id == "*"
+              ensure_task_exists!(task_id)
 
               ::Karafka::Pro::RecurringTasks.public_send(self.class.command, task_id)
 

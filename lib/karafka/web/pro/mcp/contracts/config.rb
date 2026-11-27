@@ -48,7 +48,11 @@ module Karafka
               end
 
               required(:changing_tools) do |val|
-                val == :all || (val.is_a?(Array) && val.all?(String))
+                if val.is_a?(Symbol)
+                  Presets.exists?(val)
+                else
+                  val.is_a?(Array) && val.all? { |name| Presets.names.include?(name) }
+                end
               end
 
               nested(:audit) do

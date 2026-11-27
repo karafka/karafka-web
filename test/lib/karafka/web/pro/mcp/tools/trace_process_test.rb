@@ -57,8 +57,8 @@ describe_current do
     end
   end
 
-  context "when all changing tools are enabled" do
-    before { Karafka::Web.config.mcp.changing_tools = :all }
+  context "when the operate preset is enabled" do
+    before { Karafka::Web.config.mcp.changing_tools = :operate }
 
     it { assert_includes(listed, described_class.name) }
   end

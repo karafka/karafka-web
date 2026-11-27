@@ -57,17 +57,6 @@ module Karafka
                     [[%i[arguments], :unknown]]
                   end
                 end
-
-                # Accepts the given arguments and the `confirm` and `dry_run` arguments every
-                # destructive tool takes
-                #
-                # @param names [Array<Symbol>] names of the tool own arguments
-                def destructive_arguments(*names)
-                  arguments(*names, :confirm, :dry_run)
-
-                  optional(:confirm) { |val| [true, false].include?(val) }
-                  optional(:dry_run) { |val| [true, false].include?(val) }
-                end
               end
             end
           end

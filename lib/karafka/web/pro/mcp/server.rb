@@ -56,29 +56,12 @@ module Karafka
             Tools::Error,
             Tools::TraceProcess,
             Tools::QuietProcess,
-            Tools::StopProcess,
-            Tools::QuietAllProcesses,
-            Tools::StopAllProcesses,
             Tools::PausePartition,
             Tools::ResumePartition,
-            Tools::SeekPartition,
             Tools::PauseTopic,
             Tools::ResumeTopic,
             Tools::TriggerRecurringTask,
-            Tools::EnableRecurringTask,
-            Tools::DisableRecurringTask,
-            Tools::TriggerAllRecurringTasks,
-            Tools::EnableAllRecurringTasks,
-            Tools::DisableAllRecurringTasks,
-            Tools::CreateTopic,
-            Tools::RepartitionTopic,
-            Tools::UpdateTopicConfig,
-            Tools::DeleteTopic,
-            Tools::DeleteConsumerGroupOffsets,
-            Tools::PublishMessage,
-            Tools::RepublishMessage,
-            Tools::DeleteMessages,
-            Tools::CancelScheduledMessage
+            Tools::RepublishMessage
           ].to_h { |tool| [tool.name, tool] }.freeze
 
           # JSON-RPC error codes
