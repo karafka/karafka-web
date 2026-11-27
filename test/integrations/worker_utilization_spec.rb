@@ -43,7 +43,6 @@ File.write(boot_file, <<~RUBY)
 
     routes.draw do
       topic TOPIC do
-        # One message keeps the only worker busy for 50 ms
         consumer Class.new(Karafka::BaseConsumer) { def consume = sleep(0.05) }
       end
     end
