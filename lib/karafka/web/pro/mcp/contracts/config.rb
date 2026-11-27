@@ -43,6 +43,18 @@ module Karafka
             end
 
             nested(:mcp) do
+              required(:web_ui_path) do |val|
+                val.is_a?(String) && (val.empty? || val.match?(%r{\A/.*[^/]\z}))
+              end
+
+              required(:changing_tools) do |val|
+                if val.is_a?(Symbol)
+                  Presets.exists?(val)
+                else
+                  val.is_a?(Array) && val.all? { |name| Presets.names.include?(name) }
+                end
+              end
+
               nested(:audit) do
                 required(:actor) { |val| val.nil? || val.respond_to?(:call) }
                 required(:fail_closed_reads) { |val| [true, false].include?(val) }

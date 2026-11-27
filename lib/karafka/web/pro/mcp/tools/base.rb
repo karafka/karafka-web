@@ -32,7 +32,7 @@ module Karafka
   module Web
     module Pro
       module Mcp
-        # Read-only tools exposed to the agents
+        # Tools exposed to the agents
         module Tools
           # Base for all the tools. A tool validates its arguments, reads the data and returns
           # the MCP tool result
@@ -53,6 +53,9 @@ module Karafka
               # @return [Web::Contracts::Base] contract of the tool arguments
               attr_reader :contract
 
+              # @return [Object, nil] command a commanding tool sends
+              attr_reader :command
+
               # @return [Symbol, nil] kind of change ({Mcp::Guard::OPERATIONS}) a changing tool
               #   makes, nil for read-only tools
               attr_reader :operation
@@ -60,6 +63,14 @@ module Karafka
               # @return [Boolean] does this tool change anything
               def changing?
                 !operation.nil?
+              end
+
+              # @return [Boolean] can agents list and call this tool. Changing tools only when
+              #   `config.mcp.changing_tools` enables them
+              def enabled?
+                return true unless changing?
+
+                Presets.tools(::Karafka::Web.config.mcp.changing_tools).include?(name)
               end
 
               # @return [Hash] JSON schema of the tool arguments
@@ -76,15 +87,27 @@ module Karafka
 
               # @return [Hash] tool definition for tools/list
               def definition
+                annotations = { readOnlyHint: !changing?, openWorldHint: false }
+
+                if changing?
+                  annotations[:destructiveHint] = false
+                  annotations[:idempotentHint] = @idempotent
+                end
+
                 {
                   name: name,
                   description: description,
                   inputSchema: input_schema,
-                  annotations: { readOnlyHint: !changing?, openWorldHint: false }
+                  annotations: annotations
                 }
               end
 
               private
+
+              # @param command [Object] command a commanding tool sends
+              def sends(command)
+                @command = command
+              end
 
               # Defines the tool metadata
               #
@@ -94,9 +117,19 @@ module Karafka
               # @param properties [Hash] properties of the arguments schema
               # @param required [Array<String>] names of the required arguments
               # @param operation [Symbol, nil] kind of change a changing tool makes
-              def tool(name, description, contract:, properties: {}, required: [], operation: nil)
+              # @param idempotent [Boolean] does repeating a changing tool call change nothing more
+              def tool(
+                name,
+                description,
+                contract:,
+                properties: {},
+                required: [],
+                operation: nil,
+                idempotent: false
+              )
                 @name = name
                 @operation = operation
+                @idempotent = idempotent
                 @description = description
                 @contract = contract
                 @properties = properties
@@ -109,14 +142,14 @@ module Karafka
             def initialize(arguments)
               @arguments = arguments.transform_keys(&:to_sym)
 
-              result = self.class.contract.call(@arguments)
+              check!(self.class.contract.call(@arguments), Errors::Mcp::InvalidArgumentsError)
+            end
 
-              return if result.success?
-
-              raise(
-                Errors::Mcp::InvalidArgumentsError,
-                result.errors.map { |key, message| "#{key} #{message}" }.join(", ")
-              )
+            # Checks the same Web UI features and policies the matching Web UI action checks.
+            # Read-only tools have none
+            #
+            # @raise [Errors::Mcp::PolicyDeniedError] when the Web UI would deny the action
+            def authorize!
             end
 
             # @return [Hash] MCP tool result. Failures that the agent should know about are tool
@@ -129,7 +162,7 @@ module Karafka
                 structuredContent: data,
                 isError: false
               }
-            rescue Errors::Mcp::NoDataError => e
+            rescue Errors::Mcp::NoDataError, Errors::Mcp::ChangeRefusedError => e
               failure(e.message)
             rescue Errors::Ui::NotFoundError
               failure(
@@ -138,6 +171,12 @@ module Karafka
               )
             rescue ::Rdkafka::RdkafkaError => e
               failure("Kafka request failed: #{e.code}")
+            end
+
+            # @return [Array(String, String)] HTTP method and Web UI path of the action a changing
+            #   tool runs, so the requests policy can check it as a Web UI request
+            def ui_request
+              raise NotImplementedError, "Implement in a changing tool"
             end
 
             # @return [Array<String>] topics a changing tool would change with its arguments.
@@ -149,9 +188,31 @@ module Karafka
 
             private
 
-            # @return [Hash] tool data
+            # @return [Hash] tool data. Changing tools make their change here
             def fetch
               raise NotImplementedError, "Implement in a subclass"
+            end
+
+            # @param contract [Class] Web UI form contract
+            # @param form [Hash] normalized Web UI form with the data its contract needs
+            # @raise [Errors::Mcp::ChangeRefusedError] when the Web UI would refuse the form
+            def validate_form(contract, form)
+              check!(contract.new.call(form), Errors::Mcp::ChangeRefusedError)
+            end
+
+            # @param result [Karafka::Core::Contractable::Result] contract result
+            # @param error [Class] error to raise when the result has errors
+            # @raise [Errors::Mcp::BaseError] with the contract errors as the message
+            def check!(result, error)
+              return if result.success?
+
+              raise error, result.errors.map { |key, message| "#{key} #{message}" }.join(", ")
+            end
+
+            # @param message [String] why the Web UI would deny the action
+            # @raise [Errors::Mcp::PolicyDeniedError]
+            def deny!(message)
+              raise Errors::Mcp::PolicyDeniedError, message
             end
 
             # @param message [String] failure details

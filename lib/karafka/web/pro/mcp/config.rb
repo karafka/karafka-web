@@ -49,6 +49,17 @@ module Karafka
             setting :fail_closed_reads, default: false
           end
 
+          # Changing tools agents may list and call: a preset name (`:operate`) or an array of tool
+          # names. None by default. Each one still passes the same Web UI features and policies
+          # as in the UI
+          setting :changing_tools, default: []
+
+          # Path the Web UI is mounted at in the host app (for example "/karafka"). The requests
+          # policy checks each changing tool call as a request to the matching Web UI action under
+          # this path, so policies that read `SCRIPT_NAME`, `path` or `REQUEST_URI` see the same
+          # path as for the Web UI
+          setting :web_ui_path, default: ""
+
           configure
         end
       end

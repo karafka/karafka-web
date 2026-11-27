@@ -72,7 +72,7 @@ module Karafka
               r.halt(Responses.http_error(400, "Unsupported MCP-Protocol-Version"))
             end
 
-            r.halt(Server.new(Audit.new(env)).call(r.body.read))
+            r.halt(Server.new(Audit.new(env), env).call(r.body.read))
           end
 
           private

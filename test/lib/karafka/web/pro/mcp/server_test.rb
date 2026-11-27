@@ -285,6 +285,7 @@ describe_current do
         )
 
         define_method(:topics) { [@arguments[:topic]] }
+        define_method(:ui_request) { ["DELETE", "/topics/#{@arguments[:topic]}"] }
 
         define_method(:fetch) do
           calls << @arguments[:topic]
@@ -494,6 +495,67 @@ describe_current do
           assert_empty(executions)
           assert_equal(%w[rejected], records.map { |record| record["outcome"] })
           assert_equal("ArgumentError", records.first.dig("actor", "actor_error"))
+        end
+      end
+
+      context "when the requests policy denies the matching Web UI request" do
+        let(:server) do
+          described_class.new(Karafka::Web::Pro::Mcp::Audit.new(env), env.merge("PATH_INFO" => "/"))
+        end
+        let(:requested) { [] }
+
+        before do
+          Karafka::Web.config.ui.policies.requests
+            .stubs(:allow?)
+            .with { |request_env| (requested << request_env).size.positive? }
+            .returns(false)
+        end
+
+        it "refuses the call without acting and checks the request env" do
+          assert_equal("The requests policy denies DELETE /topics/orders", rpc_error["message"])
+          assert_empty(executions)
+          assert_equal(%w[rejected], records.map { |record| record["outcome"] })
+          assert_equal("10.0.0.2", requested.first["REMOTE_ADDR"])
+          assert_equal("/topics/orders", requested.first["PATH_INFO"])
+          assert_equal("/topics/orders", Rack::Request.new(requested.first).path)
+        end
+
+        context "when the Web UI is mounted under a path" do
+          let(:env) do
+            {
+              "REMOTE_ADDR" => "10.0.0.2",
+              "SCRIPT_NAME" => "/karafka/mcp",
+              "REQUEST_URI" => "/karafka/mcp",
+              "REQUEST_PATH" => "/karafka/mcp"
+            }
+          end
+
+          before { Karafka::Web.config.mcp.web_ui_path = "/karafka" }
+
+          after { Karafka::Web.config.mcp.web_ui_path = "" }
+
+          it "presents the Web UI request under that path" do
+            assert_equal(code(:invalid_params), rpc_error["code"])
+
+            request = Rack::Request.new(requested.first)
+
+            assert(request.delete?)
+            assert_equal("/karafka/topics/orders", request.path)
+            assert_equal("/karafka/topics/orders", request.fullpath)
+            assert_equal("/karafka/topics/orders", requested.first["REQUEST_URI"])
+            assert_equal("/karafka/topics/orders", requested.first["REQUEST_PATH"])
+          end
+        end
+      end
+
+      context "when authorizing raises" do
+        before { changing_tool.any_instance.stubs(:authorize!).raises(ArgumentError) }
+
+        it "refuses the call without acting and writes the exception" do
+          assert_equal(code(:internal), rpc_error["code"])
+          assert_empty(executions)
+          assert_equal(%w[exception], records.map { |record| record["outcome"] })
+          assert_equal("ArgumentError", records.first["error"])
         end
       end
 

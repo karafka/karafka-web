@@ -30,7 +30,7 @@
 
 describe_current do
   let(:contract) { described_class.new }
-  let(:params) { { mcp: { audit: { actor: nil, fail_closed_reads: false } } } }
+  let(:params) { { mcp: { changing_tools: [], web_ui_path: "", audit: { actor: nil, fail_closed_reads: false } } } }
 
   it { assert(contract.call(params).success?) }
 
@@ -42,6 +42,66 @@ describe_current do
 
   context "when actor is not a callable" do
     before { params[:mcp][:audit][:actor] = "admin" }
+
+    it { refute(contract.call(params).success?) }
+  end
+
+  context "when changing_tools lists tool names" do
+    before { params[:mcp][:changing_tools] = %w[karafka_pause_partition karafka_trace_process] }
+
+    it { assert(contract.call(params).success?) }
+  end
+
+  context "when changing_tools lists an unknown tool name" do
+    before { params[:mcp][:changing_tools] = %w[karafka_pause_partition karafka_delete_topic] }
+
+    it { refute(contract.call(params).success?) }
+  end
+
+  context "when changing_tools lists a read-only tool name" do
+    before { params[:mcp][:changing_tools] = %w[karafka_overview] }
+
+    it { refute(contract.call(params).success?) }
+  end
+
+  context "when changing_tools is the operate preset" do
+    before { params[:mcp][:changing_tools] = :operate }
+
+    it { assert(contract.call(params).success?) }
+  end
+
+  context "when changing_tools is an unknown preset" do
+    before { params[:mcp][:changing_tools] = :all }
+
+    it { refute(contract.call(params).success?) }
+  end
+
+  context "when changing_tools is true" do
+    before { params[:mcp][:changing_tools] = true }
+
+    it { refute(contract.call(params).success?) }
+  end
+
+  context "when changing_tools lists symbols" do
+    before { params[:mcp][:changing_tools] = %i[karafka_pause_partition] }
+
+    it { refute(contract.call(params).success?) }
+  end
+
+  context "when web_ui_path is a mount path" do
+    before { params[:mcp][:web_ui_path] = "/karafka" }
+
+    it { assert(contract.call(params).success?) }
+  end
+
+  context "when web_ui_path is the root" do
+    before { params[:mcp][:web_ui_path] = "/" }
+
+    it { refute(contract.call(params).success?) }
+  end
+
+  context "when web_ui_path is relative" do
+    before { params[:mcp][:web_ui_path] = "karafka" }
 
     it { refute(contract.call(params).success?) }
   end
