@@ -125,7 +125,7 @@ module Karafka
             # @return [Integer, nil] partitions count of the target topic or nil when it does not
             #   exist, as in the Web UI, so the form contract reports it
             def target_partitions_count(target_topic)
-              Web::Ui::Models::ClusterInfo.partitions_count(target_topic)
+              Ui::Models::Cluster::Topic.partitions_count(target_topic)
             rescue Errors::Ui::NotFoundError
               nil
             end

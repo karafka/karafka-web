@@ -67,7 +67,7 @@ module Karafka
             # @param task_id [String]
             # @raise [Errors::Mcp::NoDataError] when the task is not in the current schedule
             def ensure_task_exists!(task_id)
-              schedule = Web::Ui::Models::RecurringTasks::Schedule.current
+              schedule = Ui::Models::RecurringTasks::Schedule.current
 
               return if schedule && schedule.tasks.map(&:id).include?(task_id)
 
