@@ -262,6 +262,74 @@ describe_current do
         consumer.consume
       end
     end
+
+    context "when reports are consumed again after a crash between flush and commit" do
+      let(:tracking_interval) { Karafka::Web.config.tracking.interval }
+      let(:report_messages) { Fixtures.consumers_reports_json[:stats][:total][:messages] }
+      let(:messages) { Array.new(2) { |offset| report_message.call(offset) } }
+
+      let(:report_message) do
+        ->(offset) { stub(payload: Fixtures.consumers_reports_json, offset: offset, clean!: nil) }
+      end
+
+      let(:restarted_consumer) do
+        consumer = described_class.new
+        consumer.coordinator = coordinator
+        consumer.define_singleton_method(:mark_as_consumed) { |_message| nil }
+        consumer.stubs(:monotonic_now).returns(1_000.0, 1_000.0 + tracking_interval + 1)
+        consumer
+      end
+
+      let(:flushed_messages) do
+        lambda do
+          Karafka::Web.producer.client.flush
+          Karafka::Web::Processing::Consumers::State.current![:stats][:messages]
+        end
+      end
+
+      before do
+        [
+          Karafka::Web::Management::Migrator,
+          Karafka::Web::Processing::Consumers::SchemaManager,
+          Karafka::Web::Processing::Consumers::Aggregators::State,
+          Karafka::Web::Processing::Consumers::Aggregators::Metrics,
+          Karafka::Web::Processing::Consumers::Contracts::State,
+          Karafka::Web::Processing::Consumers::Contracts::Metrics
+        ].each { |klass| klass.unstub(:new) }
+        Karafka::Web::Processing::Publisher.unstub(:publish)
+
+        Karafka::Web.config.topics.consumers.reports.name = create_topic
+        Karafka::Web.config.topics.consumers.states.name = create_topic
+        Karafka::Web.config.topics.consumers.metrics.name = create_topic
+
+        Karafka::Web::Management::Actions::CreateInitialStates.new.call
+        wait_for_state_data(require_ui: false)
+        Karafka::Web::Management::Actions::MigrateStatesData.new.call
+        wait_for_state_data
+
+        consumer.stubs(:monotonic_now).returns(1_000.0, 1_000.0 + tracking_interval + 1)
+        consumer.consume
+      end
+
+      it "does not count the replayed reports again" do
+        flushed = flushed_messages.call
+
+        restarted_consumer.stubs(:messages).returns(messages)
+        restarted_consumer.consume
+
+        assert_equal(2 * report_messages, flushed)
+        assert_equal(flushed, flushed_messages.call)
+      end
+
+      it "counts reports that come after the replayed ones" do
+        flushed = flushed_messages.call
+
+        restarted_consumer.stubs(:messages).returns(messages + [report_message.call(2)])
+        restarted_consumer.consume
+
+        assert_equal(flushed + report_messages, flushed_messages.call)
+      end
+    end
   end
 
   describe "#shutdown" do
