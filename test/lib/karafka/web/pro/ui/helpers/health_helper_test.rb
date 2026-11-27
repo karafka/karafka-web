@@ -158,7 +158,7 @@ describe_current do
     it { assert_equal("", lag_status_row(-1)) }
   end
 
-  # Default config.ui.health.lags: skew_threshold 3, skew_minimum 1_000
+  # Default config.ui.health.lags: skew_threshold 3, min_skewed_lag 1_000
   describe "#skewed?" do
     def stats(measurable_count:, total_lag:, max_lag:)
       obj = Object.new
@@ -214,10 +214,10 @@ describe_current do
       end
     end
 
-    context "when the skew minimum is raised via config" do
-      before { ::Karafka::Web.config.ui.health.lags.skew_minimum = 100_000 }
+    context "when the min skewed lag is raised via config" do
+      before { ::Karafka::Web.config.ui.health.lags.min_skewed_lag = 100_000 }
 
-      after { ::Karafka::Web.config.ui.health.lags.skew_minimum = 1_000 }
+      after { ::Karafka::Web.config.ui.health.lags.min_skewed_lag = 1_000 }
 
       it "does not flag a distribution whose biggest lag is below the raised minimum" do
         refute(skewed?(stats(measurable_count: 4, total_lag: 10_000, max_lag: 9_100)))
