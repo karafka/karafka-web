@@ -33,10 +33,17 @@
     >
       Cluster Lags
     </a>
+
+    <a
+      href="<%= root_path('health', 'consumer_groups') %>"
+      class="custom-tab <%= nav_class(start_with: '/health/consumer_groups') %>"
+    >
+      Consumer Groups
+    </a>
   </div>
 </div>
 
-<% if filtering? || !@stats.empty? %>
+<% if @stats && (filtering? || !@stats.empty?) %>
   <div class="col-span-12">
     <%== filter_box %>
   </div>

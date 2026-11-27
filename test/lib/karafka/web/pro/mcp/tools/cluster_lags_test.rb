@@ -63,6 +63,43 @@ describe_current do
       assert_equal(0, row[:max_lag_partition_id])
       assert_equal(JSON.parse(structured.to_json), JSON.parse(result.dig(:content, 0, :text)))
     end
+
+    context "when the group has lags on an inactive topic" do
+      let(:inactive_topic) { create_topic }
+      let(:visibility) { Karafka::Web.config.ui.visibility }
+
+      before do
+        produce_many(inactive_topic, Array.new(10) { SecureRandom.uuid })
+
+        group = lagging_group
+        inactive_topic_name = inactive_topic
+        draw_routes do
+          consumer_group group do
+            topic inactive_topic_name do
+              consumer Karafka::BaseConsumer
+              active false
+            end
+          end
+        end
+
+        Karafka::Admin.seek_consumer_group(lagging_group, inactive_topic => { 0 => 5 })
+      end
+
+      it "hides that topic as the Web UI does by default" do
+        topics = structured.dig(:consumer_groups, lagging_group, :topics)
+
+        assert(topics.key?(lagging_topic))
+        refute(topics.key?(inactive_topic))
+      end
+
+      it "shows that topic when the Web UI shows inactive topics lags" do
+        visibility.stubs(:active_topics_cluster_lags_only).returns(false)
+
+        row = structured.dig(:consumer_groups, lagging_group, :topics, inactive_topic)
+
+        assert_equal(5, row[:total_lag])
+      end
+    end
   end
 
   context "when arguments are given" do

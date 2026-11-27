@@ -47,6 +47,10 @@ module Karafka
                   controller.subscriptions(process_id)
                 end
 
+                r.get String, "memberships" do |process_id|
+                  controller.memberships(process_id)
+                end
+
                 r.get String, "details" do |process_id|
                   controller.details(process_id)
                 end

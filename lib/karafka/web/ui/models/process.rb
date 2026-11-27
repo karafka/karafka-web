@@ -6,20 +6,6 @@ module Karafka
       module Models
         # Single consumer process representation
         class Process < Lib::HashProxy
-          class << self
-            # Looks for a given process based on its id
-            # @param state [State] state of the system based on which we will do the lookup
-            # @param process_id [String] id of the process we are looking for
-            # @return [Process] selected process or error raised
-            # @raise [::Karafka::Web::Errors::Ui::NotFoundError] raised if process not found
-            # @note Keep in mind, that this search is looking only within processes with a
-            #   compatible schema, as it uses `#active` under the hood.
-            def find(state, process_id)
-              found_process = Processes.active(state).find { |process| process.id == process_id }
-              found_process || raise(::Karafka::Web::Errors::Ui::NotFoundError, process_id)
-            end
-          end
-
           # @return [Array<ConsumerGroup>] consumer groups to which this process is subscribed in
           #   an alphabetical order
           def consumer_groups

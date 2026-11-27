@@ -6,6 +6,7 @@ describe_current do
   let(:errors_topic) { create_topic }
   let(:no_errors) { "There are no errors in this errors topic partition" }
   let(:error_report) { Fixtures.errors_file }
+  let(:partitions_limited) { "The OSS Web UI shows only" }
 
   before { topics_config.errors.name = errors_topic }
 
@@ -29,6 +30,7 @@ describe_current do
         assert_body(no_errors)
         assert_body(breadcrumbs)
         refute_body(pagination)
+        refute_body(partitions_limited)
       end
     end
 
@@ -48,6 +50,95 @@ describe_current do
         assert_body("high: 3")
         assert_body("low: 0")
         assert_body(breadcrumbs)
+        refute_body(partitions_limited)
+      end
+    end
+
+    context "when the errors topic has many partitions" do
+      let(:errors_topic) { create_topic(partitions: 4) }
+
+      before do
+        produce(errors_topic, error_report, partition: 0)
+        produce(errors_topic, error_report, partition: 2)
+
+        get "errors"
+      end
+
+      it "expect to list only partition 0 and say that other partitions are not listed" do
+        assert_ok
+        assert_equal(1, body.scan("StandardError:").size)
+        assert_body("high: 1")
+        assert_body("This errors topic has 4 partitions.")
+        assert_body("errors in partitions 1 to 3 are not listed")
+      end
+    end
+
+    context "when the errors topic has many partitions and partition 0 has no errors" do
+      let(:errors_topic) { create_topic(partitions: 2) }
+
+      before do
+        produce(errors_topic, error_report, partition: 1)
+
+        get "errors"
+      end
+
+      it "expect to say that other partitions are not listed" do
+        assert_ok
+        assert_body(no_errors)
+        assert_body("This errors topic has 2 partitions.")
+        assert_body("errors in partition 1 are not listed")
+      end
+    end
+
+    context "when the cached cluster metadata does not have the errors topic yet" do
+      let(:new_errors_topic) { create_topic(partitions: 4) }
+
+      before do
+        get "errors"
+        topics_config.errors.name = new_errors_topic
+        get "errors"
+      end
+
+      it "expect to render without the partitions notice" do
+        assert_ok
+        assert_body(no_errors)
+        refute_body(partitions_limited)
+      end
+    end
+
+    context "when an error message has 200 characters" do
+      let(:error_message) { "<b>#{"x" * 193}</b>" }
+      let(:error_report) { Fixtures.errors_json.merge(error_message: error_message).to_json }
+
+      before do
+        produce(errors_topic, error_report)
+
+        get "errors"
+      end
+
+      it "expect to show the full escaped message with no ellipsis" do
+        assert_ok
+        assert_body("&lt;b&gt;#{"x" * 193}&lt;/b&gt;")
+        refute_body("<b>#{"x" * 193}</b>")
+        refute_body("…")
+        refute_body('<span title="&lt;b&gt;')
+      end
+    end
+
+    context "when an error message is longer than 200 characters" do
+      let(:error_message) { "#{"x" * 200}<b>tail</b>" }
+      let(:error_report) { Fixtures.errors_json.merge(error_message: error_message).to_json }
+
+      before do
+        produce(errors_topic, error_report)
+
+        get "errors"
+      end
+
+      it "expect to cut it with an ellipsis and show the full escaped message in the title" do
+        assert_ok
+        assert_body(%(<span title="#{"x" * 200}&lt;b&gt;tail&lt;/b&gt;">#{"x" * 199}…</span>))
+        refute_body("<b>tail</b>")
       end
     end
 
@@ -255,6 +346,72 @@ describe_current do
         refute_body(pagination)
         assert_body(breadcrumbs)
         assert_body("app/jobs/visitors_job.rb:9:in")
+      end
+    end
+
+    context "when visiting an error with a backtrace" do
+      before do
+        produce(errors_topic, error_report)
+        get "errors/0"
+      end
+
+      it "expect to render it as plain text with gem frames muted and application ones plain" do
+        assert_body('<code class="wrapped hljs nohighlight p-0 m-0">')
+        refute_body("wrapped json")
+        assert_body("app/jobs/visitors_job.rb:9:in")
+        refute_body('<span class="text-muted">app/jobs/visitors_job.rb')
+        refute_body('<span class="font-bold">app/')
+        assert_body('<span class="text-muted">gems/activejob-7.0.6/lib/active_job/')
+      end
+
+      it "expect to render one frame per line" do
+        assert_body(
+          "in `perform&#39;\n" \
+          '<span class="text-muted">gems/activejob-7.0.6/lib/active_job/execution.rb:65:in'
+        )
+      end
+    end
+
+    context "when visiting an error with absolute application paths" do
+      let(:root) { "/home/user/Karafka" }
+
+      before do
+        report = JSON.parse(error_report)
+        report["backtrace"] = [
+          "#{root}/karafka-web/lib/karafka/web/processing/consumer.rb:16:in 'consume'",
+          "gems/karafka-core-2.6.8/lib/karafka/core/monitoring/monitor.rb:42:in 'instrument'",
+          "#{root}/karafka/lib/karafka/processing/worker.rb:80:in 'process'"
+        ].join("\n")
+        produce(errors_topic, report.to_json)
+        get "errors/0"
+      end
+
+      it "expect to collapse their shared prefix by default with a toggle to expand it" do
+        assert_body('<div id="backtrace-paths" class="backtrace-short-paths">')
+        assert_body('class="btn-action btn-toggle-backtrace-paths"')
+        assert_body(
+          '<span class="backtrace-prefix">/home/user/Karafka/</span>' \
+          '<span class="backtrace-ellipsis"></span>karafka-web/lib/karafka/web/processing/consumer.rb'
+        )
+        assert_body('<span class="text-muted">gems/karafka-core-2.6.8/lib/')
+      end
+    end
+
+    context "when visiting an error with only relative paths" do
+      before do
+        report = JSON.parse(error_report)
+        report["backtrace"] = [
+          "app/jobs/visitors_job.rb:9:in 'perform'",
+          "gems/activejob-7.0.6/lib/active_job/execution.rb:65:in 'block in _perform_job'"
+        ].join("\n")
+        produce(errors_topic, report.to_json)
+        get "errors/0"
+      end
+
+      it "expect not to offer collapsing paths" do
+        assert_body("app/jobs/visitors_job.rb:9:in")
+        refute_body("btn-toggle-backtrace-paths")
+        refute_body("backtrace-prefix")
       end
     end
 

@@ -1,0 +1,19 @@
+/* Error and thread backtraces */
+
+/*
+  Collapsed backtrace paths show an ellipsis instead of the prefix shared by the frames. The
+  prefix is only visually hidden and the ellipsis is generated content, so copying a collapsed
+  backtrace still copies the full paths.
+*/
+.backtrace-short-paths .backtrace-prefix {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.backtrace-short-paths .backtrace-ellipsis::before {
+  content: "…/";
+}

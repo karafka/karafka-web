@@ -21,25 +21,31 @@
 <% if (error = displayable_error(error_msg)) %>
   <tr>
     <td>
-      <span class="badge badge-secondary">
-        <% if error[:details].key?(:topic) %>
-          <%=
-            topic = error[:details][:topic]
-            partition = error[:details][:partition]
-
-            topics_partition_identifier(topic, partition)
-          %>
-        <% else %>
+      <% if error[:details].key?(:topic) %>
+        <%
+          topic = error[:details][:topic]
+          partition = error[:details][:partition]
+          last_offset = error[:details][:last_offset]
+          path_partition = partition if partition && partition >= 0
+          offset = last_offset if path_partition && last_offset && last_offset >= 0
+        %>
+        <a href="<%= explorer_topics_path(topic, path_partition, offset) %>">
+          <span class="badge badge-secondary">
+            <%= topics_partition_identifier(topic, partition) %>
+          </span>
+        </a>
+      <% else %>
+        <span class="badge badge-secondary">
           <%= error[:type] %>
-        <% end %>
-      </span>
+        </span>
+      <% end %>
     </td>
     <td>
       <%== error[:process][:id] %>
     </td>
     <td>
       <%= error[:error_class] %>:
-      <%= error[:error_message][0..199] %>
+      <%== truncate(error[:error_message], length: 200, omission: "…") %>
     </td>
     <td>
       <%== relative_time error[:occurred_at] %>

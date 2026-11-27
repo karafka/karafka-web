@@ -46,7 +46,7 @@ module Karafka
 
               # Displays list of topics we can work with
               def index
-                @topics = Models::Topic.all.sort_by(&:topic_name)
+                @topics = Models::Cluster::Topic.all.sort_by(&:topic_name)
 
                 unless ::Karafka::Web.config.ui.visibility.internal_topics
                   @topics.delete_if { |topic| topic[:topic_name].start_with?("__") }
@@ -101,7 +101,7 @@ module Karafka
                 features.topics_management!
                 ensure_visible!(topic_name)
 
-                @topic = Models::Topic.find(topic_name)
+                @topic = Models::Cluster::Topic.find(topic_name)
                 @topic_name = topic_name
 
                 render

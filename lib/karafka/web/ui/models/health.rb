@@ -18,34 +18,6 @@ module Karafka
               sort_structure(stats)
             end
 
-            # @return [Hash] cluster lag data with consumer groups and their topics in alphabetical
-            #   order (mirroring {.current}), so both aggregated views share one stable default
-            #   ordering. Raw cluster results arrive in whatever order the cluster reports them.
-            def cluster_lags_with_offsets
-              # We need to remap raw results so they comply with our sorting flows
-              mapped_lags = {}
-
-              ::Karafka::Admin.read_lags_with_offsets(
-                active_topics_only: Web.config.ui.visibility.active_topics_cluster_lags_only
-              ).each do |consumer_group, topics|
-                mapped_lags[consumer_group] ||= {}
-
-                topics.each do |topic_name, partitions_details|
-                  mapped_lags[consumer_group][topic_name] ||= []
-
-                  partitions_details.each do |partition_id, lags_with_offsets|
-                    mapped_lags[consumer_group][topic_name] << {
-                      id: partition_id,
-                      lag: lags_with_offsets.fetch(:lag),
-                      stored_offset: lags_with_offsets.fetch(:offset)
-                    }
-                  end
-                end
-              end
-
-              sort_structure_cluster_lags(mapped_lags)
-            end
-
             private
 
             # Aggregates data on a per topic basis (in the context of a consumer group)
@@ -135,34 +107,6 @@ module Karafka
 
               # Ensure that all consumer groups are always in the same order
               stats.sort_by { |key, _| key }.to_h
-            end
-
-            # Sorts the cluster lags structure (`cg => topic_name => partitions`) so consumer groups
-            # and their topics are in alphabetical order and each topic's partitions are in
-            # partition id order, giving this lens the same stable default order {#sort_structure}
-            # gives the report-based tree.
-            #
-            # @param stats [Hash] cluster lags hash
-            # @return [Hash] sorted data
-            #
-            # @note Partitions are an Array of `{ id:, lag:, stored_offset: }` hashes here, not the
-            #   id-keyed Hash the report-based tree uses, so they are sorted on `:id` and stay an
-            #   Array - {Health::ClusterLagsAggregation} and the partitions controller both expect
-            #   one.
-            def sort_structure_cluster_lags(stats)
-              sorted = {}
-
-              stats.sort_by { |consumer_group, _| consumer_group }.each do |consumer_group, topics|
-                sorted_topics = topics.sort_by { |topic_name, _| topic_name }.to_h
-
-                sorted_topics.each do |topic_name, partitions|
-                  sorted_topics[topic_name] = partitions.sort_by { |partition| partition[:id] }
-                end
-
-                sorted[consumer_group] = sorted_topics
-              end
-
-              sorted
             end
           end
         end

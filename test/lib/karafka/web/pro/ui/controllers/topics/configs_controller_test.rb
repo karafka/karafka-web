@@ -60,6 +60,21 @@ describe_current do
       end
     end
 
+    context "when a topic config has been set dynamically" do
+      before do
+        alter_topic_config(topic, "retention.ms", "86400000")
+
+        get "topics/#{topic}/config"
+      end
+
+      it "expect to show where each value comes from" do
+        assert_ok
+        assert_body("Source")
+        assert_body("dynamic_topic_config")
+        assert_body("default_config")
+      end
+    end
+
     context "when topics management is disabled" do
       before do
         Karafka::Web.config.ui.topics.management.active = false
@@ -113,6 +128,38 @@ describe_current do
       it do
         assert_ok
         assert_body("max.message.bytes")
+      end
+    end
+
+    context "when sorting the configs by source" do
+      let(:body) { response.body }
+
+      before { alter_topic_config(topic, "retention.ms", "86400000") }
+
+      context "when ascending" do
+        before { get "topics/#{topic}/config?sort=source+asc" }
+
+        it do
+          assert_ok
+          assert_operator(
+            body.rindex("<td>default_config</td>"),
+            :<,
+            body.index("<td>dynamic_topic_config</td>")
+          )
+        end
+      end
+
+      context "when descending" do
+        before { get "topics/#{topic}/config?sort=source+desc" }
+
+        it do
+          assert_ok
+          assert_operator(
+            body.index("<td>dynamic_topic_config</td>"),
+            :<,
+            body.index("<td>default_config</td>")
+          )
+        end
       end
     end
 
@@ -211,7 +258,7 @@ describe_current do
     let(:property_value) { rand(1_000..100_000) }
     let(:default_params) { { property_value: property_value } }
     let(:updated_value) do
-      Karafka::Web::Ui::Models::Topic.find(topic_name).configs.find do |config|
+      Karafka::Web::Pro::Ui::Models::Cluster::Topic.find(topic_name).configs.find do |config|
         config.name == "max.message.bytes"
       end.value
     end
@@ -316,6 +363,22 @@ describe_current do
 
       it "returns not found status" do
         assert_equal(404, status)
+      end
+    end
+  end
+
+  describe "routes with a topic name that is not a valid Kafka topic name" do
+    before do
+      Karafka::Admin.expects(:topic_info).never
+      Karafka::Admin.expects(:read_watermark_offsets).never
+      Karafka::Admin.expects(:read_topic).never
+    end
+
+    ["a" * 513, "a" * 250, "a%20b"].each do |invalid|
+      context "when getting topics/an invalid topic/config" do
+        before { get "topics/#{invalid}/config" }
+
+        it { assert_equal(404, response.status) }
       end
     end
   end

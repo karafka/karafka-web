@@ -83,7 +83,7 @@ describe_current do
 
     it "returns a tool error" do
       assert(result[:isError])
-      assert_includes(result.dig(:content, 0, :text), "Status page")
+      assert_includes(result.dig(:content, 0, :text), "karafka_status")
     end
   end
 

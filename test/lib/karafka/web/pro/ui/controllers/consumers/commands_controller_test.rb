@@ -34,6 +34,8 @@ describe_current do
   let(:commands_topic) { create_topic }
   let(:no_commands) { "No commands found." }
 
+  let(:recent_button) { 'title="Display the most recent command"' }
+
   describe "#index" do
     context "when commands topic does not exist" do
       before do
@@ -60,6 +62,8 @@ describe_current do
         refute_body(pagination)
         assert_body(breadcrumbs)
         assert_body(no_commands)
+        refute_body(recent_button)
+        assert_body(disabled_action("There are no commands to display"))
       end
     end
 
@@ -97,6 +101,7 @@ describe_current do
         assert_body("quiet")
         assert_body("process_id:")
         assert_body("/commands/0")
+        assert_body(recent_button)
       end
     end
 
@@ -155,6 +160,7 @@ describe_current do
           assert_ok
           refute_body(pagination)
           assert_body(no_commands)
+          assert_body(recent_button)
         end
       end
     end
@@ -241,6 +247,29 @@ describe_current do
         assert_body("Metadata")
         assert_body("trace result")
         assert_body("shinra:397793:6fa3f39acf46")
+      end
+
+      it "expect to render backtraces as plain text with gem and Ruby frames muted" do
+        refute_body("wrapped json")
+        assert_body('<code class="wrapped hljs nohighlight p-0 m-0">')
+        assert_body('<span class="text-muted">&lt;internal:thread_sync&gt;:18:in')
+        assert_body('<span class="backtrace-prefix">/mnt/software/Karafka/</span><span class="backtrace-ellipsis"></span>karafka/lib/karafka/runner.rb')
+        refute_body('<span class="font-bold">')
+        assert_body('<span class="text-muted">/home/mencio/.rbenv/versions/3.3.0/lib/ruby/')
+        assert_body('<span class="text-muted">/home/mencio/.rbenv/versions/3.3.0/bin/bundle:25:in')
+      end
+
+      it "expect to render one frame per line" do
+        assert_body(
+          "&lt;internal:thread_sync&gt;:18:in `pop&#39;</span>\n" \
+          '<span class="backtrace-prefix">/mnt/software/Karafka/</span><span class="backtrace-ellipsis"></span>karafka/lib/karafka/connection/conductor.rb'
+        )
+      end
+
+      it "expect to collapse the paths prefix shared by the application frames by default" do
+        assert_body('<div id="backtrace-paths" class="backtrace-short-paths">')
+        assert_body('class="btn-action btn-toggle-backtrace-paths"')
+        assert_body('data-toggle-target="backtrace-paths"')
       end
     end
 

@@ -1,7 +1,26 @@
+<% prefix = backtrace_paths_prefix(error[:backtrace]) %>
+
 <div class="col-span-12 mb-6">
   <h2 class="h2">
     Backtrace
   </h2>
 
-  <pre class="mb-5 p-0 border border-base-300 text-sm"><code class="wrapped json p-0 m-0"><%= error[:backtrace] %></code></pre>
+  <% if prefix %>
+    <section class="actions">
+      <%== partial 'shared/backtrace_paths_toggle' %>
+    </section>
+  <% end %>
+
+  <div id="backtrace-paths" class="backtrace-short-paths">
+    <%==
+      partial(
+        'shared/backtrace',
+        locals: {
+          backtrace: error[:backtrace],
+          prefix: prefix,
+          classes: 'mb-5 p-0 border border-base-300 text-sm'
+        }
+      )
+    %>
+  </div>
 </div>

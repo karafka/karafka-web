@@ -42,7 +42,7 @@ module Karafka
 
               # Displays list of groups
               def index
-                topics = Models::Topic.all
+                topics = Models::Cluster::Topic.all
 
                 # Names of scheduled messages topics defined in the routing
                 # They may not exist (yet) so we filter them based on the existing topics in the
@@ -68,7 +68,7 @@ module Karafka
               def show(schedule_name)
                 @schedule_name = schedule_name
                 @stats_topic_name = "#{schedule_name}#{states_postfix}"
-                @stats_info = Karafka::Admin.topic_info(@stats_topic_name)
+                @stats_info = Web::Ui::Lib::Admin.topic_info(@stats_topic_name)
 
                 @states = {}
                 @stats_info[:partition_count].times { |i| @states[i] = false }

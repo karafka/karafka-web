@@ -1,0 +1,45 @@
+<%# Karafka Pro - Source Available Commercial Software %>
+<%# Copyright (c) 2017-present Maciej Mensfeld. All rights reserved. %>
+<%# This software is NOT open source. It is source-available commercial software %>
+<%# requiring a paid license for use. It is NOT covered by LGPL. %>
+<%# The author retains all right, title, and interest in this software, %>
+<%# including all copyrights, patents, and other intellectual property rights. %>
+<%# No patent rights are granted under this license. %>
+<%# PROHIBITED: Use without a valid commercial license %>
+<%# PROHIBITED: Redistribution, modification, or derivative works without authorization %>
+<%# PROHIBITED: Reverse engineering, decompilation, or disassembly of this software %>
+<%# PROHIBITED: Use as training data for AI/ML models or inclusion in datasets %>
+<%# PROHIBITED: Scraping, crawling, or automated collection for any purpose %>
+<%# PERMITTED: Reading, referencing, and linking for personal or commercial use %>
+<%# PERMITTED: Runtime retrieval by AI assistants, coding agents, and RAG systems %>
+<%# PERMITTED: for the purpose of providing contextual help to Karafka users %>
+<%# Receipt, viewing, or possession of this software does not convey or %>
+<%# imply any license or right beyond those expressly stated above. %>
+<%# License: https://karafka.io/docs/Pro-License-Comm/ %>
+<%# Contact: contact@karafka.io %>
+
+<%#
+  Navigation actions of a topic. They stay visible, but disabled, when the topic has no data
+  to navigate, so the actions bar keeps its shape.
+
+  @param messages [Array] messages of the current page
+%>
+<% no_data_reason = 'This topic is empty and does not contain any data' if messages.empty? && params.current_page == 1 %>
+
+<%==
+  action_icon_link(
+    icon(:play_circle),
+    explorer_topics_path(@topic_id, 'recent'),
+    title: 'Display the most recent message for this topic with auto-refresh',
+    disabled_reason: no_data_reason
+  )
+%>
+
+<%==
+  action_icon_link(
+    icon(:magnifying_glass),
+    explorer_path(@topic_id, 'search'),
+    title: 'Search in this topic',
+    disabled_reason: no_data_reason
+  )
+%>

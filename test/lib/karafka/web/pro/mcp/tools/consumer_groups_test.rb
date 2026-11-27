@@ -27,6 +27,7 @@
 #
 # License: https://karafka.io/docs/Pro-License-Comm/
 # Contact: contact@karafka.io
+
 describe_current do
   let(:result) { described_class.new(arguments).call }
   let(:arguments) { {} }

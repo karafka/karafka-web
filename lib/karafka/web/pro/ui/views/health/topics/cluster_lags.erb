@@ -28,7 +28,9 @@
   <% end %>
 
   <% @stats.each do |cg_name, cg_details| %>
-    <h2 class="h2"><%= cg_name %></h2>
+    <h2 class="h2">
+      <a href="<%= health_consumer_group_path(cg_name) %>"><%= cg_name %></a>
+    </h2>
 
     <%==
       partial(

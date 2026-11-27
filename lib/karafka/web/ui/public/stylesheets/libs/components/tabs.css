@@ -1,0 +1,29 @@
+/* Page tabs */
+
+@utility custom-tab {
+  @apply border-b-2 py-4 px-2 text-sm hover:text-primary md:text-base;
+
+  &.active {
+    @apply text-primary border-primary;
+  }
+
+  &:hover {
+    @apply no-underline;
+  }
+
+  &.disabled {
+    @apply text-gray-500;
+  }
+}
+
+@utility tab-container-wrapper {
+  @apply col-span-12 mb-9;
+}
+
+@utility tab-container {
+  @apply mb-3 flex flex-wrap gap-5 border-b sm:gap-10;
+
+  & span {
+    @apply hover:cursor-pointer;
+  }
+}

@@ -103,10 +103,8 @@ module Karafka
             end
           end
 
-          # Creates a specific identifier for topic-partition combinations.
-          #
-          # This method generates consistent identifiers used in metrics collection,
-          # cache keys, and other contexts requiring unique topic-partition identification.
+          # Creates a display identifier of a single topic partition, in the same bracket notation
+          # as the topic assignments (see {#topics_assignment_text})
           #
           # @param topic [String] the Kafka topic name
           # @param partition [Integer] the partition number
@@ -114,13 +112,9 @@ module Karafka
           #
           # @example Basic identifier
           #   topics_partition_identifier("user-events", 0)
-          #   # => "user-events-0"
-          #
-          # @example Used for cache keys
-          #   cache_key = topics_partition_identifier("orders", 3)
-          #   Rails.cache.fetch(cache_key) { expensive_operation }
+          #   # => "user-events-[0]"
           def topics_partition_identifier(topic, partition)
-            "#{topic}-#{partition}"
+            "#{topic}-[#{partition}]"
           end
 
           private

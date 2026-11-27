@@ -37,6 +37,49 @@ describe_current do
     end
   end
 
+  describe "#dead_letter_queues" do
+    before { get "dead_letter_queues" }
+
+    it do
+      refute(response.ok?)
+      assert_body(make_better)
+      assert_equal(402, status)
+    end
+  end
+
+  describe "#format_flash" do
+    let(:controller) { described_class.allocate }
+
+    def format_flash(*args)
+      controller.send(:format_flash, *args)
+    end
+
+    it "wraps each argument in strong in the order of the placeholders" do
+      assert_equal(
+        "Topic <strong>a</strong> has <strong>3</strong> partitions",
+        format_flash("Topic ? has ? partitions", "a", 3)
+      )
+    end
+
+    it "escapes the arguments" do
+      assert_equal(
+        "Group <strong>&lt;img src=x onerror=alert(1)&gt;</strong> done",
+        format_flash("Group ? done", "<img src=x onerror=alert(1)>")
+      )
+    end
+
+    it "does not replace the question marks inside the arguments" do
+      assert_equal(
+        "Group <strong>a?b</strong> and topic <strong>t</strong>",
+        format_flash("Group ? and topic ?", "a?b", "t")
+      )
+    end
+
+    it "keeps the placeholders that have no argument" do
+      assert_equal("Is <strong>a</strong> ok?", format_flash("Is ? ok?", "a"))
+    end
+  end
+
   describe "custom assets" do
     let(:custom_css) { "assets/#{Karafka::Web::VERSION}/stylesheets/custom.css" }
     let(:custom_js) { "assets/#{Karafka::Web::VERSION}/javascripts/custom.js" }
