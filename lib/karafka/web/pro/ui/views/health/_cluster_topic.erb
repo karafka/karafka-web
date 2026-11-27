@@ -20,7 +20,7 @@
 
 <tr class="<%= topic_lag_status_row(topic_stats) %>">
   <td>
-    <a href="<%= root_path('health', 'topics', cg_name, topic_name, 'cluster_lags') %>">
+    <a href="<%= health_topic_path(cg_name, topic_name, 'cluster_lags') %>">
       <%= topic_name %>
     </a>
   </td>

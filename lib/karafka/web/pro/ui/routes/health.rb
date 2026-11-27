@@ -49,7 +49,8 @@ module Karafka
                 # Per-topic drill-down. The per-partition lenses (overview/lags/offsets/changes and
                 # cluster_lags) live here, scoped to a single topic, instead of the old top-level
                 # all-topics views which became unusable with many topics/partitions.
-                r.on "topics", String, String do |consumer_group_id, topic_name|
+                r.on "topics", String, String do |encoded_consumer_group_id, topic_name|
+                  consumer_group_id = health_decode_path_segment(encoded_consumer_group_id)
                   partitions_controller = build(Controllers::Health::PartitionsController)
 
                   r.get "overview" do
@@ -74,7 +75,7 @@ module Karafka
 
                   # A bare topic path defaults to the overview lens
                   r.get do
-                    r.redirect root_path("health", "topics", consumer_group_id, topic_name, "overview")
+                    r.redirect health_topic_path(consumer_group_id, topic_name)
                   end
                 end
 
@@ -82,7 +83,9 @@ module Karafka
                 # topics list scoped to that group rather than 404-ing. `health_group_topics_path`
                 # URL-encodes the group value (it comes from the URL path) so it cannot inject extra
                 # query params.
-                r.get "topics", String do |consumer_group_id|
+                r.get "topics", String do |encoded_consumer_group_id|
+                  consumer_group_id = health_decode_path_segment(encoded_consumer_group_id)
+
                   r.redirect health_group_topics_path(consumer_group_id)
                 end
 
@@ -100,11 +103,7 @@ module Karafka
                 end
 
                 r.on "consumer_groups", String do |group_id|
-                  decoded_group_id = begin
-                    URI.decode_uri_component(group_id)
-                  rescue ArgumentError
-                    raise Web::Errors::Ui::NotFoundError, group_id
-                  end
+                  decoded_group_id = health_decode_path_segment(group_id)
 
                   r.get "overview" do
                     consumer_groups_controller.overview(decoded_group_id)

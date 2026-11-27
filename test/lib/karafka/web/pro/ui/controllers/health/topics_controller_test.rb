@@ -68,6 +68,86 @@ describe_current do
     end
   end
 
+  context "when the consumer group id needs encoding in the path" do
+    let(:group_id) { "my group/a?b#c-zażółć" }
+    let(:encoded_group_id) { URI.encode_uri_component(group_id) }
+    let(:topic_path) { "/health/topics/#{encoded_group_id}/default" }
+
+    context "when visiting the consumer group path without a topic" do
+      before { get "health/topics/#{encoded_group_id}" }
+
+      it "expect to redirect to the topics list scoped to the decoded group id" do
+        assert_equal(302, response.status)
+        assert_includes(
+          response.headers["location"],
+          "filter[value]=#{Rack::Utils.escape(group_id)}"
+        )
+      end
+    end
+
+    %w[%zz abc%].each do |malformed|
+      context "when the consumer group path is a malformed escape (#{malformed})" do
+        it do
+          env = Rack::MockRequest.env_for("http://example.org/")
+          env["PATH_INFO"] = "/health/topics/#{malformed}"
+
+          assert_equal(404, app.call(env).first)
+        end
+      end
+    end
+
+    context "when the group is in the reports" do
+      before do
+        topics_config.consumers.reports.name = reports_topic
+
+        report = Fixtures.consumers_reports_json(symbolize_names: false)
+        consumer_group = report["consumer_groups"].delete("example_app6_app")
+        consumer_group["id"] = group_id
+        report["consumer_groups"][group_id] = consumer_group
+
+        produce(reports_topic, report.to_json, key: report["process"]["id"])
+
+        get "health/topics"
+      end
+
+      it "expect the topic and its by lag links to render the topic of that group" do
+        assert_ok
+
+        ["#{topic_path}/overview", "#{topic_path}/overview?sort=lag_hybrid+desc"].each do |path|
+          assert_body(%(href="#{path}"))
+
+          get path
+
+          assert_ok
+          assert_body("213731273")
+        end
+      end
+    end
+
+    context "when the group is in the cluster lags" do
+      before do
+        Karafka::Admin.stubs(:read_lags_with_offsets).returns(
+          group_id => { "default" => { 0 => { lag: 4_200, offset: 10 } } }
+        )
+
+        get "health/cluster_lags"
+      end
+
+      it "expect the topic and its by lag links to render the topic of that group" do
+        assert_ok
+
+        ["#{topic_path}/cluster_lags", "#{topic_path}/cluster_lags?sort=lag+desc"].each do |path|
+          assert_body(%(href="#{path}"))
+
+          get path
+
+          assert_ok
+          assert_body("4200")
+        end
+      end
+    end
+  end
+
   describe "#index" do
     context "when no report data" do
       before do
