@@ -23,7 +23,7 @@ module Karafka
               true
             ].freeze
 
-            private_constant :ALLOWED_RANGES, :ALLOWED_BOOLEAN_TRUE
+            private_constant :ALLOWED_BOOLEAN_TRUE
 
             # @param request_params [Hash] raw hash with params
             def initialize(request_params)

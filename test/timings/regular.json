@@ -1,4 +1,6 @@
 {
+  "test/lib/karafka/web/mcp/pro_only_app_test.rb": 1.0,
+  "test/lib/karafka/web/mcp/app_test.rb": 0.01,
   "test/lib/karafka/web/ui/models/metrics/aggregated_test.rb": 3.0,
   "test/lib/karafka/web/ui/models/status_test.rb": 135.926,
   "test/lib/karafka/web/ui/controllers/cluster_controller_test.rb": 125.172,
