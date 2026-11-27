@@ -8,3 +8,4 @@ en:
       id_format: needs to be a String
       format: is invalid
       processes_format: must be a hash with symbol keys
+      topic_name_format: needs to be a valid Kafka topic name

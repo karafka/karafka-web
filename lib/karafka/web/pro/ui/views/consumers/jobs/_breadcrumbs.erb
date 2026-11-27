@@ -38,7 +38,7 @@
 
 <% if current_path.include?('/running') %>
   <li>
-    <a href="<%= consumer_path(@process.id, 'jobs', 'pending') %>">
+    <a href="<%= consumer_path(@process.id, 'jobs', 'running') %>">
       Running
     </a>
   </li>

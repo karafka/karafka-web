@@ -33,6 +33,7 @@ module Karafka
     module Pro
       module Mcp
         module Tools
+          # Contracts of the tools arguments
           module Contracts
             # Base for the tools arguments contracts. It loads the tools error messages and lets
             # each contract declare the arguments it accepts

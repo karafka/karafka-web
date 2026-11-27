@@ -247,6 +247,8 @@ Minitest::Spec.class_eval do
   # IMPORTANT: Minitest::Spec's `after` uses define_method(:teardown), so each call
   # REPLACES the previous one. All after-test logic must be in a single `after` block.
   after do
+    breadcrumbs_page = nil
+
     # Links validation for controller tests (must run before cleanup)
     if respond_to?(:last_response) && respond_to?(:app)
       begin
@@ -256,6 +258,8 @@ Minitest::Spec.class_eval do
           validator.context = self
           validator.description = name
           validator.validate_all!(resp)
+
+          breadcrumbs_page = resp.body
         end
       rescue Rack::Test::Error
         # No request was made in this test, skip validation
@@ -271,6 +275,9 @@ Minitest::Spec.class_eval do
     Karafka::Web.config.topics.consumers.commands.name = TOPICS[3]
     Karafka::Web.config.topics.errors.name = TOPICS[4]
     Karafka::Web.config.topics.mcp_audit.name = TOPICS[5]
+
+    # Last, as it fails the spec, which must not skip the cleanup above
+    BreadcrumbsValidator.instance.validate!(self, breadcrumbs_page) if breadcrumbs_page
   end
 end
 

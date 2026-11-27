@@ -30,7 +30,6 @@
 
 describe_current do
   let(:app) { Karafka::Web::Pro::Ui::App }
-  let(:delete_offsets_denied) { "Deleting these offsets is not allowed by the Web UI policies" }
 
   let(:reports_topic) { create_topic }
 
@@ -73,6 +72,13 @@ describe_current do
       assert_body("health/topics/example_app6_app/default/cluster_lags")
       assert_body("Pause all partitions of this topic within the")
       refute_body("Commanding is disabled in the Web UI configuration")
+    end
+
+    it "expect the resume actions to be disabled when nothing is paused" do
+      assert_body('class="btn btn-success btn-sm btn-disabled"')
+      assert_body('title="No partitions of this topic are paused"')
+      assert_body('title="This partition is not paused"')
+      refute_body("pause/edit")
     end
 
     context "when commanding is disabled" do
@@ -241,6 +247,13 @@ describe_current do
         assert_ok
         assert_body("status-row-warning")
         refute_body("status-row-error")
+      end
+
+      it "expect the resume actions to be available" do
+        assert_body("default/pause/edit")
+        assert_body("0/pause/edit")
+        refute_body("No partitions of this topic are paused")
+        refute_body("This partition is not paused")
       end
     end
 
@@ -443,10 +456,11 @@ describe_current do
         assert_ok
         assert_body(breadcrumbs)
         assert_body("4200")
-        assert_body("Delete Offsets")
-        assert_body('class="btn btn-error btn-sm btn-disabled"')
-        refute_body("health/topics/example_app6_app/default/delete")
-        assert_body(%(title="#{delete_offsets_denied}"))
+      end
+
+      it "expect the consumer group to link to its cluster consumer group page" do
+        assert_ok
+        assert_body("health/consumer_groups/example_app6_app")
       end
 
       context "when deleting offsets is allowed" do
@@ -456,13 +470,10 @@ describe_current do
           get "health/topics/example_app6_app/default/cluster_lags"
         end
 
-        it "expect to link to the offsets deletion" do
+        it "expect the deletion to be on the consumer group topics page, not here" do
           assert_ok
-          assert_body("health/topics/example_app6_app/default/delete")
-          assert_body("Delete Offsets")
-          refute_body(delete_offsets_denied)
-          assert_body('title="Delete the committed offsets of this consumer group for this topic"')
-          refute_body("btn-error btn-sm btn-disabled")
+          refute_body("Delete Offsets")
+          refute_body("/delete")
         end
       end
 

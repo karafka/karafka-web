@@ -54,9 +54,10 @@ module Karafka
           # @param length [Integer] max length of the final string that we accept before truncating
           # @param omission [String] truncation omission
           # @param strategy [Symbol] `:default` or `:middle` how should we truncate
-          # @return [String] HTML span tag with truncated content and full content title
+          # @return [String] escaped string or HTML span tag with escaped truncated content and
+          #   full content title
           def truncate(string, length: 50, omission: "...", strategy: :default)
-            return string if string.length <= length
+            return ::Rack::Utils.escape_html(string) if string.length <= length
 
             case strategy
             when :default
@@ -68,7 +69,9 @@ module Karafka
               raise Karafka::Errors::UnsupportedCaseError, "Unknown strategy: #{strategy}"
             end
 
-            %(<span title="#{string}">#{truncated}</span>)
+            title = ::Rack::Utils.escape_html(string)
+
+            %(<span title="#{title}">#{::Rack::Utils.escape_html(truncated)}</span>)
           end
         end
       end

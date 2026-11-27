@@ -50,4 +50,28 @@ describe_current do
       end
     end
   end
+
+  describe "old dlq path" do
+    context "when visiting the legacy dlq path" do
+      before { get "dlq" }
+
+      it "expect to redirect to the dead letter queues page" do
+        assert_equal(302, response.status)
+        assert(response.location.end_with?("/dead_letter_queues"))
+      end
+    end
+
+    context "when visiting the legacy dlq path with a filter" do
+      before { get "dlq?filter%5Bfield%5D=topic_name&filter%5Bvalue%5D=orders" }
+
+      it "expect to keep the query string" do
+        assert_equal(302, response.status)
+        assert(
+          response.location.end_with?(
+            "/dead_letter_queues?filter%5Bfield%5D=topic_name&filter%5Bvalue%5D=orders"
+          )
+        )
+      end
+    end
+  end
 end

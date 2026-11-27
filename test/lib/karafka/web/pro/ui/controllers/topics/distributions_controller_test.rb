@@ -327,7 +327,7 @@ describe_current do
 
           sleep(1)
 
-          updated_topic = Karafka::Web::Ui::Models::Topic.find(topic_name)
+          updated_topic = Karafka::Web::Pro::Ui::Models::Cluster::Topic.find(topic_name)
 
           assert_equal(new_partition_count, updated_topic.partition_count)
         end
@@ -394,6 +394,22 @@ describe_current do
 
       it "returns not found status" do
         assert_equal(404, status)
+      end
+    end
+  end
+
+  describe "routes with a topic name that is not a valid Kafka topic name" do
+    before do
+      Karafka::Admin.expects(:topic_info).never
+      Karafka::Admin.expects(:read_watermark_offsets).never
+      Karafka::Admin.expects(:read_topic).never
+    end
+
+    ["a" * 513, "a" * 250, "a%20b"].each do |invalid|
+      context "when getting topics/an invalid topic/distribution" do
+        before { get "topics/#{invalid}/distribution" }
+
+        it { assert_equal(404, response.status) }
       end
     end
   end

@@ -54,7 +54,7 @@ module Karafka
               # On failure, sets connection_time to 1_000_000 (indicating failure).
               def connect
                 started = Time.now.to_f
-                context.cluster_info = Models::ClusterInfo.fetch
+                context.cluster_info = Models::Cluster::Info.fetch
                 context.connection_time = (Time.now.to_f - started) * 1_000
               rescue ::Rdkafka::RdkafkaError
                 context.connection_time = 1_000_000

@@ -45,6 +45,7 @@ module Karafka
 
           # Tools available to the agents, in the order in which we list them
           TOOLS = [
+            Tools::Status,
             Tools::Overview,
             Tools::Metrics,
             Tools::Health,
@@ -89,7 +90,10 @@ module Karafka
             internal: -32_603
           }.freeze
 
-          private_constant :TOOLS
+          # Types of the JSON-RPC request ids
+          ID_TYPES = [String, Integer].freeze
+
+          private_constant :TOOLS, :ID_TYPES
 
           # @param audit [Audit] audit log of the request tools calls
           # @param env [Hash] Rack env of the MCP request, checked by the requests policy with the
@@ -105,7 +109,9 @@ module Karafka
             message = JSON.parse(body)
 
             return error(nil, :invalid_request, "Invalid Request") unless message.is_a?(Hash)
-            return error(message["id"], :invalid_request, "Invalid Request") unless valid?(message)
+            id = message["id"] if valid_id?(message["id"])
+
+            return error(id, :invalid_request, "Invalid Request") unless valid?(message)
 
             # Notifications and responses (to requests we never send) need no answer
             return Responses.accepted unless message.key?("method")
@@ -148,16 +154,22 @@ module Karafka
           def valid?(message)
             return false unless message["jsonrpc"] == "2.0"
             return true unless message.key?("method")
-            return false if message.key?("id") && message["id"].nil?
+            return false if message.key?("id") && !valid_id?(message["id"])
 
             message["method"].is_a?(String)
+          end
+
+          # @param id [Object] request id
+          # @return [Boolean] is it an id that JSON-RPC allows in a request
+          def valid_id?(id)
+            ID_TYPES.any? { |type| id.is_a?(type) }
           end
 
           # @param message [Hash] JSON-RPC request
           # @return [Array] Rack response
           def dispatch(message)
             id = message["id"]
-            params = message.fetch("params", nil) || {}
+            params = message.fetch("params", {})
 
             unless params.is_a?(Hash)
               reject(nil, nil, "Invalid params") if message["method"] == "tools/call"
@@ -206,7 +218,7 @@ module Karafka
           # @return [Array] Rack response
           def call_tool(id, params)
             name = params["name"]
-            arguments = params.fetch("arguments", nil) || {}
+            arguments = params.fetch("arguments", {})
             tool = tools[name]
 
             return invalid(id, name, arguments, "Unknown tool: #{name}") unless tool

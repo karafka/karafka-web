@@ -291,4 +291,30 @@ describe_current do
       end
     end
   end
+
+  describe "routes with a topic name that is not a valid Kafka topic name" do
+    before do
+      Karafka::Admin.expects(:topic_info).never
+      Karafka::Admin.expects(:read_watermark_offsets).never
+      Karafka::Admin.expects(:read_topic).never
+    end
+
+    ["a" * 513, "a" * 250, "a%20b"].each do |invalid|
+      context "when the policy allows deleting records" do
+        before { policy.stubs(:delete_records?).returns(true) }
+
+        context "when getting explorer/messages/an invalid topic/0/0/delete" do
+          before { get "explorer/messages/#{invalid}/0/0/delete" }
+
+          it { assert_equal(404, response.status) }
+        end
+
+        context "when deleting explorer/messages/an invalid topic/0/0/delete" do
+          before { delete "explorer/messages/#{invalid}/0/0/delete" }
+
+          it { assert_equal(404, response.status) }
+        end
+      end
+    end
+  end
 end

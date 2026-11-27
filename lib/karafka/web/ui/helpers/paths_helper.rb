@@ -61,76 +61,11 @@ module Karafka
             root_path("assets/#{Karafka::Web::VERSION}/#{local_path}")
           end
 
-          # Helps build explorer paths. We often link offsets to proper messages, etc so this
-          # allows us to short-track this
-          # @param args [Array<String>] sub-paths
-          # @return [String] path to the expected location
-          def explorer_path(*args)
-            root_path(*["explorer", args.compact].flatten)
-          end
-
-          # Generates routes for explorer topics paths
-          #
-          # @param args [Array<String>] sub-paths
-          # @return explorer topics path
-          def explorer_topics_path(*args)
-            explorer_path(*["topics", args.compact].flatten)
-          end
-
-          # Generates routes for explorer messages paths
-          #
-          # @param args [Array<String>] sub-paths
-          # @return [String] explorer messages path
-          def explorer_messages_path(*args)
-            explorer_path(*["messages", args.compact].flatten)
-          end
-
-          # Helps build topics paths
-          #
-          # @return [String] topics scope path
-          def topics_path(*)
-            root_path("topics", *)
-          end
-
           # Helps build consumers paths
           #
           # @return [String] consumers scope path
           def consumers_path(*)
             root_path("consumers", *)
-          end
-
-          # Helps build per-consumer scope paths
-          #
-          # @param consumer_id [String] consumer process id
-          # @return [String] per consumer specific path
-          def consumer_path(consumer_id, *)
-            consumers_path(consumer_id, *)
-          end
-
-          # Helps build scheduled messages paths.
-          # Similar to the explorer helper one
-          # @param topic_name [String]
-          # @param partition_id [Integer, nil]
-          # @param offset [Integer, nil]
-          # @param action [String, nil]
-          # @return [String] path to the expected location
-          def scheduled_messages_explorer_path(
-            topic_name = nil,
-            partition_id = nil,
-            offset = nil,
-            action = nil
-          )
-            root_path(
-              *[
-                "scheduled_messages",
-                "explorer",
-                "topics",
-                topic_name,
-                partition_id,
-                offset,
-                action
-              ].compact
-            )
           end
         end
       end

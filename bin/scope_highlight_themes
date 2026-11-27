@@ -1,0 +1,61 @@
+#!/usr/bin/env node
+
+// Builds one code highlighting stylesheet out of the vendored light and dark highlight.js themes,
+// scoping each to its Web UI theme. Both apply from a single never-changing <link>, so switching
+// themes only changes the `data-theme` attribute of <html> and Turbo never sees a new stylesheet.
+//
+// The vendored themes stay as downloaded, so updating them means replacing the files and
+// rebuilding the assets.
+//
+// Usage: bin/scope_highlight_themes <light.css> <dark.css> <output.css>
+
+const fs = require('fs');
+const postcss = require('postcss');
+
+const [lightPath, darkPath, outputPath] = process.argv.slice(2);
+
+if (!lightPath || !darkPath || !outputPath) {
+  console.error('Usage: bin/scope_highlight_themes <light.css> <dark.css> <output.css>');
+  process.exit(1);
+}
+
+// The light theme also covers any other theme value, the same as before when it was the default
+const SCOPES = {
+  light: ':root:not([data-theme="dark"])',
+  dark: ':root[data-theme="dark"]'
+};
+
+// Selectors that target the document root itself get the scope merged in instead of prefixed
+const ROOT_SELECTOR = /^(:root|html)(?=$|[\s.#:[>+~])/;
+
+function scopeSelector(selector, scope) {
+  const trimmed = selector.trim();
+
+  if (ROOT_SELECTOR.test(trimmed)) {
+    return trimmed.replace(ROOT_SELECTOR, scope);
+  }
+
+  return `${scope} ${trimmed}`;
+}
+
+function scope(css, scopeSelectorValue, from) {
+  const root = postcss.parse(css, { from });
+
+  root.walkRules((rule) => {
+    // Keyframe steps (from, to, 50%) are not element selectors
+    if (rule.parent && rule.parent.type === 'atrule' && /keyframes$/i.test(rule.parent.name)) {
+      return;
+    }
+
+    rule.selectors = rule.selectors.map((selector) => scopeSelector(selector, scopeSelectorValue));
+  });
+
+  return root.toString();
+}
+
+const output = [
+  scope(fs.readFileSync(lightPath, 'utf8'), SCOPES.light, lightPath),
+  scope(fs.readFileSync(darkPath, 'utf8'), SCOPES.dark, darkPath)
+].join('\n');
+
+fs.writeFileSync(outputPath, `${output}\n`);

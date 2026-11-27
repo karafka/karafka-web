@@ -21,43 +21,16 @@
 <div class="grid grid-cols-12">
   <div class="col-span-4">
     <section class="actions">
-      <% if @visibility_filter.publish?(@topic_id) %>
-        <a
-          href="<%= explorer_messages_path(@topic_id, 'publish') %>"
-          class="btn-action"
-          title="Publish a new message to this topic"
-        >
-          <%== icon(:plus) %>
-        </a>
-      <% else %>
-        <%==
-          partial(
-            'explorer/explorer/disabled_action',
-            locals: {
-              icon_name: :plus,
-              reason: 'Publishing messages to this topic is not allowed by the Web UI policies'
-            }
-          )
-        %>
-      <% end %>
+      <%==
+        action_icon_link(
+          icon(:plus),
+          explorer_messages_path(@topic_id, 'publish'),
+          title: 'Publish a new message to this topic',
+          disabled_reason: @visibility_filter.publish?(@topic_id) ? nil : 'Publishing messages to this topic is not allowed by the Web UI policies'
+        )
+      %>
 
-      <% if @messages && !@messages.empty? %>
-        <a
-          href="<%= explorer_topics_path(@topic_id, 'recent') %>"
-          class="btn-action"
-          title="Display the most recent message for this topic with auto-refresh"
-        >
-          <%== icon(:play_circle) %>
-        </a>
-
-        <a
-          href="<%= explorer_path(@topic_id, 'search') %>"
-          class="btn-action"
-          title="Search in this topic"
-        >
-          <%== icon(:magnifying_glass) %>
-        </a>
-      <% end %>
+      <%== partial 'explorer/explorer/topic/navigation', locals: { messages: @messages } %>
     </section>
   </div>
 

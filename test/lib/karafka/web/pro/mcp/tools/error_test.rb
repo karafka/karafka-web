@@ -44,6 +44,7 @@ describe_current do
       report = JSON.parse(Fixtures.errors_file)
       report["details"]["sasl.password"] = "secret"
       report["details"]["nested"] = { "ssl.key.password" => "secret" }
+      report["details"]["connections"] = [{ "sasl.username" => "secret", "host" => "kafka" }]
       report.to_json
     end
 
@@ -57,6 +58,7 @@ describe_current do
       assert_equal(JSON.parse(error_report)["error_class"], error[:error_class])
       assert_equal("***", error.dig(:details, :"sasl.password"))
       assert_equal("***", error.dig(:details, :nested, :"ssl.key.password"))
+      assert_equal([{ "sasl.username": "***", host: "kafka" }], error.dig(:details, :connections))
       refute_includes(text, "secret")
       assert_includes(structured[:untrusted_fields], "backtrace")
     end

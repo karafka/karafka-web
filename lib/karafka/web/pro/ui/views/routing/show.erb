@@ -36,14 +36,3 @@
 <% else %>
   <%== partial 'routing/details_table' %>
 <% end %>
-
-<% if @topic.group.consumer_group? %>
-  <div class="col-span-12 flex justify-end space-x-2 mt-6">
-    <%==
-      partial(
-        'health/offsets/delete_button',
-        locals: { consumer_group_id: @topic.group.id, topic_name: @topic.name, labeled: true }
-      )
-    %>
-  </div>
-<% end %>

@@ -28,7 +28,7 @@
 # License: https://karafka.io/docs/Pro-License-Comm/
 # Contact: contact@karafka.io
 
-describe Karafka::Web::Ui::Models::Health::AggregatedClusterTopic do
+describe_current do
   let(:aggregated) { described_class.new("orders", partitions) }
 
   def partition(id, lag:, stored_offset: 0)

@@ -27,6 +27,7 @@
 #
 # License: https://karafka.io/docs/Pro-License-Comm/
 # Contact: contact@karafka.io
+
 describe_current do
   let(:contract_class) do
     Class.new(described_class) do
