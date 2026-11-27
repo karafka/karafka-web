@@ -30,6 +30,21 @@ module Karafka
               end
 
               attr_reader :state, :active_reports, :aggregated_from, :report, :offset
+
+              # @return [Boolean] true when the state already holds this or a newer report of the
+              #   same process. This happens when reports are consumed again after a state flush
+              #   whose offset commit did not reach Kafka.
+              #
+              # @note A lower offset alone is not a replay: a recreated reports topic starts from
+              #   offset 0 again, but its reports are newer than the stored one.
+              def replayed?
+                process = state[:processes][report[:process][:id].to_sym]
+
+                return false unless process
+                return false if offset > process[:offset]
+
+                report[:dispatched_at] <= process[:dispatched_at]
+              end
             end
           end
         end

@@ -12,7 +12,7 @@ module Karafka
             # @param event [Karafka::Core::Monitoring::Event]
             def on_worker_processed(event)
               track do |sampler|
-                sampler.windows.m1[:processed_total_time] << event[:time]
+                sampler.processing_times << event[:time]
               end
             end
 

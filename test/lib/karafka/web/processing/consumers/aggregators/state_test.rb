@@ -193,6 +193,38 @@ describe_current do
         assert(stats[:enqueued] >= 0)
       end
     end
+
+    context "when reports of a process are consumed again" do
+      let(:report) do
+        data = Fixtures.consumers_reports_json("multi_partition/v1.4.1_process_1")
+        data[:dispatched_at] = Time.now.to_f
+        data
+      end
+
+      let(:report_messages) { report[:stats][:total][:messages] }
+      let(:initial_messages) { state_aggregator.stats[:messages] || 0 }
+
+      before do
+        initial_messages
+        state_aggregator.add(report, 42)
+        state_aggregator.add(report, 43)
+      end
+
+      it "does not count them again" do
+        state_aggregator.add(report, 42)
+        state_aggregator.add(report, 43)
+
+        assert_equal(initial_messages + (2 * report_messages), state_aggregator.stats[:messages])
+        assert_equal(43, state_aggregator.to_h[:processes][report[:process][:id].to_sym][:offset])
+      end
+
+      it "counts the next report" do
+        state_aggregator.add(report, 42)
+        state_aggregator.add(report, 44)
+
+        assert_equal(initial_messages + (3 * report_messages), state_aggregator.stats[:messages])
+      end
+    end
   end
 
   describe "waiting jobs aggregation" do
