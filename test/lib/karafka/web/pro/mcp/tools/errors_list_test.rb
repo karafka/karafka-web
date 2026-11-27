@@ -156,7 +156,10 @@ describe_current do
 
     it "pages through the empty middle slice to the last one" do
       assert_equal([2, 3, nil], pages.map { |page| page[:next_page] })
-      assert_equal([[0], [], [partition_count - 1]], pages.map { |page| page[:errors].map { |error| error[:partition] } })
+      assert_equal(
+        [[0], [], [partition_count - 1]],
+        pages.map { |page| page[:errors].map { |error| error[:partition] } }
+      )
     end
   end
 
