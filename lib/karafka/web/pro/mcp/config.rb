@@ -39,7 +39,9 @@ module Karafka
           # Audit log of the tools calls, written to the `topics.mcp_audit` topic
           setting :audit do
             # Callable that gets the Rack env and returns who called (e.g. from the host app
-            # auth). When not set or when it returns nil, the remote IP and User-Agent are used
+            # auth). The actor identifies the caller only when the host app auth supplies it.
+            # When not set or when it returns nil, the remote IP and User-Agent are used. They
+            # are request details, not an identity
             setting :actor, default: nil
 
             # Refuse read-only tools results when their audit record cannot be written. Changing
