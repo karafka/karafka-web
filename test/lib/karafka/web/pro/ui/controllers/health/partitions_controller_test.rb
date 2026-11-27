@@ -60,15 +60,20 @@ describe_current do
     let(:encoded_group_id) { URI.encode_uri_component(group_id) }
     let(:topic_path) { "/health/topics/#{encoded_group_id}/default" }
 
-    before do
+    def produce_group_report(poll_state: "active")
       topics_config.consumers.reports.name = reports_topic
 
       report = Fixtures.consumers_reports_json(symbolize_names: false)
       consumer_group = report["consumer_groups"].delete("example_app6_app")
       consumer_group["id"] = group_id
       report["consumer_groups"][group_id] = consumer_group
+      report.dig(partition_scope[0], group_id, *partition_scope[2..])["poll_state"] = poll_state
 
       produce(reports_topic, report.to_json, key: report["process"]["id"])
+    end
+
+    before do
+      produce_group_report
 
       Karafka::Admin.stubs(:read_lags_with_offsets).returns(
         group_id => { "default" => { 0 => { lag: 4_200, offset: 10 } } }
@@ -137,15 +142,7 @@ describe_current do
       end
 
       context "when the partition is paused" do
-        before do
-          report = Fixtures.consumers_reports_json(symbolize_names: false)
-          consumer_group = report["consumer_groups"].delete("example_app6_app")
-          consumer_group["id"] = group_id
-          report["consumer_groups"][group_id] = consumer_group
-          report.dig(partition_scope[0], group_id, *partition_scope[2..])["poll_state"] = "paused"
-
-          produce(reports_topic, report.to_json, key: report["process"]["id"])
-        end
+        before { produce_group_report(poll_state: "paused") }
 
         it "expect the resume links and forms to reach that group" do
           [
