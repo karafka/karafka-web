@@ -135,6 +135,39 @@ describe_current do
           assert_includes(flash[:success], group_id)
         end
       end
+
+      context "when the partition is paused" do
+        before do
+          report = Fixtures.consumers_reports_json(symbolize_names: false)
+          consumer_group = report["consumer_groups"].delete("example_app6_app")
+          consumer_group["id"] = group_id
+          report["consumer_groups"][group_id] = consumer_group
+          report.dig(partition_scope[0], group_id, *partition_scope[2..])["poll_state"] = "paused"
+
+          produce(reports_topic, report.to_json, key: report["process"]["id"])
+        end
+
+        it "expect the resume links and forms to reach that group" do
+          [
+            "/consumers/topics/#{encoded_group_id}/default/pause",
+            "/consumers/partitions/#{encoded_group_id}/default/0/pause"
+          ].each do |action_path|
+            get "#{topic_path}/overview"
+
+            assert_body(%(href="#{action_path}/edit"))
+
+            get "#{action_path}/edit"
+
+            assert_ok
+            assert_body(%(action="#{action_path}"))
+
+            delete(action_path, reset_attempts: "on")
+
+            assert_equal(302, response.status)
+            assert_includes(flash[:success], group_id)
+          end
+        end
+      end
     end
 
     it "expect the group breadcrumb to scope the topics list to the decoded group id" do
