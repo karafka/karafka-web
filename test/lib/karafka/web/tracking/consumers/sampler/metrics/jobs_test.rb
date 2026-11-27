@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
-  let(:jobs_metrics) { described_class.new(windows, started_at) }
+  let(:jobs_metrics) { described_class.new(processing_times, started_at) }
 
-  let(:windows) { Karafka::Web::Tracking::Helpers::Ttls::Windows.new }
+  let(:processing_times) { Karafka::Web::Tracking::Helpers::Ttls::Sum.new(60_000) }
   let(:started_at) { Time.now.to_f }
 
   before { Karafka::Server.workers.stubs(:size).returns(5) }
@@ -21,9 +21,9 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
 
     context "when process has been running for less than 60 seconds" do
       before do
-        windows.m1[:processed_total_time] << 15_000
-        windows.m1[:processed_total_time] << 20_000
-        windows.m1[:processed_total_time] << 25_000
+        processing_times << 15_000
+        processing_times << 20_000
+        processing_times << 25_000
         jobs_metrics.stubs(:float_now).returns(started_at + 30)
       end
 
@@ -38,8 +38,8 @@ describe Karafka::Web::Tracking::Consumers::Sampler::Metrics::Jobs do
 
     context "when calculating utilization with processed time" do
       before do
-        windows.m1[:processed_total_time] << 15_000
-        windows.m1[:processed_total_time] << 20_000
+        processing_times << 15_000
+        processing_times << 20_000
         jobs_metrics.stubs(:float_now).returns(started_at + 60)
       end
 
