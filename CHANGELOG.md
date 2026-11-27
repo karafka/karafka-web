@@ -31,17 +31,9 @@
 - [Enhancement] Show error and thread backtraces as plain text instead of JSON-highlighted, with gem and Ruby frames muted so the application frames stand out.
 - [Enhancement] Collapse the directory prefix shared by the absolute application paths of error and thread backtraces behind an ellipsis, with a toggle to show the full paths.
 - [Enhancement] Link the Origin badge on the Pro Errors list to the Explorer: to the last offset of the failed batch when known, else to the partition, else to the topic.
+- [Enhancement] Validate the Explorer republish form before producing: the target topic must exist, the target partition must be in range and the payload must suit the target topic's deserializer (skippable). Errors re-render the form (Pro) (#1244).
 - [Change] Move the Pro Dead Letter Queue Topics view from `/dlq` to `/dead_letter_queues`. Old `/dlq` links redirect to the new path. Label its navigation item `DLQ`.
-- [Maintenance] Split the Web UI Tailwind stylesheet into per-component files.
-- [Maintenance] Extract the consumer commanding forms into `Lib::Commands` and validate offset and pause values server-side (#1241).
-- [Maintenance] Extract the topic configuration edit flow into `Lib::Configuring` and reject empty values (#1241).
-- [Maintenance] Extract topic creation and repartitioning into `Lib::TopicCreation` and `Lib::Repartitioning` with server-side validation (#1241).
-- [Maintenance] Extract the Explorer republish flow into `Lib::Republishing` and validate the form before producing (#1244).
 - [Maintenance] Update the vendored `AirDatepicker` CSS to `3.6.0` to match the JS.
-- [Maintenance] Stop the release when gem signing fails, instead of publishing the gem without a Sigstore attestation.
-- [Maintenance] Move the cluster-sourced Web UI models (`Broker`, `BrokerPartitionsDistribution`, `WatermarkOffsets`, cluster `Topic` and the cluster lags) into `Models::Cluster` and keep `Models::Topic` and `Models::Health` for consumer reports data.
-- [Maintenance] Move the models used only by the Pro Web UI (cluster brokers, topics, consumer groups and lags, the Health aggregations and the recurring tasks) into `Pro::Ui::Models`, leaving `Models::Cluster::Info` with the cluster metadata only.
-- [Maintenance] Move the Pro-only parts of the shared Web UI models, helpers and partials into Pro: topic-wide message pages, process lookups by id and member id, the Explorer, topics and consumer paths, and the partition, badge, button and time helpers used only by Pro views.
 - [Fix] Stop the first page visit after each full page load from stalling for 2 seconds while Turbo waited for a code highlighting stylesheet to load.
 - [Fix] Apply the stored or system theme before the page renders instead of after it loads, so pages no longer flash in the light theme first.
 - [Fix] Stop every page visit from keeping the previous page in browser memory, through the theme manager color scheme listener and the charts that were never destroyed. Long open Web UI tabs could grow and slow the browser down.
@@ -94,6 +86,9 @@
 - [Fix] Return 404 for a topic name Kafka cannot have (over 249 characters, characters other than letters, digits, `.`, `_` and `-`, or `.` / `..`) in topic, Explorer and scheduled messages URLs. A name over 512 characters crashed the process on karafka-rdkafka `0.32.2` and older.
 - [Fix] End error messages cut on the Errors list with an ellipsis and show the full message in their title.
 - [Fix] Escape shortened values (process IDs, command arguments) and their title, which rendered as raw HTML.
+- [Fix] Reject invalid seek offsets and pause durations with a form error instead of sending them to the running consumer (Pro) (#1241).
+- [Fix] Reject an empty value in the topic configuration form with a form error instead of sending it to the broker (Pro) (#1241).
+- [Fix] Validate the topic creation and repartition forms server-side and show a form error instead of the broker error (Pro) (#1241).
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a keyword filtering box to the data-heavy Web UI listings, with a field selector on flat listings (Pro) (#1073).
