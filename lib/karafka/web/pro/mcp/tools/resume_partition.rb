@@ -47,7 +47,7 @@ module Karafka
               properties: TOPIC_PROPERTIES
                 .merge(PARTITION_PROPERTIES)
                 .merge(RESUME_PROPERTIES),
-              required: %w[consumer_group_id topic partition]
+              required: %w[consumer_group_id topic_name partition]
             )
 
             # @return [Array(String, String)] Web UI request of the matching action

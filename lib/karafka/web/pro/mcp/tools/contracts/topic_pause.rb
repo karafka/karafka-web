@@ -36,10 +36,10 @@ module Karafka
           module Contracts
             # Validates the karafka_pause_topic tool arguments
             class TopicPause < Base
-              arguments :consumer_group_id, :topic, :duration, :prevent_override
+              arguments :consumer_group_id, :topic_name, :duration, :prevent_override
 
               required(:consumer_group_id) { |val| val.is_a?(String) && !val.empty? }
-              required(:topic) { |val| val.is_a?(String) && !val.empty? }
+              required(:topic_name) { |val| val.is_a?(String) && !val.empty? }
               required(:duration) { |val| val.is_a?(Integer) && val >= 0 }
               optional(:prevent_override) { |val| [true, false].include?(val) }
             end

@@ -47,7 +47,7 @@ module Karafka
               properties: TOPIC_PROPERTIES
                 .merge(PARTITION_PROPERTIES)
                 .merge(PAUSE_PROPERTIES),
-              required: %w[consumer_group_id topic partition duration]
+              required: %w[consumer_group_id topic_name partition duration]
             )
 
             # @return [Array(String, String)] Web UI request of the matching action

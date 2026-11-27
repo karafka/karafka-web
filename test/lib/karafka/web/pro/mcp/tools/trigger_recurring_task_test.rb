@@ -31,6 +31,13 @@
 describe_current do
   include McpToolsHelper
 
+  let(:arguments) { { task_id: "test1" } }
+  let(:schedules_topic) { create_topic }
+  let(:last_message) do
+    sleep(1)
+    Karafka::Admin.read_topic(schedules_topic, 0, 1, -1).first
+  end
+
   before do
     Karafka::Web.config.topics.mcp_audit.name = audit_topic
     Karafka::Web.config.mcp.changing_tools = [described_class.name]
@@ -76,12 +83,6 @@ describe_current do
     refute(annotations[:readOnlyHint])
     refute(annotations[:destructiveHint])
     refute(annotations[:idempotentHint])
-  end
-  let(:arguments) { { task_id: "test1" } }
-  let(:schedules_topic) { create_topic }
-  let(:last_message) do
-    sleep(1)
-    Karafka::Admin.read_topic(schedules_topic, 0, 1, -1).first
   end
 
   context "when the audit intent cannot be written" do

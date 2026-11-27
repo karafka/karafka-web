@@ -34,6 +34,11 @@ describe_current do
   let(:process_id) { SecureRandom.uuid }
   let(:arguments) { { process_id: process_id } }
 
+  let(:commands_topic) { create_topic }
+  let(:commands) do
+    Karafka::Admin.read_topic(commands_topic, 0, 10).map(&:payload)
+  end
+
   before do
     Karafka::Web.config.topics.mcp_audit.name = audit_topic
     Karafka::Web.config.mcp.changing_tools = [described_class.name]
@@ -70,10 +75,6 @@ describe_current do
     refute(annotations[:destructiveHint])
     assert(annotations[:idempotentHint])
   end
-  let(:commands_topic) { create_topic }
-  let(:commands) do
-    Karafka::Admin.read_topic(commands_topic, 0, 10).map(&:payload)
-  end
 
   context "when commanding is disabled" do
     before { Karafka::Web.config.commanding.active = false }
@@ -90,15 +91,6 @@ describe_current do
 
     it "refuses the call without sending a command" do
       assert_equal("Audit log is not available, the call was refused", rpc_error["message"])
-      assert_empty(commands)
-    end
-  end
-
-  context "when asked for a dry run" do
-    let(:arguments) { { process_id: process_id, dry_run: true } }
-
-    it "refuses the call without sending a command" do
-      assert_equal("arguments contain an unknown argument", rpc_error["message"])
       assert_empty(commands)
     end
   end

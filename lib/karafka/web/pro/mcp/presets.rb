@@ -49,26 +49,26 @@ module Karafka
           ].freeze
 
           # Presets by name
-          ALL = { operate: OPERATE }.freeze
+          BY_NAME = { operate: OPERATE }.freeze
 
-          private_constant :OPERATE, :ALL
+          private_constant :OPERATE, :BY_NAME
 
           class << self
             # @param name [Symbol] preset name
             # @return [Boolean] is there such a preset
             def exists?(name)
-              ALL.key?(name)
+              BY_NAME.key?(name)
             end
 
             # @return [Array<String>] names of all the changing tools the presets know
             def names
-              ALL.values.flatten.uniq
+              BY_NAME.values.flatten.uniq
             end
 
             # @param setting [Symbol, Array<String>] `config.mcp.changing_tools` value
             # @return [Array<String>] names of the changing tools it enables
             def tools(setting)
-              setting.is_a?(Symbol) ? ALL.fetch(setting) : setting
+              setting.is_a?(Symbol) ? BY_NAME.fetch(setting) : setting
             end
           end
         end

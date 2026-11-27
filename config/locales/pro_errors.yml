@@ -95,6 +95,7 @@ en:
       offset_format: needs to be an integer that is 0 or greater
       process_id_format: needs to be a non-empty string
       topic_format: needs to be a non-empty string
+      topic_name_format: needs to be a non-empty string
       consumer_group_id_format: needs to be a non-empty string
       duration_format: needs to be an integer that is 0 or greater
       prevent_override_format: needs to be either true or false

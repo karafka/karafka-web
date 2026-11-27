@@ -36,10 +36,10 @@ module Karafka
           module Contracts
             # Validates the karafka_resume_partition tool arguments
             class PartitionResume < Base
-              arguments :consumer_group_id, :topic, :partition, :reset_attempts
+              arguments :consumer_group_id, :topic_name, :partition, :reset_attempts
 
               required(:consumer_group_id) { |val| val.is_a?(String) && !val.empty? }
-              required(:topic) { |val| val.is_a?(String) && !val.empty? }
+              required(:topic_name) { |val| val.is_a?(String) && !val.empty? }
               required(:partition) { |val| val.is_a?(Integer) && val >= 0 }
               optional(:reset_attempts) { |val| [true, false].include?(val) }
             end

@@ -31,6 +31,12 @@
 describe_current do
   include McpToolsHelper
 
+  let(:topic) { create_topic }
+  let(:target_topic) { create_topic }
+  let(:arguments) { { topic: topic, partition: 0, offset: 0, target_topic: target_topic } }
+  let(:policy) { Karafka::Web.config.ui.policies.messages }
+  let(:copies) { Karafka::Admin.read_topic(target_topic, 0, 10) }
+
   before do
     Karafka::Web.config.topics.mcp_audit.name = audit_topic
     Karafka::Web.config.mcp.changing_tools = [described_class.name]
@@ -66,11 +72,6 @@ describe_current do
     refute(annotations[:destructiveHint])
     refute(annotations[:idempotentHint])
   end
-  let(:topic) { create_topic }
-  let(:target_topic) { create_topic }
-  let(:arguments) { { topic: topic, partition: 0, offset: 0, target_topic: target_topic } }
-  let(:policy) { Karafka::Web.config.ui.policies.messages }
-  let(:copies) { Karafka::Admin.read_topic(target_topic, 0, 10) }
 
   context "when the policy denies it" do
     before { policy.stubs(:republish?).returns(false) }

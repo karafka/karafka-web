@@ -33,13 +33,13 @@ module Karafka
     module Pro
       module Mcp
         module Tools
-          # Base for the tools that pause, resume or seek consumers, as the Web UI partition and
-          # topic actions do. They build and send the same commands as those actions
+          # Base for the tools that pause or resume consumers, as the Web UI partition and topic
+          # actions do. They build and send the same commands as those actions
           class ConsumersCommand < Base
             # Arguments that point to a consumer group topic
             TOPIC_PROPERTIES = {
               consumer_group_id: { type: "string", description: "Id of the consumer group" },
-              topic: { type: "string", description: "Topic name" }
+              topic_name: { type: "string", description: "Topic name" }
             }.freeze
 
             # Argument that points to a partition of the topic
@@ -82,18 +82,13 @@ module Karafka
 
             # @return [Hash] dispatched command
             def fetch
-              change = plan
+              ensure_target_exists!
+
+              change = command.slice(:name, :payload, :matchers)
 
               Ui::Lib::Consumers::Commands::Dispatcher.new(change).call
 
               { dispatched: true }.merge(change)
-            end
-
-            # @return [Hash] command the tool would send, as the Web UI builds it
-            def plan
-              ensure_target_exists!
-
-              command.slice(:name, :payload, :matchers)
             end
 
             # The Web UI actions answer 404 for a consumer group, topic or partition that the
@@ -134,7 +129,7 @@ module Karafka
             def target
               target = {
                 consumer_group_id: @arguments.fetch(:consumer_group_id),
-                topic: @arguments.fetch(:topic)
+                topic: @arguments.fetch(:topic_name)
               }
 
               target[:partition_id] = @arguments[:partition] if @arguments.key?(:partition)

@@ -45,7 +45,7 @@ module Karafka
               contract: Contracts::TopicPause.new,
               operation: :produce,
               properties: TOPIC_PROPERTIES.merge(PAUSE_PROPERTIES),
-              required: %w[consumer_group_id topic duration]
+              required: %w[consumer_group_id topic_name duration]
             )
 
             # @return [Array(String, String)] Web UI request of the matching action

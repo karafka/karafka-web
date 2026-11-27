@@ -36,10 +36,10 @@ module Karafka
           module Contracts
             # Validates the karafka_resume_topic tool arguments
             class TopicResume < Base
-              arguments :consumer_group_id, :topic, :reset_attempts
+              arguments :consumer_group_id, :topic_name, :reset_attempts
 
               required(:consumer_group_id) { |val| val.is_a?(String) && !val.empty? }
-              required(:topic) { |val| val.is_a?(String) && !val.empty? }
+              required(:topic_name) { |val| val.is_a?(String) && !val.empty? }
               optional(:reset_attempts) { |val| [true, false].include?(val) }
             end
           end

@@ -32,11 +32,16 @@ describe_current do
   include McpToolsHelper
 
   let(:consumer_group_id) { "example_app6_app" }
-  let(:topic) { "default" }
+  let(:topic_name) { "default" }
   let(:states_topic) { create_topic }
   let(:reports_topic) { create_topic }
-  let(:base_arguments) { { consumer_group_id: consumer_group_id, topic: topic, partition: 0, duration: 60 } }
+  let(:base_arguments) { { consumer_group_id: consumer_group_id, topic_name: topic_name, partition: 0, duration: 60 } }
   let(:arguments) { base_arguments }
+
+  let(:commands_topic) { create_topic }
+  let(:commands) do
+    Karafka::Admin.read_topic(commands_topic, 0, 10).map(&:payload)
+  end
 
   before do
     Karafka::Web.config.topics.mcp_audit.name = audit_topic
@@ -79,10 +84,6 @@ describe_current do
     refute(annotations[:destructiveHint])
     refute(annotations[:idempotentHint])
   end
-  let(:commands_topic) { create_topic }
-  let(:commands) do
-    Karafka::Admin.read_topic(commands_topic, 0, 10).map(&:payload)
-  end
 
   context "when commanding is disabled" do
     before { Karafka::Web.config.commanding.active = false }
@@ -104,7 +105,7 @@ describe_current do
   end
 
   context "when duration is not an integer" do
-    let(:base_arguments) { { consumer_group_id: consumer_group_id, topic: topic, partition: 0, duration: "60" } }
+    let(:base_arguments) { { consumer_group_id: consumer_group_id, topic_name: topic_name, partition: 0, duration: "60" } }
 
     it "refuses the call without sending a command" do
       assert_equal("duration needs to be an integer that is 0 or greater", rpc_error["message"])
@@ -121,12 +122,12 @@ describe_current do
       assert_equal({
         name: "partitions.pause",
         consumer_group_id: consumer_group_id,
-        topic: topic,
+        topic: topic_name,
         partition_id: 0,
         duration: 60_000,
         prevent_override: false
       }, command[:command])
-      assert_equal({ consumer_group_id: consumer_group_id, topic: topic, partition_id: 0 }, command[:matchers])
+      assert_equal({ consumer_group_id: consumer_group_id, topic: topic_name, partition_id: 0 }, command[:matchers])
     end
 
     it "writes the intent and the outcome to the audit log" do
@@ -147,8 +148,8 @@ describe_current do
     end
 
     it "refuses the call and writes the rejection" do
-      assert_equal("The requests policy denies POST /consumers/partitions/#{consumer_group_id}/#{topic}/0/pause", rpc_error["message"])
-      assert_equal(["POST", "/consumers/partitions/#{consumer_group_id}/#{topic}/0/pause"], requested.first)
+      assert_equal("The requests policy denies POST /consumers/partitions/#{consumer_group_id}/#{topic_name}/0/pause", rpc_error["message"])
+      assert_equal(["POST", "/consumers/partitions/#{consumer_group_id}/#{topic_name}/0/pause"], requested.first)
       assert_equal(%w[rejected], records.map { |record| record["outcome"] })
     end
   end

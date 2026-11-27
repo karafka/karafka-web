@@ -46,7 +46,7 @@ module Karafka
               operation: :produce,
               idempotent: true,
               properties: TOPIC_PROPERTIES.merge(RESUME_PROPERTIES),
-              required: %w[consumer_group_id topic]
+              required: %w[consumer_group_id topic_name]
             )
 
             # @return [Array(String, String)] Web UI request of the matching action
