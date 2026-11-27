@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# Scenarios: limited
+
 require "bundler/setup"
 require "karafka/web"
 require_relative "helper"

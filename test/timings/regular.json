@@ -37,6 +37,7 @@
   "test/lib/karafka/web/tracking/helpers/ttls/hash_test.rb": 0.105,
   "test/lib/karafka/web/tracking/consumers/sampler_test.rb": 0.102,
   "test/lib/karafka/web/contracts/config_test.rb": 0.093,
+  "test/lib/karafka/web/config_test.rb": 0.02,
   "test/lib/karafka/web/tracking/consumers/contracts/partition_test.rb": 0.092,
   "test/lib/karafka/web/tracking/consumers/listeners/processing_test.rb": 0.084,
   "test/lib/karafka/web/ui/base_test.rb": 0.084,

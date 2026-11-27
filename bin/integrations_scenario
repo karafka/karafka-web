@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+# Runs every test/integrations/*_spec.rb of the current scenario (TEST_SCENARIO), so a new spec
+# needs no entry in test/integrations/docker-compose.yml.
+#
+# Spec header lines:
+#   # Scenarios: limited, strict  - scenarios the spec runs in (default: unlimited)
+#   # Env: LANG=C LC_ALL=C        - environment variables the spec runs with
+
+set -e
+
+known_scenarios=(limited unlimited strict jruby swarm)
+
+: "${TEST_SCENARIO:?TEST_SCENARIO is not set}"
+
+if [[ " ${known_scenarios[*]} " != *" ${TEST_SCENARIO} "* ]]; then
+  echo "Unknown scenario: ${TEST_SCENARIO}"
+  exit 1
+fi
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+ran=0
+
+for spec in test/integrations/*_spec.rb; do
+  read -r -a scenarios <<< "$(sed -n 's/^# Scenarios: //p' "$spec" | tr ',' ' ')"
+  scenarios=("${scenarios[@]:-unlimited}")
+
+  for scenario in "${scenarios[@]}"; do
+    if [[ " ${known_scenarios[*]} " != *" ${scenario} "* ]]; then
+      echo "Unknown scenario ${scenario} in $spec"
+      exit 1
+    fi
+  done
+
+  [[ " ${scenarios[*]} " == *" ${TEST_SCENARIO} "* ]] || continue
+
+  read -r -a env_vars <<< "$(sed -n 's/^# Env: //p' "$spec")"
+
+  echo "Running $spec..."
+  env "${env_vars[@]}" bundle exec ruby "$spec"
+  ran=$((ran + 1))
+done
+
+if [ "$ran" -eq 0 ]; then
+  echo "No integration specs for scenario: ${TEST_SCENARIO}"
+  exit 1
+fi

@@ -49,7 +49,7 @@ module Karafka
                 .compact
                 .select(&:itself)
 
-              dead_letter_queue_topic_patterns += Web.config.ui.dlq_patterns
+              dead_letter_queue_topic_patterns += Web.config.ui.dead_letter_queue_patterns
 
               @dead_letter_queue_topics = Models::Cluster::Topic
                 .all

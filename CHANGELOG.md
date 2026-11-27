@@ -33,6 +33,7 @@
 - [Enhancement] Link the Origin badge on the Pro Errors list to the Explorer: to the last offset of the failed batch when known, else to the partition, else to the topic.
 - [Enhancement] Validate the Explorer republish form before producing: the target topic must exist, the target partition must be in range and the payload must suit the target topic's deserializer (skippable). Errors re-render the form (Pro) (#1244).
 - [Change] Move the Pro Dead Letter Queue Topics view from `/dlq` to `/dead_letter_queues`. Old `/dlq` links redirect to the new path. Label its navigation item `DLQ`.
+- [Change] Rename the `config.ui.dlq_patterns` setting to `config.ui.dead_letter_queue_patterns`. `config.ui.dlq_patterns` stays as an alias.
 - [Maintenance] Update the vendored `AirDatepicker` CSS to `3.6.0` to match the JS.
 - [Fix] Stop the first page visit after each full page load from stalling for 2 seconds while Turbo waited for a code highlighting stylesheet to load.
 - [Fix] Apply the stored or system theme before the page renders instead of after it loads, so pages no longer flash in the light theme first.

@@ -105,7 +105,7 @@ module Karafka
             required(:nav_erb) { |val| val == false || (val.is_a?(String) && !val.empty?) }
           end
 
-          required(:dlq_patterns) do |val|
+          required(:dead_letter_queue_patterns) do |val|
             val.is_a?(Array) &&
               val.all? { |attr| attr.is_a?(String) || attr.is_a?(Regexp) }
           end
