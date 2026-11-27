@@ -35,6 +35,29 @@ module Karafka
         module Helpers
           # Paths of the Pro-only sections
           module PathsHelper
+            # Path segment that `URI.encode_uri_component` leaves unchanged
+            PLAIN_PATH_SEGMENT = /\A[A-Za-z0-9._-]*\z/
+
+            private_constant :PLAIN_PATH_SEGMENT
+
+            # @param value [String] value to put in a path, like a consumer group id. Kafka group
+            #   ids may hold any character, so the value is encoded as a single path segment.
+            # @return [String] encoded path segment
+            def encode_path_segment(value)
+              return value if PLAIN_PATH_SEGMENT.match?(value)
+
+              URI.encode_uri_component(value)
+            end
+
+            # @param segment [String] path segment encoded with {#encode_path_segment}
+            # @return [String] decoded path segment
+            # @raise [Web::Errors::Ui::NotFoundError] when the segment has a malformed escape
+            def decode_path_segment(segment)
+              URI.decode_uri_component(segment)
+            rescue ArgumentError
+              raise Web::Errors::Ui::NotFoundError, segment
+            end
+
             # Helps build explorer paths. We often link offsets to proper messages, etc so this
             # allows us to short-track this
             # @param args [Array<String>] sub-paths

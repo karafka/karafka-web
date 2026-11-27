@@ -50,7 +50,7 @@ module Karafka
                 # cluster_lags) live here, scoped to a single topic, instead of the old top-level
                 # all-topics views which became unusable with many topics/partitions.
                 r.on "topics", String, String do |encoded_consumer_group_id, topic_name|
-                  consumer_group_id = health_decode_path_segment(encoded_consumer_group_id)
+                  consumer_group_id = decode_path_segment(encoded_consumer_group_id)
                   partitions_controller = build(Controllers::Health::PartitionsController)
 
                   r.get "overview" do
@@ -84,7 +84,7 @@ module Karafka
                 # URL-encodes the group value (it comes from the URL path) so it cannot inject extra
                 # query params.
                 r.get "topics", String do |encoded_consumer_group_id|
-                  consumer_group_id = health_decode_path_segment(encoded_consumer_group_id)
+                  consumer_group_id = decode_path_segment(encoded_consumer_group_id)
 
                   r.redirect health_group_topics_path(consumer_group_id)
                 end
@@ -103,7 +103,7 @@ module Karafka
                 end
 
                 r.on "consumer_groups", String do |group_id|
-                  decoded_group_id = health_decode_path_segment(group_id)
+                  decoded_group_id = decode_path_segment(group_id)
 
                   r.get "overview" do
                     consumer_groups_controller.overview(decoded_group_id)

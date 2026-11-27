@@ -48,11 +48,6 @@ module Karafka
               cluster_lags: "Cluster Lags"
             }.freeze
 
-            # Path segment that `URI.encode_uri_component` leaves unchanged
-            PLAIN_PATH_SEGMENT = /\A[A-Za-z0-9._-]*\z/
-
-            private_constant :PLAIN_PATH_SEGMENT
-
             # @param lens [Symbol, String] the lens/action name (e.g. `:changes`)
             # @return [String] the label for that lens, falling back to a titleized name for any
             #   lens not in {LENS_LABELS}
@@ -75,31 +70,13 @@ module Karafka
               "#{root_path("health", "topics")}?filter[field]=consumer_group&filter[value]=#{value}"
             end
 
-            # @param value [String] consumer group id to put in a path. Kafka group ids may hold any
-            #   character, so the id is encoded as a single path segment.
-            # @return [String] encoded path segment
-            def health_path_segment(value)
-              return value if PLAIN_PATH_SEGMENT.match?(value)
-
-              URI.encode_uri_component(value)
-            end
-
-            # @param segment [String] path segment encoded with {#health_path_segment}
-            # @return [String] decoded path segment
-            # @raise [Web::Errors::Ui::NotFoundError] when the segment has a malformed escape
-            def health_decode_path_segment(segment)
-              URI.decode_uri_component(segment)
-            rescue ArgumentError
-              raise Web::Errors::Ui::NotFoundError, segment
-            end
-
             # @param consumer_group_id [String] consumer group id
             # @param topic_name [String] name of the topic
-            # @param lens [String] per-topic lens (`overview`, `lags`, `offsets`, `changes` or
-            #   `cluster_lags`)
+            # @param lens [String, Symbol] per-topic lens (`overview`, `lags`, `offsets`, `changes`
+            #   or `cluster_lags`)
             # @return [String] path to the per-topic health lens
             def health_topic_path(consumer_group_id, topic_name, lens = "overview")
-              root_path("health", "topics", health_path_segment(consumer_group_id), topic_name, lens)
+              root_path("health", "topics", encode_path_segment(consumer_group_id), topic_name, lens)
             end
 
             # @param group_id [String] consumer group id
@@ -107,7 +84,7 @@ module Karafka
             # @return [String] path to the cluster consumer group page. Kafka group ids may hold
             #   any character, so the id is encoded as a single path segment.
             def health_consumer_group_path(group_id, page = "overview")
-              root_path("health", "consumer_groups", health_path_segment(group_id), page)
+              root_path("health", "consumer_groups", encode_path_segment(group_id), page)
             end
 
             # @param group_id [String] consumer group id
@@ -117,7 +94,7 @@ module Karafka
               root_path(
                 "health",
                 "consumer_groups",
-                health_path_segment(group_id),
+                encode_path_segment(group_id),
                 "topics",
                 topic_name,
                 "delete"

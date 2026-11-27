@@ -97,6 +97,46 @@ describe_current do
       assert_body("4200")
     end
 
+    it "expect the topic and lens breadcrumbs to link to the topic of that group" do
+      get "#{topic_path}/lags"
+
+      crumbs = body[%r{<div class="breadcrumbs">.*?</ul>}m]
+
+      assert_includes(crumbs, %(href="#{topic_path}/overview"))
+      assert_includes(crumbs, %(href="#{topic_path}/lags"))
+    end
+
+    context "when commanding is on" do
+      let(:commands_topic) { create_topic }
+
+      before do
+        Karafka::Web.config.commanding.active = true
+        topics_config.consumers.commands.name = commands_topic
+      end
+
+      it "expect the pause and offset links and forms to reach that group" do
+        {
+          "/consumers/topics/#{encoded_group_id}/default/pause" => [:post, "new", { duration: 60 }],
+          "/consumers/partitions/#{encoded_group_id}/default/0/pause" => [:post, "new", { duration: 60 }],
+          "/consumers/partitions/#{encoded_group_id}/default/0/offset" => [:put, "edit", { offset: 1 }]
+        }.each do |action_path, (verb, page, params)|
+          get "#{topic_path}/overview"
+
+          assert_body(%(href="#{action_path}/#{page}"))
+
+          get "#{action_path}/#{page}"
+
+          assert_ok
+          assert_body(%(action="#{action_path}"))
+
+          public_send(verb, action_path, params)
+
+          assert_equal(302, response.status)
+          assert_includes(flash[:success], group_id)
+        end
+      end
+    end
+
     it "expect the group breadcrumb to scope the topics list to the decoded group id" do
       get "#{topic_path}/overview"
 
@@ -116,10 +156,17 @@ describe_current do
   %w[%zz abc%].each do |malformed|
     context "when the consumer group id is a malformed escape (#{malformed})" do
       it do
-        env = Rack::MockRequest.env_for("http://example.org/")
-        env["PATH_INFO"] = "/health/topics/#{malformed}/default/overview"
+        [
+          "/health/topics/#{malformed}/default/overview",
+          "/consumers/topics/#{malformed}/default/pause/new",
+          "/consumers/partitions/#{malformed}/default/0/pause/new",
+          "/consumers/partitions/#{malformed}/default/0/offset/edit"
+        ].each do |path|
+          env = Rack::MockRequest.env_for("http://example.org/")
+          env["PATH_INFO"] = path
 
-        assert_equal(404, app.call(env).first)
+          assert_equal(404, app.call(env).first)
+        end
       end
     end
   end

@@ -28,7 +28,7 @@
 
     pause_path = consumers_path(
       'topics',
-      consumer_group_name,
+      encode_path_segment(consumer_group_name),
       topic_name,
       'pause',
       'new'
@@ -36,7 +36,7 @@
 
     resume_path = consumers_path(
       'topics',
-      consumer_group_name,
+      encode_path_segment(consumer_group_name),
       topic_name,
       'pause',
       'edit'

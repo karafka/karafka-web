@@ -64,7 +64,9 @@ module Karafka
                   String,
                   String,
                   :partition_id
-                ) do |consumer_group_id, topic, partition_id|
+                ) do |encoded_consumer_group_id, topic, partition_id|
+                  consumer_group_id = decode_path_segment(encoded_consumer_group_id)
+
                   r.on "pause" do
                     controller = build(Controllers::Consumers::Partitions::PausesController)
 
@@ -98,7 +100,8 @@ module Karafka
                   end
                 end
 
-                r.on "topics", String, String, "pause" do |cg_id, topic|
+                r.on "topics", String, String, "pause" do |encoded_cg_id, topic|
+                  cg_id = decode_path_segment(encoded_cg_id)
                   controller = build(Controllers::Consumers::Topics::PausesController)
 
                   r.get "new" do
