@@ -10,7 +10,7 @@ module Karafka
           include ::Karafka::Core::Helpers::Time
 
           attr_reader :counters, :consumer_groups, :subscription_groups, :errors,
-            :pauses, :jobs, :windows
+            :pauses, :jobs, :windows, :processing_times
 
           # Current schema version
           # This is used for detecting incompatible changes and not using outdated data during
@@ -43,6 +43,7 @@ module Karafka
             super
 
             @windows = Helpers::Ttls::Windows.new
+            @processing_times = Helpers::Ttls::Sum.new(60 * 1_000)
             @counters = COUNTERS_BASE.dup
 
             @consumer_groups = Hash.new do |h, cg_id|
@@ -176,7 +177,7 @@ module Karafka
           # @return [Metrics::Jobs] jobs metrics instance
           # @note Lazy initialization since it depends on started_at
           def jobs_metrics
-            @jobs_metrics ||= Metrics::Jobs.new(@windows, started_at)
+            @jobs_metrics ||= Metrics::Jobs.new(@processing_times, started_at)
           end
 
           # @return [Integer] memory used by this process in kilobytes
