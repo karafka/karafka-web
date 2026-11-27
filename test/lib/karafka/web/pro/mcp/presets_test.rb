@@ -44,12 +44,34 @@ describe_current do
 
   it { assert_equal(%w[karafka_pause_partition], described_class.tools(%w[karafka_pause_partition])) }
 
+  it "keeps the operate preset to the reversible tools" do
+    assert_equal(
+      %w[
+        karafka_pause_partition
+        karafka_resume_partition
+        karafka_pause_topic
+        karafka_resume_topic
+        karafka_trace_process
+        karafka_quiet_process
+        karafka_trigger_recurring_task
+        karafka_republish_message
+      ],
+      described_class.tools(:operate)
+    )
+  end
+
   context "when the operate preset is enabled" do
     before { Karafka::Web.config.mcp.changing_tools = :operate }
 
     it "lists exactly the preset tools" do
       assert_equal(described_class.tools(:operate).sort, changing.sort)
       assert_equal(described_class.names.sort, changing.sort)
+    end
+
+    it "lists no destructive tool" do
+      rpc("tools/list").dig("result", "tools").each do |tool|
+        refute(tool.dig("annotations", "destructiveHint"), tool["name"])
+      end
     end
   end
 
