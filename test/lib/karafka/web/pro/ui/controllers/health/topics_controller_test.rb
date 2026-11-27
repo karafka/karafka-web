@@ -73,6 +73,17 @@ describe_current do
     let(:encoded_group_id) { URI.encode_uri_component(group_id) }
     let(:topic_path) { "/health/topics/#{encoded_group_id}/default" }
 
+    def produce_group_report
+      topics_config.consumers.reports.name = reports_topic
+
+      report = Fixtures.consumers_reports_json(symbolize_names: false)
+      consumer_group = report["consumer_groups"].delete("example_app6_app")
+      consumer_group["id"] = group_id
+      report["consumer_groups"][group_id] = consumer_group
+
+      produce(reports_topic, report.to_json, key: report["process"]["id"])
+    end
+
     context "when visiting the consumer group path without a topic" do
       before { get "health/topics/#{encoded_group_id}" }
 
@@ -98,14 +109,7 @@ describe_current do
 
     context "when the group is in the reports" do
       before do
-        topics_config.consumers.reports.name = reports_topic
-
-        report = Fixtures.consumers_reports_json(symbolize_names: false)
-        consumer_group = report["consumer_groups"].delete("example_app6_app")
-        consumer_group["id"] = group_id
-        report["consumer_groups"][group_id] = consumer_group
-
-        produce(reports_topic, report.to_json, key: report["process"]["id"])
+        produce_group_report
 
         get "health/topics"
       end
@@ -126,6 +130,8 @@ describe_current do
 
     context "when the group is in the cluster lags" do
       before do
+        produce_group_report
+
         Karafka::Admin.stubs(:read_lags_with_offsets).returns(
           group_id => { "default" => { 0 => { lag: 4_200, offset: 10 } } }
         )

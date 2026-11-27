@@ -48,6 +48,11 @@ module Karafka
               cluster_lags: "Cluster Lags"
             }.freeze
 
+            # Path segment that `URI.encode_uri_component` leaves unchanged
+            PLAIN_PATH_SEGMENT = /\A[A-Za-z0-9._-]*\z/
+
+            private_constant :PLAIN_PATH_SEGMENT
+
             # @param lens [Symbol, String] the lens/action name (e.g. `:changes`)
             # @return [String] the label for that lens, falling back to a titleized name for any
             #   lens not in {LENS_LABELS}
@@ -74,6 +79,8 @@ module Karafka
             #   character, so the id is encoded as a single path segment.
             # @return [String] encoded path segment
             def health_path_segment(value)
+              return value if PLAIN_PATH_SEGMENT.match?(value)
+
               URI.encode_uri_component(value)
             end
 

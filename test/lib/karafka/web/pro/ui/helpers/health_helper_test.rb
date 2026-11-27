@@ -53,7 +53,11 @@ describe_current do
   end
 
   describe "#health_path_segment" do
-    it { assert_equal("app_6.x-y", health_path_segment("app_6.x-y")) }
+    it "returns a plain value itself" do
+      value = "app_6.x-y"
+
+      assert_same(value, health_path_segment(value))
+    end
 
     it "encodes the value as one path segment" do
       assert_equal("a%20b%2Fc%3Fd%23e%25f-%C5%BC", health_path_segment("a b/c?d#e%f-ż"))
