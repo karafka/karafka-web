@@ -175,7 +175,8 @@ describe_current do
       assert_equal(
         %w[
           karafka_status karafka_overview karafka_metrics karafka_health karafka_cluster_lags
-          karafka_processes karafka_consumer_groups karafka_errors_list karafka_error
+          karafka_processes karafka_consumer_groups karafka_topics karafka_topic_configs
+          karafka_routing karafka_routing_topic karafka_errors_list karafka_error
         ],
         tools.map { |tool| tool["name"] }
       )
