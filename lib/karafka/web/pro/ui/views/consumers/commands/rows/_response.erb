@@ -34,7 +34,9 @@
 
   <td>
     <% process_id = command[:process][:id] %>
-    <%== badge_secondary "process_id:#{truncate(process_id, strategy: :middle)}" %>
+    <span class="badge badge-secondary">
+      process_id:<%== truncate(process_id, strategy: :middle) %>
+    </span>
   </td>
 
   <td>

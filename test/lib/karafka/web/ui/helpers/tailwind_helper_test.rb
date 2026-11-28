@@ -3,6 +3,37 @@
 describe_current do
   include described_class
 
+  describe "#badge" do
+    it "expect to render escaped content" do
+      assert_equal(
+        '<span class="badge extra">&lt;script&gt;x&lt;/script&gt;</span>',
+        badge("<script>x</script>", classes: "extra")
+      )
+    end
+
+    it "expect to render non-string content" do
+      assert_equal('<span class="badge ">true</span>', badge(true))
+    end
+  end
+
+  describe "#badge_secondary" do
+    it "expect to render escaped content" do
+      assert_equal(
+        '<span class="badge  badge-secondary">&lt;b&gt;</span>',
+        badge_secondary("<b>")
+      )
+    end
+  end
+
+  describe "#badge_primary_sm" do
+    it "expect to render escaped content" do
+      assert_equal(
+        '<span class="badge  badge-primary badge-sm">&lt;b&gt;</span>',
+        badge_primary_sm("<b>")
+      )
+    end
+  end
+
   describe "#action_link_button" do
     let(:result) do
       action_link_button(

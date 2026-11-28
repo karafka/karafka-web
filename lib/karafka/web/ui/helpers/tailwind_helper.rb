@@ -22,12 +22,12 @@ module Karafka
             TYPES
           end
 
-          # Renders a plain badge
-          # @param content [String] badge content
+          # Renders a plain badge with escaped content
+          # @param content [Object] badge content
           # @param classes [String] extra css classes
           # @return [String] badge html
           def badge(content, classes: "")
-            %(<span class="badge #{classes}">#{content}</span>)
+            %(<span class="badge #{classes}">#{::Rack::Utils.escape_html(content)}</span>)
           end
 
           # Renders a link to with button styling

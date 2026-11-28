@@ -33,7 +33,9 @@
       <%== badge_secondary '*' %>
     <% else %>
       <% matchers.each do |key, value| %>
-        <%== badge_secondary "#{key}:#{truncate(value.to_s, length: 20, strategy: :middle)}" %>
+        <span class="badge badge-secondary">
+          <%= key %>:<%== truncate(value.to_s, length: 20, strategy: :middle) %>
+        </span>
       <% end %>
     <% end %>
   </td>
