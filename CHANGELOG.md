@@ -7,6 +7,7 @@
 - **[Feature]** Aggregate the Health views per topic with drill-down to partitions, so they stay usable at scale. Thresholds are configurable under `config.ui.health.lags` (#112).
 - **[Feature]** Add a **Delete Offsets** action (Pro) to the Health consumer group Topics page that deletes a consumer group's committed offsets for a topic. Gated by the new `ui.policies.consumer_groups` `#delete_offsets?` policy, denied by default. Requires karafka `2.6.2`.
 - **[Feature]** Add a read-only MCP server, mounted with `Karafka::Web::Mcp::App`, so AI agents can read the Status page checks, the dashboard overview, metrics, per-topic health, cluster lags, consumer processes, consumer groups and errors over plain HTTP. Mounting it is the opt-in and, like the Web UI, it relies on the host app for authentication (Pro).
+- **[Feature]** Record every MCP tool call to the new `karafka_mcp_audit` topic (`config.topics.mcp_audit`; kept by `reset`) with the caller (`config.mcp.audit.actor`). Changing tools are refused when the audit write fails (`config.mcp.audit.fail_closed_reads` for reads). MCP cannot change the topic (Pro).
 - [Enhancement] Add a Health **Consumer Groups** view (Pro) listing every consumer group in the cluster with its state, also those the Web UI does not track. Each has overview, members (linked to their Karafka processes), topics (lags, offsets deletion) and committed offsets pages. Cluster Lags link each group to its page.
 - [Enhancement] Report the group member id of each subscription group and list it on a new consumer **Memberships** tab (Pro), one row per subscription group with its consumer group, member id, static membership id and state. Bumps the consumers reports schema to `1.8.0` and migrates older reports.
 - [Enhancement] Show the source of each config value (dynamic topic, dynamic broker, static broker, default, ...) on the topic and broker configuration pages (Pro). Requires karafka `2.6.2`.
@@ -20,6 +21,7 @@
 - [Enhancement] Produce consumer commanding requests with `acks: 1` so the broker confirms receipt, and add a `Karafka::Web.producers` facade (#1241).
 - [Enhancement] After republishing, redirect to the partition that received the copy (#1239).
 - [Enhancement] Add `Karafka::Web.producer.acked`, an `acks: 1` producer variant, so user-initiated produces report the assigned offset (#956).
+- [Enhancement] Add `Karafka::Web.producer.fully_acked`, an `acks: all` producer variant for records that must not be lost.
 - [Enhancement] Add a per-broker partition **Distribution** view to the Cluster section (Pro) that flags over and under-loaded brokers (#962).
 - [Enhancement] Read the Pro commands and scheduled-messages topics with the same Web UI kafka settings as the rest of the UI.
 - [Enhancement] Tighten compaction on the `karafka_consumers_states` and `karafka_consumers_metrics` topics so superseded versions are removed sooner.

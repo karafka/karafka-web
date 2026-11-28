@@ -51,8 +51,8 @@ describe_current do
       topics_reseter.stubs(:call)
     end
 
-    it "expect to remote topics, create topics and their states" do
-      topics_reseter.expects(:call)
+    it "expect to remove topics but the mcp audit one, create topics and their states" do
+      topics_reseter.expects(:call).with(mcp_audit: false)
       topics_creator.expects(:call)
       states_creator.expects(:call)
       states_migrator.expects(:call)
@@ -74,8 +74,8 @@ describe_current do
       cleaner.stubs(:call)
     end
 
-    it "expect to delete and clean" do
-      deleter.expects(:call)
+    it "expect to delete all the topics and clean" do
+      deleter.expects(:call).with { |*args| args.empty? }
       cleaner.expects(:call)
       execute
     end

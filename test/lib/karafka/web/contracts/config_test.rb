@@ -30,6 +30,10 @@ describe_current do
             name: "commands-topic",
             config: { "cleanup.policy": "delete" }
           }
+        },
+        mcp_audit: {
+          name: "mcp-audit-topic",
+          config: { "cleanup.policy": "delete" }
         }
       },
       tracking: {
@@ -97,6 +101,18 @@ describe_current do
   context "when validating topics topics" do
     context "when errors topic does not match the regexp" do
       before { params[:topics][:errors][:name] = "invalid topic!" }
+
+      it { refute(contract.call(params).success?) }
+    end
+
+    context "when mcp audit topic does not match the regexp" do
+      before { params[:topics][:mcp_audit][:name] = "invalid topic!" }
+
+      it { refute(contract.call(params).success?) }
+    end
+
+    context "when mcp audit topic config is empty" do
+      before { params[:topics][:mcp_audit][:config] = {} }
 
       it { refute(contract.call(params).success?) }
     end

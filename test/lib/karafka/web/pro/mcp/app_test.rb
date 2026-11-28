@@ -121,6 +121,87 @@ describe_current do
     end
   end
 
+  describe "audit log" do
+    let(:audit_topic) { create_topic }
+    let(:records) do
+      Karafka.producer.client.flush
+
+      Karafka::Admin
+        .read_topic(audit_topic, 0, 100)
+        .map { |message| JSON.parse(message.raw_payload) }
+    end
+    let(:call) { { name: "karafka_overview", arguments: {} } }
+    let(:agent) { { "HTTP_USER_AGENT" => "claude-code/2.0", "REMOTE_ADDR" => "10.1.1.1" } }
+
+    before { Karafka::Web.config.topics.mcp_audit.name = audit_topic }
+
+    after { Karafka::Web.config.mcp.audit.actor = nil }
+
+    context "when tool is called over HTTP" do
+      before { rpc("tools/call", call, headers: agent) }
+
+      it "records the call with the request actor" do
+        assert_equal(1, records.size)
+        assert_equal("ok", records.first["outcome"])
+        assert_equal(
+          { "remote_ip" => "10.1.1.1", "user_agent" => "claude-code/2.0" },
+          records.first["actor"]
+        )
+      end
+    end
+
+    context "when actor callable reads the host app auth from the Rack env" do
+      before do
+        Karafka::Web.config.mcp.audit.actor = ->(env) { env.fetch("app.user", nil) }
+        rpc("tools/call", call, headers: agent.merge("app.user" => "ops@example.com"))
+      end
+
+      it { assert_equal("ops@example.com", records.first["actor"]) }
+    end
+
+    context "when requests policy denies the call" do
+      before do
+        Karafka::Web.config.ui.policies.requests.stubs(:allow?).returns(false)
+        rpc("tools/call", call, headers: agent)
+      end
+
+      it "records the rejection" do
+        assert_equal(403, status)
+        assert_equal(%w[rejected], records.map { |record| record["outcome"] })
+        assert_equal("Forbidden", records.first["error"])
+      end
+    end
+
+    context "when requests policy denies the call and actor callable raises" do
+      before do
+        Karafka::Web.config.ui.policies.requests.stubs(:allow?).returns(false)
+        Karafka::Web.config.mcp.audit.actor = ->(_env) { raise ArgumentError }
+        rpc("tools/call", call, headers: agent)
+      end
+
+      it "still refuses with 403 and records the rejection" do
+        assert_equal(403, status)
+        assert_equal(%w[rejected], records.map { |record| record["outcome"] })
+      end
+    end
+
+    context "when the audit cannot be built for a denied call" do
+      before do
+        Karafka::Web.config.ui.policies.requests.stubs(:allow?).returns(false)
+        Karafka::Web::Pro::Mcp::Audit.any_instance.stubs(:result).raises(StandardError)
+        rpc("tools/call", call, headers: agent)
+      end
+
+      it { assert_equal(403, status) }
+    end
+
+    context "when not calling a tool" do
+      before { rpc("ping") }
+
+      it { assert_empty(records) }
+    end
+  end
+
   context "when mounted through the proxy" do
     let(:app) { Karafka::Web::Mcp::App }
 

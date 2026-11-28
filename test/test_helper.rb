@@ -207,7 +207,7 @@ PRODUCERS = Struct.new(:regular, :transactional).new(
 )
 
 # Topics that we will use for all the tests as the primary karafka-web topics for valid cases
-TOPICS = Array.new(5) { create_topic }
+TOPICS = Array.new(6) { create_topic }
 
 # Global setup that runs before each test
 Minitest::Spec.class_eval do
@@ -233,6 +233,7 @@ Minitest::Spec.class_eval do
     Karafka::Web.config.topics.consumers.reports.name = TOPICS[2]
     Karafka::Web.config.topics.consumers.commands.name = TOPICS[3]
     Karafka::Web.config.topics.errors.name = TOPICS[4]
+    Karafka::Web.config.topics.mcp_audit.name = TOPICS[5]
 
     # Enable all features in case they were disabled for the controllers tests
     if Karafka.pro? && described_class &&
@@ -273,6 +274,7 @@ Minitest::Spec.class_eval do
     Karafka::Web.config.topics.consumers.reports.name = TOPICS[2]
     Karafka::Web.config.topics.consumers.commands.name = TOPICS[3]
     Karafka::Web.config.topics.errors.name = TOPICS[4]
+    Karafka::Web.config.topics.mcp_audit.name = TOPICS[5]
 
     # Last, as it fails the spec, which must not skip the cleanup above
     BreadcrumbsValidator.instance.validate!(self, breadcrumbs_page) if breadcrumbs_page
@@ -290,6 +292,7 @@ Karafka::Web.setup do |config|
   config.topics.consumers.reports.name = TOPICS[2]
   config.topics.consumers.commands.name = TOPICS[3]
   config.topics.errors.name = TOPICS[4]
+  config.topics.mcp_audit.name = TOPICS[5]
 
   # Disable so it is not auto-subscribed under the hood of tests
   config.commanding.active = false if Karafka.pro?

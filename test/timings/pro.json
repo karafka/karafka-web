@@ -1,6 +1,9 @@
 {
   "test/lib/karafka/web/pro/mcp/responses_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/server_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/audit_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/guard_test.rb": 1.0,
+  "test/lib/karafka/web/pro/mcp/contracts/config_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/tools/contracts/errors/show_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/tools/contracts/errors/list_test.rb": 1.0,
   "test/lib/karafka/web/pro/mcp/tools/contracts/metrics_test.rb": 1.0,

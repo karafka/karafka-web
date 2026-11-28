@@ -15,6 +15,7 @@ describe_current do
   let(:consumers_reports_topic) { generate_topic_name }
   let(:consumers_commands_topic) { generate_topic_name }
   let(:errors_topic) { generate_topic_name }
+  let(:mcp_audit_topic) { generate_topic_name }
 
   before do
     Karafka::Web.config.topics.consumers.states.name = consumers_states_topic
@@ -22,6 +23,7 @@ describe_current do
     Karafka::Web.config.topics.consumers.reports.name = consumers_reports_topic
     Karafka::Web.config.topics.consumers.commands.name = consumers_commands_topic
     Karafka::Web.config.topics.errors.name = errors_topic
+    Karafka::Web.config.topics.mcp_audit.name = mcp_audit_topic
   end
 
   context "when topics do not exist" do
@@ -31,7 +33,8 @@ describe_current do
         consumers_metrics_topic,
         consumers_reports_topic,
         consumers_commands_topic,
-        errors_topic
+        errors_topic,
+        mcp_audit_topic
       ]
 
       delete
@@ -91,6 +94,29 @@ describe_current do
 
       assert(before_val)
       refute(after_val)
+    end
+  end
+
+  context "when mcp audit topic exists" do
+    let(:mcp_audit_topic) { create_topic }
+
+    it "expect to remove it" do
+      before_val = topics.call.include?(mcp_audit_topic)
+      delete
+      after_val = topics.call.include?(mcp_audit_topic)
+
+      assert(before_val)
+      refute(after_val)
+    end
+  end
+
+  context "when mcp audit topic exists and is kept" do
+    let(:mcp_audit_topic) { create_topic }
+
+    it "expect not to remove it" do
+      described_class.new.call(mcp_audit: false)
+
+      assert_includes(topics.call, mcp_audit_topic)
     end
   end
 end

@@ -111,4 +111,39 @@ describe_current do
       assert_includes(topics, errors_topic)
     end
   end
+
+  context "when mcp audit topic exists" do
+    let(:mcp_audit_topic) { create_topic }
+
+    before do
+      Karafka::Web.config.topics.mcp_audit.name = mcp_audit_topic
+      produce(mcp_audit_topic, {}.to_json)
+    end
+
+    it "expect not to create it again" do
+      create
+
+      assert_equal(1, Karafka::Admin.read_topic(mcp_audit_topic, 0, 100).size)
+    end
+  end
+
+  context "when mcp audit topic does not exist" do
+    let(:mcp_audit_topic) { generate_topic_name }
+
+    before { Karafka::Web.config.topics.mcp_audit.name = mcp_audit_topic }
+
+    it "expect to create it with the delete cleanup policy" do
+      create
+
+      assert_includes(topics, mcp_audit_topic)
+
+      cleanup = Karafka::Admin::Configs
+        .describe(Karafka::Admin::Configs::Resource.new(type: :topic, name: mcp_audit_topic))
+        .first
+        .configs
+        .find { |config| config.name == "cleanup.policy" }
+
+      assert_equal("delete", cleanup.value)
+    end
+  end
 end

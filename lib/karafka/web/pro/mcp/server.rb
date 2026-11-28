@@ -34,6 +34,8 @@ module Karafka
       module Mcp
         # Handles one JSON-RPC message of the MCP protocol and builds its HTTP response
         class Server
+          include ::Karafka::Core::Helpers::Time
+
           # Protocol versions we can talk. The first one is used when the client asks for one we
           # do not support
           PROTOCOL_VERSIONS = %w[
@@ -68,6 +70,11 @@ module Karafka
 
           private_constant :TOOLS, :ID_TYPES
 
+          # @param audit [Audit] audit log of the request tools calls
+          def initialize(audit)
+            @audit = audit
+          end
+
           # @param body [String] raw request body
           # @return [Array] Rack response
           def call(body)
@@ -85,6 +92,31 @@ module Karafka
             dispatch(message)
           rescue JSON::ParserError
             error(nil, :parse, "Parse error")
+          end
+
+          # Records a tools call refused by the requests policy before it reached the server
+          #
+          # @param body [String] raw request body
+          def denied(body)
+            message = JSON.parse(body)
+
+            return unless message.is_a?(Hash) && message["method"] == "tools/call"
+
+            params = message["params"]
+            params = {} unless params.is_a?(Hash)
+
+            reject(params["name"], params["arguments"], "Forbidden")
+          rescue JSON::ParserError
+            nil
+          rescue => e
+            ::Karafka.monitor.instrument(
+              "error.occurred",
+              error: e,
+              caller: self,
+              type: "web.ui.error"
+            )
+
+            nil
           end
 
           private
@@ -111,7 +143,11 @@ module Karafka
             id = message["id"]
             params = message.fetch("params", {})
 
-            return error(id, :invalid_params, "Invalid params") unless params.is_a?(Hash)
+            unless params.is_a?(Hash)
+              reject(nil, nil, "Invalid params") if message["method"] == "tools/call"
+
+              return error(id, :invalid_params, "Invalid params")
+            end
 
             case message["method"]
             when "initialize"
@@ -152,17 +188,27 @@ module Karafka
           # @param params [Hash] tools/call params
           # @return [Array] Rack response
           def call_tool(id, params)
-            tool = TOOLS[params["name"]]
-
-            return error(id, :invalid_params, "Unknown tool: #{params["name"]}") unless tool
-
+            name = params["name"]
             arguments = params.fetch("arguments", {})
+            tool = tools[name]
 
-            return error(id, :invalid_params, "Invalid arguments") unless arguments.is_a?(Hash)
+            return invalid(id, name, arguments, "Unknown tool: #{name}") unless tool
+            return invalid(id, name, arguments, "Invalid arguments") unless arguments.is_a?(Hash)
 
-            result(id, tool.new(arguments).call)
-          rescue Errors::Mcp::InvalidArgumentsError => e
-            error(id, :invalid_params, e.message)
+            instance = tool.new(arguments)
+            call_id = SecureRandom.uuid
+
+            if tool.changing?
+              Guard.check!(instance)
+
+              unless @audit.intent(call_id, name, arguments)
+                return error(id, :internal, "Audit log is not available, the call was refused")
+              end
+            end
+
+            execute(id, call_id, instance, arguments)
+          rescue Errors::Mcp::InvalidArgumentsError, Errors::Mcp::PolicyDeniedError => e
+            invalid(id, name, arguments, e.message)
           rescue => e
             ::Karafka.monitor.instrument(
               "error.occurred",
@@ -172,6 +218,86 @@ module Karafka
             )
 
             error(id, :internal, "Internal error")
+          end
+
+          # Runs the tool and records its outcome. Changing tools wait for the record, read-only
+          # ones hand it over unless reads are configured to fail closed
+          #
+          # @param id [String, Integer] request id
+          # @param call_id [String] audit id of the call
+          # @param tool [Tools::Base] tool with validated arguments
+          # @param arguments [Hash] tool arguments
+          # @return [Array] Rack response
+          def execute(id, call_id, tool, arguments)
+            fail_closed = !tool.class.changing? && ::Karafka::Web.config.mcp.audit.fail_closed_reads
+            sync = tool.class.changing? || fail_closed
+            started_at = monotonic_now
+            response = tool.call
+
+            details = if response[:isError]
+              { outcome: "tool_error", error: response[:content].first[:text] }
+            else
+              { outcome: "ok", summary: @audit.summarize(response[:structuredContent]) }
+            end
+
+            written = @audit.result(
+              call_id, tool.class.name, arguments, sync: sync, started_at: started_at, **details
+            )
+
+            return error(id, :internal, "Audit log is not available") if fail_closed && !written
+
+            result(id, response)
+          rescue => e
+            ::Karafka.monitor.instrument(
+              "error.occurred",
+              error: e,
+              caller: self,
+              type: "web.ui.error"
+            )
+
+            @audit.result(
+              call_id,
+              tool.class.name,
+              arguments,
+              outcome: "exception",
+              error: e.class.name,
+              sync: sync,
+              started_at: started_at
+            )
+
+            error(id, :internal, "Internal error")
+          end
+
+          # Records a rejected call and answers with the invalid params error
+          #
+          # @param id [String, Integer] request id
+          # @param name [Object] requested tool name
+          # @param arguments [Object] requested tool arguments
+          # @param message [String] rejection reason
+          # @return [Array] Rack response
+          def invalid(id, name, arguments, message)
+            reject(name, arguments, message)
+
+            error(id, :invalid_params, message)
+          end
+
+          # @param name [Object] requested tool name
+          # @param arguments [Object] requested tool arguments
+          # @param message [String] rejection reason
+          def reject(name, arguments, message)
+            @audit.result(
+              SecureRandom.uuid,
+              name.is_a?(String) ? name : nil,
+              arguments,
+              outcome: "rejected",
+              error: message,
+              sync: ::Karafka::Web.config.mcp.audit.fail_closed_reads
+            )
+          end
+
+          # @return [Hash{String => Class}] tools by name
+          def tools
+            TOOLS
           end
 
           # @param id [String, Integer] request id

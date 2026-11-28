@@ -203,6 +203,35 @@ describe_current do
     end
   end
 
+  describe "#fully_acked" do
+    context "when default producer is not idempotent and not transactional" do
+      before do
+        default_producer.stubs(:idempotent?).returns(false)
+        default_producer.stubs(:transactional?).returns(false)
+        default_producer.stubs(:variant).with(topic_config: { acks: "all" }).returns(variant)
+      end
+
+      it "returns a variant with acks: all" do
+        assert_equal(variant, producer.fully_acked)
+      end
+
+      it "caches the result on subsequent calls" do
+        default_producer.expects(:variant).once.returns(variant)
+        3.times { producer.fully_acked }
+      end
+    end
+
+    context "when default producer is idempotent" do
+      before { default_producer.stubs(:idempotent?).returns(true) }
+
+      it "returns the default producer unchanged" do
+        default_producer.expects(:variant).never
+
+        assert_equal(default_producer, producer.fully_acked)
+      end
+    end
+  end
+
   describe "delegation" do
     before do
       default_producer.stubs(:idempotent?).returns(false)
