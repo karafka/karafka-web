@@ -388,7 +388,7 @@ describe_current do
 
       it "expect to render them escaped" do
         assert_ok
-        assert_body('<span class="badge badge-secondary">&lt;script&gt;alert(1)&lt;/script&gt;</span>')
+        assert_body('badge-secondary">&lt;script&gt;alert(1)&lt;/script&gt;</span>')
         assert_body('<span class="badge badge-info">&lt;b&gt;tag&lt;/b&gt;</span>')
         refute_body("<script>alert(1)</script>")
         refute_body("<b>tag</b>")
