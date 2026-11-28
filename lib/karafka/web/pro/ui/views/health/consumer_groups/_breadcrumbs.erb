@@ -36,4 +36,30 @@
       <%= @consumer_group.id %>
     </a>
   </li>
+
+  <% if request.path.end_with?('/members') %>
+    <li>
+      <a href="<%= health_consumer_group_path(@consumer_group.id, 'members') %>">
+        Members
+      </a>
+    </li>
+  <% elsif request.path.end_with?('/topics') %>
+    <li>
+      <a href="<%= health_consumer_group_path(@consumer_group.id, 'topics') %>">
+        Topics
+      </a>
+    </li>
+  <% elsif request.path.end_with?('/offsets') %>
+    <li>
+      <a href="<%= health_consumer_group_path(@consumer_group.id, 'offsets') %>">
+        Committed Offsets
+      </a>
+    </li>
+  <% else %>
+    <li>
+      <a href="<%= health_consumer_group_path(@consumer_group.id) %>">
+        Overview
+      </a>
+    </li>
+  <% end %>
 <% end %>

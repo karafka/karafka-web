@@ -46,22 +46,6 @@ module Karafka
                   topics_controller.cluster_lags
                 end
 
-                consumer_groups_controller = build(Controllers::Health::ConsumerGroupsController)
-
-                r.get "consumer_groups", String do |group_id|
-                  decoded_group_id = begin
-                    URI.decode_uri_component(group_id)
-                  rescue ArgumentError
-                    raise Web::Errors::Ui::NotFoundError, group_id
-                  end
-
-                  consumer_groups_controller.show(decoded_group_id)
-                end
-
-                r.get "consumer_groups" do
-                  consumer_groups_controller.index
-                end
-
                 # Per-topic drill-down. The per-partition lenses (overview/lags/offsets/changes and
                 # cluster_lags) live here, scoped to a single topic, instead of the old top-level
                 # all-topics views which became unusable with many topics/partitions.
@@ -88,16 +72,6 @@ module Karafka
                     partitions_controller.cluster_lags(consumer_group_id, topic_name)
                   end
 
-                  offsets_controller = build(Controllers::Health::OffsetsController)
-
-                  r.get "delete" do
-                    offsets_controller.edit(consumer_group_id, topic_name)
-                  end
-
-                  r.delete "delete" do
-                    offsets_controller.delete(consumer_group_id, topic_name)
-                  end
-
                   # A bare topic path defaults to the overview lens
                   r.get do
                     r.redirect root_path("health", "topics", consumer_group_id, topic_name, "overview")
@@ -114,6 +88,56 @@ module Karafka
 
                 r.get "topics" do
                   topics_controller.index
+                end
+
+                # Consumer groups as the cluster sees them, including the ones the Web UI does not
+                # manage or receive reports from. Group ids may hold any character, so they are
+                # encoded as one path segment.
+                consumer_groups_controller = build(Controllers::Health::ConsumerGroupsController)
+
+                r.get "consumer_groups" do
+                  consumer_groups_controller.index
+                end
+
+                r.on "consumer_groups", String do |group_id|
+                  decoded_group_id = begin
+                    URI.decode_uri_component(group_id)
+                  rescue ArgumentError
+                    raise Web::Errors::Ui::NotFoundError, group_id
+                  end
+
+                  r.get "overview" do
+                    consumer_groups_controller.overview(decoded_group_id)
+                  end
+
+                  r.get "members" do
+                    consumer_groups_controller.members(decoded_group_id)
+                  end
+
+                  r.get "topics" do
+                    consumer_groups_controller.topics(decoded_group_id)
+                  end
+
+                  r.on "topics", String do |topic_name|
+                    offsets_controller = build(Controllers::Health::OffsetsController)
+
+                    r.get "delete" do
+                      offsets_controller.edit(decoded_group_id, topic_name)
+                    end
+
+                    r.delete "delete" do
+                      offsets_controller.delete(decoded_group_id, topic_name)
+                    end
+                  end
+
+                  r.get "offsets" do
+                    consumer_groups_controller.offsets(decoded_group_id)
+                  end
+
+                  # A bare consumer group path defaults to its overview. Unknown pages are 404s.
+                  r.is do
+                    r.redirect health_consumer_group_path(decoded_group_id)
+                  end
                 end
 
                 r.get do

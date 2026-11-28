@@ -18,14 +18,30 @@
 <%# License: https://karafka.io/docs/Pro-License-Comm/ %>
 <%# Contact: contact@karafka.io %>
 
+<% trace = command[:command][:name] == 'consumers.trace' %>
+<% prefix = trace && backtrace_paths_prefix(*command[:result].values.map { |backtrace| backtrace[:backtrace] }) %>
+
 <%== partial 'consumers/commands/metadata/response', locals: { command: command } %>
 
-<% if command[:command][:name] == 'consumers.trace' %>
+<% if trace %>
   <h2 class="h2">Backtraces</h2>
 
-  <% command[:result].each_value do |backtrace| %>
-    <%== partial 'consumers/commands/backtrace', locals: { backtrace: backtrace } %>
+  <% if prefix %>
+    <section class="actions">
+      <%== partial 'shared/backtrace_paths_toggle' %>
+    </section>
   <% end %>
+
+  <div id="backtrace-paths" class="backtrace-short-paths">
+    <% command[:result].each_value do |backtrace| %>
+      <%==
+        partial(
+          'consumers/commands/backtrace',
+          locals: { backtrace: backtrace, prefix: prefix }
+        )
+      %>
+    <% end %>
+  </div>
 <% else %>
   <h2 class="h2">Details</h2>
 

@@ -47,7 +47,7 @@ module Karafka
               #
               # @param topic_name [String] topic we're interested in
               def show(topic_name)
-                @topic = Models::Topic.find(topic_name)
+                @topic = Models::Cluster::Topic.find(topic_name)
 
                 @partitions = sort(@topic[:partitions])
 

@@ -53,8 +53,8 @@ module Karafka
                   @partition_id = partition_id.to_i
 
                   # Get aggregated stats from all processes
-                  current_state = Models::ConsumersState.current!
-                  @stats = Models::Health.current(current_state)
+                  current_state = Web::Ui::Models::ConsumersState.current!
+                  @stats = Web::Ui::Models::Health.current(current_state)
 
                   # Find the consumer group
                   cg_stats = @stats[@consumer_group_id]

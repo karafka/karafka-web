@@ -76,7 +76,7 @@ module Karafka
               # single summary row per topic. This is the default health landing page: it lets one
               # answer "is anything off?" at a glance and drill down into a topic only when needed.
               def index
-                current_state = Models::ConsumersState.current!
+                current_state = Web::Ui::Models::ConsumersState.current!
                 @stats = Models::Health::TopicsAggregation.call(current_state)
 
                 # Sort the aggregated topic rows within each consumer group (by name/lag/etc.)

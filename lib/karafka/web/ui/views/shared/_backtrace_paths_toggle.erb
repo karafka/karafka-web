@@ -1,0 +1,12 @@
+<%#
+  Toggles between the collapsed and the full paths of the backtraces inside the element with the
+  `backtrace-paths` id. Paths start collapsed and the choice is remembered.
+%>
+<button
+  type="button"
+  class="btn-action btn-toggle-backtrace-paths"
+  data-toggle-target="backtrace-paths"
+  title="Show the full paths of the backtrace frames"
+>
+  <%== icon(:folder) %>
+</button>

@@ -8,9 +8,13 @@ module Karafka
           class State
             module Steps
               # Increments the total counters based on the provided report.
+              #
+              # @note Replayed reports are skipped, as their totals are already in the state.
               class IncrementCounters < Base
                 # Increments `context.state[:stats]` totals from `context.report[:stats][:total]`
                 def call
+                  return if context.replayed?
+
                   context.report[:stats][:total].each do |key, value|
                     context.state[:stats][key] ||= 0
                     context.state[:stats][key] += value

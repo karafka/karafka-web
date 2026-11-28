@@ -1,0 +1,37 @@
+/* Badges */
+
+@utility badge {
+  @apply rounded-md whitespace-nowrap mb-1;
+
+  .data-table & {
+    @apply mt-1 badge-sm;
+  }
+
+  .table_metadata & {
+    @apply badge-sm;
+  }
+
+  .card-metric & {
+    @apply badge-sm;
+  }
+}
+
+@utility badge-info {
+  @apply text-base-100;
+}
+
+@utility badge-primary {
+  @apply text-base-100;
+}
+
+@utility badge-error {
+  @apply text-base-100;
+}
+
+@utility badge-success {
+  @apply text-base-100;
+}
+
+@utility badge-secondary {
+  @apply text-base-100;
+}

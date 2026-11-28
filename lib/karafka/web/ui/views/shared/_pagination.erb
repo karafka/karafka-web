@@ -4,20 +4,20 @@
       <nav class="flex justify-center">
         <ul class="pagination flex space-x-1">
           <li class="<%= 'disabled' unless @pagination.first_offset? %>">
-            <a class="btn font-normal <%= 'btn-disabled' unless @pagination.first_offset? %>" href="<%= current_path(@pagination.offset_key => @pagination.first_offset || 1) %>">
+            <a class="btn font-normal <%= 'btn-disabled' unless @pagination.first_offset? %>" href="<%= pagination_path(@pagination.first_offset? ? (@pagination.first_offset || 1) : @pagination.current_offset) %>">
               <span>&laquo;</span>
             </a>
           </li>
 
           <li class="<%= 'disabled' unless @pagination.previous_offset? %>">
-            <a class="btn font-normal <%= 'btn-disabled' unless @pagination.previous_offset? %>" href="<%= current_path(@pagination.offset_key => @pagination.previous_offset) %>">
+            <a class="btn font-normal <%= 'btn-disabled' unless @pagination.previous_offset? %>" href="<%= pagination_path(@pagination.previous_offset? ? @pagination.previous_offset : @pagination.current_offset) %>">
               <span>&lsaquo; Prev</span>
             </a>
           </li>
 
           <% if @pagination.current_offset? %>
             <li class="active">
-              <a class="btn btn-active font-normal" href="<%= current_path(@pagination.offset_key => @pagination.current_offset) %>">
+              <a class="btn btn-active font-normal" href="<%= pagination_path(@pagination.current_offset) %>">
                 <span>
                   <%= @pagination.current_label %>
                 </span>
@@ -26,7 +26,7 @@
           <% end %>
 
           <li class="<%= 'disabled' unless @pagination.next_offset? %>">
-            <a class="btn font-bold font-normal <%= 'btn-disabled' unless @pagination.next_offset? %>" href="<%= current_path(@pagination.offset_key => @pagination.next_offset) %>">
+            <a class="btn font-bold font-normal <%= 'btn-disabled' unless @pagination.next_offset? %>" href="<%= pagination_path(@pagination.next_offset? ? @pagination.next_offset : @pagination.current_offset) %>">
               <span>Next &rsaquo;</span>
             </a>
           </li>

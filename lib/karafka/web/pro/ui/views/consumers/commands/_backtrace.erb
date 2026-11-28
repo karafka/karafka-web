@@ -22,4 +22,9 @@
   <%= backtrace[:label] %>
 </h3>
 
-<pre class="code"><code class="wrapped json p-0 m-0"><%= backtrace[:backtrace] %></code></pre>
+<%==
+  partial(
+    'shared/backtrace',
+    locals: { backtrace: backtrace[:backtrace], prefix: prefix, classes: 'code' }
+  )
+%>

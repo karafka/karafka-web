@@ -39,27 +39,27 @@ module Karafka
 
             # View with statistics dashboard details
             def index
-              @current_state = Models::ConsumersState.current!
-              @counters = Models::Counters.new(@current_state)
+              @current_state = Web::Ui::Models::ConsumersState.current!
+              @counters = Web::Ui::Models::Counters.new(@current_state)
 
-              current_metrics = Models::ConsumersMetrics.current!
+              current_metrics = Web::Ui::Models::ConsumersMetrics.current!
 
               # Build the charts data using the aggregated metrics
-              @aggregated = Models::Metrics::Aggregated.new(
+              @aggregated = Web::Ui::Models::Metrics::Aggregated.new(
                 current_metrics.to_h.fetch(:aggregated)
               )
 
               # Build the charts data about topics using the consumers groups metrics
-              @topics = Models::Metrics::Topics.new(
+              @topics = Web::Ui::Models::Metrics::Topics.new(
                 current_metrics.to_h.fetch(:consumer_groups)
               )
 
               # Load only historicals for the selected range
-              @aggregated_charts = Models::Metrics::Charts::Aggregated.new(
+              @aggregated_charts = Web::Ui::Models::Metrics::Charts::Aggregated.new(
                 @aggregated, @params.current_range
               )
 
-              @topics_charts = Models::Metrics::Charts::Topics.new(
+              @topics_charts = Web::Ui::Models::Metrics::Charts::Topics.new(
                 @topics, @params.current_range
               )
 

@@ -44,7 +44,7 @@ module Karafka
             # Run the detection
             def call
               detector = ::Karafka::Pro::Routing::Features::ConsumerGroups::Patterns::Detector.new
-              topics_names = Web::Ui::Models::ClusterInfo.topics.map(&:topic_name)
+              topics_names = Models::Cluster::Topic.all.map(&:topic_name)
 
               Karafka::App
                 .routes

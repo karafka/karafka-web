@@ -63,7 +63,7 @@ module Karafka
 
             # Displays the execution logs
             def logs
-              @watermark_offsets = Models::WatermarkOffsets.find(logs_topic, 0)
+              @watermark_offsets = Web::Ui::Models::Cluster::WatermarkOffsets.find(logs_topic, 0)
               previous_offset, @logs, next_offset, = current_page_data
 
               paginate(

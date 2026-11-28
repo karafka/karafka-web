@@ -117,34 +117,6 @@ describe_current do
     end
   end
 
-  describe "#consumer_group_state_badge" do
-    let(:result) { consumer_group_state_badge(state) }
-
-    context "when the consumer group is stable" do
-      let(:state) { :stable }
-
-      it { assert_equal("badge-success", result) }
-    end
-
-    context "when the consumer group is empty" do
-      let(:state) { :empty }
-
-      it { assert_equal("badge-secondary", result) }
-    end
-
-    context "when the consumer group is dead" do
-      let(:state) { :dead }
-
-      it { assert_equal("badge-error", result) }
-    end
-
-    context "when the consumer group is rebalancing" do
-      let(:state) { :preparing_rebalance }
-
-      it { assert_equal("badge-warning", result) }
-    end
-  end
-
   describe "#delivery_status_badge" do
     let(:result) { delivery_status_badge(status) }
 

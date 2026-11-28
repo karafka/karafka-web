@@ -107,11 +107,16 @@ module Karafka
           # @param args [Array<Object>] arguments to use to replace `?` with strong
           # @return [String] formatted string
           def format_flash(message, *args)
-            args.each do |arg|
-              message = message.sub("?", "<strong>#{arg}</strong>")
-            end
+            args = args.dup
 
-            message
+            # We replace only the `?` of the message itself, not those inside the arguments.
+            # Flashes are rendered as HTML and arguments can come from users or the cluster (e.g.
+            # topic or consumer group names), so we escape them.
+            message.gsub("?") do
+              next "?" if args.empty?
+
+              "<strong>#{::Rack::Utils.escape_html(args.shift.to_s)}</strong>"
+            end
           end
 
           # Builds a file response object that will be used as a base to dispatch the file

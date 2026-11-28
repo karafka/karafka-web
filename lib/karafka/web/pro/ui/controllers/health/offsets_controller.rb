@@ -36,8 +36,8 @@ module Karafka
           module Health
             # Committed offsets of a consumer group for a topic. Kafka keeps them after the
             # consumer group stops consuming the topic, so the topic keeps showing up in the
-            # cluster lags with an ever-growing lag. Deleting them removes the topic from the
-            # consumer group's cluster lags.
+            # consumer group topics and lags with an ever-growing lag. Deleting them removes the
+            # topic from there.
             class OffsetsController < BaseController
               # Renders a confirmation page for the offsets removal since it is a sensitive
               # operation
@@ -65,7 +65,7 @@ module Karafka
                 bootstrap!(consumer_group_id, topic_name)
 
                 begin
-                  ::Karafka::Admin.delete_consumer_group_offsets(consumer_group_id, [topic_name])
+                  ::Karafka::Admin.delete_consumer_group_offsets(@kafka_group_id, [topic_name])
                 rescue ::Karafka::Errors::ConsumerGroupSubscribedToTopicError
                   return edit(consumer_group_id, topic_name, subscribed: true)
                 rescue Rdkafka::RdkafkaError, Rdkafka::Config::ConfigError => e
@@ -73,7 +73,7 @@ module Karafka
                 end
 
                 redirect(
-                  "health/cluster_lags",
+                  "health/consumer_groups/#{URI.encode_uri_component(consumer_group_id)}/topics",
                   success: format_flash(
                     "Offsets of consumer group ? for topic ? have been deleted",
                     consumer_group_id,
@@ -94,12 +94,17 @@ module Karafka
                 @consumer_group_id = consumer_group_id
                 @topic_name = topic_name
 
+                # Kafka has to be queried with the group id it lists, which differs in encoding
+                @kafka_group_id = Models::Cluster::ConsumerGroup.kafka_id(consumer_group_id)
+
+                not_found!(consumer_group_id) unless @kafka_group_id
+
                 # We read the offsets of this topic straight from Kafka rather than through the
                 # cluster lags, which hide inactive topics and topics outside the Web UI routing.
                 # Those abandoned topics are the ones whose offsets usually need deleting.
                 partitions = ::Karafka::Admin
-                  .read_lags_with_offsets({ consumer_group_id => [topic_name] })
-                  .dig(consumer_group_id, topic_name)
+                  .read_lags_with_offsets({ @kafka_group_id => [topic_name] })
+                  .dig(@kafka_group_id, topic_name)
 
                 not_found!(topic_name) if partitions.nil? || partitions.empty?
 

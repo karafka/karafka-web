@@ -194,6 +194,26 @@ module Karafka
           [request.path, query_string].compact.join("?")
         end
 
+        # Builds the path of a pagination link to the given offset or page.
+        # Single message views (explorer, errors) end their path with the message offset, so we
+        # link to the other message path directly. The offset param would only redirect there,
+        # which makes Turbo render the page twice.
+        # offset - offset or page the link should lead to
+        path :pagination do |offset|
+          single_message = @pagination.is_a?(Lib::Paginations::WatermarkOffsetsBased)
+
+          next current_path(@pagination.offset_key => offset) unless single_message
+          next current_path(@pagination.offset_key => offset) unless request.path.match?(%r{/\d+\z})
+
+          params = request.params.except(@pagination.offset_key)
+          query_string = URI.encode_www_form(flatten_params("", params))
+
+          [
+            request.path.sub(%r{/\d+\z}, "/#{offset}"),
+            (query_string unless query_string.empty?)
+          ].compact.join("?")
+        end
+
         # Builds a consumer instance with all needed details
         # @param consumer_class [Class]
         def build(consumer_class)

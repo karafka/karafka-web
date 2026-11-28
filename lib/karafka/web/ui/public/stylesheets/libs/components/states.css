@@ -1,0 +1,25 @@
+/* Active and disabled states shared by tabs, buttons and navigation items */
+
+@utility active {
+  &.custom-tab {
+    @apply text-primary border-primary;
+  }
+
+  &.btn-action {
+    @apply text-base-content;
+  }
+}
+
+@utility disabled {
+  &.custom-tab {
+    @apply text-gray-500;
+  }
+
+  &.sidebar-nav-item {
+    @apply text-gray-500;
+  }
+
+  &.btn-action {
+    @apply opacity-40 pointer-events-none;
+  }
+}

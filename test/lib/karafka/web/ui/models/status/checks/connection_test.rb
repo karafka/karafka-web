@@ -16,7 +16,7 @@ describe_current do
       let(:cluster_info) { Struct.new(:topics).new([]) }
 
       before do
-        Karafka::Web::Ui::Models::ClusterInfo.stubs(:fetch).returns(cluster_info)
+        Karafka::Web::Ui::Models::Cluster::Info.stubs(:fetch).returns(cluster_info)
       end
 
       it "returns success" do
@@ -37,7 +37,7 @@ describe_current do
 
     context "when connection fails" do
       before do
-        Karafka::Web::Ui::Models::ClusterInfo.stubs(:fetch).raises(Rdkafka::RdkafkaError.new(0))
+        Karafka::Web::Ui::Models::Cluster::Info.stubs(:fetch).raises(Rdkafka::RdkafkaError.new(0))
       end
 
       it "returns failure" do
@@ -55,8 +55,8 @@ describe_current do
       end
 
       it "does not connect again" do
-        Karafka::Web::Ui::Models::ClusterInfo.expects(:fetch).never
-        Karafka::Web::Ui::Models::ClusterInfo.stubs(:fetch)
+        Karafka::Web::Ui::Models::Cluster::Info.expects(:fetch).never
+        Karafka::Web::Ui::Models::Cluster::Info.stubs(:fetch)
 
         result = check.call
 
