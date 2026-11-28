@@ -35,10 +35,13 @@ describe_current do
   let(:group_id) { SecureRandom.uuid }
   let(:stable_group_id) { "member-#{group_id}" }
 
+  let(:group_protocol) { "classic" }
+
   let(:consumer) do
     Rdkafka::Config.new(
       Karafka::App.config.kafka.merge(
         "group.id": stable_group_id,
+        "group.protocol": group_protocol,
         "client.id": "consumer-groups-controller-test",
         "enable.auto.commit": false
       )
@@ -460,6 +463,19 @@ describe_current do
         assert_body("<td>#{described.fetch(:members).first.fetch(:host)}</td>")
         assert_body("#{topic}-[0-1]")
         refute_body("This consumer group has no members.")
+        refute_body("Target assignment")
+      end
+
+      context "when the consumer group uses the consumer (KIP-848) protocol" do
+        let(:group_protocol) { "consumer" }
+
+        it "expect the members page to show the current and the target assignment" do
+          get "health/consumer_groups/#{stable_group_id}/members"
+
+          assert_ok
+          assert_body("<th>Target assignment</th>")
+          assert_equal(2, response.body.scan(%(title="#{topic}-[0-1] (2 partitions total)")).size)
+        end
       end
     end
 
@@ -583,6 +599,34 @@ describe_current do
 
         assert_ok
         assert_body("This page does not contain any data")
+      end
+    end
+
+    context "when a member target assignment differs from its current one" do
+      before do
+        described = Karafka::Admin.describe_consumer_groups([group_id]).first
+
+        member = {
+          member_id: "moving-member",
+          client_id: "moving-app",
+          group_instance_id: nil,
+          host: "/10.0.0.3",
+          assignment: { topic => [0, 1] },
+          target_assignment: { topic => [1] }
+        }
+
+        Karafka::Admin
+          .stubs(:describe_consumer_groups)
+          .returns([described.merge(members: [member])])
+
+        get "health/consumer_groups/#{group_id}/members"
+      end
+
+      it "expect the target assignment column to show the target, not the current one" do
+        assert_ok
+        assert_body("<th>Target assignment</th>")
+        assert_body("#{topic}-[1]")
+        assert_equal(1, response.body.scan("#{topic}-[0,1]").size)
       end
     end
 
