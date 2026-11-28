@@ -121,6 +121,47 @@ describe_current do
     end
   end
 
+  describe "messages tools" do
+    let(:topic_name) { create_topic }
+    let(:tool_names) { result.fetch("tools").map { |tool| tool["name"] } }
+    let(:arguments) { { topic_name: topic_name, partition: 0, offset: 0 } }
+
+    before { produce(topic_name, { "user" => "jane" }.to_json, key: "k1") }
+
+    context "when they are disabled" do
+      it "does not list them and refuses a call" do
+        rpc("tools/list")
+
+        refute_includes(tool_names, "karafka_message")
+
+        rpc("tools/call", { name: "karafka_message", arguments: arguments })
+
+        assert_includes(JSON.parse(body).dig("error", "message"), "is disabled")
+        refute_includes(body, "jane")
+      end
+    end
+
+    context "when they are enabled" do
+      before { Karafka::Web.config.mcp.messages.active = true }
+
+      after { Karafka::Web.config.mcp.messages.active = false }
+
+      it "lists them and returns the message" do
+        rpc("tools/list")
+
+        assert_includes(tool_names, "karafka_message")
+
+        rpc("tools/call", { name: "karafka_message", arguments: arguments })
+
+        message = JSON.parse(body).dig("result", "structuredContent")
+
+        assert_equal(200, status)
+        assert_equal({ "user" => "jane" }, message["payload"])
+        assert_equal("k1", message["key"])
+      end
+    end
+  end
+
   describe "audit log" do
     let(:audit_topic) { create_topic }
     let(:records) do
