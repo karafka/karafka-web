@@ -363,19 +363,33 @@ describe_current do
       end
     end
 
-    context "when messages tool works" do
-      let(:tool_name) { "karafka_topic_messages" }
-      let(:arguments) { { topic_name: audit_topic, partition: 0 } }
+    context "when messages tools work" do
+      let(:messages_topic) { create_topic }
 
-      before { Karafka::Web.config.mcp.messages.active = true }
+      before do
+        Karafka::Web.config.mcp.messages.active = true
+        produce(messages_topic, "jane@example.com", key: "user-jane@example.com")
+      end
 
       after { Karafka::Web.config.mcp.messages.active = false }
 
-      it "writes one result record" do
-        refute(result["isError"])
-        assert_equal(1, records.size)
-        assert_equal("karafka_topic_messages", records.first["tool"])
-        assert_equal("ok", records.first["outcome"])
+      {
+        "karafka_dead_letter_queues" => ->(_topic) { {} },
+        "karafka_topic_messages" => ->(topic) { { topic_name: topic, partition: 0 } },
+        "karafka_message" => ->(topic) { { topic_name: topic, partition: 0, offset: 0 } }
+      }.each do |name, build_arguments|
+        context "when calling #{name}" do
+          let(:tool_name) { name }
+          let(:arguments) { build_arguments.call(messages_topic) }
+
+          it "writes one result record without the message data" do
+            refute(result["isError"])
+            assert_equal(1, records.size)
+            assert_equal(name, records.first["tool"])
+            assert_equal("ok", records.first["outcome"])
+            refute_includes(records.first.to_json, "jane@example.com")
+          end
+        end
       end
     end
 

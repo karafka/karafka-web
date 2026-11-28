@@ -95,12 +95,65 @@ describe_current do
   end
 
   context "when payload cannot be deserialized" do
-    before { produce(topic_name, "{") }
+    before { produce(topic_name, "plain text") }
+
+    it "returns the raw payload as the Explorer shows it" do
+      refute(result[:isError])
+      assert_equal(%w[payload], structured[:raw_fields])
+      assert_empty(structured[:failed_fields])
+      assert_equal("plain text", structured[:payload])
+    end
+  end
+
+  context "when payload cannot be deserialized and the policy hides it" do
+    before do
+      policy.stubs(:payload?).returns(false)
+      produce(topic_name, "plain secret")
+    end
 
     it do
+      assert_equal(%w[payload], structured[:filtered_fields])
+      assert_empty(structured[:raw_fields])
+      refute_includes(text, "plain secret")
+    end
+  end
+
+  context "when key is binary" do
+    before { produce(topic_name, "{}", key: "\xFF\xFE\x00k".b) }
+
+    it "returns it with the invalid bytes replaced" do
       refute(result[:isError])
-      assert_equal(%w[payload], structured[:failed_fields])
-      assert_nil(structured[:payload])
+      assert_empty(structured[:failed_fields])
+      assert_equal("\uFFFD\uFFFD\u0000k", structured[:key])
+    end
+  end
+
+  context "when topic comes from a routing pattern" do
+    before do
+      name = topic_name
+
+      draw_routes do
+        pattern(/#{name}/) do
+          active(false)
+          deserializer(->(_message) { "from-pattern" })
+        end
+      end
+
+      produce(topic_name, "{}")
+    end
+
+    it "uses the pattern deserializer" do
+      assert_equal("from-pattern", structured[:payload])
+      assert_empty(structured[:raw_fields])
+    end
+  end
+
+  context "when partition does not exist" do
+    let(:arguments) { { "topic_name" => topic_name, "partition" => 5, "offset" => 0 } }
+
+    it do
+      assert(result[:isError])
+      assert_includes(text, "Partition 5 of topic #{topic_name} does not exist: the topic has 1 partition")
     end
   end
 

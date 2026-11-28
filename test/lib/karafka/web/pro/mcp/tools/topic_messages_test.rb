@@ -112,7 +112,27 @@ describe_current do
   context "when partition does not exist" do
     let(:arguments) { { "topic_name" => topic_name, "partition" => 10 } }
 
-    it { assert(result[:isError]) }
+    it do
+      assert(result[:isError])
+      assert_includes(text, "does not exist: the topic has 1 partition")
+    end
+  end
+
+  context "when topic comes from a routing pattern" do
+    before do
+      name = topic_name
+
+      draw_routes do
+        pattern(/#{name}/) do
+          active(false)
+          deserializers(key: ->(_metadata) { "pattern-key" })
+        end
+      end
+
+      produce(topic_name, "1", key: "k")
+    end
+
+    it { assert_equal("pattern-key", messages.first[:key]) }
   end
 
   context "when offset is negative" do

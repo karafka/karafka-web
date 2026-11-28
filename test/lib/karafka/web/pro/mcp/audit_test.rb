@@ -258,5 +258,21 @@ describe_current do
     end
 
     it { assert_nil(audit.summarize(nil)) }
+
+    context "when data lists untrusted fields" do
+      let(:data) do
+        {
+          key: "jane@example.com",
+          payload: "jane@example.com",
+          messages: [1, 2],
+          offset: 3,
+          untrusted_fields: %w[key payload messages.key]
+        }
+      end
+
+      it "never copies the top-level ones" do
+        assert_equal({ messages: 2, offset: 3, untrusted_fields: 3 }, audit.summarize(data))
+      end
+    end
   end
 end

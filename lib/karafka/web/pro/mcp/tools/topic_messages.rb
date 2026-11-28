@@ -77,7 +77,8 @@ module Karafka
               topic_name = @arguments.fetch(:topic_name)
               partition = @arguments.fetch(:partition)
 
-              find_topic(topic_name)
+              validate_partition!(find_topic(topic_name), partition)
+              detect_patterns
 
               watermark_offsets = Web::Ui::Models::Cluster::WatermarkOffsets.find(topic_name, partition)
 
