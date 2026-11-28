@@ -53,9 +53,9 @@ module Karafka
             def fetch
               Ui::Lib::PatternsDetector.new.call
 
-              assigned = assigned_topics
+              assigned = Ui::Lib::Routing.assigned_topics
 
-              consumer_groups = ::Karafka::App.routes.consumer_groups.map do |consumer_group|
+              consumer_groups = Ui::Lib::Routing.consumer_groups.map do |consumer_group|
                 {
                   id: consumer_group.id,
                   topics: consumer_group.topics.map do |topic|
@@ -65,27 +65,6 @@ module Karafka
               end
 
               { consumer_groups: consumer_groups }
-            end
-
-            # @return [Hash{String => Set<String>}] names of the topics that the active processes
-            #   report as assigned, per consumer group
-            def assigned_topics
-              assigned = Hash.new { |h, k| h[k] = Set.new }
-              state = Web::Ui::Models::ConsumersState.current
-
-              return assigned unless state
-
-              Ui::Models::Processes.active(state).each do |process|
-                process.consumer_groups.each do |consumer_group|
-                  consumer_group.subscription_groups.each do |subscription_group|
-                    subscription_group.topics.each do |topic|
-                      assigned[consumer_group.id.to_s] << topic.name
-                    end
-                  end
-                end
-              end
-
-              assigned
             end
 
             # @param topic [Karafka::Routing::Topic]

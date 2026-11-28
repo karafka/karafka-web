@@ -52,28 +52,12 @@ module Karafka
             def index
               detect_patterns_routes
 
-              @routes = Karafka::App.routes.consumer_groups
+              @routes = Lib::Routing.consumer_groups
               @routes.each do |consumer_group|
                 sort(consumer_group.topics)
               end
 
-              current_state = Web::Ui::Models::ConsumersState.current
-              @assigned = Hash.new { |h, k| h[k] = Set.new }
-
-              # If there are active processes, we can use their data to mark certain topics as
-              # assigned. This does not cover the full scope as some partitions may be assigned
-              # and some not, but provides general overview
-              if current_state
-                Models::Processes.active(current_state).each do |process|
-                  process.consumer_groups.each do |consumer_group|
-                    consumer_group.subscription_groups.each do |subscription_group|
-                      subscription_group.topics.each do |topic|
-                        @assigned[consumer_group.id.to_s] << topic.name
-                      end
-                    end
-                  end
-                end
-              end
+              @assigned = Lib::Routing.assigned_topics
 
               render
             end
@@ -84,32 +68,17 @@ module Karafka
             def show(topic_id)
               detect_patterns_routes
 
-              @topic = Karafka::App
-                .routes
-                .consumer_groups
-                .flat_map { |consumer_group| consumer_group.topics.to_a }
-                .find { |topic| topic.id == topic_id }
+              @topic = Lib::Routing.find_topic(topic_id)
 
               @topic || not_found!(topic_id)
 
               # Present the routing settings as a flat, sortable + filterable list of name/value rows
-              @details = sort(filter(topic_detail_rows(@topic)))
+              @details = sort(filter(Lib::Routing.settings(@topic)))
 
               render
             end
 
             private
-
-            # @param topic [Karafka::Routing::Topic] topic we present the routing details for
-            # @return [Array<Hash>] `{ name:, value: }` rows for every routing setting (including
-            #   the Pro multiplexing settings)
-            def topic_detail_rows(topic)
-              flattener = Web::Ui::Lib::HashFlattener
-              rows = flattener.call(topic.subscription_group.kafka, "kafka")
-              rows.merge!(flattener.call(topic.to_h.except(:kafka)))
-              rows.merge!(flattener.call(topic.subscription_group.multiplexing.to_h, "multiplexing"))
-              rows.map { |name, value| { name: name.to_s, value: value } }
-            end
 
             # Detect routes defined as patterns
             def detect_patterns_routes

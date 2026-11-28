@@ -72,11 +72,7 @@ module Karafka
 
               Ui::Lib::PatternsDetector.new.call
 
-              topic = ::Karafka::App
-                .routes
-                .consumer_groups
-                .flat_map { |consumer_group| consumer_group.topics.to_a }
-                .find { |route| route.id == topic_id }
+              topic = Ui::Lib::Routing.find_topic(topic_id)
 
               unless topic
                 raise Errors::Mcp::NoDataError, "No routed topic with id #{topic_id}. " \
@@ -96,15 +92,10 @@ module Karafka
             # @return [Array<Hash>] name and value of every routing setting, sorted by name. Values
             #   are strings, as the Web UI renders them
             def settings(topic)
-              flattener = Web::Ui::Lib::HashFlattener
-              rows = flattener.call(topic.subscription_group.kafka, "kafka")
-              rows.merge!(flattener.call(topic.to_h.except(:kafka)))
-              rows.merge!(flattener.call(topic.subscription_group.multiplexing.to_h, "multiplexing"))
+              Ui::Lib::Routing.settings(topic).sort_by { |row| row[:name] }.map do |row|
+                secret = SECRET_SCOPES.any? { |scope| row[:name].include?(scope) }
 
-              rows.sort_by { |name, _| name.to_s }.map do |name, value|
-                secret = SECRET_SCOPES.any? { |scope| name.to_s.include?(scope) }
-
-                { name: name.to_s, value: secret ? "***" : object_value_to_s(value) }
+                { name: row[:name], value: secret ? "***" : object_value_to_s(row[:value]) }
               end
             end
           end
