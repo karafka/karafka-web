@@ -131,11 +131,17 @@ module Karafka
           end
 
           # @param data [Object] structured content of a tool result
-          # @return [Hash, nil] counts of the listed items and short scalar values
+          # @return [Hash, nil] counts of the listed items and short scalar values. Top-level fields
+          #   listed in `untrusted_fields` hold the monitored data (e.g. message keys and payloads)
+          #   and are never copied
           def summarize(data)
             return nil unless data.is_a?(Hash)
 
+            untrusted = Array(data[:untrusted_fields]).map(&:to_s)
+
             data.each_with_object({}) do |(key, value), summary|
+              next if untrusted.include?(key.to_s)
+
               case value
               when Array
                 summary[key] = value.size

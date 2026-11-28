@@ -187,6 +187,21 @@ describe_current do
       end
     end
 
+    context "when messages tools are enabled" do
+      before { Karafka::Web.config.mcp.messages.active = true }
+
+      after { Karafka::Web.config.mcp.messages.active = false }
+
+      it "lists them after the other read-only tools" do
+        assert_equal(
+          %w[karafka_dead_letter_queues karafka_topic_messages karafka_message],
+          tools.map { |tool| tool["name"] }.last(3)
+        )
+
+        tools.each { |tool| assert(tool.dig("annotations", "readOnlyHint")) }
+      end
+    end
+
     it "requires error coordinates for the error details" do
       error_tool = tools.find { |tool| tool["name"] == "karafka_error" }
 
@@ -241,6 +256,28 @@ describe_current do
       before { Karafka::Web::Ui::Models::ConsumersState.stubs(:current!).raises(StandardError) }
 
       it { assert_equal(code(:internal), rpc_error["code"]) }
+    end
+
+    context "when messages tool is disabled" do
+      let(:tool_name) { "karafka_dead_letter_queues" }
+
+      it do
+        assert_equal(code(:invalid_params), rpc_error["code"])
+        assert_equal(
+          "Tool karafka_dead_letter_queues is disabled: enable mcp.messages.active",
+          rpc_error["message"]
+        )
+      end
+    end
+
+    context "when messages tool is enabled" do
+      let(:tool_name) { "karafka_dead_letter_queues" }
+
+      before { Karafka::Web.config.mcp.messages.active = true }
+
+      after { Karafka::Web.config.mcp.messages.active = false }
+
+      it { assert_kind_of(Array, result.dig("structuredContent", "topics")) }
     end
 
     context "when tool works" do
@@ -311,6 +348,48 @@ describe_current do
         assert_equal("ok", records.first["outcome"])
         assert_equal("10.0.0.2", records.first.dig("actor", "remote_ip"))
         assert_kind_of(Float, records.first["duration"])
+      end
+    end
+
+    context "when messages tool is disabled" do
+      let(:tool_name) { "karafka_message" }
+      let(:arguments) { { topic_name: audit_topic, partition: 0, offset: 0 } }
+
+      it "writes the rejection" do
+        assert_equal(code(:invalid_params), rpc_error["code"])
+        assert_equal(1, records.size)
+        assert_equal("karafka_message", records.first["tool"])
+        assert_equal("rejected", records.first["outcome"])
+      end
+    end
+
+    context "when messages tools work" do
+      let(:messages_topic) { create_topic }
+
+      before do
+        Karafka::Web.config.mcp.messages.active = true
+        produce(messages_topic, "jane@example.com", key: "user-jane@example.com")
+      end
+
+      after { Karafka::Web.config.mcp.messages.active = false }
+
+      {
+        "karafka_dead_letter_queues" => ->(_topic) { {} },
+        "karafka_topic_messages" => ->(topic) { { topic_name: topic, partition: 0 } },
+        "karafka_message" => ->(topic) { { topic_name: topic, partition: 0, offset: 0 } }
+      }.each do |name, build_arguments|
+        context "when calling #{name}" do
+          let(:tool_name) { name }
+          let(:arguments) { build_arguments.call(messages_topic) }
+
+          it "writes one result record without the message data" do
+            refute(result["isError"])
+            assert_equal(1, records.size)
+            assert_equal(name, records.first["tool"])
+            assert_equal("ok", records.first["outcome"])
+            refute_includes(records.first.to_json, "jane@example.com")
+          end
+        end
       end
     end
 

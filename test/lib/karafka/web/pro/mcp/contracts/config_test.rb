@@ -30,7 +30,9 @@
 
 describe_current do
   let(:contract) { described_class.new }
-  let(:params) { { mcp: { audit: { actor: nil, fail_closed_reads: false } } } }
+  let(:params) do
+    { mcp: { audit: { actor: nil, fail_closed_reads: false }, messages: { active: false } } }
+  end
 
   it { assert(contract.call(params).success?) }
 
@@ -48,6 +50,12 @@ describe_current do
 
   context "when fail_closed_reads is not a boolean" do
     before { params[:mcp][:audit][:fail_closed_reads] = "yes" }
+
+    it { refute(contract.call(params).success?) }
+  end
+
+  context "when messages active is not a boolean" do
+    before { params[:mcp][:messages][:active] = "yes" }
 
     it { refute(contract.call(params).success?) }
   end

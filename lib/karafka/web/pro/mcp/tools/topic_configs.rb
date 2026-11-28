@@ -62,23 +62,8 @@ module Karafka
                 topic_name: topic_name,
                 untrusted_fields: %w[configs.value],
                 note: UNTRUSTED_NOTE,
-                configs: find(topic_name).configs.sort_by(&:name).map { |config| serialize(config) }
+                configs: find_topic(topic_name).configs.sort_by(&:name).map { |config| serialize(config) }
               }
-            end
-
-            # @param topic_name [String]
-            # @return [Ui::Models::Cluster::Topic] the topic when it exists and the Web UI shows it
-            # @raise [Errors::Mcp::NoDataError] when there is no such topic or the Web UI hides it
-            def find(topic_name)
-              hidden = !::Karafka::Web.config.ui.visibility.internal_topics &&
-                topic_name.start_with?("__")
-
-              raise Errors::Ui::NotFoundError, topic_name if hidden
-
-              Ui::Models::Cluster::Topic.find(topic_name)
-            rescue Errors::Ui::NotFoundError
-              raise Errors::Mcp::NoDataError, "Topic #{topic_name} does not exist. " \
-                "Call karafka_topics to list the topics"
             end
 
             # @param config [Karafka::Admin::Configs::Config]

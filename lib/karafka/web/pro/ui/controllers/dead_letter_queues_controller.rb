@@ -41,39 +41,9 @@ module Karafka
 
             # Lists DLQ topics
             def index
-              topics = Karafka::App.routes.consumer_groups.flat_map(&:topics).flat_map(&:to_a)
-
-              dead_letter_queue_topic_patterns = topics
-                .map { |source_topic| source_topic.dead_letter_queue.topic }
-                .uniq
-                .compact
-                .select(&:itself)
-
-              dead_letter_queue_topic_patterns += Web.config.ui.dlq_patterns
-
-              @dead_letter_queue_topics = Models::Cluster::Topic
-                .all
-                .select { |topic| dead_letter_queue?(dead_letter_queue_topic_patterns, topic[:topic_name]) }
-                .sort_by { |topic| topic[:topic_name] }
-
-              @dead_letter_queue_topics = filter(@dead_letter_queue_topics)
+              @dead_letter_queue_topics = filter(Lib::DeadLetterQueues.topics)
 
               render
-            end
-
-            private
-
-            # Checks if topic is in topics we consider DLQ or if it matches any predefined regular
-            # expressions used for auto-DLQ discovery
-            #
-            # @param topics_matches [Array<String, Regexp>] array with list of DLQ topics matches
-            #   from the routing and regular expressions for auto-discovery
-            # @param name [String] topic name for which we want to know if it is used in DLQ
-            # @return [Boolean] is the given topic a DLQ topic
-            def dead_letter_queue?(topics_matches, name)
-              topics_matches.any? do |candidate|
-                candidate.is_a?(Regexp) ? candidate.match?(name) : candidate == name
-              end
             end
           end
         end
