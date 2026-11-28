@@ -44,6 +44,7 @@
   <% elsif @members.empty? %>
     <%== partial 'shared/no_paginated_data' %>
   <% else %>
+    <% target_assignments = @consumer_group.target_assignments? %>
     <div class="data-table-wrapper">
       <table class="data-table">
         <thead>
@@ -54,6 +55,9 @@
             <th><%== sort_link('Group instance ID', :group_instance_id) %></th>
             <th>Process</th>
             <th>Assignment</th>
+            <% if target_assignments %>
+              <th>Target assignment</th>
+            <% end %>
           </tr>
         </thead>
         <tbody>
@@ -86,6 +90,15 @@
                   </div>
                 <% end %>
               </td>
+              <% if target_assignments %>
+                <td>
+                  <% (member[:target_assignment] || {}).each do |topic_name, partitions| %>
+                    <div title="<%= topics_assignment_label(topic_name, partitions, limit: 25) %>">
+                      <%= topics_assignment_text(topic_name, partitions) %>
+                    </div>
+                  <% end %>
+                </td>
+              <% end %>
             </tr>
           <% end %>
         </tbody>

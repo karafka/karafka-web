@@ -35,10 +35,13 @@ describe_current do
   let(:group_id) { SecureRandom.uuid }
   let(:stable_group_id) { "member-#{group_id}" }
 
+  let(:group_protocol) { "classic" }
+
   let(:consumer) do
     Rdkafka::Config.new(
       Karafka::App.config.kafka.merge(
         "group.id": stable_group_id,
+        "group.protocol": group_protocol,
         "client.id": "consumer-groups-controller-test",
         "enable.auto.commit": false
       )
@@ -460,6 +463,19 @@ describe_current do
         assert_body("<td>#{described.fetch(:members).first.fetch(:host)}</td>")
         assert_body("#{topic}-[0-1]")
         refute_body("This consumer group has no members.")
+        refute_body("Target assignment")
+      end
+
+      context "when the consumer group uses the consumer (KIP-848) protocol" do
+        let(:group_protocol) { "consumer" }
+
+        it "expect the members page to show the current and the target assignment" do
+          get "health/consumer_groups/#{stable_group_id}/members"
+
+          assert_ok
+          assert_body("<th>Target assignment</th>")
+          assert_equal(2, response.body.scan(%(title="#{topic}-[0-1] (2 partitions total)")).size)
+        end
       end
     end
 
