@@ -76,15 +76,9 @@ module Karafka
               offset = @arguments.fetch(:offset)
 
               validate_partition!(find_topic(topic_name), partition)
-              detect_patterns
+              Ui::Lib::PatternsDetector.new.call
 
-              watermark_offsets = Web::Ui::Models::Cluster::WatermarkOffsets.find(topic_name, partition)
-              message = find(topic_name, partition, offset, watermark_offsets)
-
-              unless message
-                raise Errors::Mcp::NoDataError, "Offset #{offset} of partition #{partition} holds no message: " \
-                  "it was compacted or is a transaction marker"
-              end
+              message = find_message(topic_name, partition, offset)
 
               {
                 topic_name: topic_name,
@@ -95,22 +89,6 @@ module Karafka
                 note: MessageFields::NOTE,
                 **message_fields(message, %i[key headers payload])
               }
-            end
-
-            # @param topic_name [String]
-            # @param partition [Integer]
-            # @param offset [Integer]
-            # @param watermark_offsets [Web::Ui::Models::Cluster::WatermarkOffsets]
-            # @return [Karafka::Messages::Message, nil] message or nil for an offset in the
-            #   partition range that holds no message
-            def find(topic_name, partition, offset, watermark_offsets)
-              Ui::Models::Message.find(topic_name, partition, offset, watermark_offsets: watermark_offsets)
-            rescue Errors::Ui::NotFoundError
-              low = watermark_offsets.low
-              high = watermark_offsets.high
-              range = (low == high) ? "the partition is empty" : "its offsets are #{low} to #{high - 1}"
-
-              raise Errors::Mcp::NoDataError, "No message under offset #{offset} of partition #{partition}: #{range}"
             end
           end
         end

@@ -62,7 +62,8 @@ module Karafka
                 !operation.nil?
               end
 
-              # @return [Boolean] does this tool read messages payloads, keys or headers
+              # @return [Boolean] is this tool listed and callable only when `mcp.messages.active`
+              #   is set
               def messages?
                 @messages || false
               end
@@ -105,7 +106,8 @@ module Karafka
               # @param properties [Hash] properties of the arguments schema
               # @param required [Array<String>] names of the required arguments
               # @param operation [Symbol, nil] kind of change a changing tool makes
-              # @param messages [Boolean] does the tool read messages
+              # @param messages [Boolean] should the tool be listed and callable only when
+              #   `mcp.messages.active` is set
               def tool(
                 name,
                 description,
@@ -202,6 +204,48 @@ module Karafka
             rescue Errors::Ui::NotFoundError
               raise Errors::Mcp::NoDataError, "Topic #{topic_name} does not exist. " \
                 "Call karafka_topics to list the topics"
+            end
+
+            # @param topic [Ui::Models::Cluster::Topic]
+            # @param partition [Integer]
+            # @raise [Errors::Mcp::NoDataError] when the topic has no such partition
+            def validate_partition!(topic, partition)
+              count = topic[:partition_count]
+
+              return if partition < count
+
+              raise Errors::Mcp::NoDataError, "Partition #{partition} of topic #{topic[:topic_name]} " \
+                "does not exist: the topic has #{count} #{(count == 1) ? "partition" : "partitions"}"
+            end
+
+            # @param topic_name [String]
+            # @param partition [Integer]
+            # @param offset [Integer]
+            # @return [Karafka::Messages::Message] message under the offset
+            # @raise [Errors::Mcp::NoDataError] when the offset is out of the partition range or
+            #   holds no message
+            def find_message(topic_name, partition, offset)
+              watermark_offsets = Web::Ui::Models::Cluster::WatermarkOffsets.find(topic_name, partition)
+
+              message = begin
+                Web::Ui::Models::Message.find(
+                  topic_name,
+                  partition,
+                  offset,
+                  watermark_offsets: watermark_offsets
+                )
+              rescue Errors::Ui::NotFoundError
+                low = watermark_offsets.low
+                high = watermark_offsets.high
+                range = (low == high) ? "the partition is empty" : "its offsets are #{low} to #{high - 1}"
+
+                raise Errors::Mcp::NoDataError, "No message under offset #{offset} of partition #{partition}: #{range}"
+              end
+
+              return message if message
+
+              raise Errors::Mcp::NoDataError, "Offset #{offset} of partition #{partition} holds no message: " \
+                "it was compacted or is a transaction marker"
             end
           end
         end

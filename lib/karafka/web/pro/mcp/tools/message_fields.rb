@@ -108,24 +108,6 @@ module Karafka
                 value
               end
             end
-
-            # Expands the routing with the topics matched by patterns, as the Explorer does, so
-            # their messages use the pattern deserializers
-            def detect_patterns
-              Ui::Lib::PatternsDetector.new.call
-            end
-
-            # @param topic [Ui::Models::Cluster::Topic]
-            # @param partition [Integer]
-            # @raise [Errors::Mcp::NoDataError] when the topic has no such partition
-            def validate_partition!(topic, partition)
-              count = topic[:partition_count]
-
-              return if partition < count
-
-              raise Errors::Mcp::NoDataError, "Partition #{partition} of topic #{topic[:topic_name]} " \
-                "does not exist: the topic has #{count} #{(count == 1) ? "partition" : "partitions"}"
-            end
           end
         end
       end
