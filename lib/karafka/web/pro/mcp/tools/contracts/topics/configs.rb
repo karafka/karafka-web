@@ -38,14 +38,11 @@ module Karafka
             module Topics
               # Validates the karafka_topic_configs tool arguments
               class Configs < Base
-                # Topic names Kafka accepts
-                TOPIC_NAME = /\A[a-zA-Z0-9._-]{1,249}\z/
-
-                private_constant :TOPIC_NAME
-
                 arguments :topic_name
 
-                required(:topic_name) { |val| val.is_a?(String) && val.match?(TOPIC_NAME) }
+                required(:topic_name) do |val|
+                  Web::Ui::Lib::Contracts::TopicName.new.call({ topic_name: val }).success?
+                end
               end
             end
           end

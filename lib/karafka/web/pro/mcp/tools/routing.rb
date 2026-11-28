@@ -39,7 +39,7 @@ module Karafka
               "karafka_routing",
               <<~TEXT.tr("\n", " ").strip,
                 Routing of the application, as on the Web UI Routing page: consumer groups with
-                their routed topics, each with its route id, subscription group, pattern type,
+                their routed topics, each with its route id, subscription group id, pattern type,
                 multiplexing, whether it is active and whether any running consumer process
                 reports it as assigned. Use karafka_routing_topic with the route id to read the
                 settings of one routed topic.
@@ -55,7 +55,7 @@ module Karafka
 
               assigned = assigned_topics
 
-              consumer_groups = ::Karafka::App.routes.map do |consumer_group|
+              consumer_groups = ::Karafka::App.routes.consumer_groups.map do |consumer_group|
                 {
                   id: consumer_group.id,
                   topics: consumer_group.topics.map do |topic|
@@ -99,7 +99,7 @@ module Karafka
               {
                 id: topic.id,
                 name: topic.name,
-                subscription_group: subscription_group.name,
+                subscription_group: subscription_group.id,
                 type: topic.patterns.type,
                 multiplexing: multiplexed ? { min: multiplexing.min, max: multiplexing.max } : nil,
                 assigned: assigned,

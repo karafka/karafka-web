@@ -36,6 +36,9 @@ describe_current do
   it { refute_predicate(contract.call({ topic_name: "" }), :success?) }
   it { refute_predicate(contract.call({ topic_name: "a" * 250 }), :success?) }
   it { refute_predicate(contract.call({ topic_name: "a/b" }), :success?) }
+  it { refute_predicate(contract.call({ topic_name: "." }), :success?) }
+  it { refute_predicate(contract.call({ topic_name: ".." }), :success?) }
+  it { assert_predicate(contract.call({ topic_name: "..." }), :success?) }
   it { refute_predicate(contract.call({ topic_name: 1 }), :success?) }
   it { refute_predicate(contract.call({ topic_name: "a", partition: 0 }), :success?) }
 

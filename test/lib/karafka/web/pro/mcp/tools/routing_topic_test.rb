@@ -60,6 +60,7 @@ describe_current do
       assert_equal(topic_id, structured[:id])
       assert_equal(routed_topic, structured[:name])
       assert_equal(routed_group, structured[:consumer_group])
+      assert_equal(Karafka::Routing::Router.find_by(name: routed_topic).subscription_group.id, structured[:subscription_group])
       assert_equal("7", settings["max_messages"])
       assert_equal("127.0.0.1:9092", settings["kafka.bootstrap.servers"])
       assert(settings.key?("multiplexing.max"))
@@ -73,6 +74,37 @@ describe_current do
       assert_equal("***", settings["kafka.sasl.password"])
       assert_equal("***", settings["kafka.ssl.key.password"])
       refute_includes(result.dig(:content, 0, :text), "secret")
+    end
+  end
+
+  context "when the routing also has a share group" do
+    let(:share_topic) { "#{routed_topic}-share" }
+
+    before do
+      share_name = share_topic
+      draw_routes do
+        share_group "it-share-#{SecureRandom.uuid}" do
+          topic share_name do
+            consumer Karafka::ShareConsumer
+          end
+        end
+      end
+    end
+
+    it "returns the consumer group route" do
+      refute(result[:isError])
+      assert_equal(routed_topic, structured[:name])
+    end
+
+    context "when asked for the share group topic" do
+      let(:topic_id) do
+        Karafka::App.routes.share_groups.flat_map { |sg| sg.topics.to_a }.find { |topic| topic.name == share_topic }.id
+      end
+
+      it "answers as for a route that does not exist" do
+        assert(result[:isError])
+        assert_includes(result.dig(:content, 0, :text), "No routed topic with id")
+      end
     end
   end
 

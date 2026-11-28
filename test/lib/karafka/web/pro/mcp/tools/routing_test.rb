@@ -64,7 +64,7 @@ describe_current do
       refute(topic[:assigned])
       assert(topic[:active])
       refute(inactive[:active])
-      assert_kind_of(String, topic[:subscription_group])
+      assert_equal(Karafka::Routing::Router.find_by(name: routed_topic).subscription_group.id, topic[:subscription_group])
       assert_equal(JSON.parse(structured.to_json), JSON.parse(result.dig(:content, 0, :text)))
     end
   end
@@ -107,6 +107,35 @@ describe_current do
 
     it "marks it as assigned" do
       assert(group[:topics].find { |details| details[:name] == routed_topic }[:assigned])
+    end
+  end
+
+  context "when the routing has a share group next to a consumer group" do
+    let(:share_group_id) { "it-share-#{SecureRandom.uuid}" }
+
+    before do
+      group_id = routed_group
+      topic_name = routed_topic
+      share_id = share_group_id
+      draw_routes do
+        consumer_group group_id do
+          topic topic_name do
+            consumer Karafka::BaseConsumer
+          end
+        end
+
+        share_group share_id do
+          topic "#{topic_name}-share" do
+            consumer Karafka::ShareConsumer
+          end
+        end
+      end
+    end
+
+    it "lists only the consumer groups" do
+      refute(result[:isError])
+      assert_equal([routed_topic], group[:topics].map { |details| details[:name] })
+      refute_includes(structured.fetch(:consumer_groups).map { |cg| cg[:id] }, share_group_id)
     end
   end
 

@@ -40,8 +40,7 @@ module Karafka
               <<~TEXT.tr("\n", " ").strip,
                 Configs of one topic as Kafka describes them, as on the Web UI topic Configuration
                 page: name, value, source, synonyms and the default, sensitive and read-only flags
-                of each config. Kafka does not return the values of sensitive configs. Use
-                karafka_topics to find the topic name.
+                of each config. Use karafka_topics to find the topic name.
               TEXT
               contract: Contracts::Topics::Configs.new,
               required: %w[topic_name],

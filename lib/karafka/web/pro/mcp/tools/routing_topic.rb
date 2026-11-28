@@ -49,7 +49,7 @@ module Karafka
               "karafka_routing_topic",
               <<~TEXT.tr("\n", " ").strip,
                 Settings of one routed topic, as on the Web UI Routing topic details page: its
-                consumer group, subscription group and every routing setting as a flat name and
+                consumer group, subscription group id and every routing setting as a flat name and
                 value list, with values as the Web UI renders them. It includes the kafka settings
                 of its subscription group and the multiplexing settings. Values of sasl and ssl
                 settings are masked. Use karafka_routing to find the route id.
@@ -72,7 +72,11 @@ module Karafka
 
               Ui::Lib::PatternsDetector.new.call
 
-              topic = ::Karafka::Routing::Router.find_by(id: topic_id)
+              topic = ::Karafka::App
+                .routes
+                .consumer_groups
+                .flat_map { |consumer_group| consumer_group.topics.to_a }
+                .find { |route| route.id == topic_id }
 
               unless topic
                 raise Errors::Mcp::NoDataError, "No routed topic with id #{topic_id}. " \
@@ -83,7 +87,7 @@ module Karafka
                 id: topic.id,
                 name: topic.name,
                 consumer_group: topic.consumer_group.id,
-                subscription_group: topic.subscription_group.name,
+                subscription_group: topic.subscription_group.id,
                 settings: settings(topic)
               }
             end

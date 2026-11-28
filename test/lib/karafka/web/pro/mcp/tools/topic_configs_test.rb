@@ -61,6 +61,31 @@ describe_current do
       refute(retention[:read_only])
       assert_includes(retention[:synonyms], "retention.ms")
     end
+
+    it "marks an untouched config as default" do
+      assert(configs.find { |config| config[:name] == "segment.bytes" }[:default])
+    end
+  end
+
+  context "when configs are read-only or sensitive" do
+    let(:flagged) do
+      [
+        Karafka::Admin::Configs::Config.new(name: "a.read.only", value: "1", read_only: 1),
+        Karafka::Admin::Configs::Config.new(name: "b.sensitive", value: nil, sensitive: 1)
+      ]
+    end
+
+    before do
+      Karafka::Web::Pro::Ui::Models::Cluster::Topic.any_instance.stubs(:configs).returns(flagged)
+    end
+
+    it "maps each flag from its own config field" do
+      read_only, sensitive = configs
+
+      assert_equal([true, false, false], read_only.values_at(:read_only, :sensitive, :default))
+      assert_equal([false, true, false], sensitive.values_at(:read_only, :sensitive, :default))
+      assert_nil(sensitive[:value])
+    end
   end
 
   context "when the topic does not exist" do

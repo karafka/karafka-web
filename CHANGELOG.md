@@ -98,6 +98,7 @@
 - [Fix] Return 404 for a topic name Kafka cannot have (over 249 characters, characters other than letters, digits, `.`, `_` and `-`, or `.` / `..`) in topic, Explorer and scheduled messages URLs. A name over 512 characters crashed the process on karafka-rdkafka `0.32.2` and older.
 - [Fix] End error messages cut on the Errors list with an ellipsis and show the full message in their title.
 - [Fix] Escape shortened values (process IDs, command arguments) and their title, which rendered as raw HTML.
+- [Fix] Do not fail the Pro Explorer message view and message export when the routing has share groups: the routing patterns detection now covers consumer groups only (Pro).
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a keyword filtering box to the data-heavy Web UI listings, with a field selector on flat listings (Pro) (#1073).
