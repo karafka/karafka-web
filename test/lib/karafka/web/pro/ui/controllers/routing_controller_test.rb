@@ -106,6 +106,31 @@ describe_current do
       end
     end
 
+    context "when the routing has a share group" do
+      let(:share_group_id) { "it-share-#{SecureRandom.uuid}" }
+
+      before do
+        share_id = share_group_id
+        share_name = create_topic
+
+        draw_routes do
+          share_group share_id do
+            topic share_name do
+              consumer Karafka::ShareConsumer
+            end
+          end
+        end
+
+        get "routing"
+      end
+
+      it do
+        assert_ok
+        assert_body(Karafka::App.routes.consumer_groups.first.id)
+        refute_body(share_group_id)
+      end
+    end
+
     context "when there is no consumers state" do
       before do
         Karafka::Web::Ui::Models::ConsumersState.stubs(:current).returns(false)
@@ -222,6 +247,27 @@ describe_current do
       it do
         assert_ok
         assert_body("No results match your filter")
+      end
+    end
+
+    context "when given route is a share group topic" do
+      before do
+        share_name = create_topic
+
+        draw_routes do
+          share_group "it-share-#{SecureRandom.uuid}" do
+            topic share_name do
+              consumer Karafka::ShareConsumer
+            end
+          end
+        end
+
+        get "routing/#{Karafka::App.routes.share_groups.first.topics.first.id}"
+      end
+
+      it do
+        refute(response.ok?)
+        assert_equal(404, status)
       end
     end
 

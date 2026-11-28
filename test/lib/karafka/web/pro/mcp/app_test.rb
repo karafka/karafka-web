@@ -172,6 +172,65 @@ describe_current do
       end
     end
 
+    context "when topics and routing tools are called" do
+      let(:topic_id) { Karafka::App.routes.first.topics.first.id }
+      let(:calls) do
+        [
+          { name: "karafka_topics", arguments: {} },
+          { name: "karafka_topic_configs", arguments: { topic_name: audit_topic } },
+          { name: "karafka_routing", arguments: {} },
+          { name: "karafka_routing_topic", arguments: { topic_id: topic_id } }
+        ]
+      end
+
+      before { calls.each { |tool_call| rpc("tools/call", tool_call, headers: agent) } }
+
+      it "answers and records each call" do
+        assert_equal(%w[ok ok ok ok], records.map { |record| record["outcome"] })
+        assert_equal(calls.map { |tool_call| tool_call[:name] }, records.map { |record| record["tool"] })
+      end
+    end
+
+    context "when requests policy denies topics and routing tools" do
+      let(:calls) do
+        [
+          { name: "karafka_topics", arguments: {} },
+          { name: "karafka_topic_configs", arguments: { topic_name: audit_topic } },
+          { name: "karafka_routing", arguments: {} },
+          { name: "karafka_routing_topic", arguments: { topic_id: "test" } }
+        ]
+      end
+      let(:statuses) { [] }
+
+      before do
+        Karafka::Web.config.ui.policies.requests.stubs(:allow?).returns(false)
+
+        calls.each do |tool_call|
+          rpc("tools/call", tool_call, headers: agent)
+          statuses << status
+        end
+      end
+
+      it "refuses and records each call" do
+        assert_equal([403] * 4, statuses)
+        assert_equal(%w[rejected] * 4, records.map { |record| record["outcome"] })
+        assert_equal(calls.map { |tool_call| tool_call[:name] }, records.map { |record| record["tool"] })
+      end
+    end
+
+    context "when topics and routing tools get arguments their contracts reject" do
+      before do
+        rpc("tools/call", { name: "karafka_topic_configs", arguments: { topic_name: "a b" } })
+        rpc("tools/call", { name: "karafka_routing_topic", arguments: { topic_id: 1 } })
+      end
+
+      it "records the rejections with the contract errors" do
+        assert_equal(%w[rejected rejected], records.map { |record| record["outcome"] })
+        assert_equal("topic_name needs to be a valid Kafka topic name", records.first["error"])
+        assert_equal("topic_id needs to be a non-empty string", records.last["error"])
+      end
+    end
+
     context "when requests policy denies the call and actor callable raises" do
       before do
         Karafka::Web.config.ui.policies.requests.stubs(:allow?).returns(false)

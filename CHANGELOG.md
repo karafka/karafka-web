@@ -8,6 +8,7 @@
 - **[Feature]** Add a **Delete Offsets** action (Pro) to the Health consumer group Topics page that deletes a consumer group's committed offsets for a topic. Gated by the new `ui.policies.consumer_groups` `#delete_offsets?` policy, denied by default. Requires karafka `2.6.2`.
 - **[Feature]** Add a read-only MCP server, mounted with `Karafka::Web::Mcp::App`, so AI agents can read the Status page checks, the dashboard overview, metrics, per-topic health, cluster lags, consumer processes, consumer groups and errors over plain HTTP. Mounting it is the opt-in and, like the Web UI, it relies on the host app for authentication (Pro).
 - **[Feature]** Record every MCP tool call to the new `karafka_mcp_audit` topic (`config.topics.mcp_audit`; kept by `reset`) with the caller (`config.mcp.audit.actor`). Changing tools are refused when the audit write fails (`config.mcp.audit.fail_closed_reads` for reads). MCP cannot change the topic (Pro).
+- **[Feature]** Add MCP tools that read the topics list (`karafka_topics`), a topic's configs (`karafka_topic_configs`), the routing (`karafka_routing`) and one routed topic's settings (`karafka_routing_topic`), with the same internal topics visibility and credentials masking as the Web UI (Pro).
 - [Enhancement] Add a Health **Consumer Groups** view (Pro) listing every consumer group in the cluster with its state, also those the Web UI does not track. Each has overview, members (linked to their Karafka processes), topics (lags, offsets deletion) and committed offsets pages. Cluster Lags link each group to its page.
 - [Enhancement] Report the group member id of each subscription group and list it on a new consumer **Memberships** tab (Pro), one row per subscription group with its consumer group, member id, static membership id and state. Bumps the consumers reports schema to `1.8.0` and migrates older reports.
 - [Enhancement] Show the source of each config value (dynamic topic, dynamic broker, static broker, default, ...) on the topic and broker configuration pages (Pro). Requires karafka `2.6.2`.
@@ -97,6 +98,7 @@
 - [Fix] Return 404 for a topic name Kafka cannot have (over 249 characters, characters other than letters, digits, `.`, `_` and `-`, or `.` / `..`) in topic, Explorer and scheduled messages URLs. A name over 512 characters crashed the process on karafka-rdkafka `0.32.2` and older.
 - [Fix] End error messages cut on the Errors list with an ellipsis and show the full message in their title.
 - [Fix] Escape shortened values (process IDs, command arguments) and their title, which rendered as raw HTML.
+- [Fix] Do not fail the Pro Routing, DLQ, Explorer message view and message export pages when the routing has share groups: they and the routing patterns detection now cover consumer groups only (Pro).
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a keyword filtering box to the data-heavy Web UI listings, with a field selector on flat listings (Pro) (#1073).

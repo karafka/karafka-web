@@ -48,6 +48,7 @@ module Karafka
 
               Karafka::App
                 .routes
+                .consumer_groups
                 .flat_map(&:subscription_groups)
                 .each do |subscription_group|
                   sg_topics = subscription_group.topics

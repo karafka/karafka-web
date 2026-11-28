@@ -111,6 +111,30 @@ describe_current do
       end
     end
 
+    context "when message exists and the routing has a share group" do
+      let(:payload) { { test: "me" }.to_json }
+
+      before do
+        share_name = create_topic
+
+        draw_routes do
+          share_group "it-share-#{SecureRandom.uuid}" do
+            topic share_name do
+              consumer Karafka::ShareConsumer
+            end
+          end
+        end
+
+        produce(topic, payload)
+        get "explorer/messages/#{topic}/0/0/export"
+      end
+
+      it do
+        assert_ok
+        assert_equal(payload, response.body)
+      end
+    end
+
     context "when message exists on a dynamic topic with custom deserializer" do
       let(:payload) { rand.to_s }
       let(:expected_file_name) { "#{topic}_0_0_payload.json" }

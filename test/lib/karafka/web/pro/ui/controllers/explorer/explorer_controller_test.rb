@@ -643,6 +643,28 @@ describe_current do
       end
     end
 
+    context "when requested message exists and the routing has a share group" do
+      before do
+        share_name = create_topic
+
+        draw_routes do
+          share_group "it-share-#{SecureRandom.uuid}" do
+            topic share_name do
+              consumer Karafka::ShareConsumer
+            end
+          end
+        end
+
+        produce(topic, { test: "me" }.to_json)
+        get "explorer/topics/#{topic}/0/0"
+      end
+
+      it do
+        assert_ok
+        assert_body('<code class="json')
+      end
+    end
+
     context "when requested message exists and has array headers" do
       before do
         produce(
