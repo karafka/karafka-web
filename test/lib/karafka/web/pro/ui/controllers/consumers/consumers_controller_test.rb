@@ -760,6 +760,12 @@ describe_current do
         assert_body("This process does not consume any")
         refute_body(pagination)
       end
+
+      it "expect to render subscription group times as time elements in badges" do
+        assert_body('<span class="badge badge-secondary badge-sm">')
+        assert_body('<time class="ltr"')
+        refute_body("&lt;time")
+      end
     end
 
     context "when filtering by a matching topic name" do

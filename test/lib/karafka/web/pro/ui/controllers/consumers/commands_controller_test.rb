@@ -105,6 +105,31 @@ describe_current do
       end
     end
 
+    context "when commands have long matcher values and process ids" do
+      before do
+        topics_config.consumers.commands.name = commands_topic
+
+        request = Fixtures.consumers_commands_json("consumers/v1.2.0_quiet", symbolize_names: false)
+        produce(commands_topic, request.to_json)
+
+        result = Fixtures.consumers_commands_json(
+          "consumers/v1.2.0_trace_result",
+          symbolize_names: false
+        )
+        result["process"]["id"] = "shinra:#{"1" * 60}:6fa3f39acf46"
+        produce(commands_topic, result.to_json)
+
+        get "consumers/commands"
+      end
+
+      it "expect to render them shortened with the full value in the title" do
+        assert_ok
+        assert_body('<span title="shinra:1404842:f66b40c75f92">')
+        assert_body(%(<span title="shinra:#{"1" * 60}:6fa3f39acf46">))
+        refute_body("&lt;span")
+      end
+    end
+
     context "when there are more commands that we fit in a single page" do
       before do
         topics_config.consumers.commands.name = commands_topic

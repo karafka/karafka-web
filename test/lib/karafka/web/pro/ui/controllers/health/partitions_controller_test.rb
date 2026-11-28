@@ -58,6 +58,13 @@ describe_current do
   describe "#overview" do
     before { get "health/topics/example_app6_app/default/overview" }
 
+    it "expect to render the last rebalance time as a time element in a badge" do
+      assert_ok
+      assert_body('<span class="badge">')
+      assert_body('<time class="ltr"')
+      refute_body("&lt;time")
+    end
+
     it "expect to render the per-partition overview for that topic" do
       assert_ok
       assert_body(breadcrumbs)
