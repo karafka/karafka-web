@@ -92,7 +92,7 @@ describe_current do
   end
 
   describe "#tags" do
-    it "expect to render each tag as an escaped badge" do
+    it "renders each tag as an escaped badge" do
       assert_equal(
         '<span class="badge badge-info">a</span> <span class="badge badge-info">&lt;b&gt;</span>',
         tags(["a", "<b>"])
