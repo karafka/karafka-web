@@ -602,6 +602,34 @@ describe_current do
       end
     end
 
+    context "when a member target assignment differs from its current one" do
+      before do
+        described = Karafka::Admin.describe_consumer_groups([group_id]).first
+
+        member = {
+          member_id: "moving-member",
+          client_id: "moving-app",
+          group_instance_id: nil,
+          host: "/10.0.0.3",
+          assignment: { topic => [0, 1] },
+          target_assignment: { topic => [1] }
+        }
+
+        Karafka::Admin
+          .stubs(:describe_consumer_groups)
+          .returns([described.merge(members: [member])])
+
+        get "health/consumer_groups/#{group_id}/members"
+      end
+
+      it "expect the target assignment column to show the target, not the current one" do
+        assert_ok
+        assert_body("<th>Target assignment</th>")
+        assert_body("#{topic}-[1]")
+        assert_equal(1, response.body.scan("#{topic}-[0,1]").size)
+      end
+    end
+
     context "when a member runs in a Karafka process that reports to the Web UI" do
       let(:report) { Fixtures.consumers_reports_json }
       let(:member_id) { "karafka-1c5e2b3a-7d4f-4e8a-b6c9-0f2a3d4e5b6c" }

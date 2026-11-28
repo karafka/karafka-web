@@ -86,7 +86,7 @@ module Karafka
               end
 
               # @return [Boolean] true when any member has a target assignment. Only `consumer`
-              #   (KIP-848) groups have it and it differs from the current one during a rebalance.
+              #   (KIP-848) groups have it.
               def target_assignments?
                 members.any? { |member| member[:target_assignment] }
               end
