@@ -49,6 +49,13 @@ module Karafka
             setting :fail_closed_reads, default: false
           end
 
+          # Tools that read messages of topics and dead letter queues. Off by default, apart from
+          # the other read-only tools, because payloads can hold personal data
+          setting :messages do
+            # Should the messages tools be listed and callable
+            setting :active, default: false
+          end
+
           configure
         end
       end

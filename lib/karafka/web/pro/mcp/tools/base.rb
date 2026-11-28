@@ -62,6 +62,17 @@ module Karafka
                 !operation.nil?
               end
 
+              # @return [Boolean] does this tool read messages payloads, keys or headers
+              def messages?
+                @messages || false
+              end
+
+              # @return [Boolean] can this tool be listed and called. Messages tools need their own
+              #   opt-in
+              def available?
+                !messages? || ::Karafka::Web.config.mcp.messages.active
+              end
+
               # @return [Hash] JSON schema of the tool arguments
               def input_schema
                 schema = { type: "object", properties: properties, additionalProperties: false }
@@ -94,9 +105,19 @@ module Karafka
               # @param properties [Hash] properties of the arguments schema
               # @param required [Array<String>] names of the required arguments
               # @param operation [Symbol, nil] kind of change a changing tool makes
-              def tool(name, description, contract:, properties: {}, required: [], operation: nil)
+              # @param messages [Boolean] does the tool read messages
+              def tool(
+                name,
+                description,
+                contract:,
+                properties: {},
+                required: [],
+                operation: nil,
+                messages: false
+              )
                 @name = name
                 @operation = operation
+                @messages = messages
                 @description = description
                 @contract = contract
                 @properties = properties
@@ -166,6 +187,21 @@ module Karafka
             # @return [String] errors topic name
             def errors_topic
               ::Karafka::Web.config.topics.errors.name
+            end
+
+            # @param topic_name [String]
+            # @return [Ui::Models::Cluster::Topic] the topic when it exists and the Web UI shows it
+            # @raise [Errors::Mcp::NoDataError] when there is no such topic or the Web UI hides it
+            def find_topic(topic_name)
+              hidden = !::Karafka::Web.config.ui.visibility.internal_topics &&
+                topic_name.start_with?("__")
+
+              raise Errors::Ui::NotFoundError, topic_name if hidden
+
+              Ui::Models::Cluster::Topic.find(topic_name)
+            rescue Errors::Ui::NotFoundError
+              raise Errors::Mcp::NoDataError, "Topic #{topic_name} does not exist. " \
+                "Call karafka_topics to list the topics"
             end
           end
         end

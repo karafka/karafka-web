@@ -47,6 +47,10 @@ module Karafka
                 required(:actor) { |val| val.nil? || val.respond_to?(:call) }
                 required(:fail_closed_reads) { |val| [true, false].include?(val) }
               end
+
+              nested(:messages) do
+                required(:active) { |val| [true, false].include?(val) }
+              end
             end
           end
         end
