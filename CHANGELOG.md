@@ -88,6 +88,7 @@
 - [Fix] Escape shortened values (process IDs, command arguments) and their title, which rendered as raw HTML.
 - [Fix] Do not count consumer reports again in the Web UI totals (messages, errors, retries, etc.) when the Web UI consumer consumes them again after a restart or rebalance that happened after the state was stored.
 - [Fix] Reject an empty value in the topic configuration form with a form error instead of sending it to the broker (Pro) (#1241).
+- [Fix] Escape the content of Web UI badges, the error process ID on the Errors pages and the error, process and job tags, which rendered as raw HTML.
 
 ## 1.0.1 (2026-08-24)
 - **[Feature]** Add a keyword filtering box to the data-heavy Web UI listings, with a field selector on flat listings (Pro) (#1073).

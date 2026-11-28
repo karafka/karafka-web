@@ -43,7 +43,7 @@ module Karafka
           # @return [String] tags badges
           def tags(tags_array)
             tags_array
-              .map { |tag| %(<span class="badge badge-info">#{tag}</span>) }
+              .map { |tag| %(<span class="badge badge-info">#{::Rack::Utils.escape_html(tag)}</span>) }
               .join(" ")
           end
 

@@ -91,6 +91,15 @@ describe_current do
     end
   end
 
+  describe "#tags" do
+    it "renders each tag as an escaped badge" do
+      assert_equal(
+        '<span class="badge badge-info">a</span> <span class="badge badge-info">&lt;b&gt;</span>',
+        tags(["a", "<b>"])
+      )
+    end
+  end
+
   describe "#kafka_state_badge" do
     let(:result) { kafka_state_badge(state) }
 

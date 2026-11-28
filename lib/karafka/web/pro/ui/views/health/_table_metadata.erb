@@ -20,9 +20,7 @@
 
 <p class="table_metadata">
   Last rebalance:
-  <%==
-    badge(
-      relative_time(details[:rebalanced_at])
-    )
-  %>
+  <span class="badge">
+    <%== relative_time(details[:rebalanced_at]) %>
+  </span>
 </p>

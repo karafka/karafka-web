@@ -65,39 +65,39 @@
   <div class="card-detail">
     <div class="card-detail-body">
       State change
-      <%==
-        badge_secondary_sm(
+      <span class="badge badge-secondary badge-sm">
+        <%==
           relative_time(
             Time.at(@process.dispatched_at) - (subscription_group.stateage / 1_000.0)
           )
-        )
-      %>
+        %>
+      </span>
     </div>
   </div>
 
   <div class="card-detail">
     <div class="card-detail-body">
       Last Poll
-      <%==
-        badge_secondary_sm(
+      <span class="badge badge-secondary badge-sm">
+        <%==
           relative_time(
             Time.at(@process.dispatched_at) - (subscription_group.poll_age / 1_000.0)
           )
-        )
-      %>
+        %>
+      </span>
     </div>
   </div>
 
   <div class="card-detail">
     <div class="card-detail-body">
       Last rebalance
-      <%==
-        badge_secondary_sm(
+      <span class="badge badge-secondary badge-sm">
+        <%==
           relative_time(
             Time.at(@process.dispatched_at) - (subscription_group.rebalance_age / 1_000.0)
           )
-        )
-      %>
+        %>
+      </span>
     </div>
   </div>
 
