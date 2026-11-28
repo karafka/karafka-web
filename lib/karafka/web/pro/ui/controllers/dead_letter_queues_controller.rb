@@ -41,7 +41,7 @@ module Karafka
 
             # Lists DLQ topics
             def index
-              topics = Karafka::App.consumer_groups.flat_map(&:topics).flat_map(&:to_a)
+              topics = Karafka::App.routes.consumer_groups.flat_map(&:topics).flat_map(&:to_a)
 
               dead_letter_queue_topic_patterns = topics
                 .map { |source_topic| source_topic.dead_letter_queue.topic }

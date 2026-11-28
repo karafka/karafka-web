@@ -52,7 +52,7 @@ module Karafka
             def index
               detect_patterns_routes
 
-              @routes = Karafka::App.routes
+              @routes = Karafka::App.routes.consumer_groups
               @routes.each do |consumer_group|
                 sort(consumer_group.topics)
               end
@@ -84,7 +84,11 @@ module Karafka
             def show(topic_id)
               detect_patterns_routes
 
-              @topic = Karafka::Routing::Router.find_by(id: topic_id)
+              @topic = Karafka::App
+                .routes
+                .consumer_groups
+                .flat_map { |consumer_group| consumer_group.topics.to_a }
+                .find { |topic| topic.id == topic_id }
 
               @topic || not_found!(topic_id)
 

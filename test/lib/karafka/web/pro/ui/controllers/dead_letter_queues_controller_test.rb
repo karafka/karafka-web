@@ -85,6 +85,27 @@ describe_current do
       end
     end
 
+    context "when the routing has a share group" do
+      before do
+        share_name = create_topic
+
+        draw_routes do
+          share_group "it-share-#{SecureRandom.uuid}" do
+            topic share_name do
+              consumer Karafka::ShareConsumer
+            end
+          end
+        end
+
+        get "dead_letter_queues"
+      end
+
+      it do
+        assert_ok
+        assert_body("No Dead Letter Queue topics exist in Kafka")
+      end
+    end
+
     context "when defined DLQ name matches the topic name with a postfix" do
       let(:topic) { Karafka::App.consumer_groups.first.topics.first }
       let(:dlq_topic) { "#{topic.name}.dql" }
