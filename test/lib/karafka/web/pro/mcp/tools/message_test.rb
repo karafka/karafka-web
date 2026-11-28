@@ -128,6 +128,25 @@ describe_current do
     end
   end
 
+  context "when a header value is binary" do
+    before { produce(topic_name, "{}", headers: { "h" => "\xFF\xFEv".b }) }
+
+    it "returns the headers with the invalid bytes replaced" do
+      refute(result[:isError])
+      assert_empty(structured[:failed_fields])
+      assert_equal({ "h" => "\uFFFD\uFFFDv" }, structured[:headers])
+    end
+  end
+
+  context "when a header has several binary values" do
+    before { produce(topic_name, "{}", headers: { "h" => ["\xFFa".b, "b"] }) }
+
+    it do
+      assert_empty(structured[:failed_fields])
+      assert_equal({ "h" => %W[\uFFFDa b] }, structured[:headers])
+    end
+  end
+
   context "when topic comes from a routing pattern" do
     before do
       name = topic_name
@@ -145,6 +164,15 @@ describe_current do
     it "uses the pattern deserializer" do
       assert_equal("from-pattern", structured[:payload])
       assert_empty(structured[:raw_fields])
+    end
+  end
+
+  context "when partition is the first one past the topic partitions" do
+    let(:arguments) { { "topic_name" => topic_name, "partition" => 1, "offset" => 0 } }
+
+    it do
+      assert(result[:isError])
+      assert_includes(text, "Partition 1 of topic #{topic_name} does not exist: the topic has 1 partition")
     end
   end
 

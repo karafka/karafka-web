@@ -109,6 +109,15 @@ describe_current do
     end
   end
 
+  context "when partition is the first one past the topic partitions" do
+    let(:arguments) { { "topic_name" => topic_name, "partition" => 1 } }
+
+    it do
+      assert(result[:isError])
+      assert_includes(text, "Partition 1 of topic #{topic_name} does not exist: the topic has 1 partition")
+    end
+  end
+
   context "when partition does not exist" do
     let(:arguments) { { "topic_name" => topic_name, "partition" => 10 } }
 
